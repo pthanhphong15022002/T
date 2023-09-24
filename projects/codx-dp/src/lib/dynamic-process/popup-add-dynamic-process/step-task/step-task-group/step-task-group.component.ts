@@ -8,6 +8,7 @@ import {
 } from 'codx-core';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   Optional,

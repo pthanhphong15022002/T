@@ -48,7 +48,8 @@ export class UserComponent implements OnInit {
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private changeDef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {}
@@ -56,6 +57,7 @@ export class UserComponent implements OnInit {
     if (changes?.dataSource) {
       this.dataSource;
     }
+    this.changeDef.markForCheck();
   }
 
   shareUser(share) {
@@ -86,6 +88,7 @@ export class UserComponent implements OnInit {
     if (index != -1) {
       datas.splice(index, 1);
       this.valueList.emit(datas);
+      this.changeDef.markForCheck();
     }
   }
 
@@ -114,6 +117,7 @@ export class UserComponent implements OnInit {
       listUser[0] = user;
     }
     this.valueList.emit(listUser);
+    this.changeDef.markForCheck();
   }
 
   convertUser(user, type) {

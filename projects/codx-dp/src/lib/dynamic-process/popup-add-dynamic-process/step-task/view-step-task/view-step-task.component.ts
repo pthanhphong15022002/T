@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnInit,
   Optional,
@@ -57,6 +58,7 @@ export class ViewJobComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private callfc: CallFuncService,
     private authStore: AuthStore,
+    private changeDef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -112,6 +114,8 @@ export class ViewJobComponent implements OnInit {
           return item.objectID;
         })
         .join(';') || [];
+
+    this.changeDef.markForCheck();
   }
 
   getModeFunction() {
