@@ -2325,7 +2325,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
         });
         // if(!this.isChange) this.isChange=true ;
-        this.changeDetectorRef.detectChanges();
+        // this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
