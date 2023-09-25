@@ -177,7 +177,7 @@
               </div>
             </div>
             <div class="d-flex justify-content-between w-100 mt-2">
-              <div class="w-70">
+              <div class="w-100 pe-6">
                 <div class="d-flex w-100">
                   <div class="w-60px">
                     <codx-label
@@ -187,7 +187,7 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <div class="d-flex align-items-end">
+                  <div class="aqua positon-relative">
                     <div
                       #elementNote
                       id="elementNote"
@@ -198,20 +198,19 @@
                           ? 'line-clamp line-clamp-2 text-popover'
                           : ''
                       "
-                      class="me-1"
-                      style="width: 79% !important"
+                      class="pe-6 red"
                       [innerHTML]="
                         dataSelected?.description
                           | formatvalue : formModel : 'Description'
                           | async
                       "
                     ></div>
-                    <div *ngIf="isCollapsable">
+                    <div class="positon-absolute bottom-0 red" *ngIf="isCollapsable">
                       <codx-label
                         *ngIf="isCollapsed"
                         fieldName="lblReadMore"
                         [formModel]="formModel"
-                        default="&nbsp;Xem thêm"
+                        default="Xem thêm"
                         class="text-primary"
                         style="white-space: nowrap"
                         role="button"
@@ -230,7 +229,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-end w-20">
+              <div class="d-flex justify-content-end w-auto">
                 <div class="d-flex flex-column">
                   <codx-label
                     style="white-space: nowrap"
