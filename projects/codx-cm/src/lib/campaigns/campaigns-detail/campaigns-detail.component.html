@@ -177,7 +177,7 @@
               </div>
             </div>
             <div class="d-flex justify-content-between w-100 mt-2">
-              <div class="w-70">
+              <div class="w-70 h-35px">
                 <div class="d-flex w-100">
                   <div class="w-60px">
                     <codx-label
@@ -190,7 +190,7 @@
                   <div class="d-flex align-items-end">
                     <div
                       #elementNote
-                      id="elementNote"
+                      [id]="'elementNote'"
                       [class.collapsed]="isCollapsed"
                       [style.height]="isCollapsed ? '35px' : 'auto'"
                       [ngClass]="
@@ -199,7 +199,7 @@
                           : ''
                       "
                       class="me-1"
-                      style="width: 79% !important"
+                      style="width: 100% !important"
                       [innerHTML]="
                         dataSelected?.description
                           | formatvalue : formModel : 'Description'

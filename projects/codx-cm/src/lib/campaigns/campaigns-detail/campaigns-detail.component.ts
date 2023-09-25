@@ -61,8 +61,11 @@ export class CampaignsDetailComponent implements OnInit {
         this.loaded = false;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.seeMore();
+
         this.loaded = true;
+        setTimeout(() => {
+          this.seeMore(this.dataSelected?.recID);
+        }, 0);
       }
     }
   }
@@ -71,16 +74,26 @@ export class CampaignsDetailComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  seeMore() {
+  seeMore(id) {
     this.isCollapsed = false;
     this.isCollapsable = false;
 
     let element = document.getElementById('elementNote');
     if (element) {
-      if (element.offsetHeight > 35) {
+      let height = element.offsetHeight
+        ? JSON.parse(JSON.stringify(element.offsetHeight))
+        : 0;
+      if (
+        this.dataSelected?.description == null ||
+        this.dataSelected.description?.trim() == ''
+      ) {
+        height = 35;
+      }
+      if (height > 35) {
         this.isCollapsed = true;
         this.isCollapsable = true;
       }
+      element.focus();
     }
 
     this.detectorRef.detectChanges();
