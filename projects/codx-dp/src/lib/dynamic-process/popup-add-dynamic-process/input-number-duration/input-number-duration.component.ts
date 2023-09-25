@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -15,6 +16,7 @@ import { NotificationsService, UIComponent } from 'codx-core';
   selector: 'codx-input-number-duration',
   templateUrl: './input-number-duration.component.html',
   styleUrls: ['./input-number-duration.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputNumberDurationComponent
   extends UIComponent
@@ -62,7 +64,6 @@ export class InputNumberDurationComponent
     private notificationsService: NotificationsService
   ) {
     super(inject);
-
   }
   ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -74,25 +75,29 @@ export class InputNumberDurationComponent
     }
     if (changes['dayOld']) {
       this.dayOld = changes['dayOld'].currentValue;
-      this.dayValue = this.isTurnInput(this.typeDay,this.dayOld);
+      this.dayValue = this.isTurnInput(this.typeDay, this.dayOld);
     }
     if (changes['hourOld']) {
       this.hourOld = changes['hourOld'].currentValue;
-      this.hourValue =  this.isTurnInput(this.typeHour,this.hourOld);
+      this.hourValue = this.isTurnInput(this.typeHour, this.hourOld);
     }
-    this.noteDay =  this.formatNote(this.noteDay,this.maxDayDefault);
-    this.noteHour =  this.formatNote(this.noteHour,this.maxHourDefault);
+    this.noteDay = this.formatNote(this.noteDay, this.maxDayDefault);
+    this.noteHour = this.formatNote(this.noteHour, this.maxHourDefault);
+    this.changeDetectorRef.markForCheck();
   }
   onInit() {}
   checkInputDayValue($event: any) {
-    let value = parseInt($event.target.value ? $event.target.value: this.minDayDefault);
-    if (( value ||value == 0) && this.dayMax) {
+    let value = parseInt(
+      $event.target.value ? $event.target.value : this.minDayDefault
+    );
+    if ((value || value == 0) && this.dayMax) {
       if (value >= this.maxDayDefault) {
         value = this.maxDayDefault;
       } else if (value < this.dayMax) {
         this.notificationsService.notifyCode('DP012');
         value = this.dayMax;
-        this.hourValue = this.hourValue >= this.hourMax ? this.hourValue: this.hourMax ;
+        this.hourValue =
+          this.hourValue >= this.hourMax ? this.hourValue : this.hourMax;
       } else if (!value && value != 0) {
         value = this.dayMax;
       }
@@ -110,11 +115,13 @@ export class InputNumberDurationComponent
   }
 
   checkInputHourValue($event: any) {
-    let value = parseInt( $event.target.value ? $event.target.value: this.minHourDefault) ;
+    let value = parseInt(
+      $event.target.value ? $event.target.value : this.minHourDefault
+    );
     if ((value || value == 0) && this.dayMax && this.dayValue == this.dayMax) {
       if (value >= this.maxHourDefault) {
         value = this.maxHourDefault;
-      } else if ( value < this.hourMax  ) {
+      } else if (value < this.hourMax) {
         this.notificationsService.notifyCode('DP012');
         value = this.hourMax;
       } else if (!value && value != 0) {
@@ -140,40 +147,39 @@ export class InputNumberDurationComponent
 
   isTurnInput(type: string, value: number) {
     if (type === this.typeDay) {
-      if (value >= this.maxDayDefault) {;
+      if (value >= this.maxDayDefault) {
         this.hourValue = this.minHourDefault;
         value = this.maxDayDefault;
-        this.isView = true
-      }
-      else if( value == this.secondMaxDayDefault && this.hourValue == this.maxHourDefault) {
+        this.isView = true;
+      } else if (
+        value == this.secondMaxDayDefault &&
+        this.hourValue == this.maxHourDefault
+      ) {
         this.hourValue = this.minHourDefault;
         value = this.maxDayDefault;
-      }
-      else {
+      } else {
         this.isView = false;
       }
-  } else if (type === this.typeHour) {
-    if (value >= this.maxHourDefault) {
-      value = this.maxHourDefault;
-      }
-      else if (
+    } else if (type === this.typeHour) {
+      if (value >= this.maxHourDefault) {
+        value = this.maxHourDefault;
+      } else if (
         this.dayValue == this.secondMaxDayDefault &&
         value == this.maxHourDefault
       ) {
         this.dayValue = this.maxDayDefault;
         value = this.minHourDefault;
         this.isView = true;
-      }
-       else {
+      } else {
         this.isView = this.dayValue == this.maxDayDefault;
       }
-  } else {
+    } else {
       this.isView = false;
     }
     return value;
   }
 
-  formatNote(note,maxValue){
+  formatNote(note, maxValue) {
     return (note ?? '').replace('{0}', maxValue);
   }
 }
