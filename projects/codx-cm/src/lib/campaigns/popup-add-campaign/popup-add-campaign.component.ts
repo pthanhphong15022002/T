@@ -1,13 +1,22 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
+  ImageViewerComponent,
   NotificationsService,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-campaign',
@@ -15,11 +24,16 @@ import { CodxCmService } from '../../codx-cm.service';
   styleUrls: ['./popup-add-campaign.component.scss'],
 })
 export class PopupAddCampaignComponent implements OnInit {
+  @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
+
   dialog: any;
   data: any;
   action = '';
   titleAction = '';
   autoNumber: any;
+  avatarChange = false;
+  gridViewSetup: any;
+  count = 0;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -34,13 +48,14 @@ export class PopupAddCampaignComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.title;
-
+    this.gridViewSetup = dt?.data?.gridViewSetup
     this.autoNumber = dt?.data?.autoNumber;
   }
   ngOnInit(): void {
-    if (this.action == 'add') this.data.campaignID = this.autoNumber;
+    if (this.action != 'edit') this.data.campaignID = this.autoNumber;
   }
 
+  //#region save
   beforeSave(op) {
     var data = [];
     if (this.action === 'add' || this.action == 'copy') {
@@ -60,7 +75,7 @@ export class PopupAddCampaignComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
         }
       });
   }
@@ -70,16 +85,41 @@ export class PopupAddCampaignComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
           this.dialog.close(res.update);
         }
       });
   }
 
-  onSave() {
-    if (this.action == 'edti') {
+  async onSave() {
+    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.count > 0) {
+      return;
+    }
+
+    if(new Date(this.data?.startDate) >= new Date(this.data?.endDate)){
+      this.notiService.notifyCode('Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu');
+      return;
+    }
+
+    if (this.avatarChange) {
+      await firstValueFrom(
+        this.imageUpload.updateFileDirectReload(this.data?.recID)
+      );
+    }
+    if (this.action == 'edit') {
       this.onUpdate();
     } else {
       this.onAdd();
     }
   }
+  //#endregion
+
+  //#region avata
+  changeAvatar() {
+    this.avatarChange = true;
+  }
+  //#endregion
 }
