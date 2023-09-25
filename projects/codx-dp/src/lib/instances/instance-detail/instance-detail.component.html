@@ -306,6 +306,7 @@
               </codx-carousel-stage>
               <ng-container *ngIf="tmpDataSteps">
                 <codx-stages-detail
+                  #codxStage
                   [dataStep]="tmpDataSteps"
                   [showColumnControl]="showColumnControl(tmpDataSteps.stepID)"
                   [formModel]="formModel"

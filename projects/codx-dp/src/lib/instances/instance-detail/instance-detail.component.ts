@@ -33,6 +33,7 @@ import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
+import { StagesDetailComponent } from './stages-detail/stages-detail.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -40,6 +41,8 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
   styleUrls: ['./instance-detail.component.scss'],
 })
 export class InstanceDetailComponent implements OnInit {
+  @ViewChild('codxStage') codxStage: StagesDetailComponent;
+
   @Input() formModel: any;
   @Input() stepName: string;
   @Input() progress = '0';
@@ -73,7 +76,6 @@ export class InstanceDetailComponent implements OnInit {
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-
   id: any;
   totalInSteps: any;
   tmpDataSteps: DP_Instances_Steps;
@@ -864,5 +866,12 @@ export class InstanceDetailComponent implements OnInit {
       }, 0);
       this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
     }
+  }
+
+  loadOwnerStep(owner){
+    if(this.codxStage){
+      this.codxStage.dataStep.owner = owner;
+    }
+    this.changeDetec.detectChanges();
   }
 }

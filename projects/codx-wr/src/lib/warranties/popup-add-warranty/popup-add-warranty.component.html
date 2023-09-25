@@ -265,14 +265,14 @@
               </div>
             </div>
           </div>
-          <div class="d-flex align-items-center mt-2" *ngIf="data?.customerID">
+          <div class="d-flex align-items-center justify-content-end mt-2" *ngIf="data?.customerID">
             <button
               [ngClass]="action == 'edit' ? 'disabled' : ''"
               type="button"
               class="btn btn-sm btn-outline-primary"
               (click)="clickAddCustomer('switch')"
             >
-              <span class="icon-person_add_alt_1 icon-16"></span>
+              <i class="icon-person_add_alt_1 icon-16 me-1"></i>
               <codx-label
                 name="lblSwitchCustomer"
                 [formModel]="form.formModel"
