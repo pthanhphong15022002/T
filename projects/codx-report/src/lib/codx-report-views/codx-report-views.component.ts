@@ -1,4 +1,4 @@
-import { T } from '@angular/cdk/keycodes';
+import { count } from 'console';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -18,10 +18,12 @@ import {
   LayoutService,
   PageTitleService,
   UIComponent,
+  UserModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { CodxReportService } from '../codx-report.service';
 
 @Component({
   selector: 'codx-report-views',
@@ -42,27 +44,28 @@ export class CodxReportViewsComponent
     id: 'btnAdd',
   };
   module: any = '';
-  predicates:string = "ReportType = 'R' && Module=@0";
-  dataValues:String = "";
+  predicates: string = "ReportType = 'R' && Module=@0";
+  dataValues: String = '';
+  user: UserModel;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
     private cacheSv: CacheService,
     private layout: LayoutService,
     private pageTitle: PageTitleService,
-    private routerNg: Router
+    private routerNg: Router,
+    private reportService: CodxReportService,
+    private auth: AuthStore
   ) {
     super(injector);
-
-
   }
+
   onInit(): void {
-    this.router.params.subscribe((param:any) => {
-      if(param)
-      {
+    this.router.params.subscribe((param: any) => {
+      if (param) {
         this.funcID = param['funcID'];
-        this.cacheSv.functionList(this.funcID)
-        .subscribe((res: any) => {
+        this.cacheSv.functionList(this.funcID).subscribe((res: any) => {
           if (res) {
             this.funcItem = res;
             this.module = res.module ? res.module.toLowerCase() : '';
@@ -73,6 +76,8 @@ export class CodxReportViewsComponent
         });
       }
     });
+
+    this.user = this.auth.get();
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
@@ -86,7 +91,7 @@ export class CodxReportViewsComponent
         reportView: true,
         reportType: 'R',
         model: {
-          template:this.templateListCard
+          template: this.templateListCard,
         },
       },
       // {
@@ -112,11 +117,13 @@ export class CodxReportViewsComponent
     // });
     this.changeDetectorRef.detectChanges();
   }
+
   viewChanged(e: any) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.pageTitle.setSubTitle('');
     //this.pageTitle.setTitle(this.funcItem.customName ? this.funcItem.customName : "" );
   }
+
   onActions(e: any) {
     if (e.type == 'detail') {
       this.codxService.navigate(
@@ -126,12 +133,32 @@ export class CodxReportViewsComponent
       this.detectorRef.reattach();
     }
   }
+
   cardClick(e: any) {
-    if(e?.recID)
-    {
-      this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","UpdateViewAsync",[e.recID]).subscribe();
+    if (e?.recID) {
+      this.api
+        .execSv(
+          'rptrp',
+          'Codx.RptBusiness.RP',
+          'ReportListBusiness',
+          'UpdateViewAsync',
+          [e.recID]
+        )
+        .subscribe();
       this.codxService.navigate('', this.module + '/report/detail/' + e.recID);
     }
+  }
 
+  bookmark(recID: string) {
+    this.reportService.bookmark(recID).subscribe();
+  }
+
+  hasBookmark(item) {
+    if (item.bookmarks != null) {
+      var list = item.bookmarks.filter((x) => x.objectID == this.user?.userID);
+      if (list.length > 0) return true;
+      else return false;
+    }
+    return false;
   }
 }
