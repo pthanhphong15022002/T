@@ -831,16 +831,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
         data[i].avatar = null;
         data[i].data = '';
         data[i].createdOn = new Date();
-
-        if (total > 1) data[i] = await this.addFileLargeLong(data[i], false);
-        // if (total > 1) {
-        //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
-        //     if (i == total -1)
-
-        //   });
-        // }
+      }
+      if (total > 1) {
+        const requests = this.fileUploadList.map((data) => this.addFileLargeLong(data, false));
+        data = await Promise.all(requests);
       }
       let countFile = this.fileUploadList.length;
+
       if (total > 1) {
         for (var i = 0; i < data.length; i++) {
           data[i].source = null;
@@ -964,19 +961,27 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var data = JSON.parse(JSON.stringify(this.fileUploadList));
         var toltalUsed = 0; //bytes
         var remainingStorage = -1;
-        if (this.infoHDD.totalHdd >= 0)
-          remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+        if (this.infoHDD.totalHdd >= 0) remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
         var that = this;
-        for (var i = 0; i < total; i++) {
-          data[i].objectID = this.objectId;
-          data[i].description = this.description[i];
-          data[i].avatar = null;
-          data[i].data = '';
-          if (this.isTab) data[i].createdOn = this.date;
-          else data[i].createdOn = new Date();
-          toltalUsed += data[i].fileSize;
-          if (total > 1 && !data[i].uploadId) data[i] = await this.addFileLargeLong(data[i], false);
+        if(total > 1)
+        {
+          let listData = data.filter(x=>!x.uploadId);
+          const requests = listData.map((datas) => this.addFileLargeLong(datas, false));
+
+          var result = await Promise.all(requests) as any;
+          for (var i = 0; i < total; i++) {
+            var dt = result.filter(x=>x.fileName ==  data[i].fileName)[0];
+            if(dt) data[i] = dt;
+            data[i].objectID = this.objectId;
+            data[i].description = this.description[i];
+            data[i].avatar = null;
+            data[i].data = '';
+            if (this.isTab) data[i].createdOn = this.date;
+            else data[i].createdOn = new Date();
+            toltalUsed += data[i].fileSize;
+          }
         }
+
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage) {
           this.closeBtnUp = false;
