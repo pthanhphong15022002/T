@@ -172,6 +172,7 @@ export class PopupEProcessContractComponent
   }
 
   onInit(): void {
+    console.log(this.formModel);
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -194,7 +195,11 @@ export class PopupEProcessContractComponent
         if (formModel) {
           this.formModel = formModel;
           this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+            .getFormGroup(
+              this.formModel.formName,
+              this.formModel.gridViewName,
+              this.formModel
+            )
             .then((fg) => {
               if (fg) {
                 this.formGroup = fg;
@@ -205,7 +210,11 @@ export class PopupEProcessContractComponent
       });
     else
       this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+        .getFormGroup(
+          this.formModel.formName,
+          this.formModel.gridViewName,
+          this.formModel
+        )
         .then((fg) => {
           if (fg) {
             this.formGroup = fg;
@@ -292,9 +301,9 @@ export class PopupEProcessContractComponent
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger
+      debugger;
       if (res?.event) {
-      this.changedInForm = true;
+        this.changedInForm = true;
         if (actionType == 'add') {
           let index = this.tempBenefitArr.findIndex(
             (x: any) => x.BenefitID == res.event.benefitID
@@ -480,8 +489,7 @@ export class PopupEProcessContractComponent
     }
   }
 
-  async addFiles(evt){
-    debugger
+  async addFiles(evt) {
     this.changedInForm = true;
     this.data.attachments = evt.data.length;
     this.formGroup.patchValue(this.data);
@@ -493,7 +501,7 @@ export class PopupEProcessContractComponent
 
     if (this.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-      this.form.form.validation(false)
+      this.form.form.validation(false);
 
       return;
     }
