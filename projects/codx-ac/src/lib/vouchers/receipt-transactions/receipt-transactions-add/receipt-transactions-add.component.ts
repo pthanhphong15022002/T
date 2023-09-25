@@ -290,7 +290,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
         break;
     }
 
-    this.updateFromBackEnd(e);
+    //this.updateFromBackEnd(e);
 
   }
 

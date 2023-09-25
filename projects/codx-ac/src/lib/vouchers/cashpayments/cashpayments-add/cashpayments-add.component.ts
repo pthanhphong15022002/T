@@ -702,6 +702,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         setTimeout(() => {
           oLine.accountID = event?.itemData?.OffsetAcctID;
           this.detectorRef.detectChanges();
+          oAccount = this.acService.getCacheValue('account',oLine.accountID);
+          this.setConstraintGridCashPayment(oLine,oAccount,oOffsetAccount);
         }, 100);
         break;
     }
@@ -806,9 +808,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   copyRow(data) {
     data.recID = Util.uid();
     data.index = this.eleGridCashPayment.dataSource.length;
-    let oAccount = this.acService.getCacheValue('account', data.accountID);
-    let oOffsetAccount = this.acService.getCacheValue('account',data.offsetAcctID);
-    this.setConstraintGridCashPayment(data, oAccount, oOffsetAccount);
     this.eleGridCashPayment.addRow(data,this.eleGridCashPayment.dataSource.length);
   }
 
@@ -1540,9 +1539,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         break;
       case 'add':
       case 'update': //? sau khi thêm dòng thành công
-        if (!this.eleGridCashPayment.autoAddRow) {
+        if (!this.eleGridCashPayment.autoAddRow && !this.eleGridCashPayment.isSaveOnClick) {
           setTimeout(() => {
-            let element = document.getElementById('btnadd');
+            let element = document.getElementById('btnAddCash');
             element.focus();
           }, 100);
         }
@@ -1552,7 +1551,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         this.eleGridCashPayment.rowDataSelected = null;
       }
         setTimeout(() => {
-          let element = document.getElementById('btnadd');
+          let element = document.getElementById('btnAddCash');
           element.focus();
         }, 100);
         break;
@@ -1598,6 +1597,12 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
               this.eleGridCashPayment.refresh(); //? => refresh lại lưới
             }
           });
+          if (!this.eleGridVatInvoices.autoAddRow && !this.eleGridVatInvoices.isSaveOnClick) {
+            setTimeout(() => {
+              let element = document.getElementById('btnAddVAT');
+              element.focus();
+            }, 100);
+          }
         break;
       case 'update':
         this.api
@@ -1613,6 +1618,12 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
               this.eleGridCashPayment.refresh(); //? => refresh lại lưới
             }
           });
+          if (!this.eleGridVatInvoices.autoAddRow && !this.eleGridVatInvoices.isSaveOnClick) {
+            setTimeout(() => {
+              let element = document.getElementById('btnAddVAT');
+              element.focus();
+            }, 100);
+          }
         break;
       case 'endEdit':
         if (!this.eleGridCashPayment.rowDataSelected) {

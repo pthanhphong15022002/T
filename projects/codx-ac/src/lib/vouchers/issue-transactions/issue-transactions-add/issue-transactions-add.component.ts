@@ -279,7 +279,10 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             setTimeout(() => {
               e.data.costAmt = e.data.costPrice * e.data.quantity;
               this.dt.detectChanges();
-              this.grvVouchersLine.endProcess();
+              setTimeout(() => {
+                this.grvVouchersLine.endProcess();
+              }, 100);
+              
             }, 100);
           }
         }
