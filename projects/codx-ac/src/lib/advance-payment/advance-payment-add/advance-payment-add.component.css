@@ -1,7 +1,3 @@
-.voucherText{
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 .amount .e-editable-value{
     justify-content: end;
 }
