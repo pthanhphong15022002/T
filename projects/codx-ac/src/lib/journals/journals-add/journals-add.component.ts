@@ -408,10 +408,9 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     }
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gvs,
-        ['DIM1Control', 'DIM2Control', 'DIM3Control'],
         ignoredFields
       )
     ) {

@@ -1221,6 +1221,26 @@ DeletePolicyAL(data){
   }
 
   onEditGrid1(evt){
+    if(!evt.fromValue){
+      this.notify.notifyCode('HR023');
+      setTimeout(() => {
+        this.GetPolicyDetailByFirstMonthType(this.alpolicyObj.firstMonthType).subscribe((res) => {
+          this.dataSourceGridView1 = res;
+        });
+        this.gridView1.refresh();
+      }, 200);
+      return;
+    }
+    if(!evt.days){
+      this.notify.notifyCode('HR024');
+      setTimeout(() => {
+        this.GetPolicyDetailByFirstMonthType(this.alpolicyObj.firstMonthType).subscribe((res) => {
+          this.dataSourceGridView1 = res;
+        });
+        this.gridView1.refresh();
+      }, 200);
+      return;
+    }
     let index = this.gridView1.dataSource.findIndex(v => v.recID == evt.recID)
     this.UpdatePolicyDetail(evt).subscribe((res) => {
       if(res && res.oldData){
@@ -1299,6 +1319,28 @@ DeletePolicyAL(data){
   }
 
   onEditGrid2(evt){
+    if(!evt.fromValue){
+      this.notify.notifyCode('HR025');
+      setTimeout(() => {
+        this.GetPolicyDetailBySeniorityType().subscribe((res) => {
+          this.dataSourceGridView2 = res;
+          this.gridView2.dataSource = res;
+        });
+        this.gridView2.refresh();
+      }, 200);
+      return;
+    }
+    if(!evt.days){
+      this.notify.notifyCode('HR026');
+      setTimeout(() => {
+        this.GetPolicyDetailBySeniorityType().subscribe((res) => {
+          this.dataSourceGridView2 = res;
+          this.gridView2.dataSource = res;
+        });
+        this.gridView2.refresh();
+      }, 200);
+      return;
+    }
     let index = this.gridView2.dataSource.findIndex(v => v.recID == evt.recID)
     this.UpdatePolicyDetail(evt).subscribe((res) => {
       if(res && res.oldData){

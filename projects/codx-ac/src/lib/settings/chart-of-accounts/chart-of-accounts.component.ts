@@ -175,7 +175,11 @@ export class ChartOfAccountsComponent extends UIComponent {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {});
+    this.view.dataService.delete([data], true).subscribe((res: any) => {
+      if (res) {
+        this.acService.clearCache('account');
+      }
+    });
   }
 
   onActions(e:any){

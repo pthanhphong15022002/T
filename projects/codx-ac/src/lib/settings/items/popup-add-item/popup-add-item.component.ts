@@ -436,10 +436,9 @@ export class PopupAddItemComponent
     console.log('itemsProduction', this.itemsProduction);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gridViewSetup,
-        ['UMID'],
         this.ignoredFields
       )
     ) {
@@ -447,7 +446,7 @@ export class PopupAddItemComponent
     }
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.fgItemsPurchase,
         this.gvsItemsPurchase
       )
@@ -456,13 +455,13 @@ export class PopupAddItemComponent
     }
 
     if (
-      !this.acService.validateFormData(this.fgItemsSales, this.gvsItemsSales)
+      !this.acService.isFormDataValid(this.fgItemsSales, this.gvsItemsSales)
     ) {
       return;
     }
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.fgItemsProduction,
         this.gvsItemsProduction
       )

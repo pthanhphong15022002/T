@@ -4,7 +4,7 @@
             <div class="mb-3">
                 <div class="d-flex align-items-center file-item ng-star-inserted">
                     <img alt="{{fileEditing?.fileName}}" class="mh-30px me-3"
-                        src="../../../assets/codx/dms/{{getAvatar(fileEditing?.extension)}}">
+                        src="../../../assets/themes/dm/default/img/{{getAvatar(fileEditing?.extension)}}">
                     <codx-input placeholder="Tên tài liệu..." #fileNameCtrl [class]="validate('fileName')" type="text"
                         style="width:100%" [crrValue]="fileEditing?.fileName"
                         (valueChange)="txtValue($event, 'filename')"></codx-input>

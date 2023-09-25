@@ -232,7 +232,7 @@ export class MoveComponent implements OnInit {
             if (res.status == 0) {
               var files = that.dmSV.listFiles;
               if (files == null) files = [];
-              res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+              res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                 res.data.extension
               )}`; //"../../../assets/img/loader.gif";
               files.push(Object.assign({}, res.data));
@@ -262,7 +262,7 @@ export class MoveComponent implements OnInit {
                             (d) => d.recID.toString() === item.data.recID
                           );
                           if (index != -1) {
-                            item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                            item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                               item.data.extension
                             )}`; //"../../../assets/img/loader.gif";
                             files[index] = item.data;
@@ -416,7 +416,7 @@ export class MoveComponent implements OnInit {
 
   //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
   //     item1 =
-  //       '<img class="max-h-18px" src="../../../assets/codx/dms/folder.svg">';
+  //       '<img class="max-h-18px" src="../../../assets/themes/dm/default/img/folder.svg">';
   //   else {
   //     if (folder.icon.indexOf('.') == -1)
   //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;

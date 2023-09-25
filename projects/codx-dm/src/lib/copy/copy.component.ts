@@ -129,8 +129,8 @@ export class CopyComponent implements OnInit {
           if (res.status == 0) {
             var files = that.dmSV.listFiles;
             if (files == null) files = [];
-            //var ret = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`
-            res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
+            //var ret = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`
+            res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
             files.push(Object.assign({}, res.data));
             this.dmSV.listFiles = files;
             that.dmSV.addFile.next(true);
@@ -157,7 +157,7 @@ export class CopyComponent implements OnInit {
                     if (files == null) files = [];
                     let index = files.findIndex(d => d.recID.toString() === item.data.recID);
                     if (index != -1) {
-                      item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
+                      item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
                       files[index] = item.data;
                       that.displayThumbnail(item.data);
                       that.dmSV.listFiles = files;                      

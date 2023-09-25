@@ -146,15 +146,15 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
-        subModel:{
-          gridviewName:'grvCashPaymentsLines',
-          formName:'CashPaymentsLines',
-          entityName:'AC_CashPaymentsLines',
-          service:'AC',
-          predicates:'TransID=@0',
-          rowNoField:'rowNo',
+        // subModel:{
+        //   gridviewName:'grvCashPaymentsLines',
+        //   formName:'CashPaymentsLines',
+        //   entityName:'AC_CashPaymentsLines',
+        //   service:'AC',
+        //   predicates:'TransID=@0',
+        //   rowNoField:'rowNo',
 
-        },
+        // },
         model: {
           template2: this.templateGrid,
         },
@@ -411,8 +411,7 @@ onSelectedItem(event) {
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -434,7 +433,7 @@ onSelectedItem(event) {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -442,7 +441,7 @@ onSelectedItem(event) {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -461,7 +460,7 @@ onSelectedItem(event) {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
               element.disabled = false;
             } else {
               element.disabled = true;

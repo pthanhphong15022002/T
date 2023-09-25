@@ -45,14 +45,14 @@
         </codx-label>
         <span
           *ngIf="advancedPayment?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ advancedPayment?.voucherNo }}
         </span>
         <span
           *ngIf="!advancedPayment?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ "AC0028" | mssg | async }}
@@ -68,7 +68,7 @@
         >
         </codx-label>
         <span
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ formatDate(advancedPayment?.voucherDate) }}
@@ -205,17 +205,22 @@
                   [formModel]="form.formModel"
                 >
                 </codx-label>
-                <codx-inplace
-                  type="combobox"
-                  [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
-                  [refType]="form?.gridviewSetup?.PmtMethodID.referedType"
-                  [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
-                  field="pmtMethodID"
-                  [value]="advancedPayment.pmtMethodID"
-                  [class]="'om-input w-100 '"
-                  [cssClass]="'om-input w-100  fs-4'"
-                  (valueChange)="valueChange($event)"
-                ></codx-inplace>
+                <div class="dropdown-input">
+                  <codx-dropdown-select
+                    #CbxPmtMethodID
+                    [showFooter]="false"
+                    [isToolbar]="false"
+                    [cssClass]="'rounded-pill border-0'"
+                    cssPopup="h-350px w-100 fs-4"
+                    [isMulti]="false"
+                    type="valuelist"
+                    field="pmtMethodID"
+                    [value]="advancedPayment.pmtMethodID"
+                    [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
+                    [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
+                    (valueChange)="dropdownChange($event)"
+                  ></codx-dropdown-select>
+                </div>
               </div>
             </div>
           </div>
@@ -228,17 +233,6 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <!-- <codx-inplace
-              type="combobox"
-              [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
-              [refType]="form?.gridviewSetup?.ReasonID.referedType"
-              [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
-              field="reasonID"
-              [value]="advancedPayment.reasonID"
-              [class]="'om-input w-100 '"
-              [cssClass]="'om-input w-100  fs-4'"
-              (valueChange)="valueChange($event)"
-            ></codx-inplace> -->
             <div class="dropdown-input">
               <codx-dropdown-select
                 #CbxReasonID
@@ -257,27 +251,6 @@
             </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div>
-            <codx-label
-              class="fw-bold"
-              fiedName="Memo"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-inplace
-              type="text"
-              [refValue]="form?.gridviewSetup?.Memo.referedValue"
-              [refType]="form?.gridviewSetup?.Memo.referedType"
-              [emptyText]="form?.gridviewSetup?.Memo.headerText"
-              [value]="advancedPayment.memo"
-              field="memo"
-              [class]="'om-input w-100 '"
-              [cssClass]="'om-input w-100  fs-4'"
-              (valueChange)="valueChange($event)"
-            ></codx-inplace>
-          </div>
-        </div> -->
         <div class="mt-2 text-primary fw-bold fs-5">
           <codx-label default="Chi tiết"></codx-label>
         </div>
@@ -469,8 +442,8 @@
             style="border: 1px solid var(--primary-dark) !important"
             type="button"
             class="btn btn-md btn-light-primary me-2 rounded-15"
-            (keydown.enter)="onSave(); $event.preventDefault()"
-            (click)="onSave()"
+            (keydown.enter)="onSaveAndRelease(); $event.preventDefault()"
+            (click)="onSaveAndRelease()"
           >
             <div class="d-flex align-items-center">
               <i class="icon-add_to_photos icon-16"></i>

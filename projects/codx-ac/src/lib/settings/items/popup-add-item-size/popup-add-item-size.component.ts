@@ -97,7 +97,7 @@ export class PopupAddItemSizeComponent
     console.log(this.itemSize);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )
@@ -141,7 +141,7 @@ export class PopupAddItemSizeComponent
     console.log(this.itemSize);
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.dialogData.data.gridViewSetup
       )

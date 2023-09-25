@@ -49,7 +49,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   ) {
     super(inject);
     this.dialogRef = dialog;
-    this.advancedPayment = dialogData.data?.advancedPayment;
+    this.advancedPayment = {...dialogData.data?.advancedPayment};
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
@@ -176,11 +176,11 @@ export class AdvancePaymentAddComponent extends UIComponent
         else
         {
           if (res?.save?.data) {
-            this.saveLine();
+            this.saveLine(false);
             this.onRelease('', res.save.data);
           }
           else if (res?.update?.data) {
-            this.saveLine();
+            this.saveLine(false);
             this.onRelease('', res.update.data);
           }
         }
@@ -223,7 +223,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       });
   }
 
-  saveLine(){
+  saveLine(isClose: boolean = true){
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
         this.advancedPaymentLines
@@ -232,7 +232,10 @@ export class AdvancePaymentAddComponent extends UIComponent
       .subscribe((res) => {
         if (res) {
           this.saveFileUpload();
-          this.dialogRef.close();
+          if(isClose)
+          {
+            this.dialogRef.close();
+          }
           this.detectorRef.detectChanges();
         }
       });

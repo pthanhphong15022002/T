@@ -214,7 +214,7 @@ export class SalesinvoiceslinesAddComponent
     console.log(this.line);
 
     if (
-      !this.acService.validateFormData(this.form.formGroup, this.gvs, [
+      !this.acService.isFormDataValid(this.form.formGroup, this.gvs, [
         'UMID',
         'IDIM4',
         'VATID',
