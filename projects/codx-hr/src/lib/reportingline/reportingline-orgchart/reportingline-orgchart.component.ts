@@ -38,7 +38,8 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   @Input() formModel: any;
   @Input() view: ViewsComponent;
   @Input() grvSetup: any;
-  @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
+  @Input() addedData: any;
+  // @Output() deletedInputPosition: EventEmitter<any> = new EventEmitter();
   @Output() hasChangedData: EventEmitter<any> = new EventEmitter();
   @Output() itemSelectedChanged: EventEmitter<any> = new EventEmitter();
 
@@ -79,91 +80,34 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   //#region chart setting
   public layout: LayoutModel = {
     type: 'ComplexHierarchicalTree',
-    connectionPointOrigin: ConnectionPointOrigin.SamePoint,
-    //orientation: 'LeftToRight',
+    connectionPointOrigin: ConnectionPointOrigin.DifferentPoint,
     verticalSpacing: 80,
     horizontalSpacing: 30,
-    enableAnimation: false,
   };
   public tool: DiagramTools = DiagramTools.ZoomPan;
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None,
   };
   public scrollSettings: ScrollSettingsModel = { scrollLimit: 'Infinity' };
-  public reloadDiagram(): void {
-    this.firstLoadDiagram = true;
-    this.getDataPositionByID(this.positionID);
-  }
-  public onmarginLeftChange(args: NumericChangeEventArgs): void {
-    this.diagram.layout.margin.left = args.value;
-    this.diagram.dataBind();
-  }
-  public onmarginTopChange(args: NumericChangeEventArgs): void {
-    this.diagram.layout.margin.top = args.value;
-    this.diagram.dataBind();
-  }
-  public onhSpacingChange(args: NumericChangeEventArgs): void {
-    this.diagram.layout.horizontalSpacing = Number(args.value);
-    this.diagram.dataBind();
-  }
-
-  public onvSpacingChange(args: NumericChangeEventArgs): void {
-    this.diagram.layout.verticalSpacing = Number(args.value);
-    this.diagram.dataBind();
-  }
-  public documentClick(args: MouseEvent): void {
-    let target: HTMLElement = args.target as HTMLElement;
-    // custom code start
-    let selectedElement: HTMLCollection = document.getElementsByClassName('e-selected-style');
-    if (selectedElement.length) {
-      selectedElement[0].classList.remove('e-selected-style');
-    }
-    // custom code end
-    if (target.className === 'image-pattern-style') {
-      let id: string = target.id;
-      let orientation1: string = id.substring(0, 1).toUpperCase() + id.substring(1, id.length);
-      this.diagram.layout.orientation = orientation1 as LayoutOrientation;
-      this.diagram.layout.orientation = orientation1 as LayoutOrientation;
-      this.diagram.doLayout();
-      // custom code start
-      target.classList.add('e-selected-style');
-      // custom code end
-      this.diagram.dataBind();
-    }
-  };
   public created(): void {
     if (this.diagram) {
       this.diagram.fitToPage();
       this.firstLoadDiagram = false;
     }
   }
-  public onChange(args: CheckBoxChangeEventArgs): void {
-    if (args.checked) {
-      this.diagram.layout.connectionPointOrigin = ConnectionPointOrigin.DifferentPoint;
-    }
-    else {
-      this.diagram.layout.connectionPointOrigin = ConnectionPointOrigin.SamePoint;
-    }
-  }
   public connDefaults(connector: ConnectorModel, diagram: Diagram): ConnectorModel {
     connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
-    // connector.constraints = 0;
     connector.cornerRadius = 5;
     connector.targetDecorator.height = 5;
     connector.targetDecorator.width = 5;
-    //connector.style!.strokeColor = '#6d6d6d';
     let sourceNode = diagram.getNodeObject(connector.sourceID).data;
     let targetNode = diagram.getNodeObject(connector.targetID).data;
     if (sourceNode['positionID'] === targetNode['reportTo2']) {
       connector.style!.strokeColor = '#6d6d6d';
       connector.style.strokeDashArray = '5,5';
-      // diagram.previousSelectedObject =  [connector];
-      // diagram.sendToBack();
-      // diagram.sendBackward();
     }
     if (sourceNode['isSelected'] == true || targetNode['isSelected'] == true) {
-      // connector.style!.strokeColor = '#3699FF';
       connector.style!.strokeColor = 'var(--primary)';
       connector.style!.strokeWidth = 2;
     }
@@ -205,16 +149,22 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
     this.posEmpPageIndex = 0;
     this.scrolling = true;
     this.currentViewPosEmp = { countEmp: 0, employees: [] }
-    if (changes.positionID.currentValue != changes.positionID.previousValue) {
+    if (changes.positionID?.currentValue && changes.positionID.currentValue != changes.positionID.previousValue) {
       this.onDoneLoading = false;
       this.haveHighLight = true;
+      // if(this.addedData.positionID != null){
+      //   this.positionID = this.addedData.positionID
+      // }else 
       this.positionID = changes.positionID.currentValue;
       this.firstLoadDiagram = true;
       this.getDataPositionByID(this.positionID);
       this.changeDetectorRef.detectChanges();
     }
   }
-
+  public reloadDiagram(): void {
+    this.firstLoadDiagram = true;
+    this.getDataPositionByID(this.positionID);
+  }
   newDataManager(): any {
     return {
       id: 'positionID',
@@ -271,23 +221,12 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
 
   renewData() {
-    for (var i = 0; i < this.data.length; i++) {
-      var count = this.data.filter(data => data.reportTo == this.data[i].positionID
-        || data.reportTo2 == this.data[i].positionID).length;
-      if (this.data[i].countChild == count) {
-        this.data[i]['loadChildrent'] = true;
-      } else this.data[i]['loadChildrent'] = false;
-
-    }
+    this.data.forEach(item => {
+      var countChild = this.data.filter(x => x.reportTo == item.positionID || x.reportTo2 == item.positionID).length;
+      item.loadChildrent = (countChild == item.countChild);
+    });
   }
-  // mouseUp(dataNode: any, evt: any) {
-  //   this.positionID = dataNode.positionID;
-  //   var exist = this.checkExistParent(this.positionID);
-  //   if (this.diagram && exist) {
-  //     var tool = this.diagram.getTool('LayoutAnimation');
-  //     tool.mouseUp(this.diagram.eventHandler.eventArgs);
-  //   }
-  // }
+
 
   loadDataChild(node: any, element: HTMLElement, e: Event) {
     e.stopPropagation();
@@ -405,7 +344,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           option.FormModel = this.view.formModel;
           option.Width = '800px';
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: res,
             funcID: this.funcID,
@@ -418,6 +356,7 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
                 this.hasChangedData.emit({
                   data: res?.event?.positionID ? res.event : res,
                   action: 'copy',
+                  hasChanged: true,
                 });
               }
             });
@@ -436,7 +375,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
         .edit(this.view.dataService.dataSelected)
         .subscribe((result) => {
           let object = {
-            //dataService: this.view.dataService,
             formModel: this.view.formModel,
             data: result,
             funcID: this.funcID,
@@ -479,7 +417,11 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
           this.notiService.notifyCode('SYS008');
           if (data?.positionID == this.positionID || data?.position == this.position?.positionID) {
             let parent = this.data.filter((item) => item.positionID == data?.reportTo);
-            this.deletedInputPosition.emit(parent);
+            this.hasChangedData.emit({
+              data: null,
+              action: 'delete',
+              hasChanged: true,
+            });
           } else {
             this.data = this.data.filter((x) => x.positionID !== data.positionID);
           }
@@ -537,7 +479,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
       this.scrolling = true;
       this.viewEmpPosition = positionID;
     }
-    //var totalScroll = ele.offsetHeight + ele.scrollTop;
     var totalScroll = ele.clientHeight + ele.scrollTop;
     if (this.scrolling && totalScroll == ele.scrollHeight) {
       this.getEmpListPaging(positionID);
@@ -599,7 +540,6 @@ export class ReportinglineOrgChartComponent implements OnInit, OnChanges {
   }
   hasOpenEmpList(positionID: string, event: Event) {
     event.stopPropagation();
-    // event.preventDefault();
     if (this.viewEmpPosition !== positionID) { //change position
       this.posEmpPageIndex = 1;
       this.scrolling = true;

@@ -43,8 +43,6 @@ declare var jsBh: any;
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  
-  
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -101,7 +99,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
-        
+
       });
   }
   //#endregion
@@ -148,6 +146,15 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
+        // subModel:{
+        //   gridviewName:'grvCashPaymentsLines',
+        //   formName:'CashPaymentsLines',
+        //   entityName:'AC_CashPaymentsLines',
+        //   service:'AC',
+        //   predicates:'TransID=@0',
+        //   rowNoField:'rowNo',
+
+        // },
         model: {
           template2: this.templateGrid,
         },
@@ -159,6 +166,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
+    console.log(this.view);
 
   }
 
@@ -257,6 +265,7 @@ onSelectedItem(event) {
   addNewVoucher() {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
           if(this.dataDefault == null) this.dataDefault = {...res};
@@ -283,6 +292,7 @@ onSelectedItem(event) {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -310,24 +320,32 @@ onSelectedItem(event) {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(dataCopy))
+      .copy((o) => this.setDefault(dataCopy,'copy'))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let data = {
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
-          };
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
+          let datas = {...res};
+          this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+            if (res) {
+              let data = {
+                headerText: this.headerText, //? tiêu đề voucher
+                journal: { ...this.journal }, //?  data journal
+                oData: { ...datas }, //?  data của cashpayment
+                hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                legalName: this.legalName, //? tên company
+              };
+              let dialog = this.callfc.openSide(
+                CashPaymentAddComponent,
+                data,
+                this.optionSidebar,
+                this.view.funcID
+              );
+              this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
+            }
+          })
         }
       });
   }
@@ -393,8 +411,7 @@ onSelectedItem(event) {
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -404,6 +421,7 @@ onSelectedItem(event) {
       }
       switch (data?.status) {
         case '7':
+        case '2':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
               element.disabled = false;
@@ -415,7 +433,7 @@ onSelectedItem(event) {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -423,7 +441,7 @@ onSelectedItem(event) {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -442,7 +460,7 @@ onSelectedItem(event) {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -616,13 +634,14 @@ onSelectedItem(event) {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data) {
+  setDefault(data:any,action:any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      action
     ]);
   }
-  
+
   /**
    * *Hàm in chứng từ (xử lí cho MF In)
    * @param data
@@ -678,7 +697,7 @@ onSelectedItem(event) {
     );
   }
 
-  
+
 
   /**
    * *Hàm hủy các obsevable subcrible

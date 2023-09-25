@@ -533,12 +533,21 @@ export class CodxDpService {
     );
   }
 
-  getTree(recID) {
+  getTreeBySession(recID) {
     return this.api.exec<any>(
       'TM',
       'TaskBusiness',
       'GetListTaskTreeBySessionIDAsync',
       recID
+    );
+  }
+  //listRef chuỗi json
+  getTreeByListRef(listRef) {
+    return this.api.exec<any>(
+      'TM',
+      'TaskBusiness',
+      'GetListTaskTreeByListRefIDAsync',
+      listRef
     );
   }
 
@@ -831,12 +840,21 @@ export class CodxDpService {
   }
 
   //#region  API FOR CM
-  startDeal(data) {
+  // startDeal(data) {
+  //   return this.api.execSv<any>(
+  //     'CM',
+  //     'ERM.Business.CM',
+  //     'DealsBusiness',
+  //     'StartDealAsync',
+  //     data
+  //   );
+  // }
+  moveStageDeal(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
       'DealsBusiness',
-      'StartDealAsync',
+      'MoveStageDealAsync',
       data
     );
   }

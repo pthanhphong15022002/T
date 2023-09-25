@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,6 +35,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
   selector: 'lib-popup-add-custom-field',
   templateUrl: './popup-add-custom-field.component.html',
   styleUrls: ['./popup-add-custom-field.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
@@ -43,6 +45,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
   @ViewChild('viewComboxForm') viewComboxForm: ComboBoxComponent; ///cobx xem truoc ViewForm add VLL
+  @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
+
   dialog: DialogRef;
   field: DP_Steps_Fields;
   grvSetup: any;
@@ -96,7 +100,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   serviceTemp = 'SYS';
   assemblyNameTemp = 'SYS';
   classNameTemp = 'ValueListBusiness';
-  methodTemp = 'GetVllCustormByFormatAsync';
+  methodTemp = 'GetVllCustomsByFormatAsync';
   requestTemp = new DataRequest();
   user: any;
   crrVll: tempVllDP;
@@ -107,6 +111,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   crrValueFirst = '';
   element: any;
   isOpenPopup = false;
+  loaded: boolean = false;
+
+  idxEdit = -1;
+  popover: any;
+  idxDeleted = -1;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -155,9 +164,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   ngOnInit(): void {
     // this.field.dataType = 'L';
     // this.field.dataFormat = 'V';
-    // if ((this.field.dataFormat = 'V'))
-    // test
-    // this.loadDataVll();
+    if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
+      this.loadDataVll();
   }
 
   valueChangeCbx(e) {}
@@ -279,6 +287,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
+    // if (this.field.dataType == 'L' && !this.field.refType) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.grvSetup['RefType']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+
+    if (this.field.dataType == 'L' && !this.field.refValue) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RefValue']?.headerText + '"'
+      );
+      return;
+    }
+
     if (
       (this.field.note == null || this.field.note.trim() == '') &&
       this.grvSetup['Note']?.isRequire
@@ -315,11 +341,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   clickAddVll() {
     // 'add vll'
-    if (this.crrVll.defaultValues) this.changeFormVll();
+    if (!this.crrVll) {
+      this.crrVll = new tempVllDP();
+      this.crrVll.language = this.user.language;
+      this.crrVll.createdBy = this.user.userID;
+      this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+      this.crrVll.version = 'x00.01';
+    }
+    if (this.crrVll?.defaultValues) this.changeFormVll();
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
-    option.zIndex = 3000;
-    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 500, '');
+    option.zIndex = 1099;
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
   }
 
   closeDialog() {}
@@ -377,8 +410,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       (x) => x.listName == this.crrVll.listName
     );
     let menthol = checkEdit
-      ? 'EditValuelistCustormAsync'
-      : 'AddValuelistCustormAsync';
+      ? 'EditValuelistCustomsAsync'
+      : 'AddValuelistCustomsAsync';
 
     this.api
       .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
@@ -420,6 +453,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       eleAdd.focus();
       eleAdd.inputMode = '';
     }
+    this.idxEdit = -1;
     if (this.viewComboxForm) this.viewComboxForm.refresh();
     this.changeDef.detectChanges();
   }
@@ -454,6 +488,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   loadDataVll() {
+    if (this.loaded) return;
     this.requestTemp.entityName = 'SYS_ValueList';
     // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
     // this.requestTemp.dataValue = this.user.language + ';DPF';
@@ -477,8 +512,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       } else this.listVll = [];
       if (this.datasVllCbx) this.datasVllCbx.refresh();
       this.changeDef.detectChanges();
+      this.loaded = true;
     });
   }
+
   private fetch(): Observable<any[]> {
     return this.api
       .execSv<Array<any>>(
@@ -501,6 +538,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   cbxChangeVll(value, elm) {
     if (elm) this.element = elm;
+    this.field['refValue'] = value;
     if (!value) {
       //data form
       this.crrVll = new tempVllDP();
@@ -516,7 +554,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.field['refValue'] = value;
     this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
 
     if (
@@ -582,8 +619,55 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
 
-  deletedValue(value, i) {
+  deletedValue(i) {
+    if (i == -1) return;
     this.datasVll.splice(i, 1);
+    // this.idxDeleted = -1;
     if (this.viewComboxForm) this.viewComboxForm.refresh();
+  }
+
+  handelTextValue(i) {
+    this.idxEdit = i;
+    this.changeDef.detectChanges();
+  }
+
+  showPopoverDeleted(p, i) {
+    this.idxDeleted = i;
+    if (this.popover && this.popover.isOpen()) this.popover.close();
+    p.open();
+    this.popover = p;
+  }
+
+  clickDeletedVll() {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res?.event && res?.event?.status == 'Y') {
+        this.api
+          .execSv(
+            'SYS',
+            'SYS',
+            'ValueListBusiness',
+            'DeletedValuelistCustomsAsync',
+            this.crrVll.listName
+          )
+          .subscribe((res) => {
+            if (res) {
+              var idxDeleted = this.listVll.findIndex(
+                (x) => x.value == this.crrVll.listName
+              );
+              if (idxDeleted != -1) {
+                this.listVll.splice(idxDeleted, 1);
+                //data crrVll
+              }
+              this.field.refValue = '';
+              this.datasVllCrr = [];
+              this.crrValueFirst = null;
+              this.crrVll = null;
+              if (this.comboxView) this.comboxView.refresh();
+              if (this.datasVllCbx) this.comboxView.refresh();
+              this.notiService.notifyCode('SYS008');
+            } else this.notiService.notifyCode('SYS022');
+          });
+      }
+    });
   }
 }

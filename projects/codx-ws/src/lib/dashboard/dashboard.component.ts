@@ -9,12 +9,25 @@ import { isObservable } from 'rxjs';
 })
 export class DashboardComponent extends WSUIComponent{
   listDashboard:any;
-
+  listDashboards:any;
+  listGroupDashboard = [];
+  selectedToolBar = "All"
+  imgDefault = "assets/themes/ws/default/img/Dashboard_Empty.svg";
+  
   override onInit(): void {
+    this.formatListGroupReport();
     this.getModuleByUserID();
   }
   
-
+  formatListGroupReport()
+  {
+    var obj = 
+    {
+      functionID : "All",
+      customName : "Tất cả"
+    }
+    this.listGroupDashboard.push(obj);
+  }
   getModuleByUserID()
   {
     var module = this.codxWsService.loadModuleByUserID(this.userInfo?.userID) as any;
@@ -39,11 +52,17 @@ export class DashboardComponent extends WSUIComponent{
     if(isObservable(result))
     {
       result.subscribe((item:any)=>{
-        if(item) this.listDashboard = item;
+        if(item) {
+          this.listDashboard = item;
+          this.listDashboards = item;
+          this.getModule(this.listDashboard)
+        }
       })
     }
     else  {
+      this.listDashboards = result;
       this.listDashboard = result;
+      this.getModule(this.listDashboard)
     }
   }
   selectedChange(data:any)
@@ -52,5 +71,40 @@ export class DashboardComponent extends WSUIComponent{
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);
+  }
+
+  getModule(data:any)
+  {
+    var listModule = data.map(function(item){return item.moduleID});
+    listModule = this.removeDuplicates(listModule);
+    this.getFuncListByModules(JSON.stringify(listModule))
+  }
+
+  getFuncListByModules(data:any)
+  {
+    var result = this.codxWsService.loadListFucByListModule(data) as any;
+    if(isObservable(result))
+    {
+      result.subscribe((item:any)=>{
+        if(item){this.formatData(item)}
+      })
+    }
+    else this.formatData(result)
+  }
+
+  removeDuplicates(arr:any) {
+    return [...new Set(arr)];
+  }
+
+  formatData(data:any)
+  {
+    this.listGroupDashboard = this.listGroupDashboard.concat(data);
+  }
+
+  selectedChangeToolBar(data:any)
+  {
+    this.selectedToolBar = data?.functionID;
+    if(this.selectedToolBar == "All") this.listDashboard = this.listDashboards;
+    else this.listDashboard = this.listDashboards.filter(x=>x.moduleID == this.selectedToolBar);
   }
 }

@@ -54,10 +54,7 @@
 
     <div class="w-30 min-w-250px px-2">
       <div class="d-flex flex-row mb-1">
-        <span
-          class="me-2 fw-bold"
-          [ngbTooltip]="grvSetup?.ContractNo?.headerText"
-        >
+        <span class="me-2" [ngbTooltip]="grvSetup?.ContractNo?.headerText">
           {{ data?.contractNo }}</span
         >
 
@@ -202,6 +199,7 @@
       </div>
       <codx-attachment
         #attachment
+        [isFristVer]="data?.approveStatus != '5' ? true : false"
         [objectId]="data?.recID"
         [objectType]="view.formModel.entityName"
         hideFolder="1"
@@ -372,7 +370,7 @@
 
   <ng-template #descTmp>
     <span
-      class="text-gray-700 mt-1"
+      class="fw-bold mt-1"
       [ngbTooltip]="grvSetup?.ContractTypeID?.headerText"
       [innerHTML]="
         data?.contractTypeID

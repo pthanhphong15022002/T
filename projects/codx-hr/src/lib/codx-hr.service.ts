@@ -1977,6 +1977,34 @@ export class CodxHrService {
       recID
     );
   }
+
+  AddEQuit(data: object) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EQuitBusiness',
+      'AddAsync',
+      data
+    );
+  }
+  EditEQuit(data: object) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EQuitBusiness',
+      'EditAsync',
+      data
+    );
+  }
+  DeleteEQuit(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EQuitBusiness',
+      'DeleteAsync',
+      recID
+    );
+  }
   //#endregion
 
   //#region Common
@@ -2008,7 +2036,7 @@ export class CodxHrService {
                   if (!formModel.fieldRequired.includes(field))
                     formModel.fieldRequired += field + ';';
                 }
-              }        
+              }
             }
             group[keytmp] = element.isRequire
               ? new FormControl(value, Validators.required)
@@ -2298,45 +2326,58 @@ export class CodxHrService {
     for (let i = 0; i < evt.length; i++) {
       let funcIDStr = evt[i].functionID;
       let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
-      //Propose add new Contract
-      if (IDCompare === this.actionAddNew) {
+
+      if (formModel.funcID === 'HRTPro01') {
+        //Propose add new Contract
+        if (IDCompare === this.actionAddNew) {
+          if (
+            data.status === '5' &&
+            data.isCurrent === true &&
+            data.resignStatus === '1'
+          ) {
+            evt[i].disabled = false;
+          } else {
+            evt[i].disabled = true;
+          }
+        }
+
+        //Resign Contract
         if (
-          data.status === '5' &&
-          data.isCurrent === true &&
-          data.resignStatus === '1'
+          IDCompare == this.actionCheckResignApprove ||
+          IDCompare == this.actionCheckResignCancel
         ) {
-          evt[i].disabled = false;
-        } else {
-          evt[i].disabled = true;
+          this.api
+            .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetAsync', recID)
+            .subscribe((res) => {
+              if (
+                res.stop == true &&
+                data.status === '5' &&
+                data.isCurrent === true
+              ) {
+                evt[i].disabled = false;
+              } else {
+                evt[i].disabled = true;
+              }
+            });
+        }
+
+        if (IDCompare === this.actionUpdateClosed) {
+          if (data.status !== '5') {
+            evt[i].disabled = true;
+          } else if (data.status === '5' && data.isCurrent === true) {
+            evt[i].disabled = false;
+          } else {
+            evt[i].disabled = true;
+          }
         }
       }
 
-      //Resign Contract
-      if (
-        IDCompare == this.actionCheckResignApprove ||
-        IDCompare == this.actionCheckResignCancel
-      ) {
-        this.api
-          .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetAsync', recID)
-          .subscribe((res) => {
-            if (
-              res.stop == true &&
-              data.status === '5' &&
-              data.isCurrent === true
-            ) {
-              evt[i].disabled = false;
-            } else {
-              evt[i].disabled = true;
-            }
-          });
-      }
-
       //Gửi mail
-      if (IDCompare === this.actionUpdateRejected) {
+      if (IDCompare === '004') {
         evt[i].disabled = true;
       }
 
-      if (IDCompare === '004') {
+      if (IDCompare === this.actionUpdateRejected) {
         evt[i].disabled = true;
       }
 
@@ -2344,15 +2385,56 @@ export class CodxHrService {
         evt[i].disabled = true;
       }
 
-      if (data.status !== '5' && IDCompare === this.actionUpdateClosed) {
-        evt[i].disabled = true;
+      if (data.status == '3') {
+        switch (IDCompare) {
+          case this.actionSubmit:
+          case this.actionUpdateInProgress:
+          case this.actionEdit:
+          case this.actionDelete:
+            evt[i].disabled = true;
+            break;
+        }
       }
+
       if (
-        (data.status === '9' || data.status === '0') &&
+        (data?.status === '9' || data?.status === '0') &&
         IDCompare === this.actionExport
       ) {
         evt[i].disabled = true;
       }
+
+      // if (data.status == '2') {
+      //   if (IDCompare === this.actionSubmit) {
+      //     evt[i].disabled = false;
+      //   }
+      //   if (IDCompare === this.actionCancelSubmit) {
+      //     evt[i].disabled = false;
+      //   }
+      //   if (IDCompare === this.actionEdit) {
+      //     evt[i].disabled = false;
+      //   }
+      // }
+
+      // if (IDCompare === this.actionDelete) {
+      //   if (data.status == '0' || data.status == '4') {
+      //     evt[i].disabled = false;
+      //   }
+      // }
+
+      // if (IDCompare === this.actionSubmit) {
+      //   if (
+      //     data.status === '0' ||
+      //     data.status === '2' ||
+      //     data.status === '4' ||
+      //     data.status === '5' ||
+      //     data.status === '6' ||
+      //     data.status === '9'
+      //   ) {
+      //     evt[i].disabled = true;
+      //   } else {
+      //     evt[i].disabled = false;
+      //   }
+      // }
 
       if (
         data.status == '0' ||
@@ -2368,27 +2450,10 @@ export class CodxHrService {
           case this.actionCancelSubmit:
           case this.actionUpdateInProgress:
           case this.actionUpdateApproved:
-          case this.actionUpdateClosed:
           case this.actionEdit:
           case this.actionDelete:
             evt[i].disabled = true;
             break;
-        }
-        if (
-          IDCompare == this.actionDelete &&
-          (data.status == '0' || data.status == '4')
-        ) {
-          evt[i].disabled = false;
-        }
-        if (IDCompare == this.actionSubmit && data.status == '6') {
-          evt[i].disabled = false;
-        }
-        if (
-          IDCompare == this.actionUpdateClosed &&
-          data.status == '5' &&
-          data.isCurrent === true
-        ) {
-          evt[i].disabled = false;
         }
 
         if (data.status == '2') {
@@ -2402,96 +2467,14 @@ export class CodxHrService {
             evt[i].disabled = false;
           }
         }
-      }
 
-      if (data.status == '3') {
-        switch (IDCompare) {
-          case this.actionSubmit:
-          case this.actionUpdateInProgress:
-          case this.actionEdit:
-          case this.actionDelete:
-            evt[i].disabled = true;
-            break;
+        if (data.status == '0' || data.status == '4') {
+          if (IDCompare === this.actionDelete) {
+            evt[i].disabled = false;
+          }
         }
       }
     }
-
-    // if (formModel.entityName == 'HR_EContracts') {
-    // }
-
-    //#region code cũ
-    // if (
-    //   data.status == '0' ||
-    //   data.status == '2' ||
-    //   data.status == '4' ||
-    //   data.status == '5' ||
-    //   data.status == '6' ||
-    //   data.status == '9'
-    // ) {
-    //   for (let i = 0; i < evt.length; i++) {
-    //     let funcIDStr = evt[i].functionID;
-    //     let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
-    //     switch (IDCompare) {
-    //       case this.actionSubmit:
-    //       case this.actionUpdateCanceled:
-    //       case this.actionCancelSubmit:
-    //       case this.actionUpdateInProgress:
-    //       case this.actionUpdateApproved:
-    //       case this.actionUpdateClosed:
-    //       case this.actionEdit:
-    //       case this.actionDelete:
-    //         evt[i].disabled = true;
-    //         break;
-    //     }
-    //     if (
-    //       IDCompare == this.actionDelete &&
-    //       (data.status == '0' || data.status == '4')
-    //     ) {
-    //       evt[i].disabled = false;
-    //     }
-    //     if (IDCompare == this.actionSubmit && data.status == '6') {
-    //       evt[i].disabled = false;
-    //     }
-    //     if (IDCompare == this.actionUpdateClosed && data.status == '5') {
-    //       evt[i].disabled = false;
-    //     }
-    //     if (IDCompare === this.actionExport && data.status !== '9') {
-    //       evt[i].disabled = false;
-    //     }
-    //     if (data.status == '2') {
-    //       if (IDCompare === this.actionSubmit) {
-    //         evt[i].disabled = false;
-    //       }
-    //       if (IDCompare === this.actionCancelSubmit) {
-    //         evt[i].disabled = false;
-    //       }
-    //     }
-    //     // if (data.status == '3') {
-    //     //   switch (IDCompare) {
-    //     //     case this.actionSubmit:
-    //     //     case this.actionUpdateInProgress:
-    //     //     case this.actionEdit:
-    //     //     case this.actionDelete:
-    //     //       evt[i].disabled = true;
-    //     //       break;
-    //     //   }
-    //     // }
-    //   }
-    // }
-    // else if (data.status == '3') {
-    //   for (let i = 0; i < evt.length; i++) {
-    //     let funcIDStr = evt[i].functionID;
-    //     let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
-    //     switch (IDCompare) {
-    //       case this.actionSubmit:
-    //       case this.actionUpdateInProgress:
-    //       case this.actionEdit:
-    //       case this.actionDelete:
-    //         evt[i].disabled = true;
-    //         break;
-    //     }
-    //   }
-    // }
   }
 
   handleUpdateRecordStatus(functionID, data) {

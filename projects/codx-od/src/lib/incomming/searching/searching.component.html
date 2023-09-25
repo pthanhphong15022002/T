@@ -1,34 +1,44 @@
-<codx-fulltextsearch #view 
-    [centerTmp]="centerTmp" 
-    [widthItemTmp]="400" 
-    [pageSize]="10" 
-    [widthLeft]="400" 
-    [funcID]="funcID" 
-    [service]="service" 
-    [entityName]="entityName" 
-    [assemblyName]="'OD'"
-    [className]="'DispatchesBusiness'"
-    [method]="'FullTextSearchAsync'"
-    (selectedChange)="onSelected($event)"
+<codx-views 
+    #view
+    [views]="views"
+    [toolbarDisplay]="false"
+>
+</codx-views>
+<ng-template #template>
+    <codx-fulltextsearch 
+        #viewFullText 
+        [centerTmp]="centerTmp" 
+        [widthItemTmp]="400" 
+        [pageSize]="10" 
+        [widthLeft]="400" 
+        [funcID]="funcID" 
+        [service]="service" 
+        [entityName]="entityName" 
+        [assemblyName]="'OD'"
+        [className]="'DispatchesBusiness'"
+        [method]="'FullTextSearchAsync'"
     >
 </codx-fulltextsearch>
-<!-- <ng-template #menu >
-    <button (click)="testSearch()">test</button>
-</ng-template> -->
+</ng-template>
 <ng-template #centerTmp let-data>
+    <div class="d-flex flex-column border-bottom">
         <codx-temp-full [content]="extractContent(data.title)"
             [desc]="convertHtmlAgency(data.agencyName, gridViewSetup?.AgencyName?.headerText)"
             [status]="data.status" [statusVll]="gridViewSetup['Status']['referedValue']" [date]="data.createdOn"
-            cardCss="card-template border-bottom px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
+            cardCss="card-template cursor-pointer px-2 py-3" [resources]="getIdUser(data.createdBy,data.owner)"
             [resourceObjType]="'AD_Users'" [icoStatus]="data?.urgency"
             [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
             [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false"
-            [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data" [footer]="footer">
+            [bookmark]="data.isBookmark" [titleLine]="2"  [dataItem]="data"
+            (click)="onSelected(data)"
+        >
         </codx-temp-full>
+        <ng-container *ngTemplateOutlet="footer; context: { $implicit: data }"></ng-container>
+    </div>
+       
 </ng-template>
 <ng-template #footer let-data>
     <div class="d-flex flex-column">
-        <div class="text-dark" [innerHtml]="data.highlight"></div>
         <codx-thumbnail
             [files]="data?.unbounds?.files"
             displayThumb="simple"
@@ -36,6 +46,7 @@
             [hideMoreF]="'0'"
         >
         </codx-thumbnail>
+        <div class="text-highlight" *ngFor="let item of data?.unbounds?.highLight?.content" [innerHtml]="item"></div>
     </div>
    
 </ng-template>

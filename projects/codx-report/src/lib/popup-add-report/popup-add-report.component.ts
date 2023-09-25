@@ -134,6 +134,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   dataEx:any=[];
   fields: any = {};
   module:any;
+  isLoaded = false;
   rootFunction:any = null;
 
   constructor(
@@ -189,12 +190,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.displayMode == "3" || this.data.displayMode == "4")
         {
-          this.data.icon = `../../../assets/codx/dms/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
+          this.data.icon = `../../../assets/themes/dm/default/img/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
           this.getFileTemplate(this.data.templateID);
         }
         else
         {
-          this.data.icon = "../../../assets/codx/dms/file.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/file.svg";
         }
       } 
       else
@@ -386,7 +387,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     })
   }
 
-  isLoaded = false;
   saveForm() {
     this.isLoaded = true;
     this.api
@@ -397,14 +397,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'AddUpdateAsync',
         [this.data])
         .subscribe((res:any) => {
-        if(this.data.isUpload && this.data.reportContent)
-        {
-          this.setDataset();
-        }
-        else
-        {
-          this.dialog.close(this.data);
-        }
+        (this.data.isUpload && this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
         this.isLoaded = false;
       });
 
@@ -470,12 +463,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         if(res.event.templateType == "AD_WordTemplates")
         {
           this.data.displayMode = "4";
-          this.data.icon = "../../../assets/codx/dms/docx.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/docx.svg";
         }
         else
         {
           this.data.displayMode = "3";
-          this.data.icon = "../../../assets/codx/dms/xlsx.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/xlsx.svg";
         }
         this.getFileTemplate(this.data.templateID);
         this.changeDetectorRef.detectChanges();
@@ -494,7 +487,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       'FileBussiness',
       'GetFilesByIbjectIDAsync',
       [templateID]).subscribe((res:any) =>{
-        debugger
         if(res?.length > 0)
         {
           this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
@@ -510,7 +502,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       this.data.service,
       'Codx.RptBusiness',
       'ReportBusiness',
-      'GetReportFileAsync',
+      'GetReportFileRootAsync',
       [this.data.recID])
       .subscribe((res:any)=>{
         let linkSource = res;
@@ -586,8 +578,9 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       t.data.reportContent = strBase64;
       t.data.location = file.name;
       t.data.displayMode = "1";
-      t.data.icon = "../../../assets/codx/dms/file.svg";
+      t.data.icon = "../../../assets/themes/dm/default/img/file.svg";
       t.data.size = t.formatBytes(file.size);
+      t.data.isUpload = true;
     };
 
   }

@@ -66,6 +66,9 @@ export class CodxViewTaskComponent implements OnInit {
   dateFomat = 'dd/MM/yyyy';
   formModelStep: FormModel;
   moreDefaut;
+  //truyen cho giao viec
+  sessionID = ''; // session giao việc
+  formModelAssign: FormModel; // formModel của giao việc
 
   constructor(
     private cache: CacheService,
@@ -88,6 +91,9 @@ export class CodxViewTaskComponent implements OnInit {
     this.isActivitie = dt?.data?.isActivitie;
     this.instanceStep = dt?.data?.instanceStep;
     this.listRefIDAssign = dt?.data?.listRefIDAssign; // a thảo truyền để lấy listRef của cong việc
+    this.sessionID = dt?.data?.sessionID; // session giao việc
+    this.formModelAssign = dt?.data?.formModelAssign; // formModel của giao việc
+
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
     this.getModeFunction();
@@ -412,7 +418,9 @@ export class CodxViewTaskComponent implements OnInit {
         this.stepService.assignTask(
           event.data,
           this.dataView,
-          this.instanceStep
+          this.instanceStep,
+          this.sessionID,
+          this.formModelAssign
         );
         break;
       case 'DP08': //them task
@@ -430,7 +438,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
   //#endregion
-  
+
   //#region start task
   startTask(task: DP_Instances_Steps_Tasks) {
     // if (task?.taskType == 'Q') {
@@ -447,12 +455,14 @@ export class CodxViewTaskComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          let taskFind = this.instanceStep?.tasks?.find(t => t.recID == task?.recID);
+          let taskFind = this.instanceStep?.tasks?.find(
+            (t) => t.recID == task?.recID
+          );
           taskFind.status = '2';
           taskFind.actualStart = res;
           taskFind.modifiedBy = this.user.userID;
           taskFind.modifiedOn = new Date();
-          this.moreDefaut = { ...this.moreDefaut };;
+          this.moreDefaut = { ...this.moreDefaut };
           this.notiService.notifyCode('SYS007');
         }
       });

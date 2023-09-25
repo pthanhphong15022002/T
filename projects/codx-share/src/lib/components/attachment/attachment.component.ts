@@ -1019,7 +1019,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         //'../../../assets/img/loader.gif';
                         that.displayThumbnail(item.data);
                         if (!item.data.thumbnail)
-                          item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                          item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                             item.data.extension
                           )}`;
                         files.push(Object.assign({}, item.data));
@@ -1565,7 +1565,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.fileSave.emit(res);
           var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
           if (!thumbnail) {
-            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+            res.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
               res.extension
             )}`;
             this.displayThumbnail(res);
@@ -1618,7 +1618,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   (d) => d.recID.toString() === item.recID
                 );
                 if (index != -1) {
-                  res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                  res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                     res.data.extension
                   )}`; //'../../../assets/img/loader.gif';
                   this.displayThumbnail(res.data);
@@ -3516,7 +3516,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   //Icon avatar mặc định
   urlAvartarIcon(fileName: any) {
-    return `../../../assets/codx/dms/${this.getAvatar(fileName)}`;
+    return `../../../assets/themes/dm/default/img/${this.getAvatar(fileName)}`;
   }
 
   clearData() {

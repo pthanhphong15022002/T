@@ -9,6 +9,20 @@
 .table-ac{
     height: calc(100vh - 429px)!important;
 }
+
+.table-thead-ac{
+    position: sticky !important; 
+    top: 0 !important;
+    z-index: 15 !important;
+    background-color: white !important;
+}
+
+.table-footer-ac{
+    position: sticky !important;
+    bottom: 0 !important;
+    background-color:#f8f9fa !important;
+}
+
 .table-ac table tbody tr{
     border-bottom-width: 1px !important;
 }
@@ -210,9 +224,13 @@
      animation-duration: 500ms;
      animation-fill-mode: both;
      animation-timing-function: ease;
+     will-change: transform;
+     width: 100%;
+     height: 100%;
+     position: absolute;
  }
  @keyframes slideRight {
-     from{
+     /* from{
          width: 100%;
          height: 100%;
          position: absolute;
@@ -223,7 +241,13 @@
          height: 100%;
          position: absolute;
          transform: translate3d(0%, 0, 0);
-     }
+     } */
+     0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(0);
+      }
    }
    /* css row emptyRecord */
  .ac-empty-record{

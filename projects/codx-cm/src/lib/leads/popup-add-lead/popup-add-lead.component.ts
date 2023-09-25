@@ -29,7 +29,7 @@ import { tmpInstances } from '../../models/tmpModel';
 import { recordEdited } from '@syncfusion/ej2-pivotview';
 import { environment } from 'src/environments/environment';
 import { T } from '@angular/cdk/keycodes';
-import {  filter, firstValueFrom } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -750,7 +750,7 @@ export class PopupAddLeadComponent
   }
 
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
@@ -758,7 +758,9 @@ export class PopupAddLeadComponent
   // an tat theo truong tuy chinh
 
   itemTabsInput(check: boolean): void {
-    let menuInput = this.tabInfo.findIndex((item) => item === this.menuInputInfo);
+    let menuInput = this.tabInfo.findIndex(
+      (item) => item === this.menuInputInfo
+    );
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
@@ -790,11 +792,9 @@ export class PopupAddLeadComponent
     if (steps?.length > 0) {
       if (this.action != 'edit') {
         if (steps[0].fields?.length > 0) return true;
-
-      }
-      else {
-        let stepCurrent = steps.filter(x=>x.stepID == this.lead.stepID)[0];
-        if(stepCurrent) {
+      } else {
+        let stepCurrent = steps.filter((x) => x.stepID == this.lead.stepID)[0];
+        if (stepCurrent) {
           if (stepCurrent.fields?.length > 0) return true;
         }
       }
@@ -862,6 +862,8 @@ export class PopupAddLeadComponent
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
+          // case 'C': lead ko co
           result = event.e;
           break;
       }

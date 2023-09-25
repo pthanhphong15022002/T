@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Reason } from '../../models/Reason.model';
 
 @Component({
   selector: 'lib-advance-payment-add',
@@ -14,9 +16,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 })
 export class AdvancePaymentAddComponent extends UIComponent
 {
-  @ViewChild('grvAdvancedPaymentLines')
-  public grvAdvancedPaymentLines: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   private destroy$ = new Subject<void>();
   headerText: string = '';
@@ -24,13 +25,19 @@ export class AdvancePaymentAddComponent extends UIComponent
   logosrc: any;
   dataCategory: any;
   formType: any;
+  validate: any = 0;
   dialogRef!: DialogRef;
+  reason: Array<Reason> = [];
+  isHaveFile: any = false;
+  showLabelAttachment: any = false;
   advancedPayment: AdvancedPayment;
+  advancedPaymentLines: Array<AdvancedPaymentLines> = [];
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
     gridViewName: 'grvAdvancedPaymentLines',
   }
+  grvSetupAdvancedPaymentLines: any;
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -42,13 +49,24 @@ export class AdvancePaymentAddComponent extends UIComponent
   ) {
     super(inject);
     this.dialogRef = dialog;
-    this.advancedPayment = dialogData.data?.advancedPayment;
+    this.advancedPayment = {...dialogData.data?.advancedPayment};
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
+    if(this.formType == 'edit')
+    {
+      this.loadAdvancedPaymentLines();
+    }
+    this.cache.gridViewSetup(this.fmAdvancedPaymentLines.formName, this.fmAdvancedPaymentLines.gridViewName)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res)
+        this.grvSetupAdvancedPaymentLines = res;
+    });
   }
 
   onInit(): void {
+    this.showLabelAttachment = this.advancedPayment?.attachments > 0 ? true : false;
   }
 
   ngAfterViewInit(){
@@ -57,7 +75,7 @@ export class AdvancePaymentAddComponent extends UIComponent
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.advancedPayment.voucherNo) {
       this.form.setRequire([{
-        field: 'voucherNo',
+        field: 'VoucherNo',
         isDisable: false,
         require: false
       }]);
@@ -82,24 +100,45 @@ export class AdvancePaymentAddComponent extends UIComponent
   valueChange(e: any){
     this.advancedPayment[e.field] = e.data;
   }
-  formatDate(date) {
-    return new Date(date).toLocaleDateString();
-  }
 
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deleteLine(data);
+  dropdownChange(e: any)
+  {
+    switch(e.field)
+    {
+      case 'objectID':
+        this.advancedPayment[e.field] = e.data[0];
         break;
-      case 'SYS04':
-        this.copyLine(data);
+      case 'reasonID':
+        this.advancedPayment[e.field] = e.data[0];
+        if (e.itemData[0].ReasonID) {
+          let text = e.itemData[0].ReasonName;
+          this.setMemo(e.field.toLowerCase(), text, 0);
+        }
         break;
     }
   }
 
+  lineChange(e: any, i: any)
+  {
+    this.advancedPaymentLines[i][e.field] = e.data
+  }
+
+  formatDate(date) {
+    return new Date(date).toLocaleDateString();
+  }
+
   onSave(){
+    this.inputValidate();
+
     if (this.form.validation())
       return;
+    
+    if(this.validate != 0)
+    {
+      this.validate = 0;
+      return;
+    }
+
     if (this.advancedPayment.status == '7') {
       this.advancedPayment.status = '1';
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
@@ -112,29 +151,10 @@ export class AdvancePaymentAddComponent extends UIComponent
           this.advancedPayment.status = '7';
           this.form.formGroup.patchValue({ status: this.advancedPayment.status });
         }
-        else if (res?.save?.data) {
-          this.notification.notifyCode('SYS006');
-          this.dialogRef.close({
-            update: true,
-            data: res.save.data,
-          });
-        }
-        else if (res?.update?.data) {
-          this.notification.notifyCode('SYS007');
-          this.dialogRef.close({
-            update: true,
-            data: res.update.data,
-          });
-        }
         else
         {
-          this.notification.notifyCode('SYS007');
-          this.dialogRef.close({
-            update: true,
-            data: res,
-          });
+          this.saveLine();
         }
-        this.dt.detectChanges();
       });
   }
 
@@ -156,9 +176,11 @@ export class AdvancePaymentAddComponent extends UIComponent
         else
         {
           if (res?.save?.data) {
+            this.saveLine(false);
             this.onRelease('', res.save.data);
           }
           else if (res?.update?.data) {
+            this.saveLine(false);
             this.onRelease('', res.update.data);
           }
         }
@@ -201,19 +223,20 @@ export class AdvancePaymentAddComponent extends UIComponent
       });
   }
 
-  saveMasterBeforeAddLine(){
-    if (this.form.validation())
-      return;
-      this.dialogRef.dataService
-      .save(null, 0, '', '', false)
+  saveLine(isClose: boolean = true){
+    this.api
+      .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
+        this.advancedPaymentLines
+      ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved))) {
-          if (!this.advancedPayment.voucherNo && res?.save?.data?.voucherNo) {
-            this.advancedPayment.voucherNo = res.save.data.voucherNo;
-            this.form.formGroup?.patchValue({ voucherNo: this.advancedPayment.voucherNo });
+        if (res) {
+          this.saveFileUpload();
+          if(isClose)
+          {
+            this.dialogRef.close();
           }
-          this.addLine();
+          this.detectorRef.detectChanges();
         }
       });
   }
@@ -221,7 +244,6 @@ export class AdvancePaymentAddComponent extends UIComponent
   addLine()
   {
     let data = new AdvancedPaymentLines();
-    let idx;
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SetDefaultAsync', [
         this.advancedPayment,
@@ -230,81 +252,110 @@ export class AdvancePaymentAddComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          idx = this.grvAdvancedPaymentLines.dataSource.length;
-              res.rowNo = idx + 1;
-              this.grvAdvancedPaymentLines.addRow(res, idx);
+          this.advancedPaymentLines.push(res);
         }
       });
   }
 
-  copyLine(data){
-    let idx;
+  deleteLine(index: any){
     this.api
-      .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SetDefaultAsync', [
-        this.advancedPayment,
-        data,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          idx = this.grvAdvancedPaymentLines.dataSource.length;
-          res.rowNo = idx + 1;
-          res.recID = Util.uid();
-          this.grvAdvancedPaymentLines.addRow(res, idx);
-        }
-      });
-  }
-
-  deleteLine(data){
-    this.grvAdvancedPaymentLines.deleteRow(data)
-  }
-
-  onEventAction(e: any) {
-    switch (e.type) {
-      case 'autoAdd':
-        if (this.grvAdvancedPaymentLines.autoAddRow) {
-          this.saveMasterBeforeAddLine();
-        }
-        break;
-      case 'endEdit':
-        if (!this.grvAdvancedPaymentLines.autoAddRow) {
-          setTimeout(() => {
-            let element = document.getElementById('btnadd');
-            element.focus();
-          }, 100);
-        }
-        break;
-      case 'closeEdit':
-        setTimeout(() => {
-          let element = document.getElementById('btnadd');
-          element.focus();
-        }, 100);
-        break;
-    }
-  }
-
-  hideMF(event) {
-    var mf = event.filter(
-      (x) => x.functionID != 'SYS02' && x.functionID != 'SYS04'
-    );
-    mf.forEach((element) => {
-      element.disabled = true;
+    .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'DeleteAsync', [
+      this.advancedPaymentLines[index]
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res) {
+        this.advancedPaymentLines.splice(index,1);
+        this.detectorRef.detectChanges();
+      }
     });
   }
 
-  @HostListener('click', ['$event.target'])
-  onClick(e) {
-    if(this.advancedPayment)
-      return;
-    if (
-      e.target.closest('.e-grid') == null &&
-      e.target.closest('.e-popup') == null &&
-      e.target.closest('.edit-value') == null
-    ) {
-      if (this.grvAdvancedPaymentLines && this.grvAdvancedPaymentLines.gridRef.isEdit) {
-        this.grvAdvancedPaymentLines.autoAddRow = false;
-        this.grvAdvancedPaymentLines.endEdit();
+  loadAdvancedPaymentLines()
+  {
+    this.api
+    .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'LoadDataAsync', [
+      this.advancedPayment.recID
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res) {
+        this.advancedPaymentLines = res;
+      }
+    });
+  }
+
+  inputValidate()
+  {
+    for (let line of this.advancedPaymentLines) {
+      if (line.note == null || line.note == '') {
+        this.notification.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grvSetupAdvancedPaymentLines.Note.headerText + '"'
+        );
+        this.validate ++;
+      }
+      if (line.dr == null || line.dr == '') {
+        this.notification.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grvSetupAdvancedPaymentLines.DR.headerText + '"'
+        );
+        this.validate ++;
       }
     }
+    return null;
+  }
+
+  fileAdded(event: any) {
+    this.advancedPayment.attachments = event.data.length;
+    this.detectorRef.detectChanges();
+  }
+
+  fileCount(e) {
+    if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
+    else this.isHaveFile = false;
+    this.showLabelAttachment = this.isHaveFile;
+  }
+
+  addFiles(evt){
+    this.advancedPayment.attachments = evt.data.length;
+    this.form.formGroup.patchValue({attachments: this.advancedPayment.attachments});
+  }
+
+  popupUploadFile() {
+    this.attachment.uploadFile();
+  }
+
+  async saveFileUpload(){
+    if (this.attachment.fileUploadList.length !== 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((file: any) => {
+        if (file?.status == 0) {
+          this.fileAdded(file);
+        }
+      });
+    }
+  }
+
+  setMemo(field, text, idx) {
+    if (!this.reason.some((x) => x.field == field)) {
+      let transText = new Reason();
+      transText.field = field;
+      transText.value = text;
+      transText.index = idx;
+      this.reason.push(transText);
+    } else {
+      let iTrans = this.reason.find((x) => x.field == field);
+      if (iTrans) iTrans.value = text;
+    }
+
+    this.advancedPayment.memo = this.acService.setMemo(
+      this.advancedPayment,
+      this.reason
+    );
+    this.form.formGroup.patchValue({
+      memo: this.advancedPayment.memo,
+    });
   }
 }

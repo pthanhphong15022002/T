@@ -854,7 +854,7 @@ export class LeadsComponent
           if (e && e.event != null) {
             e.event.modifiedOn = new Date();
             this.detailViewLead.promiseAllLoad();
-            this.dataSelected =  JSON.parse(JSON.stringify(e.event));
+            this.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.view.dataService.update(this.dataSelected).subscribe();
             this.changeDetectorRef.detectChanges();
           }
@@ -1105,23 +1105,25 @@ export class LeadsComponent
       .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.codxCmService.startInstance([data.refID]).subscribe((resDP) => {
-            if (resDP) {
-              var datas = [data.recID, resDP[0]];
-              this.codxCmService.startLead(datas).subscribe((res) => {
-                if (res) {
-                  this.dataSelected = res[0];
-                  this.dataSelected = JSON.parse(
-                    JSON.stringify(this.dataSelected)
-                  );
-                  this.detailViewLead.reloadListStep(resDP[1]);
-                  this.notificationsService.notifyCode('SYS007');
-                  this.view.dataService.update(this.dataSelected).subscribe();
-                }
-                this.detectorRef.detectChanges();
-              });
-            }
-          });
+          this.codxCmService
+            .startInstance([data.refID, data.recID, 'CM0205', 'CM_Leads'])
+            .subscribe((resDP) => {
+              if (resDP) {
+                var datas = [data.recID, resDP[0]];
+                this.codxCmService.startLead(datas).subscribe((res) => {
+                  if (res) {
+                    this.dataSelected = res[0];
+                    this.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
+                    this.detailViewLead.reloadListStep(resDP[1]);
+                    this.notificationsService.notifyCode('SYS007');
+                    this.view.dataService.update(this.dataSelected).subscribe();
+                  }
+                  this.detectorRef.detectChanges();
+                });
+              }
+            });
         }
       });
   }
@@ -1221,7 +1223,7 @@ export class LeadsComponent
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
         }
-     //   this.detailViewLead.resetTab(this.dataSelected.applyProcess);
+        //   this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected).subscribe();
       }

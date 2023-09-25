@@ -135,7 +135,7 @@ export class PopupAddCasesComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.applyFor = dt?.data?.applyFor;
-    this.caseType = dt?.data?.caseType;
+    // this.caseType = dt?.data?.caseType;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
     this.funcID = dt?.data?.funcID;
@@ -143,7 +143,7 @@ export class PopupAddCasesComponent
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-      this.caseType = this.applyFor == '2' ? '1' : '2';
+      // this.caseType = this.applyFor == '2' ? '1' : '2';
       if (this.action != this.actionAdd) {
         this.cases = dt?.data?.dataCM;
       }
@@ -157,8 +157,9 @@ export class PopupAddCasesComponent
     if (this.action != this.actionAdd) {
       this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
+    } else {
+      this.cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
-    this.cases.caseType = this.caseType;
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
     }
@@ -306,6 +307,7 @@ export class PopupAddCasesComponent
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
       }
@@ -337,7 +339,7 @@ export class PopupAddCasesComponent
   }
   valueChangeOwner($event) {
     if ($event) {
-      this.owner = $event;
+      this.owner = this.cases.applyProcess ? $event : $event.data;
       this.cases.owner = this.owner;
     }
   }
@@ -356,7 +358,6 @@ export class PopupAddCasesComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
-        console.log(res);
         this.attachment?.clearData();
         if (res) {
           this.dialog.close(res.save[0]);
@@ -553,7 +554,7 @@ export class PopupAddCasesComponent
       cases.refID = instance.recID;
     }
     if (this.action === this.actionAdd) {
-      cases.caseType = this.caseType;
+      cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
     cases.owner = this.owner;
   }
@@ -626,7 +627,7 @@ export class PopupAddCasesComponent
   }
 
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;

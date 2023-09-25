@@ -29,7 +29,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   @ViewChild('grvVouchersLine')
   public grvVouchersLine: CodxGridviewV2Component;
-  @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('formVoucherIssue') public formVoucherIssue: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
 
   private destroy$ = new Subject<void>();
@@ -89,7 +89,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     this.journal = dialogData.data?.journal;
     this.fmVouchers = dialogData.data?.formModelMaster;
     this.fmVouchersLines = dialogData.data?.formModelLine;
-    this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
+    this.vouchers = {...dialogData.data?.oData};
+    // this.vouchers = Object.assign(this.vouchers, dialogData.data?.oData);
 
     if (dialogData?.data.hideFields && dialogData?.data.hideFields.length > 0) {
       this.hideFields = [...dialogData?.data.hideFields];
@@ -110,17 +111,13 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.vouchers);
+    this.formVoucherIssue.formGroup.patchValue(this.vouchers);
     this.dt.detectChanges();
   }
 
   onAfterInit() {
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     this.setFieldRequied();
-
-    if (this.formType == 'add' || this.formType == 'copy') {
-      this.form.preData = new Vouchers;
-    }
   }
 
   ngOnDestroy() {
@@ -155,7 +152,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           {
             this.vouchers.warehouseID = e.data;
             this.vouchers.warehouseName = e?.component?.itemsSelected[0]?.WarehouseName;
-            this.form.formGroup.patchValue({
+            this.formVoucherIssue.formGroup.patchValue({
               warehouseName: this.vouchers.warehouseName,
             });
           }
@@ -212,18 +209,30 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   onDiscard() {
-    this.dialog.dataService
-      .delete([this.vouchers], true, null, '', 'AC0010', null, null, false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res.data != null) {
-          this.dialog.close();
-          this.dt.detectChanges();
+    if (this.formVoucherIssue && this.formVoucherIssue.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.formVoucherIssue.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
         }
       });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
+    }
   }
 
   onClose() {
+    this.onDestroy();
     this.dialog.close();
   }
   //#endregion Event Master
@@ -249,32 +258,44 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   lineChanged(e: any) {
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
-    this.updateFromFrontEnd(e);
-    this.updateFromBackEnd(e);
 
-  }
+    e.data.updateColumns='';
 
-  /** Update từ Front End */
-  updateFromFrontEnd(e: any) {
-    this.grvVouchersLine.startProcess();
+    /** Update từ Front End */
     switch (e.field) {
       case 'costAmt':
-        this.costAmt_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costPrice = e.data.costAmt / e.data.quantity;
+              this.dt.detectChanges();
+              this.grvVouchersLine.endProcess();
+            }, 100);
+          }
+        }
         break;
       case 'costPrice':
-        this.costPrice_Change(e.data);
+        this.grvVouchersLine.startProcess();
+        if (e.data) {
+          if (e.data.quantity != 0) {
+            setTimeout(() => {
+              e.data.costAmt = e.data.costPrice * e.data.quantity;
+              this.dt.detectChanges();
+              setTimeout(() => {
+                this.grvVouchersLine.endProcess();
+              }, 100);
+              
+            }, 100);
+          }
+        }
         break;
       case 'reasonID':
         e.data.note = e.itemData.ReasonName;
         break;
     }
-    this.grvVouchersLine.endProcess();
-  }
 
-  /** Update từ Back End */
-  updateFromBackEnd(e: any) {
-    this.grvVouchersLine.startProcess();
-    e.data.updateColumns='';
+    /** Update từ Back End */
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -292,6 +313,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       'idiM9',
     ];
     if (postFields.includes(e.field)) {
+      this.grvVouchersLine.startProcess();
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
@@ -312,14 +334,11 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
-            this.grvVouchersLine.endProcess();
           }
+          this.grvVouchersLine.endProcess();
         });
     }
-    else
-    {
-      this.grvVouchersLine.endProcess();
-    }
+
   }
 
   /** Nhận các event mà lưới trả về */
@@ -369,90 +388,68 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   //   }
   // }
 
-  /** Lưu và đóng form 
-   * Hoặc
-   * Lưu và thêm mới
-  */
-  onSave(isClose: any) {
-    /** isClose = true => Lưu và đóng form
-     * isClose = false => Lưu và thêm mới
-     */
-
-    if (this.form.validation())
-      return;
-    //this.checkTransLimit(true);
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-
-    // }
-    if (this.modeGrid == 1) {
-      if (this.grvVouchersLine && !this.grvVouchersLine.gridRef.isEdit)
-        this.save(isClose);
-    }
-    else {
-      this.save(isClose);
-    }
-  }
-
   /** Hàm lưu master */
-  save(isclose: boolean) {
+  onSave() {
     if (this.vouchers.status == '7') {
       this.vouchers.status = '1';
-      this.form.formGroup.patchValue({ status: this.vouchers.status });
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.vouchers.status = '7';
-          this.form.formGroup.patchValue({ status: this.vouchers.status });
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
           this.vouchers.unbounds.isAddNew = true;
         }
-        else if (isclose) {
-          if (res?.save?.data) {
-            // this.notification.notifyCode('SYS006');
-            this.dialog.close({
-              update: true,
-              data: res.save.data,
-            });
-          }
-          else if (res?.update?.data) {
-            // this.notification.notifyCode('SYS007');
-            this.dialog.close({
-              update: true,
-              data: res.update.data,
-            });
-          }
-          else
+        else {
+          if(this.formType == 'edit')
           {
-            // this.notification.notifyCode('SYS007');
             this.dialog.close({
               update: true,
               data: res,
             });
           }
+          else
+          {
+            this.dialog.close();
+          }
         }
-        else {
-          this.clearVouchers();
+        this.dt.detectChanges();
+      });
+  }
+
+  /** Hàm lưu và thêm master */
+  onSaveAdd()
+  {
+    if (this.vouchers.status == '7') {
+      this.vouchers.status = '1';
+      this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
+    }
+
+    this.formVoucherIssue.save(null, 0, '', 'SYS006', true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res?.update?.error || res?.save?.error) {
+          this.vouchers.status = '7';
+          this.formVoucherIssue.formGroup.patchValue({ status: this.vouchers.status });
+          this.vouchers.unbounds.isAddNew = true;
+        }
+        else
+        {
           this.dialog.dataService.clear();
-          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-            this.journalNo,
-          ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res) {
-                this.vouchers = res.data;
-                this.formType = 'add';
-                this.form.formGroup.patchValue(this.vouchers);
-                this.form.preData = { ...this.vouchers };
-                // this.notification.notifyCode('SYS006');
-                this.setFieldRequied();
-                this.detectorRef.detectChanges();
-              }
-            });
+          this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [null, this.journalNo, ''])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res: any) => {
+            if (res) {
+              this.formType = 'add';
+              this.formVoucherIssue.refreshData(res.data);
+              this.clearGrid();
+              this.setFieldRequied();
+              this.detectorRef.detectChanges();
+            }
+          });
         }
         this.dt.detectChanges();
       });
@@ -491,7 +488,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   // }
 
   /** Xóa data lưới khi master thêm mới */
-  clearVouchers() {
+  clearGrid() {
     this.grvVouchersLine.dataSource = [];
   }
 
@@ -499,7 +496,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   setFieldRequied()
   {
     if (this.journal.assignRule == '2') {
-      this.form.setRequire([{
+      this.formVoucherIssue.setRequire([{
         field: 'VoucherNo',
         isDisable: false,
         require: false
@@ -524,7 +521,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       this.vouchers,
       this.reason
     );
-    this.form.formGroup.patchValue({
+    this.formVoucherIssue.formGroup.patchValue({
       memo: this.vouchers.memo,
     });
   }
@@ -549,16 +546,16 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if (this.form.validation())
+    if (this.formVoucherIssue.validation())
       return;
-    this.form
+    this.formVoucherIssue
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res && ((!res?.save?.error) || (!res?.update?.error) || (res?._hasSaved))) {
           if (!this.vouchers.voucherNo && res?.save?.data?.voucherNo) {
             this.vouchers.voucherNo = res.save.data.voucherNo;
-            this.form.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
+            this.formVoucherIssue.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
           this.checkModeGridBeforeAddLine();
         }
@@ -729,31 +726,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   /** Xóa dòng */
   deleteRow(data) {
     this.grvVouchersLine.deleteRow(data);
-  }
-
-  /** Cập nhật thành tiền khi thay đổi đơn giá */
-  costPrice_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costAmt = line.costPrice * line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-      }
-    }
-  }
-
-  /** Cập nhật đơn giá khi thay đổi thành tiền */
-  costAmt_Change(line: any) {
-    if (line) {
-      if (line.quantity != 0) {
-        setTimeout(() => {
-          line.costPrice = line.costAmt / line.quantity;
-          this.dt.detectChanges();
-        }, 100);
-
-      }
-    }
   }
 
   /** Kiểm tra dữ liệu update dưới back end có bị trùng hay ko */

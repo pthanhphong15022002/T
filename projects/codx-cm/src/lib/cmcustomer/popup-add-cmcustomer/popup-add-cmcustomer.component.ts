@@ -104,6 +104,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   ];
 
   checkContact: boolean = false;
+  leverSetting: number;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -174,7 +175,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
       this.data.regionID = null;
       this.data.wardID = null;
     }
-
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
     // this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
     //   if (res && res.length) {
     //     let m = res.find((x) => x.functionID == 'SYS01');
@@ -212,22 +222,22 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.dialog.formModel.gridViewName
       )
     );
-    if (this.action == 'edit') {
-      this.listAddress = await firstValueFrom(
-        this.cmSv.getListAddress(
-          this.dialog.formModel.entityName,
-          this.data.recID
-        )
-      );
-      if (this.data.address != null && this.data.address.trim() != '') {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex((x) => x.isDefault == true);
-          if (index != -1) {
-            this.tmpAddress = this.listAddress[index];
-          }
-        }
-      }
-    }
+    // if (this.action == 'edit') {
+    //   // this.listAddress = await firstValueFrom(
+    //   //   this.cmSv.getListAddress(
+    //   //     this.dialog.formModel.entityName,
+    //   //     this.data.recID
+    //   //   )
+    //   // );
+    //   if (this.data.address != null && this.data.address.trim() != '') {
+    //     if (this.listAddress != null && this.listAddress.length > 0) {
+    //       var index = this.listAddress.findIndex((x) => x.isDefault == true);
+    //       if (index != -1) {
+    //         this.tmpAddress = this.listAddress[index];
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   setTitle(e: any) {
@@ -390,8 +400,130 @@ export class PopupAddCmCustomerComponent implements OnInit {
     } else {
       this.data.address = null;
     }
+  }
+
+  valueBlur(e) {
     this.setAddress(this.data.address);
-    if (!this.isAdress) this.isAdress = true;
+  }
+  async setAddress(name) {
+    this.isAdress = true;
+    if (name != null && name != '') {
+      var tmp = new BS_AddressBook();
+
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [name, this.leverSetting]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        if (this.data.provinceID != lstDis?.ProvinceID)
+          this.data.provinceID = lstDis?.ProvinceID;
+        if (this.data.districtID != lstDis?.DistrictID)
+          this.data.districtID = lstDis?.DistrictID;
+        if (this.data.wardID != lstDis?.WardID)
+          this.data.wardID = lstDis?.WardID;
+      } else {
+        this.data.provinceID = null;
+        this.data.districtID = null;
+        this.data.wardID = null;
+      }
+      if (this.action != 'edit') {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex((x) => x.isDefault == true);
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].isDefault = true;
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
+          } else {
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
+            tmp.isDefault = true;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
+      } else {
+        if (this.listAddress != null && this.listAddress.length > 0) {
+          var index = this.listAddress.findIndex(
+            (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
+          );
+          if (index != -1) {
+            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].provinceID = this.data.provinceID;
+            this.listAddress[index].districtID = this.data.districtID;
+            this.listAddress[index].wardID = this.data.wardID;
+          } else {
+            tmp.recID = Util.uid();
+            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+            tmp.adressName = this.data.address;
+            tmp.isDefault = true;
+            tmp.provinceID = this.data.provinceID;
+            tmp.districtID = this.data.districtID;
+            tmp.wardID = this.data.wardID;
+            this.tmpAddress = tmp;
+            this.listAddress.push(tmp);
+          }
+        } else {
+          tmp.recID = Util.uid();
+          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
+          tmp.adressName = this.data.address;
+          tmp.isDefault = true;
+          tmp.provinceID = this.data.provinceID;
+          tmp.districtID = this.data.districtID;
+          tmp.wardID = this.data.wardID;
+          this.tmpAddress = tmp;
+          this.listAddress.push(tmp);
+        }
+      }
+      this.isAdress = false;
+    } else {
+      this.data.provinceID = null;
+      this.data.countryID = null;
+      this.data.provinceID = null;
+      this.data.districtID = null;
+      this.data.regionID = null;
+      this.data.wardID = null;
+      this.data.address = null;
+      if (this.listAddress != null && this.listAddress.length > 0) {
+        var indexDelete = this.listAddress.findIndex(
+          (x) => x.isDefault == true
+        );
+        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+          if (indexDelete != -1) {
+            this.listAddress[indexDelete].isDefault = false;
+          }
+        } else {
+          this.listAddressDelete.push(this.listAddress[0]);
+          this.listAddress.splice(indexDelete, 1);
+        }
+      }
+      this.isAdress = false;
+    }
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
+      if (this.codxListAddress)
+        this.codxListAddress.loadListAdress(this.listAddress);
+    }
   }
 
   valueChangeContact(e) {
@@ -570,6 +702,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     if (this.count > 0) {
       return;
     }
+
     let check = false;
     if (this.action != 'edit') {
       check = await firstValueFrom(
@@ -690,128 +823,41 @@ export class PopupAddCmCustomerComponent implements OnInit {
       await firstValueFrom(
         this.imageUpload.updateFileDirectReload(this.data?.recID)
       );
-    }
-    if (this.action == 'add' || this.action == 'copy') {
-      this.onAdd();
+      if (this.action == 'add' || this.action == 'copy') {
+        this.onAdd();
+      } else {
+        this.onUpdate();
+      }
     } else {
-      this.onUpdate();
+      if (this.data?.address != null && this.data?.address?.trim() != '' && this.leverSetting > 0) {
+        setTimeout(async () => { //Bùa, Để cho anh Huy copy địa chỉ xong lưu liền để get api theo địa chỉ tỉnh, thành phố, xã
+          if (
+            !this.cmSv.checkValidateSetting(
+              this.data.address,
+              this.data,
+              this.leverSetting,
+              this.gridViewSetup,
+              this.gridViewSetup?.Address?.headerText
+            )
+          ) {
+            return;
+          }
+          if (this.action == 'add' || this.action == 'copy') {
+            this.onAdd();
+          } else {
+            this.onUpdate();
+          }
+        }, 2000);
+      } else {
+        if (this.action == 'add' || this.action == 'copy') {
+          this.onAdd();
+        } else {
+          this.onUpdate();
+        }
+      }
     }
   }
   //#endregion
-  async setAddress(name) {
-    if (name != null && name != '') {
-      var tmp = new BS_AddressBook();
-      var param = await firstValueFrom(
-        this.cache.viewSettingValues('CMParameters')
-      );
-      let lever = 0;
-      if (param?.length > 0) {
-        let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        lever = paramDefault['ControlInputAddress'] ?? 0;
-      }
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [name, lever]
-        )
-      );
-      if (json != null && json.trim() != '') {
-        let lstDis = JSON.parse(json);
-        if (this.data.provinceID != lstDis?.ProvinceID)
-          this.data.provinceID = lstDis?.ProvinceID;
-        if (this.data.districtID != lstDis?.DistrictID)
-          this.data.districtID = lstDis?.DistrictID;
-        if (this.data.wardID != lstDis?.WardID)
-          this.data.wardID = lstDis?.WardID;
-      }
-      if (this.action != 'edit') {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex((x) => x.isDefault == true);
-          if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
-            this.listAddress[index].isDefault = true;
-          } else {
-            tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
-            tmp.provinceID = this.data.provinceID;
-            tmp.districtID = this.data.districtID;
-            tmp.wardID = this.data.wardID;
-            tmp.isDefault = true;
-            this.tmpAddress = tmp;
-            this.listAddress.push(tmp);
-          }
-        } else {
-          tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
-          tmp.isDefault = true;
-          tmp.provinceID = this.data.provinceID;
-          tmp.districtID = this.data.districtID;
-          tmp.wardID = this.data.wardID;
-          this.tmpAddress = tmp;
-          this.listAddress.push(tmp);
-        }
-      } else {
-        if (this.listAddress != null && this.listAddress.length > 0) {
-          var index = this.listAddress.findIndex(
-            (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
-          );
-          if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
-          } else {
-            tmp.recID = Util.uid();
-            tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
-            tmp.isDefault = true;
-            tmp.provinceID = this.data.provinceID;
-            tmp.districtID = this.data.districtID;
-            tmp.wardID = this.data.wardID;
-            this.tmpAddress = tmp;
-            this.listAddress.push(tmp);
-          }
-        } else {
-          tmp.recID = Util.uid();
-          tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
-          tmp.isDefault = true;
-          tmp.provinceID = this.data.provinceID;
-          tmp.districtID = this.data.districtID;
-          tmp.wardID = this.data.wardID;
-          this.tmpAddress = tmp;
-          this.listAddress.push(tmp);
-        }
-      }
-    } else {
-      this.data.provinceID = null;
-      this.data.countryID = null;
-      this.data.provinceID = null;
-      this.data.districtID = null;
-      this.data.regionID = null;
-      this.data.wardID = null;
-      this.data.address = null;
-      if (this.listAddress != null && this.listAddress.length > 0) {
-        var indexDelete = this.listAddress.findIndex(
-          (x) => x.isDefault == true
-        );
-        if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-          if (indexDelete != -1) {
-            this.listAddress[indexDelete].isDefault = false;
-          }
-        } else {
-          this.listAddressDelete.push(this.listAddress[0]);
-          this.listAddress.splice(indexDelete, 1);
-        }
-      }
-    }
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-      this.codxListAddress.loadListAdress(this.listAddress);
-    }
-  }
 
   checkEmailOrPhone(field, type) {
     if (type == 'E') {
@@ -852,8 +898,8 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   lstAddressEmit(e) {
-    if (e != null && e.length > 0) {
-      this.listAddress = e;
+    this.listAddress = e;
+    if (this.listAddress != null && this.listAddress.length > 0) {
       var index = this.listAddress.findIndex((x) => x.isDefault == true);
       if (index != -1) {
         this.tmpAddress = this.listAddress[index];

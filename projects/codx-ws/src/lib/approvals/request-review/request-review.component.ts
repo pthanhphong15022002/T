@@ -94,6 +94,7 @@ export class RequestReviewComponent
     let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
     if(funcID) componentRef.instance.funcID = funcID;
     if(transID) componentRef.instance.recID = transID;
+    componentRef.instance.view = this.view;
   }
 
   click(e: any) {}

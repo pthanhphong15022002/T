@@ -126,7 +126,7 @@
           </div>
         </ng-container>
         <!-- group -->
-        <div class="news-group">
+        <div class="news-group pt-5">
           <codx-listview #listview 
             [service]="'WP'"
             [assemblyName]="'ERM.Business.WP'" 
@@ -213,7 +213,7 @@
       </div>
       <div class="col-10 d-flex flex-wrap">
         <div>
-          <span class="d-block news-title fs-5 mt-2 fw-bolder ">{{item.subject}}</span>
+          <span class="d-block news-title fs-6 fw-bolder">{{item.subject}}</span>
           <span class="d-block text-gray-700 mt-1" *ngIf="item.subContent">
             {{item.subContent | maxlenght:500}}
           </span>

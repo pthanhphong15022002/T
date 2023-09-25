@@ -1,4 +1,3 @@
-
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -32,6 +31,7 @@ import { Approvers, CodxShareService } from '../../../codx-share.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ShareType } from '../../../models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-add-edit-approval-step',
@@ -51,6 +51,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() stepNo = 1;
   @Input() vllShare = null;
   @Input() hideTabQuery = false;
+  @Input() isSettingMode = true;
   dataEdit: any;
 
   isAfterRender = false;
@@ -100,6 +101,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   tabContent: any[];
   qbFilter: any;
   vllStepType = [];
+  userOrg: any;
   setTitle(e: any) {
     console.log(e);
   }
@@ -145,12 +147,12 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.confirmControl = data?.data?.confirmControl;
 
     this.eSign = data?.data?.eSign ?? false;
-    let vllStepTypeName= this.eSign ? 'ES002' : 'ES026';
-    this.cache.valueList(vllStepTypeName).subscribe(vllStepType=>{
-      if(vllStepType){
+    let vllStepTypeName = this.eSign ? 'ES002' : 'ES026';
+    this.cache.valueList(vllStepTypeName).subscribe((vllStepType) => {
+      if (vllStepType) {
         this.vllStepType = vllStepType?.datas;
       }
-    })
+    });
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     if (this.vllShare == null) {
       this.vllShare =
@@ -158,16 +160,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
 
     this.hideTabQuery = data?.data.hideTabQuery ?? false;
-    if(this.isAdd ){
+    if (this.isAdd) {
       this.qbFilter = new Filters();
-      this.qbFilter.logic= 'or';
-      this.qbFilter.filters=[];
-    }
-    else{
-      if(this.data?.constraints?.length>0){
+      this.qbFilter.logic = 'or';
+      this.qbFilter.filters = [];
+    } else {
+      if (this.data?.constraints?.length > 0) {
         this.qbFilter = this.data?.constraints[0];
-      }
-      else{
+      } else {
         this.qbFilter = new Filters();
       }
     }
@@ -209,6 +209,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.cache.getCompany(this.user?.userID).subscribe(userOrg=>{
+      if(userOrg){
+        this.userOrg=userOrg;
+      }
+    })
     if (this.isAdd) {
       this.codxService
         .getDataValueOfSetting('ESParameters', null, '1')
@@ -284,16 +289,18 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                   //     });
                   //   }
                   // });
-                  if (this.vllStepType?.length>0) {
-                    let stepType = this.vllStepType.filter((p) => p.value ==  this.data.stepType);
-                    if(stepType?.length>0){
+                  if (this.vllStepType?.length > 0) {
+                    let stepType = this.vllStepType.filter(
+                      (p) => p.value == this.data.stepType
+                    );
+                    if (stepType?.length > 0) {
                       this.data.stepName = stepType[0]?.text;
                       this.dialogApprovalStep.patchValue({
                         stepName: this.data.stepName,
-                      });                  
+                      });
                       this.cr.detectChanges();
                     }
-                  }  
+                  }
                 }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
@@ -356,18 +363,19 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         case 'stepType': {
           this.data[event?.field] = event.data;
           this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-          
-          if (this.vllStepType?.length>0) {
-            let stepType = this.vllStepType.filter((p) => p.value == event.data);
-            if(stepType?.length>0){
+
+          if (this.vllStepType?.length > 0) {
+            let stepType = this.vllStepType.filter(
+              (p) => p.value == event.data
+            );
+            if (stepType?.length > 0) {
               this.data.stepName = stepType[0]?.text;
               this.dialogApprovalStep.patchValue({
                 stepName: this.data.stepName,
-              });                  
+              });
               this.cr.detectChanges();
             }
-          }  
-          
+          }
 
           //Loại cấp phát -> duyệt đại diện
           if (this.data.stepType == 'I') {
@@ -484,11 +492,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     });
     console.log(this.lstApprover);
 
-    this.dialogApprovalStep.patchValue({
+    this.dialogApprovalStep?.patchValue({
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,
     });
-    if(this.data?.constraints==null){
+    if (this.data?.constraints == null) {
       this.data.constraints = [this.qbFilter];
     }
     this.data.approveMode = this.currentApproveMode;
@@ -578,50 +586,198 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event) {
+    
     if (event) {
       event.forEach((element) => {
-        if (
-          element?.objectType &&
-          element?.objectType.length == 1 &&
-          element?.objectType != 'S' &&
-          element?.objectType != 'A' &&
-          element?.objectType != 'P'
-        ) {
-          let lstID = element?.id.split(';');
-          let lstUserName = element?.text.split(';');
-          let dataSelected = element?.dataSelected;
+        // if (
+        //   element?.objectType &&
+        //   element?.objectType?.length == 1 &&
+        //   element?.objectType != 'S' &&
+        //   element?.objectType != 'A' &&
+        //   element?.objectType != 'P' &&
+        //   element?.objectType != 'E'
+        // ) {
+        //   let lstID = element?.id.split(';');
+        //   let lstUserName = element?.text.split(';');
+        //   let dataSelected = element?.dataSelected;
 
-          for (let i = 0; i < lstID?.length; i++) {
-            let index = this.lstApprover.findIndex(
-              (p) => p.approver == lstID[i]
-            );
-            if (lstID[i].toString() != '' && index == -1) {
-              let appr = new Approvers();
-              appr.roleType = element.objectType;
-              appr.name = lstUserName[i];
-              appr.approver = lstID[i];
-              this.codxService.getDetailApprover(appr).subscribe((oRes) => {
-                if (oRes?.length > 0) {
-                  appr.position = oRes[0].position;
-                  appr.phone = oRes[0].phone;
-                  appr.email = oRes[0].email;
-                  this.lstApprover.push(appr);
-                }
-              });
+        //   for (let i = 0; i < lstID?.length; i++) {
+        //     let index = this.lstApprover.findIndex(
+        //       (p) => p.approver == lstID[i]
+        //     );
+        //     if (lstID[i].toString() != '' && index == -1) {
+        //       let appr = new Approvers();
+        //       appr.roleType = element.objectType;
+        //       appr.name = lstUserName[i];
+        //       appr.approver = lstID[i];
+        //       this.codxService.getDetailApprover(appr).subscribe((oRes) => {
+        //         if (oRes?.length > 0) {
+        //           appr.position = oRes[0].position;
+        //           appr.phone = oRes[0].phone;
+        //           appr.email = oRes[0].email;
+        //           this.lstApprover.push(appr);
+        //         }
+        //       });
+        //     }
+        //   }
+        // } else {
+        //   let i = this.lstApprover.findIndex(
+        //     (p) => p.approver == element?.objectType
+        //   );
+        //   if (element?.objectType == 'PA') {
+        //     //loại đối tác mở popup
+        //     let appr = new Approvers();
+        //     appr.write = true;
+        //     appr.roleType = element.objectType;
+        //     //appr.approver = element.objectType;
+        //     appr.icon = element?.icon;
+
+        //     let popupApprover = this.callfc.openForm(
+        //       PopupAddApproverComponent,
+        //       '',
+        //       550,
+        //       screen.height,
+        //       '',
+        //       {
+        //         approverData: appr,
+        //         lstApprover: this.lstApprover,
+        //         isAddNew: true,
+        //       }
+        //     );
+
+        //     popupApprover.closed.subscribe((res) => {
+        //       if (res.event) {
+        //         this.lstApprover.push(res.event);
+        //       }
+        //     });
+        //   } else if (element?.objectType == 'P') {
+        //     if (element?.id != null) {
+        //       this.codxService
+        //         .getUserIDByPositionsID(element?.id)
+        //         .subscribe((lstUserInfo) => {
+        //           if (lstUserInfo) {
+        //             if (lstUserInfo != null && lstUserInfo.length >= 2) {
+        //               this.notifySvr.alertCode('ES033').subscribe((x) => {
+        //                 if (x.event?.status == 'Y') {
+        //                   let appr = new Approvers();
+        //                   appr.roleType = element?.objectType;
+        //                   appr.name = element?.text;
+        //                   appr.approver = element?.id;
+        //                   appr.userID = lstUserInfo[0]?.userID;
+        //                   appr.userName = lstUserInfo[0]?.userName;
+        //                   appr.icon =
+        //                     element?.icon != null ? element?.icon : null;
+        //                   this.lstApprover.push(appr);
+        //                 } else {
+        //                   return;
+        //                 }
+        //               });
+        //             } else {
+        //               let appr = new Approvers();
+        //               appr.roleType = element?.objectType;
+        //               appr.name = element?.text;
+        //               appr.approver = element?.id;
+        //               appr.icon = element?.icon != null ? element?.icon : null;
+        //               appr.userID = lstUserInfo[0]?.userID;
+        //               appr.userName = lstUserInfo[0]?.userName;
+        //               this.lstApprover.push(appr);
+        //             }
+        //           }
+        //         });
+        //     }
+        //   } else if (i == -1) {
+        //     let appr = new Approvers();
+        //     appr.roleType = element?.objectType;
+        //     appr.name = element?.objectName;
+        //     appr.approver = element?.objectType;
+        //     appr.icon = element?.icon != null ? element?.icon : null;
+        //     this.lstApprover.push(appr);
+        //   }
+        // }
+
+        let appr = new Approvers();
+        appr.approver = element?.id;
+        appr.name = element?.text;
+        appr.roleType = element?.objectType;
+        appr.icon = element?.icon;
+        switch (element?.objectType) {
+          case ShareType.User: //	Người dùng
+            appr.position = element?.dataSelected?.PositionName;
+            appr.userID = element?.dataSelected?.UserID;
+            appr.userName = element?.dataSelected?.UserName;
+            this.lstApprover.push(appr);
+            break;
+            //----------------------------------------------------------------------------------//
+            case ShareType.AC: //	Thư ký Giám đốc công ty
+            case ShareType.DC: //	Phó Giám đốc công ty
+            case ShareType.CEO: //	Giám đốc công ty
+            this.lstApprover.push(appr);
+            this.codxService.getCompanyApprover(this.userOrg?.companyID,element?.objectType).subscribe(companyAppr=>{
+              if(companyAppr){
+                appr.position = companyAppr?.position;
+                appr.userID = companyAppr?.UserID;
+                appr.userName = companyAppr?.UserName;
+              }
+            });
+            break;
+          //----------------------------------------------------------------------------------//
+          case ShareType.Position: //	Chức danh công việc
+            if (element?.id != null) {
+              this.codxService
+                .getUserIDByPositionsID(element?.id)
+                .subscribe((lstUserInfo) => {
+                  if (lstUserInfo) {
+                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
+                      this.notifySvr.alertCode('ES033').subscribe((x) => {
+                        if (x.event?.status == 'Y') {
+                          appr.roleType = element?.objectType;
+                          appr.name = element?.text;
+                          appr.position = element?.dataSelected?.PositionName;
+                          appr.userID = lstUserInfo[0]?.userID;
+                          appr.userName = lstUserInfo[0]?.userName;
+                          this.lstApprover.push(appr);
+                        } else {
+                          return;
+                        }
+                      });
+                    } else {
+                      appr.roleType = element?.objectType;
+                      appr.name = element?.text;
+                      appr.position = element?.dataSelected?.PositionName;
+                      appr.userID = lstUserInfo[0]?.userID;
+                      appr.userName = lstUserInfo[0]?.userName;
+                      this.lstApprover.push(appr);
+                    }
+                  }
+                });
             }
-          }
-        } else {
-          let i = this.lstApprover.findIndex(
-            (p) => p.approver == element?.objectType
-          );
-          if (element?.objectType == 'PA') {
-            //loại đối tác mở popup
-            let appr = new Approvers();
+            break;
+          //----------------------------------------------------------------------------------//
+          case ShareType.ResourceOwner: //	Chủ sở hữu nguồn lực
+          case ShareType.Owner: //	Người sở hữu
+          case ShareType.Employee: //	Nhân viên
+          appr.approver=element?.objectType;
+            this.lstApprover.push(appr);
+          break;
+          case ShareType.Created: //	Người tạo
+          case ShareType.TeamLead: //	Trưởng nhóm
+          case ShareType.AM: //	Thư ký phòng
+          case ShareType.DM: //	Phó phòng
+          case ShareType.MA: //	Trưởng phòng
+          case ShareType.AD: //	Thư ký Giám đốc khối
+          case ShareType.DD: //	Phó Giám đốc khối
+          case ShareType.DI: //	Giám đốc khối
+          case ShareType.DR: //	Báo cáo trực tiếp
+          case ShareType.IR: //	Báo cáo gián tiếp
+            appr.approver = element?.objectType;
+            this.lstApprover.push(appr);
+            
+            break;
+          //----------------------------------------------------------------------------------//
+
+          case ShareType.Partner: //	Đối tác
             appr.write = true;
             appr.roleType = element.objectType;
-            //appr.approver = element.objectType;
-            appr.icon = element?.icon;
-
             let popupApprover = this.callfc.openForm(
               PopupAddApproverComponent,
               '',
@@ -634,91 +790,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 isAddNew: true,
               }
             );
-
             popupApprover.closed.subscribe((res) => {
               if (res.event) {
                 this.lstApprover.push(res.event);
               }
             });
-          } else if (element?.objectType == 'P') {
-            // if (element?.id != null) {
-            //   this.api
-            //     .execSv<any>(
-            //       'HR',
-            //       'HR',
-            //       'EmployeesBusiness',
-            //       'GetListUserIDByListPositionsIDAsync',
-            //       [element?.id]
-            //     )
-            //     .subscribe((res) => {
-            //       if (res) {
-            //         let listUserID = res[0].split(';');
-            //         if (listUserID != null && listUserID.length >= 2) {
-            //           this.notifySvr.alertCode('ES033').subscribe((x) => {
-            //             if (x.event?.status == 'Y') {
-            //               let appr = new Approvers();
-            //               appr.roleType = element?.objectType;
-            //               appr.name = element?.text;
-            //               appr.approver = element?.id;
-            //               appr.userID = listUserID[0];
-            //               appr.icon = element?.icon != null ? element?.icon : null;
-            //               this.lstApprover.push(appr);
-            //             } else {
-            //               return;
-            //             }
-            //           });
-            //         } else {
-            //           let appr = new Approvers();
-            //           appr.roleType = element?.objectType;
-            //           appr.name = element?.text;
-            //           appr.approver = element?.id;
-            //           appr.icon = element?.icon != null ? element?.icon : null;
-            //           appr.userID = listUserID[0];
-            //           this.lstApprover.push(appr);
-            //         }
-            //       }
-            //     });
-            // }
-            if (element?.id != null) {
-              this.codxService.getUserIDByPositionsID(element?.id).subscribe(lstUserInfo=>{
-                
-                  if (lstUserInfo) {
-                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
-                      this.notifySvr.alertCode('ES033').subscribe((x) => {
-                        if (x.event?.status == 'Y') {
-                          let appr = new Approvers();
-                          appr.roleType = element?.objectType;
-                          appr.name = element?.text;
-                          appr.approver = element?.id;
-                          appr.userID = lstUserInfo[0]?.userID;
-                          appr.userName = lstUserInfo[0]?.userName;
-                          appr.icon = element?.icon != null ? element?.icon : null;
-                          this.lstApprover.push(appr);
-                        } else {
-                          return;
-                        }
-                      });
-                    } else {
-                      let appr = new Approvers();
-                      appr.roleType = element?.objectType;
-                      appr.name = element?.text;
-                      appr.approver = element?.id;
-                      appr.icon = element?.icon != null ? element?.icon : null;
-                      appr.userID = lstUserInfo[0]?.userID;
-                      appr.userName = lstUserInfo[0]?.userName;
-                      this.lstApprover.push(appr);
-                    }
-                  }
-                });
-            }
-          } else if (i == -1) {
-            let appr = new Approvers();
-            appr.roleType = element?.objectType;
-            appr.name = element?.objectName;
-            appr.approver = element?.objectType;
-            appr.icon = element?.icon != null ? element?.icon : null;
-            this.lstApprover.push(appr);
-          }
+            break;
+          //----------------------------------------------------------------------------------//
+
         }
       });
     }

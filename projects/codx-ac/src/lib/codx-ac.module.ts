@@ -88,10 +88,14 @@ import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-a
 import { AdvancePaymentComponent } from './advance-payment/advance-payment.component';
 import { AdvancePaymentAddComponent } from './advance-payment/advance-payment-add/advance-payment-add.component';
 import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayment-detail.component';
+import { CashrecieptDetailComponent } from './vouchers/cashreceipts/cashreciept-detail.component';
 import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/purchaseinvoices-detail/purchaseinvoices-detail.component';
-
 import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/issue-transactions-detail/issue-transactions-detail.component';
 import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
+import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
+import { AdvancePaymentDetailComponent } from './advance-payment/advance-payment-detail/advance-payment-detail.component';
+import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
+import { IssueTransactionsUpdateParasComponent } from './vouchers/issue-transactions/issue-transactions-update-paras/issue-transactions-update-paras.component';
 export const routes: Routes = [
   {
     path: '',
@@ -317,9 +321,14 @@ export const routes: Routes = [
     AdvancePaymentComponent,
     AdvancePaymentAddComponent,
     CashpaymentDetailComponent,
+    CashrecieptDetailComponent,
     PurchaseinvoicesDetailComponent,
     IssueTransactionsDetailComponent,
     ReceiptTransactionsDetailComponent,
+    SalesinvoicesDetailComponent,
+    AdvancePaymentDetailComponent,
+    CashtransfersDetailComponent,
+    IssueTransactionsUpdateParasComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -1,0 +1,184 @@
+<codx-views
+  #view
+  service="HR"
+  assemblyName="ERM.Business.HR"
+  entityName="HR_EQuit"
+  className="EQuitBusiness"
+  method="GetListAsync"
+  [views]="views"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  [funcID]="funcID"
+  (buttonClick)="add($event)"
+  (selectedChange)="ChangeItemDetail($event)"
+>
+</codx-views>
+
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Cập nhật trạng thái"
+              [formModel]="view.formModel"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="CloseStatus(dialog1)"
+          >
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+            <codx-label fiedName="status" [formModel]="view.formModel">
+            </codx-label>
+          </label>
+          <div class="p-disabled">
+            <codx-input
+              field="status"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            <codx-label
+              fiedName="comments"
+              [formModel]="view.formModel"
+              [default]="grvSetup?.Comments?.description"
+            ></codx-label>
+          </label>
+          <codx-input
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="ValueChangeComment($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          <i class="icon-save"></i>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Detail -->
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3 when-hover-box"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-5'"
+    [imageId]="data.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageObjName]="data?.emp?.employeeName"
+    [imageWidth]="35"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]="data?.modifiedOn"
+    [typeMF]="'view'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 text-dark then-text-primary'"
+    [subTitle]="data.emp?.positionName"
+    [subTitleCss]="'text-gray-600'"
+    [descTmp]="descTmp"
+    (changeDataMF)="ChangeDataMF($event, data)"
+  >
+  </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span class="fw-bold fs-6 mb-1 then-text-primary">
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
+
+  <ng-template #descTmp>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center mt-1 text-gray-600">
+        <span class="icon-calendar_today icon-14 me-1"></span>
+        <div
+          class="me-3"
+          [ngbTooltip]="grvSetup?.StoppedOn?.headerText"
+          [innerHTML]="
+            data?.stoppedOn | formatvalue : view.formModel : 'StoppedOn' | async
+          "
+        ></div>
+      </div>
+      <div
+        class="text-gray-600"
+        [ngbTooltip]="grvSetup?.QuitReason?.headerText"
+        [innerHTML]="
+          data?.quitReason | formatvalue : view.formModel : 'QuitReason' | async
+        "
+      ></div>
+      <div class="d-flex text-dark align-items-end mt-2">
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #panelRightListDetail let-data>
+  <lib-view-detail-equit
+    [itemDetail]="itemDetail"
+    [view]="view"
+    [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
+    (clickMFunction)="clickEvent($event)"
+  >
+  </lib-view-detail-equit>
+  <ng-template #itemRightDetail> </ng-template>
+</ng-template>
+
+<!--End Detail -->

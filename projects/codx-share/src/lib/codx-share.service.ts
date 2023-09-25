@@ -88,6 +88,46 @@ export class CodxShareService {
     private signalRSV: SignalRService,
     private httpClient: HttpClient
   ) {}
+  
+  loadDataCache(
+    paras:any,
+    keyRoot:any,
+    service:any,
+    assemly:any,
+    className:any,
+    method:any
+  ): Observable<any>
+  {
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv(service,assemly,className,method,paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   loadFunctionList(funcID: any): Observable<any> {
     let paras = ['FuncID', funcID];
     let keyRoot = 'FuncID' + funcID;
@@ -122,70 +162,16 @@ export class CodxShareService {
   loadFuncID(functionID: any): Observable<any> {
     let paras = [functionID];
     let keyRoot = 'MFunc' + functionID;
-    let key = JSON.stringify(paras).toLowerCase();
-    if (this.caches.has(keyRoot)) {
-      var c = this.caches.get(keyRoot);
-      if (c && c.has(key)) {
-        return c.get(key);
-      }
-    }
-    if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key);
-    }
-    let observable = this.api
-      .execSv('SYS', 'SYS', 'MoreFunctionsBusiness', 'GetAsync', functionID)
-      .pipe(
-        map((res) => {
-          if (res) {
-            let c = this.caches.get(keyRoot);
-            c?.set(key, res);
-            return res;
-          }
-          return null;
-        }),
-        share(),
-        finalize(() => this.cachedObservables.delete(key))
-      );
-    this.cachedObservables.set(key, observable);
-    return observable;
+
+    return this.loadDataCache(paras,keyRoot,"SYS","SYS","MoreFunctionsBusiness","GetAsync");
+    
   }
   checkStatusApproval(recID: any, status): Observable<any> {
     let paras = [recID];
     let keyRoot = recID + status;
-    let key = JSON.stringify(paras).toLowerCase();
-    if (this.caches.has(keyRoot)) {
-      var c = this.caches.get(keyRoot);
-      if (c && c.has(key)) {
-        return c.get(key);
-      }
-    }
-    if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key);
-    }
-
-    let observable = this.api
-      .execSv(
-        'ES',
-        'ERM.Business.ES',
-        'ApprovalTransBusiness',
-        'CheckRestoreAsync',
-        recID
-      )
-      .pipe(
-        map((res) => {
-          if (res) {
-            let c = this.caches.get(keyRoot);
-            c?.set(key, res);
-            return res;
-          }
-          return null;
-        }),
-        share(),
-        finalize(() => this.cachedObservables.delete(key))
-      );
-    this.cachedObservables.set(key, observable);
-    return observable;
+    return this.loadDataCache(paras,keyRoot,"ES","ES","ApprovalTransBusiness","CheckRestoreAsync");
   }
+  
   defaultMoreFunc(
     val: any,
     data: any,
@@ -245,6 +231,7 @@ export class CodxShareService {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
+              that?.reloadFile();
             }
           });
         } else {
@@ -277,6 +264,10 @@ export class CodxShareService {
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                  //Cập nhật lại status duyệt 
+                  var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                  if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+                  
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -294,7 +285,12 @@ export class CodxShareService {
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                 //Cập nhật lại status duyệt 
+                 var index = dataService.data.findIndex(x=>x.transID == data.recID);
+                 if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+
                 dataService.update(data).subscribe();
+               
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
@@ -306,8 +302,12 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (!res?.msgCodeError && res?.rowCount>0) {
-              data.unbounds.statusApproval = res?.returnStatus;
+            if (res) {
+              data.unbounds.statusApproval = res?.status;
+              //Cập nhật lại status duyệt 
+              var index = dataService.data.findIndex(x=>x.transID == data.recID);
+              if(index >= 0) dataService.data[index].unbounds.statusApproval =  res?.status;
+
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             }
@@ -1306,6 +1306,24 @@ export class CodxShareService {
       'EmployeesBusiness',
       'GetEmployeesByPositionsAsync',
       listPositionID
+    );
+  }
+  getCompanyApprover(companyID,roleType) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetCompanyApproverAsync',
+      [companyID,roleType]
+    );
+  }
+  viewApprovalStep(transID) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'ViewApprovalStepAsync',
+      [transID]
     );
   }
   //#region Codx Quy trình duyệt

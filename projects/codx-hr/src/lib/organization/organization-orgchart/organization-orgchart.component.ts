@@ -56,6 +56,7 @@ import {
 import { CodxHrService } from '../../codx-hr.service';
 import { DataVll } from '../../model/HR_OrgChart.model';
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
+import { LCA, Tree } from 'basicprimitives';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -991,6 +992,8 @@ export class OrganizationOrgchartComponent {
   }
 
   getDataPositionByID(orgUnitID: string, getManager: boolean, level: number) {
+    //Reset data when click change orgUnitID changes from getDataPositionByID
+    this.items = [];
     if (orgUnitID) {
       this.api
         .execSv(
@@ -1003,36 +1006,33 @@ export class OrganizationOrgchartComponent {
         .subscribe((res: any) => {
           if (res) {
             // this.dataSource = this.newDataManager(res);
-            var items: Array<OrgItemConfig> = [];
-
             res.map((item) => {
-              items.push(
-                new OrgItemConfig({
-                  id: item.orgUnitID,
-                  parent: item.parentID || null,
-                  title: item.orgUnitName,
-                  description: item.positionName,
-                  label: item.orgUnitName,
-                  templateName: 'contactTemplate',
-                  itemTitleColor: String(this.getColorItem(item.orgUnitType)),
-                  context: {
-                    employeeID: item.employeeID,
-                    employeeName: item.employeeName,
-                    employeeManager: item.employeeManager,
-                    orgUnitType: item.orgUnitType,
-                    data: item,
-                    isChildren: item.isChildren,
-                    loadChildrent: item.loadChildrent,
-                  },
-                  //itemType: ItemType.Assistant,
-                  // adviserPlacementType: AdviserPlacementType.Left,
-                  // groupTitle: 'Sub Adviser',
-                  // groupTitleColor: Colors.Red,
-                })
-              );
-            });
+              var tmp;
+              tmp = new OrgItemConfig({
+                id: item.orgUnitID,
+                parent: item.parentID || null,
+                title: item?.employeeManager?.orgUnitName ?? item.positionName,
+                description: item.positionName,
+                label: item.orgUnitName,
+                templateName: 'contactTemplate',
+                itemTitleColor: String(this.getColorItem(item.orgUnitType)),
+                context: {
+                  employeeID: item.employeeID,
+                  employeeName: item.employeeName,
+                  employeeManager: item.employeeManager,
+                  orgUnitType: item.orgUnitType,
+                  data: item,
+                  isChildren: item.isChildren,
+                  loadChildrent: item.loadChildrent,
+                },
+                //itemType: ItemType.Assistant,
+                // adviserPlacementType: AdviserPlacementType.Left,
+                // groupTitle: 'Sub Adviser',
+                // groupTitleColor: Colors.Red,
+              });
 
-            this.items = items;
+              this.items = [...this.items, tmp];
+            });
           }
         });
     }
@@ -1119,32 +1119,32 @@ export class OrganizationOrgchartComponent {
 
         if (checkSameTree1) {
           //Add to chart from parent
-          this.items.push(
-            new OrgItemConfig({
-              id: data.orgUnitID,
-              parent: data.parentID,
-              title: data.orgUnitName,
-              description: data.positionName,
-              label: data.orgUnitName,
-              templateName: 'contactTemplate',
-              itemTitleColor: String(this.getColorItem(data.orgUnitType)),
-              context: {
-                employeeID: data.employeeID,
-                employeeName: data.employeeName,
-                employeeManager: data.employeeManager,
-                orgUnitType: data.orgUnitType,
-                data: data,
-                isChildren: data.isChildren,
-                loadChildrent: data.loadChildrent,
-              },
-            })
-          );
+          var tmp = new OrgItemConfig({
+            id: data.orgUnitID,
+            parent: data.parentID,
+            title: data.orgUnitName,
+            description: data.positionName,
+            label: data.orgUnitName,
+            templateName: 'contactTemplate',
+            itemTitleColor: String(this.getColorItem(data.orgUnitType)),
+            context: {
+              employeeID: data.employeeID,
+              employeeName: data.employeeName,
+              employeeManager: data.employeeManager,
+              orgUnitType: data.orgUnitType,
+              data: data,
+              isChildren: data.isChildren,
+              loadChildrent: data.loadChildrent,
+            },
+          });
 
+          this.items = [...this.items, tmp];
           this.items.forEach((e) => {
             if (e.id === data.parentID && e.context.loadChildrent !== false) {
               if (e.context.id == data.parentID) {
                 e.context.isChildren = true;
                 e.context.loadChildrent = true;
+                return;
               }
             }
           });
@@ -1159,35 +1159,36 @@ export class OrganizationOrgchartComponent {
             )
             .subscribe((res: any) => {
               if (res) {
-                res.forEach((item) => {
-                  this.items.push(
-                    new OrgItemConfig({
-                      id: item.orgUnitID,
-                      parent: item.parentID,
-                      title: item.orgUnitName,
-                      description: item.positionName,
-                      label: item.orgUnitName,
-                      templateName: 'contactTemplate',
-                      itemTitleColor: String(
-                        this.getColorItem(item.orgUnitType)
-                      ),
-                      context: {
-                        employeeID: item.employeeID,
-                        employeeName: item.employeeName,
-                        employeeManager: item.employeeManager,
-                        orgUnitType: item.orgUnitType,
-                        data: item,
-                        isChildren: item.isChildren,
-                        loadChildrent: item.loadChildrent,
-                      },
-                    })
-                  );
+                res.map((item) => {
+                  var tmp;
+                  tmp = new OrgItemConfig({
+                    id: item.orgUnitID,
+                    parent: item.parentID || null,
+                    title:
+                      item?.employeeManager?.orgUnitName ?? item.positionName,
+                    description: item.positionName,
+                    label: item.orgUnitName,
+                    templateName: 'contactTemplate',
+                    itemTitleColor: String(this.getColorItem(item.orgUnitType)),
+                    context: {
+                      employeeID: item.employeeID,
+                      employeeName: item.employeeName,
+                      employeeManager: item.employeeManager,
+                      orgUnitType: item.orgUnitType,
+                      data: item,
+                      isChildren: item.isChildren,
+                      loadChildrent: item.loadChildrent,
+                    },
+                  });
+
+                  this.items = [...this.items, tmp];
                 });
 
                 this.items.forEach((e) => {
                   if (e.id === data.parentID) {
                     e.context.isChildren = true;
                     e.context.loadChildrent = true;
+                    return;
                   }
                 });
                 this.dt.detectChanges();
@@ -1285,12 +1286,55 @@ export class OrganizationOrgchartComponent {
     return obj;
   }
 
+  deleteOrgChart(id: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'OrganizationUnitsBusiness',
+      'DeleteEOrgChartAsync',
+      id
+    );
+  }
+
   // click moreFC
   clickMF(event: any, data: any) {
+    //let dataObj = data.context.data;
+    //itemConfig.context.data
+
     if (event) {
       switch (event.functionID) {
         case 'SYS02': //delete
-          this.deleteData(data);
+          this.notify.alertCode('SYS030').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              this.deleteOrgChart(data.orgUnitID).subscribe((res) => {
+                if (res === true) {
+                  this.items = this.items.filter(
+                    (item) => item.id != data.orgUnitID
+                  );
+                  const checkSameLevel = this.items.filter(
+                    (item) => data.parentID === item.parent
+                  );
+
+                  if (checkSameLevel.length === 0) {
+                    let tmpParent = this.items.find(
+                      (item) => data.parentID === item.id
+                    );
+
+                    tmpParent.context.isChildren = false;
+                    tmpParent.context.loadChildrent = false;
+                  }
+
+                  this.notify.notifyCode('SYS008');
+                  this.view.dataService
+                    .delete([data], false, null, null, null, null, null, null)
+                    .subscribe();
+                  this.dt.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
+            }
+          });
           break;
         case 'SYS03': // edit
           this.editData(data, event);
@@ -1348,85 +1392,187 @@ export class OrganizationOrgchartComponent {
                   this.orgUnitID = data.orgUnitID;
                   this.isGetManager();
                 } else {
-                  this.items.forEach((e) => {
-                    if (
+                  let checkSameTree1 = this.items.find(
+                    (e) =>
                       e.id === data.parentID &&
                       e.context.loadChildrent !== false
-                    ) {
-                      //Add to chart from parent
-                      this.items.push(
-                        new OrgItemConfig({
-                          id: data.orgUnitID,
-                          parent: data.parentID,
-                          title: data.orgUnitName,
-                          description: data.positionName,
-                          label: data.orgUnitName,
-                          templateName: 'contactTemplate',
-                          itemTitleColor: String(
-                            this.getColorItem(data.orgUnitType)
-                          ),
-                          context: {
-                            employeeID: data.employeeID,
-                            employeeName: data.employeeName,
-                            employeeManager: data.employeeManager,
-                            orgUnitType: data.orgUnitType,
-                            data: data,
-                            isChildren: data.isChildren,
-                            loadChildrent: data.loadChildrent,
-                          },
-                        })
-                      );
-                      e.context.isChildren = true;
-                      e.context.loadChildrent = true;
-                    } else {
-                      this.api
-                        .execSv(
-                          'HR',
-                          'ERM.Business.HR',
-                          'OrganizationUnitsBusiness',
-                          'GetChildChartAsync',
-                          [
-                            data.parentID,
-                            this.selectedTeam.includes('No') ? false : true,
-                          ]
-                        )
-                        .subscribe((res: any) => {
-                          if (res) {
-                            res.map((item) => {
-                              this.items.push(
-                                new OrgItemConfig({
-                                  id: item.orgUnitID,
-                                  parent: item.parentID,
-                                  title: item.orgUnitName,
-                                  description: item.positionName,
-                                  label: item.orgUnitName,
-                                  templateName: 'contactTemplate',
-                                  itemTitleColor: String(
-                                    this.getColorItem(item.orgUnitType)
-                                  ),
-                                  context: {
-                                    employeeID: item.employeeID,
-                                    employeeName: item.employeeName,
-                                    employeeManager: item.employeeManager,
-                                    orgUnitType: item.orgUnitType,
-                                    data: item,
-                                    isChildren: item.isChildren,
-                                    loadChildrent: item.loadChildrent,
-                                  },
-                                })
-                              );
+                  );
+                  if (data.employeeManager?.positionName) {
+                    data.employeeManager.positionName = data.positionName;
+                  }
+                  if (data.employeeManager?.orgUnitName) {
+                    data.employeeManager.orgUnitName = data.orgUnitName;
+                  }
+
+                  if (checkSameTree1) {
+                    //Add to chart from parent
+                    var tmp = new OrgItemConfig({
+                      id: data.orgUnitID,
+                      parent: data.parentID,
+                      title: data.orgUnitName,
+                      description: data.positionName,
+                      label: data.orgUnitName,
+                      templateName: 'contactTemplate',
+                      itemTitleColor: String(
+                        this.getColorItem(data.orgUnitType)
+                      ),
+                      context: {
+                        employeeID: data.employeeID,
+                        employeeName: data.employeeName,
+                        employeeManager: data.employeeManager,
+                        orgUnitType: data.orgUnitType,
+                        data: data,
+                        isChildren: data.isChildren,
+                        loadChildrent: data.loadChildrent,
+                      },
+                    });
+
+                    this.items = [...this.items, tmp];
+                    this.items.forEach((e) => {
+                      if (
+                        e.id === data.parentID &&
+                        e.context.loadChildrent !== false
+                      ) {
+                        if (e.context.id == data.parentID) {
+                          e.context.isChildren = true;
+                          e.context.loadChildrent = true;
+                          return;
+                        }
+                      }
+                    });
+                  } else {
+                    this.api
+                      .execSv(
+                        'HR',
+                        'ERM.Business.HR',
+                        'OrganizationUnitsBusiness',
+                        'GetChildChartAsync',
+                        [
+                          data.parentID,
+                          this.selectedTeam.includes('No') ? false : true,
+                        ]
+                      )
+                      .subscribe((res: any) => {
+                        if (res) {
+                          res.map((item) => {
+                            var tmp;
+                            tmp = new OrgItemConfig({
+                              id: item.orgUnitID,
+                              parent: item.parentID || null,
+                              title:
+                                item?.employeeManager?.orgUnitName ??
+                                item.positionName,
+                              description: item.positionName,
+                              label: item.orgUnitName,
+                              templateName: 'contactTemplate',
+                              itemTitleColor: String(
+                                this.getColorItem(item.orgUnitType)
+                              ),
+                              context: {
+                                employeeID: item.employeeID,
+                                employeeName: item.employeeName,
+                                employeeManager: item.employeeManager,
+                                orgUnitType: item.orgUnitType,
+                                data: item,
+                                isChildren: item.isChildren,
+                                loadChildrent: item.loadChildrent,
+                              },
                             });
 
-                            // this.items.forEach((e) => {
-                            if (e.id == data.parentID) {
+                            this.items = [...this.items, tmp];
+                          });
+
+                          this.items.forEach((e) => {
+                            if (e.id === data.parentID) {
                               e.context.isChildren = true;
                               e.context.loadChildrent = true;
+                              return;
                             }
-                            // });
-                          }
-                        });
-                    }
-                  });
+                          });
+                          this.dt.detectChanges();
+                        }
+                      });
+                  }
+                  // this.items.forEach((e) => {
+                  //   if (
+                  //     e.id === data.parentID &&
+                  //     e.context.loadChildrent !== false
+                  //   ) {
+                  //     data.employeeManager.positionName = data.positionName;
+                  //     data.employeeManager.orgUnitName = data.orgUnitName;
+
+                  //     //Add to chart from parent
+                  //     this.items.push(
+                  //       new OrgItemConfig({
+                  //         id: data.orgUnitID,
+                  //         parent: data.parentID,
+                  //         title: data.orgUnitName,
+                  //         description: data.positionName,
+                  //         label: data.orgUnitName,
+                  //         templateName: 'contactTemplate',
+                  //         itemTitleColor: String(
+                  //           this.getColorItem(data.orgUnitType)
+                  //         ),
+                  //         context: {
+                  //           employeeID: data.employeeID,
+                  //           employeeName: data.employeeName,
+                  //           employeeManager: data.employeeManager,
+                  //           orgUnitType: data.orgUnitType,
+                  //           data: data,
+                  //           isChildren: data.isChildren,
+                  //           loadChildrent: data.loadChildrent,
+                  //         },
+                  //       })
+                  //     );
+                  //     e.context.isChildren = true;
+                  //     e.context.loadChildrent = true;
+                  //   } else {
+                  //     this.api
+                  //       .execSv(
+                  //         'HR',
+                  //         'ERM.Business.HR',
+                  //         'OrganizationUnitsBusiness',
+                  //         'GetChildChartAsync',
+                  //         [
+                  //           data.parentID,
+                  //           this.selectedTeam.includes('No') ? false : true,
+                  //         ]
+                  //       )
+                  //       .subscribe((res: any) => {
+                  //         if (res) {
+                  //           res.map((item) => {
+                  //             this.items.push(
+                  //               new OrgItemConfig({
+                  //                 id: item.orgUnitID,
+                  //                 parent: item.parentID,
+                  //                 title: item.orgUnitName,
+                  //                 description: item.positionName,
+                  //                 label: item.orgUnitName,
+                  //                 templateName: 'contactTemplate',
+                  //                 itemTitleColor: String(
+                  //                   this.getColorItem(item.orgUnitType)
+                  //                 ),
+                  //                 context: {
+                  //                   employeeID: item.employeeID,
+                  //                   employeeName: item.employeeName,
+                  //                   employeeManager: item.employeeManager,
+                  //                   orgUnitType: item.orgUnitType,
+                  //                   data: item,
+                  //                   isChildren: item.isChildren,
+                  //                   loadChildrent: item.loadChildrent,
+                  //                 },
+                  //               })
+                  //             );
+                  //           });
+
+                  //           if (e.id == data.parentID) {
+                  //             e.context.isChildren = true;
+                  //             e.context.loadChildrent = true;
+                  //           }
+                  //         }
+                  //       });
+                  //   }
+                  // });
                 }
 
                 //CursorItem
@@ -1464,6 +1610,12 @@ export class OrganizationOrgchartComponent {
       popup.closed.subscribe((res: any) => {
         if (res.event) {
           let dataUpdated = res.event;
+          if (dataUpdated.employeeManager?.positionName) {
+            dataUpdated.employeeManager.positionName = dataUpdated.positionName;
+          }
+          if (dataUpdated.employeeManager?.orgUnitName) {
+            dataUpdated.employeeManager.orgUnitName = dataUpdated.orgUnitName;
+          }
 
           dataUpdated = new OrgItemConfig({
             id: dataUpdated.orgUnitID,
@@ -1522,6 +1674,7 @@ export class OrganizationOrgchartComponent {
             if (element.id === dataUpdated.parent) {
               element.context.isChildren = true;
               element.context.loadChildrent = true;
+              return;
             }
           });
 
@@ -1534,100 +1687,152 @@ export class OrganizationOrgchartComponent {
       });
     }
   }
-
-  beforeDelete(opt: RequestOption, id, data) {
-    opt.methodName = 'DeleteEOrgChartAsync';
-    opt.className = 'OrganizationUnitsBusiness';
-    opt.assemblyName = 'HR';
-    opt.service = 'HR';
-    opt.data = id;
-    return true;
-  }
-
   // delete data
-  deleteData(data) {
-    // let dataFilter =
-    //   this.view.dataService.currentView.currentComponent.treeView.dicDatas;
+  // deleteData(data) {
+  //   this.view.dataService
+  //     .delete(
+  //       [data],
+  //       true,
+  //       (option: RequestOption) =>
+  //         this.beforeDelete(option, data.orgUnitID, data),
+  //       '',
+  //       '',
+  //       '',
+  //       '',
+  //       false
+  //     )
+  //     .subscribe((res) => {
+  //       if (res === true) {
+  //         this.items = this.items.filter((item) => item.id != data.orgUnitID);
+  //         const checkSameLevel = this.items.filter(
+  //           (item) => data.parentID === item.parent
+  //         );
 
-    // console.log(this.view.dataService.currentComponent);
-    // console.log(this.view.dataService.currentView.dataService.dataSelected);
-    // console.log(this.view.dataService.currentView.dataService.data);
+  //         if (checkSameLevel.length === 0) {
+  //           let tmpParent = this.items.find(
+  //             (item) => data.parentID === item.id
+  //           );
 
-    this.view.dataService
-      .delete(
-        [data],
-        true,
-        (option: RequestOption) =>
-          this.beforeDelete(option, data.orgUnitID, data),
-        '',
-        '',
-        '',
-        '',
-        false
-      )
-      .subscribe((res) => {
-        if (res === true) {
-          this.items = this.items.filter((item) => item.id != data.orgUnitID);
-          const checkSameLevel = this.items.filter(
-            (item) => data.parentID === item.parent
-          );
+  //           tmpParent.context.isChildren = false;
+  //           tmpParent.context.loadChildrent = false;
+  //         }
 
-          if (checkSameLevel.length === 0) {
-            let tmpParent = this.items.find(
-              (item) => data.parentID === item.id
-            );
+  //         this.notify.notifyCode('SYS008');
+  //         this.dt.detectChanges();
+  //       } else {
+  //         this.notify.notifyCode('SYS022');
+  //       }
+  //     });
+  // }
 
-            tmpParent.context.isChildren = false;
-            tmpParent.context.loadChildrent = false;
-          }
+  // removeNode(id: string) {
+  //   var children = this.items.filter((x) => x.parent === id);
+  //   if (children.length > 0) {
+  //     children.forEach((e) => {
+  //       let index = this.items.findIndex((p) => p.id == e.id);
+  //       this.items.splice(index, 1);
 
-          this.notify.notifyCode('SYS008');
-          this.dt.detectChanges();
-        } else {
-          this.notify.notifyCode('SYS022');
-        }
-      });
+  //       if (e.id) {
+  //         this.removeNode(String(e.id));
+  //       } else {
+  //         return;
+  //       }
+  //     });
+  //   }
+  // }
+
+  getDeletedItems(
+    items: Array<OrgItemConfig> = [],
+    deletedItems: Array<string> = [],
+    id
+  ) {
+    const tree = this.getTree(items, id);
+    const hash: { [id: string]: boolean } = {};
+    deletedItems.forEach((itemId) => {
+      hash[itemId] = true;
+    });
+    const cursorParent = this.getDeletedItemsParent(tree, deletedItems, hash);
+    const result: Array<OrgItemConfig> = [];
+    tree.loopLevels(this, (nodeId: string, node: OrgItemConfig) => {
+      if (hash[nodeId]) {
+        return tree.SKIP;
+      }
+      result.push(node);
+    });
+
+    return {
+      items: result,
+      cursorItem: cursorParent,
+    };
   }
 
-  removeNode(id: string) {
-    var children = this.items.filter((x) => x.parent === id);
-    if (children.length > 0) {
-      children.forEach((e) => {
-        let index = this.items.findIndex((p) => p.id == e.id);
-        this.items.splice(index, 1);
+  getDeletedItemsParent(
+    tree: any,
+    deletedItems: Array<string>,
+    deletedHash: { [id: string]: boolean }
+  ) {
+    let result: string | null = null;
+    const lca = LCA(tree);
+    result = deletedItems.reduce((agg: string | null, itemId: string) => {
+      if (agg == null) {
+        agg = itemId;
+      } else {
+        agg = lca.getLowestCommonAncestor(agg, itemId);
+      }
+      return agg;
+    }, null);
 
-        //delete this.items[index];
-        if (e.id) {
-          this.removeNode(String(e.id));
-        } else {
-          return;
-        }
-      });
+    if (deletedHash[result!]) {
+      result = tree.parentid(result);
     }
+    return result;
+  }
+
+  getTree(items: Array<OrgItemConfig> = [], nodeId) {
+    const tree = Tree();
+
+    // rebuild tree
+    for (let index = 0; index < items.length; index += 1) {
+      if (items[index].id == nodeId && items[index].parent != nodeId) {
+        items[index].context.loadChildrent = false;
+      }
+      const item = items[index];
+      tree.add(item.parent, item.id, item);
+    }
+    return tree;
   }
 
   //Load more icon add
   loadDataChild(node: any, element: HTMLElement) {
-    let result = [];
-    //var items = [];
+    this.cursorItem = node.id;
+    //let result = [];
     if (node.context.loadChildrent) {
-      result = this.items.filter((e) => e.parent != node.id);
-      if (result.length > 0) {
-        this.items.forEach((element) => {
-          if (element.id == node.id && element.parent != node.id) {
-            element.context.loadChildrent = false;
-          }
-        });
-        this.removeNode(node.id);
-      }
+      const findId = this.items
+        .filter((item) => item.parent === node.id)
+        .map((item: any) => item.id)
+        .join(',');
+      var arrID = findId.split(',');
+
+      const { items, cursorItem } = this.getDeletedItems(
+        this.items,
+        arrID,
+        node.id
+      );
+
+      this.items = items;
+
+      //Old function when remove node
+      // result = this.items.filter((e) => e.parent != node.id);
+      // if (result.length > 0) {
+      //   this.items.forEach((element) => {
+      //     if (element.id == node.id && element.parent != node.id) {
+      //       element.context.loadChildrent = false;
+      //     }
+      //   });
+      //   this.removeNode(node.id);
+      // }
     } else {
       if (node.id) {
-        // let listPos = [];
-        // this.items.forEach(function (object) {
-        //   var posID = object.id;
-        //   listPos.push(posID);
-        // });
-
         this.api
           .execSv(
             'HR',
@@ -1638,39 +1843,38 @@ export class OrganizationOrgchartComponent {
           )
           .subscribe((res: any) => {
             if (res) {
-              this.items.forEach((e) => {
+              this.items.map((e) => {
                 if (e.id == node.id) {
                   e.context.loadChildrent = true;
+                  return;
                 }
-                // items.push(e);
               });
+
               res.map((item) => {
-                this.items.push(
-                  new OrgItemConfig({
-                    id: item.orgUnitID,
-                    parent: item.parentID,
-                    title: item.orgUnitName,
-                    description: item.positionName,
-                    label: item.orgUnitName,
-                    templateName: 'contactTemplate',
-                    itemTitleColor: String(this.getColorItem(item.orgUnitType)),
-                    context: {
-                      employeeID: item.employeeID,
-                      employeeName: item.employeeName,
-                      employeeManager: item.employeeManager,
-                      orgUnitType: item.orgUnitType,
-                      data: item,
-                      isChildren: item.isChildren,
-                      loadChildrent: item.loadChildrent,
-                    },
-                  })
-                );
+                var tmp;
+                tmp = new OrgItemConfig({
+                  id: item.orgUnitID,
+                  parent: item.parentID || null,
+                  title:
+                    item?.employeeManager?.orgUnitName ?? item.positionName,
+                  description: item.positionName,
+                  label: item.orgUnitName,
+                  templateName: 'contactTemplate',
+                  itemTitleColor: String(this.getColorItem(item.orgUnitType)),
+                  context: {
+                    employeeID: item.employeeID,
+                    employeeName: item.employeeName,
+                    employeeManager: item.employeeManager,
+                    orgUnitType: item.orgUnitType,
+                    data: item,
+                    isChildren: item.isChildren,
+                    loadChildrent: item.loadChildrent,
+                  },
+                });
+
+                this.items = [...this.items, tmp];
               });
             }
-            //  else {
-            //   result = this.items;
-            // }
-            // this.items = items;
           });
       }
     }
@@ -1686,7 +1890,6 @@ export class OrganizationOrgchartComponent {
   mouseLeave(e, id) {
     this.isPopUpManager = false;
     this.idHover = id;
-    // this.dataManager = '';
   }
 
   onSaveForm() {
