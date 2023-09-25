@@ -49,7 +49,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   ) {
     super(inject);
     this.dialogRef = dialog;
-    this.advancedPayment = dialogData.data?.advancedPayment;
+    this.advancedPayment = {...dialogData.data?.advancedPayment};
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
