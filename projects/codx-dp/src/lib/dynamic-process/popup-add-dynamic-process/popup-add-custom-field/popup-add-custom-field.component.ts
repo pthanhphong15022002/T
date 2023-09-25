@@ -326,6 +326,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close(this.field);
+    this.field = new DP_Steps_Fields();
   }
 
   removeAccents(str) {
@@ -511,7 +512,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         });
       } else this.listVll = [];
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.detectChanges();
+      this.changeDef.markForCheck();
       this.loaded = true;
     });
   }

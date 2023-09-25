@@ -162,6 +162,12 @@ codx-view-list-detail {
 .e-multi-select-wrapper input[type="text"] {
   font-size: 13px;
 }
+.h-18px {
+  height: 18px !important;
+}
+.w-18px {
+  width: 18px !important;
+}
 .w-16px {
   width: 16px !important;
 }
@@ -3887,4 +3893,8 @@ app-setting .e-tab-header{
 
 app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   border-color:transparent;
+}
+
+.e-dlg-content .tab-action{
+  display: none;
 }
