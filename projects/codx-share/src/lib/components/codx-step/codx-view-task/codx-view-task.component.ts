@@ -231,9 +231,9 @@ export class CodxViewTaskComponent implements OnInit {
     });
 
     this.owner =
-      this.dataView?.roles?.filter((role) => role.roleType === 'O') || [];
+      this.dataView?.roles?.filter((role) => role.objectID == this.dataView?.owner) || [];
     this.participant =
-      this.dataView?.roles?.filter((role) => role.roleType === 'P') || [];
+      this.dataView?.roles?.filter((role) =>  role.objectID != this.dataView?.owner) || [];
     this.person =
       this.dataView?.roles?.filter((role) => role.roleType === 'S') || [];
     this.connection =
