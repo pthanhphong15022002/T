@@ -580,8 +580,8 @@ export class PopupAddDealComponent
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
     permission.allowUpdateStatus = '0';
-    // permission.createdOn = new Date();
-    // permission.createdBy = this.user.userID;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
     return permission;
   }
   valueChangeBusinessLine($event) {

@@ -6,13 +6,20 @@ import {
   CallFuncService,
   NotificationsService,
 } from 'codx-core';
-import { Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'lib-step-task-group',
   templateUrl: './step-task-group.component.html',
   styleUrls: ['./step-task-group.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTaskGroupComponent implements OnInit {
   REQUIRE = ['taskGroupName'];
@@ -29,7 +36,7 @@ export class StepTaskGroupComponent implements OnInit {
   type: string;
   step;
   isSave = true;
-  titleText = "";
+  titleText = '';
   listCombobox = {
     U: 'Share_Users_Sgl',
     P: 'Share_Positions_Sgl',
@@ -83,7 +90,7 @@ export class StepTaskGroupComponent implements OnInit {
 
   changeUser(e) {
     this.taskGroup['roles'] = e || [];
-    if(this.taskGroup?.roles?.length > 0){
+    if (this.taskGroup?.roles?.length > 0) {
       this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
     }
   }

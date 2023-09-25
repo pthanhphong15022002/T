@@ -1,11 +1,30 @@
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef, ViewChild, TemplateRef, SimpleChanges } from '@angular/core';
-import { CacheService, CallFuncService, DialogRef, FormModel, NotificationsService, DialogModel } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectorRef,
+  ViewChild,
+  TemplateRef,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  DialogModel,
+} from 'codx-core';
 
 @Component({
   selector: 'codx-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  styleUrls: ['./user.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent implements OnInit {
   @ViewChild('controlUserOne') controlUserOne: ComboBoxComponent;
@@ -30,36 +49,47 @@ export class UserComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private callfc: CallFuncService,
-  ) { }
+    private changeDef: ChangeDetectorRef
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.dataSource){
+    if (changes?.dataSource) {
       this.dataSource;
     }
+    this.changeDef.markForCheck();
   }
-  
+
   shareUser(share) {
-    if(this.type == 'user'){
+    if (this.type == 'user') {
       this.isPopupUserCbb = true;
-      if(this.controlUserOne){
+      if (this.controlUserOne) {
         let option = new DialogModel();
         option.zIndex = 1010;
-        this.popup = this.callfc.openForm(this.controlUserOne, '', 500, 500,'',null,'', option);
+        this.popup = this.callfc.openForm(
+          this.controlUserOne,
+          '',
+          500,
+          500,
+          '',
+          null,
+          '',
+          option
+        );
         this.popup.close();
       }
-    }else{
+    } else {
       this.popup = this.callfc.openForm(share, '', 500, 500);
     }
   }
 
   onDeleteOwner(objectID, datas) {
     let index = datas.findIndex((item) => item.objectID == objectID);
-    if (index != -1){
+    if (index != -1) {
       datas.splice(index, 1);
       this.valueList.emit(datas);
-    } 
+      this.changeDef.markForCheck();
+    }
   }
 
   applyUser(event, datas) {
@@ -67,36 +97,36 @@ export class UserComponent implements OnInit {
     if (!event) return;
     let valueUser = [];
     this.popup.close();
-    if(this.type == 'user'){
+    if (this.type == 'user') {
       // this.isPopupUserCbb = false;
       valueUser = event.dataSelected;
-    }else{
+    } else {
       this.popup.close();
       valueUser = event;
     }
-    if(this.multiple){
-      valueUser?.forEach(element => {
-        let user = this.convertUser(element,this.type)
-        if(!listUser?.some(item => item.objectID == user.objectID)){
-          listUser.push(user)
+    if (this.multiple) {
+      valueUser?.forEach((element) => {
+        let user = this.convertUser(element, this.type);
+        if (!listUser?.some((item) => item.objectID == user.objectID)) {
+          listUser.push(user);
         }
       });
-    }else{
+    } else {
       let userInfo = valueUser[0];
-      let user = this.convertUser(userInfo,this.type)
+      let user = this.convertUser(userInfo, this.type);
       listUser[0] = user;
     }
     this.valueList.emit(listUser);
+    this.changeDef.markForCheck();
   }
 
-  convertUser(user, type){
+  convertUser(user, type) {
     let userConert = {
       objectID: type == 'user' ? user.UserID : user.id,
-      objectName: type == 'user' ? user.UserName: user.text,
-      objectType: type == 'user' ? 'U' : user.objectType ,
+      objectName: type == 'user' ? user.UserName : user.text,
+      objectType: type == 'user' ? 'U' : user.objectType,
       roleType: type == 'user' ? user.PositionName : user.objectName,
-    }
+    };
     return userConert;
   }
-
 }

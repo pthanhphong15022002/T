@@ -217,6 +217,7 @@ import { CodxFilesAttachmentComponent } from './components/codx-files-attachment
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
+import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -385,6 +386,9 @@ const T_Component: Type<any>[] = [
   CodxViewReleaseSignFileComponent,
   CodxAddSignFileComponent,
   CodxGetTemplateSignFileComponent,
+
+  //View
+  CodxView2Component
 ];
 
 const T_Pipe: Type<any>[] = [

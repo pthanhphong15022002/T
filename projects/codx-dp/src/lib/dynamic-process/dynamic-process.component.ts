@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
@@ -42,6 +43,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   selector: 'lib-dynamic-process',
   templateUrl: './dynamic-process.component.html',
   styleUrls: ['./dynamic-process.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DynamicProcessComponent
   extends UIComponent
@@ -60,12 +62,14 @@ export class DynamicProcessComponent
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('footerButton') footerButton: TemplateRef<any>;
   @ViewChild('releasedNameTem') releasedNameTem: CodxLabelComponent;
-  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
+  @ViewChild('popUpQuestionCopy') popUpQuestionCopy: TemplateRef<any>;
+  @ViewChild('bodyFormCopyName') bodyFormCopyName: TemplateRef<any>;
+  @ViewChild('footerFormCopyName') footerFormCopyName: TemplateRef<any>;
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
   dialog!: DialogRef;
-  dialogQuestionCopy: DialogRef;
+  dialogQuestionCopy!: DialogRef;
   // create variables
   crrFunID: string = '';
   gridViewSetup: any;
@@ -130,7 +134,6 @@ export class DynamicProcessComponent
 
   constructor(
     private inject: Injector,
-    private changeDetectorRef: ChangeDetectorRef,
     private activedRouter: ActivatedRoute,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
@@ -178,7 +181,8 @@ export class DynamicProcessComponent
       this.crrFunID = this.funcID;
       this.afterLoad();
 
-      this.changeDetectorRef.detectChanges();
+      this.detectorRef.detectChanges();
+      //this.detectorRef.markForCheck();
     }
   }
   onDragDrop(e: any) {}
@@ -208,12 +212,14 @@ export class DynamicProcessComponent
     ];
     this.view.dataService.methodSave = 'AddProcessAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessAsync';
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
+    // this.detectorRef.markForCheck();
   }
 
   searchDynamicProcess($event) {
     this.view.dataService.search($event);
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
+    // this.detectorRef.markForCheck();
   }
 
   // CRUD methods
@@ -258,7 +264,8 @@ export class DynamicProcessComponent
               if (e && e.event != null) {
                 e.event.totalInstance = this.totalInstance;
                 this.view.dataService.update(e.event).subscribe();
-                this.changeDetectorRef.detectChanges();
+                this.detectorRef.detectChanges();
+                // this.detectorRef.markForCheck();
               }
               // if (e?.event == null)
               //   this.view.dataService.delete(
@@ -314,7 +321,8 @@ export class DynamicProcessComponent
                 if (!e?.event) this.view.dataService.clear();
                 if (e && e.event != null) {
                   this.view.dataService.update(e.event).subscribe();
-                  this.changeDetectorRef.detectChanges();
+                  this.detectorRef.detectChanges();
+                  // this.detectorRef.markForCheck();
                 }
               });
             }
@@ -382,7 +390,8 @@ export class DynamicProcessComponent
       if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
         e.event.totalInstance = this.totalInstance;
-        this.changeDetectorRef.detectChanges();
+        this.detectorRef.detectChanges();
+        // this.detectorRef.markForCheck();
       }
     });
   }
@@ -402,6 +411,7 @@ export class DynamicProcessComponent
       550,
       500
     );
+    this.dialogQuestionCopy.closed.subscribe();
   }
   checkValueCopy($event, data) {
     // if ($event && $event.currentTarget.checked) {
@@ -470,7 +480,8 @@ export class DynamicProcessComponent
           this.view.dataService.onAction.next({ type: 'delete', data: data });
         }
       });
-    this.changeDetectorRef.detectChanges();
+    this.detectorRef.detectChanges();
+    // this.detectorRef.markForCheck();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
@@ -496,7 +507,8 @@ export class DynamicProcessComponent
       .subscribe((res) => {
         if (res && res?.url) {
           link = environment.urlUpload + '/' + res?.url;
-          this.changeDetectorRef.detectChanges();
+          this.detectorRef.detectChanges();
+          // this.detectorRef.markForCheck();
         }
       });
     return link;
@@ -933,7 +945,8 @@ export class DynamicProcessComponent
         process.modifiedOn = res;
         process.modifiedBy = this.user?.userID;
         this.view.dataService.update(process).subscribe();
-        this.changeDetectorRef.detectChanges();
+        this.detectorRef.detectChanges();
+        // this.detectorRef.markForCheck();
         this.notificationsService.notifyCode('SYS007');
       }
     });
@@ -963,9 +976,11 @@ export class DynamicProcessComponent
           this.processReleaseClone.modifiedOn = res;
           this.processReleaseClone.modifiedBy = this.user?.userID;
           this.view.dataService.update(this.processReleaseClone).subscribe();
-          this.changeDetectorRef.detectChanges();
+
           this.notificationsService.notifyCode('SYS007');
           this.popupRelease.close();
+          this.detectorRef.detectChanges();
+          // this.detectorRef.markForCheck();
         }
       });
   }

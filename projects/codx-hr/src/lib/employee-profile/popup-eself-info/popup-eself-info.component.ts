@@ -69,6 +69,8 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
   initForm() {
     this.formGroup.patchValue(this.data);
+    console.log('fgr sau khi patch', this.formGroup);
+    
     this.oldDistrictID = this.data.districtID;
     this.oldTDistrictID = this.data.tDistrictID;
     this.oldProvinceID = this.data.provinceID;

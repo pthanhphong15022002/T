@@ -135,7 +135,7 @@ export class PopupAddCasesComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.applyFor = dt?.data?.applyFor;
-    this.caseType = dt?.data?.caseType;
+    // this.caseType = dt?.data?.caseType;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
     this.funcID = dt?.data?.funcID;
@@ -143,7 +143,7 @@ export class PopupAddCasesComponent
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-      this.caseType = this.applyFor == '2' ? '1' : '2';
+      // this.caseType = this.applyFor == '2' ? '1' : '2';
       if (this.action != this.actionAdd) {
         this.cases = dt?.data?.dataCM;
       }
@@ -157,8 +157,9 @@ export class PopupAddCasesComponent
     if (this.action != this.actionAdd) {
       this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
+    } else {
+      this.cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
-    this.cases.caseType = this.caseType;
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
     }
@@ -553,7 +554,7 @@ export class PopupAddCasesComponent
       cases.refID = instance.recID;
     }
     if (this.action === this.actionAdd) {
-      cases.caseType = this.caseType;
+      cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
     cases.owner = this.owner;
   }
@@ -712,11 +713,9 @@ export class PopupAddCasesComponent
       if (this.funcID == 'CM0401') {
         this.applyProcess = dataValue?.ProcessCase == '1';
         this.cases.applyProcess = this.applyProcess;
-        this.cases.caseType = '1';
       } else if (this.funcID == 'CM0402') {
         this.applyProcess = dataValue?.ProcessRequest == '1';
         this.cases.applyProcess = this.applyProcess;
-        this.cases.caseType = '2';
       }
     }
   }

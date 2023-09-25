@@ -298,11 +298,16 @@ export class PopupAddWarrantyComponent implements OnInit {
   clickAddServiceTag() {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
-    dialogModel.FormModel = this.dialog?.formModel;
+    let formModel = new FormModel();
+    formModel.formName = this.dialog.formModel?.formName;
+    formModel.gridViewName = this.dialog.formModel?.gridViewName;
+    formModel.entityName = this.dialog.formModel?.entityName;
+    dialogModel.FormModel = formModel;
+    let dataService = JSON.parse(JSON.stringify(this.data));
     let obj = {
       title:
         this.moreFuncAdd + ' ' + this.gridViewSetup?.ServiceTag?.headerText,
-      data: this.data,
+      data: dataService,
       gridViewSetup: this.gridViewSetup,
     };
     this.callFc
@@ -319,7 +324,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       .closed.subscribe((e) => {
         if (e && e?.event != null) {
           if (e?.event?.seriNo) {
-            this.data = e?.event;
+            this.data = JSON.parse(JSON.stringify(e?.event));
             this.isCheckCbx = false;
             this.form.formGroup.patchValue(this.data);
             this.detectorRef.detectChanges();
@@ -333,10 +338,15 @@ export class PopupAddWarrantyComponent implements OnInit {
       this.radioChecked = true;
       let dialogModel = new DialogModel();
       dialogModel.zIndex = 1010;
-      dialogModel.FormModel = this.dialog?.formModel;
+      let formModel = new FormModel();
+      formModel.formName = this.dialog.formModel?.formName;
+      formModel.gridViewName = this.dialog.formModel?.gridViewName;
+      formModel.entityName = this.dialog.formModel?.entityName;
+      dialogModel.FormModel = formModel;
+      let dataService = JSON.parse(JSON.stringify(this.data));
       let obj = {
         title: this.moreFuncAdd + ' ' + res?.defaultName,
-        data: this.data,
+        data: dataService,
         gridViewSetup: this.gridViewSetup,
       };
       this.callFc
@@ -354,7 +364,7 @@ export class PopupAddWarrantyComponent implements OnInit {
           if (e?.event && e?.event != null) {
             if (e?.event[0]?.customerID) {
               let customerID = this.data.customerID;
-              this.data = e?.event[0];
+              this.data = JSON.parse(JSON.stringify(e?.event[0]));
               if (this.isCheckCbx && type != 'switch') {
                 this.setServiceTagEmtry();
                 this.isCheckCbx = false;

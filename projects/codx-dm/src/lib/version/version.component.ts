@@ -324,7 +324,7 @@ export class VersionComponent implements OnInit {
     var file = files[0];    
     var data = await this.convertBlobToBase64(file.rawFile);  
     var type = file.type.toLowerCase();
-    this.fileEditing.avatar = `../../../assets/codx/dms/${this.getAvatar(file.name)}`;
+    this.fileEditing.avatar = `../../..assets/themes/dm/default/img/${this.getAvatar(file.name)}`;
     this.fileEditing.extension = file.name.substring(file.name.lastIndexOf('.'), file.name.length) || file.name;
     this.fileEditing.createdBy = this.user.userName;//userName;
     this.fileEditing.type = file.type;
@@ -498,7 +498,7 @@ export class VersionComponent implements OnInit {
             files[index] = res.data;
             files[index].recID = res.data.recID; // thumbmail
             files[index].fileName = res.data.fileName;
-            files[index].thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
+            files[index].thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";//res.data.thumbnail;
             that.displayThumbnail(res.data);
             this.dmSV.ChangeOneFolder.next(files[index]);
           }

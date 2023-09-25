@@ -259,6 +259,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     if (!this.checkDataUpdateFromBackEnd(e))
       return;
 
+    e.data.updateColumns='';
+
+    /** Update từ Front End */
     switch (e.field) {
       case 'costAmt':
         this.grvVouchersLine.startProcess();
@@ -292,13 +295,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
         break;
     }
 
-    this.updateFromBackEnd(e);
-
-  }
-
-  /** Update từ Back End */
-  updateFromBackEnd(e: any) {
-    e.data.updateColumns='';
+    /** Update từ Back End */
     const postFields: string[] = [
       'itemID',
       'quantity',
@@ -315,8 +312,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       'idiM8',
       'idiM9',
     ];
-    this.grvVouchersLine.startProcess();
     if (postFields.includes(e.field)) {
+      this.grvVouchersLine.startProcess();
       this.api
         .exec('IV', 'VouchersLinesBusiness', 'ValueChangedAsync', [
           e.field,
@@ -337,14 +334,11 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             });
             this.dt.detectChanges();
             this.dataUpdate = Object.assign(this.dataUpdate, e.data);
-            this.grvVouchersLine.endProcess();
           }
+          this.grvVouchersLine.endProcess();
         });
     }
-    else
-    {
-      this.grvVouchersLine.endProcess();
-    }
+
   }
 
   /** Nhận các event mà lưới trả về */
