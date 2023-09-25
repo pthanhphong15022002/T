@@ -27,7 +27,174 @@
       (clickMF)="clickMF($event, dataSelected)"
     >
       <ng-template #header let-data>
-        {{dataSelected?.campaignName}} </ng-template>
+        <div class="container_detail">
+          <div class="d-flex flex-column">
+            <div class="d-flex justify-content-between mb-2">
+              <div class="d-flex justify-content-start w-100">
+                <div class="d-flex align-items-start">
+                  <div class="me-3">
+                    <codx-img
+                      [objectId]="dataSelected.recID"
+                      [objectName]="dataSelected?.campaignName"
+                      [referType]="'avt'"
+                      [imgOn]="dataSelected?.modifiedOn"
+                      [objectType]="formModel?.entityName"
+                      [width]="35"
+                    >
+                    </codx-img>
+                  </div>
+                  <div class="d-flex flex-column">
+                    <div class="d-flex align-items-top">
+                      <span
+                        class="fw-bold text-dark fs-5-sm mb-1"
+                        [innerHTML]="
+                          dataSelected?.campaignName
+                            | formatvalue : formModel : 'CampaignName'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      class="d-flex align-items-top"
+                      *ngIf="
+                        dataSelected.location != null &&
+                        dataSelected.location.trim() != ''
+                      "
+                    >
+                      <span
+                        [ngbTooltip]="popupAddress"
+                        class="icon-16 text-gray-600 fs-7"
+                      >
+                        <ng-template #popupAddress>
+                          <codx-label
+                            fiedName="Location"
+                            [formModel]="formModel"
+                          ></codx-label>
+                        </ng-template>
+                      </span>
+                      <span
+                        class="text-gray-600"
+                        [innerHTML]="
+                          dataSelected.location
+                            | formatvalue : formModel : 'Location'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end flex-column">
+                <div class="d-flex">
+                  <span class="icon-access_alarm icon-16 me-2"></span>
+                  <span
+                    class="text-gray-800"
+                    [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
+                    [innerHTML]="
+                      dataSelected?.startDate
+                        | formatvalue : formModel : 'StartDate'
+                        | async
+                    "
+                  ></span>
+                  <span class="me-1 ms-1">-</span>
+                  <span
+                    class="text-gray-800"
+                    [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
+                    [innerHTML]="
+                      dataSelected?.endDate
+                        | formatvalue : formModel : 'EndDate'
+                        | async
+                    "
+                  ></span>
+                </div>
+                <div clas="mt-1">
+                  <codx-vll
+                    [name]="gridViewSetup?.Status?.referedValue"
+                    [field]="'Status'"
+                    [value]="dataSelected?.status"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-sm"
+                  >
+                  </codx-vll>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+              <div class="w-100">
+                <codx-label
+                  style="white-space: nowrap"
+                  class="fw-bold text-primary label-colon"
+                  fiedName="BudgetCost"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div class="">
+                  <div
+                    class="text-dark fw-bold codx-textcontent"
+                    [innerHTML]="
+                      dataSelected?.budgetCost
+                        | formatvalue : formModel : 'BudgetCost'
+                        | async
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="w-100">
+                <codx-label
+                  style="white-space: nowrap"
+                  class="fw-bold text-primary label-colon"
+                  fiedName="ExpectedRevenue"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div class="mt-1">
+                  <div
+                    class="text-dark fw-bold codx-textcontent"
+                    [innerHTML]="
+                      dataSelected?.expectedRevenue
+                        | formatvalue : formModel : 'ExpectedRevenue'
+                        | async
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="w-100">
+                <codx-label
+                  style="white-space: nowrap"
+                  class="fw-bold text-primary label-colon"
+                  fiedName="ActualCost"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div class="mt-1">
+                  <div
+                    class="text-dark fw-bold codx-textcontent"
+                    [innerHTML]="
+                      dataSelected?.actualCost
+                        | formatvalue : formModel : 'ActualCost'
+                        | async
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex w-100">
+              <div class="w-7">
+                <codx-label
+                  style="white-space: nowrap"
+                  class="label-colon text-gray-600"
+                  fiedName="Note"
+                  [formModel]="formModel"
+                ></codx-label>
+              </div>
+              <div
+                class="w-93 line-clamp line-clamp-2 text-popover"
+                [innerHTML]="
+                dataSelected?.note | formatvalue : formModel : 'Note' | async
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
       <ng-template #body></ng-template>
       <ng-template #tabs>
         <codx-tabs

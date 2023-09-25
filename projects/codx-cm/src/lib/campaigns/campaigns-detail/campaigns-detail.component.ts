@@ -4,12 +4,13 @@ import { CRUDService } from 'codx-core';
 @Component({
   selector: 'codx-campaigns-detail',
   templateUrl: './campaigns-detail.component.html',
-  styleUrls: ['./campaigns-detail.component.css']
+  styleUrls: ['./campaigns-detail.component.scss']
 })
 export class CampaignsDetailComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
+  @Input() gridViewSetup: any;
   id: any;
   loaded: boolean;
   tabControl = [
