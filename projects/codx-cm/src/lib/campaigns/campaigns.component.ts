@@ -59,6 +59,7 @@ export class CampaignsComponent
   popupOld: any;
   popoverList: any;
   gridViewSetup: any;
+  isCollapsed: boolean = false;
   readonly btnAdd: string = 'btnAdd';
 
   constructor(
@@ -79,12 +80,13 @@ export class CampaignsComponent
     };
     this.showButtonAdd = true;
 
-   this.cache.gridViewSetup('CMCampaigns','grvCMCampaigns').subscribe((res) =>{
-    if(res){
-      this.gridViewSetup = res;
-    }
-   });
-
+    this.cache
+      .gridViewSetup('CMCampaigns', 'grvCMCampaigns')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -135,7 +137,7 @@ export class CampaignsComponent
     this.titleAction = e.text;
     switch (e.functionID) {
       case 'SYS03':
-       this.edit(data);
+        this.edit(data);
         break;
       case 'SYS02':
         this.delete(data);
@@ -143,7 +145,6 @@ export class CampaignsComponent
       case 'SYS04':
         this.copy(data);
         break;
-
     }
   }
 
@@ -168,7 +169,7 @@ export class CampaignsComponent
               action: 'add',
               title: this.titleAction,
               autoNumber: x,
-              gridViewSetup: this.gridViewSetup
+              gridViewSetup: this.gridViewSetup,
             };
             var dialog = this.callfc.openSide(
               PopupAddCampaignComponent,
@@ -213,7 +214,7 @@ export class CampaignsComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
-            gridViewSetup: this.gridViewSetup
+            gridViewSetup: this.gridViewSetup,
           };
           var dialog = this.callfc.openSide(
             PopupAddCampaignComponent,
@@ -260,7 +261,7 @@ export class CampaignsComponent
               title: this.titleAction,
               recIdOld: this.dataSelected.recID,
               autoNumber: x,
-              gridViewSetup: this.gridViewSetup
+              gridViewSetup: this.gridViewSetup,
             };
             var dialog = this.callfc.openSide(
               PopupAddCampaignComponent,
@@ -283,24 +284,24 @@ export class CampaignsComponent
     });
   }
 
-  delete(data){
-    if(data){
+  delete(data) {
+    if (data) {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
-    .delete([this.view.dataService.dataSelected], true, (opt) =>
-      this.beforeDel(opt)
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.view.dataService.onAction.next({
-          type: 'delete',
-          data: data,
-        });
-      }
-    });
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
+          });
+        }
+      });
 
-  this.detectorRef.detectChanges();
+    this.detectorRef.detectChanges();
   }
 
   beforeDel(opt: RequestOption) {
@@ -312,6 +313,17 @@ export class CampaignsComponent
   //#endregion
 
   //#region popover
+  checkIsCollapsed(id) {
+    let isCollapsed = false;
+    let element = document.getElementById(id);
+    if (element) {
+      if (element.offsetHeight > 38) {
+        isCollapsed = true;
+      }
+    }
+    return isCollapsed;
+  }
+
   setTextPopover(text) {
     return text;
   }
@@ -327,8 +339,14 @@ export class CampaignsComponent
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (parent <= child) {
-          p.open();
+        if (field != 'description') {
+          if (parent <= child) {
+            p.open();
+          }
+        } else {
+          if (e.currentTarget.offsetHeight > 38) {
+            p.open();
+          }
         }
       }
     } else p.close();

@@ -1,7 +1,9 @@
 <ng-template #subHeader let-form>
   <div class="d-flex flex-column">
     <div class="pb-2" *ngIf="cases?.caseNo">
-      <span *ngIf="gridViewSetup"> {{ gridViewSetup["CaseNo"]?.headerText }}: </span>
+      <span *ngIf="gridViewSetup">
+        {{ gridViewSetup["CaseNo"]?.headerText }}:
+      </span>
       <span class="ps-2 pe-2">
         {{ cases?.caseNo }}
       </span>
@@ -33,6 +35,26 @@
 </ng-template>
 
 <ng-template #body let-form>
+  <div class="row" *ngIf="action == 'add' && !applyProcess">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label
+          fiedName="CaseNo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [setRequire]="false"
+        >
+        </codx-label>
+        <codx-input
+          field="caseNo"
+          type="text"
+          [crrValue]="placeHolderAutoNumber"
+          [disabled]="disabledShowInput || action == actionEdit"
+          (controlBlur)="changeAutoNum($event)"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-12">
       <div class="form-group">

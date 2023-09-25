@@ -71,8 +71,13 @@ export class CodxCmService {
     );
   }
 
-  getAdminRolesByModule(){
-    return this.api.exec<any>('AD', 'UserRolesBusiness', 'GetListUserIDByADMinStrAsync', ['CM']);
+  getAdminRolesByModule() {
+    return this.api.exec<any>(
+      'AD',
+      'UserRolesBusiness',
+      'GetListUserIDByADMinStrAsync',
+      ['CM']
+    );
   }
 
   getAvatar(avata) {
@@ -378,10 +383,9 @@ export class CodxCmService {
     return countValidate;
   }
 
-  checkValidateSetting(address ,data, lever = 3, gridViewSetup, headerText) {
+  checkValidateSetting(address, data, lever = 3, gridViewSetup, headerText) {
     let unFillFields = '';
-    if (address == null || address?.trim() == '')
-      return true;
+    if (address == null || address?.trim() == '') return true;
     if (lever == 0) {
       return true;
     }
@@ -395,12 +399,7 @@ export class CodxCmService {
       unFillFields += ' ' + gridViewSetup?.WardID?.headerText;
     }
     if (unFillFields.length > 0) {
-      this.notification.notifyCode(
-        'CM048',
-        0,
-        unFillFields,
-        headerText
-      );
+      this.notification.notifyCode('CM048', 0, unFillFields, headerText);
       return false;
     }
     return true;
@@ -529,7 +528,11 @@ export class CodxCmService {
     );
   }
 
-  updateFieldContacts(instanceID, dataValueEdit: string, dataValueDeleted: string = '') {
+  updateFieldContacts(
+    instanceID,
+    dataValueEdit: string,
+    dataValueDeleted: string = ''
+  ) {
     return this.api.exec<any>(
       'DP',
       'InstanceStepsBusiness',
@@ -568,11 +571,7 @@ export class CodxCmService {
     );
   }
   getListLead() {
-    return this.api.exec<any>(
-      'CM',
-      'LeadsBusiness',
-      'GetListLeadsAsync'
-    );
+    return this.api.exec<any>('CM', 'LeadsBusiness', 'GetListLeadsAsync');
   }
 
   openOrClosedDeal(data: any) {
@@ -868,6 +867,16 @@ export class CodxCmService {
     );
   }
 
+  isExistCaseNo(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'IsExistAutoCodeNumberAsync',
+      data
+    );
+  }
+
   moveStageCases(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1055,7 +1064,7 @@ export class CodxCmService {
     );
   }
 
-  getListUserByBUID(data){
+  getListUserByBUID(data) {
     return this.api.exec<any>(
       'AD',
       'UsersBusiness',
