@@ -46,14 +46,14 @@
         </codx-label>
         <span
           *ngIf="dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ dataItem?.voucherNo }}
         </span>
         <span
           *ngIf="!dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ "AC0028" | mssg | async }}
@@ -69,7 +69,7 @@
         >
         </codx-label>
         <span
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ formatDate(dataItem?.voucherDate) }}
@@ -184,14 +184,18 @@
                   [formModel]="formModel"
                 >
                 </codx-label>
-                <codx-inplace
-                  type="text"
-                  field="pmtMethodID"
-                  [value]="dataItem.pmtMethodID"
-                  [class]="'om-input w-100 '"
-                  [cssClass]="'om-input w-100  fs-4'"
-                  [disabled]="true"
-                ></codx-inplace>
+                <div>
+                  <span
+                    #pmtMethodID
+                    [innerHTML]="
+                      dataItem?.pmtMethodID
+                        | formatvalue : formModel : 'pmtMethodID' : pmtMethodID
+                        | async
+                    "
+                    class="om-input w-100"
+                    style="font-size: 13px;"
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
