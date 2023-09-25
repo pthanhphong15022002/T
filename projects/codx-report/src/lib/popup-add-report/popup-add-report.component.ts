@@ -397,7 +397,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'AddUpdateAsync',
         [this.data])
         .subscribe((res:any) => {
-        (this.data.isUpload && this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
+        (this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
         this.isLoaded = false;
       });
 
@@ -580,7 +580,6 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       t.data.displayMode = "1";
       t.data.icon = "../../../assets/codx/dms/file.svg";
       t.data.size = t.formatBytes(file.size);
-      t.data.isUpload = true;
     };
 
   }
