@@ -49,7 +49,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   ) {
     super(inject);
     this.dialogRef = dialog;
-    this.advancedPayment = dialogData.data?.advancedPayment;
+    this.advancedPayment = {...dialogData.data?.advancedPayment};
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
@@ -109,8 +109,8 @@ export class AdvancePaymentAddComponent extends UIComponent
         this.advancedPayment[e.field] = e.data[0];
         break;
       case 'reasonID':
-        this.advancedPayment[e.field] = e.data[0];
         if (e.itemData[0].ReasonID) {
+          this.advancedPayment[e.field] = e.itemData[0].ReasonID;
           let text = e.itemData[0].ReasonName;
           this.setMemo(e.field.toLowerCase(), text, 0);
         }

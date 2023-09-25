@@ -205,6 +205,9 @@
                       [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
+                  <!-- <codx-input #eleCbxCashBook [Group]="formCashPayment.formGroup" field="cashBookID"
+                      [formModel]="formCashPayment.formModel" (valueChange)="valueChangeMaster($event)">
+                    </codx-input> -->
                 </div>
               </div>
               <div class="col-3">
@@ -537,7 +540,7 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="elementTabDetail?.selectingID == '0'">
+  <ng-container>
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false"
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'"
@@ -549,7 +552,7 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
-            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnadd"
+            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
               " (click)="onAddLine('1')">
@@ -576,7 +579,7 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="elementTabDetail?.selectingID == '1'">
+  <ng-container>
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices" [editOnClick]="true"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" [showEmptyRecord]="false" rowNoField="rowNo"
@@ -590,7 +593,7 @@
               formCashPayment.data?.subType == '9' ||
               formCashPayment.data?.subType == '12')
             ">
-            <button style="border: 1px solid !important" tab-index="12" id="btnset"
+            <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine('3');$event.preventDefault()"
               (click)="onAddLine('3')">
               <i class="icon-i-wallet2 icon-16"></i>
@@ -627,7 +630,7 @@
 
 <!-- Start: Grid VATInvoices -->
 <ng-template #TmpTabVATInvoices>
-  <ng-container *ngIf="elementTabDetail?.selectingID == '2'">
+  <ng-container>
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices formName="VATInvoices" gridViewName="grvVATInvoices"
         entityName="AC_VATInvoices" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)"
@@ -638,10 +641,8 @@
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
           <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="
-              onAddLine('4'); $event.preventDefault()
-              " (click)="onAddLine('4')">
+            <button tabindex="-1" style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
+              (keydown.enter)="onAddLine('4'); $event.preventDefault()" (click)="onAddLine('4')" id="btnAddVAT">
               <i class="icon-i-graph-up icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm hóa đơn GTGT"></codx-label>
             </button>

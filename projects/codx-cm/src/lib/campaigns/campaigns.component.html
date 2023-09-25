@@ -21,13 +21,138 @@
 ></codx-views>
 
 <!--Card-->
-<ng-template #templateViewCard let-data> </ng-template>
+<ng-template #templateViewCard let-data>
+  <codx-card-img
+    cardCss="card-process border border-gray-200 rounded-2 h-300px
+      w-225px card-no-body"
+    [imageObjType]="view?.formModel?.entityName"
+    imgCss="w-100 h-150px"
+    [imageObjName]="data?.campaignName"
+    [imageId]="data?.recID"
+    [imgOn]="data?.modifiedOn"
+    [imageWidth]="1000"
+    [imageReferType]="'avt'"
+    [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [footer]="footerCard"
+    [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)"
+  >
+  </codx-card-img>
+  <ng-template #footerCard>
+    <div class="d-flex bg-footer">
+      <div class="d-flex flex-column w-100">
+        <div
+          class="d-flex justify-content-between align-items-start w-100 h-25px"
+        >
+          <div
+            #campaignName
+            class="fs-6 fw-bold line-clamp line-clamp-1 text-popover"
+            [ngbPopover]="setTextPopover(data?.campaignName)"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="PopoverDetail($event, p, data, 'campaignName')"
+            (mouseleave)="p.close()"
+            placement="bottom right top"
+            [popoverClass]="data.recID"
+            [innerHTML]="
+              data?.campaignName
+                | formatvalue : view.formModel : 'CampaignName'
+                | async
+            "
+          ></div>
+        </div>
+        <div
+          class="d-flex justify-content-between align-items-start w-100 h-50px"
+        >
+          <div
+            #note
+            class="fs-6 text-gray-800 line-clamp line-clamp-2 text-popover"
+            [ngbPopover]="setTextPopover(data?.note)"
+            #p1="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="PopoverDetail($event, p1, data, 'note')"
+            (mouseleave)="p1.close()"
+            placement="bottom right top"
+            [popoverClass]="data?.recID"
+            [innerHTML]="
+              data?.note | formatvalue : view.formModel : 'Note' | async
+            "
+          ></div>
+        </div>
+        <div class="d-flex justify-content-end footerCard-item">
+          <span class="icon-access_alarm icon-16 me-2"></span>
+          <span
+            class="text-gray-800"
+            [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
+            [innerHTML]="
+              data?.startDate
+                | formatvalue : view.formModel : 'StartDate'
+                | async
+            "
+          ></span>
+          <span class="me-1 ms-1">-</span>
+          <span
+            class="text-gray-800"
+            [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
+            [innerHTML]="
+              data?.endDate | formatvalue : view.formModel : 'EndDate' | async
+            "
+          ></span>
+        </div>
+        <div class="mt-1 d-flex justify-content-between">
+          <codx-vll
+            [name]="gridViewSetup?.Status?.referedValue"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <div class="footerCard-item d-flex justify-content-between mt-2">
+          <div class="d-flex justify-content-start">
+            <div class="d-flex me-2">
+              <div class="icon-list-checkbox icon-16 me-1"></div>
+              <div>0</div>
+            </div>
+            <div class="d-flex me-2">
+              <div class="icon-assignment_turned_in icon-16"></div>
+              <div>0</div>
+            </div>
+          </div>
+          <div
+            class="ms-auto d-flex justify-content-end"
+            *ngIf="data?.owner != null && data?.owner?.trim() != ''"
+          >
+            <codx-imgs
+              [width]="25"
+              [objectId]="data?.owner"
+              objectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
 <!--End Card-->
 
 <!--List detail-->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     cardCss="card-template border-bottom p-3 list-task"
+    [imageId]="data?.recID"
+    [imageReferType]="'avt'"
+    [imageWidth]="35"
+    imgCss="me-3"
+    [imageObjName]="data?.campaignName"
+    [imageObjType]="view?.formModel?.entityName"
+    [imgOn]="data?.modifiedOn"
     [typeMF]="'hover'"
     [title]="data?.campaignName"
     [titleCss]="'fs-6 mb-1'"
@@ -41,13 +166,86 @@
   >
   </codx-temp-full>
 </ng-template>
-<ng-template #descTmp let-data> desc </ng-template>
-<ng-template #footer> footer </ng-template>
+<ng-template #descTmp let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex justify-content-between align-items-start w-100 h-50px">
+      <div
+        #note
+        class="fs-6 text-gray-800 line-clamp line-clamp-2 text-popover"
+        [ngbPopover]="setTextPopover(data?.note)"
+        #p2="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, p2, data, 'note')"
+        (mouseleave)="p2.close()"
+        placement="bottom right top"
+        [popoverClass]="data?.recID"
+        [innerHTML]="data?.note | formatvalue : view.formModel : 'Note' | async"
+      ></div>
+    </div>
+    <div class="d-flex justify-content-between mt-1">
+      <div class="d-flex justify-content-start">
+        <codx-vll
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
+      </div>
+      <div class="d-flex justify-content-end footerCard-item">
+        <span class="icon-access_alarm icon-16 me-2"></span>
+        <span
+          class="text-gray-800"
+          [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
+          [innerHTML]="
+            data?.startDate | formatvalue : view.formModel : 'StartDate' | async
+          "
+        ></span>
+        <span class="me-1 ms-1">-</span>
+        <span
+          class="text-gray-800"
+          [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
+          [innerHTML]="
+            data?.endDate | formatvalue : view.formModel : 'EndDate' | async
+          "
+        ></span>
+      </div>
+    </div>
+    <div class="footerCard-item d-flex justify-content-between mt-2">
+      <div class="d-flex justify-content-start">
+        <div class="d-flex me-2">
+          <div class="icon-list-checkbox icon-16 me-1"></div>
+          <div>0</div>
+        </div>
+        <div class="d-flex me-2">
+          <div class="icon-assignment_turned_in icon-16"></div>
+          <div>0</div>
+        </div>
+      </div>
+      <div
+        class="ms-auto d-flex justify-content-end"
+        *ngIf="data?.owner != null && data?.owner?.trim() != ''"
+      >
+        <codx-imgs
+          [width]="25"
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [numberImages]="1"
+        >
+        </codx-imgs>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer> </ng-template>
 <ng-template #templateDetail>
   <codx-campaigns-detail
     [dataService]="view.dataService"
     [dataSelected]="dataSelected"
     [formModel]="view.formModel"
+    [gridViewSetup]="gridViewSetup"
   ></codx-campaigns-detail>
 </ng-template>
 <!--End List detail-->

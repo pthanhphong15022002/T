@@ -61,12 +61,12 @@
           >
           </codx-input>
           <!-- <codx-input
-          field="fieldName"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
+            field="fieldName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input> -->
         </div>
       </div>
       <div class="form-group">
@@ -221,7 +221,6 @@
           <ng-container *ngIf="field.dataFormat == 'V'">
             <ejs-combobox
               #datasVllCbx
-              [enabled]="enabled"
               [dataSource]="listVll"
               [fields]="fieldsVll"
               [value]="field.refValue"
@@ -253,7 +252,6 @@
             <ng-container *ngIf="!this.crrVll?.multiSelect">
               <ejs-combobox
                 #comboxView
-                [enabled]="enabled"
                 [dataSource]="datasVllCrr"
                 [fields]="fieldsCrrVll"
                 [value]="crrValueFirst"
@@ -511,7 +509,6 @@
             <ng-container *ngIf="!this.crrVll?.multiSelect">
               <ejs-combobox
                 #viewComboxForm
-                [enabled]="enabled"
                 [dataSource]="datasVll"
                 [fields]="fieldsResourceVll"
                 [value]="crrValue"

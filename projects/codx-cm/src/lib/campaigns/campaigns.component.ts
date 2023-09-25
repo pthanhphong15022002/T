@@ -12,6 +12,7 @@ import {
   CacheService,
   FormModel,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -21,9 +22,9 @@ import { CodxCmService } from '../codx-cm.service';
 import { PopupAddCampaignComponent } from './popup-add-campaign/popup-add-campaign.component';
 
 @Component({
-  selector: 'lib-campaigns',
+  selector: 'codx-campaigns',
   templateUrl: './campaigns.component.html',
-  styleUrls: ['./campaigns.component.css'],
+  styleUrls: ['./campaigns.component.scss'],
 })
 export class CampaignsComponent
   extends UIComponent
@@ -54,6 +55,10 @@ export class CampaignsComponent
   isButton = true;
   titleAction: any;
   dataSelected: any;
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
+  gridViewSetup: any;
   readonly btnAdd: string = 'btnAdd';
 
   constructor(
@@ -74,11 +79,19 @@ export class CampaignsComponent
     };
     this.showButtonAdd = true;
 
+   this.cache.gridViewSetup('CMCampaigns','grvCMCampaigns').subscribe((res) =>{
+    if(res){
+      this.gridViewSetup = res;
+    }
+   });
+
+  }
+  ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.listdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
@@ -87,15 +100,13 @@ export class CampaignsComponent
       {
         type: ViewType.card,
         sameData: true,
-        active: false,
+        active: true,
         toolbarTemplate: this.footerButton,
         model: {
           template: this.templateViewCard,
         },
       },
     ];
-  }
-  ngAfterViewInit(): void {
     this.view.dataService.methodSave = 'AddCampaignsAsync';
     this.view.dataService.methodUpdate = 'EditCampaignsAsync';
     this.view.dataService.methodDelete = 'DeleteCampaignsAsync';
@@ -157,6 +168,7 @@ export class CampaignsComponent
               action: 'add',
               title: this.titleAction,
               autoNumber: x,
+              gridViewSetup: this.gridViewSetup
             };
             var dialog = this.callfc.openSide(
               PopupAddCampaignComponent,
@@ -167,6 +179,11 @@ export class CampaignsComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
+                let data = e?.event;
+                data.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(data));
+                this.view.dataService.update(this.dataSelected).subscribe();
+                this.detectorRef.detectChanges();
               }
             });
           });
@@ -196,6 +213,7 @@ export class CampaignsComponent
           var obj = {
             action: 'edit',
             title: this.titleAction,
+            gridViewSetup: this.gridViewSetup
           };
           var dialog = this.callfc.openSide(
             PopupAddCampaignComponent,
@@ -206,8 +224,11 @@ export class CampaignsComponent
             this.isButton = true;
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.view.dataService.update(e.event).subscribe();
-              this.dataSelected = JSON.parse(JSON.stringify(e?.event));
+              let data = e?.event;
+              data.modifiedOn = new Date();
+              this.dataSelected = JSON.parse(JSON.stringify(data));
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.detectorRef.detectChanges();
             }
           });
         });
@@ -239,6 +260,7 @@ export class CampaignsComponent
               title: this.titleAction,
               recIdOld: this.dataSelected.recID,
               autoNumber: x,
+              gridViewSetup: this.gridViewSetup
             };
             var dialog = this.callfc.openSide(
               PopupAddCampaignComponent,
@@ -249,10 +271,10 @@ export class CampaignsComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
-                this.view.dataService.update(e.event).subscribe();
-                this.dataSelected = JSON.parse(
-                  JSON.stringify(this.view.dataService.data[0])
-                );
+                let data = e?.event;
+                data.modifiedOn = new Date();
+                this.dataSelected = JSON.parse(JSON.stringify(data));
+                this.view.dataService.update(this.dataSelected).subscribe();
                 this.detectorRef.detectChanges();
               }
             });
@@ -262,7 +284,55 @@ export class CampaignsComponent
   }
 
   delete(data){
+    if(data){
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+    .delete([this.view.dataService.dataSelected], true, (opt) =>
+      this.beforeDel(opt)
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.view.dataService.onAction.next({
+          type: 'delete',
+          data: data,
+        });
+      }
+    });
 
+  this.detectorRef.detectChanges();
+  }
+
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteCampaignsAsync';
+    opt.data = [itemSelected.recID];
+    return true;
+  }
+  //#endregion
+
+  //#region popover
+  setTextPopover(text) {
+    return text;
+  }
+
+  PopoverDetail(e, p: any, emp, field: string) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp[field] != null && emp[field]?.trim() != '') {
+        if (parent <= child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
   }
   //#endregion
 }
