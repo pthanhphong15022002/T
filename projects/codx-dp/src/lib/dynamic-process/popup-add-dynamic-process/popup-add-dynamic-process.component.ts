@@ -2742,6 +2742,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
         }
+        this.changeDetectorRef.markForCheck()
       }
     });
   }
@@ -2789,7 +2790,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       } else {
         this.taskGroupList.push(taskGroup);
       }
-
+      
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);

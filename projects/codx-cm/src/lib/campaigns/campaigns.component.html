@@ -64,20 +64,29 @@
           ></div>
         </div>
         <div
-          class="d-flex justify-content-between align-items-start w-100 h-50px"
+          class="d-flex justify-content-between align-items-start w-100 h-40px"
         >
           <div
-            #note
-            class="fs-6 text-gray-800 line-clamp line-clamp-2 text-popover"
-            [ngbPopover]="setTextPopover(data?.note)"
+            #description
+            [id]="data?.recID"
+            class="fs-6 text-gray-800"
+            [style.height]="checkIsCollapsed(data?.recID) ? '40px' : 'auto'"
+            [ngClass]="
+              checkIsCollapsed(data?.recID)
+                ? 'line-clamp line-clamp-2 text-popover'
+                : ''
+            "
+            [ngbPopover]="setTextPopover(data?.description)"
             #p1="ngbPopover"
             [openDelay]="500"
-            (mouseenter)="PopoverDetail($event, p1, data, 'note')"
+            (mouseenter)="PopoverDetail($event, p1, data, 'description')"
             (mouseleave)="p1.close()"
             placement="bottom right top"
             [popoverClass]="data?.recID"
             [innerHTML]="
-              data?.note | formatvalue : view.formModel : 'Note' | async
+              data?.description
+                | formatvalue : view.formModel : 'Description'
+                | async
             "
           ></div>
         </div>
@@ -168,18 +177,24 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex justify-content-between align-items-start w-100 h-50px">
+    <div class="d-flex justify-content-between align-items-start w-100 h-40px">
       <div
-        #note
-        class="fs-6 text-gray-800 line-clamp line-clamp-2 text-popover"
-        [ngbPopover]="setTextPopover(data?.note)"
-        #p2="ngbPopover"
+        #description
+        [id]="data?.recID"
+        class="fs-6 text-gray-800"
+        [ngClass]="'line-clamp line-clamp-2 text-popover'"
+        [ngbPopover]="setTextPopover(data?.description)"
+        #p1="ngbPopover"
         [openDelay]="500"
-        (mouseenter)="PopoverDetail($event, p2, data, 'note')"
-        (mouseleave)="p2.close()"
+        (mouseenter)="PopoverDetail($event, p1, data, 'description')"
+        (mouseleave)="p1.close()"
         placement="bottom right top"
         [popoverClass]="data?.recID"
-        [innerHTML]="data?.note | formatvalue : view.formModel : 'Note' | async"
+        [innerHTML]="
+          data?.description
+            | formatvalue : view.formModel : 'Description'
+            | async
+        "
       ></div>
     </div>
     <div class="d-flex justify-content-between mt-1">
