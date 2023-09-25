@@ -99,7 +99,7 @@ export class PdfComponent
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
-  // @Output() confirmChange = new EventEmitter<boolean>();
+  @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
@@ -802,6 +802,7 @@ export class PdfComponent
               dialog && dialog?.close();
               this.isSigned = true;
               this.detectorRef.detectChanges();
+              this.changeConfirmState(res);
             }
           });
       }
@@ -1672,10 +1673,11 @@ export class PdfComponent
     }
     this.detectorRef.detectChanges();
   }
-  // changeConfirmState(e: any) {
-  //   this.checkedConfirm = e.data;
-  //   this.confirmChange.emit(e.data);
-  // }
+  changeConfirmState(e: any) {
+    if(this.isSigned){
+      this.confirmChange.emit(e);
+    }
+  }
 
   changeSignature_StampImg(area: tmpSignArea) {
     let setupShowForm = new SetupShowSignature();
