@@ -90,6 +90,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.isUseEmployee = data?.data?.isUseEmployee;
     if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
+    console.log(this.EAppointionObj);
 
     if (data?.data?.empObj && this.actionType == 'add') {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
@@ -235,7 +236,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.eAppointionHeaderTexts = res;
     });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName,
+        this.formModel
+      )
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -263,13 +268,12 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  async addFiles(evt){
-    debugger
+  async addFiles(evt) {
+    debugger;
     this.changedInForm = true;
     this.EAppointionObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.EAppointionObj);
   }
-
 
   onChangeOrgUnitID(event) {
     if (
@@ -528,7 +532,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(false)
+      this.form.validation(false);
       return;
     }
 
