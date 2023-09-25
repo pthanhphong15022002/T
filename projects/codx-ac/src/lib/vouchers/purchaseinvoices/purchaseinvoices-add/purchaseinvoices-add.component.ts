@@ -429,16 +429,19 @@ export class PurchaseinvoicesAddComponent
         };
       }
 
+      this.gridVatInvoices.startProcess();
       this.api
         .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-          field,
+          "AC_PurchaseInvoices",
           this.master,
           e.data,
+          field,
         ])
         .subscribe((line: any) => {
           this.prevVatInvoice = { ...line };
           Object.assign(e.data, line);
           this.detectorRef.markForCheck();
+          this.gridVatInvoices.endProcess();
         });
     }
   }
