@@ -187,7 +187,7 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <div class="d-flex align-items-end">
+                  <div class="d-flex align-items-center">
                     <div
                       #elementNote
                       [id]="'elementNote'"
@@ -206,12 +206,12 @@
                           | async
                       "
                     ></div>
-                    <div *ngIf="isCollapsable">
+                    <div class="" *ngIf="isCollapsable">
                       <codx-label
                         *ngIf="isCollapsed"
                         fieldName="lblReadMore"
                         [formModel]="formModel"
-                        default="&nbsp;Xem thêm"
+                        default="Xem thêm"
                         class="text-primary"
                         style="white-space: nowrap"
                         role="button"
@@ -230,7 +230,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-end w-30">
+              <div class="d-flex justify-content-end w-auto">
                 <div class="d-flex flex-column">
                   <codx-label
                     style="white-space: nowrap"
