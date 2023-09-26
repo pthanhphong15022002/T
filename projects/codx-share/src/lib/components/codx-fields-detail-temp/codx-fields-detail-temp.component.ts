@@ -391,5 +391,6 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     //       return value;
     //     });
     // });
+    return value;
   }
 }
