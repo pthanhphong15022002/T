@@ -179,9 +179,7 @@ export class PopupConvertLeadComponent implements OnInit {
     );
     let lever = 0;
     if (param?.length > 0) {
-      let dataParam = param.filter(
-        (x) => x.category == '1' && !x.transType
-      )[0];
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
       let paramDefault = JSON.parse(dataParam.dataValue);
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
@@ -396,6 +394,29 @@ export class PopupConvertLeadComponent implements OnInit {
           return;
         }
       }
+
+      if (this.customer.address != null && this.customer.address.trim() != '') {
+        let json = await firstValueFrom(
+          this.api.execSv<any>(
+            'BS',
+            'ERM.Business.BS',
+            'ProvincesBusiness',
+            'GetLocationAsync',
+            [this.customer.address, this.leverSetting]
+          )
+        );
+        if (json != null && json.trim() != '') {
+          let lstDis = JSON.parse(json);
+          this.customer.provinceID = lstDis?.ProvinceID;
+          this.customer.districtID = lstDis?.DistrictID;
+          this.customer.wardID = lstDis?.WardID;
+        }else{
+          this.customer.provinceID = null;
+          this.customer.districtID = null;
+          this.customer.wardID = null;
+        }
+      }
+
       if (
         !this.cmSv.checkValidateSetting(
           this.customer.address,
@@ -407,7 +428,6 @@ export class PopupConvertLeadComponent implements OnInit {
       ) {
         return;
       }
-
     }
 
     var ischeck = true;
@@ -913,29 +933,6 @@ export class PopupConvertLeadComponent implements OnInit {
     this.customer[e.field] = e?.data;
     if (e.field == 'customerName' && e?.data) {
       this.nameAvt = e?.data?.trim();
-    }
-    if (e.field == 'address') {
-      if (e?.data != null && e?.data.trim() != '') {
-
-        let json = await firstValueFrom(
-          this.api.execSv<any>(
-            'BS',
-            'ERM.Business.BS',
-            'ProvincesBusiness',
-            'GetLocationAsync',
-            [e?.data, this.leverSetting]
-          )
-        );
-        if (json != null && json.trim() != '') {
-          let lstDis = JSON.parse(json);
-          if (this.customer.provinceID != lstDis?.ProvinceID)
-            this.customer.provinceID = lstDis?.ProvinceID;
-          if (this.customer.districtID != lstDis?.DistrictID)
-            this.customer.districtID = lstDis?.DistrictID;
-          if (this.customer.wardID != lstDis?.WardID)
-            this.customer.wardID = lstDis?.WardID;
-        }
-      }
     }
   }
   valueTagChange(e) {
