@@ -54,10 +54,7 @@ export class AdvancePaymentAddComponent extends UIComponent
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
     this.headerText = dialogData.data?.headerText;
-    if(this.formType == 'edit')
-    {
-      this.loadAdvancedPaymentLines();
-    }
+    this.loadAdvancedPaymentLines();
     this.cache.gridViewSetup(this.fmAdvancedPaymentLines.formName, this.fmAdvancedPaymentLines.gridViewName)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
