@@ -88,7 +88,7 @@
         <div class="row text-center mt-2 text-primary fw-bold">
           <codx-label
             style="font-size: 35px"
-            default="Đề nghị tạm ứng"
+            [default]="headerText"
           ></codx-label>
         </div>
         <div class="row">
@@ -120,7 +120,7 @@
                 [isMulti]="false"
                 type="combobox"
                 field="objectID"
-                [value]="advancedPayment.objectID"
+                [value]="advancedPayment?.objectID"
                 [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
                 [emptyText]="form?.gridviewSetup?.ObjectID.headerText"
                 (valueChange)="dropdownChange($event)"
@@ -244,7 +244,7 @@
                 [isMulti]="false"
                 type="combobox"
                 field="reasonID"
-                [value]="advancedPayment.reasonID"
+                [value]="advancedPayment?.reasonID"
                 [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
                 [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
                 (valueChange)="dropdownChange($event)"

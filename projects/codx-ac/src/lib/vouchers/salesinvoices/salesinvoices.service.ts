@@ -3,6 +3,15 @@ import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 
+export enum MF {
+  GuiDuyet = 'ACT060504',
+  GhiSo = 'ACT060506',
+  HuyYeuCauDuyet = 'ACT060505',
+  KhoiPhuc = 'ACT060507',
+  KiemTraTinhHopLe = 'ACT060503',
+  In = 'ACT060508',
+}
+
 export const fmSalesInvoicesLines: FormModel = {
   entityName: 'AC_SalesInvoicesLines',
   formName: 'SalesInvoicesLines',

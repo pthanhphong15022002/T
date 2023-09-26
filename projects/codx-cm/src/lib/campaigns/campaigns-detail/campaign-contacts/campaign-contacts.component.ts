@@ -35,7 +35,7 @@ export class CampaignContactsComponent implements OnInit{
   service = 'CM';
   currentRecID = '';
   assemblyName = 'ERM.Business.CM';
-  className = 'WorkOrderUpdatesBusiness';
+  className = 'CampaignsBusiness';
   method = 'GetListCampaignContactsAsync';
   id: any;
   loaded: boolean;
