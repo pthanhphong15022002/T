@@ -38,6 +38,7 @@ export abstract class WSUIComponent implements OnInit {
       
     ngOnInit(): void {
         this.getFuncID();
+        this.getUserInfo();
         this.onInit();
     }
     
