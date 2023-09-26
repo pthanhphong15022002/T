@@ -2005,6 +2005,17 @@ export class CodxHrService {
       recID
     );
   }
+
+  validateBeforeReleaseEQuit(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EQuitBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
+    );
+  }
+
   //#endregion
 
   //#region Common

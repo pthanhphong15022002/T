@@ -1,29 +1,32 @@
 ﻿<div codxcontainer></div>
 <div modifyLang></div>
-<ng-container *ngIf="layoutCZ == 'qtsc'; else default">
-  <qtsc-login
-    [loginForm]="loginForm"
-    [changePassForm]="changePassForm"
-    [firstLoginForm]="firstLoginForm"
-    [defaultAuth]="defaultAuth"
-    [hasError]="hasError"
-    [returnUrl]="returnUrl"
-    [alerttext]="alerttext"
-    [sessionID]="sessionID"
-    [email]="email"
-    [mode]="mode"
-    [user]="user"
-    [f]="f"
-    [c]="c"
-    [fl]="fl"
-    [isNotADMode]="sysSetting?.loginType != '8'"
-    (submitEvent)="submit($event)"
-    (submitChangePassEvent)="submitChangePass()"
-    (submitFirstLoginEvent)="submitFirstLogin()"
-    (destroyEven)="ngOnDestroy()"
-    (forgotPassEven)="forgotPass()"
-  ></qtsc-login>
+<ng-container *ngIf="f && c && fl">
+  <ng-container *ngIf="layoutCZ == 'qtsc'; else default">
+    <qtsc-login
+      [loginForm]="loginForm"
+      [changePassForm]="changePassForm"
+      [firstLoginForm]="firstLoginForm"
+      [defaultAuth]="defaultAuth"
+      [hasError]="hasError"
+      [returnUrl]="returnUrl"
+      [alerttext]="alerttext"
+      [sessionID]="sessionID"
+      [email]="email"
+      [mode]="mode"
+      [user]="user"
+      [f]="f"
+      [c]="c"
+      [fl]="fl"
+      [isNotADMode]="sysSetting?.loginType != '8'"
+      (submitEvent)="submit($event)"
+      (submitChangePassEvent)="submitChangePass()"
+      (submitFirstLoginEvent)="submitFirstLogin()"
+      (destroyEven)="ngOnDestroy()"
+      (forgotPassEven)="forgotPass()"
+    ></qtsc-login>
+  </ng-container>
 </ng-container>
+
 <ng-template #default>
   <codx-login
     [loginForm]="loginForm"
@@ -35,6 +38,7 @@
     [alerttext]="alerttext"
     [sessionID]="sessionID"
     [loginDevice]="loginDevice"
+    [sysSetting]="sysSetting"
     [email]="email"
     [mode]="mode"
     [user]="user"
