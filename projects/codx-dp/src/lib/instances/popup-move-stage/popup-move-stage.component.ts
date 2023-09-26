@@ -539,6 +539,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
           comment: this.instancesStepOld?.note,
           expectedClosed: this.expectedClosed,
+          permissionCM:  res[2],
         };
         if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [

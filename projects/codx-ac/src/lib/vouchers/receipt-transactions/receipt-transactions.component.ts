@@ -306,12 +306,10 @@ export class ReceiptTransactionsComponent extends UIComponent {
       });
   }
 
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
+  edit(e, dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+      .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if(res)
@@ -335,17 +333,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
             option,
             this.view.funcID
           );
-          this.dialog.closed
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res.event != null) {
-              if (res.event['update']) {
-                this.itemSelected = res.event['data'];
-                this.view.dataService.dataSelected = this.itemSelected;
-                this.detectorRef.detectChanges();
-              }
-            }
-          });
         }
       });
   }
