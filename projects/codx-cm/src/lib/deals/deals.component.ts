@@ -771,18 +771,18 @@ export class DealsComponent
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
           let oldStatus = data.status;
           let oldStepId = data.stepID;
-          var stepReason = {
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
@@ -790,7 +790,7 @@ export class DealsComponent
             isCallInstance: true,
             // listStepCbx: this.lstStepInstances,
           };
-          var obj = {
+          let obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
@@ -799,7 +799,7 @@ export class DealsComponent
             applyFor: '1',
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -809,17 +809,17 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
+              let instance = e.event.instance;
+              let listSteps = e.event?.listStep;
               this.detailViewDeal.reloadListStep(listSteps);
-              var index =
+              let index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              var nextStep = '';
+              let nextStep = '';
               if (
                 index != -1 &&
                 !listSteps[index]?.isSuccessStep &&
@@ -829,13 +829,14 @@ export class DealsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [
+              let dataUpdate = [
                 data.recID,
                 instance.stepID,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
+                e.event?.permissionCM
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
