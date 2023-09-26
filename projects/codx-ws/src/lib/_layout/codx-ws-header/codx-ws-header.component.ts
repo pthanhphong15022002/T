@@ -103,7 +103,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
 
   navigateWS()
   {
-    debugger
+    if(!this.url$.includes("ws/workspace")) this.url$ = "ws/workspace/WS001";
     this.codxService.navigate("","/"+this.url$);
   }
 }
