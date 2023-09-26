@@ -1,0 +1,221 @@
+<codx-form
+  #form
+  [headerText]="titleAction"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [body]="body"
+></codx-form>
+<ng-template #body>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-1">
+        <codx-input
+          type="checkbox"
+          [field]="'isProvince'"
+          [crrValue]="isProvince"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblProvince"
+        default="Tỉnh/Thành phố"
+      >
+      </codx-label>
+    </div>
+    <div class="col-8">
+      <!-- <codx-input
+        type="combobox"
+        [field]="'provinceIDs'"
+        [multiple]="true"
+        [showInput]="true"
+        [crrValue]="provinceIDs"
+        [disabled]="!isProvince"
+        refValue="CMProvinces"
+        (valueChange)="valueChange($event)"
+      ></codx-input> -->
+      <codx-dropdown-select
+        #cbxProvince
+        type="combobox"
+        field="provinceIDs"
+        [refValue]="'CMProvinces'"
+        [value]="provinceIDs"
+        [disabled]="!isProvince"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-1">
+        <codx-input
+          type="checkbox"
+          [field]="'isDistrict'"
+          [crrValue]="isDistrict"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblDistrict"
+        default="Quận/Huyện"
+      >
+      </codx-label>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxDistrict
+        type="combobox"
+        field="districtIDs"
+        [refValue]="'CMDistricts'"
+        [value]="districtIDs"
+        [disabled]="!isDistrict"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+      <!-- <codx-input
+        type="combobox"
+        [field]="'districtIDs'"
+        [multiple]="true"
+        [crrValue]="districtIDs"
+        refValue="CMDistricts"
+        [disabled]="!isDistrict"
+        (valueChange)="valueChange($event)"
+      ></codx-input> -->
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-1">
+        <codx-input
+          type="checkbox"
+          [field]="'isIndustries'"
+          [crrValue]="isIndustries"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblIndustries"
+        default="Lĩnh vực hoạt động"
+      >
+      </codx-label>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxIndustries
+        type="combobox"
+        field="industries"
+        [refValue]="'CMIndustries'"
+        [value]="industries"
+        [disabled]="!isIndustries"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+      <!-- <codx-input
+        type="combobox"
+        [field]="'industries'"
+        [multiple]="true"
+        [crrValue]="industries"
+        [disabled]="!isIndustries"
+        refValue="CMIndustries"
+        (valueChange)="valueChange($event)"
+      ></codx-input> -->
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-1">
+        <codx-input
+          type="checkbox"
+          [field]="'isStatus'"
+          [crrValue]="isStatus"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblStatus"
+        default="Trạng thái"
+      >
+      </codx-label>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxStatus
+        type="valuelist"
+        field="status"
+        [refValue]="objectType == '1' ? 'CRM041' : 'CRM039'"
+        [value]="status"
+        [disabled]="!isStatus"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+      <!-- <codx-input
+        type="valuelist"
+        [field]="'status'"
+        [multiple]="true"
+        [crrValue]="status"
+        [disabled]="!isStatus"
+        refValue="CRM041"
+        (valueChange)="valueChange($event)"
+      ></codx-input> -->
+    </div>
+  </div>
+  <div class="form-group d-flex">
+    <codx-label
+      class="label-colon text-gray-500"
+      [formModel]="form.formModel"
+      [name]="objectType == '1' ? 'lblCountLeads' : 'lblCountCustomers'"
+      [default]="
+        objectType == '1'
+          ? 'Số lượng khách hàng tiềm năng được tìm thấy'
+          : 'Số lượng khách hàng được tiềm thấy'
+      "
+    >
+    </codx-label>
+    <span class="fw-bold">{{ countLeadCus }}</span>
+  </div>
+  <div class="form-group d-flex">
+    <codx-label
+      class="label-colon text-gray-500"
+      [formModel]="form.formModel"
+      [name]="objectType == '1' ? 'lblHadCountLeads' : 'lblHadCountCustomers'"
+      [default]="
+        objectType == '1'
+          ? 'Số lượng khách hàng tiềm năng đã có trong chiến dịch'
+          : 'Số lượng khách hàng được đã có trong chiến dịch'
+      "
+    >
+    </codx-label>
+    <span class="fw-bold">{{ countHadLeadCus }}</span>
+  </div>
+  <div class="form-group d-flex">
+    <codx-label
+      class="label-colon text-gray-500"
+      [formModel]="form.formModel"
+      [name]="objectType == '1' ? 'lblCountAddLeads' : 'lblCountAddCustomers'"
+      [default]="
+        objectType == '1'
+          ? 'Số lượng khách hàng tiềm năng sẽ được thêm'
+          : 'Số lượng khách hàng sẽ được thêm'
+      "
+    >
+    </codx-label>
+    <span class="fw-bold">{{ countAdd }}</span>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">
+      <codx-label
+        name="lblSave"
+        [formModel]="dialog.formModel"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>

@@ -19,8 +19,8 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   @Input() dataService: any;
   @Input() formModel: any;
   @Input() company: any;
+  @Input() headerText: any;
   
-  headerText: string = '';
   logosrc: any;
   dataCategory: any;
   formType: any;
@@ -147,14 +147,14 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   }
 
   copy(dataCopy) {
-    this.view.dataService
+    this.dataService
     .copy((o) => this.setDefault(dataCopy,'copy'))
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if(res != null)
       {
         let datas = {...res};
-        this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+        this.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
           var obj = {
             formType: 'copy',
             headerText: this.headerText,
@@ -162,8 +162,8 @@ export class AdvancePaymentDetailComponent extends UIComponent {
             company: this.company,
           };
           let opt = new DialogModel();
-          opt.FormModel = this.view.formModel;
-          opt.DataService = this.view.dataService;
+          opt.FormModel = this.formModel;
+          opt.DataService = this.dataService;
           var dialog = this.callfc.openForm(
             AdvancePaymentAddComponent,
             '',
@@ -174,6 +174,7 @@ export class AdvancePaymentDetailComponent extends UIComponent {
             '',
             opt
           );
+          this.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
         });
       }
     });
