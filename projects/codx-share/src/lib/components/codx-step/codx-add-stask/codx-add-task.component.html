@@ -47,6 +47,7 @@
           [label]="'Mới'" 
           (change)="valueChangeRadio($event)"
           [checked]="stepsTasks?.status == '1'"
+          [disabled]="action == 'edit'"
         ></ejs-radiobutton>
       </div>
 
@@ -56,6 +57,7 @@
           [label]="'Hoàn thành'" 
           (change)="valueChangeRadio($event)"
           [checked]="stepsTasks?.status == '3'"
+          [disabled]="action == 'edit'"
         ></ejs-radiobutton>
         <!-- <codx-input
           type="radio"
