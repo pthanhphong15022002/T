@@ -104,9 +104,9 @@
         type="combobox"
         [refValue]="customField.refValue"
         [placeholder]="customField.note || ''"
-        [crrValue]="customField.dataValue"
-        (keyUpEnter)="valueChange($event)"
-        (valueChange)="valueChange($event)"
+        [crrValue]="customField.dataValue|| ''"
+        (keyUpEnter)="valueChangeCbx($event)"
+        (valueChange)="valueChangeCbx($event)"
         [disabled]="disable"
       >
       </codx-input
