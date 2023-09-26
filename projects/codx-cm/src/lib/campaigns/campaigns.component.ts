@@ -20,6 +20,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddCampaignComponent } from './popup-add-campaign/popup-add-campaign.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-campaigns',
@@ -322,6 +323,37 @@ export class CampaignsComponent
       }
     }
     return isCollapsed;
+  }
+
+  seeMore(data) {
+    let isCollapsed = false;
+
+    let element = document.getElementById('elementNote');
+    if (element) {
+      let height = element.offsetHeight
+        ? JSON.parse(JSON.stringify(element.offsetHeight))
+        : 0;
+      if (
+        data?.description == null ||
+        data.description?.trim() == ''
+      ) {
+        height = 38;
+      }
+      if (height > 38) {
+        isCollapsed = true;
+      }
+      element.focus();
+    }
+
+    return isCollapsed;
+  }
+
+  timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async sleep(fn, ...args) {
+    await this.timeout(3000);
+    return fn(...args);
   }
 
   setTextPopover(text) {

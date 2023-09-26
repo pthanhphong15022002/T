@@ -70,7 +70,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   }
 
   ngAfterViewInit(){
-    this.form.formGroup.patchValue(this.advancedPayment);
+    if(this.form?.data?.coppyForm) this.form.data._isEdit = true;
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.advancedPayment.voucherNo) {
