@@ -227,15 +227,15 @@
             class="text-gray-600 label-colon"
           >
           </codx-label>
-          <span *ngIf="itemDetail?.jobLevel; else noJobLevel">{{
+          <!-- <span *ngIf="itemDetail?.jobLevel; else noJobLevel">{{
             itemDetail.jobLevel
           }}</span>
           <ng-template #noJobLevel>
             <span class="place-holder">{{
               grvSetup["JobLevel"].headerText
             }}</span>
-          </ng-template>
-          <!-- <span
+          </ng-template> -->
+          <span
             class="fw-bold me-4"
             [innerHTML]="
               itemDetail?.jobLevel
@@ -243,7 +243,7 @@
                 | async
             "
           >
-          </span> -->
+          </span>
         </div>
         <div class="d-flex mb-1">
           <codx-label
@@ -291,22 +291,22 @@
               | async
           "
         ></div>
-        <span *ngIf="itemDetail?.oldJobLevel; else noOldJobLevel">{{
+        <!-- <span *ngIf="itemDetail?.oldJobLevel; else noOldJobLevel">{{
           itemDetail.oldJobLevel
         }}</span>
         <ng-template #noOldJobLevel>
           <span class="place-holder">{{
             grvSetup["OldJobLevel"].headerText
           }}</span>
-        </ng-template>
-        <!-- <div
+        </ng-template> -->
+        <div
           class="fw-bold"
           [innerHTML]="
             itemDetail?.oldJobLevel
               | formatvalue : formModel : 'oldJobLevel'
               | async
           "
-        ></div> -->
+        ></div>
         <div
           class="fw-bold"
           [innerHTML]="

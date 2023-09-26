@@ -32,7 +32,7 @@ import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
 import { PurchaseinvoicesComponent } from '../purchaseinvoices.component';
-import { MF, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
+import { MF, PurchaseInvoiceService, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices-detail',
@@ -77,6 +77,7 @@ export class PurchaseinvoicesDetailComponent
     private injector: Injector,
     parentComponent: PurchaseinvoicesComponent,
     private acService: CodxAcService,
+    private purchaseInvoiceService: PurchaseInvoiceService,
     private journalService: JournalService
   ) {
     super(injector);
@@ -190,6 +191,12 @@ export class PurchaseinvoicesDetailComponent
         break;
       case 'SYS002':
         this.export(data);
+        break;
+      case MF.KiemTraTinhHopLe:
+        this.purchaseInvoiceService.validate(e, data);
+        break;
+      case MF.GhiSo:
+        this.purchaseInvoiceService.post(e, data);
         break;
     }
   }

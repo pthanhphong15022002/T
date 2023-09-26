@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
 
 export enum MF {
   GuiDuyet = 'ACT060102',
@@ -31,7 +37,11 @@ export const fmVATInvoices: FormModel = {
 export class PurchaseInvoiceService {
   journal: IJournal;
 
-  constructor(cacheService: CacheService, private apiService: ApiHttpService) {
+  constructor(
+    cacheService: CacheService,
+    private notiService: NotificationsService,
+    private apiService: ApiHttpService
+  ) {
     cacheService
       .gridViewSetup(fmVATInvoices.formName, fmVATInvoices.gridViewName)
       .subscribe();
@@ -49,5 +59,27 @@ export class PurchaseInvoiceService {
     this.apiService
       .exec('IV', 'IVBusiness', 'InitDimSetupListCacheAsync')
       .subscribe();
+  }
+
+  validate(e: any, data: IPurchaseInvoice): void {
+    this.apiService
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          Object.assign(data, res);
+          this.notiService.notifyCode('AC0029', 0, e.text);
+        }
+      });
+  }
+
+  post(e: any, data: IPurchaseInvoice): void {
+    this.apiService
+      .exec('AC', 'PurchaseInvoicesBusiness', 'PostAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          Object.assign(data, res);
+          this.notiService.notifyCode('AC0029', 0, e.text);
+        }
+      });
   }
 }
