@@ -10,6 +10,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { FormGroup } from '@angular/forms';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-equit',
@@ -17,6 +18,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./popup-equit.component.css'],
 })
 export class PopupEquitComponent extends UIComponent {
+  console = console;
   dialog: DialogRef;
   formModel: FormModel;
   headerText;
@@ -25,6 +27,10 @@ export class PopupEquitComponent extends UIComponent {
   disabledInput: boolean = false;
   employeeObj;
   formGroup: FormGroup;
+  currentContract;
+  fmContract: FormModel;
+  createdOn;
+  stoppedOn;
 
   constructor(
     private injector: Injector,
@@ -41,13 +47,12 @@ export class PopupEquitComponent extends UIComponent {
     this.actionType = data?.data?.actionType;
 
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    console.log(this.data);
     this.employeeObj = data?.data?.empObj
       ? JSON.parse(JSON.stringify(data?.data?.empObj))
       : {};
 
+    this.fmContract = data.data.fmContract;
     this.headerText = data?.data?.headerText;
-
     this.funcID = data?.data?.funcID;
 
     // this.cache
@@ -68,9 +73,11 @@ export class PopupEquitComponent extends UIComponent {
             res.data.employeeID = this.employeeObj.employeeID;
           }
           this.data = res.data;
-          console.log(this.data);
+
           this.formModel.currentData = res.data;
           this.formGroup.patchValue(res.data);
+
+          this.getInforContract(this.employeeObj.employeeID);
         }
       });
   }
@@ -83,8 +90,18 @@ export class PopupEquitComponent extends UIComponent {
       this.initFormAdd();
     }
     if (this.actionType == 'edit') {
+      if (this.employeeObj) {
+        this.data.employeeID = this.employeeObj.employeeID;
+      }
+
+      this.createdOn = this.data.createdOn;
+      this.stoppedOn = this.data.stoppedOn;
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
+
+      if (this.employeeObj?.employeeID) {
+        this.getInforContract(this.employeeObj.employeeID);
+      }
     }
   }
 
@@ -95,6 +112,48 @@ export class PopupEquitComponent extends UIComponent {
     } else {
       delete this.employeeObj;
     }
+  }
+
+  //Calc ViolatedDays
+  functionCalcViolatedDays() {
+    var violatedDays = 0;
+
+    if (this.createdOn && this.stoppedOn) {
+      violatedDays =
+        this.currentContract?.quitForetellDays -
+        (moment(this.stoppedOn).diff(moment(this.createdOn), 'days') +
+          (moment(this.stoppedOn).format('yyyy-MM-dd') ==
+          moment(this.createdOn).format('yyyy-MM-dd')
+            ? 0
+            : 1));
+      if (!isNaN(violatedDays)) {
+        this.currentContract = {
+          ...this.currentContract,
+          violatedDays: violatedDays >= 0 ? violatedDays : 0,
+        };
+      }
+    } else {
+      this.currentContract = null;
+    }
+  }
+
+  getInforContract(id) {
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'EQuitBusiness',
+        'GetContractCurrentAsync',
+        id
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.currentContract = res;
+          this.functionCalcViolatedDays();
+        } else {
+          this.currentContract = null;
+        }
+      });
   }
 
   getEmployeeInfoById(empId: string, fieldName: string) {
@@ -123,6 +182,8 @@ export class PopupEquitComponent extends UIComponent {
           this.employeeObj.phone = tmpEmployee.phone;
           this.employeeObj.email = tmpEmployee.email;
 
+          this.getInforContract(tmpEmployee.employeeID);
+
           this.hrSevice
             .getOrgUnitID(tmpEmployee?.orgUnitID)
             .subscribe((res) => {
@@ -143,6 +204,23 @@ export class PopupEquitComponent extends UIComponent {
     });
   }
   //#endregion
+
+  valueChange(event) {
+    switch (event.field) {
+      case 'createdOn': {
+        this.createdOn = event.data;
+        this.functionCalcViolatedDays();
+        break;
+      }
+      case 'stoppedOn': {
+        this.stoppedOn = event.data;
+        this.functionCalcViolatedDays();
+        break;
+      }
+      default:
+        break;
+    }
+  }
 
   onSaveForm() {
     if (this.formGroup.invalid) {
