@@ -187,7 +187,7 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <div class="d-flex align-items-center">
+                  <div class="d-flex flex-column">
                     <div
                       #elementNote
                       [id]="'elementNote'"
@@ -230,7 +230,7 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-end w-auto">
+              <div class="d-flex justify-content-end w-30">
                 <div class="d-flex flex-column">
                   <codx-label
                     style="white-space: nowrap"
@@ -290,7 +290,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5">Khách hàng tiềm năng</div>
+                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'1'"></codx-campaign-contacts></div>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -308,7 +308,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5">Cơ hội tạo ra</div>
+                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'2'"></codx-campaign-contacts></div>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
