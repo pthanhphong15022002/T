@@ -36,7 +36,6 @@ import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
-import { CodxCalendarService } from '../../codx-calendar/codx-calendar.service';
 import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
 import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
@@ -51,6 +50,7 @@ import {
   CO_Meetings,
   CO_Permissions,
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
+import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 
 @Component({
   selector: 'codx-step-task',
@@ -166,7 +166,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private stepService: StepService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private calendarService: CodxCalendarService
+    private bookingService: CodxBookingService
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -261,7 +261,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.addCarTitle = res?.customName;
       }
     });
-    this.calendarService.getFormModel('EPT21').then((res) => {
+    this.bookingService.getFormModel('EPT21').then((res) => {
       this.carFM = res;
       this.carFG = this.codxService.buildFormGroup(
         this.carFM?.formName,

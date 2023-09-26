@@ -19,7 +19,6 @@ import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-l
 import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
 import { PersonalsComponent } from 'projects/codx-mwp/src/lib/personals/personals.component';
-import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { IncommingComponent } from 'projects/codx-od/src/lib/incomming/incomming.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -36,6 +35,7 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
+import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
 
 const routes: Routes = [
   {

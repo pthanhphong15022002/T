@@ -158,6 +158,14 @@ export class AdvancePaymentAddComponent extends UIComponent
         }
         else
         {
+          if(res?.update?.data)
+          {
+            this.advancedPayment = res.update.data;
+          }
+          else if(!res?.save)
+          {
+            this.advancedPayment = res;
+          }
           this.saveLine();
         }
       });
@@ -180,15 +188,26 @@ export class AdvancePaymentAddComponent extends UIComponent
         }
         else
         {
-          if (res?.save?.data) {
-            this.saveLine(false);
-            this.onRelease('', res.save.data);
-          }
-          else if (res?.update?.data) {
-            this.saveLine(false);
-            this.onRelease('', res.update.data);
-          }
+          this.api
+          .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
+            this.advancedPaymentLines
+          ])
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res) {
+              this.saveFileUpload();
+              if(res?.save?.data)
+              {
+                this.onRelease('', res.save.data);
+              } else if(res?.update?.data)
+              {
+                this.onRelease('', res.update.data);
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
         }
+        this.dt.detectChanges();
       });
   }
   
@@ -228,7 +247,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       });
   }
 
-  saveLine(isClose: boolean = true){
+  saveLine(){
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
         this.advancedPaymentLines
@@ -237,10 +256,9 @@ export class AdvancePaymentAddComponent extends UIComponent
       .subscribe((res) => {
         if (res) {
           this.saveFileUpload();
-          if(isClose)
-          {
-            this.dialogRef.close();
-          }
+          this.dialogRef.dataService.update(this.advancedPayment).subscribe();
+          this.onDestroy();
+          this.dialogRef.close();
           this.detectorRef.detectChanges();
         }
       });

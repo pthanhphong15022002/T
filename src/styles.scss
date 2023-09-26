@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-/***Khong duoc xoa***/
+
 @import "codx-core/assets/sass/init";
 
 @import "src/theme.scss";
@@ -772,9 +772,14 @@ codx-mfunc .icon-file_copy {
 // }
 
 
-.login-aside .e-input-group {
-  background-color: transparent;
-}
+.login-aside{
+  .e-input-group.e-corner{
+    border: 0!important;
+  }
+  .e-input-group {
+    background-color: transparent;
+  }
+} 
 
 .login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
 .login-aside

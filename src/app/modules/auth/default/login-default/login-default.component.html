@@ -658,6 +658,23 @@
                             >
                             </codx-input>
                           </div>
+                          <!-- <div
+                            *ngIf="
+                              changePassForm.controls['passwordOld']?.status ==
+                              'INVALID'
+                            "
+                            (mouseenter)="
+                              pwOnHover(changePassForm, 'passwordOld')
+                            "
+                            popoverClass="userPopoverClass"
+                            [ngbPopover]="passPolicy"
+                            triggers="mouseenter:mouseleave"
+                            placement="right"
+                            container="body"
+                            #p="ngbPopover"
+                            autoClose="outside"
+                            class="attendees-tag icon-20 icon-i-info-circle text-danger"
+                          ></div> -->
                         </div>
                       </div>
                       <div
@@ -674,7 +691,7 @@
                         <div
                           class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
                         >
-                          <div class="d-flex flex-column flex-grow-1">
+                          <div class="d-flex align-items-center flex-grow-1">
                             <!-- <input
                               type="password"
                               class="form-control border-0 p-0 ps-3"
@@ -682,17 +699,35 @@
                               placeholder="Mật khẩu mới"
                               formControlName="password"
                             /> -->
-                            <codx-input
-                              type="password"
-                              class="form-control border-0 p-0 ps-3 d-flex"
-                              field="Password"
-                              placeholder="Mật khẩu mới"
-                              [Group]=""
-                              [Group]="changePassForm"
-                              ControlName="password"
-                            >
-                            </codx-input>
+                            <div class="w-100">
+                              <codx-input
+                                type="password"
+                                class="form-control border-0 p-0 ps-3 d-flex"
+                                field="Password"
+                                placeholder="Mật khẩu mới"
+                                [Group]=""
+                                [Group]="changePassForm"
+                                ControlName="password"
+                              >
+                              </codx-input>
+                            </div>
+                            <div
+                              *ngIf="
+                                changePassForm.controls['password']?.status ==
+                                'INVALID'
+                              "
+                              (mouseenter)="pwOnHover(changePassForm, 'password')"
+                              popoverClass="userPopoverClass"
+                              [ngbPopover]="passPolicy"
+                              triggers="mouseenter:mouseleave"
+                              container="body"
+                              placement="right"
+                              #p="ngbPopover"
+                              autoClose="outside"
+                              class="attendees-tag icon-20 icon-i-info-circle text-danger"
+                            ></div>
                           </div>
+                          
                         </div>
                       </div>
                       <div
@@ -727,6 +762,23 @@
                             >
                             </codx-input>
                           </div>
+                          <div
+                            *ngIf="
+                              changePassForm.controls['confirmPassword']
+                                ?.status == 'INVALID'
+                            "
+                            (mouseenter)="
+                              pwOnHover(changePassForm, 'confirmPassword')
+                            "
+                            popoverClass="userPopoverClass"
+                            [ngbPopover]="passPolicy"
+                            triggers="mouseenter:mouseleave"
+                            container="body"
+                            placement="right"
+                            #p="ngbPopover"
+                            autoClose="outside"
+                            class="attendees-tag icon-20 icon-i-info-circle text-danger"
+                          ></div>
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
@@ -884,6 +936,21 @@
                               formControlName="password"
                             />
                           </div>
+                          <div
+                            *ngIf="
+                              firstLoginForm.controls['password']?.status ==
+                              'INVALID'
+                            "
+                            (mouseenter)="pwOnHover(firstLoginForm, 'password')"
+                            popoverClass="userPopoverClass"
+                            [ngbPopover]="passPolicy"
+                            triggers="mouseenter:mouseleave"
+                            container="body"
+                            placement="right"
+                            #p="ngbPopover"
+                            autoClose="outside"
+                            class="attendees-tag icon-20 icon-i-info-circle text-danger"
+                          ></div>
                         </div>
                       </div>
                       <div
@@ -909,6 +976,23 @@
                               formControlName="confirmPassword"
                             />
                           </div>
+                          <div
+                            *ngIf="
+                              firstLoginForm.controls['confirmPassword']
+                                ?.status == 'INVALID'
+                            "
+                            (mouseenter)="
+                              pwOnHover(firstLoginForm, 'confirmPassword')
+                            "
+                            popoverClass="userPopoverClass"
+                            [ngbPopover]="passPolicy"
+                            triggers="mouseenter:mouseleave"
+                            container="body"
+                            placement="right"
+                            #p="ngbPopover"
+                            autoClose="outside"
+                            class="attendees-tag icon-20 icon-i-info-circle text-danger"
+                          ></div>
                         </div>
                       </div>
                       <div class="form-group d-grid gap-2 mb-5">
@@ -1169,3 +1253,90 @@
     </div>
   </div>
 </div>
+
+<ng-template #passPolicy>
+  <div class="d-flex flex-column pass-policy">
+    <!-- Chiều dài pw -->
+    <div
+      class="d-flex align-items-center pw-length m-2"
+      [ngClass]="{
+      'text-danger icon-sms_failed': !pwValidate.length,
+      'icon-check_circle text-success': pwValidate.length, 
+    }"
+    >
+      <span class="ms-2">
+        <codx-label
+          name="pwPolicyLength"
+          formModel=""
+          default="Tối thiểu "
+        ></codx-label>
+      </span>
+      <span class="px-2 fw-bold">
+        {{ " " + sysSetting?.pwLength + " " }}
+      </span>
+      <span>
+        <codx-label
+          name="pwPolicyLength2"
+          formModel=""
+          default=" kí tự"
+        ></codx-label>
+      </span>
+    </div>
+    <!-- Ký tự hoa -->
+    <div
+      class="d-flex align-items-center pw-uppercase m-2"
+      [ngClass]="{
+      'text-danger icon-sms_failed': !pwValidate.upper,
+      'icon-check_circle text-success': pwValidate.upper, 
+    }"
+    >
+      <codx-label class="ms-2"
+        name="pwPolicy-uppercase"
+        formModel=""
+        default="Bao gồm chữ hoa"
+      ></codx-label>
+    </div>
+    <!-- Ký tự thường -->
+    <div
+      class="d-flex align-items-center pw-lowercase m-2"
+      [ngClass]="{
+      'text-danger icon-sms_failed': !pwValidate.lower,
+      'icon-check_circle text-success': pwValidate.lower, 
+    }"
+    >
+      <codx-label class="ms-2"
+        name="pwPolicy-lowercase"
+        formModel=""
+        default="Bao gồm chữ thường"
+      ></codx-label>
+    </div>
+    <!-- Số -->
+    <div
+      class="d-flex align-items-center pw-num m-2"
+      [ngClass]="{
+      'text-danger icon-sms_failed': !pwValidate.num,
+      'icon-check_circle text-success': pwValidate.num, 
+    }"
+    >
+      <codx-label class="ms-2"
+        name="pwPolicy-num"
+        formModel=""
+        default="Bao gồm chữ số"
+      ></codx-label>
+    </div>
+    <!-- Ký tự đặc biệt -->
+    <div
+      class="d-flex align-items-center pw-special m-2"
+      [ngClass]="{
+      'text-danger icon-sms_failed': !pwValidate.spcialChar,
+      'icon-check_circle text-success': pwValidate.spcialChar, 
+    }"
+    >
+      <codx-label class="ms-2"
+        name="pwPolicy-special"
+        formModel=""
+        default="Bao gồm ký tự đặc biệt"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
