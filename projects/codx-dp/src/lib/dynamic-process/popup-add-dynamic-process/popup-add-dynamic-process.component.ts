@@ -3668,14 +3668,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.objectID == task?.owner) ||
+      task?.roles.find((role) => role.roleType == 'O') ||
       task?.roles[0];
     return role?.objectName;
   }
 
   checkOwner(task) {
-    let taskFind = task?.roles.find((role) => role.objectID == task?.owner);
-    return taskFind?.roleType == 'Owner';
+    let taskFind = task?.roles.find((role) => role.roleType == 'O');
+    return taskFind?.objectType == '1';
   }
 
   checkOverflow(event: any, popup: any) {
