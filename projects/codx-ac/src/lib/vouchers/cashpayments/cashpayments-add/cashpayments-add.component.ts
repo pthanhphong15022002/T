@@ -34,6 +34,7 @@ import {
   FormModel,
   NotificationsService,
   RequestOption,
+  SubModel,
   UIComponent,
   Util,
 } from 'codx-core';
@@ -98,6 +99,14 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  childModelCashPayment: SubModel = {
+    gridviewName:'grvVATInvoices',
+    formName:'VATInvoices',
+    entityName:'AC_VATInvoices',
+    service:'AC',
+    predicates:'LineID=@0',
+    rowNoField:'rowNo',
+  }
   baseCurr: any; //? đồng tiền hạch toán
   legalName: any; //? tên company
   voucherNoAdv: any; //? số chứng từ liên kết(xử lí lấy số chứng từ cho loại chi tạm ứng & chi thanh toán)
@@ -724,20 +733,20 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   onTabSelectedDetail(event) {
-    if (event.selectedIndex == 2) { //? nếu click tab hóa đơn GTGT
-      let ins = setInterval(() => {
-        if (this.eleGridVatInvoices) {
-          clearInterval(ins);
-          this.eleGridVatInvoices.predicates = 'TransID=@0'+(this.eleGridCashPayment?.rowDataSelected ? '&&LineID=@1' : '');
-          this.eleGridVatInvoices.dataValues = this.formCashPayment.data.recID+';'+ (this.eleGridCashPayment?.rowDataSelected?.recID || '');
-          this.detectorRef.detectChanges();
-          this.eleGridVatInvoices.refresh();
-        }
-        setTimeout(() => {
-          if (ins) clearInterval(ins);
-        }, 5000);
-      });
-    }
+    // if (event.selectedIndex == 2) { //? nếu click tab hóa đơn GTGT
+    //   let ins = setInterval(() => {
+    //     if (this.eleGridVatInvoices) {
+    //       clearInterval(ins);
+    //       this.eleGridVatInvoices.predicates = 'TransID=@0'+(this.eleGridCashPayment?.rowDataSelected ? '&&LineID=@1' : '');
+    //       this.eleGridVatInvoices.dataValues = this.formCashPayment.data.recID+';'+ (this.eleGridCashPayment?.rowDataSelected?.recID || '');
+    //       this.detectorRef.detectChanges();
+    //       this.eleGridVatInvoices.refresh();
+    //     }
+    //     setTimeout(() => {
+    //       if (ins) clearInterval(ins);
+    //     }, 5000);
+    //   });
+    // }
   }
 
   //#endregion Event
@@ -1439,13 +1448,13 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         // }
         break;
       case 'closeEdit': //? khi thoát dòng
-      if(this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected){
+      if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {
         this.eleGridCashPayment.rowDataSelected = null;
       }
-        setTimeout(() => {
-          let element = document.getElementById('btnAddCash');
-          element.focus();
-        }, 100);
+      setTimeout(() => {
+        let element = document.getElementById('btnAddCash');
+        element.focus();
+      }, 100);
         break;
       case 'beginEdit':
         let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
@@ -1489,12 +1498,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
               this.eleGridCashPayment.refresh(); //? => refresh lại lưới
             }
           });
-          if (!this.eleGridVatInvoices.autoAddRow && !this.eleGridVatInvoices.isSaveOnClick) {
-            setTimeout(() => {
-              let element = document.getElementById('btnAddVAT');
-              element.focus();
-            }, 100);
-          }
         break;
       case 'update':
         this.api
@@ -1510,12 +1513,15 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
               this.eleGridCashPayment.refresh(); //? => refresh lại lưới
             }
           });
-          if (!this.eleGridVatInvoices.autoAddRow && !this.eleGridVatInvoices.isSaveOnClick) {
-            setTimeout(() => {
-              let element = document.getElementById('btnAddVAT');
-              element.focus();
-            }, 100);
-          }
+        break;
+      case 'closeEdit': //? khi thoát dòng
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
+        this.eleGridVatInvoices.rowDataSelected = null;
+      }
+      setTimeout(() => {
+        let element = document.getElementById('btnAddCash');
+        element.focus();
+      }, 100);
         break;
       case 'endEdit':
         if (!this.eleGridCashPayment.rowDataSelected) {
