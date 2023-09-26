@@ -138,7 +138,7 @@
           "
         ></span>
       </div>
-      <div class="mb-2">
+      <div class="mb-6">
         <codx-label
           fiedName="note"
           [setRequire]="false"
@@ -153,55 +153,65 @@
           "
         ></span>
       </div>
-      <!-- <div class="d-flex flex-wrap">
-        <div class="d-flex align-item-center mb-1 me-5">
-          <codx-label
-            fiedName="contractNo"
-            [setRequire]="false"
-            [formModel]="formModel"
-            class="text-gray-600 label-colon"
-          >
-          </codx-label>
-          <span class="text-dark">
-            {{ itemDetail?.contractNo }}
-          </span>
+
+      <div class="col-12 mb-2" *ngIf="currentContract">
+        <codx-label
+          class="text-primary fw-bold fs-5"
+          fiedName="inForContractCurrent"
+          [formModel]="fmContract"
+          default="Thông tin HĐLĐ hiện tại"
+        ></codx-label>
+
+        <div class="d-flex mb-2">
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName="contractTypeID"
+              [formModel]="fmContract"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fw-bold">{{
+              itemDetail.currentContract?.contractTypeID
+            }}</span>
+          </div>
+
+          <div>
+            <codx-label
+              class="label-colon ms-2"
+              fiedName="contractNo"
+              [formModel]="fmContract"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fw-bold">{{
+              itemDetail.currentContract?.contractNo
+            }}</span>
+          </div>
         </div>
-        <div class="d-flex align-item-center mb-1 me-5">
+
+        <div class="mb-2">
           <codx-label
-            [default]="'Hiệu lực'"
-            [name]="'contractTime'"
-            [formModel]="formModel"
-            class="text-gray-600 label-colon"
-          >
-          </codx-label>
-          <span class="text-dark">
-            {{ itemDetail?.effectedDate | fmDT }}
-            <span *ngIf="itemDetail?.expiredDate">
-              - {{ itemDetail?.expiredDate | fmDT }}
-            </span>
-          </span>
+            class="label-colon"
+            fiedName="quitForetellDays"
+            [formModel]="fmContract"
+            default="Qui định số ngày báo trước"
+          ></codx-label>
+          <span class="fw-bold">{{
+            itemDetail.currentContract?.quitForetellDays
+          }}</span>
         </div>
-        <div class="d-flex align-item-center mb-1">
+
+        <div>
           <codx-label
-            fiedName="signedDate"
-            [setRequire]="false"
-            [formModel]="formModel"
-            class="text-gray-600 label-colon"
-          >
-          </codx-label>
-          <span
-            class="text-dark"
-            class="me-4"
-            [ngbTooltip]="grvSetup?.SignedDate?.headerText"
-            [innerHTML]="
-              itemDetail?.signedDate
-                | formatvalue : formModel : 'signedDate'
-                | async
-            "
-          >
-          </span>
+            class="label-colon"
+            fiedName="violatedDays"
+            [formModel]="fmContract"
+            default="Số ngày nghỉ sớm"
+          ></codx-label>
+          <span class="fw-bold">{{
+            itemDetail.currentContract?.violatedDays
+          }}</span>
         </div>
-      </div> -->
+      </div>
     </div>
   </ng-template>
 

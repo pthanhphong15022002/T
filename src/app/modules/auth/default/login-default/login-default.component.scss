@@ -191,3 +191,22 @@ a:hover {
 		height: 100%;
 	}
 }
+#frm_erm_login .form-control{
+	position: relative;
+	width: calc(100% - 25px)!important;
+	.attendees-tag{
+		position: absolute;
+		top: 10px;
+		right: -25px;
+	}
+}
+#btn-signin{
+	width: calc(100% - 25px)!important;
+}
+.pass-policy codx-label{
+	font-family:Roboto!important;
+	font-size: 13px!important;
+}
+.fv-plugins-icon-container .e-float-input.mt-0{
+	background-color: transparent!important;
+}

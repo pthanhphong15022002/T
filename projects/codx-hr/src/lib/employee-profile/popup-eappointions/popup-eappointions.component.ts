@@ -90,7 +90,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.isUseEmployee = data?.data?.isUseEmployee;
     if (data?.data?.appointionObj)
       this.EAppointionObj = JSON.parse(JSON.stringify(data.data.appointionObj));
-    console.log(this.EAppointionObj);
 
     if (data?.data?.empObj && this.actionType == 'add') {
       this.employeeObj = JSON.parse(JSON.stringify(data.data.empObj));
@@ -269,7 +268,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt) {
-    debugger;
     this.changedInForm = true;
     this.EAppointionObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.EAppointionObj);
