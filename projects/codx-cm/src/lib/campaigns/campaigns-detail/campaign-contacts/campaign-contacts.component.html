@@ -1,5 +1,5 @@
 <ng-container *ngIf="loaded">
-  <div class="h-100 scroll-grid">
+  <div class="h-100" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
     <codx-gridview-v2
       #grid
       service="WR"

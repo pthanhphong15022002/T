@@ -26,6 +26,7 @@ import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/p
 export class CampaignContactsComponent implements OnInit {
   @Input() transID: any;
   @Input() objectType: any;
+  @Input() isShow: boolean;
   @ViewChild('headerCustomerName') headerCustomerName: TemplateRef<any>;
   @ViewChild('tempCustomerName') tempCustomerName: TemplateRef<any>;
   @ViewChild('headerIndustries') headerIndustries: TemplateRef<any>;

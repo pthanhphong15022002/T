@@ -290,7 +290,11 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'3'"></codx-campaign-contacts></div>
+                    <codx-campaign-contacts
+                      [transID]="dataSelected?.recID"
+                      [objectType]="'3'"
+                      [isShow]="isShow"
+                    ></codx-campaign-contacts>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -308,7 +312,11 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'1'"></codx-campaign-contacts></div>
+                    <codx-campaign-contacts
+                      [transID]="dataSelected?.recID"
+                      [objectType]="'1'"
+                      [isShow]="isShow"
+                    ></codx-campaign-contacts>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
