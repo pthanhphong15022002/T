@@ -1219,6 +1219,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (uploadFile?.size % chunSizeInfBytes > 0) {
       numOfChunks++;
     }
+    let percent = 0;
+    let p = 100 / numOfChunks;
     for (var i = 0; i < numOfChunks; i++) {
       var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
       var end = start + chunSizeInfBytes; //Vị trí cuối
@@ -1237,7 +1239,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
           },
           uploadFile.name
         );
-        console.log(uploadChunk);
+
+        if(uploadChunk?.status == 200)
+        {
+          percent += p;
+          let elem =  document.getElementById("circle"+ uploadFile.name);
+          if(elem) elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+        }
       } catch (ex) {}
     }
     return retUpload;
