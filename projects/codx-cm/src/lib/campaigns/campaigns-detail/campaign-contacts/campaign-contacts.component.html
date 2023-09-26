@@ -1,18 +1,46 @@
-<div class="h-100" *ngIf="loaded">
-  <codx-gridview-v2
-    #grid
-    service="WR"
-    [formModel]="formModel"
-    [dataSource]="lstCampContacts"
-    [templateMore]="tempMorefunction"
-    rowHeight="40"
-    [height]="'100%'"
-    [hideMoreFunc]="false"
-    [columnsGrid]="columnsGrid"
-  ></codx-gridview-v2>
-</div>
+<ng-container *ngIf="loaded">
+  <div class="h-100 scroll-grid">
+    <codx-gridview-v2
+      #grid
+      service="WR"
+      [formModel]="formModel"
+      [dataSource]="lstCampContacts"
+      [templateMore]="tempMorefunction"
+      rowHeight="40"
+      [height]="'100%'"
+      [hideMoreFunc]="false"
+      [columnsGrid]="columnsGrid"
+    ></codx-gridview-v2>
+  </div>
+  <div [class]="'d-flex justify-content-center mt-1'">
+    <button
+      type="button"
+      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+      style="min-width: 100px"
+      (click)="addCampaignContact('add')"
+    >
+      <i class="icon-add_location_alt icon-16 me-1"></i>
+      <codx-label
+        name="lblAdd"
+        [formModel]="formModel"
+        default="Thêm"
+      ></codx-label>
+    </button>
+  </div>
+</ng-container>
 
-<ng-template #tempMorefunction></ng-template>
+<ng-template #tempMorefunction let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      type="view"
+      [isBookMark]="false"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+    ></codx-mfunc>
+  </div>
+</ng-template>
 
 <ng-template #headerCustomerName>
   <codx-label
@@ -27,7 +55,7 @@
   <div class="d-flex justify-content-start align-items-center">
     <div class="d-flex flex-column">
       <div
-        class="mb-1"
+        class="mb-1 fw-bold"
         [innerHTML]="
           data?.objectName | formatvalue : formModel : 'ObjectName' | async
         "
@@ -117,11 +145,7 @@
 </ng-template>
 
 <ng-template #headerStatus>
-  <codx-label
-    [formModel]="formModel"
-    fiedName="Status"
-    default="Trạng thái"
-  >
+  <codx-label [formModel]="formModel" fiedName="Status" default="Trạng thái">
   </codx-label>
 </ng-template>
 
@@ -139,7 +163,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #headerHistory>
   <codx-label
     [formModel]="formModel"
@@ -153,13 +176,20 @@
   <div class="d-flex justify-content-start align-items-center">
     <div class="d-flex me-2">
       <div class="icon-email text-primary icon-16 me-1"></div>
-      <div *ngIf="data?.called && data?.called > 0"  [innerHTML]="data?.called | formatvalue : formModel : 'Called' | async"></div>
+      <div
+        *ngIf="data?.called && data?.called > 0"
+        [innerHTML]="data?.called | formatvalue : formModel : 'Called' | async"
+      ></div>
       <div *ngIf="data?.called == null || data?.called == 0">0</div>
-
     </div>
     <div class="d-flex me-2">
       <div class="icon-email text-primary icon-16 me-1"></div>
-      <div *ngIf="data?.sendMail && data?.sendMail > 0"  [innerHTML]="data?.sendMail | formatvalue : formModel : 'SendMail' | async"></div>
+      <div
+        *ngIf="data?.sendMail && data?.sendMail > 0"
+        [innerHTML]="
+          data?.sendMail | formatvalue : formModel : 'SendMail' | async
+        "
+      ></div>
       <div *ngIf="data?.sendMail == null || data?.sendMail == 0">0</div>
     </div>
   </div>

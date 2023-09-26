@@ -290,6 +290,24 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
+                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'3'"></codx-campaign-contacts></div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-info text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Khách hàng"
+                        [formModel]="formModel"
+                        name="lblCustomers"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
                     <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'1'"></codx-campaign-contacts></div>
                   </ng-template>
                 </e-tabitem>
@@ -308,7 +326,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5"><codx-campaign-contacts [transID]="dataSelected?.recID" [objectType]="'2'"></codx-campaign-contacts></div>
+                    <div class="mt-5"></div>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
