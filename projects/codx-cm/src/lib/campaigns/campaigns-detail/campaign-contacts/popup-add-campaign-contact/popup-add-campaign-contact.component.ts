@@ -76,66 +76,76 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      if (this.countChange == 0) {
-        this[e?.field] = e?.data;
-        switch (e?.field) {
-          case 'isProvince':
-            if (!this.isProvince) {
-              if (this.cbxProvince) {
-                this.cbxProvince.value = [];
-                this.cbxProvince.selectedItems = [];
-                this.cbxProvince.setValue([]);
-              }
-              this.provinceIDs = [];
+      this[e?.field] = e?.data;
+      switch (e?.field) {
+        case 'isProvince':
+          if (!this.isProvince) {
+            if (this.cbxProvince) {
+              this.cbxProvince.value = [];
+              this.cbxProvince.selectedItems = [];
+              this.cbxProvince.setValue([]);
             }
-            break;
-          case 'isDistrict':
-            if (!this.isDistrict) {
-              this.districtIDs = [];
-            }
-            break;
-          case 'isIndustries':
-            if (!this.isIndustries) {
-              this.industries = [];
-            }
-            break;
-          case 'isStatus':
-            if (!this.isStatus) {
-              this.status = [];
-            }
-            break;
-        }
-        this.api
-          .execSv<any>(
-            'CM',
-            'ERM.Business.CM',
-            'LeadsBusiness',
-            'GetLeadOrCustomersAsync',
-            [
-              this.objectType,
-              this.provinceIDs,
-              this.districtIDs,
-              this.industries,
-              this.status,
-            ]
-          )
-          .subscribe((res) => {
-            if (res) {
-              let lstAllSearchs = res[0];
-              this.countLeadCus = res[1];
-            } else {
-              let lstAllSearchs = [];
-              this.countLeadCus = 0;
-            }
-            this.countChange += 1;
-          });
-      }else{
-        this.countChange = 0;
+            this.provinceIDs = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        case 'isDistrict':
+          if (!this.isDistrict) {
+            this.districtIDs = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        case 'isIndustries':
+          if (!this.isIndustries) {
+            this.industries = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        case 'isStatus':
+          if (!this.isStatus) {
+            this.status = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        default:
+          this.bindingCountCompaign();
+          break;
+        // case 'districtIDs':
+        //   break;
+        // case 'industries':
+        //   break;
+        // case 'status':
+        //   break;
       }
     }
 
     this.detector.detectChanges();
   }
 
+  bindingCountCompaign() {
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'LeadsBusiness',
+        'GetLeadOrCustomersAsync',
+        [
+          this.objectType,
+          this.provinceIDs,
+          this.districtIDs,
+          this.industries,
+          this.status,
+        ]
+      )
+      .subscribe((res) => {
+        if (res) {
+          let lstAllSearchs = res[0];
+          this.countLeadCus = res[1];
+        } else {
+          let lstAllSearchs = [];
+          this.countLeadCus = 0;
+        }
+      });
+  }
   //#endregion
 }
