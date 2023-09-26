@@ -175,6 +175,7 @@ export class AdvancePaymentComponent extends UIComponent{
   }
 
   edit(e, data) {
+    this.headerText = this.funcName;
     this.view.dataService
     .edit(data)
     .pipe(takeUntil(this.destroy$))
@@ -204,6 +205,7 @@ export class AdvancePaymentComponent extends UIComponent{
     });
   }
   copy(e, dataCopy) {
+    this.headerText = this.funcName;
     this.view.dataService
     .copy((o) => this.setDefault(dataCopy,'copy'))
     .pipe(takeUntil(this.destroy$))
