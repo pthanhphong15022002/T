@@ -111,8 +111,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   ngAfterViewInit() {
-    this.formVoucherIssue.formGroup.patchValue(this.vouchers);
-    this.dt.detectChanges();
+    if(this.formVoucherIssue?.data?.coppyForm) this.formVoucherIssue.data._isEdit = true;
   }
 
   onAfterInit() {
