@@ -464,6 +464,10 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
       this.journal.vatControl = this.journal.vatControl ? '1' : '0';
     }
 
+    if (typeof this.journal.autoPost === "boolean") {
+      this.journal.autoPost = +this.journal.autoPost;
+    }
+
     const extrasObj = this.extrasProps088.reduce(
       (prev, cur) => ({ ...prev, [cur]: this.journal[cur] }),
       {}

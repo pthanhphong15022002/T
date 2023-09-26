@@ -1,15 +1,32 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, DataRequest, FormModel } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  CacheService,
+  CallFuncService,
+  DataRequest,
+  DialogModel,
+  FormModel,
+} from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
 
 @Component({
   selector: 'codx-campaign-contacts',
   templateUrl: './campaign-contacts.component.html',
-  styleUrls: ['./campaign-contacts.component.css']
+  styleUrls: ['./campaign-contacts.component.scss'],
 })
-export class CampaignContactsComponent implements OnInit{
+export class CampaignContactsComponent implements OnInit {
   @Input() transID: any;
   @Input() objectType: any;
+  @Input() isShow: boolean;
   @ViewChild('headerCustomerName') headerCustomerName: TemplateRef<any>;
   @ViewChild('tempCustomerName') tempCustomerName: TemplateRef<any>;
   @ViewChild('headerIndustries') headerIndustries: TemplateRef<any>;
@@ -30,23 +47,38 @@ export class CampaignContactsComponent implements OnInit{
   };
 
   request = new DataRequest();
-  predicates = 'TransID=@0';
+  predicates = 'TransID=@0 && ObjectType=@1';
   dataValues = '';
   service = 'CM';
   currentRecID = '';
   assemblyName = 'ERM.Business.CM';
-  className = 'WorkOrderUpdatesBusiness';
+  className = 'CampaignsBusiness';
   method = 'GetListCampaignContactsAsync';
   id: any;
+  objectTypeOld: any;
   loaded: boolean;
   columnsGrid = [];
   gridViewSetup: any;
-  constructor(private api: ApiHttpService, private detector: ChangeDetectorRef, private cache: CacheService){
-
-  }
+  moreFuncAdd = '';
+  constructor(
+    private api: ApiHttpService,
+    private detector: ChangeDetectorRef,
+    private cache: CacheService,
+    private callFc: CallFuncService
+  ) {}
   async ngOnInit() {
-    this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName));
-
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup(
+        this.formModel?.formName,
+        this.formModel?.gridViewName
+      )
+    );
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncAdd = m.customName;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -91,22 +123,30 @@ export class CampaignContactsComponent implements OnInit{
     if (changes['transID']) {
       if (
         changes['transID'].currentValue != null &&
-        changes['transID']?.currentValue?.trim() != ''
+        changes['transID']?.currentValue?.trim() != '' &&
+        changes['objectType'].currentValue != null &&
+        changes['objectType']?.currentValue?.trim() != ''
       ) {
-        if (changes['transID']?.currentValue == this.id) return;
+        if (
+          changes['transID']?.currentValue == this.id &&
+          changes['objectType']?.currentValue == this.objectTypeOld
+        )
+          return;
         this.id = changes['transID']?.currentValue;
+        this.objectTypeOld = changes['objectType'].currentValue;
+        this.formModel.funcID =
+          this.objectType == '1' ? 'CM0301_1' : 'CM0301_2';
         this.getList();
       } else {
         if (!this.loaded) this.loaded = true;
       }
     }
-
   }
 
   getList() {
     this.loaded = false;
     this.request.predicates = this.predicates;
-    this.request.dataValues = this.transID;
+    this.request.dataValues = this.transID + ';' + this.objectType;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
@@ -136,4 +176,53 @@ export class CampaignContactsComponent implements OnInit{
       );
   }
 
+  //#region  more
+  clickMF(e, data){
+
+  }
+
+  changeDataMF(e, data){
+
+  }
+  //#endregion
+
+  //#region crud
+  //add campaign contacts
+
+  addCampaignContact(action) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 1010;
+    dialogModel.FormModel = this.formModel;
+    this.cache
+      .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
+      .subscribe((res) => {
+        if (res) {
+          let obj = {
+            title: this.moreFuncAdd,
+            transID: this.transID,
+            objectType: this.objectType,
+            gridViewSetup: res,
+            lstCampContacts: this.lstCampContacts,
+          };
+          this.callFc
+            .openForm(
+              PopupAddCampaignContactComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {
+              if (e && e?.event) {
+                this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
+                this.detector.detectChanges();
+              }
+            });
+        }
+      });
+  }
+  //#endregion
 }

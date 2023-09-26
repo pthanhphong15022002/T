@@ -235,8 +235,8 @@
   </div>
 
   <div class="row">
-    <div class="col-6">
-      <div class="form-group" *ngIf="cases?.caseType == '1'">
+    <div class="col-6" *ngIf="cases?.caseType == '1'">
+      <div class="form-group">
         <codx-label
           fiedName="OccuredOn"
           [formModel]="form.formModel"
@@ -272,11 +272,42 @@
         </codx-input>
       </div>
     </div>
+
+    <div class="col-6" *ngIf="cases?.caseType == '2'">
+      <div class="form-group">
+        <codx-label
+          fiedName="Owner"
+          default="Người phụ trách"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <div *ngIf="!cases?.applyProcess; else ownerProcess">
+          <codx-input
+            field="owner"
+            [formModel]="form.formModel"
+            [crrValue]="owner"
+            (valueChange)="valueChangeOwner($event)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #ownerProcess>
+          <ejs-combobox
+            [dataSource]="listParticipants"
+            (valueChange)="valueChangeOwner($event)"
+            [fields]="fieldCbxParticipants"
+            [allowFiltering]="true"
+            [value]="owner"
+            [placeholder]="gridViewSetup?.Owner?.description"
+          ></ejs-combobox>
+        </ng-template>
+      </div>
+    </div>
   </div>
 
-  <div class="row">
+  <div class="row" *ngIf="cases?.caseType == '1'">
     <div class="col-6">
-      <div class="form-group" *ngIf="cases?.caseType == '1'">
+      <div class="form-group">
         <codx-label
           fiedName="DetectedOn"
           [formModel]="form.formModel"

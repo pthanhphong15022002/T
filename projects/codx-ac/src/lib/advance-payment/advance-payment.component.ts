@@ -175,6 +175,7 @@ export class AdvancePaymentComponent extends UIComponent{
   }
 
   edit(e, data) {
+    this.headerText = this.funcName;
     this.view.dataService
     .edit(data)
     .pipe(takeUntil(this.destroy$))
@@ -204,6 +205,7 @@ export class AdvancePaymentComponent extends UIComponent{
     });
   }
   copy(e, dataCopy) {
+    this.headerText = this.funcName;
     this.view.dataService
     .copy((o) => this.setDefault(dataCopy,'copy'))
     .pipe(takeUntil(this.destroy$))
@@ -212,25 +214,29 @@ export class AdvancePaymentComponent extends UIComponent{
       {
         let datas = {...res};
         this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
-          var obj = {
-            formType: 'copy',
-            headerText: this.headerText,
-            advancedPayment: {...datas},
-            company: this.company,
-          };
-          let opt = new DialogModel();
-          opt.FormModel = this.view.formModel;
-          opt.DataService = this.view.dataService;
-          var dialog = this.callfc.openForm(
-            AdvancePaymentAddComponent,
-            '',
-            800,
-            850,
-            '',
-            obj,
-            '',
-            opt
-          );
+          if(res)
+          {
+            var obj = {
+              formType: 'copy',
+              headerText: this.headerText,
+              advancedPayment: {...datas},
+              company: this.company,
+            };
+            let opt = new DialogModel();
+            opt.FormModel = this.view.formModel;
+            opt.DataService = this.view.dataService;
+            var dialog = this.callfc.openForm(
+              AdvancePaymentAddComponent,
+              '',
+              800,
+              850,
+              '',
+              obj,
+              '',
+              opt
+            );
+            this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
+          }
         });
       }
     });
