@@ -7,6 +7,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxCalendarComponent } from './codx-calendar/codx-calendar.component';
 import { CalendarCenterComponent } from './codx-calendar/calendar-center/calendar-center.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
+import { PopupSettingsComponent } from './codx-calendar/popup-settings/popup-settings.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,7 @@ export const routes: Routes = [
     LayoutComponent,
     CalendarCenterComponent,
     CodxCalendarComponent,
+    PopupSettingsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
