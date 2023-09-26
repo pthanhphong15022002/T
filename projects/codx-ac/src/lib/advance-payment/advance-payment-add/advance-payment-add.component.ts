@@ -107,11 +107,11 @@ export class AdvancePaymentAddComponent extends UIComponent
       case 'objectID':
         this.advancedPayment[e.field] = e.data[0];
         break;
-      case 'reasonID':
+      case 'memo':
+        this.advancedPayment[e.field] = e.data[0];
         if (e.itemData[0].ReasonID) {
-          this.advancedPayment[e.field] = e.itemData[0].ReasonID;
-          let text = e.itemData[0].ReasonName;
-          this.setMemo(e.field.toLowerCase(), text, 0);
+          this.advancedPayment.reasonID = e.itemData[0].ReasonID;
+          this.form.formGroup.patchValue({reasonID: this.advancedPayment.reasonID});
         }
         break;
       case 'pmtMethodID':
@@ -357,26 +357,5 @@ export class AdvancePaymentAddComponent extends UIComponent
         }
       });
     }
-  }
-
-  setMemo(field, text, idx) {
-    if (!this.reason.some((x) => x.field == field)) {
-      let transText = new Reason();
-      transText.field = field;
-      transText.value = text;
-      transText.index = idx;
-      this.reason.push(transText);
-    } else {
-      let iTrans = this.reason.find((x) => x.field == field);
-      if (iTrans) iTrans.value = text;
-    }
-
-    this.advancedPayment.memo = this.acService.setMemo(
-      this.advancedPayment,
-      this.reason
-    );
-    this.form.formGroup.patchValue({
-      memo: this.advancedPayment.memo,
-    });
   }
 }
