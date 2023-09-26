@@ -146,15 +146,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
-        // subModel:{
-        //   gridviewName:'grvCashPaymentsLines',
-        //   formName:'CashPaymentsLines',
-        //   entityName:'AC_CashPaymentsLines',
-        //   service:'AC',
-        //   predicates:'TransID=@0',
-        //   rowNoField:'rowNo',
-
-        // },
         model: {
           template2: this.templateGrid,
         },

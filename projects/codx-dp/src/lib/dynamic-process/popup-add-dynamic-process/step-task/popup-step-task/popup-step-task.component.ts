@@ -127,12 +127,8 @@ export class PopupJobComponent implements OnInit {
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner =
-      this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) ||
-      [];
-    this.participant =
-      this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) ||
-      [];
+    this.owner = this.roles?.filter((role) => role.roleType == 'O') || [];
+    this.participant = this.roles?.filter((role) => role.roleType != 'O') || [];
 
     let group = this.listGroupTask?.find(
       (x) => x.recID === this.stepsTasks?.taskGroupID
@@ -392,7 +388,7 @@ export class PopupJobComponent implements OnInit {
   //#region handle time
   getHour(data) {
     let hour =
-      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+      Number(data?.durationDay || 0) * 24 + Number(data?.durationHour || 0);
     return hour || 0;
   }
 
@@ -501,7 +497,7 @@ export class PopupJobComponent implements OnInit {
         objectID: role?.objectID,
         objectName: role?.objectName,
         objectType: role?.objectType,
-        roleType: role?.roleType,
+        roleType: roleType,
         taskID: this.stepsTasks?.recID,
       });
     }
@@ -511,9 +507,8 @@ export class PopupJobComponent implements OnInit {
       let index = this.participant?.findIndex(
         (role) => role?.objectID == this.stepsTasks.owner
       );
-      index >= 0 &&
-        this.participant?.length > 0 &&
-        this.participant?.splice(index, 1);
+      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index, 1);
+      this.participant = [...this.participant];
     }
     if (roleType == 'P') {
       this.participant = listRole;
@@ -522,8 +517,8 @@ export class PopupJobComponent implements OnInit {
   //#endregion
 
   //#region prarentID
-  async changeCombobox(value, key) {
-    let data = this.comboBoxObj?.value;
+  async changeCombobox(event, key) {
+    let data = event?.value;
     this.stepsTasks[key] = data;
     let group = this.listGroupTask.find((x) => x.recID === data);
     this.listTaskLink = group?.recID
