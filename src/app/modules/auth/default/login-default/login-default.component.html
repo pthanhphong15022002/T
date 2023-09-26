@@ -155,7 +155,7 @@
                                 </div>
                                 <div
                                   *ngIf="isNotADMode"
-                                  class="text-start mt-3 mb-3"
+                                  class="text-start mt-2 mb-2"
                                 >
                                   <div class="otp-btn w-100">
                                     <button
@@ -175,14 +175,15 @@
                                       ></codx-label>
                                     </button>
                                   </div>
-                                  <div class="" *ngIf="otpTimeout > 0">
+                                  <div class="d-flex align-items-center" *ngIf="otpTimeout > 0">
                                     <codx-label
                                       formModel=""
-                                      default="Xác thực sẽ hết hạn sau "
+                                      default="Xác thực sẽ hết hạn sau"
                                     ></codx-label>
                                     <!-- {{ otpTimeout / 1000 }} -->
-                                    {{ otpMinutes }}:
-                                    {{ otpTimeout % 60 }}
+                                    <span class="ms-2 fw-bold text-danger">
+                                      {{ otpMinutes }}:{{ otpTimeout % 60 }}
+                                    </span>
                                   </div>
                                 </div>
                                 <div class="form-group d-grid gap-2 mb-5">
@@ -222,7 +223,7 @@
                                 class="w-100 h-100 d-flex flex-column justify-content-center align-items-center mt-3"
                               >
                                 <div
-                                  class="d-flex flex-column justify-content-center align-items-center p-3"
+                                  class="d-flex flex-column justify-content-center align-items-center mb-3"
                                 >
                                   <div
                                     *ngIf="!isScaned; else avatar"
@@ -283,19 +284,18 @@
                                     </button> -->
                                   </div>
                                 </div>
-                                <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
+                                <div class="d-flex align-items-center" *ngIf="qrTimeout > 0">
                                   <codx-label
                                     formModel=""
                                     default="Xác thực sẽ hết hạn sau "
                                   >
                                   </codx-label>
-                                  <span class="ms-2">
-                                    {{ qrTimeoutMinutes }}:
-                                    {{ qrTimeout % 60 }}
+                                  <span class="ms-2 fw-bold text-danger">
+                                    {{ qrTimeoutMinutes }}:{{ qrTimeout % 60 }}
                                   </span>
                                 </div>
                                 <div
-                                  class="qr-codx-guid d-flex flex-column text-center mt-3"
+                                  class="qr-codx-guid d-flex flex-column text-center mt-2"
                                 >
                                   <codx-label
                                     class="fw-bold text-dark fs-6"
