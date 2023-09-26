@@ -561,7 +561,7 @@ export class PopupAddDealComponent
 
   //#endregion
 
-  // Add permission form DP
+  // Add permission form DP - FE
   copyPermission(permissionDP: any) {
     let permission = new CM_Permissions();
     permission.objectID = permissionDP.objectID;
