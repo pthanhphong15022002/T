@@ -19,16 +19,7 @@ import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
-import { SalesInvoiceService } from './salesinvoices.service';
-
-export enum MF {
-  GuiDuyet = 'ACT060504',
-  GhiSo = 'ACT060506',
-  HuyYeuCauDuyet = 'ACT060505',
-  KhoiPhuc = 'ACT060507',
-  KiemTraTinhHopLe = 'ACT060503',
-  In = 'ACT060508',
-}
+import { MF, SalesInvoiceService } from './salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices',
