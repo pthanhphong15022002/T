@@ -53,6 +53,7 @@ export class AdvancePaymentAddComponent extends UIComponent
     this.company = dialogData.data?.company;
     this.advancedPayment.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
+    this.headerText = dialogData.data?.headerText;
     if(this.formType == 'edit')
     {
       this.loadAdvancedPaymentLines();
