@@ -366,31 +366,30 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   getViewText(refValue, value) {
     // this.cache.getComboboxSource('User').subscribe((res) => {});
     // chưa làm
-    this.cache.combobox(refValue).subscribe((data) => {
-      let gridModel = new DataRequest();
-      gridModel.entityName = data.entityName;
-      gridModel.entityPermission = data.entityName;
-      gridModel.pageLoading = false;
-      gridModel.comboboxName = data.comboboxName;
-      gridModel.predicate = data.valueMember + '==@0';
-      gridModel.dataValue = value;
-
-      this.api
-        .execSv<any>(
-          'DP',
-          'ERM.Business.Core',
-          'DataBusiness',
-          'LoadOneDataCbxAsync',
-          gridModel
-        )
-        .subscribe((cbbData) => {
-          let map = JSON.parse(cbbData[0]);
-          if (map?.length > 0) {
-            let crr = map.find((x) => (x.value = value));
-            if (crr) return crr.textValue;
-          }
-          return value;
-        });
-    });
+    // this.cache.combobox(refValue).subscribe((data) => {
+    //   let gridModel = new DataRequest();
+    //   gridModel.entityName = data.entityName;
+    //   gridModel.entityPermission = data.entityName;
+    //   gridModel.pageLoading = false;
+    //   gridModel.comboboxName = data.comboboxName;
+    //   gridModel.predicate = data.valueMember + '=@0';
+    //   gridModel.dataValue = value;
+    //   this.api
+    //     .execSv<any>(
+    //       'DP',
+    //       'ERM.Business.Core',
+    //       'DataBusiness',
+    //       'LoadOneDataCbxAsync',
+    //       gridModel
+    //     )
+    //     .subscribe((cbbData) => {
+    //       let map = JSON.parse(cbbData[0]);
+    //       if (map?.length > 0) {
+    //         let crr = map.find((x) => (x.value = value));
+    //         if (crr) return crr.textValue;
+    //       }
+    //       return value;
+    //     });
+    // });
   }
 }
