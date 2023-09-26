@@ -13,6 +13,7 @@
   [funcID]="funcID"
   (buttonClick)="add($event)"
   (selectedChange)="ChangeItemDetail($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 >
 </codx-views>
 
@@ -75,7 +76,7 @@
     </div>
     <div class="card-footer border-0">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="onSaveUpdateForm()">
           <i class="icon-save"></i>
           <codx-label
             default="Lưu"
@@ -171,6 +172,7 @@
 
 <ng-template #panelRightListDetail let-data>
   <lib-view-detail-equit
+    [fmContract]="fmContract"
     [itemDetail]="itemDetail"
     [view]="view"
     [formModel]="view.formModel"

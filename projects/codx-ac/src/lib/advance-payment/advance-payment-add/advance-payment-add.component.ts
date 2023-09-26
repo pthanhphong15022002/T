@@ -30,7 +30,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   reason: Array<Reason> = [];
   isHaveFile: any = false;
   showLabelAttachment: any = false;
-  advancedPayment: AdvancedPayment;
+  advancedPayment: AdvancedPayment = new AdvancedPayment();
   advancedPaymentLines: Array<AdvancedPaymentLines> = [];
   fmAdvancedPaymentLines: FormModel = {
     entityName: 'AC_AdvancedPaymentLines',
@@ -70,7 +70,7 @@ export class AdvancePaymentAddComponent extends UIComponent
   }
 
   ngAfterViewInit(){
-    this.form.formGroup.patchValue(this.advancedPayment);
+    if(this.form?.data?.coppyForm) this.form.data._isEdit = true;
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.advancedPayment.voucherNo) {
@@ -99,6 +99,7 @@ export class AdvancePaymentAddComponent extends UIComponent
 
   valueChange(e: any){
     this.advancedPayment[e.field] = e.data;
+    this.form.formGroup.patchValue({[e.field]: this.advancedPayment[e.field]});
   }
 
   dropdownChange(e: any)
@@ -115,7 +116,11 @@ export class AdvancePaymentAddComponent extends UIComponent
           this.setMemo(e.field.toLowerCase(), text, 0);
         }
         break;
+      case 'pmtMethodID':
+        this.advancedPayment[e.field] = e.data[0];
+        break;
     }
+    this.form.formGroup.patchValue({[e.field]: this.advancedPayment[e.field]});
   }
 
   lineChange(e: any, i: any)
@@ -144,7 +149,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.dialogRef.dataService.save(null, 0, '', '', true)
+    this.form.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
@@ -166,7 +171,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.dialogRef.dataService.save(null, 0, '', '', true)
+    this.form.save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {

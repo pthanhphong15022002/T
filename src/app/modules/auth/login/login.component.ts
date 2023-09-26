@@ -106,9 +106,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 
-    this.cache.systemSetting().subscribe((res) => {
-      this.sysSetting = res;
-    });
+    // this.cache.systemSetting().subscribe((res) => {
+    //   this.sysSetting = res;
+    // });
+
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       // if (params.i){
@@ -184,7 +185,16 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   onInit(): void {
-    this.initForm();
+    if (this.mode == 'firstLogin' || this.mode == 'changePass') {
+      this.loginService.getUserLoginSetting(this.email).subscribe((setting) => {
+        this.sysSetting = setting;
+        console.log('setting', this.sysSetting);
+        this.initForm();
+      });
+    } else {
+      this.initForm();
+    }
+
     // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
@@ -199,14 +209,14 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   // convenience getter for easy access to form fields
   get f() {
-    return this.loginForm.controls;
+    return this.loginForm?.controls;
   }
   get c() {
-    return this.changePassForm.controls;
+    return this.changePassForm?.controls;
   }
 
   get fl() {
-    return this.firstLoginForm.controls;
+    return this.firstLoginForm?.controls;
   }
 
   checkPasswords: ValidatorFn = (
@@ -222,7 +232,18 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.navRouter.navigate([`/${tenant}/auth/forgotpassword`]);
   }
 
+  validatePWPattern(setting): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      return !setting?.pwSensitive
+        ? !Boolean(control.value.match(/[!@#$%^&*?_~-£().,]/))
+          ? { NotMatch: control.value }
+          : null
+        : null;
+    };
+  }
+
   initForm() {
+    let minL = this.sysSetting?.pwLength ?? 3;
     this.loginForm = this.fb.group({
       email: [
         this.defaultAuth.email,
@@ -232,7 +253,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         this.defaultAuth.password,
         Validators.compose([
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(minL),
           Validators.maxLength(100),
         ]),
       ],
@@ -251,8 +272,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.minLength(3),
+            Validators.minLength(minL),
             Validators.maxLength(100),
+            // Validators.pattern(pattern),
+            // this.validatePWPattern(),
           ]),
         ],
         password: [
@@ -260,8 +283,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.minLength(3),
+            Validators.minLength(minL),
             Validators.maxLength(100),
+            // Validators.pattern(pattern),
+            this.validatePWPattern(this.sysSetting),
           ]),
         ],
         confirmPassword: [
@@ -269,8 +294,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.minLength(3),
+            Validators.minLength(minL),
             Validators.maxLength(100),
+            // Validators.pattern(pattern),
+            this.validatePWPattern(this.sysSetting),
           ]),
         ],
         //captCha: ['', Validators.compose([Validators.required])],
@@ -290,8 +317,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.minLength(3),
+            Validators.minLength(minL),
             Validators.maxLength(100),
+            // Validators.pattern(pattern),
+            this.validatePWPattern(this.sysSetting),
           ]),
         ],
         confirmPassword: [
@@ -299,8 +328,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           '',
           Validators.compose([
             Validators.required,
-            Validators.minLength(3),
+            Validators.minLength(minL),
             Validators.maxLength(100),
+            this.validatePWPattern(this.sysSetting),
+            // Validators.pattern(pattern),
           ]),
         ],
         //captCha: ['', Validators.compose([Validators.required])],

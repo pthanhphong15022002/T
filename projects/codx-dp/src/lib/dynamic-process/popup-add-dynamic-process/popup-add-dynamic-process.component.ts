@@ -2742,6 +2742,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (!check && data?.stepID) {
           this.listStepEdit.push(data?.stepID);
         }
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -2956,6 +2957,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     taskData['roles']?.forEach((role) => {
       this.addRole(role);
     });
+    this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
   }
 
@@ -2997,7 +2999,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     taskData?.roles?.forEach((role, index) => {
       this.addRole(taskData?.roles[index], roleOld[index]);
     });
-
+    this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
   }
 

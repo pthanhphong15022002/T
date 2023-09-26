@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
@@ -46,8 +47,21 @@ export class EmployeeQuitComponent extends UIComponent {
   currentEmpObj;
   flagChangeMF: boolean = false;
   runModeCheck: boolean = false;
+  editStatusObj;
+  dialogEditStatus: any;
+  fmContract;
 
+  //More function
+  @ViewChild('templateUpdateStatus', { static: true })
+  templateUpdateStatus: TemplateRef<any>;
+
+  actionCancelSubmit = 'HRTPro08A00';
+  actionAddNew = 'HRTPro08A01';
   actionSubmit = 'HRTPro08A03';
+  actionUpdateCanceled = 'HRTPro08AU0';
+  actionUpdateInProgress = 'HRTPro08AU3';
+  actionUpdateApproved = 'HRTPro08AU5';
+  actionUpdateClosed = 'HRTPro08AU9';
 
   //Detail
   @ViewChild('templateListDetail') templateListDetail?: TemplateRef<any>;
@@ -78,6 +92,11 @@ export class EmployeeQuitComponent extends UIComponent {
   }
 
   onInit() {
+    this.fmContract = new FormModel();
+    this.fmContract.entityName = 'HR_EContracts';
+    this.fmContract.gridViewName = 'grvEContracts';
+    this.fmContract.formName = 'EContracts';
+
     this.GetGvSetup();
   }
 
@@ -106,12 +125,146 @@ export class EmployeeQuitComponent extends UIComponent {
     this.cmtStatus = evt.data;
   }
 
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.codxShareService.codxReleaseDynamic(
+            'HR',
+            this.itemDetail,
+            res,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notify.notifyCode('ES007');
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.hrService
+                  .UpdateEmployeeAppointionsInfo(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+        }
+      });
+  }
+
+  beforeRelease() {
+    this.hrService
+      .validateBeforeReleaseEQuit(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4';
+          let formName = 'HRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let eJobSalaryObj = parsedJSON[index];
+                  if (eJobSalaryObj['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
+        }
+      });
+  }
+
+  PopupUpdateEAppointStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+    this.editStatusObj = data;
+    this.editStatusObj.employeeID = data.emp.employeeID;
+    this.currentEmpObj = data.emp;
+    this.formGroup.patchValue(this.editStatusObj);
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
+      500,
+      350,
+      null,
+      null
+    );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if (res?.event) {
+        this.view.dataService.update(res.event).subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'HR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+
+        //Render new data when update new status on view detail
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  onSaveUpdateForm() {
+    console.log(this.editStatusObj);
+    this.hrService.EditEQuit(this.editStatusObj).subscribe((res: any) => {
+      if (res != null) {
+        this.notify.notifyCode('SYS007');
+        let data = {
+          ...res,
+          emp: this.currentEmpObj,
+        };
+        this.hrService
+          .addBGTrackLog(
+            res.recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EQuitBusiness'
+          )
+          .subscribe();
+        this.dialogEditStatus && this.dialogEditStatus.close(data);
+      }
+    });
+  }
+
   clickMF(event, data): void {
-    console.log(event);
-    //this.itemDetail = data;
+    if (data?.emp) {
+      this.currentEmpObj = data.emp;
+    }
+    this.itemDetail = data;
     switch (event.functionID) {
       case this.actionSubmit:
-        //this.beforeRelease();
+        this.beforeRelease();
+        break;
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.PopupUpdateEAppointStatus(event.functionID, oUpdate);
         break;
       //Delete
       case 'SYS02':
@@ -179,6 +332,7 @@ export class EmployeeQuitComponent extends UIComponent {
     let dialogAdd = this.callfc.openSide(
       PopupEquitComponent,
       {
+        fmContract: this.fmContract,
         formGroup: this.formGroup,
         actionType: actionType,
         dataObj: data,
@@ -219,6 +373,58 @@ export class EmployeeQuitComponent extends UIComponent {
   }
 
   //#endregion
+
+  handleMutipleUpdateStatus(funcID, data) {
+    this.hrService.handleUpdateRecordStatus(funcID, data);
+
+    this.hrService.EditEQuit(data).subscribe((res: any) => {
+      if (res != null) {
+        res.inforEmployee = data?.inforEmployee;
+        this.view.dataService.update(res).subscribe();
+
+        this.hrService
+          .addBGTrackLog(
+            res.recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'EQuitBusiness'
+          )
+          .subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          funcID === this.actionUpdateCanceled ||
+          funcID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel('HR', res.recID, this.view.formModel.entityName, '', '')
+            .subscribe();
+        }
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  //Send multi
+  async onMoreMulti(e) {
+    let dataSelected = e.dataSelected;
+    let funcID = e.event.functionID;
+
+    switch (funcID) {
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+      case this.actionUpdateClosed:
+        await Promise.all([
+          ...dataSelected.map((res) =>
+            this.handleMutipleUpdateStatus(funcID, res)
+          ),
+        ]);
+    }
+  }
 
   ChangeItemDetail(event) {
     if (event?.data?.emp) {

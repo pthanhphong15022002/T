@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
   ViewChild,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   AuthStore,
@@ -55,6 +56,7 @@ import {
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
   styleUrls: ['./codx-step-task.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   @ViewChild('popupGuide') popupGuide;
@@ -250,6 +252,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         group['isChangeAuto'] = true;
       });
     }
+    this.changeDetectorRef.markForCheck();
   }
 
   ngAfterViewInit() {
