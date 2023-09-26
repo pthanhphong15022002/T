@@ -403,19 +403,19 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          if(this.formType == 'edit')
+          if(res?.update?.data)
           {
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
+            this.dialog.dataService.update(res.update.data).subscribe();
+            this.onDestroy();
           }
-          else
+          else if(!res?.save)
           {
-            this.dialog.close();
+            this.dialog.dataService.update(res).subscribe();
+            this.onDestroy();
           }
+          this.dialog.close();
+          this.detectorRef.detectChanges();
         }
-        this.dt.detectChanges();
       });
   }
 
