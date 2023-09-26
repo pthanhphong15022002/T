@@ -19,7 +19,7 @@ import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
   selector: 'lib-step-task-group',
   templateUrl: './step-task-group.component.html',
   styleUrls: ['./step-task-group.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTaskGroupComponent implements OnInit {
   REQUIRE = ['taskGroupName'];

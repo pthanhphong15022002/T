@@ -374,7 +374,7 @@
             class="d-flex justify-content-between align-items-start"
             *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
           >
-            <div class="w-100 mt-1">
+            <!-- <div class="w-100 mt-1">
               <codx-label
                 style="white-space: nowrap"
                 class="fw-bold text-primary"
@@ -391,7 +391,7 @@
                   "
                 ></div>
               </div>
-            </div>
+            </div> -->
             <div class="w-100 mt-1">
               <codx-label
                 style="white-space: nowrap"
@@ -797,6 +797,7 @@
   <step-task
     [typeTask]="2"
     [customerID]="dataSelected?.recID"
+    [owner]="dataSelected?.owner"
     [isPause]="
       (!isAdmin && user.userID != dataSelected.owner) ||
       dataSelected?.status == '99'

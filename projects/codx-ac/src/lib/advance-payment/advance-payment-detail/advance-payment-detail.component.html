@@ -46,14 +46,14 @@
         </codx-label>
         <span
           *ngIf="dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ dataItem?.voucherNo }}
         </span>
         <span
           *ngIf="!dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ "AC0028" | mssg | async }}
@@ -69,7 +69,7 @@
         >
         </codx-label>
         <span
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ formatDate(dataItem?.voucherDate) }}
@@ -91,7 +91,7 @@
             default="Đề nghị tạm ứng"
           ></codx-label>
         </div>
-        <div class="row">
+        <div class="row" style="padding-bottom: 5px;">
           <div>
             <codx-label
               class="fw-bold"
@@ -99,14 +99,18 @@
               [formModel]="formModel"
             >
             </codx-label>
-            <codx-inplace
-              type="combobox"
-              field="objectID"
-              [value]="dataItem.objectID"
-              [class]="'om-input w-100'"
-              [cssClass]="'om-input w-100 fs-4'"
-              [disabled]="true"
-            ></codx-inplace>
+            <div>
+              <span
+                #objectID
+                [innerHTML]="
+                  dataItem?.objectID
+                    | formatvalue : formModel : 'objectID' : objectID
+                    | async
+                "
+                class="om-input w-100"
+                style="font-size: 13px;"
+              ></span>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -180,14 +184,18 @@
                   [formModel]="formModel"
                 >
                 </codx-label>
-                <codx-inplace
-                  type="text"
-                  field="pmtMethodID"
-                  [value]="dataItem.pmtMethodID"
-                  [class]="'om-input w-100 '"
-                  [cssClass]="'om-input w-100  fs-4'"
-                  [disabled]="true"
-                ></codx-inplace>
+                <div>
+                  <span
+                    #pmtMethodID
+                    [innerHTML]="
+                      dataItem?.pmtMethodID
+                        | formatvalue : formModel : 'pmtMethodID' : pmtMethodID
+                        | async
+                    "
+                    class="om-input w-100"
+                    style="font-size: 13px;"
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
@@ -200,14 +208,18 @@
               [formModel]="formModel"
             >
             </codx-label>
-            <codx-inplace
-              type="combobox"
-              field="reasonID"
-              [value]="dataItem.reasonID"
-              [class]="'om-input w-100 '"
-              [cssClass]="'om-input w-100  fs-4'"
-              [disabled]="true"
-            ></codx-inplace>
+            <div>
+              <span
+                #reasonID
+                [innerHTML]="
+                  dataItem?.reasonID
+                    | formatvalue : formModel : 'reasonID' : reasonID
+                    | async
+                "
+                class="om-input w-100"
+                style="font-size: 13px;"
+              ></span>
+            </div>
           </div>
         </div>
         <!-- <div class="row">
@@ -279,13 +291,14 @@
             class="d-flex justify-content-start flex-column"
             *ngFor="let item of advancedPaymentLines; let i = index"
           >
-            <div class="d-flex justify-content-start flex-column pb-3 mt-2">
+            <div class="d-flex justify-content-start flex-column">
               <div
                 class="d-flex align-items-center flex-row cursor-pointer w-100"
               >
-                <span
-                  class="icon-brightness_1 fs-12 d-flex align-items-center text-warning mr-2"
-                ></span>
+              <span
+                class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
+                style="font-size: 10px !important;"
+              ></span>
                 <div
                   class="w-50 d-flex justify-content-start align-items-center"
                 >

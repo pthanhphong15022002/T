@@ -30,12 +30,12 @@ import { toCamelCase } from '../utils';
 @Component({
   selector: 'lib-test-journal',
   templateUrl: './journal-v2.component.html',
-  styleUrls: ['./journal-v2.component.css'],
+  styleUrls: ['./journal-v2.component.scss'],
 })
 export class JournalV2Component extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   subViews: Array<ViewModel> = [];
-  viewActive: number = 5;
+  viewActive: number = ViewType.smallcard;
   functionName: string;
   vll86 = [];
   vll85 = [];
@@ -59,23 +59,11 @@ export class JournalV2Component extends UIComponent implements OnInit {
   button: ButtonModel = {
     id: 'btnAdd',
   };
-  @ViewChild('grid') grid: CodxGridviewV2Component;
+
+  @ViewChild('grid') grid?: CodxGridviewV2Component;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-  @ViewChild('moreTemplate', { static: true }) moreTemplate: TemplateRef<any>;
-  @ViewChild('header1Template', { static: true })
-  header1Template: TemplateRef<any>;
-  @ViewChild('header2Template', { static: true })
-  header2Template: TemplateRef<any>;
-  @ViewChild('header3Template', { static: true })
-  header3Template: TemplateRef<any>;
-  @ViewChild('column1Template', { static: true })
-  column1Template: TemplateRef<any>;
-  @ViewChild('column2Template', { static: true })
-  column2Template: TemplateRef<any>;
-  @ViewChild('column3Template', { static: true })
-  column3Template: TemplateRef<any>;
   viewComponent = [];
+
   constructor(
     inject: Injector,
     private route: Router,
@@ -91,36 +79,16 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.viewComponent.push(this.viewActive);
     this.subViews = [
       {
-        type: ViewType.list,
-        hide: true,
-        active: this.viewActive == ViewType.list,
+        type: ViewType.smallcard,
+        active: this.viewActive === ViewType.smallcard,
       },
       {
-        type: ViewType.smallcard,
-        active: this.viewActive == ViewType.smallcard,
+        type: ViewType.list,
+        active: this.viewActive === ViewType.list,
       },
       {
         type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          resources: [
-            {
-              headerTemplate: this.header1Template,
-              template: this.column1Template,
-            },
-            {
-              headerTemplate: this.header2Template,
-              template: this.column2Template,
-              width: '50%',
-            },
-            {
-              headerTemplate: this.header3Template,
-              template: this.column3Template,
-            },
-          ],
-          template2: this.moreTemplate,
-        },
+        active: this.viewActive === ViewType.grid,
       },
     ];
 
@@ -136,12 +104,14 @@ export class JournalV2Component extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.vllJournalTypes064 = res;
       });
+
     this.cache.valueList('AC085').subscribe((res) => {
       if (res) {
         this.vll85 = res.datas;
         this.subFilterValue = res.datas[0].value;
       }
     });
+
     this.cache.valueList('AC086').subscribe((res) => {
       if (res) {
         this.vll86 = res.datas;
@@ -296,7 +266,9 @@ export class JournalV2Component extends UIComponent implements OnInit {
         ? ['Status=@0 and @1.Contains(JournalType)']
         : ['Status=@0'];
     const dataValues: string[] = [`${this.mainFilterValue};[${journalTypes}]`];
-    this.view.dataService.setPredicates(predicates, dataValues);
+    this.view.dataService.setPredicates(predicates, dataValues, () => {
+      this.grid?.refresh();
+    });
   }
 
   search(e) {
@@ -305,6 +277,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   dbClick(data) {
     if (this.mainFilterValue == '3') {
+      // nhat ky mau
       return;
     }
 
@@ -318,7 +291,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.route.navigate([urlRedirect], {
           queryParams: {
             journalNo: data.journalNo,
-            // parent: this.view.funcID,
           },
         });
       }
@@ -452,6 +424,27 @@ export class JournalV2Component extends UIComponent implements OnInit {
       .subscribe((res) => {
         this[propName] = res;
       });
+  }
+
+  sortData(): void {
+    const temp: any[] = this.view.dataService.data;
+    this.view.dataService.data = [
+      ...temp.filter((j: IJournal) =>
+        this.journalTypes134.includes(j.journalType)
+      ),
+      ...temp.filter((j: IJournal) =>
+        this.journalTypes135.includes(j.journalType)
+      ),
+      ...temp.filter((j: IJournal) =>
+        this.journalTypes136.includes(j.journalType)
+      ),
+      ...temp.filter((j: IJournal) =>
+        this.journalTypes137.includes(j.journalType)
+      ),
+      ...temp.filter((j: IJournal) =>
+        this.journalTypes138.includes(j.journalType)
+      ),
+    ];
   }
   //#endregion
 }

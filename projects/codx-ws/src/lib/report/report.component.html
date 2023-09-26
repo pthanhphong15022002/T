@@ -4,7 +4,7 @@
       [dataSource]="listReport"
       [tmpItem]="tmp"
       [tmpRightToolBar]="tmpRightToolBar"
-      [bodyCss]="'px-4'"
+      [bodyCss]="'px-4 pb-5'"
     >
     </codx-view2>
   </div>
@@ -14,17 +14,23 @@
     (click)="selectedChange(data)"
   >
     <codx-card-img
-      imgCss="h-170px rounded"
-      cardCss="border rounded"
+      imgCss="h-170px rounded "
+      cardCss="border rounded h-100"
       [imageSrc]="data?.background || imgDefault"
       [footer]="footer"
+      ngClass="h-100"
     >
     </codx-card-img>
   </div>
   <ng-template #footer>
-    <div class="d-flex flex-column justify-content-center text-dark py-2 min-height-70px">
-      <span class="fs-5-sm line-clamp line-clamp-2">{{data.customName}}</span>
-      <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+    <div class="d-flex align-items-center justify-content-between h-50px">
+      <div class="d-flex flex-column justify-content-center text-dark py-2">
+        <span class="fs-5-sm line-clamp text-wrap">{{data.customName}}</span>
+        <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+      </div>
+      <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle ms-2">
+        <span class="icon-24 icon-bookmark"></span>
+      </div>
     </div>
   </ng-template>
 </ng-template>

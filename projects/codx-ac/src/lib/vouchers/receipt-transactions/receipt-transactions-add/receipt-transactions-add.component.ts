@@ -112,8 +112,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngAfterViewInit() {
-    this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
-    this.dt.detectChanges();
+    if(this.formVoucherReceipt?.data?.coppyForm) this.formVoucherReceipt.data._isEdit = true;
   }
 
   onAfterInit() {

@@ -1,0 +1,267 @@
+<codx-detail-tmp
+  *ngIf="itemDetail"
+  #itemDetailTemplate
+  [header]="header"
+  [dataItem]="itemDetail"
+  [footer]="footer"
+  [body]="body"
+  [formModel]="view?.formModel || formModel"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+  class="h-100 dt-es-view"
+>
+  <ng-template #titleTmp>
+    <div class="d-flex flex-column ms-1 w-100">
+      <div class="mb-1 d-flex align-items-center">
+        <span class="text-dark fs-5-sm fw-bold me-3">
+          {{ itemDetail?.emp?.employeeName }}
+        </span>
+      </div>
+
+      <!-- 1 -->
+      <div class="d-flex align-items-center text-gray-600">
+        <span class="me-4 fw-bold text-dark">{{
+          itemDetail?.emp?.positionName
+        }}</span>
+        <span
+          [innerHTML]="
+            itemDetail?.emp.email
+              | formatvalue : formModelEmployee : 'email'
+              | async
+          "
+        ></span>
+        <span
+          class="ms-3"
+          [innerHTML]="
+            itemDetail?.emp.phone
+              | formatvalue : formModelEmployee : 'phone'
+              | async
+          "
+        ></span>
+      </div>
+      <!-- 2 -->
+      <div class="text-gray-600 fs-7">
+        <span *ngIf="itemDetail?.emp?.orgUnitName; else noOrgUnitName">{{
+          itemDetail.emp.orgUnitName
+        }}</span>
+        <ng-template #noOrgUnitName>
+          <span class="place-holder">{{
+            grvSetup["OrgUnitID"].headerText
+          }}</span>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <div class="mb-4">
+      <codx-temp-full
+        class="user-center"
+        [title]=""
+        [imageId]="itemDetail?.emp?.employeeID"
+        [imageObjName]="itemDetail?.emp?.employeeName"
+        [imageObjType]="'HR_Employees'"
+        [referType]="'avt'"
+        [imageWidth]="50"
+        [titleTmp]="titleTmp"
+      >
+      </codx-temp-full>
+    </div>
+    <div class="mt-1">
+      <div class="d-flex flex-wrap mb-2">
+        <div class="me-5">
+          <codx-label
+            fiedName="createdOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+            class="text-gray-600 label-colon"
+          >
+          </codx-label>
+          <span
+            class="text-dark"
+            [innerHTML]="
+              itemDetail?.createdOn
+                | formatvalue : formModel : 'CreatedOn'
+                | async
+            "
+          >
+          </span>
+        </div>
+        <div>
+          <codx-label
+            fiedName="stoppedOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+            class="text-gray-600 label-colon"
+          >
+          </codx-label>
+          <span
+            class="text-dark"
+            [innerHTML]="
+              itemDetail?.stoppedOn
+                | formatvalue : formModel : 'StoppedOn'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <codx-label
+          fiedName="quitForm"
+          [setRequire]="false"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+        >
+        </codx-label>
+        <span
+          class="text-dark"
+          [innerHTML]="
+            itemDetail?.quitForm | formatvalue : formModel : 'QuitForm' | async
+          "
+        ></span>
+      </div>
+      <div class="mb-2">
+        <codx-label
+          fiedName="quitReason"
+          [setRequire]="false"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+        >
+        </codx-label>
+        <span
+          class="text-dark"
+          [innerHTML]="
+            itemDetail?.quitReason
+              | formatvalue : formModel : 'QuitReason'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="mb-6">
+        <codx-label
+          fiedName="note"
+          [setRequire]="false"
+          [formModel]="formModel"
+          class="text-gray-600 label-colon"
+        >
+        </codx-label>
+        <span
+          class="text-dark"
+          [innerHTML]="
+            itemDetail?.note | formatvalue : formModel : 'Note' | async
+          "
+        ></span>
+      </div>
+
+      <div class="col-12 mb-2" *ngIf="currentContract">
+        <codx-label
+          class="text-primary fw-bold fs-5"
+          fiedName="inForContractCurrent"
+          [formModel]="fmContract"
+          default="Thông tin HĐLĐ hiện tại"
+        ></codx-label>
+
+        <div class="d-flex mb-2">
+          <div>
+            <codx-label
+              class="label-colon"
+              fiedName="contractTypeID"
+              [formModel]="fmContract"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fw-bold">{{
+              itemDetail.currentContract?.contractTypeID
+            }}</span>
+          </div>
+
+          <div>
+            <codx-label
+              class="label-colon ms-2"
+              fiedName="contractNo"
+              [formModel]="fmContract"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fw-bold">{{
+              itemDetail.currentContract?.contractNo
+            }}</span>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <codx-label
+            class="label-colon"
+            fiedName="quitForetellDays"
+            [formModel]="fmContract"
+            default="Qui định số ngày báo trước"
+          ></codx-label>
+          <span class="fw-bold">{{
+            itemDetail.currentContract?.quitForetellDays
+          }}</span>
+        </div>
+
+        <div>
+          <codx-label
+            class="label-colon"
+            fiedName="violatedDays"
+            [formModel]="fmContract"
+            default="Số ngày nghỉ sớm"
+          ></codx-label>
+          <span class="fw-bold">{{
+            itemDetail.currentContract?.violatedDays
+          }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <!-- <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs"> 
+      </ul>
+      <div [ngbNavOutlet]="nav" class="pt-4"></div>
+    </div> -->
+  </ng-template>
+
+  <ng-template #footer>
+    <codx-tabs
+      [TabControl]="tabControl"
+      [entityName]="formModel.entityName"
+      [objectID]="itemDetail?.recID"
+      [funcID]="formModel.funcID"
+      [transID]="itemDetail?.recID"
+      [approveStatus]="itemDetail?.signStatus"
+    >
+    </codx-tabs>
+  </ng-template>
+</codx-detail-tmp>
+
+<ng-template #popIsNewest>
+  <span>
+    <codx-label
+      name="lblIsCurrent"
+      [formModel]="view.formModel"
+      default="Đang hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popOverDue>
+  <span>
+    <codx-label
+      name="lblOverDue"
+      [formModel]="view.formModel"
+      default="Quá hạn"
+    ></codx-label>
+  </span>
+</ng-template>
+
+<ng-template #popIsNotNewsest>
+  <span>
+    <codx-label
+      name="lblIsNotCurrent"
+      [formModel]="view.formModel"
+      default="Chưa hiệu lực"
+    ></codx-label>
+  </span>
+</ng-template>

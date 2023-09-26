@@ -24,10 +24,10 @@ import {
 import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-task.component';
 import { CodxAddTaskComponent } from './codx-add-stask/codx-add-task.component';
 import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
-import { CodxCalendarService } from '../codx-calendar/codx-calendar.service';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAddMeetingComponent } from '../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { CodxBookingService } from '../codx-booking/codx-booking.service';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +45,7 @@ export class StepService {
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     private cache: CacheService,
-    private calendarService: CodxCalendarService,
+    private bookingService: CodxBookingService,
     private codxService: CodxService
   ) {}
 
@@ -495,7 +495,7 @@ export class StepService {
     let addCarTitle = await firstValueFrom(this.cache.functionList('EPT21'));
     let title = addCarTitle ? addCarTitle?.customName?.toString() : '';
 
-    this.calendarService.getFormModel('EPT21').then((res) => {
+    this.bookingService.getFormModel('EPT21').then((res) => {
       let carFM = res;
       let carFG = this.codxService.buildFormGroup(
         carFM?.formName,
