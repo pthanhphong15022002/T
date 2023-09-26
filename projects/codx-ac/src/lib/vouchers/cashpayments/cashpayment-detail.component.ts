@@ -331,6 +331,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     ele = this.elementTabDetail;
     if (ele) {
       ele.hideTab(0, false);
+      ele.select(0)
       switch (type) {
         case '1':
         case '3':

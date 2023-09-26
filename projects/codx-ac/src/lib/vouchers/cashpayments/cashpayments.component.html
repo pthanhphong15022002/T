@@ -46,12 +46,14 @@
           </span>
       </div>
       <div>
-        <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
+        <!-- <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
           [innerHTML]="(data?.totalDR
                 | formatvalue : view.formModel : 'totalDR' : totalDR
                 | async)+ ' ' +data?.currencyID"></span>
         <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
-          data?.currencyID}}</span>
+          data?.currencyID}}</span> -->
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
+          [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between">
@@ -191,19 +193,8 @@
       </div>
       <div class="col-3">
         <div class="d-flex align-items-center">
-          <!-- <span *ngIf="!journal.multiCurrency && data?.totalDR != 0"
-            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR [innerHTML]="data?.totalDR
-                | formatvalue : view.formModel : 'totalDR' : totalDR
-                | async
-            "></span> -->
-          <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
-            [innerHTML]="(data?.totalDR
-                | formatvalue : view.formModel : 'totalDR' : totalDR
-                | async)+ ' ' +data?.currencyID"></span>
-          <!-- <span *ngIf="!journal.multiCurrency && data?.totalDR == 0"
-            class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">0</span> -->
-          <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
-            data?.currencyID}}</span>
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
+            [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
         </div>
         <div class="d-flex align-items-center mb-1">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="refDocs" [formModel]="view.formModel">

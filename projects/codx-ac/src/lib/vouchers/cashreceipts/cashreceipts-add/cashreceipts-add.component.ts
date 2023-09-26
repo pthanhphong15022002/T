@@ -568,51 +568,25 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onAddLine(typeBtn) {
-    let isFirstSave = false;
-    if(!this.formCashReceipt?.data?._isEdit && this.formCashReceipt?.data?.coppyForm) isFirstSave = true; //? trường hợp chưa save master và form coppy
     this.formCashReceipt.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          if ((this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit || isFirstSave) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-            if(isFirstSave){ //? trường hợp copy 
-              this.eleGridCashReceipt.refresh();
-              this.eleGridCashReceipt.dataService.onAction.subscribe((res)=>{
-                if (res?.type == 'read') {
-                  setTimeout(() => {
-                    this.addRowDetailByType(typeBtn);
-                  }, 100);
-                }
-              })
-              return;
-            }else{
-              this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
-                if(res){
-                  this.addRowDetailByType(typeBtn);
-                }
-              })
-              return;
-            }
+          if ((this.eleGridCashReceipt || this.eleGridCashReceipt?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
+            this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.addRowDetailByType(typeBtn);
+              }
+            })
+            return;
           }
-          if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit || isFirstSave) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
-            if(isFirstSave){ //? trường hợp copy 
-              this.eleGridSettledInvoices.refresh();
-              this.eleGridSettledInvoices.dataService.onAction.subscribe((res)=>{
-                if (res?.type == 'read') {
-                  setTimeout(() => {
-                    this.addRowDetailByType(typeBtn);
-                  }, 100);
-                }
-              })
-              return;
-            }else{
-              this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
-                if(res){
-                  this.addRowDetailByType(typeBtn);
-                }
-              })
-              return;
-            }
+          if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
+            this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.addRowDetailByType(typeBtn);
+              }
+            })
+            return;
           }
         }
       });
@@ -870,6 +844,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm hủy các observable api
    */
   onDestroy() {
+    if(this.eleGridCashReceipt) this.eleGridCashReceipt.onDestroy();
+    if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.onDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
