@@ -189,6 +189,24 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') {
           this.employeeObj = emp[0][0];
+
+          this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
+          this.EAppointionObj.jobLevel = this.employeeObj.jobLevel;
+          this.EAppointionObj.locationID = this.employeeObj.locationID;
+          this.EAppointionObj.positionID = this.employeeObj.positionID;
+
+          this.EAppointionObj.oldOrgUnitID = null;
+          this.newOrgUnitID = null;
+          this.EAppointionObj.oldJobLevelID = null;
+          this.newJobLevelID = null;
+          this.EAppointionObj.oldPositionID = null;
+          this.newPositionID = null;
+          this.EAppointionObj.oldLocationID = null;
+          this.newLocationID = null;
+
+          this.formModel.currentData = this.EAppointionObj;
+          this.formGroup.patchValue(this.EAppointionObj);
+
           this.hrService
             .getOrgUnitID(
               this.employeeObj?.orgUnitID ?? this.employeeObj?.emp?.orgUnitID
@@ -288,7 +306,6 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
     this.formGroup.patchValue(this.EAppointionObj);
     this.detectorRef.detectChanges();
-
     // let viewMem = event.component?.setting.viewMember
     // let newVal = event.component.itemsSelected[0][viewMem]
     // if(this.actionType == 'edit'){
