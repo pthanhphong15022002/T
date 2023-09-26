@@ -123,17 +123,10 @@ export class CampaignContactsComponent implements OnInit {
     if (changes['transID']) {
       if (
         changes['transID'].currentValue != null &&
-        changes['transID']?.currentValue?.trim() != '' &&
-        changes['objectType'].currentValue != null &&
-        changes['objectType']?.currentValue?.trim() != ''
+        changes['transID']?.currentValue?.trim() != ''
       ) {
-        if (
-          changes['transID']?.currentValue == this.id &&
-          changes['objectType']?.currentValue == this.objectTypeOld
-        )
-          return;
         this.id = changes['transID']?.currentValue;
-        this.objectTypeOld = changes['objectType'].currentValue;
+        this.objectTypeOld = changes['objectType']?.currentValue;
         this.formModel.funcID =
           this.objectType == '1' ? 'CM0301_1' : 'CM0301_2';
         this.getList();
@@ -177,13 +170,9 @@ export class CampaignContactsComponent implements OnInit {
   }
 
   //#region  more
-  clickMF(e, data){
+  clickMF(e, data) {}
 
-  }
-
-  changeDataMF(e, data){
-
-  }
+  changeDataMF(e, data) {}
   //#endregion
 
   //#region crud
