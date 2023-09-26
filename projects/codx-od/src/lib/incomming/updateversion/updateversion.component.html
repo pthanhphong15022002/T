@@ -36,7 +36,7 @@
                 <div class="modal-main py-2">
                     <div *ngIf="this.updateversion" class="d-flex align-items-center file-item mt-1">
                       <codx-temp-full 
-                          [imageSrc]="'../../../assets/codx/dms/'+dmSV.getAvatar(fileEditing.extension)"
+                          [imageSrc]="'../../../assets/themes/dm/default/img/'+dmSV.getAvatar(fileEditing.extension)"
                           [imageWidth]="30"
                           imgCss="w-30px me-3"
                           [title]="fileEditing.fileName"
@@ -51,7 +51,7 @@
                           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                           <ng-template #simple>
                               <codx-temp-full 
-                                  imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                                  imageSrc="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}" 
                                   imgCss="w-30px me-3 mb-3"
                                   [title]="file?.fileName" 
                                   [subTitleTmp]="cardImgFooter"
@@ -62,7 +62,7 @@
                           </ng-template>
                           <ng-template #full>
                               <codx-temp-full 
-                                  imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                                  imageSrc="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}" 
                                   imgCss="w-30px me-3 mb-3"
                                   title="{{file.fileName}}" 
                                   [subTitleTmp]="cardImgFooter"
@@ -89,7 +89,7 @@
                           </div>
                             <!-- <div class="d-flex align-items-center file-item mt-3">
                                 <img alt="" class="max-h-35px mr-2"
-                                    src="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}">
+                                    src="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}">
                                 <div class="d-flex flex-column flex-grow-1">
                                     <span class="text-dark">{{file.fileName}}</span>
                                     <div class="d-flex mt-1"> 
@@ -186,7 +186,7 @@
                     <div class="modal-main py-2">
                         <div *ngIf="this.updateversion" class="d-flex align-items-center file-item mt-1">
                           <codx-temp-full 
-                              [imageSrc]="'../../../assets/codx/dms/'+dmSV.getAvatar(fileEditing.extension)"
+                              [imageSrc]="'../../../assets/themes/dm/default/img/'+dmSV.getAvatar(fileEditing.extension)"
                               [imageWidth]="30"
                               imgCss="w-30px me-3"
                               [title]="fileEditing.fileName"
@@ -201,7 +201,7 @@
                               <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                               <ng-template #simple>
                                   <codx-temp-full 
-                                      imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                                      imageSrc="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}" 
                                       imgCss="w-30px me-3 mb-3"
                                       [title]="file?.fileName" 
                                       [subTitleTmp]="cardImgFooter"
@@ -212,7 +212,7 @@
                               </ng-template>
                               <ng-template #full>
                                   <codx-temp-full 
-                                      imageSrc="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}" 
+                                      imageSrc="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}" 
                                       imgCss="w-30px me-3 mb-3"
                                       title="{{file.fileName}}" 
                                       [subTitleTmp]="cardImgFooter"
@@ -239,7 +239,7 @@
                               </div>
                                 <!-- <div class="d-flex align-items-center file-item mt-3">
                                     <img alt="" class="max-h-35px mr-2"
-                                        src="../../../assets/codx/dms/{{dmSV.getAvatar(file.extension)}}">
+                                        src="../../../assets/themes/dm/default/img/{{dmSV.getAvatar(file.extension)}}">
                                     <div class="d-flex flex-column flex-grow-1">
                                         <span class="text-dark">{{file.fileName}}</span>
                                         <div class="d-flex mt-1"> 

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,6 +35,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
   selector: 'lib-popup-add-custom-field',
   templateUrl: './popup-add-custom-field.component.html',
   styleUrls: ['./popup-add-custom-field.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
@@ -324,9 +326,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close(this.field);
+    this.field = new DP_Steps_Fields(); //tắt bùa
   }
 
   removeAccents(str) {
+    if (!str) return;
     var format = str
       .trim()
       .normalize('NFD')
@@ -509,7 +513,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         });
       } else this.listVll = [];
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.detectChanges();
+      this.changeDef.markForCheck();
       this.loaded = true;
     });
   }

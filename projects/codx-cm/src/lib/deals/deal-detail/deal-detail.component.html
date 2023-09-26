@@ -177,7 +177,7 @@
           <div class="w-100 d-flex flex-column">
             <div class="d-flex align-items-top justify-content-between">
               <div class="w-100 d-flex flex-column">
-                <div class="d-flex align-items-top">
+                <div class="d-flex align-items-top mb-1">
                   <codx-label
                     fiedName="Industries"
                     class="text-dark fw-bold me-2 label-colon"
@@ -204,7 +204,7 @@
                     class="text-dark fw-bold me-2 text-nowrap"
                   ></codx-label>
                   <span
-                    class="text-gray-700"
+                    class="text-gray-600"
                     #note
                     [innerHTML]="
                       dataSelected?.note
@@ -264,7 +264,6 @@
                           <div
                             #role
                             *ngIf="contactPerson?.role"
-                            class="text-gray-800 fs-7"
                             [innerHTML]="
                               contactPerson?.role
                                 | formatvalue : formModelContact : 'role' : role
@@ -278,7 +277,7 @@
                             *ngIf="contactPerson?.mobile"
                           >
                             <div
-                              class="text-gray-800 fs-7"
+                              class="text-gray-600 fs-7"
                               #mobile
                               [innerHTML]="
                                 contactPerson?.mobile
@@ -295,7 +294,7 @@
                             *ngIf="contactPerson?.personalEmail"
                           >
                             <div
-                              class="text-gray-800 fs-7"
+                              class="text-gray-600 fs-7"
                               #personalEmail
                               [innerHTML]="
                                 contactPerson?.personalEmail

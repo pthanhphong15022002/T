@@ -57,8 +57,11 @@
     }}</span>
   </div>
   <div>
-    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+    <span class="fw-bold fs-6 text-uppercase">{{
       data?.totalAmt?.toLocaleString("it-IT")
+    }}</span>
+    <span class="fw-bold fs-6 text-uppercase" style="margin-left: 5px;">{{
+      data?.currencyID
     }}</span>
   </div>
 </ng-template>

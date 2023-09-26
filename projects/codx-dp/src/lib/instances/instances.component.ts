@@ -1126,6 +1126,7 @@ export class InstancesComponent
         if (e && e?.event != null) {
           this.dataSelected.ownerStepInstances = e.event.owner;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.detailViewInstance.loadOwnerStep(e.event.owner);
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }

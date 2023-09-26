@@ -13,6 +13,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   title$:any;
   asideTheme:any;
   logo$:any;
+  url$:any;
   funcList:any;
   selectedIndex = 0;
   userInfo:any;
@@ -29,6 +30,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   ) {
     super(inject);
     this.module = 'WS';
+
     this.layoutModel.asideDisplay = false;
     this.layoutModel.toolbarFixed = false;
     this.userInfo = this.authStore.get();
@@ -37,6 +39,7 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
   override onInit(): void {
     this.logo$ = this.layout.logo.asObservable();
     this.title$ = this.pageTitle.title.asObservable();
+    this.url$ = this.layout.url.getValue();
     this.asideTheme = this.layout.getProp('aside.theme') as string;
     this.listBreadCumb = this.codxWsService.listBreadCumb;
     this.getFuncChange();
@@ -96,5 +99,11 @@ export class CodxWsHeaderComponent extends LayoutBaseComponent{
     if(item.functionID == this.codxWsService.functionID) return;
     this.codxService.navigate("","/"+item.url);
     this.SetBreadCumb();
+  }
+
+  navigateWS()
+  {
+    if(!this.url$.includes("ws/workspace")) this.url$ = "ws/workspace/WS001";
+    this.codxService.navigate("","/"+this.url$);
   }
 }

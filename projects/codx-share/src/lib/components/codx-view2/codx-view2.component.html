@@ -38,7 +38,7 @@
 
 <ng-template #body>
     <ng-container *ngIf="dataSource && (dataSource.length > 0) && tmpItem">
-        <div class="d-flex flex-wrap h-auto scroll-y">
+        <div class="d-flex flex-wrap h-auto scroll-y" [ngClass]="bodyCss">
             <ng-container *ngFor="let item of dataSource">
                 <ng-container *ngTemplateOutlet="tmpItem ; context:{ $implicit: item }"></ng-container>
             </ng-container>

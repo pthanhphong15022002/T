@@ -190,12 +190,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         this.getRootFunction(this.data.moduleID, this.data.reportType);
         if(this.data.displayMode == "3" || this.data.displayMode == "4")
         {
-          this.data.icon = `../../../assets/codx/dms/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
+          this.data.icon = `../../../assets/themes/dm/default/img/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
           this.getFileTemplate(this.data.templateID);
         }
         else
         {
-          this.data.icon = "../../../assets/codx/dms/file.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/file.svg";
         }
       } 
       else
@@ -397,7 +397,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'AddUpdateAsync',
         [this.data])
         .subscribe((res:any) => {
-        (this.data.isUpload && this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
+        (this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
         this.isLoaded = false;
       });
 
@@ -463,12 +463,12 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         if(res.event.templateType == "AD_WordTemplates")
         {
           this.data.displayMode = "4";
-          this.data.icon = "../../../assets/codx/dms/docx.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/docx.svg";
         }
         else
         {
           this.data.displayMode = "3";
-          this.data.icon = "../../../assets/codx/dms/xlsx.svg";
+          this.data.icon = "../../../assets/themes/dm/default/img/xlsx.svg";
         }
         this.getFileTemplate(this.data.templateID);
         this.changeDetectorRef.detectChanges();
@@ -578,9 +578,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
       t.data.reportContent = strBase64;
       t.data.location = file.name;
       t.data.displayMode = "1";
-      t.data.icon = "../../../assets/codx/dms/file.svg";
+      t.data.icon = "../../../assets/themes/dm/default/img/file.svg";
       t.data.size = t.formatBytes(file.size);
-      t.data.isUpload = true;
     };
 
   }

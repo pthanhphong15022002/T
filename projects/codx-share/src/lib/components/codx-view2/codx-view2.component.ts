@@ -21,7 +21,8 @@ export class CodxView2Component implements OnInit{
   @Input() predicates: string = '';
   @Input() dataValues: string = '';
   @Input() dataSource:any;
-
+  @Input() bodyCss:any;
+  
   request:DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];

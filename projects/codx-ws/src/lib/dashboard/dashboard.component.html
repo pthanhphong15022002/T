@@ -1,10 +1,13 @@
 <ng-container *ngIf="listDashboard">
-  <codx-view2
-    [dataSource]="listDashboard"
-    [tmpItem]="tmp"
-    [tmpRightToolBar]="tmpRightToolBar"
-  >
-  </codx-view2>
+  <div class="mt-4 h-100 bg-white">
+    <codx-view2
+      [dataSource]="listDashboard"
+      [tmpItem]="tmp"
+      [tmpRightToolBar]="tmpRightToolBar"
+      [bodyCss]="'px-4 pb-5'"
+    >
+    </codx-view2>
+  </div>
 </ng-container>
 
 <ng-template #tmp let-data>
@@ -20,16 +23,21 @@
     </codx-card-img>
   </div>
   <ng-template #footer>
-    <div class="d-flex flex-column justify-content-center text-dark py-2 min-height-70px">
-      <span class="fs-5-sm line-clamp line-clamp-2">{{data.customName}}</span>
-      <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+    <div class="d-flex align-items-center justify-content-between h-50px">
+      <div class="d-flex flex-column  text-dark py-2 ">
+        <span class="fs-5-sm line-clamp text-wrap">{{data.customName}}</span>
+        <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+      </div>
+      <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle ms-2">
+        <span class="icon-24 icon-bookmark"></span>
+      </div>
     </div>
   </ng-template>
 </ng-template>
 
 <ng-template #tmpRightToolBar >
   <ng-container *ngIf="listGroupDashboard && listGroupDashboard.length > 0">
-    <div class="d-flex flex-wrap ws-dashboard-toolbar-list fw-bold ">
+    <div class="d-flex flex-wrap ws-dashboard-toolbar-list fw-bold ms-4">
       <div class="mx-2 cursor-pointer" *ngFor="let item of listGroupDashboard" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
         <span>{{item?.customName}}</span>
       </div>

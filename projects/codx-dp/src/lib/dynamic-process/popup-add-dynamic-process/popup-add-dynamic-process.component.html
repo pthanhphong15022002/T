@@ -1825,9 +1825,10 @@
                   </div>
                   <div class="fs-7">
                     <codx-label
+                      class="label-colon"
                       fiedName="task"
                       [formModel]="dialog.formModel"
-                      [default]="'Công việc:'"
+                      [default]="'Công việc'"
                     ></codx-label>
                     <span class="fw-bold">{{ itemStep?.tasks?.length }}</span>
                   </div>
@@ -3730,9 +3731,13 @@
     (mouseleave)="popoverTooltip.close()"
   >
     <ng-template #tooltipImg let-data="value">
-      <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px;">O</span>
+      <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px"
+        >O</span
+      >
       <span class="ms-1 fw-bold">Owner</span>
     </ng-template>
-    <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px;">O</span>
+    <span class="e-avatar e-avatar-circle" style="width: 26px; height: 26px"
+      >O</span
+    >
   </div>
 </ng-template>
