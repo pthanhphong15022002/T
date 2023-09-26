@@ -831,16 +831,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
         data[i].avatar = null;
         data[i].data = '';
         data[i].createdOn = new Date();
-
-        if (total > 1) data[i] = await this.addFileLargeLong(data[i], false);
-        // if (total > 1) {
-        //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
-        //     if (i == total -1)
-
-        //   });
-        // }
+      }
+      if (total > 1) {
+        const requests = this.fileUploadList.map((data) => this.addFileLargeLong(data, false));
+        data = await Promise.all(requests);
       }
       let countFile = this.fileUploadList.length;
+
       if (total > 1) {
         for (var i = 0; i < data.length; i++) {
           data[i].source = null;
@@ -964,19 +961,27 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var data = JSON.parse(JSON.stringify(this.fileUploadList));
         var toltalUsed = 0; //bytes
         var remainingStorage = -1;
-        if (this.infoHDD.totalHdd >= 0)
-          remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+        if (this.infoHDD.totalHdd >= 0) remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
         var that = this;
-        for (var i = 0; i < total; i++) {
-          data[i].objectID = this.objectId;
-          data[i].description = this.description[i];
-          data[i].avatar = null;
-          data[i].data = '';
-          if (this.isTab) data[i].createdOn = this.date;
-          else data[i].createdOn = new Date();
-          toltalUsed += data[i].fileSize;
-          if (total > 1 && !data[i].uploadId) data[i] = await this.addFileLargeLong(data[i], false);
+        if(total > 1)
+        {
+          let listData = data.filter(x=>!x.uploadId);
+          const requests = listData.map((datas) => this.addFileLargeLong(datas, false));
+
+          var result = await Promise.all(requests) as any;
+          for (var i = 0; i < total; i++) {
+            var dt = result.filter(x=>x.fileName ==  data[i].fileName)[0];
+            if(dt) data[i] = dt;
+            data[i].objectID = this.objectId;
+            data[i].description = this.description[i];
+            data[i].avatar = null;
+            data[i].data = '';
+            if (this.isTab) data[i].createdOn = this.date;
+            else data[i].createdOn = new Date();
+            toltalUsed += data[i].fileSize;
+          }
         }
+
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage) {
           this.closeBtnUp = false;
@@ -1019,7 +1024,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         //'../../../assets/img/loader.gif';
                         that.displayThumbnail(item.data);
                         if (!item.data.thumbnail)
-                          item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                          item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                             item.data.extension
                           )}`;
                         files.push(Object.assign({}, item.data));
@@ -1214,6 +1219,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (uploadFile?.size % chunSizeInfBytes > 0) {
       numOfChunks++;
     }
+    let percent = 0;
+    let p = 100 / numOfChunks;
     for (var i = 0; i < numOfChunks; i++) {
       var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
       var end = start + chunSizeInfBytes; //Vị trí cuối
@@ -1232,7 +1239,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
           },
           uploadFile.name
         );
-        console.log(uploadChunk);
+
+        if(uploadChunk?.status == 200)
+        {
+          percent += p;
+          let elem =  document.getElementById("circle"+ uploadFile.name);
+          if(elem) elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+        }
       } catch (ex) {}
     }
     return retUpload;
@@ -1565,7 +1578,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.fileSave.emit(res);
           var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
           if (!thumbnail) {
-            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+            res.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
               res.extension
             )}`;
             this.displayThumbnail(res);
@@ -1618,7 +1631,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   (d) => d.recID.toString() === item.recID
                 );
                 if (index != -1) {
-                  res.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                  res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
                     res.data.extension
                   )}`; //'../../../assets/img/loader.gif';
                   this.displayThumbnail(res.data);
@@ -3516,7 +3529,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   //Icon avatar mặc định
   urlAvartarIcon(fileName: any) {
-    return `../../../assets/codx/dms/${this.getAvatar(fileName)}`;
+    return `../../../assets/themes/dm/default/img/${this.getAvatar(fileName)}`;
   }
 
   clearData() {

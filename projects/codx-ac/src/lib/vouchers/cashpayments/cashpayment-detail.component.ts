@@ -220,8 +220,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT042902'  // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -230,20 +229,10 @@ export class CashpaymentDetailComponent extends UIComponent {
         });
       }
       switch (data?.status) {
-        case '2':
-        case '7':
-          arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -251,7 +240,7 @@ export class CashpaymentDetailComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
+              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -270,7 +259,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -286,9 +275,38 @@ export class CashpaymentDetailComponent extends UIComponent {
             }
           });
           break;
+        case '2':
+        case '7':
+          arrBookmark.forEach((element) => {
+            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '8':
+        case '11':
+          arrBookmark.forEach((element) => {
+            if ((element.functionID == 'ACT042907' && this.formModel.funcID == 'ACT0429')) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
         case '9':
           arrBookmark.forEach((element) => {
             if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '10':
+          arrBookmark.forEach((element) => {
+            if ((element.functionID == 'ACT042905' || element.functionID == 'ACT042907' && this.formModel.funcID == 'ACT0429')) {
               element.disabled = false;
             } else {
               element.disabled = true;

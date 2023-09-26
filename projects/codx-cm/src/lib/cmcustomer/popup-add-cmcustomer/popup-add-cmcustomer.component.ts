@@ -180,9 +180,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     );
     let lever = 0;
     if (param?.length > 0) {
-      let dataParam = param.filter(
-        (x) => x.category == '1' && !x.transType
-      )[0];
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
       let paramDefault = JSON.parse(dataParam.dataValue);
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
@@ -397,18 +395,18 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeAdress(e) {
-    this.isAdress = true;
     if (e && e.data) {
       this.data.address = e?.data?.trim();
     } else {
       this.data.address = null;
     }
-    this.setAddress(this.data.address);
-
-    this.isAdress = false;
   }
 
+  valueBlur(e) {
+    this.setAddress(this.data.address);
+  }
   async setAddress(name) {
+    this.isAdress = true;
     if (name != null && name != '') {
       var tmp = new BS_AddressBook();
 
@@ -429,7 +427,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.data.districtID = lstDis?.DistrictID;
         if (this.data.wardID != lstDis?.WardID)
           this.data.wardID = lstDis?.WardID;
-      }else{
+      } else {
         this.data.provinceID = null;
         this.data.districtID = null;
         this.data.wardID = null;
@@ -498,6 +496,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.listAddress.push(tmp);
         }
       }
+      this.isAdress = false;
     } else {
       this.data.provinceID = null;
       this.data.countryID = null;
@@ -519,9 +518,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.listAddress.splice(indexDelete, 1);
         }
       }
+      this.isAdress = false;
     }
     if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
-      this.codxListAddress.loadListAdress(this.listAddress);
+      if (this.codxListAddress)
+        this.codxListAddress.loadListAdress(this.listAddress);
     }
   }
 
@@ -659,140 +660,126 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   async onSave() {
-    if (!this.isAdress) {
-      if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-        this.data.customerName = this.data?.customerName;
-        this.data.category = this.funcID == 'CM0101' ? '1' : '2';
-      } else if (this.funcID == 'CM0103') {
-        this.data.partnerName = this.data?.partnerName;
-        this.data.annualRevenue =
-          this.data?.annualRevenue != null &&
-          parseFloat(this.data?.annualRevenue) >= 0
-            ? parseFloat(this.data?.annualRevenue)
-            : 0;
-      }
-
-      if (this.funcID == 'CM0104') {
-        this.data.annualRevenue =
-          this.data?.annualRevenue != null &&
-          parseFloat(this.data?.annualRevenue) >= 0
-            ? parseFloat(this.data?.annualRevenue)
-            : 0;
-      }
-
-      if (this.funcID == 'CM0102') {
-        if (this.data.objectType == null || this.data.objectType.trim() == '') {
-          this.gridViewSetup['ContactType'].isRequire = false;
-          this.gridViewSetup['ObjectID'].isRequire = false;
-        }
-        this.gridViewSetup['FirstName'].isRequire = false;
-
-        // if (this.data.firstName != null && this.data.firstName.trim() != '') {
-        //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
-        //     this.data.contactName =
-        //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-        //   } else {
-        //     this.data.contactName = this.data.firstName.trim();
-        //   }
-        // } else {
-        //   this.data.contactName = '';
-        // }
-      }
-      this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
-      if (this.count > 0) {
-        return;
-      }
-
-      if (
-        !this.cmSv.checkValidateSetting(
-          this.data.address,
-          this.data,
-          this.leverSetting,
-          this.gridViewSetup,
-          this.gridViewSetup?.Address?.headerText
-        )
-      ) {
-        return;
-      }
-
-      let check = false;
-      if (this.action != 'edit') {
-        check = await firstValueFrom(
-          this.api.execSv<any>(
-            'CM',
-            'ERM.Business.CM',
-            'CustomersBusiness',
-            'IsExitCoincideIDAsync',
-            [
-              this.data?.recID,
-              this.funcID == 'CM0102'
-                ? this.data?.contactID
-                : this.funcID == 'CM0103'
-                ? this.data?.partnerID
-                : this.funcID == 'CM0104'
-                ? this.data?.competitorID
-                : this.data?.customerID,
-              this.dialog?.formModel?.entityName,
-            ]
-          )
-        );
-      }
-
-      if (check) {
-        this.notiService.notifyCode('Trùng mã khách hàng');
-        return;
-      }
-
-      if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
-        check = await firstValueFrom(
-          this.api.execSv<any>(
-            'CM',
-            'ERM.Business.CM',
-            'CustomersBusiness',
-            'IsExitCoincideTaxCodeAsync',
-            [
-              this.data?.recID,
-              this.data?.taxCode,
-              this.dialog?.formModel?.entityName,
-            ]
-          )
-        );
-        if (check) {
-          this.notiService.notifyCode('CM016');
-          return;
-        }
-      }
-
-      if (this.funcID == 'CM0102') {
-        if (this.data.mobile != null && this.data.mobile.trim() != '') {
-          if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
-        } else {
-          this.data.mobile = null;
-        }
-        if (
-          this.data.personalEmail != null &&
-          this.data.personalEmail.trim() != ''
-        ) {
-          if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
-        } else {
-          this.data.personalEmail = null;
-        }
-      }
-
-      // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-      //   if (this.contactsPerson == null) {
-      //     this.notiService.notifyCode('CM002'); //Chưa có msssg
-      //     return;
-      //   }
-      // }
-      if (this.data.phone != null && this.data.phone.trim() != '') {
-        if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
-      }
-      if (this.data.email != null && this.data.email.trim() != '') {
-        if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
-      }
-      this.onSaveHanle();
+    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
+      this.data.customerName = this.data?.customerName;
+      this.data.category = this.funcID == 'CM0101' ? '1' : '2';
+    } else if (this.funcID == 'CM0103') {
+      this.data.partnerName = this.data?.partnerName;
+      this.data.annualRevenue =
+        this.data?.annualRevenue != null &&
+        parseFloat(this.data?.annualRevenue) >= 0
+          ? parseFloat(this.data?.annualRevenue)
+          : 0;
     }
+
+    if (this.funcID == 'CM0104') {
+      this.data.annualRevenue =
+        this.data?.annualRevenue != null &&
+        parseFloat(this.data?.annualRevenue) >= 0
+          ? parseFloat(this.data?.annualRevenue)
+          : 0;
+    }
+
+    if (this.funcID == 'CM0102') {
+      if (this.data.objectType == null || this.data.objectType.trim() == '') {
+        this.gridViewSetup['ContactType'].isRequire = false;
+        this.gridViewSetup['ObjectID'].isRequire = false;
+      }
+      this.gridViewSetup['FirstName'].isRequire = false;
+
+      // if (this.data.firstName != null && this.data.firstName.trim() != '') {
+      //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
+      //     this.data.contactName =
+      //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
+      //   } else {
+      //     this.data.contactName = this.data.firstName.trim();
+      //   }
+      // } else {
+      //   this.data.contactName = '';
+      // }
+    }
+    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.count > 0) {
+      return;
+    }
+
+    let check = false;
+    if (this.action != 'edit') {
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'IsExitCoincideIDAsync',
+          [
+            this.data?.recID,
+            this.funcID == 'CM0102'
+              ? this.data?.contactID
+              : this.funcID == 'CM0103'
+              ? this.data?.partnerID
+              : this.funcID == 'CM0104'
+              ? this.data?.competitorID
+              : this.data?.customerID,
+            this.dialog?.formModel?.entityName,
+          ]
+        )
+      );
+    }
+
+    if (check) {
+      this.notiService.notifyCode('Trùng mã khách hàng');
+      return;
+    }
+
+    if (this.data?.taxCode != null && this.data?.taxCode.trim() != '') {
+      check = await firstValueFrom(
+        this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CustomersBusiness',
+          'IsExitCoincideTaxCodeAsync',
+          [
+            this.data?.recID,
+            this.data?.taxCode,
+            this.dialog?.formModel?.entityName,
+          ]
+        )
+      );
+      if (check) {
+        this.notiService.notifyCode('CM016');
+        return;
+      }
+    }
+
+    if (this.funcID == 'CM0102') {
+      if (this.data.mobile != null && this.data.mobile.trim() != '') {
+        if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
+      } else {
+        this.data.mobile = null;
+      }
+      if (
+        this.data.personalEmail != null &&
+        this.data.personalEmail.trim() != ''
+      ) {
+        if (!this.checkEmailOrPhone(this.data.personalEmail, 'E')) return;
+      } else {
+        this.data.personalEmail = null;
+      }
+    }
+
+    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
+    //   if (this.contactsPerson == null) {
+    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
+    //     return;
+    //   }
+    // }
+    if (this.data.phone != null && this.data.phone.trim() != '') {
+      if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
+    }
+    if (this.data.email != null && this.data.email.trim() != '') {
+      if (!this.checkEmailOrPhone(this.data.email, 'E')) return;
+    }
+    this.onSaveHanle();
   }
 
   async onSaveHanle() {
@@ -836,11 +823,38 @@ export class PopupAddCmCustomerComponent implements OnInit {
       await firstValueFrom(
         this.imageUpload.updateFileDirectReload(this.data?.recID)
       );
-    }
-    if (this.action == 'add' || this.action == 'copy') {
-      this.onAdd();
+      if (this.action == 'add' || this.action == 'copy') {
+        this.onAdd();
+      } else {
+        this.onUpdate();
+      }
     } else {
-      this.onUpdate();
+      if (this.data?.address != null && this.data?.address?.trim() != '' && this.leverSetting > 0) {
+        setTimeout(async () => { //Bùa, Để cho anh Huy copy địa chỉ xong lưu liền để get api theo địa chỉ tỉnh, thành phố, xã
+          if (
+            !this.cmSv.checkValidateSetting(
+              this.data.address,
+              this.data,
+              this.leverSetting,
+              this.gridViewSetup,
+              this.gridViewSetup?.Address?.headerText
+            )
+          ) {
+            return;
+          }
+          if (this.action == 'add' || this.action == 'copy') {
+            this.onAdd();
+          } else {
+            this.onUpdate();
+          }
+        }, 2000);
+      } else {
+        if (this.action == 'add' || this.action == 'copy') {
+          this.onAdd();
+        } else {
+          this.onUpdate();
+        }
+      }
     }
   }
   //#endregion

@@ -1,0 +1,32 @@
+codx-campaigns codx-campaigns-detail .codx-detail-main{
+	padding-bottom: 0!important;
+	background-color: #FF9472;
+}
+
+.view-step-box {
+	clear: both;
+}
+.action-menu-od {
+  opacity: 0;
+}
+
+.has-action-menu-od:hover .action-menu-od {
+  opacity: 1;
+}
+
+.text-popover {
+  display: -webkit-inline-box !important;
+}
+
+.w-7{
+  width: 7% !important;
+}
+
+.w-79{
+  width: 79% !important;
+}
+
+div.collapsed {
+  overflow: hidden;
+}
+

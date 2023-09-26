@@ -46,7 +46,7 @@ export class FileImage implements PipeTransform {
   }
   transform(value: string) {
     if(value){
-        return `../../../assets/codx/dms/${this.getAvatar(value)}`;
+        return `../../../assets/themes/dm/default/img/${this.getAvatar(value)}`;
     }
     else
     return "";

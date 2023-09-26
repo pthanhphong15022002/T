@@ -184,7 +184,7 @@ var lvFileClientAPI = {
                             }
                             
                         }, 2000)
-
+                        console.log((503 - ( 503 * ( percent / 100 ))))
                         elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
                     }
                    

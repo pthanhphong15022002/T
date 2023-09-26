@@ -4,6 +4,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   Util,
@@ -19,7 +20,7 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
-import {ComboBoxComponent} from '@syncfusion/ej2-angular-dropdowns';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -27,6 +28,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   selector: 'lib-popup-job',
   templateUrl: './popup-step-task.component.html',
   styleUrls: ['./popup-step-task.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
@@ -96,15 +98,19 @@ export class PopupJobComponent implements OnInit {
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroupTask = dt?.data?.listGroup || [];
-      this.listGroupTaskCombobox = JSON.parse(JSON.stringify(this.listGroupTask));
-      let index = this.listGroupTaskCombobox?.findIndex((group) => !group.recID);
+      this.listGroupTaskCombobox = JSON.parse(
+        JSON.stringify(this.listGroupTask)
+      );
+      let index = this.listGroupTaskCombobox?.findIndex(
+        (group) => !group.recID
+      );
       index >= 0 && this.listGroupTaskCombobox?.splice(index, 1);
     }
 
     if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['durationDay'] = 1;
-      this.stepsTasks['stepID'] = this.step?.recID
+      this.stepsTasks['stepID'] = this.step?.recID;
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
@@ -121,10 +127,16 @@ export class PopupJobComponent implements OnInit {
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) || [];
-    this.participant = this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) || [];
+    this.owner =
+      this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) ||
+      [];
+    this.participant =
+      this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) ||
+      [];
 
-    let group = this.listGroupTask?.find((x) => x.recID === this.stepsTasks?.taskGroupID);
+    let group = this.listGroupTask?.find(
+      (x) => x.recID === this.stepsTasks?.taskGroupID
+    );
     let listTaskConvert = group?.recID
       ? JSON.parse(JSON.stringify(group?.task))
       : JSON.parse(JSON.stringify(this.listTask));
@@ -469,7 +481,7 @@ export class PopupJobComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
-    if(event?.field == "createTask" && !event?.data){
+    if (event?.field == 'createTask' && !event?.data) {
       this.stepsTasks.assignControl = null;
     }
   }
@@ -479,8 +491,10 @@ export class PopupJobComponent implements OnInit {
     let listUser = e || [];
     let listRole = [];
     for (let role of listUser) {
-      if (roleType == 'P' && this.owner.some((ownerFind) => ownerFind.objectID == role.objectID))
-      {
+      if (
+        roleType == 'P' &&
+        this.owner.some((ownerFind) => ownerFind.objectID == role.objectID)
+      ) {
         continue;
       }
       listRole.push({
@@ -494,8 +508,12 @@ export class PopupJobComponent implements OnInit {
     if (roleType == 'O') {
       this.owner = listRole;
       this.stepsTasks.owner = this.owner[0]?.objectID;
-      let index = this.participant?.findIndex(role => role?.objectID == this.stepsTasks.owner);
-      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index,1);
+      let index = this.participant?.findIndex(
+        (role) => role?.objectID == this.stepsTasks.owner
+      );
+      index >= 0 &&
+        this.participant?.length > 0 &&
+        this.participant?.splice(index, 1);
     }
     if (roleType == 'P') {
       this.participant = listRole;

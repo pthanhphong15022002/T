@@ -172,7 +172,7 @@ export class AttachmentWebComponent implements AfterViewInit{
   }
 
   getThumbnail(data:any) {
-    return `../../../assets/codx/dms/${this.shareService.getIconFile(data.extension)}`; //this.getAvatar(ext);
+    return `../../../assets/themes/dm/default/img/${this.shareService.getIconFile(data.extension)}`; //this.getAvatar(ext);
   }
 
   onSave()

@@ -90,7 +90,9 @@
           </div>
         </div>
         <div class="footerCard-item">
-          <div class="d-flex flex-wrap align-items-center justify-content-between mt-2">
+          <div
+            class="d-flex flex-wrap align-items-center justify-content-between mt-2"
+          >
             <div class="d-flex align-items-center mb-1">
               <span class="icon-adjust icon-16 me-2"></span>
               <span class="text-gray-700">
@@ -142,18 +144,14 @@
               <span
                 class="icon-new_releases text-primary cursor-pointer icon-16"
                 [ngbTooltip]="popupRelease"
-
                 placement="right"
                 ><ng-template #popupRelease>
                   <codx-label
                     name="lblRelease"
                     [formModel]="view.formModel"
-                    [default]="
-                      'Đã phát hành quy trình'
-                    "
+                    [default]="'Đã phát hành quy trình'"
                   ></codx-label> </ng-template
-              ></span
-              >
+              ></span>
             </div>
             <div class="ms-auto">
               <codx-imgs
@@ -262,99 +260,105 @@
   </ng-container>
 </ng-template>
 
-<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+<!--Start Confirm Copy -->
+<ng-template #popUpQuestionCopy>
   <codx-form
     [body]="bodyFormCopyName"
     [footer]="footerFormCopyName"
     [dialog]="dialogQuestionCopy"
   >
+    <ng-template #bodyFormCopyName>
+      <div class="dynamic-copy">
+        <div class="d-flex align-items-center text-primary">
+          <span class="icon-reorder me-3"></span>
+          <codx-label
+            class="fs-5 fw-bold label-colon"
+            name="lblSelectCopy"
+            [formModel]="view.formModel"
+            default="Chọn các thông tin muốn sao chép"
+          ></codx-label>
+        </div>
+        <div class="mt-3">
+          <div *ngFor="let item of listSelectCoppy; let i = index">
+            <div *ngIf="i == 2; else other_content">
+              <div class="form-check py-2">
+                <input
+                  class="form-check-input w-20px h-20px rounded-1"
+                  type="checkbox"
+                  style="cursor: pointer"
+                  id="toggle"
+                  [(ngModel)]="isChecked"
+                  [checked]="listClickedCoppy.indexOf(item) >= 0"
+                  (change)="checkValueCopy($event, item)"
+                />
+                <span
+                  for="toggle"
+                  class="form-check-label ms-0"
+                  style="cursor: pointer"
+                  (click)="checkValueCopy($event, item)"
+                >
+                  {{ item?.text }}
+                </span>
+                <ng-container>
+                  <div *ngIf="isChecked" id="menu" class="pt-3">
+                    <div *ngFor="let cell of listSelectStepCoppy">
+                      <div class="form-check py-2 d-flex align-items-center">
+                        <input
+                          class="form-check-input w-20px h-20px rounded-1"
+                          type="checkbox"
+                          style="cursor: pointer"
+                          [checked]="listClickedCoppy.indexOf(cell) >= 0"
+                          (change)="checkValueCopy($event, cell)"
+                        />
+                        <span
+                          class="form-check-label ms-3"
+                          style="cursor: pointer"
+                          (click)="checkValueCopy($event, cell)"
+                        >
+                          {{ cell?.text }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <ng-template #other_content>
+              <div class="form-check py-2 d-flex align-items-center">
+                <input
+                  class="form-check-input w-20px h-20px rounded-1"
+                  type="checkbox"
+                  style="cursor: pointer"
+                  (change)="checkValueCopy($event, item)"
+                  [disabled]="i == 0 ? true : false"
+                  [checked]="
+                    i == 0 ? true : listClickedCoppy.indexOf(item) >= 0
+                  "
+                />
+                <span
+                  class="form-check-label ms-3"
+                  style="cursor: pointer"
+                  (click)="checkValueCopy($event, item)"
+                >
+                  {{ item?.text }}
+                </span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #footerFormCopyName>
+      <button type="button" class="btn btn-primary" (click)="saveCopy()">
+        <codx-label fiedName="lblSave" default="Lưu"></codx-label>
+      </button>
+    </ng-template>
   </codx-form>
 </ng-template>
 
-<ng-template #bodyFormCopyName>
-  <div class="dynamic-copy">
-    <div class="d-flex align-items-center text-primary">
-      <span class="icon-reorder me-3"></span>
-      <codx-label
-        class="fs-5 fw-bold"
-        default="Chọn các thông tin muốn sao chép:"
-      ></codx-label>
-    </div>
-    <div class="mt-3">
-      <div *ngFor="let item of listSelectCoppy; let i = index">
-        <div *ngIf="i == 2; else other_content">
-          <div class="form-check py-2">
-            <input
-              class="form-check-input w-20px h-20px rounded-1"
-              type="checkbox"
-              style="cursor: pointer"
-              id="toggle"
-              [(ngModel)]="isChecked"
-              [checked]="listClickedCoppy.indexOf(item) >= 0"
-              (change)="checkValueCopy($event, item)"
-            />
-            <span
-              for="toggle"
-              class="form-check-label ms-0"
-              style="cursor: pointer"
-              (click)="checkValueCopy($event, item)"
-            >
-              {{ item?.text }}
-            </span>
-            <ng-container>
-              <div *ngIf="isChecked" id="menu" class="pt-3">
-                <div *ngFor="let cell of listSelectStepCoppy">
-                  <div class="form-check py-2 d-flex align-items-center">
-                    <input
-                      class="form-check-input w-20px h-20px rounded-1"
-                      type="checkbox"
-                      style="cursor: pointer"
-                      [checked]="listClickedCoppy.indexOf(cell) >= 0"
-                      (change)="checkValueCopy($event, cell)"
-                    />
-                    <span
-                      class="form-check-label ms-3"
-                      style="cursor: pointer"
-                      (click)="checkValueCopy($event, cell)"
-                    >
-                      {{ cell?.text }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-
-        <ng-template #other_content>
-          <div class="form-check py-2 d-flex align-items-center">
-            <input
-              class="form-check-input w-20px h-20px rounded-1"
-              type="checkbox"
-              style="cursor: pointer"
-              (change)="checkValueCopy($event, item)"
-              [disabled]="i == 0 ? true : false"
-              [checked]="i == 0 ? true : listClickedCoppy.indexOf(item) >= 0"
-            />
-            <span
-              class="form-check-label ms-3"
-              style="cursor: pointer"
-              (click)="checkValueCopy($event, item)"
-            >
-              {{ item?.text }}
-            </span>
-          </div>
-        </ng-template>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #footerFormCopyName>
-  <button type="button" class="btn btn-primary" (click)="saveCopy()">
-    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
-  </button>
-</ng-template>
+<!--End Confirm Copy -->
 
 <ng-template #popperSteps>
   <span>
@@ -439,7 +443,7 @@
     <div>
       <codx-label
         fiedName="applyFor"
-        class=" text-gray-600 label-colon"
+        class="text-gray-600 label-colon"
         [formModel]="view.formModel"
         [setRequire]="false"
       ></codx-label>
@@ -488,30 +492,22 @@
       </codx-input>
     </div>
     <div class="form-group">
-      <codx-label
-        fiedName="module"
-        [formModel]="view.formModel"
-      ></codx-label>
+      <codx-label fiedName="module" [formModel]="view.formModel"></codx-label>
       <codx-input
         [formModel]="view.formModel"
         field="module"
         [crrValue]="processRelease?.module"
         (valueChange)="changeValue($event, processRelease)"
-
       >
       </codx-input>
     </div>
     <div class="form-group">
-      <codx-label
-        fiedName="function"
-        [formModel]="view.formModel"
-      ></codx-label>
+      <codx-label fiedName="function" [formModel]="view.formModel"></codx-label>
       <codx-input
         [formModel]="view.formModel"
         field="function"
         [crrValue]="processRelease?.function"
         (valueChange)="changeValue($event, processRelease)"
-
       >
       </codx-input>
     </div>
@@ -530,7 +526,11 @@
         default="Hủy"
       ></codx-label>
     </button>
-    <button type="button" class="btn btn-primary" (click)="saveReleaseProcess()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="saveReleaseProcess()"
+    >
       <codx-label
         name=" lblSuscess"
         [formModel]="view.formModel"
