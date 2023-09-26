@@ -156,56 +156,58 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     }
   }
   generateQR() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.api
-          .execSv<string>(
-            'SYS',
-            'ERM.Business.AD',
-            'UsersBusiness',
-            'GenQRCodeAsync',
-            [
-              this.hubConnectionID,
-              this.loginDevice.name,
-              this.loginDevice.os,
-              position.coords.accuracy +
-                ';' +
-                position.coords.latitude +
-                ';' +
-                position.coords.longitude,
-              '',
-            ]
-          )
-          .subscribe((qrImg) => {
-            if (qrImg) {
-              //nho xoa
-              // this.testQRContent = qrImg;
+    this.api
+      .execSv<string>(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GenQRCodeAsync',
+        [
+          this.hubConnectionID,
+          this.loginDevice.name,
+          this.loginDevice.os,
+          // position.coords.accuracy +
+          //   ';' +
+          //   position.coords.latitude +
+          //   ';' +
+          //   position.coords.longitude,
+          ';;',
+          '',
+        ]
+      )
+      .subscribe((qrImg) => {
+        if (qrImg) {
+          //nho xoa
+          // this.testQRContent = qrImg;
 
-              this.qrTimeout = 180;
-              this.qrBase64 = 'data:image/png;base64,' + qrImg;
-              let id = setInterval(
-                () => {
-                  this.qrTimeout -= 1;
-                  this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
+          this.qrTimeout = 180;
+          this.qrBase64 = 'data:image/png;base64,' + qrImg;
+          let id = setInterval(
+            () => {
+              this.qrTimeout -= 1;
+              this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
 
-                  this.detectorRef.detectChanges();
-                  if (this.qrTimeout === 0) {
-                    clearInterval(id);
-                    console.log('het gio');
-                  }
-                },
-                1000,
-                this.qrTimeout
-              );
               this.detectorRef.detectChanges();
-            }
-          });
-      },
+              if (this.qrTimeout === 0) {
+                clearInterval(id);
+                console.log('het gio');
+              }
+            },
+            1000,
+            this.qrTimeout
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
 
-      (error) => {
-        console.log(error);
-      }
-    );
+    //   },
+
+    //   (error) => {
+    //     console.log(error);
+    //   }
+    // );
   }
   generateOTP() {
     this.api
