@@ -95,7 +95,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
         .subscribe((res) => {
           if(res){
             this.dialog.close(res);
-            this.notiSv.notifyCode('Thêm thành công');
+            this.notiSv.notifyCode('SYS006');
           }
         });
     } else {
