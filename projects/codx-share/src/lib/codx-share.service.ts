@@ -1317,13 +1317,13 @@ export class CodxShareService {
       [companyID,roleType]
     );
   }
-  viewApprovalStep(transID) {
+  viewApprovalStep(transID,isSettingMode = true) {
     return this.api.execSv<any>(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'ViewApprovalStepAsync',
-      [transID]
+      [transID,isSettingMode]
     );
   }
   //#region Codx Quy trình duyệt

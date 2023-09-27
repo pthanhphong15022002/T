@@ -44,6 +44,7 @@ export class CodxViewApprovalStepComponent
   @Input() approveStatus: string = '';
   @Input() eSign = false;
   @Input() showCanceled = false;
+  @Input() isSettingMode = true;
   formModel: FormModel;
   fmApprovalTrans: FormModel;
   fmApprovalStep: FormModel;
@@ -79,50 +80,28 @@ export class CodxViewApprovalStepComponent
         this.esService.getFormModel('EST04').then((res) => {
           if (res) {
             this.fmApprovalStep = res;
-            let gridModels = new DataRequest();
-            gridModels.dataValue = this.transID;
-            gridModels.predicate = 'TransID=@0';
-            gridModels.funcID = this.fmApprovalStep.funcID;
-            gridModels.entityName = this.fmApprovalStep.entityName;
-            gridModels.gridViewName = this.fmApprovalStep.gridViewName;
-            gridModels.pageLoading = false;
-            gridModels.srtColumns = 'StepNo';
-            gridModels.srtDirections = 'asc';
-
-            if (gridModels.dataValue != null) {
-              this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                if (res && res?.length >= 0) {                  
-                  this.process = res;
-                  let listPosition=[];
-                  for(let step of this.process){
-                    for(let approve of step.approvers){
-                      if(approve?.roleType=='P' && !listPosition.includes(approve?.approver)){
-                        listPosition.push(approve?.approver);
-                      }
-                    }
-                  }
-                  if(listPosition?.length>0){
-                    this.shareService.getUserIDByPositionsID(listPosition).subscribe(lstUserInfo=>{
-                      if(lstUserInfo){
-                        for(let step of this.process){
-                          for(let approve of step.approvers){
-                            if(approve?.roleType=='P'){
-                              let crrApprover = lstUserInfo.filter(x=>x?.positionID == approve?.approver);
-                              if(crrApprover?.length>0){
-                                approve.userID= crrApprover[0].userID;
-                                approve.userName= crrApprover[0].userName;
-                                this.cr.detectChanges();
-                              }
-                            }
-                          }
+            this.shareService.viewApprovalStep(this.transID,this.isSettingMode).subscribe((res)=>{
+              if (res && res?.length == 2) {
+                this.process = res[0] ?? [];
+                if(res[1]?.length>0){
+                  let apInfos = res[1];
+                  this.process.forEach(st=>{
+                    if(st?.approvers){
+                      st?.approvers.forEach(ap=>{
+                        let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+                        if(curAp?.length>0){
+                          ap.userID = curAp[0]?.userID;
+                          ap.userName = curAp[0]?.userName;
+                          ap.employeeID = curAp[0]?.employeeID;
+                          ap.position = ap?.position ?? curAp[0]?.positionName;
                         }
-                      }                      
-                    });
-                  }
-                  this.cr.detectChanges();
-                }
-              });
-            }
+                      })
+                    }
+                  });
+                }            
+                this.cr.detectChanges();            
+              }
+            });
           }
         });
       } else {
