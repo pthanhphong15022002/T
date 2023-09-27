@@ -111,7 +111,11 @@
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item?.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full [imageId]="approver?.approver" [imageObjType]="'AD_Users'" [imageWidth]="35" [title]="
+            <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+            [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            
+            [title]="
                 approver?.name ??
                 approver?.approverName ??
                 (approver?.approver | vll : 'ES014' : 'text' | async)
@@ -237,7 +241,10 @@
           <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item?.approvers">
               <div class="d-flex justify-content-between align-items-start mb-3">
-                <codx-temp-full [imageId]="approver?.approver" [imageObjType]="'AD_Users'" [imageWidth]="35" [title]="
+                <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+                [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            [title]="
                   approver?.name ??
                   approver?.approverName ??
                   (approver?.approver | vll : 'ES014' : 'text' | async)

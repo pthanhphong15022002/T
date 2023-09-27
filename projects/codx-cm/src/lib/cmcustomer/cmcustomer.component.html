@@ -100,58 +100,27 @@
       [ngbTooltip]="popupAllowCall"
     >
       <ng-template #popupAllowCall>
-        <codx-label
-          name="lblAllowCall"
-          [formModel]="view.formModel"
-          [default]="
-            data?.allowCall
-              ? 'Cho phép điện thoại'
-              : 'Không cho phép điện thoại'
-          "
-        ></codx-label>
+        <codx-label fiedName="Mobile" [formModel]="view.formModel"></codx-label>
       </ng-template>
       <span
-        [ngClass]="
-          data.allowCall
-            ? 'text-primary text-hover-primary'
-            : 'icon-phonelink_erase  me-2'
-        "
-        class="icon-16"
-      ></span>
-      <span
-        *ngIf="data?.allowCall"
         class="text-gray-700 text-primary text-hover-primary"
         [innerHTML]="
           data.mobile | formatvalue : view.formModel : 'mobile' | async
         "
       ></span>
-      <span *ngIf="!data?.allowCall" class="text-gray-700">{{
-        data.mobile
-      }}</span>
     </div>
     <div
       class="mb-1 d-flex align-items-center"
       *ngIf="funcID == 'CM0102' && data?.personalEmail"
       [ngbTooltip]="popupAllowEmail"
     >
+      <ng-template #popupAllowEmail>
+        <codx-label
+          fiedName="PersonalEmail"
+          [formModel]="view.formModel"
+        ></codx-label>
+      </ng-template>
       <span
-        [ngClass]="
-          data.allowEmail
-            ? 'text-primary text-hover-primary'
-            : 'icon-print_disabled  me-2'
-        "
-        class="icon-16"
-        ><ng-template #popupAllowEmail>
-          <codx-label
-            name="lblAllowEmail"
-            [formModel]="view.formModel"
-            [default]="
-              data?.allowEmail ? 'Cho phép gửi mail' : 'Không cho phép gửi mail'
-            "
-          ></codx-label> </ng-template
-      ></span>
-      <span
-        *ngIf="data?.allowEmail"
         class="text-gray-700 text-primary text-hover-primary"
         [innerHTML]="
           data.personalEmail
@@ -159,7 +128,6 @@
             | async
         "
       ></span>
-      <span *ngIf="!data?.allowEmail">{{ data.personalEmail }}</span>
     </div>
     <div
       class="mb-1 d-flex align-items-top text-hover-primary"

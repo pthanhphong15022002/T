@@ -1684,41 +1684,41 @@ implements OnInit{
     else if(this.actionType === 'edit'){
       if(this.originPolicyId != '' && this.originPolicyId != this.benefitPolicyObj.policyID){
         debugger
-        // this.DeletePolicyBenefit(this.originPolicyId).subscribe((x) => {
-        //   this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
-        //     if(res){
-        //       this.notify.notifyCode('SYS007');
-        //       this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
-        //         if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
-        //         for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-        //           debugger
-        //           this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-        //           })
-        //         }
-        //         for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-        //           this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-        //           })
-        //         }
-        //       }
-        //       })
-        //       if(this.benefitPolicyObj.constraintBy){
-        //         this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
-        //           if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
-        //             this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
-        //             this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
-        //             })
-        //           }
-        //         })
-        //       }
-        //       this.benefitPolicyObj.editPrimaryKey = true;
-        //       this.benefitPolicyObj.oldData = this.originPolicyBenefitObj;
-        //       this.dialog && this.dialog.close(this.benefitPolicyObj);
-        //     }
-        //     else{
-        //       this.notify.notifyCode('SYS021');
-        //     }
-        //   })
-        // })
+        this.DeletePolicyBenefit(this.originPolicyId).subscribe((x) => {
+          this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
+            if(res){
+              this.notify.notifyCode('SYS007');
+              this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+                if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
+                for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
+                  debugger
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
+                  })
+                }
+                for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
+                  this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
+                  })
+                }
+              }
+              })
+              if(this.benefitPolicyObj.constraintBy){
+                this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
+                  if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
+                    this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                    this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
+                    })
+                  }
+                })
+              }
+              this.benefitPolicyObj.editPrimaryKey = true;
+              this.benefitPolicyObj.oldData = this.originPolicyBenefitObj;
+              this.dialog && this.dialog.close(this.benefitPolicyObj);
+            }
+            else{
+              this.notify.notifyCode('SYS021');
+            }
+          })
+        })
 
 
         // this.EditPolicyBenefitsIDChanged().subscribe((res) => {

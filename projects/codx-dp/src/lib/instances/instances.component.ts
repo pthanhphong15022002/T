@@ -235,7 +235,7 @@ export class InstancesComponent
   };
   // For CM
   categoryCustomer: any = '';
-  instanceCM:any;
+  instanceCM: any;
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -253,7 +253,7 @@ export class InstancesComponent
     @Optional() dt: DialogData
   ) {
     super(inject);
-    this.funcID = "DPT04";
+    this.funcID = 'DPT04';
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
@@ -749,7 +749,7 @@ export class InstancesComponent
   }
 
   startInstance(data) {
-    var datas = [data.recID,this.process?.applyFor];
+    var datas = [data.recID, this.process?.applyFor];
     this.codxDpService.startInstance(datas).subscribe((res) => {
       if (res) {
         data.status = '2';
@@ -884,12 +884,12 @@ export class InstancesComponent
                 break;
               //Đóng nhiệm vụ = true
               case 'DP14':
-                if (data.closed || !data.permissionCloseInstances )
+                if (data.closed || !data.permissionCloseInstances)
                   res.disabled = true;
                 break;
               //Mở nhiệm vụ = false
               case 'DP15':
-                if (!data.closed || !data.permissionCloseInstances ) {
+                if (!data.closed || !data.permissionCloseInstances) {
                   res.disabled = true;
                 }
                 break;
@@ -1163,7 +1163,6 @@ export class InstancesComponent
 
   viewDetail(data) {
     this.dataSelected = data;
-    debugger;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
@@ -1307,32 +1306,52 @@ export class InstancesComponent
             isUseSuccess: this.isUseSuccess,
           };
           if (this.process.applyFor != '0') {
-            let datas = [ data.recID, this.process.applyFor ];
+            let datas = [data.recID, this.process.applyFor];
             this.codxDpService.getOneDeal(datas).subscribe((res) => {
               if (res) {
                 let dataCM = {
                   refID: data?.recID,
-                  processID:  this.process.recID,
+                  processID: this.process.recID,
                   stepID: data?.stepID,
                   nextStep: this.stepIdClick ? this.stepIdClick : '',
-                  isCallInstance: false
+                  isCallInstance: false,
                   // listStepCbx: this.lstStepInstances,
                 };
                 this.instanceCM = res[0];
-                this.openPoupMoveStage(data,formMD,null,stepReason,dataMore.defaultName,dataCM);
-              }
-              else {
+                this.openPoupMoveStage(
+                  data,
+                  formMD,
+                  null,
+                  stepReason,
+                  dataMore.defaultName,
+                  dataCM
+                );
+              } else {
                 this.notificationsService.notifyCode('SYS001');
               }
             });
           } else {
-            this.openPoupMoveStage(data,formMD,listStepCbx,stepReason,dataMore.defaultName,null);
+            this.openPoupMoveStage(
+              data,
+              formMD,
+              listStepCbx,
+              stepReason,
+              dataMore.defaultName,
+              null
+            );
           }
         });
       // });
     });
   }
-  openPoupMoveStage(data,formMD,listStepCbx,stepReason,headerTitle,dataCM){
+  openPoupMoveStage(
+    data,
+    formMD,
+    listStepCbx,
+    stepReason,
+    headerTitle,
+    dataCM
+  ) {
     let obj = {
       formModel: formMD,
       instance: data,
@@ -1344,8 +1363,8 @@ export class InstancesComponent
       lstParticipants: this.lstOrg,
       isDurationControl: this.checkDurationControl(data.stepID),
       applyFor: this.process.applyFor,
-      deal:this.instanceCM,
-      dataCM:dataCM
+      deal: this.instanceCM,
+      dataCM: dataCM,
     };
 
     var dialogMoveStage = this.callfc.openForm(
