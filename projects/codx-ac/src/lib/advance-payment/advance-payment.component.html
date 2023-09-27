@@ -52,18 +52,30 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div class="d-flex align-items-center">
-    <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
-      data?.voucherNo
-    }}</span>
+  <div class="col-4">
+    <div class="d-flex align-items-center">
+      <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+        data?.voucherNo
+      }}</span>
+    </div>
   </div>
-  <div>
-    <span class="fw-bold fs-6 text-uppercase">{{
-      data?.totalAmt?.toLocaleString("it-IT")
-    }}</span>
-    <span class="fw-bold fs-6 text-uppercase" style="margin-left: 5px;">{{
-      data?.currencyID
-    }}</span>
+  <div class="col-4">
+    <div class="d-flex align-items-center justify-content-center">
+      <span class="icon-customize icon-16 me-1 fw-bold"></span>
+      <span class="fw-bold fs-6 text-uppercase">
+        {{ data?.voucherDate | date : "dd/MM/yyyy" }}
+      </span>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="d-flex align-items-center justify-content-end">
+      <span class="fw-bold fs-6 text-uppercase">{{
+        data?.totalAmt?.toLocaleString("it-IT")
+      }}</span>
+      <span class="fw-bold fs-6 text-uppercase" style="margin-left: 5px;">{{
+        data?.currencyID
+      }}</span>
+    </div>
   </div>
 </ng-template>
 <ng-template #descTmp let-data>
@@ -98,7 +110,7 @@
       <div class="d-flex align-items-center">
         <span class="icon-customize icon-16 me-1 text-gray-600"></span>
         <span class="text-gray-600">
-          {{ data?.voucherDate | date : "dd/MM/yyyy" }}
+          {{ data?.postedDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
     </div>
