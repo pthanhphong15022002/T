@@ -108,7 +108,8 @@ export class DealsComponent
   className = 'DealsBusiness';
   method = 'GetListDealsAsync';
   idField = 'recID';
-
+  predicate = '';
+  dataValue = '';
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -169,6 +170,7 @@ export class DealsComponent
 
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
+  queryParams: any;
 
   constructor(
     private inject: Injector,
@@ -183,6 +185,11 @@ export class DealsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
+    if (this.queryParams?.recID) {
+      this.predicate = 'RecID=@0';
+      this.dataValue = this.queryParams?.recID;
+    }
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -285,7 +292,10 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-
+    if(this.queryParams?.recID){
+      this.request.predicate = this.predicate;
+      this.request.dataValue = this.dataValue;
+    }
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';

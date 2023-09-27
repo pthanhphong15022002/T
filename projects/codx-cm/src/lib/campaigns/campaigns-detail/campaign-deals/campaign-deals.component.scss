@@ -1,0 +1,10 @@
+.scroll-grid {
+  //height: calc(100vh - 212px);
+  height: calc(100vh - 448px) !important;
+  overflow: hidden;
+}
+
+.grid-full {
+  height: calc(100vh - 285px) !important;
+  overflow: hidden;
+}
