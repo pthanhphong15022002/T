@@ -1,21 +1,16 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
   ButtonModel,
   DataRequest,
   DialogModel,
-  FormModel,
   NotificationsService,
-  PageLink,
-  PageTitleService,
   SidebarModel,
   TenantStore,
   UIComponent,
@@ -25,17 +20,11 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import {
-  AnimationModel,
-  ProgressBar,
-} from '@syncfusion/ej2-angular-progressbar';
+import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
-import { X } from '@angular/cdk/keycodes';
 import { JournalService } from '../../journals/journals.service';
 declare var jsBh: any;
 @Component({
@@ -81,7 +70,7 @@ export class CashPaymentsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService,
+    private journalService: JournalService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -99,7 +88,6 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
-
       });
   }
   //#endregion
@@ -132,6 +120,9 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft: '30%',
+          resizable: true,
         },
       },
       {
@@ -146,6 +137,14 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
+        subModel: {
+          gridviewName: 'grvCashPaymentsLines',
+          formName: 'CashPaymentsLines',
+          entityName: 'AC_CashPaymentsLines',
+          service: 'AC',
+          predicates: 'TransID=@0',
+          rowNoField: 'rowNo',
+        },
         model: {
           template2: this.templateGrid,
         },
@@ -158,7 +157,6 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
     console.log(this.view);
-
   }
 
   ngOnDestroy() {
@@ -230,21 +228,21 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-/**
+  /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
    * @param event
    * @returns
    */
-onSelectedItem(event) {
-  if (typeof event.data !== 'undefined') {
-    if (event?.data.data || event?.data.error) {
-      return;
-    } else {
-      this.itemSelected = event?.data;
-      this.detectorRef.detectChanges();
+  onSelectedItem(event) {
+    if (typeof event.data !== 'undefined') {
+      if (event?.data.data || event?.data.error) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.detectorRef.detectChanges();
+      }
     }
   }
-}
 
   //#endregion
 
@@ -259,7 +257,7 @@ onSelectedItem(event) {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
-          if(this.dataDefault == null) this.dataDefault = {...res};
+          if (this.dataDefault == null) this.dataDefault = { ...res };
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
             journal: { ...this.journal }, //?  data journal
@@ -313,30 +311,36 @@ onSelectedItem(event) {
   copyVoucher(dataCopy) {
     this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(dataCopy,'copy'))
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let datas = {...res};
-          this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
-            if (res) {
-              let data = {
-                headerText: this.headerText, //? tiêu đề voucher
-                journal: { ...this.journal }, //?  data journal
-                oData: { ...datas }, //?  data của cashpayment
-                hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-                legalName: this.legalName, //? tên company
-              };
-              let dialog = this.callfc.openSide(
-                CashPaymentAddComponent,
-                data,
-                this.optionSidebar,
-                this.view.funcID
-              );
-              this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
-            }
-          })
+          let datas = { ...res };
+          this.view.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                  legalName: this.legalName, //? tên company
+                };
+                let dialog = this.callfc.openSide(
+                  CashPaymentAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+                this.view.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
         }
       });
   }
@@ -386,7 +390,7 @@ onSelectedItem(event) {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any, data: any, type: any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
@@ -414,7 +418,12 @@ onSelectedItem(event) {
         case '7':
         case '2':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042902' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -424,7 +433,14 @@ onSelectedItem(event) {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042905' ||
+                element.functionID == 'ACT042907' ||
+                (element.functionID == 'ACT042901' &&
+                  this.view.funcID == 'ACT0429')
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -432,7 +448,12 @@ onSelectedItem(event) {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042903' ||
+                element.functionID == 'ACT042907'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -442,7 +463,12 @@ onSelectedItem(event) {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042904' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -451,7 +477,14 @@ onSelectedItem(event) {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.view.funcID == 'ACT0429')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907' ||
+              (element.functionID == 'ACT042901' &&
+                this.view.funcID == 'ACT0429')
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -460,7 +493,12 @@ onSelectedItem(event) {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042906' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -469,7 +507,12 @@ onSelectedItem(event) {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -561,11 +604,7 @@ onSelectedItem(event) {
           this.itemSelected = res?.data;
           this.view.dataService.update(this.itemSelected).subscribe();
           //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
@@ -625,11 +664,11 @@ onSelectedItem(event) {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data:any,action:any = '') {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
-      action
+      action,
     ]);
   }
 
@@ -673,7 +712,7 @@ onSelectedItem(event) {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(
@@ -687,8 +726,6 @@ onSelectedItem(event) {
       opt
     );
   }
-
-
 
   /**
    * *Hàm hủy các obsevable subcrible

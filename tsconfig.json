@@ -96,6 +96,9 @@
         "dist/codx-om/codx-om",
         "dist/codx-om"
       ],
+      "codx-pr": [
+        "dist/codx-pr"
+      ],
       "codx-report": [
         "dist/codx-report/codx-report",
         "dist/codx-report"
@@ -136,6 +139,9 @@
       ],
       "@shared/*": [
         "src/shared/*"
+      ],
+      "pr": [
+        "dist/pr"
       ],
       "test": [
         "dist/test/test",

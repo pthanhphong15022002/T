@@ -43,6 +43,7 @@ export class UserComponent implements OnInit {
   @Input() disabled = false;
   @Output() valueList = new EventEmitter();
 
+  listRole = [];
   isPopupUserCbb = false;
   popup: DialogRef;
   constructor(
@@ -56,6 +57,9 @@ export class UserComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.dataSource) {
       this.dataSource;
+    }
+    if (changes?.formModel) {
+      console.log(this.formModel);    
     }
     this.changeDef.markForCheck();
   }
@@ -125,7 +129,6 @@ export class UserComponent implements OnInit {
       objectID: type == 'user' ? user.UserID : user.id,
       objectName: type == 'user' ? user.UserName : user.text,
       objectType: type == 'user' ? 'U' : user.objectType,
-      roleType: type == 'user' ? user.PositionName : user.objectName,
     };
     return userConert;
   }
