@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-/***Khong duoc xoa***/
+
 @import "codx-core/assets/sass/init";
 
 @import "src/theme.scss";
@@ -772,9 +772,14 @@ codx-mfunc .icon-file_copy {
 // }
 
 
-.login-aside .e-input-group {
-  background-color: transparent;
-}
+.login-aside{
+  .e-input-group.e-corner{
+    border: 0!important;
+  }
+  .e-input-group {
+    background-color: transparent;
+  }
+} 
 
 .login-aside .e-input-group:not(.e-disabled) .e-input-group-icon:hover,
 .login-aside
@@ -1481,7 +1486,7 @@ img.symbol-12px.symbol-circle {
 
 /*** tabs ***/
 .tab-item {
-  padding: 7px;
+  padding: 5px;
   display: inline-block;
   border-bottom: 2px transparent solid;
   margin-right: 1px;
@@ -3897,4 +3902,11 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
 
 .e-dlg-content .tab-action{
   display: none;
+}
+
+.login-signin .fv-plugins-icon-container .e-float-input{
+	background-color: transparent!important;
+  .form-control:focus{
+    background-color: transparent!important;
+  }
 }

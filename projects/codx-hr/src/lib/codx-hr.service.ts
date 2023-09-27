@@ -2005,6 +2005,17 @@ export class CodxHrService {
       recID
     );
   }
+
+  validateBeforeReleaseEQuit(recID: string) {
+    return this.api.execSv(
+      'HR',
+      'ERM.Business.HR',
+      'EQuitBusiness',
+      'ValidateBeforeReleaseAsync',
+      recID
+    );
+  }
+
   //#endregion
 
   //#region Common
@@ -2261,6 +2272,7 @@ export class CodxHrService {
     let category = '4';
     let formName = 'HRParameters';
     let recID = '717944fc-7799-43c2-b73d-35986fa00c8b';
+    let scheduelID = 'HRAutoResignEContract';
 
     this.getSettingValue(formName, category).subscribe((res) => {
       if (res) {
@@ -2322,6 +2334,18 @@ export class CodxHrService {
         }
       }
     });
+
+    // this.api
+    //   .execSv<any>(
+    //     'BG',
+    //     'BG',
+    //     'ScheduleTasksBusiness',
+    //     'GetScheduleTasksByIDAsync',
+    //     scheduelID
+    //   )
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //   });
 
     for (let i = 0; i < evt.length; i++) {
       let funcIDStr = evt[i].functionID;

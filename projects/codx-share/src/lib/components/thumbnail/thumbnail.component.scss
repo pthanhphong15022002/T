@@ -24,18 +24,20 @@
 {
     position: absolute;
     z-index: 1;
-    margin-top: -17px;
-    margin-left: 9px;
-    background-color: rgba(0, 0, 0, 0.1);
+    margin-top: -22px;
+    margin-left: 6px;
+    background-color: rgba(255, 255, 255, 0.75);
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     justify-content: center;
     display: flex;
     align-items: center;
+    .icon-14 {
+        font-size: 12px !important;
+    }
     i{
-        color: #DD0000;
-
+        color:var(--bs-danger);
     }
 }
 .w-20px

@@ -1,10 +1,13 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnInit,
   Optional,
+  Output,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -22,6 +25,7 @@ import {
 import { TreeMapComponent } from '@syncfusion/ej2-angular-treemap';
 import {
   ApiHttpService,
+  AuthStore,
   CallFuncService,
   CodxChartsComponent,
   DialogData,
@@ -33,11 +37,11 @@ import { LayoutPanelComponent } from './layout-panel/layout-panel.component';
 import { PopupAddChartComponent } from './popup-add-chart/popup-add-chart.component';
 import { PopupAddPanelComponent } from './popup-add-panel/popup-add-panel.component';
 import { PopupSelectTemplateComponent } from './popup-select-template/popup-select-template.component';
-import {
-  CircularGauge,
-  CircularGaugeComponent,
-} from '@syncfusion/ej2-angular-circulargauge';
+import { CircularGaugeComponent } from '@syncfusion/ej2-angular-circulargauge';
 import { ɵglobal as global } from '@angular/core';
+import { tap } from 'rxjs';
+import { NgxCaptureService } from 'ngx-capture';
+import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'codx-dashboard',
   templateUrl: 'codx-dashboard.component.html',
@@ -167,6 +171,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('dfPyramid') dfPyramid?: TemplateRef<any>;
   @ViewChild('dfFunnel') dfFunnel?: TemplateRef<any>;
   @ViewChildren('eleLayout') elesLayout!: QueryList<LayoutPanelComponent>;
+  @ViewChild('screen', { static: true }) screen: any;
+
+  @Output() background = new EventEmitter<string>();
 
   @Input() columns: number = 48;
   @Input() cellSpacing: number[] = [0, 0];
@@ -276,6 +283,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
+    private captureService: NgxCaptureService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -327,9 +335,29 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     //     )[0].parentElement!.parentElement!.style.padding = '5px';
     //   }
     // }, 200);
+
+    //snapshot dashboard
+    let index = setInterval(() => {
+      if (this.screen) {
+        clearInterval(index);
+        this.captureService
+          .getImage(this.screen.nativeElement, true)
+          .pipe(
+            tap((img) => {
+              //img: string Base64
+              console.log(img);
+            }),
+
+            tap((img) => {
+              //this.captureService.downloadImage(img);
+            })
+          )
+          .subscribe();
+      }
+    }, 1000);
   }
 
-  changeCondition(evt: any) {
+  changeCondition() {
     this.api
       .execSv(this.service, this.assembly, this.className, this.method)
       .subscribe((res: any) => {
@@ -354,7 +382,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       });
   }
 
-  savePanel(evt: any) {
+  savePanel(e) {
     let dataSettings: any = {
       id: this.dataItem?.recID,
       panels: [],
@@ -595,12 +623,12 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   //Dashboard Layout's resizestart event function
-  onResizeStart(args: any) {
+  onResizeStart($event: any) {
     //console.log('Resize start');
   }
 
   //Dashboard Layout's resize event function
-  onResize(args: any) {
+  onResize($event: any) {
     //console.log('Resizing');
   }
 
@@ -652,9 +680,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onCreate(evt: any) {
+  onCreate($event: any) {
     document.getElementsByClassName('icon-close icon-18')[0]?.remove();
-    
+
     if (this.panels && this.panels.length > 0) {
       if (!this.objDashboard) {
         let component = document.getElementsByTagName('ejs-dashboardlayout')[0];
@@ -714,7 +742,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onChange(evt: any) {}
+  onChange($event: any) {}
 
   onDragStart($event: any) {
     console.log($event);
@@ -975,18 +1003,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   private showHideButton(elePanel: any) {
-    const newspaperSpinning = [
-      { transform: 'rotate(0) scale(1)' },
-      { transform: 'rotate(180deg) scale(0)' },
-    ];
-
-    const newspaperTiming = {
-      duration: 500,
-      iterations: 1,
-    };
-
     elePanel?.getElementsByClassName('card-header')[0]?.classList.add('d-none');
-    (elePanel as HTMLElement).onmouseover = (evt) => {
+    (elePanel as HTMLElement).onmouseover = () => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       if (
         elePanel
@@ -998,7 +1016,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           ?.classList.remove('d-none');
       }
     };
-    (elePanel as HTMLElement).onmouseout = (evt) => {
+    (elePanel as HTMLElement).onmouseout = () => {
       //elePanel?.getElementsByClassName('card-header')[0].animate(newspaperSpinning, newspaperTiming);
       !elePanel
         ?.getElementsByClassName('card-header')[0]

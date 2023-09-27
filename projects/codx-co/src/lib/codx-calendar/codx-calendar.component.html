@@ -42,15 +42,15 @@
           <ng-container #listParam>
             <div class="d-flex justify-content-between align-items-center mt-3">
               <codx-label
-                fiedName="Calendar"
-                default="Calendar"
+                fiedName="Events"
+                default="Danh sách sự kiện"
                 class="fw-bold"
               ></codx-label>
-              <button class="btn btn-icon btn-primary me-1">
-                <span
-                  class="icon-settings text-white icon-18"
-                  (click)="settingCalendar()"
-                ></span>
+              <button
+                class="btn btn-icon btn-primary me-1"
+                (click)="settingCalendar()"
+              >
+                <i class="icon-settings text-white icon-18"></i>
               </button>
             </div>
 
@@ -107,7 +107,6 @@
           [resources]="resources"
           [resourceModel]="dataResourceModel"
         ></lib-calendar-center>
-
       </div>
     </div>
   </div>
@@ -130,3 +129,4 @@
     </button>
   </div>
 </ng-template>
+

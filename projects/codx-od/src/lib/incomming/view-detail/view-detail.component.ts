@@ -105,6 +105,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   vllStatus = 'TM004';
   vllStatusAssign = 'TM007';
   funcList: any;
+  defaultValue:any;
   dataRq = new DataRequest();
   listPermission = [];
   constructor(
@@ -151,8 +152,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       },
     ];
     if (
-      this.funcList?.defaultValue == '2' ||
-      (this.funcList?.defaultValue == '3' && this.dataItem?.dispatchType == '3') ||
+      this.defaultValue == '2' ||
+      (this.defaultValue == '3' && this.dataItem?.dispatchType == '3') ||
       this.xd
     )
       this.tabControl.push({
@@ -161,7 +162,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         isActive: false,
       });
 
-    if (this.funcList?.defaultValue != '2' && this.funcList?.defaultValue != '3') {
+    if (this.defaultValue != '2' && this.defaultValue != '3') {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
@@ -259,6 +260,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     if (isObservable(funcList)) {
       funcList.subscribe((fuc) => {
         this.funcList = fuc;
+        this.defaultValue = this.funcList?.defaultValue.split(";")[0];
         this.formModels = {
           entityName: this.funcList?.entityName,
           formName: this.funcList?.formName,
@@ -283,6 +285,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       });
     } else {
       this.funcList = funcList;
+      this.defaultValue = this.funcList?.defaultValue.split(";")[0];
       this.formModels = {
         entityName: this.funcList?.entityName,
         formName: this.funcList?.formName,
@@ -1480,9 +1483,9 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     shareBy: any,
     agencies = null
   ) {
-    if (relationType == '1' || (this.funcList?.defaultValue == '2' && relationType == '2'))
+    if (relationType == '1' || (this.defaultValue == '2' && relationType == '2'))
     {
-      if (this.funcList?.defaultValue == '1') {
+      if (this.defaultValue == '1') {
         var text = this.ms020?.customName;
         if (!text) text = '';
 
@@ -1493,7 +1496,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         );
       } else {
         var name = agencyName;
-
         if (agencies && agencies.length > 0)
           name = agencies.map((u) => u.agencyName).join(' , ');
         return 'Gửi đến ' + name;
@@ -1553,8 +1555,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         if (bm[0]) bm[0].disabled = false;
       }
       if (
-        (this.funcList?.defaultValue == '2' ||
-        this.funcList?.defaultValue == '3') &&
+        (this.defaultValue == '2' ||
+        this.defaultValue == '3') &&
         data?.status != '1' &&
         data?.status != '2' &&
         data?.approveStatus != '2' &&
@@ -1564,8 +1566,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       }
 
       if (
-        this.funcList?.defaultValue == '2' ||
-        this.funcList?.defaultValue == '3'
+        this.defaultValue == '2' ||
+        this.defaultValue == '3'
       ) {
         if (
           data?.status != '1' &&

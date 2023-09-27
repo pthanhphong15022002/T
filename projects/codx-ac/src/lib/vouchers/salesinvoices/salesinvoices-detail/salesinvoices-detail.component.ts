@@ -27,8 +27,8 @@ import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from '../models/TableColumn.model';
 import { SalesinvoicesAddComponent } from '../salesinvoices-add/salesinvoices-add.component';
-import { MF, SalesinvoicesComponent } from '../salesinvoices.component';
-import { fmSalesInvoicesLines } from '../salesinvoices.service';
+import { SalesinvoicesComponent } from '../salesinvoices.component';
+import { MF, fmSalesInvoicesLines } from '../salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices-detail',

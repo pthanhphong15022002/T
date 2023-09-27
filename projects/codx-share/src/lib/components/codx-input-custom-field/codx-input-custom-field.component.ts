@@ -318,6 +318,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.numberChange = 1;
       return;
     }
+    let checkNull = !e || !e.data;
+    if (this.customField.isRequired && checkNull) {
+      this.cache.message('SYS028').subscribe((res) => {
+        if (res) this.errorMessage = res.customName || res.defaultName;
+        this.showErrMess = true;
+      });
+      if (!this.checkValid) return;
+    } else this.showErrMess = false;
+
     this.valueChangeCustom.emit({ e: e, data: this.customField });
   }
 
@@ -610,5 +619,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
     var value = dataValue.split(';');
     if (value?.length > 0) return value;
     return '';
+  }
+
+  valueChangeCbx(e) {
+    // let checkNull = !e || !e.data;
+    // if (this.customField.isRequired && checkNull) {
+    //   this.cache.message('SYS028').subscribe((res) => {
+    //     if (res) this.errorMessage = res.customName || res.defaultName;
+    //     this.showErrMess = true;
+    //   });
+    //   if (!this.checkValid) return;
+    // } else this.showErrMess = false;
+
+    this.valueChangeCustom.emit({
+      e: e.data,
+      data: this.customField,
+    });
   }
 }

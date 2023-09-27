@@ -108,7 +108,8 @@ export class DealsComponent
   className = 'DealsBusiness';
   method = 'GetListDealsAsync';
   idField = 'recID';
-
+  predicate = '';
+  dataValue = '';
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -169,6 +170,7 @@ export class DealsComponent
 
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
+  queryParams: any;
 
   constructor(
     private inject: Injector,
@@ -183,6 +185,11 @@ export class DealsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
+    if (this.queryParams?.recID) {
+      this.predicate = 'RecID=@0';
+      this.dataValue = this.queryParams?.recID;
+    }
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -285,7 +292,10 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-
+    if(this.queryParams?.recID){
+      this.request.predicate = this.predicate;
+      this.request.dataValue = this.dataValue;
+    }
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
@@ -771,18 +781,18 @@ export class DealsComponent
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
           let oldStatus = data.status;
           let oldStepId = data.stepID;
-          var stepReason = {
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
@@ -790,7 +800,7 @@ export class DealsComponent
             isCallInstance: true,
             // listStepCbx: this.lstStepInstances,
           };
-          var obj = {
+          let obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
@@ -799,7 +809,7 @@ export class DealsComponent
             applyFor: '1',
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -809,17 +819,17 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
+              let instance = e.event.instance;
+              let listSteps = e.event?.listStep;
               this.detailViewDeal.reloadListStep(listSteps);
-              var index =
+              let index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              var nextStep = '';
+              let nextStep = '';
               if (
                 index != -1 &&
                 !listSteps[index]?.isSuccessStep &&
@@ -829,13 +839,14 @@ export class DealsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [
+              let dataUpdate = [
                 data.recID,
                 instance.stepID,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
+                e.event?.permissionCM
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {

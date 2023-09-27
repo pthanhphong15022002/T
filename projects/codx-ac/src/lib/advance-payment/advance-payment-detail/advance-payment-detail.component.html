@@ -72,14 +72,14 @@
           class="text-gray-600"
           style="font-size: 12px !important"
         >
-          {{ formatDate(dataItem?.voucherDate) }}
+          {{ dataItem?.voucherDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
     </div>
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="d-flex h-100 w-100 bgEDEDED" style="padding: 0px 70px">
+  <div class="d-flex h-100 w-100 bgEDEDED pt-5" style="padding: 0px 70px">
     <div
       class="bg-white rounded-2 d-flex justify-content-between flex-column h-100 w-100"
     >
@@ -88,7 +88,7 @@
         <div class="row text-center mt-2 text-primary fw-bold">
           <codx-label
             style="font-size: 35px"
-            default="Đề nghị tạm ứng"
+            [default]="headerText"
           ></codx-label>
         </div>
         <div class="row" style="padding-bottom: 5px;">
@@ -107,7 +107,7 @@
                     | formatvalue : formModel : 'objectID' : objectID
                     | async
                 "
-                class="om-input w-100"
+                class="om-input w-100 dropdow-select"
                 style="font-size: 13px;"
               ></span>
             </div>
@@ -192,7 +192,7 @@
                         | formatvalue : formModel : 'pmtMethodID' : pmtMethodID
                         | async
                     "
-                    class="om-input w-100"
+                    class="om-input w-100 dropdow-select"
                     style="font-size: 13px;"
                   ></span>
                 </div>
@@ -210,15 +210,9 @@
             </codx-label>
             <div>
               <span
-                #reasonID
-                [innerHTML]="
-                  dataItem?.reasonID
-                    | formatvalue : formModel : 'reasonID' : reasonID
-                    | async
-                "
-                class="om-input w-100"
+                class="om-input w-100 dropdow-select"
                 style="font-size: 13px;"
-              ></span>
+              >{{ dataItem.memo }}</span>
             </div>
           </div>
         </div>

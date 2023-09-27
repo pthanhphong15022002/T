@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   CacheService,
+  DialogModel,
   FormModel,
   NotificationsService,
   RequestOption,
@@ -20,6 +21,8 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddCampaignComponent } from './popup-add-campaign/popup-add-campaign.component';
+import { firstValueFrom } from 'rxjs';
+import { PopupAddCampaignContactComponent } from './campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
 
 @Component({
   selector: 'codx-campaigns',
@@ -148,6 +151,9 @@ export class CampaignsComponent
     }
   }
 
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
   //#region CRUD
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -312,6 +318,47 @@ export class CampaignsComponent
   }
   //#endregion
 
+  //#region Sub more
+
+  //add campaign contacts
+
+  addCampaignContact(data, objectType) {
+    this.view.dataService.dataSelected = data;
+    let formModel = new FormModel();
+    formModel.formName = 'CMCampaignsContacts';
+    formModel.gridViewName = 'grvCMCampaignsContacts';
+    formModel.entityName = 'CM_CampaignsContacts';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 1010;
+    dialogModel.FormModel = formModel;
+    this.cache
+      .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
+      .subscribe((res) => {
+        if (res) {
+          let obj = {
+            title: this.titleAction,
+            transID: data?.recID,
+            objectType: objectType,
+            gridViewSetup: res,
+          };
+          this.callfc
+            .openForm(
+              PopupAddCampaignContactComponent,
+              '',
+              600,
+              700,
+              '',
+              obj,
+              '',
+              dialogModel
+            )
+            .closed.subscribe((e) => {});
+        }
+      });
+  }
+
+  //#endregion
+
   //#region popover
   checkIsCollapsed(id) {
     let isCollapsed = false;
@@ -322,6 +369,34 @@ export class CampaignsComponent
       }
     }
     return isCollapsed;
+  }
+
+  async seeMore(data) {
+    let isCollapsed = false;
+
+    let element = document.getElementById('elementDescription');
+    if (element) {
+      let height = element.offsetHeight
+        ? JSON.parse(JSON.stringify(element.offsetHeight))
+        : 0;
+      if (data?.description == null || data.description?.trim() == '') {
+        height = 40;
+      }
+      if (height > 40) {
+        isCollapsed = true;
+      }
+      element.focus();
+    }
+
+    return isCollapsed;
+  }
+
+  timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async sleep(fn, ...args) {
+    await this.timeout(3000);
+    return fn(...args);
   }
 
   setTextPopover(text) {
