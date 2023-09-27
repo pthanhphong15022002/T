@@ -186,7 +186,7 @@ export class DealsComponent
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
-    if (this.queryParams) {
+    if (this.queryParams?.recID) {
       this.predicate = 'RecID=@0';
       this.dataValue = this.queryParams?.recID;
     }
@@ -292,7 +292,7 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-    if(this.queryParams){
+    if(this.queryParams?.recID){
       this.request.predicate = this.predicate;
       this.request.dataValue = this.dataValue;
     }

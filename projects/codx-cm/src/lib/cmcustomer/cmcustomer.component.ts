@@ -128,7 +128,7 @@ export class CmCustomerComponent
         this.method = 'GetListCustomersAsync';
         this.className = 'CustomersBusiness';
         this.entityName = 'CM_Customers';
-        if (this.queryParams) {
+        if (this.queryParams?.recID) {
           this.predicate = 'RecID=@0';
           this.dataValue = this.queryParams?.recID;
         }

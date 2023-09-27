@@ -46,6 +46,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
   countAdd = 0; //Số lượng sẽ được thêm
 
   countChange = 0; //Để check lần change
+  gridViewSetup: any;
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -58,6 +59,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.titleAction = dt?.data?.title;
     this.transID = dt?.data?.transID;
     this.objectType = dt?.data?.objectType;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
     if (this.lstCampainsHadAdd == null || this.lstCampainsHadAdd.length == 0) {

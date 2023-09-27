@@ -158,7 +158,7 @@ export class LeadsComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
     this.queryParams = this.router.snapshot.queryParams;
-    if (this.queryParams) {
+    if (this.queryParams?.recID) {
       this.predicate = 'RecID=@0';
       this.dataValue = this.queryParams?.recID;
     }
