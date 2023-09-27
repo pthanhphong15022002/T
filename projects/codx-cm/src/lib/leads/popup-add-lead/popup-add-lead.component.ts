@@ -349,22 +349,20 @@ export class PopupAddLeadComponent
     }
   }
   valueChangeOwner($event, view) {
-    if ($event) {
+    if ($event && view === this.viewOwnerDefault) {
       let ownerName = '';
-      if (view === this.viewOwnerDefault) {
         this.owner = $event?.data;
         ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      }
       this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if (view === this.viewOwnerProcess) {
+    } else if ($event && view === this.viewOwnerProcess) {
       this.owner = $event;
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0]?.userName;
+          (x) => x.userID === this.lead.owner
+        )[0].userName;
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      this.searchOwner('1', 'O', '0', this.lead.owner, ownerName);
     }
   }
   searchOwner(
@@ -423,14 +421,19 @@ export class PopupAddLeadComponent
   //   }
   // }
 
-  addPermission(processId: any) {
-    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
-    if (result) {
-      let permissionsDP = result?.permissionRoles;
-      if (permissionsDP.length > 0 && permissionsDP) {
-        for (let item of permissionsDP) {
-          this.lead.permissions.push(this.copyPermission(item));
-        }
+  addPermission(permissionDP) {
+    // var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
+    // if (result) {
+    //   let permissionsDP = result?.permissionRoles;
+    //   if (permissionsDP.length > 0 && permissionsDP) {
+    //     for (let item of permissionsDP) {
+    //       this.lead.permissions.push(this.copyPermission(item));
+    //     }
+    //   }
+    // }
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        this.lead.permissions.push(this.copyPermission(item));
       }
     }
   }
@@ -516,7 +519,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-    this.addPermission(this.lead.processID);
+   this.lead.applyProcess && this.addPermission(this.lead.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -583,7 +586,8 @@ export class PopupAddLeadComponent
       await this.saveFileContact(this.contactId);
     }
     if (this.isLoading) {
-    } else {
+    }
+     else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
         await this.onAdd();
@@ -598,6 +602,7 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.addPermission(instance.permissions);
         this.isLoading && this.dialog.close(instance);
       }
     });
@@ -682,7 +687,8 @@ export class PopupAddLeadComponent
           (x) => x.stepID == this.lead.stepID
         );
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        this.listParticipants = obj.permissions;
+        this.listParticipants = null;
+        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {

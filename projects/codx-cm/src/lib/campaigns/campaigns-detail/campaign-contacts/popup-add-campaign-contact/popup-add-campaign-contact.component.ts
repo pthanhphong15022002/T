@@ -46,6 +46,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
   countAdd = 0; //Số lượng sẽ được thêm
 
   countChange = 0; //Để check lần change
+  gridViewSetup: any;
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -58,6 +59,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.titleAction = dt?.data?.title;
     this.transID = dt?.data?.transID;
     this.objectType = dt?.data?.objectType;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
     if (this.lstCampainsHadAdd == null || this.lstCampainsHadAdd.length == 0) {
@@ -91,9 +93,9 @@ export class PopupAddCampaignContactComponent implements OnInit {
           [lstSaves]
         )
         .subscribe((res) => {
-          if(res){
+          if (res) {
             this.dialog.close(res);
-            this.notiSv.notifyCode('Thêm thành công');
+            this.notiSv.notifyCode('SYS006');
           }
         });
     } else {
@@ -161,46 +163,48 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      this[e?.field] = e?.data;
-      switch (e?.field) {
-        case 'isProvince':
-          if (!this.isProvince) {
-            if (this.cbxProvince) {
-              this.cbxProvince.value = [];
-              this.cbxProvince.selectedItems = [];
-              this.cbxProvince.setValue([]);
+      if (this[e?.field] != e?.data) {
+        this[e?.field] = e?.data;
+        switch (e?.field) {
+          case 'isProvince':
+            if (!this.isProvince) {
+              if (this.cbxProvince) {
+                this.cbxProvince.value = [];
+                this.cbxProvince.selectedItems = [];
+                this.cbxProvince.setValue([]);
+              }
+              this.provinceIDs = [];
+              this.bindingCountCompaign();
             }
-            this.provinceIDs = [];
+            break;
+          case 'isDistrict':
+            if (!this.isDistrict) {
+              this.districtIDs = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isIndustries':
+            if (!this.isIndustries) {
+              this.industries = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isStatus':
+            if (!this.isStatus) {
+              this.status = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          default:
             this.bindingCountCompaign();
-          }
-          break;
-        case 'isDistrict':
-          if (!this.isDistrict) {
-            this.districtIDs = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isIndustries':
-          if (!this.isIndustries) {
-            this.industries = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isStatus':
-          if (!this.isStatus) {
-            this.status = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        default:
-          this.bindingCountCompaign();
-          break;
-        // case 'districtIDs':
-        //   break;
-        // case 'industries':
-        //   break;
-        // case 'status':
-        //   break;
+            break;
+          // case 'districtIDs':
+          //   break;
+          // case 'industries':
+          //   break;
+          // case 'status':
+          //   break;
+        }
       }
     }
 
@@ -208,6 +212,20 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   bindingCountCompaign() {
+    // if(this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0){
+    //   let count = 0;
+    //   let lstHadSearchs = [];
+    //   if(this.provinceIDs != null && this.provinceIDs){
+    //     let lstPro = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //     lstHadSearchs = lstPro;
+    //   }
+
+    //   if(this.districtIDs != null && this.districtIDs.length > 0){
+    //     let lstDis = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //   }
+
+    // } //Có field sẽ làm đoạn này
+
     this.api
       .execSv<any>(
         'CM',
