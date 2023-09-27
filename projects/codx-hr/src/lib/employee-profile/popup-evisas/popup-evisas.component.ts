@@ -47,6 +47,8 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    console.log('dialog nhan vao', this.dialog);
+    
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;

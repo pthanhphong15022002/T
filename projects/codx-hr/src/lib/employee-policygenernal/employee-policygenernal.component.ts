@@ -144,8 +144,6 @@ export class EmployeePolicygenernalComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    console.log('header text ne', this.view.function.description);
-    
     let dialg = this.callfc.openSide(
       PopupPolicygeneralComponent,
       {
