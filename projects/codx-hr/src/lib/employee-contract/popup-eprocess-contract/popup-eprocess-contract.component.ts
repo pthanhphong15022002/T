@@ -68,6 +68,7 @@ export class PopupEProcessContractComponent
   //#endregion
   employeeSign;
   itemContractGroup: string;
+  tmpContractNo;
 
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
@@ -172,7 +173,6 @@ export class PopupEProcessContractComponent
   }
 
   onInit(): void {
-    console.log(this.formModel);
     this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;
@@ -347,6 +347,9 @@ export class PopupEProcessContractComponent
     this.data.employeeID = this.employeeId;
     this.data.signedDate = null;
     this.data.effectedDate = null;
+    //Set contractNo => update field ContractNo undefined ??
+    this.tmpContractNo = this.data.contractNo;
+
     this.formModel.currentData = this.data;
 
     this.formGroup.patchValue(this.data);
@@ -442,6 +445,8 @@ export class PopupEProcessContractComponent
       this.actionType === 'copy' ||
       this.actionType === 'view'
     ) {
+      //Set contractNo => update field ContractNo undefined ??
+      this.tmpContractNo = this.data.contractNo;
       this.hrSevice
         .getDataDefault(
           this.formModel.funcID,
@@ -481,7 +486,6 @@ export class PopupEProcessContractComponent
       if (this.data.signerID) {
         this.getEmployeeInfoById(this.data.signerID, 'signerID');
       }
-
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
       this.isAfterRender = true;
@@ -496,6 +500,9 @@ export class PopupEProcessContractComponent
   }
 
   async onSaveForm() {
+    //Set contractNo => update field ContractNo undefined ??
+    this.data.contractNo = this.tmpContractNo;
+
     if (this.data.payForm == null) this.data.payForm = '';
     if (this.data.benefits == null) this.data.benefits = '';
 
