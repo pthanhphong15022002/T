@@ -211,7 +211,7 @@ export class CmCustomerDetailComponent implements OnInit {
     this.dataSelected.address = e ? e?.adressName : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
-    this.dataSelected.wardID = e ? e?.wrovinceID : null;
+    this.dataSelected.wardID = e ? e?.wardID : null;
     this.addressNameCMEmit.emit(e);
     this.changeDetectorRef.detectChanges();
   }
