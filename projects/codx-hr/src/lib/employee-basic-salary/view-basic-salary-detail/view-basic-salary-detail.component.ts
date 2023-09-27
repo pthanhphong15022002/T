@@ -49,6 +49,7 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
   itemDetailStt;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
+  formModelEmployee;
 
   olderItem: any;
   ngOnInit() {
@@ -60,6 +61,12 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
       { name: 'Comment', textDefault: 'Thảo Luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
 
   ngOnChanges() {

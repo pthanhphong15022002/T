@@ -1,6 +1,7 @@
 <codx-form
   #form
   [headerText]="titleAction"
+  [subHeader]="subHeader"
   [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
@@ -8,22 +9,103 @@
   [body]="body"
   [data]="data"
 ></codx-form>
+<ng-template #subHeader>
+  <div class="d-flex text-gray-600">
+    <codx-label
+      class="label-colon me-1"
+      [formModel]="form.formModel"
+      [fiedName]="'CampaignID'"
+    >
+    </codx-label>
+    <div
+      class="codx-textcontent"
+      [innerHTML]="
+        data?.campaignID | formatvalue : form.formModel : 'CampaignID' | async
+      "
+    ></div>
+  </div>
+</ng-template>
+
 <ng-template #body>
   <ng-container *ngIf="form?.formGroup">
     <div class="form-group">
-      <codx-label [formModel]="form.formModel" [fiedName]="'CampaignID'">
-      </codx-label>
-      <codx-input
-        [field]="'campaignID'"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input>
+      <div style="height: 122px">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblAvatar"
+          default="Ảnh chiến dịch"
+        ></codx-label>
+        <div class="">
+          <codx-img
+            #imageUpload
+            class="image-maxsize"
+            [referType]="'avt'"
+            [width]="90"
+            [funcId]="form.formModel.funcID"
+            [objectId]="data?.recID"
+            [objectType]="form.formModel.entityName"
+            [objectName]="data?.campaignName"
+            [isAllowEdit]="true"
+            [isDefaulImg]="true"
+            [imgOn]="data?.modifiedOn"
+            (handleInput)="changeAvatar()"
+          >
+          </codx-img>
+        </div>
+      </div>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" [fiedName]="'CampaignName'">
       </codx-label>
       <codx-input
         [field]="'campaignName'"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" [fiedName]="'Location'">
+      </codx-label>
+      <codx-input
+        [field]="'location'"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label [formModel]="form.formModel" [fiedName]="'StartDate'">
+        </codx-label>
+        <codx-input
+          [field]="'startDate'"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label [formModel]="form.formModel" [fiedName]="'EndDate'">
+        </codx-label>
+        <codx-input
+          [field]="'endDate'"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" [fiedName]="'Owner'">
+      </codx-label>
+      <codx-input
+        [field]="'owner'"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" [fiedName]="'Description'">
+      </codx-label>
+      <codx-input
+        [field]="'description'"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>

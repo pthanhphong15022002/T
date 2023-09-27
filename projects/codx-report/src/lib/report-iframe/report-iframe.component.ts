@@ -31,7 +31,6 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
     this._user = this.authStore.get();
   }
   ngOnInit(): void {
-    debugger
     this._preArray = this.predicates.split('&&').join(';');
     // this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
     this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
@@ -43,7 +42,6 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
     this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&locale=vi&lvtk=${this._user.token}`;
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);

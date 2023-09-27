@@ -516,11 +516,11 @@ export class CodxDMService {
   }
 
   getThumbnail(data) {
-    return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+    return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
     // if (data.hasThumbnail == true) {
     //   let url = `${this.urlThumbnail}/${data.thumbnail}`;
     //   return url;// this.checkUrl(url, data);
-    // } else return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+    // } else return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
   }
 
   deniedRight() {
@@ -1018,8 +1018,8 @@ export class CodxDMService {
         alert(1);
       }
        */
-    //return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
-    var ret = `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //'../../../assets/img/loader.gif';
+    //return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
+    var ret = `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //'../../../assets/img/loader.gif';
     // try {
     //   const xhr = new XMLHttpRequest();
     //   xhr.open('GET', url, false);
@@ -1050,7 +1050,7 @@ export class CodxDMService {
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
       if (data?.viewThumb && this.checkView(data?.read) == true) return environment.urlUpload + '/' + data.thumbnail;
-      return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
     }
   }
 

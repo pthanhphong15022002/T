@@ -1,6 +1,6 @@
 <div [style]="isScroll == '0'?'max-height: 100px; overflow-y: auto;':null">
   <ng-container *ngIf="files != null && files.length > 0">
-    <div *ngFor="let item of files" class="d-flex justify-content-between align-items-center mb-2">
+    <div *ngFor="let item of files" class="d-flex justify-content-between align-items-center">
       <div *ngIf="(item.data != null) then data else nodata"></div>
       <ng-template #data>
         <div class="has-action-menu-1 d-flex align-items-center  w-100 position-relative">
@@ -167,15 +167,19 @@
             <ng-container *ngTemplateOutlet="tmpRight ; context: { $implicit: item}"></ng-container>
           </ng-container>
           <ng-template #simple>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-16px me-2 cursor-pointer"
-              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1" (click)="openFile(item)">
-            </codx-temp-full>
+            <div class="my-1">
+              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-auto h-18px me-2 cursor-pointer"
+                title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})" [descLine]="1" (click)="openFile(item)">
+              </codx-temp-full>
+            </div>
           </ng-template>
           <ng-template #full>
-            <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-16px me-2 cursor-pointer"
-              title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
-              subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1" (click)="openFile(item)">
-            </codx-temp-full>
+            <div class="my-1">
+              <codx-temp-full imageSrc="{{dmSV.getImage(item)}}" imgCss="w-auto h-18px me-2 cursor-pointer"
+                title="{{item?.fileName}} ({{formatBytes(item?.fileSize)}})"
+                subTitle="{{item.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.createdBy}}" [descLine]="1" (click)="openFile(item)">
+              </codx-temp-full>
+            </div>
             <div *ngIf="isReferType && item.referType == 'source'" class="div-icon-source"><i class="icon-14 icon-i-lock-fill"></i></div>
           </ng-template>
         </div>

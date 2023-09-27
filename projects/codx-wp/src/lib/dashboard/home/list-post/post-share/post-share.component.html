@@ -17,13 +17,13 @@
                   </div>
                 </ng-container>
                 <ng-container *ngIf="data.contents">
-                  <div class="wp-share-contents">
+                  <div class="wp-share-contents p-3 mt-1">
                       <div [innerHTML]="data.contents | safe: 'html'"></div>
                   </div>
                 </ng-container>
                 <div class="d-flex border-top p-3">
                   <codx-img 
-                    [width]="30" 
+                    [width]="40" 
                     [objectId]="data.createdBy" 
                     [objectName]="data.createdName" 
                     objectType="AD_Users">

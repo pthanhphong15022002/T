@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,6 +35,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
   selector: 'lib-popup-add-custom-field',
   templateUrl: './popup-add-custom-field.component.html',
   styleUrls: ['./popup-add-custom-field.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
@@ -285,6 +287,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
+    // if (this.field.dataType == 'L' && !this.field.refType) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.grvSetup['RefType']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+
+    if (this.field.dataType == 'L' && !this.field.refValue) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RefValue']?.headerText + '"'
+      );
+      return;
+    }
+
     if (
       (this.field.note == null || this.field.note.trim() == '') &&
       this.grvSetup['Note']?.isRequire
@@ -306,9 +326,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close(this.field);
+    this.field = new DP_Steps_Fields(); //tắt bùa
   }
 
   removeAccents(str) {
+    if (!str) return;
     var format = str
       .trim()
       .normalize('NFD')
@@ -321,11 +343,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   clickAddVll() {
     // 'add vll'
-    if (this.crrVll.defaultValues) this.changeFormVll();
+    if (!this.crrVll) {
+      this.crrVll = new tempVllDP();
+      this.crrVll.language = this.user.language;
+      this.crrVll.createdBy = this.user.userID;
+      this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+      this.crrVll.version = 'x00.01';
+    }
+    if (this.crrVll?.defaultValues) this.changeFormVll();
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
-    option.zIndex = 3000;
-    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 500, '');
+    option.zIndex = 1099;
+    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
   }
 
   closeDialog() {}
@@ -484,7 +513,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         });
       } else this.listVll = [];
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.detectChanges();
+      this.changeDef.markForCheck();
       this.loaded = true;
     });
   }
@@ -511,6 +540,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   cbxChangeVll(value, elm) {
     if (elm) this.element = elm;
+    this.field['refValue'] = value;
     if (!value) {
       //data form
       this.crrVll = new tempVllDP();
@@ -526,7 +556,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.field['refValue'] = value;
     this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
 
     if (
@@ -592,10 +621,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
 
-  deletedValue() {
-    if (this.idxDeleted == -1) return;
-    this.datasVll.splice(this.idxDeleted, 1);
-    this.idxDeleted = -1;
+  deletedValue(i) {
+    if (i == -1) return;
+    this.datasVll.splice(i, 1);
+    // this.idxDeleted = -1;
     if (this.viewComboxForm) this.viewComboxForm.refresh();
   }
 
@@ -609,5 +638,38 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.popover && this.popover.isOpen()) this.popover.close();
     p.open();
     this.popover = p;
+  }
+
+  clickDeletedVll() {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res?.event && res?.event?.status == 'Y') {
+        this.api
+          .execSv(
+            'SYS',
+            'SYS',
+            'ValueListBusiness',
+            'DeletedValuelistCustomsAsync',
+            this.crrVll.listName
+          )
+          .subscribe((res) => {
+            if (res) {
+              var idxDeleted = this.listVll.findIndex(
+                (x) => x.value == this.crrVll.listName
+              );
+              if (idxDeleted != -1) {
+                this.listVll.splice(idxDeleted, 1);
+                //data crrVll
+              }
+              this.field.refValue = '';
+              this.datasVllCrr = [];
+              this.crrValueFirst = null;
+              this.crrVll = null;
+              if (this.comboxView) this.comboxView.refresh();
+              if (this.datasVllCbx) this.comboxView.refresh();
+              this.notiService.notifyCode('SYS008');
+            } else this.notiService.notifyCode('SYS022');
+          });
+      }
+    });
   }
 }

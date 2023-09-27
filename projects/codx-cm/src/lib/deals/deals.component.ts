@@ -357,8 +357,8 @@ export class DealsComponent
     let isDisabled = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data.status != '1') ||
-            ['1', '0'].includes(data.status) ||
+          ? (data.closed && data?.status != '1') ||
+            ['1', '0'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -379,11 +379,15 @@ export class DealsComponent
     };
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? data.closed ||['1','0'].includes(data.status) : true;
+        data?.alloweStatus == '1'
+          ? data.closed || ['1', '0'].includes(data.status)
+          : true;
     };
     let isOpened = (eventItem, data) => {
       eventItem.disabled =
-        data?.alloweStatus == '1' ? !data.closed  || ['1','0'].includes(data.status): true;
+        data?.alloweStatus == '1'
+          ? !data.closed || ['1', '0'].includes(data.status)
+          : true;
     };
     let isStartDay = (eventItem, data) => {
       eventItem.disabled =
@@ -393,7 +397,9 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2'].includes(data.status) || data.closed || ['1','0'].includes(data.status)
+        ? !['1', '2'].includes(data.status) ||
+          data.closed ||
+          ['1', '0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -657,7 +663,7 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-    if( data?.alloweStatus != '1' || !data?.full ) {
+    if (data?.alloweStatus != '1' || !data?.full) {
       this.notificationsService.notifyCode('CM027');
       return;
     }
@@ -765,26 +771,26 @@ export class DealsComponent
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
           let oldStatus = data.status;
           let oldStepId = data.stepID;
-          var stepReason = {
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
-            isCallInstance: true
+            isCallInstance: true,
             // listStepCbx: this.lstStepInstances,
           };
-          var obj = {
+          let obj = {
             stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
@@ -793,7 +799,7 @@ export class DealsComponent
             applyFor: '1',
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -803,17 +809,17 @@ export class DealsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
+              let instance = e.event.instance;
+              let listSteps = e.event?.listStep;
               this.detailViewDeal.reloadListStep(listSteps);
-              var index =
+              let index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              var nextStep = '';
+              let nextStep = '';
               if (
                 index != -1 &&
                 !listSteps[index]?.isSuccessStep &&
@@ -823,13 +829,14 @@ export class DealsComponent
                   nextStep = listSteps[index]?.stepID;
                 }
               }
-              var dataUpdate = [
+              let dataUpdate = [
                 data.recID,
                 instance.stepID,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
+                e.event?.permissionCM
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -839,7 +846,8 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
-                  if (this.kanban) this.kanban.updateCard(this.detailViewDeal.dataSelected);
+                  if (this.kanban)
+                    this.kanban.updateCard(this.detailViewDeal.dataSelected);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -926,7 +934,7 @@ export class DealsComponent
         this.detailViewDeal.dataSelected = JSON.parse(
           JSON.stringify(this.dataSelected)
         );
-     //   this.detailViewDeal.getListContactByDealID(this.dataSelected.recID);
+        //   this.detailViewDeal.getListContactByDealID(this.dataSelected.recID);
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -980,7 +988,6 @@ export class DealsComponent
               this.renderTotal(this.crrStepID, 'minus', money);
               if (this.kanban) this.kanban.updateCard(data);
               this.kanban.refresh();
-
             }
             this.detectorRef.detectChanges();
           }
@@ -1018,22 +1025,24 @@ export class DealsComponent
     return deal;
   }
   startDeal(data) {
-    this.codxCmService.startInstance([data.refID,'']).subscribe((resDP) => {
-      if (resDP) {
-        var datas = [data.recID, resDP[0]];
-        this.codxCmService.startDeal(datas).subscribe((res) => {
-          if (res) {
-            this.dataSelected = res[0];
-            this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-            this.detailViewDeal.reloadListStep(resDP[1]);
-            this.notificationsService.notifyCode('SYS007');
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.detectorRef.detectChanges();
-        });
-      }
-    });
+    this.codxCmService
+      .startInstance([data.refID, data.recID, 'CM0201', 'CM_Deals'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          var datas = [data.recID, resDP[0]];
+          this.codxCmService.startDeal(datas).subscribe((res) => {
+            if (res) {
+              this.dataSelected = res[0];
+              this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+              this.detailViewDeal.reloadListStep(resDP[1]);
+              this.notificationsService.notifyCode('SYS007');
+              this.view.dataService.update(this.dataSelected).subscribe();
+              if (this.kanban) this.kanban.updateCard(this.dataSelected);
+            }
+            this.detectorRef.detectChanges();
+          });
+        }
+      });
   }
 
   popupOwnerRoles(data) {
@@ -1051,6 +1060,7 @@ export class DealsComponent
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
+      data:data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
       applyFor: '1',
@@ -1134,7 +1144,8 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer: action === 'add' ? '': this.dataSelected?.categoryCustomer
+      categoryCustomer:
+        action === 'add' ? '' : this.dataSelected?.categoryCustomer,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,

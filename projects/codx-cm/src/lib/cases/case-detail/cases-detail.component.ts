@@ -32,6 +32,7 @@ export class CasesDetailComponent
   @Input() colorReasonFail: any;
   @Input() gridViewSetup: any;
   @Input() formModel: FormModel;
+  @Input() listInsStepStart = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
@@ -73,7 +74,7 @@ export class CasesDetailComponent
     },
   ];
 
-  id = '';
+  sessionID = '';
   treeTask = [];
   listCategory = [];
   listStepsProcess = [];
@@ -117,11 +118,16 @@ export class CasesDetailComponent
           this.dataSelected.contactID,
           this.dataSelected.customerID
         );
-        this.id = this.dataSelected?.applyProcess
-          ? this.dataSelected?.refID
-          : this.dataSelected?.recID;
-        this.loadTree(this.id);
+        // this.sessionID = this.dataSelected?.applyProcess
+        //   ? this.dataSelected?.refID
+        //   : this.dataSelected?.recID;
+        //da doi
+        this.sessionID = this.dataSelected?.recID;
+        this.loadTree(this.sessionID);
       }
+    }
+    if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
+      this.listSteps = this.listInsStepStart;
     }
   }
   async promiseAllAsync() {
@@ -265,7 +271,7 @@ export class CasesDetailComponent
   }
   saveAssign(e) {
     if (e) {
-      this.loadTree(this.id);
+      this.loadTree(this.sessionID);
     }
   }
 

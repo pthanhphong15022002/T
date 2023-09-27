@@ -830,6 +830,7 @@
       (changeProgress)="autoStart($event)"
       (isSusscess)="checkSusscess($event)"
       (saveAssignTask)="saveAssign($event)"
+      [owner]="contract?.owner"
     ></step-task>
   </div>
 </ng-template>

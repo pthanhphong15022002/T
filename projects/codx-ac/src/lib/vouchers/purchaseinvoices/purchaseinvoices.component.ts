@@ -4,9 +4,8 @@ import {
   ElementRef,
   Injector,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   DataRequest,
@@ -48,17 +47,14 @@ export class PurchaseinvoicesComponent
   master: IPurchaseInvoice;
   journal: IJournal;
 
-  gvsAcctTrans: any;
-
   constructor(
     inject: Injector,
     private purchaseInvoiceService: PurchaseInvoiceService, // don't remove this
-    private journalService: JournalService,
-    private routerActive: ActivatedRoute
+    private journalService: JournalService
   ) {
     super(inject);
 
-    this.routerActive.queryParams.subscribe((params) => {
+    this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
     });
   }
@@ -158,19 +154,25 @@ export class PurchaseinvoicesComponent
     }
   }
 
-  onClickMF(e, data) {
+  onClickMF(e: any, data: IPurchaseInvoice): void {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
+        break;
+      case MF.KiemTraTinhHopLe:
+        this.purchaseInvoiceService.validate(e, data);
+        break;
+      case MF.GhiSo:
+        this.purchaseInvoiceService.post(e, data);
         break;
     }
   }
@@ -214,7 +216,7 @@ export class PurchaseinvoicesComponent
     if (e.data?.error?.isError) {
       return;
     }
-    
+
     if (e.data.data ?? e.data) {
       this.master = e.data.data ?? e.data;
     }
@@ -222,17 +224,17 @@ export class PurchaseinvoicesComponent
   //#endregion
 
   //#region Method
-  getDefault(): Observable<any> {
+  getDefault$(): Observable<any> {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
       this.journalNo,
     ]);
   }
 
-  edit(e, data): void {
+  edit(data): void {
     const copiedData = { ...data };
     this.view.dataService.dataSelected = copiedData;
     this.view.dataService.edit(copiedData).subscribe((res: any) => {
-      let options = new SidebarModel();
+      const options = new SidebarModel();
       options.DataService = this.view.dataService;
       options.FormModel = this.view.formModel;
       options.isFull = true;
@@ -249,24 +251,23 @@ export class PurchaseinvoicesComponent
     });
   }
 
-  copy(e, data): void {
+  copy(data): void {
     this.view.dataService.dataSelected = data;
     this.view.dataService
-      .copy(() => this.getDefault())
+      .copy(() => this.getDefault$())
       .subscribe((res: any) => {
         if (res) {
-          var obj = {
-            formType: 'add',
-            formTitle: this.funcName,
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
+          const options = new SidebarModel();
+          options.DataService = this.view.dataService;
+          options.FormModel = this.view.formModel;
+          options.isFull = true;
           this.callfc.openSide(
             PurchaseinvoicesAddComponent,
-            obj,
-            option,
+            {
+              formType: 'add',
+              formTitle: this.funcName,
+            },
+            options,
             this.view.funcID
           );
         }
@@ -303,7 +304,7 @@ export class PurchaseinvoicesComponent
 
   //#region Function
   emitDefault(): void {
-    this.getDefault().subscribe((res) => {
+    this.getDefault$().subscribe((res) => {
       this.defaultSubject.next({
         ...res,
         recID: res.data.recID,

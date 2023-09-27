@@ -4,6 +4,7 @@ import {
   Component,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {
   Util,
@@ -19,10 +20,7 @@ import {
   DP_Steps_Tasks,
   DP_Steps_Tasks_Roles,
 } from '../../../../models/models';
-import {
-  ComboBoxComponent,
-  MultiSelectComponent,
-} from '@syncfusion/ej2-angular-dropdowns';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -30,6 +28,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   selector: 'lib-popup-job',
   templateUrl: './popup-step-task.component.html',
   styleUrls: ['./popup-step-task.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupJobComponent implements OnInit {
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
@@ -40,11 +39,13 @@ export class PopupJobComponent implements OnInit {
   step: DP_Steps;
   dialog!: DialogRef;
   stepsTasks: DP_Steps_Tasks;
+  listStep: DP_Steps[] = [];
   listTask: DP_Steps_Tasks[] = [];
   roles: DP_Steps_Tasks_Roles[] = [];
   owner: DP_Steps_Tasks_Roles[] = [];
   participant: DP_Steps_Tasks_Roles[] = [];
 
+  fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsGroup = { text: 'taskGroupName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'recID' };
   fieldsFields = { text: 'title', value: 'recID' };
@@ -62,16 +63,12 @@ export class PopupJobComponent implements OnInit {
   listGroupTask = [];
   listGroupTaskCombobox = [];
   listFileTask: string[] = [];
-
-  stepID = '';
-  stepName = '';
+  user: any;
   recIdEmail = '';
-  taskGroupID = '';
   isNewEmails = true;
   isHaveFile = false;
-  showLabelAttachment = false;
-  user: any;
   isBoughtTM = false;
+  showLabelAttachment = false;
 
   listCombobox = {
     U: 'Share_Users_Sgl',
@@ -89,13 +86,15 @@ export class PopupJobComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.step = dt?.data?.step;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.typeTask;
+    this.listStep = dt?.data?.listStep;
+    this.listTask = dt?.data?.listTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
-    this.stepID = this.step?.recID;
-    this.stepName = this.step?.stepName;
+    this.listFileTask = dt?.data?.listFileTask;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroupTask = dt?.data?.listGroup || [];
@@ -105,15 +104,13 @@ export class PopupJobComponent implements OnInit {
       let index = this.listGroupTaskCombobox?.findIndex(
         (group) => !group.recID
       );
-      if (index >= 0) {
-        this.listGroupTaskCombobox?.splice(index, 1);
-      }
+      index >= 0 && this.listGroupTaskCombobox?.splice(index, 1);
     }
 
     if (this.action == 'add') {
       this.stepsTasks = new DP_Steps_Tasks();
       this.stepsTasks['durationDay'] = 1;
-      this.stepsTasks['stepID'] = this.stepID;
+      this.stepsTasks['stepID'] = this.step?.recID;
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
@@ -125,22 +122,13 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
     }
-
-    this.listTask = dt?.data?.listTask;
-    this.taskGroupID = dt?.data?.groupTaskID;
-    this.listFileTask = dt?.data?.listFileTask;
-    this.user = this.authStore.get();
   }
   async ngOnInit() {
     this.getFormModel();
 
     this.roles = this.stepsTasks['roles'];
-    this.owner =
-      this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner) ||
-      [];
-    this.participant =
-      this.roles?.filter((role) => role.objectID != this.stepsTasks?.owner) ||
-      [];
+    this.owner = this.roles?.filter((role) => role.roleType == 'O') || [];
+    this.participant = this.roles?.filter((role) => role.roleType != 'O') || [];
 
     let group = this.listGroupTask?.find(
       (x) => x.recID === this.stepsTasks?.taskGroupID
@@ -305,6 +293,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   handelSave() {
+    // this.stepsTasks = JSON.parse(JSON.stringify(this.stepsTasks));
     let task = this.stepsTasks;
     // if task thuộc group thì kiểm tra trong group nếu không thuộc group kiểm tra với step
     if (task['taskGroupID']) {
@@ -399,7 +388,7 @@ export class PopupJobComponent implements OnInit {
   //#region handle time
   getHour(data) {
     let hour =
-      Number(data['durationDay'] || 0) * 24 + Number(data['durationHour'] || 0);
+      Number(data?.durationDay || 0) * 24 + Number(data?.durationHour || 0);
     return hour || 0;
   }
 
@@ -479,7 +468,7 @@ export class PopupJobComponent implements OnInit {
   }
 
   valueChangeText(event) {
-    this.stepsTasks[event?.field] = event?.data;
+    this.stepsTasks[event?.field] = JSON.parse(JSON.stringify(event?.data));
   }
 
   valueChangeCombobox(event) {
@@ -488,6 +477,9 @@ export class PopupJobComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
+    if (event?.field == 'createTask' && !event?.data) {
+      this.stepsTasks.assignControl = null;
+    }
   }
 
   changeRoler(e, roleType) {
@@ -495,23 +487,28 @@ export class PopupJobComponent implements OnInit {
     let listUser = e || [];
     let listRole = [];
     for (let role of listUser) {
-      if (roleType == 'P' && this.owner.some((ownerFind) => ownerFind.objectID == role.objectID))
-      {
+      if (
+        roleType == 'P' &&
+        this.owner.some((ownerFind) => ownerFind.objectID == role.objectID)
+      ) {
         continue;
       }
       listRole.push({
         objectID: role?.objectID,
         objectName: role?.objectName,
         objectType: role?.objectType,
-        roleType: role?.roleType,
+        roleType: roleType,
         taskID: this.stepsTasks?.recID,
       });
     }
     if (roleType == 'O') {
       this.owner = listRole;
       this.stepsTasks.owner = this.owner[0]?.objectID;
-      let index = this.participant?.findIndex(role => role?.objectID == this.stepsTasks.owner);
-      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index,1);
+      let index = this.participant?.findIndex(
+        (role) => role?.objectID == this.stepsTasks.owner
+      );
+      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index, 1);
+      this.participant = [...this.participant];
     }
     if (roleType == 'P') {
       this.participant = listRole;
@@ -520,8 +517,8 @@ export class PopupJobComponent implements OnInit {
   //#endregion
 
   //#region prarentID
-  async changeCombobox(value, key) {
-    let data = this.comboBoxObj?.value;
+  async changeCombobox(event, key) {
+    let data = event?.value;
     this.stepsTasks[key] = data;
     let group = this.listGroupTask.find((x) => x.recID === data);
     this.listTaskLink = group?.recID

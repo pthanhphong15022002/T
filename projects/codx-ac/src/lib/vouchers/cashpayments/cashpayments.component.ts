@@ -311,24 +311,36 @@ export class CashPaymentsComponent extends UIComponent {
   copyVoucher(dataCopy) {
     this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(dataCopy))
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let data = {
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
-          };
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
+          let datas = { ...res };
+          this.view.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                  legalName: this.legalName, //? tên company
+                };
+                let dialog = this.callfc.openSide(
+                  CashPaymentAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+                this.view.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
         }
       });
   }
@@ -394,8 +406,7 @@ export class CashPaymentsComponent extends UIComponent {
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902' || // MF kiểm tra tính hợp lệ (UNC)
-        x.functionID == 'ACT042901' // MF chuyển tiền điện tử
+        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -426,7 +437,9 @@ export class CashPaymentsComponent extends UIComponent {
                 element.functionID == 'ACT041003' ||
                 element.functionID == 'ACT041010' ||
                 element.functionID == 'ACT042905' ||
-                element.functionID == 'ACT042907'
+                element.functionID == 'ACT042907' ||
+                (element.functionID == 'ACT042901' &&
+                  this.view.funcID == 'ACT0429')
               ) {
                 element.disabled = false;
               } else {
@@ -439,9 +452,7 @@ export class CashPaymentsComponent extends UIComponent {
                 element.functionID == 'ACT041002' ||
                 element.functionID == 'ACT041010' ||
                 element.functionID == 'ACT042903' ||
-                element.functionID == 'ACT042907' ||
-                (element.functionID == 'ACT042901' &&
-                  this.view.funcID == 'ACT0429')
+                element.functionID == 'ACT042907'
               ) {
                 element.disabled = false;
               } else {
@@ -470,7 +481,9 @@ export class CashPaymentsComponent extends UIComponent {
               element.functionID == 'ACT041003' ||
               element.functionID == 'ACT041010' ||
               element.functionID == 'ACT042905' ||
-              element.functionID == 'ACT042907'
+              element.functionID == 'ACT042907' ||
+              (element.functionID == 'ACT042901' &&
+                this.view.funcID == 'ACT0429')
             ) {
               element.disabled = false;
             } else {
@@ -651,10 +664,11 @@ export class CashPaymentsComponent extends UIComponent {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data) {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      action,
     ]);
   }
 

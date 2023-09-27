@@ -104,24 +104,40 @@
         type="combobox"
         [refValue]="customField.refValue"
         [placeholder]="customField.note || ''"
-        [crrValue]="customField.dataValue"
-        (keyUpEnter)="valueChange($event)"
-        (valueChange)="valueChange($event)"
+        [crrValue]="customField.dataValue|| ''"
+        (keyUpEnter)="valueChangeCbx($event)"
+        (valueChange)="valueChangeCbx($event)"
         [disabled]="disable"
       >
       </codx-input
     ></ng-container>
 
     <ng-container *ngIf="customField.dataFormat == 'V'">
-      <ejs-combobox
-        [enabled]="!disable"
-        [dataSource]="datasVll"
-        [fields]="fieldsVll"
-        [value]="customField.dataValue"
-        [allowFiltering]="true"
-        [placeholder]="plancehoderVll"
-        (valueChange)="cbxChangeVll($event)"
-      ></ejs-combobox>
+      <ng-container *ngIf="!mutiSelectVll">
+        <ejs-combobox
+          #comboxValue
+          [enabled]="!disable"
+          [dataSource]="datasVll"
+          [fields]="fieldsVll"
+          [value]="customField.dataValue"
+          [allowFiltering]="true"
+          [placeholder]="plancehoderVll"
+          (valueChange)="cbxChangeVll($event)"
+        ></ejs-combobox>
+      </ng-container>
+      <ng-container *ngIf="mutiSelectVll">
+        <ejs-multiselect
+          #comboxValueMutilSelect
+          [dataSource]="datasVll"
+          [mode]="'Default'"
+          [fields]="fieldsVll"
+          [value]="crrValueVll"
+          [showDropDownIcon]="true"
+          [placeholder]="plancehoderVll"
+          (valueChange)="cbxChangeVllMutilSelect($event)"
+          [enabled]="!disable"
+        ></ejs-multiselect>
+      </ng-container>
     </ng-container>
   </ng-container>
 

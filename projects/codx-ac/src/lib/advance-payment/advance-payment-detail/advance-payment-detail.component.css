@@ -1,8 +1,3 @@
-.voucherText{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
-}
 .amount .e-editable-value{
     justify-content: end;
 }
@@ -11,4 +6,8 @@
 }
 .height-attachments .overflow-auto {
     max-height: 75px;
+}
+.dropdow-select{
+    padding: 0 0.85rem !important;
+    line-height: 26px;
 }

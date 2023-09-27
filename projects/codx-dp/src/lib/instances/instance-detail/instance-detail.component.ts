@@ -33,6 +33,7 @@ import { InstancesComponent } from '../instances.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
+import { StagesDetailComponent } from './stages-detail/stages-detail.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -40,6 +41,8 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
   styleUrls: ['./instance-detail.component.scss'],
 })
 export class InstanceDetailComponent implements OnInit {
+  @ViewChild('codxStage') codxStage: StagesDetailComponent;
+
   @Input() formModel: any;
   @Input() stepName: string;
   @Input() progress = '0';
@@ -73,7 +76,6 @@ export class InstanceDetailComponent implements OnInit {
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-
   id: any;
   totalInSteps: any;
   tmpDataSteps: DP_Instances_Steps;
@@ -261,6 +263,8 @@ export class InstanceDetailComponent implements OnInit {
   };
   //end gan
   loaded: boolean;
+  listRefTask = []; //chuoi recID cua task
+
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -341,13 +345,18 @@ export class InstanceDetailComponent implements OnInit {
 
   GetStepsByInstanceIDAsync() {
     this.tags = '';
-    var data = [this.id, this.dataSelect.processID, this.instanceStatus,this.applyFor];
+    var data = [
+      this.id,
+      this.dataSelect.processID,
+      this.instanceStatus,
+      this.applyFor,
+    ];
     this.dpSv.GetStepsByInstanceIDAsync(data).subscribe((res) => {
       if (res && res?.length > 0) {
-        this.loadTree(this.id);
         this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
+        this.loadTree(this.id);
         this.getStageByStep(this.listSteps);
         this.handleProgressInstance();
       } else {
@@ -761,9 +770,27 @@ export class InstanceDetailComponent implements OnInit {
     // }
   }
   loadTree(recID) {
-    this.dpSv.getTree(recID).subscribe((res) => {
-      if (res) this.treeTask = res;
-    });
+    if (this.applyFor == '0') {
+      this.dpSv.getTreeBySession(recID).subscribe((res) => {
+        if (res) this.treeTask = res;
+      });
+    } else {
+      this.listRefTask = [];
+      this.listStepInstance.forEach((x) => {
+        let refTask = (x.tasks as Array<any>).map((x) => {
+          return x.recID;
+        });
+        if (refTask?.length > 0) {
+          this.listRefTask = this.listRefTask.concat(refTask);
+        }
+      });
+
+      this.dpSv
+        .getTreeByListRef(JSON.stringify(this.listRefTask))
+        .subscribe((res) => {
+          if (res) this.treeTask = res;
+        });
+    }
   }
 
   saveAssign(e) {
@@ -826,16 +853,25 @@ export class InstanceDetailComponent implements OnInit {
         stepFind.progress = event?.progress || 0;
       }
     }
-    if(this.progressControl){
-      let index =  this.listSteps?.findIndex((step) => step.stepStatus == '1');
-      let stepIns = index > 0 ? this.listSteps[index-1] : null;
-      let step = stepIns ? this.listStepsProcess?.find(step => step.recID == stepIns?.stepID) : null;
+    if (this.progressControl) {
+      let index = this.listSteps?.findIndex((step) => step.stepStatus == '1');
+      let stepIns = index > 0 ? this.listSteps[index - 1] : null;
+      let step = stepIns
+        ? this.listStepsProcess?.find((step) => step.recID == stepIns?.stepID)
+        : null;
       this.progress = index > 0 ? step?.instanceProgress.toString() : '0';
-    }else{
+    } else {
       let sumProgress = listStepConvert.reduce((sum, step) => {
         return sum + (Number(step.progress) || 0);
       }, 0);
       this.progress = (sumProgress / listStepConvert?.length).toFixed(1);
     }
+  }
+
+  loadOwnerStep(owner){
+    if(this.codxStage){
+      this.codxStage.dataStep.owner = owner;
+    }
+    this.changeDetec.detectChanges();
   }
 }

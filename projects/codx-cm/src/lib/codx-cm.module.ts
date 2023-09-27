@@ -103,6 +103,8 @@ import { ProgressSliderComponent } from './targets/view-tree-targets/progress-sl
 import { ViewHistoryCustomerComponent } from './cmcustomer/cmcustomer-detail/view-history-customer/view-history-customer.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CampaignContactsComponent } from './campaigns/campaigns-detail/campaign-contacts/campaign-contacts.component';
+import { PopupAddCampaignContactComponent } from './campaigns/campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
 
 export const routes: Routes = [
   {
@@ -256,7 +258,7 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component],
+  declarations: [T_Component, CampaignContactsComponent, PopupAddCampaignContactComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

@@ -17,19 +17,9 @@ import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
-import { toCamelCase } from '../../utils';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
-import { SalesInvoiceService } from './salesinvoices.service';
-
-export enum MF {
-  GuiDuyet = 'ACT060504',
-  GhiSo = 'ACT060506',
-  HuyYeuCauDuyet = 'ACT060505',
-  KhoiPhuc = 'ACT060507',
-  KiemTraTinhHopLe = 'ACT060503',
-  In = 'ACT060508',
-}
+import { MF, SalesInvoiceService } from './salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices',
@@ -104,7 +94,7 @@ export class SalesinvoicesComponent
     ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
+      this.functionName = res.defaultName;
     });
   }
   //#endregion
@@ -160,10 +150,10 @@ export class SalesinvoicesComponent
         this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.edit(data);
         break;
       case 'SYS04':
-        this.copy(e, data);
+        this.copy(data);
         break;
       case 'SYS002':
         this.export(data);
@@ -227,7 +217,7 @@ export class SalesinvoicesComponent
   //#endregion
 
   //#region Method
-  getDefault(): Observable<any> {
+  getDefault$(): Observable<any> {
     return this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
       this.journalNo,
     ]);
@@ -237,7 +227,7 @@ export class SalesinvoicesComponent
     this.view.dataService.delete([data], true).subscribe();
   }
 
-  edit(e, data): void {
+  edit(data): void {
     console.log('edit', { data });
 
     const copiedData = { ...data };
@@ -260,26 +250,28 @@ export class SalesinvoicesComponent
     });
   }
 
-  copy(e, data): void {
+  copy(data): void {
     console.log('copy', { data });
 
     this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res) => {
-      let options = new SidebarModel();
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      options.isFull = true;
+    this.view.dataService
+      .copy(() => this.getDefault$())
+      .subscribe((res) => {
+        let options = new SidebarModel();
+        options.DataService = this.view.dataService;
+        options.FormModel = this.view.formModel;
+        options.isFull = true;
 
-      this.callfc.openSide(
-        SalesinvoicesAddComponent,
-        {
-          formType: 'add',
-          formTitle: this.functionName,
-        },
-        options,
-        this.view.funcID
-      );
-    });
+        this.callfc.openSide(
+          SalesinvoicesAddComponent,
+          {
+            formType: 'add',
+            formTitle: this.functionName,
+          },
+          options,
+          this.view.funcID
+        );
+      });
   }
 
   export(data): void {
@@ -308,7 +300,7 @@ export class SalesinvoicesComponent
 
   //#region Function
   emitDefault(): void {
-    this.getDefault().subscribe((res) => {
+    this.getDefault$().subscribe((res) => {
       this.defaultSubject.next({
         ...res,
         recID: res.data.recID,

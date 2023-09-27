@@ -1,0 +1,40 @@
+.wsp-bg-primary
+{
+    background-color: var(--primary-darker);
+}
+.wsp-rounder-1
+{
+    border-radius: 3px;
+}
+.pb-60px
+{
+    padding-bottom: 60px;
+}
+.ws-dashboard-toolbar-list>div:hover
+{
+    color: var(--text-primary);
+}
+.ws-dashboard-toolbar-list>div.active
+{
+    color: var(--text-primary);
+}
+.w-90
+{
+    width: 90%;
+}
+.min-height-70px
+{
+    min-height: 70px;
+}
+.mt-2px
+{
+    margin-top: 2px;
+}
+
+.ws-report-card :hover
+{
+    .ws-report-bookmark
+    {
+        visibility: visible !important;
+    }
+}

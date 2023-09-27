@@ -366,7 +366,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['TWardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['TAddress']?.headerText);
+          this.notifySV.notifyCode('HR036', 0, unFillFields, this.grvSetUp['TAddress']?.headerText);
           return false;
         }
         return true;
@@ -385,7 +385,7 @@ export class PopupAddEmployeeComponent implements OnInit {
           unFillFields += ' ' + this.grvSetUp['WardID']['headerText'];
         }
         if (unFillFields.length > 0) {
-          this.notifySV.notifyCode('HR036 ', 0, unFillFields, this.grvSetUp['Address']?.headerText);
+          this.notifySV.notifyCode('HR036', 0, unFillFields, this.grvSetUp['Address']?.headerText);
           return false;
         }
         return true;

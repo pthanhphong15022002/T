@@ -2,6 +2,7 @@
   #form
   [subHeader]="header"
   [dialog]="dialogRef"
+  [data]="advancedPayment"
   [formModel]="dialogRef.formModel"
   [bodyCss]="'bgEDEDED pt-5'"
   [body]="body"
@@ -45,14 +46,14 @@
         </codx-label>
         <span
           *ngIf="advancedPayment?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ advancedPayment?.voucherNo }}
         </span>
         <span
           *ngIf="!advancedPayment?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ "AC0028" | mssg | async }}
@@ -68,7 +69,7 @@
         >
         </codx-label>
         <span
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ formatDate(advancedPayment?.voucherDate) }}
@@ -87,7 +88,7 @@
         <div class="row text-center mt-2 text-primary fw-bold">
           <codx-label
             style="font-size: 35px"
-            default="Đề nghị tạm ứng"
+            [default]="headerText"
           ></codx-label>
         </div>
         <div class="row">
@@ -98,7 +99,7 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <codx-inplace
+            <!-- <codx-inplace
               type="combobox"
               [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
               [refType]="form?.gridviewSetup?.ObjectID.referedType"
@@ -108,7 +109,23 @@
               [class]="'om-input w-100'"
               [cssClass]="'om-input w-100 fs-4'"
               (valueChange)="valueChange($event)"
-            ></codx-inplace>
+            ></codx-inplace> -->
+            <div class="dropdown-input">
+              <codx-dropdown-select
+                #CbxObjectID
+                [showFooter]="false"
+                [isToolbar]="false"
+                [cssClass]="'rounded-pill border-0'"
+                cssPopup="h-350px w-100 fs-4"
+                [isMulti]="false"
+                type="combobox"
+                field="objectID"
+                [value]="advancedPayment.objectID"
+                [refValue]="form?.gridviewSetup?.ObjectID.referedValue"
+                [emptyText]="form?.gridviewSetup?.ObjectID.headerText"
+                (valueChange)="dropdownChange($event)"
+              ></codx-dropdown-select>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -122,13 +139,11 @@
                 >
                 </codx-label>
                 <codx-inplace
-                  type="text"
-                  [refValue]="form?.gridviewSetup?.TotalAmt.referedValue"
-                  [refType]="form?.gridviewSetup?.TotalAmt.referedType"
+                  type="number"
                   [emptyText]="form?.gridviewSetup?.TotalAmt.headerText"
                   field="totalAmt"
                   [value]="advancedPayment.totalAmt"
-                  [class]="'om-input w-auto amount'"
+                  [class]="'om-input w-auto'"
                   [cssClass]="'om-input w-100 fs-4'"
                   (valueChange)="valueChange($event)"
                 >
@@ -191,17 +206,22 @@
                   [formModel]="form.formModel"
                 >
                 </codx-label>
-                <codx-inplace
-                  type="text"
-                  [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
-                  [refType]="form?.gridviewSetup?.PmtMethodID.referedType"
-                  [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
-                  field="pmtMethodID"
-                  [value]="advancedPayment.pmtMethodID"
-                  [class]="'om-input w-100 '"
-                  [cssClass]="'om-input w-100  fs-4'"
-                  (valueChange)="valueChange($event)"
-                ></codx-inplace>
+                <div class="dropdown-input">
+                  <codx-dropdown-select
+                    #CbxPmtMethodID
+                    [showFooter]="false"
+                    [isToolbar]="false"
+                    [cssClass]="'rounded-pill border-0'"
+                    cssPopup="h-350px w-100 fs-4"
+                    [isMulti]="false"
+                    type="valuelist"
+                    field="pmtMethodID"
+                    [value]="advancedPayment.pmtMethodID"
+                    [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
+                    [emptyText]="form?.gridviewSetup?.PmtMethodID.headerText"
+                    (valueChange)="dropdownChange($event)"
+                  ></codx-dropdown-select>
+                </div>
               </div>
             </div>
           </div>
@@ -214,40 +234,24 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <codx-inplace
-              type="combobox"
-              [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
-              [refType]="form?.gridviewSetup?.ReasonID.referedType"
-              [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
-              field="reasonID"
-              [value]="advancedPayment.reasonID"
-              [class]="'om-input w-100 '"
-              [cssClass]="'om-input w-100  fs-4'"
-              (valueChange)="valueChange($event)"
-            ></codx-inplace>
+            <div class="dropdown-input">
+              <codx-dropdown-select
+                #CbxReasonID
+                [showFooter]="false"
+                [isToolbar]="false"
+                [cssClass]="'rounded-pill border-0'"
+                cssPopup="h-350px w-100 fs-4"
+                [isMulti]="false"
+                type="combobox"
+                field="memo"
+                [value]="advancedPayment.memo"
+                [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
+                [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
+                (valueChange)="dropdownChange($event)"
+              ></codx-dropdown-select>
+            </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div>
-            <codx-label
-              class="fw-bold"
-              fiedName="Memo"
-              [formModel]="form.formModel"
-            >
-            </codx-label>
-            <codx-inplace
-              type="text"
-              [refValue]="form?.gridviewSetup?.Memo.referedValue"
-              [refType]="form?.gridviewSetup?.Memo.referedType"
-              [emptyText]="form?.gridviewSetup?.Memo.headerText"
-              [value]="advancedPayment.memo"
-              field="memo"
-              [class]="'om-input w-100 '"
-              [cssClass]="'om-input w-100  fs-4'"
-              (valueChange)="valueChange($event)"
-            ></codx-inplace>
-          </div>
-        </div> -->
         <div class="mt-2 text-primary fw-bold fs-5">
           <codx-label default="Chi tiết"></codx-label>
         </div>
@@ -257,7 +261,7 @@
         <div class="d-flex justify-content-start flex-column">
           <div class="d-flex justify-content-start flex-column">
             <div class="d-flex align-items-center cursor-pointer w-100">
-              <div class="w-50 d-flex align-items-center ps-4">
+              <div class="w-60 d-flex align-items-center ps-4">
                 <div class="d-flex align-items-center w-100">
                   <div
                     class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
@@ -271,7 +275,7 @@
                   </div>
                 </div>
               </div>
-              <div class="w-50 d-flex justify-content-start">
+              <div class="w-30 d-flex justify-content-start">
                 <div
                   class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
                 >
@@ -282,6 +286,8 @@
                   >
                   </codx-label>
                 </div>
+              </div>
+              <div class="w-10 d-flex justify-content-start">
               </div>
             </div>
           </div>
@@ -296,15 +302,16 @@
             class="d-flex justify-content-start flex-column"
             *ngFor="let item of advancedPaymentLines; let i = index"
           >
-            <div class="d-flex justify-content-start flex-column pb-3 mt-2">
+            <div class="d-flex justify-content-start flex-column">
               <div
                 class="d-flex align-items-center flex-row cursor-pointer w-100"
               >
                 <span
-                  class="icon-brightness_1 fs-12 d-flex align-items-center text-warning mr-2"
+                  class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
+                  style="font-size: 10px !important;"
                 ></span>
                 <div
-                  class="w-50 d-flex justify-content-start align-items-center"
+                  class="w-60 d-flex justify-content-start align-items-center"
                 >
                   <div
                     class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
@@ -313,27 +320,30 @@
                       type="text"
                       field="note"
                       [class]="'om-input w-100'"
-                      [cssClass]="'om-input w-100 fs-4'"
+                      [cssClass]="'om-input w-100 fs-4 d-flex'"
                       [value]="item?.note"
+                      [emptyText]="grvSetupAdvancedPaymentLines?.Note.headerText"
                       (valueChange)="lineChange($event, i)"
                     ></codx-inplace>
                   </div>
                 </div>
 
-                <div class="w-50 d-flex justify-content-start h-100">
+                <div class="w-30 d-flex justify-content-start align-items-center">
                   <div
                     class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
                   >
                     <codx-inplace
-                      type="text"
+                      type="number"
                       field="dr"
-                      [class]="'om-input w-100 amount'"
-                      [cssClass]="'om-input w-100 fs-4'"
+                      [class]="'om-input w-100'"
+                      [cssClass]="'om-input w-100 fs-4 d-flex'"
                       [value]="item?.dr"
+                      [emptyText]="grvSetupAdvancedPaymentLines?.DR.headerText"
                       (valueChange)="lineChange($event, i)"
                     ></codx-inplace>
                   </div>
-                  <div
+                </div>
+                <div
                     class="w-10 d-flex align-items-center justify-content-start ps-2"
                   >
                     <button
@@ -345,7 +355,6 @@
                       <i class="icon-close"></i>
                     </button>
                   </div>
-                </div>
               </div>
             </div>
           </div>
@@ -434,8 +443,8 @@
             style="border: 1px solid var(--primary-dark) !important"
             type="button"
             class="btn btn-md btn-light-primary me-2 rounded-15"
-            (keydown.enter)="onSave(); $event.preventDefault()"
-            (click)="onSave()"
+            (keydown.enter)="onSaveAndRelease(); $event.preventDefault()"
+            (click)="onSaveAndRelease()"
           >
             <div class="d-flex align-items-center">
               <i class="icon-add_to_photos icon-16"></i>

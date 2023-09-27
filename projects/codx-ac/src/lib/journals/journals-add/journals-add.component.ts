@@ -408,10 +408,9 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     }
 
     if (
-      !this.acService.validateFormData(
+      !this.acService.isFormDataValid(
         this.form.formGroup,
         this.gvs,
-        ['DIM1Control', 'DIM2Control', 'DIM3Control'],
         ignoredFields
       )
     ) {
@@ -463,6 +462,10 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
 
     if (typeof this.journal.vatControl === "boolean") {
       this.journal.vatControl = this.journal.vatControl ? '1' : '0';
+    }
+
+    if (typeof this.journal.autoPost === "boolean") {
+      this.journal.autoPost = +this.journal.autoPost;
     }
 
     const extrasObj = this.extrasProps088.reduce(

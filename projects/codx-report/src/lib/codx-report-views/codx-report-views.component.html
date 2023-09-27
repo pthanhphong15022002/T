@@ -15,7 +15,7 @@
     [autoLoad]="false"
     [button]="button"
     (onActions)="onActions($event)"
-    >
+  >
   </codx-views>
 </div>
 <ng-template #templateListCard let-data>
@@ -42,8 +42,6 @@
   </codx-card-img>
 </ng-template>
 
-
-
 <ng-template #footerbg let-data>
   <div class="d-flex bg-footer">
     <div class="d-flex flex-column w-100 h-100">
@@ -51,31 +49,36 @@
         <div class="d-flex align-items-center justify-content-between pb-1">
           <div class="d-flex align-items-center">
             <span class="icon-access_alarm icon-16 me-2"></span>
-            <span class="text-gray-700">{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+            <span class="text-gray-700">{{
+              data.createdOn | date : "dd/MM/yyyy"
+            }}</span>
           </div>
         </div>
       </div>
       <div class="footerCard-item">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-start align-items-center">
           <div class="me-2 mt-1">
-            <span class="icon-i-star-fill icon-14 text-warning "
-            placement="right">&nbsp;{{data.rating ?data.rating : 0}}</span>
-          </div>
-          <div class="me-2 mt-1">
-            <span class="icon-how_to_vote text-info icon-16 "  placement="right">&nbsp;{{data?.votes ? data.votes : 0}}</span>
-          </div>
-          <div class="ms-auto" style="margin-top: -10px;">
-            <codx-imgs
-              [width]="30"
-              [objectId]="data.createdBy"
-              objectType="AD_Users"
-              [numberImages]="1"
+            <span
+              class="icon-i-star-fill icon-14 text-warning"
+              placement="right"
+              >&nbsp;{{ data.rating ? data.rating : 0 }}</span
             >
-            </codx-imgs>
+          </div>
+          <div class="me-2 mt-1">
+            <span class="icon-how_to_vote text-info icon-16" placement="right"
+              >&nbsp;{{ data?.votes ? data.votes : 0 }}</span
+            >
+          </div>
+          <div class="ms-auto">
+            <button
+              class="circle-button rounded-circle"
+              (click)="bookmark(data.recID)"
+            >
+              <i class="icon-bookmark" [class.active]="hasBookmark(data)"></i>
+            </button>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </ng-template>

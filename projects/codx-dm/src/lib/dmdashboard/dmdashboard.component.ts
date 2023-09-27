@@ -244,7 +244,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   getThumbnail(data) {
-    return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`;
+    return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`;
   }
 
   getData1() {}

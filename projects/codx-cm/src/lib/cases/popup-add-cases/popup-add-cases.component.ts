@@ -44,6 +44,7 @@ export class PopupAddCasesComponent
   //type any
   formModel: FormModel;
   addFieldsControl: any = '1';
+  placeHolderAutoNumber: any = '';
   // type string
   titleAction: string = '';
   action: string = '';
@@ -111,6 +112,8 @@ export class PopupAddCasesComponent
   listInstanceSteps: any[] = [];
   caseType: string = '';
   applyFor: string = '';
+  disabledShowInput: boolean = true;
+  isExist: boolean = false;
   isHaveFile: boolean;
   showLabelAttachment: boolean;
   formModelCrr: FormModel = new FormModel();
@@ -119,6 +122,7 @@ export class PopupAddCasesComponent
   isLoading: boolean = false;
   processID: string = '';
   applyProcess = false;
+  caseNoSetting: any;
   idxCrr: any = -1;
 
   constructor(
@@ -135,7 +139,7 @@ export class PopupAddCasesComponent
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
     this.applyFor = dt?.data?.applyFor;
-    this.caseType = dt?.data?.caseType;
+    // this.caseType = dt?.data?.caseType;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
     this.funcID = dt?.data?.funcID;
@@ -143,7 +147,7 @@ export class PopupAddCasesComponent
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-      this.caseType = this.applyFor == '2' ? '1' : '2';
+      // this.caseType = this.applyFor == '2' ? '1' : '2';
       if (this.action != this.actionAdd) {
         this.cases = dt?.data?.dataCM;
       }
@@ -157,8 +161,9 @@ export class PopupAddCasesComponent
     if (this.action != this.actionAdd) {
       this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
+    } else {
+      this.cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
-    this.cases.caseType = this.caseType;
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
     }
@@ -306,6 +311,7 @@ export class PopupAddCasesComponent
         case 'P':
         case 'R':
         case 'A':
+        case 'L':
           result = event.e;
           break;
       }
@@ -384,6 +390,18 @@ export class PopupAddCasesComponent
     await this.getGridView(this.formModel);
     if (this.action == 'add') {
       this.itemTabs(false);
+
+      let res = await firstValueFrom(
+        this.codxCmService.getParam('CMParameters', '1')
+      );
+      if (res?.dataValue) {
+        let dataValue = JSON.parse(res?.dataValue);
+        console.log(dataValue);
+        this.applyProcess = dataValue?.ProcessCase == '1';
+      }
+      this.cases.applyProcess = this.applyProcess;
+      this.checkApplyProcess(this.cases.applyProcess);
+
       return;
     }
 
@@ -552,7 +570,7 @@ export class PopupAddCasesComponent
       cases.refID = instance.recID;
     }
     if (this.action === this.actionAdd) {
-      cases.caseType = this.caseType;
+      cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
     cases.owner = this.owner;
   }
@@ -625,7 +643,7 @@ export class PopupAddCasesComponent
   }
 
   async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+    this.listParticipants = permissions;
     return this.listParticipants != null && this.listParticipants.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
@@ -718,6 +736,19 @@ export class PopupAddCasesComponent
     }
   }
 
+  checkApplyProcess(check: boolean) {
+    if (check) {
+      // this.placeHolderAutoNumber = this.leadNoProcess;
+      this.disabledShowInput = true;
+      // this.itemTabsInput(true);
+    } else {
+      this.getAutoNumber();
+      // this.itemTabsInput(false);
+    }
+
+    this.cases.applyProcess = check;
+  }
+
   async getAutoNumber() {
     // kiểm tra có thiết lập tư động ko
     this.codxCmService
@@ -729,14 +760,16 @@ export class PopupAddCasesComponent
         if (res && !res.stop) {
           this.cache.message('AD019').subscribe((mes) => {
             if (mes) {
-              // this.planceHolderAutoNumber = mes?.customName || mes?.description;
+              this.placeHolderAutoNumber = mes?.customName || mes?.description;
             }
           });
-          this.getAutoNumberSetting();
+          !this.caseNoSetting && this.getAutoNumberSetting();
+          this.cases.caseNo = this.caseNoSetting;
+          this.disabledShowInput = true;
         } else {
-          // this.planceHolderAutoNumber = '';
+          this.placeHolderAutoNumber = '';
           this.cases.caseNo = null;
-          // this.disabledShowInput = false;
+          this.disabledShowInput = false;
         }
       });
   }
@@ -749,40 +782,41 @@ export class PopupAddCasesComponent
         'LeadID'
       )
       .subscribe((autoNum) => {
-        // this.leadNoSetting = autoNum;
-        this.cases.caseNo = autoNum;
-        // this.disabledShowInput = true;
-        // this.lead.leadID = this.leadNoSetting;
+        this.caseNoSetting = autoNum;
+        this.cases.caseNo = this.caseNoSetting;
       });
   }
 
-  // changeAutoNum(e) { // check trùm mã khi nhạp tay
-  //   if (!this.disabledShowInput && e) {
-  //     this.contracts.contractID = e?.crrValue;
-  //     if (
-  //       this.contracts.contractID &&
-  //       this.contracts.contractID.includes(' ')
-  //     ) {
-  //       this.notiService.notifyCode(
-  //         'CM026',
-  //         0,
-  //         '"' + this.grvSetup['ContractID'].headerText + '"'
-  //       );
-  //       return;
-  //     }
-  //     this.cmService
-  //       .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
-  //       .subscribe((res) => {
-  //         this.isExitAutoNum = res;
-  //         if (this.isExitAutoNum)
-  //           this.notiService.notifyCode(
-  //             'CM003',
-  //             0,
-  //             '"' + this.grvSetup['ContractID'].headerText + '"'
-  //           );
-  //       });
-  //   }
-  // }
+  changeAutoNum(e) {
+    if (!this.disabledShowInput && e) {
+      this.cases.caseNo = e?.crrValue;
+      if (this.cases.caseNo && this.cases.caseNo.includes(' ')) {
+        this.notificationsService.notifyCode(
+          'CM026',
+          0,
+          '"' + this.gridViewSetup['CaseNo'].headerText + '"'
+        );
+        return;
+      } else if (this.cases.caseNo) {
+        if (this.isExistCaseNo(this.cases.caseNo)) {
+          return;
+        }
+      }
+    }
+  }
+  async isExistCaseNo(caseNo) {
+    this.codxCmService.isExistCaseNo([caseNo]).subscribe((res) => {
+      if (res) {
+        this.notificationsService.notifyCode(
+          'CM003',
+          0,
+          '"' + this.gridViewSetup['CaseNo'].headerText + '"'
+        );
+        this.isExist = res;
+      }
+      this.isExist = res;
+    });
+  }
   //#endregion
 
   // --------------------------lOad Tabs ----------------------- //

@@ -19,8 +19,8 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   @Input() dataService: any;
   @Input() formModel: any;
   @Input() company: any;
+  @Input() headerText: any;
   
-  headerText: string = '';
   logosrc: any;
   dataCategory: any;
   formType: any;
@@ -85,7 +85,6 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
@@ -121,7 +120,7 @@ export class AdvancePaymentDetailComponent extends UIComponent {
         var obj = {
           formType: 'edit',
           headerText: this.headerText,
-          advancedPayment: data,
+          advancedPayment: {...data},
           company: this.company,
         };
         let opt = new DialogModel();
@@ -149,39 +148,33 @@ export class AdvancePaymentDetailComponent extends UIComponent {
 
   copy(dataCopy) {
     this.dataService
-    .copy((o) => this.setDefault())
+    .copy((o) => this.setDefault(dataCopy,'copy'))
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(res)
+      if(res != null)
       {
-        dataCopy.recID = res.recID;
-        dataCopy.voucherNo = res.voucherNo;
-        dataCopy.status = res.status;
-        dataCopy['_uuid'] = res['_uuid'];
-        var obj = {
-          formType: 'copy',
-          headerText: this.headerText,
-          advancedPayment: dataCopy,
-          company: this.company,
-        };
-        let opt = new DialogModel();
-        opt.FormModel = this.formModel;
-        opt.DataService = this.dataService;
-        var dialog = this.callfc.openForm(
-          AdvancePaymentAddComponent,
-          '',
-          800,
-          850,
-          '',
-          obj,
-          '',
-          opt
-        );
-        dialog.closed
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res.event != null) {
-          }
+        let datas = {...res};
+        this.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
+          var obj = {
+            formType: 'copy',
+            headerText: this.headerText,
+            advancedPayment: {...datas},
+            company: this.company,
+          };
+          let opt = new DialogModel();
+          opt.FormModel = this.formModel;
+          opt.DataService = this.dataService;
+          var dialog = this.callfc.openForm(
+            AdvancePaymentAddComponent,
+            '',
+            800,
+            850,
+            '',
+            obj,
+            '',
+            opt
+          );
+          this.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
         });
       }
     });
@@ -241,7 +234,10 @@ export class AdvancePaymentDetailComponent extends UIComponent {
     return new Date(date).toLocaleDateString();
   }
 
-  setDefault() {
-    return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync');
+  setDefault(data:any,action:any = '') {
+    return this.api.exec('AC', 'AdvancedPaymentBusiness', 'SetDefaultAsync', [
+      data,
+      action
+    ]);
   }
 }

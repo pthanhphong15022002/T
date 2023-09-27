@@ -20,7 +20,10 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal, Vll075 } from '../../../journals/interfaces/IJournal.interface';
+import {
+  IJournal,
+  Vll075,
+} from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
@@ -49,13 +52,10 @@ export class CashtransferAddComponent extends UIComponent {
 
   fmVATInvoice: FormModel;
   fgVatInvoice: FormGroup;
-  gvsCashTransfers: any;
   gvsVATInvoices: any;
 
   hasInvoice: boolean = false;
   isEdit: boolean = false;
-
-  formTitle: string;
 
   cashBookName1: string = '';
   cashBookName2: string = '';
@@ -69,7 +69,6 @@ export class CashtransferAddComponent extends UIComponent {
   ];
   journal: IJournal;
   hiddenFields: string[] = [];
-  ignoredFields: string[] = [];
 
   constructor(
     injector: Injector,
@@ -81,10 +80,8 @@ export class CashtransferAddComponent extends UIComponent {
   ) {
     super(injector);
 
-    this.formTitle = dialogData.data.formTitle;
     this.isEdit = dialogData.data.formType === 'edit';
     this.masterService = this.dialogRef.dataService;
-    this.masterService.hasSaved = this.isEdit;
     this.cashTransfer = this.masterService?.dataSelected;
     this.cashTransfer.feeControl = Boolean(
       Number(this.cashTransfer.feeControl)
@@ -102,50 +99,6 @@ export class CashtransferAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.cache
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((gvs) => {
-        this.gvsCashTransfers = gvs;
-
-        if (this.isEdit) {
-          let predicates: string = '';
-          let dataValues: string[] = [];
-          if (this.cashTransfer.cashBookID) {
-            dataValues.push(this.cashTransfer.cashBookID);
-          }
-          if (this.cashTransfer.cashBookID2) {
-            dataValues.push(this.cashTransfer.cashBookID2);
-          }
-          for (let i = 0; i < dataValues.length; i++) {
-            predicates +=
-              `CashBookID=@${i}` + (i !== dataValues.length - 1 ? ' or ' : '');
-          }
-
-          this.acService
-            .loadComboboxData$(
-              gvs.CashBookID.referedValue,
-              'AC',
-              predicates,
-              dataValues.join(';')
-            )
-            .subscribe((cashBooks) => {
-              if (cashBooks) {
-                this.cashBookName1 = this.getCashBookNameById(
-                  cashBooks,
-                  this.cashTransfer?.cashBookID
-                );
-                this.cashBookName2 = this.getCashBookNameById(
-                  cashBooks,
-                  this.cashTransfer?.cashBookID2
-                );
-              }
-            });
-        }
-      });
-
     this.cache
       .gridViewSetup(this.fmVATInvoice.formName, this.fmVATInvoice.gridViewName)
       .subscribe((res) => {
@@ -182,10 +135,6 @@ export class CashtransferAddComponent extends UIComponent {
           this.isEdit
         );
 
-        if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
-          this.ignoredFields.push('VoucherNo');
-        }
-
         this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
         if (this.isEdit) {
@@ -196,14 +145,14 @@ export class CashtransferAddComponent extends UIComponent {
           options.predicates = 'TransID=@0';
           options.dataValues = this.cashTransfer.recID;
           this.acService.loadData$('AC', options).subscribe((res: any) => {
-            if (res) {
+            if (res[0]) {
               this.hasInvoice = true;
               this.detectorRef.markForCheck();
 
-              this.invoiceService.dataSelected = res;
-              this.invoiceService.edit(res).subscribe();
-              this.vatInvoice = this.fmVATInvoice.currentData = res;
-              this.fgVatInvoice.patchValue(res);
+              this.invoiceService.dataSelected = res[0];
+              this.invoiceService.edit(res[0]).subscribe();
+              this.vatInvoice = this.fmVATInvoice.currentData = res[0];
+              this.fgVatInvoice.patchValue(res[0]);
 
               this.loadDims(this.journal, true);
             } else {
@@ -232,6 +181,56 @@ export class CashtransferAddComponent extends UIComponent {
   //#endregion
 
   //#region Event
+  onAfterFormInit(): void {
+    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+      this.form.setRequire([
+        {
+          field: 'voucherNo',
+          require: false,
+        },
+      ]);
+    }
+
+    let predicates: string = '';
+    let dataValues: string[] = [];
+    if (this.cashTransfer.cashBookID) {
+      dataValues.push(this.cashTransfer.cashBookID);
+    }
+    if (this.cashTransfer.cashBookID2) {
+      dataValues.push(this.cashTransfer.cashBookID2);
+    }
+
+    if (dataValues.length === 0) {
+      return;
+    }
+
+    for (let i = 0; i < dataValues.length; i++) {
+      predicates +=
+        `CashBookID=@${i}` + (i !== dataValues.length - 1 ? ' or ' : '');
+    }
+
+    this.acService
+      .loadComboboxData$(
+        this.form.gridviewSetup.CashBookID.referedValue,
+        'AC',
+        predicates,
+        dataValues.join(';')
+      )
+      .subscribe((cashBooks) => {
+        if (cashBooks) {
+          this.cashBookName1 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID
+          );
+          this.cashBookName2 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID2
+          );
+          this.detectorRef.markForCheck();
+        }
+      });
+  }
+
   onInputChange(e): void {
     console.log('onInputChange', e);
 
@@ -303,46 +302,20 @@ export class CashtransferAddComponent extends UIComponent {
 
     // on off on => loi
     if (e.checked) {
-      if (
-        !this.acService.validateFormData(
-          this.form.formGroup,
-          this.gvsCashTransfers,
-          [],
-          this.ignoredFields
-        )
-      ) {
-        this.switchHasInvoice.toggle();
-        return;
-      }
-
-      this.handleDataBeforeSavingMaster();
-
-      this.journalService.checkVoucherNoBeforeSave(
-        this.journal,
-        this.cashTransfer,
-        'AC',
-        'AC_CashTranfers',
-        this.form,
-        this.masterService.hasSaved,
-        () => {
-          if (this.masterService.hasSaved) {
-            this.masterService.updateDatas.set(
-              this.cashTransfer.recID,
-              this.cashTransfer
-            );
-          }
-          this.masterService
-            .save(null, null, null, null, false)
-            .subscribe((res: any) => {
-              const tempCashTransfer = res.save.data || res.update.data;
-              if (tempCashTransfer) {
-                this.masterService.hasSaved = true;
-                this.vatInvoice.transID = tempCashTransfer.recID;
-                this.vatInvoice.lineID = tempCashTransfer.recID;
-              }
-            });
+      this.form.save(null, null, null, null, false).subscribe((res: any) => {
+        if (res === false || res.save?.error || res.update?.error) {
+          this.switchHasInvoice.toggle();
+          return;
         }
-      );
+
+        this.detectorRef.markForCheck();
+
+        const tempCashTransfer = res.save?.data || res.update?.data || res;
+        if (tempCashTransfer) {
+          this.vatInvoice.transID = tempCashTransfer.recID;
+          this.vatInvoice.lineID = tempCashTransfer.recID;
+        }
+      });
     }
   }
 
@@ -369,41 +342,61 @@ export class CashtransferAddComponent extends UIComponent {
       });
   }
 
+  onAfterValidation(): void {
+    this.cashTransfer.feeControl = +this.cashTransfer.feeControl;
+    this.cashTransfer.totalAmt =
+      (this.cashTransfer.exchangeAmt || 0) +
+      (this.cashTransfer.fees || 0) +
+      (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
+  }
+
   onClickSave(closeAfterSave: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
-    console.log(this.form);
-    console.log(this.fgVatInvoice);
-
-    if (
-      !this.acService.validateFormData(
-        this.form.formGroup,
-        this.gvsCashTransfers,
-        [],
-        this.ignoredFields
-      )
-    ) {
-      return;
-    }
 
     if (
       this.hasInvoice &&
-      !this.acService.validateFormData(this.fgVatInvoice, this.gvsVATInvoices)
+      !this.acService.isFormDataValid(this.fgVatInvoice, this.gvsVATInvoices)
     ) {
       return;
     }
 
-    this.handleDataBeforeSavingMaster();
+    this.form.save(null, null, null, null, false).subscribe((res: any) => {
+      if (res === false || res.save?.error || res.update?.error) {
+        return;
+      }
 
-    this.journalService.checkVoucherNoBeforeSave(
-      this.journal,
-      this.cashTransfer,
-      'AC',
-      'AC_CashTranfers',
-      this.form,
-      this.masterService.hasSaved,
-      () => this.save(closeAfterSave)
-    );
+      // handle invoice
+      if (this.hasInvoice) {
+        // add or update
+        this.invoiceService
+          .save(null, null, null, null, false)
+          .subscribe((res) => console.log(res));
+      } else {
+        // delete
+        this.invoiceService
+          .delete([this.vatInvoice], false, null, null, null, null, null, false)
+          .subscribe();
+      }
+
+      this.api
+        .exec('AC', 'CashTranfersBusiness', 'UpdateAsync', [
+          this.cashTransfer,
+          this.journal,
+        ])
+        .subscribe((master) => {
+          if (!master) {
+            return;
+          }
+
+          if (closeAfterSave) {
+            this.masterService.update(master).subscribe();
+            this.dialogRef.close();
+          } else {
+            this.resetForm();
+          }
+        });
+    });
   }
 
   @HostListener('click', ['$event.target'])
@@ -417,56 +410,11 @@ export class CashtransferAddComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  save(closeAfterSave: boolean): void {
-    this.cashTransfer.status = '1';
-
-    if (this.masterService.hasSaved) {
-      this.masterService.updateDatas.set(
-        this.cashTransfer.recID,
-        this.cashTransfer
-      );
-    }
-
-    this.masterService.save().subscribe((res: any) => {
-      console.log(res);
-      if (res.save.data || res.update.data) {
-        // handle invoice
-        if (this.hasInvoice) {
-          // add or update
-          this.invoiceService
-            .save(null, null, null, null, false)
-            .subscribe((res) => console.log(res));
-        } else {
-          // delete
-          this.invoiceService
-            .delete(
-              [this.vatInvoice],
-              false,
-              null,
-              null,
-              null,
-              null,
-              null,
-              false
-            )
-            .subscribe();
-        }
-
-        // handle closing
-        if (closeAfterSave) {
-          this.dialogRef.close();
-        } else {
-          this.resetForm();
-        }
-      }
-    });
-  }
-
   resetForm(): void {
     this.masterService
       .addNew(() =>
         this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
-          this.dialogData.data.journalNo,
+          this.cashTransfer.journalNo,
         ])
       )
       .subscribe((res: ICashTransfer) => {
@@ -474,9 +422,11 @@ export class CashtransferAddComponent extends UIComponent {
         this.cashBookName2 = '';
 
         // reset master
+        this.form.data =
+          this.form.formModel.currentData =
+          this.cashTransfer =
+            res;
         this.form.formGroup.patchValue(res);
-        this.form.formModel.currentData = this.cashTransfer = res;
-        this.masterService.hasSaved = false;
 
         // reset detail
         if (this.hasInvoice) {
@@ -497,15 +447,6 @@ export class CashtransferAddComponent extends UIComponent {
   //#region Function
   getCashBookNameById(cashBooks: any[], id: string): string {
     return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
-  }
-
-  handleDataBeforeSavingMaster(): void {
-    this.cashTransfer.feeControl = +this.cashTransfer.feeControl;
-    this.cashTransfer.totalAmt =
-      (this.cashTransfer.exchangeAmt || 0) +
-      (this.cashTransfer.fees || 0) +
-      (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
-    this.cashTransfer.voucherNo = this.cashTransfer.voucherNo ?? '';
   }
 
   loadDims(journal: IJournal, isEdit: boolean) {

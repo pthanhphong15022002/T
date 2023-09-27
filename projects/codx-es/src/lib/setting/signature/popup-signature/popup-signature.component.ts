@@ -54,6 +54,9 @@ export class PopupSignatureComponent extends UIComponent {
   selectedFontIndex = 0;
   sMssg: string = '';
   cbxName;
+  // PA Signature
+  paEmail:any;
+  paFullName:any;
 
   constructor(
     private inject: Injector,
@@ -69,7 +72,9 @@ export class PopupSignatureComponent extends UIComponent {
     this.dialog.formModel = data?.data?.dialog?.formModel;
     this.formModel = data?.data?.dialog?.formModel;
     this.setupShowForm = data?.data?.setupShowForm;
-    this.data = data?.data.data;
+    this.data = data?.data?.data;
+    this.paEmail=data?.data?.data?.email;
+    this.paFullName=data?.data?.data?.fullName;
 
     if (!this.setupShowForm) {
       this.setupShowForm = new SetupShowSignature();
@@ -104,6 +109,9 @@ export class PopupSignatureComponent extends UIComponent {
           .subscribe((res) => {
             if (res) {
               this.data = res[0];
+              this.data.fullName = this.data.fullName ?? this.paFullName;
+              this.data.email = this.data.email ?? this.paEmail;
+              this.data.supplier = this.data.supplier =='1'? '3':this.data.supplier;
               this.isAddNew = res[1];
 
               //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
@@ -159,7 +167,7 @@ export class PopupSignatureComponent extends UIComponent {
           this.data.modifiedOn = new Date();
 
           i--;
-          if (img && this.data?.signature1 == null) {
+          if (img) {//&& this.data?.signature1 == null
             this.data.signature1 = (img[0] as any).recID;
             this.addEditSignature(i);
           }

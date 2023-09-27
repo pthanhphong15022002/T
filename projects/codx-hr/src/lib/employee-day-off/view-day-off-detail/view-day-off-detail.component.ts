@@ -56,7 +56,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
   @ViewChild('addCancelComment') addCancelComment;
 
   tabControl: TabModel[] = [];
-
+  formModelEmployee;
   user: any;
   itemDetailStt;
   itemDetailDataStt;
@@ -69,6 +69,7 @@ export class ViewDayOffDetailComponent implements OnChanges {
     type5: ['N34'],
   };
   groupKowTypeView: any;
+  showInfoDayoffType = false;
 
   ngOnInit(): void {
     this.itemDetailStt = 1;
@@ -80,6 +81,12 @@ export class ViewDayOffDetailComponent implements OnChanges {
     //       if (res) this.gridViewSetup = res;
     //     });
     // }
+
+    this.hrService.getFormModel('HRT03a1').then((res) => {
+      if (res) {
+        this.formModelEmployee = res;
+      }
+    });
   }
   ngAfterViewInit() {
     this.tabControl = [
@@ -160,11 +167,24 @@ export class ViewDayOffDetailComponent implements OnChanges {
   }
   checkViewKowTyeGroup() {
     if (this.itemDetail?.kowID) {
+      this.showInfoDayoffType = false;
       for (let i in this.groupKowTypeView) {
         this.groupKowTypeView[i].isShow = this.groupKowTypeView[
           i
-        ].value.includes(this.itemDetail['kowID']);
+        ].value.includes(this.itemDetail?.kowID);
+
+        if (
+          this.groupKowTypeView[i].value.includes(this.itemDetail?.kowID) ==
+          true
+        ) {
+          this.showInfoDayoffType = true;
+        }
       }
+      // for (let i in this.groupKowTypeView) {
+      //   this.groupKowTypeView[i].isShow = this.groupKowTypeView[
+      //     i
+      //   ].value.includes(this.itemDetail['kowID']);
+      // }
     } else this.getGroupKowTypeView();
   }
 }

@@ -63,6 +63,7 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() isNotADMode: boolean;
   @Input() hubConnectionID: string;
   @Input() loginDevice: Device;
+  @Input() sysSetting;
 
   @Output() submitEvent = new EventEmitter<string>();
   @Output() submitChangePassEvent = new EventEmitter();
@@ -93,6 +94,15 @@ export class LoginDefaultComponent extends UIComponent {
   isScaned = false;
   modal;
   //#endregion
+
+  // PW-Validate
+  pwValidate = {
+    length: true,
+    upper: true,
+    lower: true,
+    num: true,
+    spcialChar: true,
+  };
 
   constructor(
     private injector: Injector,
@@ -240,7 +250,7 @@ export class LoginDefaultComponent extends UIComponent {
         'ERM.Business.AD',
         'UsersBusiness',
         'GenOTPLoginAsync',
-        [this.email]
+        [this.loginForm.controls['email'].value]
       )
       .subscribe((success) => {
         if (success) {
@@ -263,54 +273,55 @@ export class LoginDefaultComponent extends UIComponent {
 
   generateQR() {
     console.log('hub', this.hubConnectionID);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.api
-          .execSv<string>(
-            'SYS',
-            'ERM.Business.AD',
-            'UsersBusiness',
-            'GenQRCodeAsync',
-            [
-              this.hubConnectionID,
-              this.loginDevice.name,
-              this.loginDevice.os,
-              position.coords.accuracy +
-                ';' +
-                position.coords.latitude +
-                ';' +
-                position.coords.longitude,
-              '1',
-            ]
-          )
-          .subscribe((qrImg) => {
-            if (qrImg) {
-              //nho xoa
-              // this.testQRContent = qrImg;
-              this.qrTimeout = 180;
-              this.qrBase64 = 'data:image/png;base64,' + qrImg;
-              let id = setInterval(
-                () => {
-                  this.qrTimeout -= 1;
-                  this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
-                  this.df.detectChanges();
-                  if (this.qrTimeout === 0) {
-                    clearInterval(id);
-                  }
-                },
-                1000,
-                this.qrTimeout
-              );
+    this.api
+      .execSv<string>(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GenQRCodeAsync',
+        [
+          this.hubConnectionID,
+          this.loginDevice.name,
+          this.loginDevice.os,
+          ';;',
+          // position.coords.accuracy +
+          //   ';' +
+          //   position.coords.latitude +
+          //   ';' +
+          //   position.coords.longitude,
+          '1',
+        ]
+      )
+      .subscribe((qrImg) => {
+        if (qrImg) {
+          //nho xoa
+          // this.testQRContent = qrImg;
+          this.qrTimeout = 180;
+          this.qrBase64 = 'data:image/png;base64,' + qrImg;
+          let id = setInterval(
+            () => {
+              this.qrTimeout -= 1;
+              this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
               this.df.detectChanges();
-            }
-          });
-      },
+              if (this.qrTimeout === 0) {
+                clearInterval(id);
+              }
+            },
+            1000,
+            this.qrTimeout
+          );
+          this.df.detectChanges();
+        }
+      });
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
 
-      (error) => {
-        console.log(error);
-      }
-    );
+    //   },
+
+    //   (error) => {
+    //     console.log(error);
+    //   }
+    // );
   }
 
   changeEmail() {
@@ -363,6 +374,18 @@ export class LoginDefaultComponent extends UIComponent {
 
   closeScanQRGuid() {
     this.modal.hide();
+  }
+
+  pwOnHover(formGroup: FormGroup, control: string) {
+    let curValue = formGroup.controls[control].value as string;
+    this.pwValidate = {
+      length: curValue.length >= this.sysSetting.pwLength,
+      num: Boolean(curValue.match(/[0-9]/)),
+      lower: Boolean(curValue.match(/[a-z]/)),
+      upper: Boolean(curValue.match(/[A-Z]/)),
+      spcialChar: Boolean(curValue.match(/[!@#$%^&*?_~-£().,]/)),
+    };
+    this.detectorRef.detectChanges();
   }
 
   test() {
