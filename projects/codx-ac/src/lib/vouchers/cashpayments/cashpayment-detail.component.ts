@@ -1,6 +1,24 @@
-import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  Input,
+  SimpleChange,
+  ViewChild,
+} from '@angular/core';
 import { CodxAcService } from '../../codx-ac.service';
-import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent, Util } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+  PageTitleService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  Util,
+} from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
@@ -12,7 +30,10 @@ declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
   templateUrl: './cashpayment-detail.component.html',
-  styleUrls: ['./cashpayment-detail.component.css', '../../codx-ac.component.css'],
+  styleUrls: [
+    './cashpayment-detail.component.css',
+    '../../codx-ac.component.css',
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashpaymentDetailComponent extends UIComponent {
@@ -29,7 +50,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   @Input() dataDefault: any;
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-  itemSelected : any;
+  itemSelected: any;
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
   totalAcctCR: any = 0; //? tông tiền có tab hạch toán
   totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
@@ -80,7 +101,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -89,9 +110,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {
-    
-  }
+  onInit(): void {}
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -105,8 +124,8 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
 
   ngOnChanges(value: SimpleChange) {
-    this.getDataDetail(this.dataItem,this.recID);
-  }   
+    this.getDataDetail(this.dataItem, this.recID);
+  }
 
   ngOnDestroy() {
     this.onDestroy();
@@ -169,7 +188,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.call();
+        this.transfer(data);
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -180,14 +199,17 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Event
 
   //#region Function
-  
+
   /**
-   * *Hàm get data chi tiết 
+   * *Hàm get data chi tiết
    * @param data
    */
-  getDataDetail(dataItem,recID) {
+  getDataDetail(dataItem, recID) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [dataItem,recID])
+      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
+        dataItem,
+        recID,
+      ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
@@ -195,7 +217,6 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
-    
   }
 
   /**
@@ -204,7 +225,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any, data: any, type: any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
@@ -233,7 +254,12 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '2':
         case '7':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042902' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -243,7 +269,12 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042905' ||
+                element.functionID == 'ACT042907'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -251,7 +282,14 @@ export class CashpaymentDetailComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042903' ||
+                element.functionID == 'ACT042907' ||
+                (element.functionID == 'ACT042901' &&
+                  this.formModel.funcID == 'ACT0429')
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -261,7 +299,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042904' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -270,7 +313,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -279,7 +327,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042906' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -288,7 +341,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -346,7 +404,10 @@ export class CashpaymentDetailComponent extends UIComponent {
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
 
-    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
+    if (
+      this.itemSelected?.listAcctrants &&
+      this.itemSelected?.listAcctrants.length > 0
+    ) {
       this.itemSelected?.listAcctrants.forEach((item) => {
         if (this.itemSelected.currencyID == this.baseCurr) {
           if (!item.crediting) {
@@ -354,7 +415,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           } else {
             this.totalAcctCR += item.transAmt;
           }
-        }else{
+        } else {
           if (!item.crediting) {
             this.totalAcctDR += item.transAmt2;
             this.totalTransAmt += item.transAmt;
@@ -365,7 +426,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listSettledInvoices && this.itemSelected?.listSettledInvoices.length > 0) {
+    if (
+      this.itemSelected?.listSettledInvoices &&
+      this.itemSelected?.listSettledInvoices.length > 0
+    ) {
       this.itemSelected?.listSettledInvoices.forEach((item) => {
         this.totalbalAmt += item.balAmt;
         this.totalsettledAmt += item.settledAmt;
@@ -376,7 +440,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
+    if (
+      this.itemSelected?.listVATInvoices &&
+      this.itemSelected?.listVATInvoices.length > 0
+    ) {
       this.itemSelected?.listVATInvoices.forEach((item) => {
         this.totalVatAtm += item.vatAmt;
         this.totalVatBase += item.vatBase;
@@ -523,11 +590,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
           //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
@@ -633,7 +696,7 @@ export class CashpaymentDetailComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(
@@ -668,16 +731,33 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Function
 
   //#region Bankhub
-  call() {
-    jsBh.login('accNet', (o) => this.callback(o));
+  transfer(data) {
+    this.checkLogin((o) => {
+      if (o) {
+        let tk = jsBh.decodeCookie('bh');
+        this.api
+          .execSv<any>(
+            'AC',
+            'AC',
+            'CashPaymentsBusiness',
+            'TransferToBankAsync',
+            [data.recID, tk, 'accNet']
+          )
+          .subscribe((res) => {
+            console.log(res);
+          });
+      }
+    });
   }
 
-  callback(o: any) {
-    if (o) {
-      this.bhLogin = true;
-      localStorage.setItem('bh_tk', o);
-      this.getbank();
-    }
+  checkLogin(func: any) {
+    return jsBh.login('test', (o) => {
+      return func(o);
+    });
+  }
+
+  afterLogin(o: any) {
+    return true;
   }
 
   getbank() {
