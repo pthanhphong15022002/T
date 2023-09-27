@@ -72,7 +72,7 @@
           class="text-gray-600"
           style="font-size: 12px !important"
         >
-          {{ formatDate(advancedPayment?.voucherDate) }}
+          {{ advancedPayment?.voucherDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
     </div>

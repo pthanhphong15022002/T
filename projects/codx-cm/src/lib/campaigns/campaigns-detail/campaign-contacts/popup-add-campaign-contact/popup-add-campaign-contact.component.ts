@@ -93,9 +93,9 @@ export class PopupAddCampaignContactComponent implements OnInit {
           [lstSaves]
         )
         .subscribe((res) => {
-          if(res){
+          if (res) {
             this.dialog.close(res);
-            this.notiSv.notifyCode('Thêm thành công');
+            this.notiSv.notifyCode('SYS006');
           }
         });
     } else {
@@ -163,46 +163,48 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      this[e?.field] = e?.data;
-      switch (e?.field) {
-        case 'isProvince':
-          if (!this.isProvince) {
-            if (this.cbxProvince) {
-              this.cbxProvince.value = [];
-              this.cbxProvince.selectedItems = [];
-              this.cbxProvince.setValue([]);
+      if (this[e?.field] != e?.data) {
+        this[e?.field] = e?.data;
+        switch (e?.field) {
+          case 'isProvince':
+            if (!this.isProvince) {
+              if (this.cbxProvince) {
+                this.cbxProvince.value = [];
+                this.cbxProvince.selectedItems = [];
+                this.cbxProvince.setValue([]);
+              }
+              this.provinceIDs = [];
+              this.bindingCountCompaign();
             }
-            this.provinceIDs = [];
+            break;
+          case 'isDistrict':
+            if (!this.isDistrict) {
+              this.districtIDs = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isIndustries':
+            if (!this.isIndustries) {
+              this.industries = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isStatus':
+            if (!this.isStatus) {
+              this.status = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          default:
             this.bindingCountCompaign();
-          }
-          break;
-        case 'isDistrict':
-          if (!this.isDistrict) {
-            this.districtIDs = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isIndustries':
-          if (!this.isIndustries) {
-            this.industries = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isStatus':
-          if (!this.isStatus) {
-            this.status = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        default:
-          this.bindingCountCompaign();
-          break;
-        // case 'districtIDs':
-        //   break;
-        // case 'industries':
-        //   break;
-        // case 'status':
-        //   break;
+            break;
+          // case 'districtIDs':
+          //   break;
+          // case 'industries':
+          //   break;
+          // case 'status':
+          //   break;
+        }
       }
     }
 
