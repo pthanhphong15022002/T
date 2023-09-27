@@ -208,6 +208,20 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   bindingCountCompaign() {
+    // if(this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0){
+    //   let count = 0;
+    //   let lstHadSearchs = [];
+    //   if(this.provinceIDs != null && this.provinceIDs){
+    //     let lstPro = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //     lstHadSearchs = lstPro;
+    //   }
+
+    //   if(this.districtIDs != null && this.districtIDs.length > 0){
+    //     let lstDis = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //   }
+
+    // } //Có field sẽ làm đoạn này
+
     this.api
       .execSv<any>(
         'CM',

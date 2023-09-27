@@ -334,7 +334,10 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5"></div>
+                    <codx-campaign-deals
+                      [transID]="dataSelected?.recID"
+                      [isShow]="isShow"
+                    ></codx-campaign-deals>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>

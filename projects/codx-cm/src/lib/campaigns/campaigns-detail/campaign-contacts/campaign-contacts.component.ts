@@ -11,12 +11,14 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxService,
   DataRequest,
   DialogModel,
   FormModel,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
+import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -60,11 +62,14 @@ export class CampaignContactsComponent implements OnInit {
   columnsGrid = [];
   gridViewSetup: any;
   moreFuncAdd = '';
+  url = '';
   constructor(
     private api: ApiHttpService,
     private detector: ChangeDetectorRef,
     private cache: CacheService,
-    private callFc: CallFuncService
+    private callFc: CallFuncService,
+    private codxService: CodxService,
+    private cmSv: CodxCmService,
   ) {}
   async ngOnInit() {
     this.gridViewSetup = await firstValueFrom(
@@ -88,12 +93,12 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerCustomerName,
         template: this.tempCustomerName,
-        width: 200,
+        width: 250,
       },
       {
         headerTemplate: this.headerIndustries,
         template: this.tempIndustries,
-        width: 400,
+        width: 250,
       },
       {
         headerTemplate: this.headerContact,
@@ -129,6 +134,8 @@ export class CampaignContactsComponent implements OnInit {
         this.objectTypeOld = changes['objectType']?.currentValue;
         this.formModel.funcID =
           this.objectType == '1' ? 'CM0301_1' : 'CM0301_2';
+        let funcID = this.objectType == '1' ? 'CM0101' : 'CM0205';
+        this.getFunctionList(funcID);
         this.getList();
       } else {
         if (!this.loaded) this.loaded = true;
@@ -142,6 +149,7 @@ export class CampaignContactsComponent implements OnInit {
     this.request.dataValues = this.transID + ';' + this.objectType;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
+    this.request.funcID = this.formModel.funcID;
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstCampContacts = item ?? [];
@@ -169,10 +177,27 @@ export class CampaignContactsComponent implements OnInit {
       );
   }
 
+  getFunctionList(funcID){
+    this.cache.functionList(funcID).subscribe((res) => {
+      if(res){
+        this.url = res?.url;
+      }
+    });
+  }
+
   //#region  more
   clickMF(e, data) {}
 
   changeDataMF(e, data) {}
+  //#endregion
+
+  //#region navigate
+  clickNavigate(data){
+    // this.cmSv.navigateCampaign.next({recID: data.recID});
+    this.codxService.navigate('', this.url, {
+      recID: data?.rowData?.objectID,
+    });
+  }
   //#endregion
 
   //#region crud
