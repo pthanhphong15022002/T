@@ -12,7 +12,7 @@
 </ng-container>
 <ng-template #tmpHeader>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
-    <div class="d-flex flex-column pt-2 pb-6 h-325px">
+    <div class="d-flex flex-column h-310px">
       <span class="pt-2 ms-4 fw-bold">Đã ghim</span>
       <div class="d-flex flex-wrap h-auto pt-2 px-4">
         <ng-container *ngFor="let item of listBookMarks">
@@ -22,6 +22,7 @@
             [imageSrc]="item?.background || imgDefault"
             [footer]="footer"
             ngClass="h-100 mx-2 w-250px"
+            (click)="selectedChange(item)"
           >
           </codx-card-img>
           <ng-template #footer>

@@ -12,6 +12,7 @@ import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-
 export class ReportComponent extends WSUIComponent{
   @ViewChild('codxView2') codxView2: CodxView2Component;
 
+  listModule:any;
   listReport:any;
   listReports: any;
   listBookMarks = [];
@@ -21,6 +22,9 @@ export class ReportComponent extends WSUIComponent{
   dataModel = new FormModel();
 
   override onInit(): void {
+    this.listReport = [];
+    this.listReports = [];
+    this.listBookMarks = [];
     this.formatListGroupReport();
     this.getModuleByUserID();
   }
@@ -42,15 +46,15 @@ export class ReportComponent extends WSUIComponent{
     {
       module.subscribe((item:any)=>{
         if(item) {
-          var listModule = item.join(";");
-          this.getDashboardOrReport("R",listModule);
+          this.listModule = item.join(";");
+          this.getDashboardOrReport("R", this.listModule);
         }
       })
     }
     else
     {
-      var listModule = module.join(";");
-      this.getDashboardOrReport("R",listModule);
+      this.listModule = module.join(";");
+      this.getDashboardOrReport("R", this.listModule);
     }
   }
 
@@ -134,8 +138,8 @@ export class ReportComponent extends WSUIComponent{
   selectedChangeToolBar(data:any)
   {
     this.selectedToolBar = data?.functionID;
-    if(this.selectedToolBar == "All") this.listReport = this.listReports;
-    else this.listReport = this.listReports.filter(x=>x.moduleID == this.selectedToolBar);
+    if(this.selectedToolBar == "All") this.listReport = JSON.parse(JSON.stringify(this.listReports));
+    else this.listReport = JSON.parse(JSON.stringify(this.listReports.filter(x=>x.moduleID == this.selectedToolBar)));
   }
 
   setBookMark(recID:any)
@@ -146,44 +150,39 @@ export class ReportComponent extends WSUIComponent{
         var className = "opacity-100";
         var messCode = "OD002";
         var index = this.listReport.findIndex(x=>x.recID == recID);
+        var index2 = this.listReports.findIndex(x=>x.recID == recID);
+        if(index2 >= 0)  this.listReports[index2].isBookMark = !this.listReports[index2].isBookMark;
         if(index >= 0) {
 
           this.listReport[index].isBookMark = !this.listReport[index].isBookMark;
-          this.listReports[index].isBookMark = !this.listReports[index].isBookMark;
           
           if(!this.listReport[index].isBookMark)
           {
             className = "opacity-25";
             messCode = "OD003";
             this.listBookMarks = this.listBookMarks.filter(x=>x.recID != this.listReport[index].recID);
-            if(this.listBookMarks.length == 0) this.setHeight();
+            if(this.listReports[index2].bookmarks &&  this.listReports[index2].bookmarks.length > 0)
+            this.listReports[index2].bookmarks = this.listReports[index2].bookmarks.filter(x=>x.objectID != this.userInfo.userID);
           }
           else  {
-            this.listBookMarks.push(this.listReport[index]);
-            if(this.listBookMarks.length == 1) this.setHeight();
+            this.listBookMarks.unshift(this.listReport[index]);
+            if(!this.listReports[index2].bookmarks) this.listReports[index2].bookmarks = [];
+              this.listReports[index2].bookmarks.push({objectID:this.userInfo.userID});
           }
 
           //Bookmark report
           document.getElementById("ws-report-bookmark" + this.listReport[index].recID).classList.add(className);
           
           //Noti
-          this.notifySvr.notifyCode(messCode,0,this.userInfo?.userName)
+          this.notifySvr.notifyCode(messCode,0,this.userInfo?.userName);
+
+          //Update cache
+          let paras = ["R",this.listModule];
+          let keyRoot = "WSDR" + "R" + this.listModule;
+          let key = JSON.stringify(paras).toLowerCase();
+          this.codxWsService.updateCache(keyRoot,key,this.listReports);
         }
       }
     });
-  }
-  setHeight()
-  {
-    var h = document.getElementById("view2-header").offsetHeight;
-    if(h)
-    {
-      h += 90;
-      let height = window.innerHeight - h;
-      document.getElementById("codx-view2-body").style.cssText = "height:" +height+"px !important";
-    }
-    else
-    {
-      document.getElementById("codx-view2-body").removeAttribute("height");
-    }
   }
 }
