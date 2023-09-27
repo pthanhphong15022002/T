@@ -148,9 +148,6 @@ export class CampaignsComponent
       case 'SYS04':
         this.copy(data);
         break;
-      default:
-        this.addCampaignContact(data, '1');
-        break;
     }
   }
 
