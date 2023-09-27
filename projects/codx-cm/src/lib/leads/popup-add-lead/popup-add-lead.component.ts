@@ -152,6 +152,7 @@ export class PopupAddLeadComponent
   leadNoSetting: any;
   leadNoSystem: any;
   user: any;
+  idxCrr: any = -1;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -166,7 +167,9 @@ export class PopupAddLeadComponent
   disabledShowInput: boolean = true;
   isExist: boolean = false;
   applyProcess: boolean = true;
-  idxCrr: any = -1;
+
+  // number
+  leverSetting: number;
 
   constructor(
     private inject: Injector,
@@ -221,6 +224,20 @@ export class PopupAddLeadComponent
     this.tabInfo = [this.menuGeneralInfo];
     this.tabContent = [this.tabGeneralInfoDetail];
     this.executeApiCalls();
+  }
+
+  async getParameterAddress(){
+    debugger;
+    let param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
   }
 
   valueChange($event) {
@@ -307,7 +324,7 @@ export class PopupAddLeadComponent
     }
   }
 
-  saveLead() {
+  async saveLead() {
     if (!this.lead?.leadName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -332,6 +349,7 @@ export class PopupAddLeadComponent
       );
       return;
     }
+
     if (this.isExist) {
       this.notificationsService.notifyCode(
         'CM003',
@@ -339,9 +357,42 @@ export class PopupAddLeadComponent
         '"' + this.gridViewSetup['LeadID'].headerText + '"'
       );
       return;
-    } else {
-      this.promiseSaveFile();
     }
+
+    if (this.lead.address && this.lead.address.trim() != '') {
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [this.lead.address, this.leverSetting]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        this.lead.provinceID = lstDis?.ProvinceID;
+        this.lead.districtID = lstDis?.DistrictID;
+      //  this.lead.wardID = lstDis?.WardID;
+      }else{
+        this.lead.provinceID = null;
+        this.lead.districtID = null;
+    //    this.lead.wardID = null;
+      }
+    }
+
+    if (
+      !this.codxCmService.checkValidateSetting(
+        this.lead.address,
+        this.lead,
+        this.leverSetting,
+        this.gridViewSetup,
+        this.gridViewSetup?.Address?.headerText
+      )
+    ) {
+      return;
+    }
+    this.promiseSaveFile();
   }
   cbxChange($event, field) {
     if ($event && $event.data) {
@@ -519,7 +570,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-    this.addPermission(this.lead.processID);
+   this.lead.applyProcess && this.addPermission(this.lead.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -645,6 +696,7 @@ export class PopupAddLeadComponent
   }
 
   async executeApiCalls() {
+    this.getParameterAddress();
     if (this.action === this.actionAdd) {
       let res = await firstValueFrom(
         this.codxCmService.getParam('CMParameters', '1')

@@ -111,7 +111,7 @@ export class PopupSignatureComponent extends UIComponent {
               this.data = res[0];
               this.data.fullName = this.data.fullName ?? this.paFullName;
               this.data.email = this.data.email ?? this.paEmail;
-              this.data.supplier = this.data.supplier =='1'? '3':this.data.supplier;
+              this.data.supplier = this.data?.signatureType =='1' ? '3': '1';
               this.isAddNew = res[1];
 
               //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier
