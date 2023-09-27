@@ -191,40 +191,44 @@ export class CashtransferAddComponent extends UIComponent {
       ]);
     }
 
-    if (this.isEdit) {
-      let predicates: string = '';
-      let dataValues: string[] = [];
-      if (this.cashTransfer.cashBookID) {
-        dataValues.push(this.cashTransfer.cashBookID);
-      }
-      if (this.cashTransfer.cashBookID2) {
-        dataValues.push(this.cashTransfer.cashBookID2);
-      }
-      for (let i = 0; i < dataValues.length; i++) {
-        predicates +=
-          `CashBookID=@${i}` + (i !== dataValues.length - 1 ? ' or ' : '');
-      }
-
-      this.acService
-        .loadComboboxData$(
-          this.form.gridviewSetup.CashBookID.referedValue,
-          'AC',
-          predicates,
-          dataValues.join(';')
-        )
-        .subscribe((cashBooks) => {
-          if (cashBooks) {
-            this.cashBookName1 = this.getCashBookNameById(
-              cashBooks,
-              this.cashTransfer?.cashBookID
-            );
-            this.cashBookName2 = this.getCashBookNameById(
-              cashBooks,
-              this.cashTransfer?.cashBookID2
-            );
-          }
-        });
+    let predicates: string = '';
+    let dataValues: string[] = [];
+    if (this.cashTransfer.cashBookID) {
+      dataValues.push(this.cashTransfer.cashBookID);
     }
+    if (this.cashTransfer.cashBookID2) {
+      dataValues.push(this.cashTransfer.cashBookID2);
+    }
+
+    if (dataValues.length === 0) {
+      return;
+    }
+
+    for (let i = 0; i < dataValues.length; i++) {
+      predicates +=
+        `CashBookID=@${i}` + (i !== dataValues.length - 1 ? ' or ' : '');
+    }
+
+    this.acService
+      .loadComboboxData$(
+        this.form.gridviewSetup.CashBookID.referedValue,
+        'AC',
+        predicates,
+        dataValues.join(';')
+      )
+      .subscribe((cashBooks) => {
+        if (cashBooks) {
+          this.cashBookName1 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID
+          );
+          this.cashBookName2 = this.getCashBookNameById(
+            cashBooks,
+            this.cashTransfer?.cashBookID2
+          );
+          this.detectorRef.markForCheck();
+        }
+      });
   }
 
   onInputChange(e): void {

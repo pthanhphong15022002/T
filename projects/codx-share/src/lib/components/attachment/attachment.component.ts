@@ -126,7 +126,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   folder: any;
   closeBtnUp = false;
   barWidth = '0%';
-  pageUpload = 20;
+  pageUpload = 10;
   @Input() idField: any;
   @Input() permissions: any;
   //ChunkSizeInKB = 1024 * 2;
@@ -995,9 +995,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var result = await Promise.all(requests) as any;
   
             let resultError = result.filter(x=>x.isError);
-          
+            debugger
             if(resultError.length > 0)
             {
+              
               var namesError = "Tải file " + resultError.map(x=>x.fileName).join(' , ');
               this.notificationsService.notifyCode("AC0030",0,namesError);
               this.closeBtnUp = false;
@@ -1005,7 +1006,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             }
   
             for (var i = 0; i < total; i++) {
-              var dt = result.filter(x=>x?.fileName ==  data[i].fileName);
+              var dt = result.filter(x=>x.fileName ==  data[i].fileName);
               if(dt && dt[0]) data[i] = dt[0];
               data[i].objectID = this.objectId;
               data[i].description = this.description[i];
