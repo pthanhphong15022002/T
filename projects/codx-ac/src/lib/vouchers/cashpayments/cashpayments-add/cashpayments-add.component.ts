@@ -576,6 +576,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             this.eleGridCashPayment.endProcess();
           }, 100);
         }
+        this.eleGridCashPayment.endProcess();
         break;
       case 'cr2':
         this.eleGridCashPayment.startProcess();
@@ -596,6 +597,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
             this.eleGridCashPayment.endProcess();
           }, 100);
         }
+        this.eleGridCashPayment.endProcess();
         break;
       case 'note':
         oLine.reasonID = event?.itemData?.ReasonID;
@@ -1668,7 +1670,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     }
     this.formCashPayment.setRequire(lstDisable);
   }
-
+  onSelected(e){
+    console.log(e);
+  }
   @HostListener('click', ['$event']) //? focus out grid
   onClick(e) {
     if (

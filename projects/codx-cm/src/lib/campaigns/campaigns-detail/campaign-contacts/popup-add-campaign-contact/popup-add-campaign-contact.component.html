@@ -110,6 +110,7 @@
         type="combobox"
         field="industries"
         [refValue]="'CMIndustries'"
+        [emptyText]="gridViewSetup?.Industries?.headerText"
         [value]="industries"
         [disabled]="!isIndustries"
         [isMulti]="true"
@@ -148,7 +149,8 @@
         #cbxStatus
         type="valuelist"
         field="status"
-        [refValue]="objectType == '1' ? 'CRM041' : 'CRM039'"
+        [refValue]="objectType == '3' ? 'CRM041' : 'CRM039'"
+        [emptyText]="gridViewSetup?.Status?.headerText"
         [value]="status"
         [disabled]="!isStatus"
         [isMulti]="true"
@@ -169,9 +171,9 @@
     <codx-label
       class="label-colon text-gray-500"
       [formModel]="form.formModel"
-      [name]="objectType == '1' ? 'lblCountLeads' : 'lblCountCustomers'"
+      [name]="objectType == '3' ? 'lblCountLeads' : 'lblCountCustomers'"
       [default]="
-        objectType == '1'
+        objectType == '3'
           ? 'Số lượng khách hàng tiềm năng được tìm thấy'
           : 'Số lượng khách hàng được tiềm thấy'
       "
@@ -183,9 +185,9 @@
     <codx-label
       class="label-colon text-gray-500"
       [formModel]="form.formModel"
-      [name]="objectType == '1' ? 'lblHadCountLeads' : 'lblHadCountCustomers'"
+      [name]="objectType == '3' ? 'lblHadCountLeads' : 'lblHadCountCustomers'"
       [default]="
-        objectType == '1'
+        objectType == '3'
           ? 'Số lượng khách hàng tiềm năng đã có trong chiến dịch'
           : 'Số lượng khách hàng được đã có trong chiến dịch'
       "
@@ -197,9 +199,9 @@
     <codx-label
       class="label-colon text-gray-500"
       [formModel]="form.formModel"
-      [name]="objectType == '1' ? 'lblCountAddLeads' : 'lblCountAddCustomers'"
+      [name]="objectType == '3' ? 'lblCountAddLeads' : 'lblCountAddCustomers'"
       [default]="
-        objectType == '1'
+        objectType == '3'
           ? 'Số lượng khách hàng tiềm năng sẽ được thêm'
           : 'Số lượng khách hàng sẽ được thêm'
       "

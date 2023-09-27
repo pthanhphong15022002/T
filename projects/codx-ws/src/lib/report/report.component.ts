@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
 import { isObservable } from 'rxjs';
+import { FormModel } from 'codx-core';
 
 @Component({
   selector: 'lib-report',
   templateUrl: './report.component.html',
-  styleUrls: ['./report.component.css']
+  styleUrls: ['./report.component.scss']
 })
 export class ReportComponent extends WSUIComponent{
   listReport:any;
@@ -13,6 +14,8 @@ export class ReportComponent extends WSUIComponent{
   listGroupReport = [];
   selectedToolBar = "All";
   imgDefault = "assets/themes/ws/default/img/Report_Empty.svg";
+  dataModel = new FormModel();
+
   override onInit(): void {
     this.formatListGroupReport();
     this.getModuleByUserID();
@@ -46,6 +49,7 @@ export class ReportComponent extends WSUIComponent{
       this.getDashboardOrReport("R",listModule);
     }
   }
+
   getDashboardOrReport(type:any,listModule:any)
   {
     var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
@@ -53,17 +57,31 @@ export class ReportComponent extends WSUIComponent{
     {
       result.subscribe((item:any)=>{
         if(item) {
-          this.listReport = item ;
-          this.listReports = item; //this.formatData(item);
+          this.listReport = this.formatBookMark(item);
+          this.listReports = this.listReport ; //this.formatData(item);
           this.formatData(this.listReport);
         }
       })
     }
     else {
-      this.listReport = result; 
-      this.listReports = result;
+      this.listReport = this.formatBookMark(result); 
+      this.listReports = this.listReport;
       this.formatData(this.listReport);
     } //this.formatData(result);
+  }
+
+  formatBookMark(data:any)
+  {
+    data.forEach(element => {
+      element.isBookMark = false;
+      if(element.bookmarks && element.bookmarks.length > 0)
+      {
+        var dt = element.bookmarks.filter(x=>x.objectID == this.userInfo?.userID);
+        if(dt && dt.length > 0) element.isBookMark = true;
+      }
+    });
+    
+    return data
   }
 
   getFuncListByModules(data:any)
@@ -79,7 +97,6 @@ export class ReportComponent extends WSUIComponent{
     }
     else this.formatData2(result);
   }
-
 
   formatData(data:any)
   {
@@ -110,5 +127,21 @@ export class ReportComponent extends WSUIComponent{
     this.selectedToolBar = data?.functionID;
     if(this.selectedToolBar == "All") this.listReport = this.listReports;
     else this.listReport = this.listReports.filter(x=>x.moduleID == this.selectedToolBar);
+  }
+
+  setBookMark(recID:any)
+  {
+    this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportBusiness","BookmarkAsync",recID).subscribe(item=>{
+      if(item)
+      {
+        debugger
+        var index = this.listReport.findIndex(x=>x.recID == recID);
+        if(index >= 0) {
+          this.listReport[index].isBookMark = !this.listReport[index].isBookMark;
+          this.listReports[index].isBookMark = !this.listReports[index].isBookMark;
+          document.getElementById("ws-report-bookmark" + this.listReport[index].recID).style.visibility = this.listReports[index].isBookMark ? "visible" : "hidden";
+        }
+      }
+    });
   }
 }

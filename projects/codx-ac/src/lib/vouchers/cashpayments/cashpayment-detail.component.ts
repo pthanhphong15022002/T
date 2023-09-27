@@ -1,6 +1,24 @@
-import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  Input,
+  SimpleChange,
+  ViewChild,
+} from '@angular/core';
 import { CodxAcService } from '../../codx-ac.service';
-import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent, Util } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+  PageTitleService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  Util,
+} from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
@@ -12,7 +30,10 @@ declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
   templateUrl: './cashpayment-detail.component.html',
-  styleUrls: ['./cashpayment-detail.component.css', '../../codx-ac.component.css'],
+  styleUrls: [
+    './cashpayment-detail.component.css',
+    '../../codx-ac.component.css',
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashpaymentDetailComponent extends UIComponent {
@@ -29,7 +50,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   @Input() dataDefault: any;
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-  itemSelected : any;
+  itemSelected: any;
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
   totalAcctCR: any = 0; //? tông tiền có tab hạch toán
   totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
@@ -80,7 +101,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -89,9 +110,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {
-    
-  }
+  onInit(): void {}
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -105,8 +124,8 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
 
   ngOnChanges(value: SimpleChange) {
-    this.getDataDetail(this.dataItem,this.recID);
-  }   
+    this.getDataDetail(this.dataItem, this.recID);
+  }
 
   ngOnDestroy() {
     this.onDestroy();
@@ -169,7 +188,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.call();
+        this.transfer(data);
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -180,14 +199,17 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Event
 
   //#region Function
-  
+
   /**
-   * *Hàm get data chi tiết 
+   * *Hàm get data chi tiết
    * @param data
    */
-  getDataDetail(dataItem,recID) {
+  getDataDetail(dataItem, recID) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [dataItem,recID])
+      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
+        dataItem,
+        recID,
+      ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
@@ -195,7 +217,6 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
-    
   }
 
   /**
@@ -204,7 +225,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any, data: any, type: any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
@@ -220,7 +241,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         x.functionID == 'ACT041010' || // Mf in (PC)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-        x.functionID == 'ACT042902'  // MF kiểm tra tính hợp lệ (UNC)
+        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -232,7 +253,14 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
+              if (
+                element.functionID == 'ACT041003' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042905' ||
+                element.functionID == 'ACT042907' ||
+                (element.functionID == 'ACT042901' &&
+                  this.formModel.funcID == 'ACT0429')
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -240,7 +268,12 @@ export class CashpaymentDetailComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT041002' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
+              if (
+                element.functionID == 'ACT041002' ||
+                element.functionID == 'ACT041010' ||
+                element.functionID == 'ACT042903' ||
+                element.functionID == 'ACT042907'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -250,7 +283,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041004' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041004' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042904' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -259,7 +297,14 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907') || (element.functionID == 'ACT042901' && this.formModel.funcID == 'ACT0429')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907' ||
+              (element.functionID == 'ACT042901' &&
+                this.formModel.funcID == 'ACT0429')
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -268,7 +313,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041008' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041008' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042906' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -278,7 +328,12 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '2':
         case '7':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041009' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042902' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -288,7 +343,10 @@ export class CashpaymentDetailComponent extends UIComponent {
         case '8':
         case '11':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT042907' && this.formModel.funcID == 'ACT0429')) {
+            if (
+              element.functionID == 'ACT042907' &&
+              this.formModel.funcID == 'ACT0429'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -297,7 +355,12 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT041003' || element.functionID == 'ACT041010') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT041003' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -306,7 +369,11 @@ export class CashpaymentDetailComponent extends UIComponent {
           break;
         case '10':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT042905' || element.functionID == 'ACT042907' && this.formModel.funcID == 'ACT0429')) {
+            if (
+              element.functionID == 'ACT042905' ||
+              (element.functionID == 'ACT042907' &&
+                this.formModel.funcID == 'ACT0429')
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -331,7 +398,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     ele = this.elementTabDetail;
     if (ele) {
       ele.hideTab(0, false);
-      ele.select(0)
+      ele.select(0);
       switch (type) {
         case '1':
         case '3':
@@ -365,7 +432,10 @@ export class CashpaymentDetailComponent extends UIComponent {
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
 
-    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
+    if (
+      this.itemSelected?.listAcctrants &&
+      this.itemSelected?.listAcctrants.length > 0
+    ) {
       this.itemSelected?.listAcctrants.forEach((item) => {
         if (this.itemSelected.currencyID == this.baseCurr) {
           if (!item.crediting) {
@@ -373,7 +443,7 @@ export class CashpaymentDetailComponent extends UIComponent {
           } else {
             this.totalAcctCR += item.transAmt;
           }
-        }else{
+        } else {
           if (!item.crediting) {
             this.totalAcctDR += item.transAmt2;
             this.totalTransAmt += item.transAmt;
@@ -384,7 +454,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listSettledInvoices && this.itemSelected?.listSettledInvoices.length > 0) {
+    if (
+      this.itemSelected?.listSettledInvoices &&
+      this.itemSelected?.listSettledInvoices.length > 0
+    ) {
       this.itemSelected?.listSettledInvoices.forEach((item) => {
         this.totalbalAmt += item.balAmt;
         this.totalsettledAmt += item.settledAmt;
@@ -395,7 +468,10 @@ export class CashpaymentDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
+    if (
+      this.itemSelected?.listVATInvoices &&
+      this.itemSelected?.listVATInvoices.length > 0
+    ) {
       this.itemSelected?.listVATInvoices.forEach((item) => {
         this.totalVatAtm += item.vatAmt;
         this.totalVatBase += item.vatBase;
@@ -436,30 +512,36 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   copyVoucher(dataCopy) {
     this.dataService
-      .copy((o) => this.setDefault(dataCopy,'copy'))
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let datas = {...res};
-          this.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
-            if (res) {
-              let data = {
-                headerText: this.headerText, //? tiêu đề voucher
-                journal: { ...this.journal }, //?  data journal
-                oData: { ...datas }, //?  data của cashpayment
-                hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-                baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-                legalName: this.legalName, //? tên company
-              };
-              let dialog = this.callfc.openSide(
-                CashPaymentAddComponent,
-                data,
-                this.optionSidebar,
-                this.formModel.funcID
-              );
-              this.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
-            }
-          })
+          let datas = { ...res };
+          this.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                  legalName: this.legalName, //? tên company
+                };
+                let dialog = this.callfc.openSide(
+                  CashPaymentAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.formModel.funcID
+                );
+                this.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
         }
       });
   }
@@ -549,11 +631,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
           //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
@@ -659,7 +737,7 @@ export class CashpaymentDetailComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(
@@ -678,11 +756,11 @@ export class CashpaymentDetailComponent extends UIComponent {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data:any,action:any = '') {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
-      action
+      action,
     ]);
   }
 
@@ -695,16 +773,33 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Function
 
   //#region Bankhub
-  call() {
-    jsBh.login('accNet', (o) => this.callback(o));
+  transfer(data) {
+    this.checkLogin((o) => {
+      if (o) {
+        let tk = jsBh.decodeCookie('bh');
+        this.api
+          .execSv<any>(
+            'AC',
+            'AC',
+            'CashPaymentsBusiness',
+            'TransferToBankAsync',
+            [data.recID, tk, 'accNet']
+          )
+          .subscribe((res) => {
+            console.log(res);
+          });
+      }
+    });
   }
 
-  callback(o: any) {
-    if (o) {
-      this.bhLogin = true;
-      localStorage.setItem('bh_tk', o);
-      this.getbank();
-    }
+  checkLogin(func: any) {
+    return jsBh.login('test', (o) => {
+      return func(o);
+    });
+  }
+
+  afterLogin(o: any) {
+    return true;
   }
 
   getbank() {

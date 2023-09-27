@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -5,7 +6,14 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import {
+  ApiHttpService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  Util,
+} from 'codx-core';
+import { CodxCmService } from 'projects/codx-cm/src/projects';
 
 @Component({
   selector: 'lib-popup-add-campaign-contact',
@@ -38,9 +46,12 @@ export class PopupAddCampaignContactComponent implements OnInit {
   countAdd = 0; //Số lượng sẽ được thêm
 
   countChange = 0; //Để check lần change
+  gridViewSetup: any;
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
+    private cmSv: CodxCmService,
+    private notiSv: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -48,6 +59,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.titleAction = dt?.data?.title;
     this.transID = dt?.data?.transID;
     this.objectType = dt?.data?.objectType;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
   ngOnInit(): void {
     if (this.lstCampainsHadAdd == null || this.lstCampainsHadAdd.length == 0) {
@@ -69,7 +81,82 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   //#region save
-  onSave() {}
+  async onSave() {
+    if (this.lstCampainsAdd != null && this.lstCampainsAdd.length > 0) {
+      let lstSaves = await this.convertToCampContacts(this.lstCampainsAdd);
+      this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'CampaignsBusiness',
+          'AddCampaignContactsAsync',
+          [lstSaves]
+        )
+        .subscribe((res) => {
+          if(res){
+            this.dialog.close(res);
+            this.notiSv.notifyCode('Thêm thành công');
+          }
+        });
+    } else {
+      this.notiSv.notifyCode('Hiện tại không có dữ liệu cần thêm');
+      return;
+    }
+  }
+
+  async convertToCampContacts(list = []) {
+    var lstConverts = [];
+    var lstContactsCus = [];
+    if (this.objectType == '1') {
+      var ids = list.map((x) => x.recID);
+      lstContactsCus =
+        (await firstValueFrom(
+          this.api.execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'ContactsBusiness',
+            'GetDefaultContactByObjectIDAsync',
+            [ids]
+          )
+        )) ?? [];
+    }
+    for (var item of list) {
+      var tmp = {};
+      tmp['recID'] = Util.uid();
+      tmp['transID'] = this.transID;
+      tmp['objectType'] = this.objectType;
+      tmp['objectID'] = item?.recID;
+      tmp['objectName'] =
+        this.objectType == '1' ? item?.customerName : item?.leadName;
+      tmp['address'] = item?.address;
+      tmp['sendMail'] = 0;
+      tmp['sendSMS'] = 0;
+      tmp['called'] = 0;
+      tmp['owner'] = item?.owner;
+      tmp['industries'] = item?.industries;
+      if (this.objectType == '3') {
+        tmp['contactName'] = item?.contactName;
+        tmp['jobTitle'] = item?.jobTitle;
+        tmp['phone'] = item?.phone;
+        tmp['email'] = item?.email;
+      } else {
+        if (lstContactsCus != null && lstContactsCus.length > 0) {
+          var contactTmp = lstContactsCus.find(
+            (x) => x.objectID == item?.recID
+          );
+          if (contactTmp != null) {
+            tmp['contactName'] = contactTmp?.contactName;
+            tmp['jobTitle'] = contactTmp?.jobTitle;
+            tmp['phone'] = contactTmp?.mobile;
+            tmp['email'] = contactTmp?.personalEmail;
+          }
+        }
+      }
+      lstConverts.push(tmp);
+    }
+    return lstConverts;
+  }
+
   //#endregion
 
   //#region change
@@ -123,6 +210,20 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   bindingCountCompaign() {
+    // if(this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0){
+    //   let count = 0;
+    //   let lstHadSearchs = [];
+    //   if(this.provinceIDs != null && this.provinceIDs){
+    //     let lstPro = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //     lstHadSearchs = lstPro;
+    //   }
+
+    //   if(this.districtIDs != null && this.districtIDs.length > 0){
+    //     let lstDis = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //   }
+
+    // } //Có field sẽ làm đoạn này
+
     this.api
       .execSv<any>(
         'CM',
@@ -138,14 +239,37 @@ export class PopupAddCampaignContactComponent implements OnInit {
         ]
       )
       .subscribe((res) => {
+        let lstAllSearchs = [];
         if (res) {
-          let lstAllSearchs = res[0];
+          lstAllSearchs = res[0];
           this.countLeadCus = res[1];
         } else {
-          let lstAllSearchs = [];
+          lstAllSearchs = [];
           this.countLeadCus = 0;
         }
+        this.lstCampainsAdd = this.setListCampaignContacts(
+          lstAllSearchs,
+          this.lstCampainsHadAdd
+        );
+        this.countAdd =
+          this.lstCampainsAdd != null ? this.lstCampainsAdd.length : 0;
       });
+  }
+
+  setListCampaignContacts(list1 = [], list2 = []) {
+    const mergedList = [];
+
+    for (const item of list1) {
+      const isDuplicate = list2.some(
+        (mergedItem) => mergedItem.objectID === item.recID
+      );
+
+      if (!isDuplicate) {
+        mergedList.push(item);
+      }
+    }
+
+    return mergedList;
   }
   //#endregion
 }

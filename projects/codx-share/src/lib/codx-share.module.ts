@@ -216,6 +216,7 @@ import { CodxViewReleaseSignFileComponent } from './components/codx-approval-pro
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 import { NgxCaptureModule } from 'ngx-capture';
+import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -398,6 +399,7 @@ const T_Pipe: Type<any>[] = [
   FillterReferType,
   GroupModulePipe,
   FileSizePipe,
+  FormatDataValuePipe,
 ];
 
 @NgModule({
