@@ -519,7 +519,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-    this.addPermission(this.lead.processID);
+   this.lead.applyProcess && this.addPermission(this.lead.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
