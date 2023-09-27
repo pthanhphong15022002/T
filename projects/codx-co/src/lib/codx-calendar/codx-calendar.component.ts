@@ -10,6 +10,7 @@ import {
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
   CacheService,
+  CallFuncService,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -24,22 +25,23 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxCalendarService } from './codx-calendar.service';
-import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
-import { PopupAddMeetingComponent } from '../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { FormGroup } from '@angular/forms';
-import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
-import { AddNoteComponent } from '../calendar-notes/add-note/add-note.component';
-import { of, switchMap, take } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import {
   SpeedDialComponent,
   SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
-import { CodxAddBookingRoomComponent } from '../codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
+import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { AddNoteComponent } from 'projects/codx-share/src/lib/components/calendar-notes/add-note/add-note.component';
+import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
+import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
+import { PopupSettingsComponent } from './popup-settings/popup-settings.component';
 
 @Component({
-  selector: 'app-codx-calendar',
+  selector: 'co-calendar',
   templateUrl: './codx-calendar.component.html',
   styleUrls: ['./codx-calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -105,7 +107,8 @@ export class CodxCalendarComponent
     injector: Injector,
     private calendarService: CodxCalendarService,
     private cacheService: CacheService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private cfService: CallFuncService
   ) {
     super(injector);
     this.roomFM = new FormModel();
@@ -429,7 +432,19 @@ export class CodxCalendarComponent
 
   filterCalendar() {}
 
-  settingCalendar() {}
+  settingCalendar() {
+    let dModel = new DialogModel();
+    this.cfService.openForm(
+      PopupSettingsComponent,
+      '',
+      500,
+      550,
+      '',
+      this.calendarParams,
+      '',
+      dModel
+    );
+  }
 
   convertStrToDate(eleDate) {
     if (eleDate) {

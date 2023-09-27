@@ -19,7 +19,7 @@ import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
   selector: 'lib-step-task-group',
   templateUrl: './step-task-group.component.html',
   styleUrls: ['./step-task-group.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepTaskGroupComponent implements OnInit {
   REQUIRE = ['taskGroupName'];
@@ -89,9 +89,12 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    this.taskGroup['roles'] = e || [];
-    if (this.taskGroup?.roles?.length > 0) {
-      this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
+    if(e){
+      let listRole = e?.map(role => {return {...role, roleType: "O"}}) || [];
+      this.taskGroup['roles'] = listRole;
+      if (this.taskGroup?.roles?.length > 0) {
+        this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
+      }
     }
   }
 

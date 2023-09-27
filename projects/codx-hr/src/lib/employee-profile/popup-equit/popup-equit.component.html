@@ -69,9 +69,10 @@
         <codx-label fiedName="CreatedOn" [formModel]="formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
-          field="CreatedOn"
+          field="createdOn"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -81,6 +82,7 @@
           field="stoppedOn"
           [formModel]="formModel"
           [Group]="formGroup"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
 
@@ -112,6 +114,57 @@
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
+      </div>
+    </div>
+
+    <div class="col-12" *ngIf="currentContract">
+      <codx-label
+        class="text-primary fw-bold fs-5"
+        fiedName="inForContractCurrent"
+        [formModel]="fmContract"
+        default="Thông tin HĐLĐ hiện tại"
+      ></codx-label>
+
+      <div class="d-flex">
+        <div>
+          <codx-label
+            class="label-colon"
+            fiedName="contractTypeID"
+            [formModel]="fmContract"
+            [setRequire]="false"
+          ></codx-label>
+          <span class="fw-bold">{{ currentContract?.contractTypeID }}</span>
+        </div>
+
+        <div>
+          <codx-label
+            class="label-colon ms-2"
+            fiedName="contractNo"
+            [formModel]="fmContract"
+            [setRequire]="false"
+          ></codx-label>
+          <span class="fw-bold">{{ currentContract?.contractNo }}</span>
+        </div>
+      </div>
+
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="quitForetellDays"
+          [formModel]="fmContract"
+          default="Qui định số ngày báo trước"
+        ></codx-label>
+        <span class="fw-bold">{{ currentContract?.quitForetellDays }}</span>
+      </div>
+
+      <div>
+        <codx-label
+          class="label-colon"
+          fiedName="violatedDays"
+          [formModel]="fmContract"
+          default="Số ngày nghỉ sớm"
+        ></codx-label>
+        <span class="fw-bold">{{ currentContract?.violatedDays }}</span>
       </div>
     </div>
   </ng-template>

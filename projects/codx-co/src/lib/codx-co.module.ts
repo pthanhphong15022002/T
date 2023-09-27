@@ -1,11 +1,13 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { CodxCoComponent } from './codx-co.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
-import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { CodxCalendarComponent } from './codx-calendar/codx-calendar.component';
+import { CalendarCenterComponent } from './codx-calendar/calendar-center/calendar-center.component';
+import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
+import { PopupSettingsComponent } from './codx-calendar/popup-settings/popup-settings.component';
 
 export const routes: Routes = [
   {
@@ -21,9 +23,18 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CodxCoComponent, LayoutComponent],
-  imports: [RouterModule.forChild(routes), CodxCoreModule, CodxShareModule],
-  exports: [CodxCoComponent],
+  declarations: [
+    LayoutComponent,
+    CalendarCenterComponent,
+    CodxCalendarComponent,
+    PopupSettingsComponent,
+  ],
+  imports: [
+    RouterModule.forChild(routes),
+    CodxCoreModule,
+    CodxShareModule,
+    SpeedDialModule,
+  ],
 })
 export class CodxCoModule {
   public static forRoot(

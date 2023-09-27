@@ -1,18 +1,40 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { CRUDService } from 'codx-core';
 
 @Component({
   selector: 'codx-campaigns-detail',
   templateUrl: './campaigns-detail.component.html',
-  styleUrls: ['./campaigns-detail.component.scss']
+  styleUrls: ['./campaigns-detail.component.scss'],
 })
 export class CampaignsDetailComponent implements OnInit {
+  @ViewChild('elementNote')
+  elementNote: ElementRef<HTMLElement>;
+
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() gridViewSetup: any;
+
+  @Output() clickMoreFunc = new EventEmitter<any>();
+
+
   id: any;
   loaded: boolean;
+
+  isCollapsed: boolean = false;
+  isCollapsable: boolean = false;
+  isShow = false;
+
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -29,11 +51,11 @@ export class CampaignsDetailComponent implements OnInit {
     },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
   ];
-  constructor(){
-
-  }
-  ngOnInit(): void {
-  }
+  constructor(
+    private detectorRef: ChangeDetectorRef,
+    private elementRef: ElementRef
+  ) {}
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -45,12 +67,54 @@ export class CampaignsDetailComponent implements OnInit {
         this.loaded = false;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+
         this.loaded = true;
+        setTimeout(() => {
+          this.seeMore(this.dataSelected?.recID);
+        }, 0);
       }
     }
   }
 
-  clickMF(e, data){
+  ngAfterViewInit(): void {
+    this.detectorRef.detectChanges();
+  }
+
+  seeMore(id) {
+    this.isCollapsed = false;
+    this.isCollapsable = false;
+
+    let element = document.getElementById('elementNote');
+    if (element) {
+      let height = element.offsetHeight
+        ? JSON.parse(JSON.stringify(element.offsetHeight))
+        : 0;
+      if (
+        this.dataSelected?.description == null ||
+        this.dataSelected.description?.trim() == ''
+      ) {
+        height = 35;
+      }
+      if (height > 35) {
+        this.isCollapsed = true;
+        this.isCollapsable = true;
+      }
+      element.focus();
+    }
+
+    this.detectorRef.detectChanges();
+  }
+
+  clickMF(e, data) {
+    this.clickMoreFunc.emit({ e: e, data: data });
 
   }
+
+  //#region event element HTML
+  clickShowTab(isShow) {
+    this.isShow = isShow;
+    this.detectorRef.detectChanges();
+  }
+
+  //#endregion
 }

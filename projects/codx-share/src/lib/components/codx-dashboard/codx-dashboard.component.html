@@ -1,9 +1,11 @@
-<codx-form
-  [body]="body"
-  [subToolbar]="isEditMode ? toolbar : null"
-  [dialog]="dialog"
-  [showHeader]="isEditMode"
-></codx-form>
+<div #screen>
+  <codx-form
+    [body]="body"
+    [subToolbar]="isEditMode ? toolbar : null"
+    [dialog]="dialog"
+    [showHeader]="isEditMode"
+  ></codx-form>
+</div>
 
 <ng-template #body>
   <div class="container-fluid h-100 py-5">

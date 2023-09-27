@@ -2,6 +2,7 @@
   #form
   [subHeader]="header"
   [dialog]="dialogRef"
+  [data]="advancedPayment"
   [formModel]="dialogRef.formModel"
   [bodyCss]="'bgEDEDED pt-5'"
   [body]="body"
@@ -87,7 +88,7 @@
         <div class="row text-center mt-2 text-primary fw-bold">
           <codx-label
             style="font-size: 35px"
-            default="Đề nghị tạm ứng"
+            [default]="headerText"
           ></codx-label>
         </div>
         <div class="row">
@@ -242,8 +243,8 @@
                 cssPopup="h-350px w-100 fs-4"
                 [isMulti]="false"
                 type="combobox"
-                field="reasonID"
-                [value]="advancedPayment.reasonID"
+                field="memo"
+                [value]="advancedPayment.memo"
                 [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
                 [emptyText]="form?.gridviewSetup?.ReasonID.headerText"
                 (valueChange)="dropdownChange($event)"

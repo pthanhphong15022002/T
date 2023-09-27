@@ -46,14 +46,14 @@
         </codx-label>
         <span
           *ngIf="dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ dataItem?.voucherNo }}
         </span>
         <span
           *ngIf="!dataItem?.voucherNo"
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ "AC0028" | mssg | async }}
@@ -69,7 +69,7 @@
         >
         </codx-label>
         <span
-          class="text-gray-600 voucherText"
+          class="text-gray-600"
           style="font-size: 12px !important"
         >
           {{ formatDate(dataItem?.voucherDate) }}
@@ -79,7 +79,7 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="d-flex h-100 w-100 bgEDEDED" style="padding: 0px 70px">
+  <div class="d-flex h-100 w-100 bgEDEDED pt-5" style="padding: 0px 70px">
     <div
       class="bg-white rounded-2 d-flex justify-content-between flex-column h-100 w-100"
     >
@@ -88,7 +88,7 @@
         <div class="row text-center mt-2 text-primary fw-bold">
           <codx-label
             style="font-size: 35px"
-            default="Đề nghị tạm ứng"
+            [default]="headerText"
           ></codx-label>
         </div>
         <div class="row" style="padding-bottom: 5px;">
@@ -107,7 +107,7 @@
                     | formatvalue : formModel : 'objectID' : objectID
                     | async
                 "
-                class="om-input w-100"
+                class="om-input w-100 dropdow-select"
                 style="font-size: 13px;"
               ></span>
             </div>
@@ -184,14 +184,18 @@
                   [formModel]="formModel"
                 >
                 </codx-label>
-                <codx-inplace
-                  type="text"
-                  field="pmtMethodID"
-                  [value]="dataItem.pmtMethodID"
-                  [class]="'om-input w-100 '"
-                  [cssClass]="'om-input w-100  fs-4'"
-                  [disabled]="true"
-                ></codx-inplace>
+                <div>
+                  <span
+                    #pmtMethodID
+                    [innerHTML]="
+                      dataItem?.pmtMethodID
+                        | formatvalue : formModel : 'pmtMethodID' : pmtMethodID
+                        | async
+                    "
+                    class="om-input w-100 dropdow-select"
+                    style="font-size: 13px;"
+                  ></span>
+                </div>
               </div>
             </div>
           </div>
@@ -206,15 +210,9 @@
             </codx-label>
             <div>
               <span
-                #reasonID
-                [innerHTML]="
-                  dataItem?.reasonID
-                    | formatvalue : formModel : 'reasonID' : reasonID
-                    | async
-                "
-                class="om-input w-100"
+                class="om-input w-100 dropdow-select"
                 style="font-size: 13px;"
-              ></span>
+              >{{ dataItem.memo }}</span>
             </div>
           </div>
         </div>

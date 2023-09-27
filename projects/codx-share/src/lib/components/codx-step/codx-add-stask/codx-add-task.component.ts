@@ -84,7 +84,6 @@ export class CodxAddTaskComponent implements OnInit {
   isShowTime = false;
   startDayOld;
   endDayOld;
-  isOneRadio = true;
 
   dialogPopupLink: DialogRef;
   listCombobox = {
@@ -517,11 +516,9 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   valueChangeRadio(event) {
-    if (!this.isOneRadio) return;
-    this.isOneRadio = false;
-    this.stepsTasks.status = event?.field;
-    this.stepsTasks.progress = event?.field == '3' ? 100 : 0;
-    if (event?.field == '3') {
+    this.stepsTasks.status = event?.value;
+    this.stepsTasks.progress = this.stepsTasks?.status == '3' ? 100 : 0;
+    if (this.stepsTasks?.status == '3') {
       this.stepsTasks.actualEnd = new Date();
       [this.startDayOld, this.endDayOld] = [
         this.stepsTasks?.startDate,
@@ -529,7 +526,7 @@ export class CodxAddTaskComponent implements OnInit {
       ];
       [this.stepsTasks.startDate, this.stepsTasks.endDate] = [null, null];
     }
-    if (event?.field == '1') {
+    if (this.stepsTasks?.status == '1') {
       this.stepsTasks.startDate = this.startDayOld
         ? this.startDayOld
         : this.stepsTasks?.startDate;

@@ -130,7 +130,7 @@ a:hover {
 	}
 }
 .tabs-login {
-	height: 360px;
+	height: 380px;
 	
 	.e-tab-header{
 		margin-bottom: 15px;
@@ -190,4 +190,20 @@ a:hover {
 		align-items: center;
 		height: 100%;
 	}
+}
+#frm_erm_login .form-control{
+	position: relative;
+	width: calc(100% - 25px)!important;
+	.attendees-tag{
+		position: absolute;
+		top: 10px;
+		right: -25px;
+	}
+}
+#btn-signin{
+	width: calc(100% - 25px)!important;
+}
+.pass-policy codx-label{
+	font-family:Roboto!important;
+	font-size: 13px!important;
 }

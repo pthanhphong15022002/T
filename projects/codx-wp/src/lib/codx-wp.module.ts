@@ -29,7 +29,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add-post.component';
-import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
+import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
 
 export const routes: Routes = [
   {

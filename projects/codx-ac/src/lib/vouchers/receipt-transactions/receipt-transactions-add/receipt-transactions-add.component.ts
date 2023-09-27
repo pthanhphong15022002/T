@@ -112,8 +112,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngAfterViewInit() {
-    this.formVoucherReceipt.formGroup.patchValue(this.vouchers);
-    this.dt.detectChanges();
+    if(this.formVoucherReceipt?.data?.coppyForm) this.formVoucherReceipt.data._isEdit = true;
   }
 
   onAfterInit() {
@@ -402,19 +401,19 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          if(this.formType == 'edit')
+          if(res?.update?.data)
           {
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
+            this.dialog.dataService.update(res.update.data).subscribe();
+            this.onDestroy();
           }
-          else
+          else if(!res?.save)
           {
-            this.dialog.close();
+            this.dialog.dataService.update(res).subscribe();
+            this.onDestroy();
           }
+          this.dialog.close();
+          this.detectorRef.detectChanges();
         }
-        this.dt.detectChanges();
       });
   }
 

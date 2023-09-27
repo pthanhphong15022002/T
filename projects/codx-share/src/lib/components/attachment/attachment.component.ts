@@ -126,6 +126,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   folder: any;
   closeBtnUp = false;
   barWidth = '0%';
+  pageUpload = 10;
   @Input() idField: any;
   @Input() permissions: any;
   //ChunkSizeInKB = 1024 * 2;
@@ -831,16 +832,33 @@ export class AttachmentComponent implements OnInit, OnChanges {
         data[i].avatar = null;
         data[i].data = '';
         data[i].createdOn = new Date();
+      }
+      if (total > 1) {
+        let numFile = Math.ceil(this.fileUploadList.length/this.pageUpload); 
+        for(var i = 0 ; i< numFile ; i++)
+        {
+          var l = this.fileUploadList.slice(this.pageUpload * i , (this.pageUpload * (i+1)))
+          const requests = l.map((data) => this.addFileLargeLong(data, false));
+          let result = await Promise.all(requests);
+          let resultError = result.filter(x=>x.isError);
+          
+          if(resultError.length > 0)
+          {
+            var namesError = resultError.map(x=>x.fileName).join(' , ');
+            this.notificationsService.notifyCode("AC0030",0,namesError);
+            this.closeBtnUp = false;
+            return of(null);
+          }
 
-        if (total > 1) data[i] = await this.addFileLargeLong(data[i], false);
-        // if (total > 1) {
-        //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
-        //     if (i == total -1)
-
-        //   });
-        // }
+          data.forEach(elm => {
+            var check = result.filter(x=>x?.fileName == elm.fileName);
+            if(check && check[0]) elm = check[0];
+          });
+        }
+       
       }
       let countFile = this.fileUploadList.length;
+
       if (total > 1) {
         for (var i = 0; i < data.length; i++) {
           data[i].source = null;
@@ -964,19 +982,44 @@ export class AttachmentComponent implements OnInit, OnChanges {
         var data = JSON.parse(JSON.stringify(this.fileUploadList));
         var toltalUsed = 0; //bytes
         var remainingStorage = -1;
-        if (this.infoHDD.totalHdd >= 0)
-          remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
+        if (this.infoHDD.totalHdd >= 0) remainingStorage = this.infoHDD.totalHdd - this.infoHDD.totalUsed;
         var that = this;
-        for (var i = 0; i < total; i++) {
-          data[i].objectID = this.objectId;
-          data[i].description = this.description[i];
-          data[i].avatar = null;
-          data[i].data = '';
-          if (this.isTab) data[i].createdOn = this.date;
-          else data[i].createdOn = new Date();
-          toltalUsed += data[i].fileSize;
-          if (total > 1 && !data[i].uploadId) data[i] = await this.addFileLargeLong(data[i], false);
+        if(total > 1)
+        {
+          let listData = data.filter(x=>!x.uploadId);
+          let numFile = Math.ceil(listData.length/this.pageUpload);
+          for(var i = 0 ; i< numFile ; i++)
+          {
+            var l = listData.slice(this.pageUpload * i , (this.pageUpload * (i+1)))
+            const requests = l.map((datas) => this.addFileLargeLong(datas, false));
+            var result = await Promise.all(requests) as any;
+  
+            let resultError = result.filter(x=>x.isError);
+            debugger
+            if(resultError.length > 0)
+            {
+              
+              var namesError = "Tải file " + resultError.map(x=>x.fileName).join(' , ');
+              this.notificationsService.notifyCode("AC0030",0,namesError);
+              this.closeBtnUp = false;
+              return of(null);
+            }
+  
+            for (var i = 0; i < total; i++) {
+              var dt = result.filter(x=>x.fileName ==  data[i].fileName);
+              if(dt && dt[0]) data[i] = dt[0];
+              data[i].objectID = this.objectId;
+              data[i].description = this.description[i];
+              data[i].avatar = null;
+              data[i].data = '';
+              if (this.isTab) data[i].createdOn = this.date;
+              else data[i].createdOn = new Date();
+              toltalUsed += data[i].fileSize;
+            }
+          }
+          
         }
+
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage) {
           this.closeBtnUp = false;
@@ -1203,17 +1246,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async uploadFileAsync(uploadFile: any, appName: any, chunkSizeInKB: any) {
     lvFileClientAPI.setUrl(environment.urlUpload);
+    await this.dmSV.getToken();
     var retUpload = await this.registerFile(appName, uploadFile, chunkSizeInKB);
-    if (retUpload == '401') {
-      await this.dmSV.getToken();
-      retUpload = await this.registerFile(appName, uploadFile, chunkSizeInKB);
-    }
+    // if (retUpload == '401') {
+    //   await this.dmSV.getToken();
+    //   retUpload = await this.registerFile(appName, uploadFile, chunkSizeInKB);
+    // }
     var chunSizeInfBytes = chunkSizeInKB * 1024;
     var sizeInBytes = uploadFile?.size;
     var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
     if (uploadFile?.size % chunSizeInfBytes > 0) {
       numOfChunks++;
     }
+    let percent = 0;
+    let p = 100 / numOfChunks;
     for (var i = 0; i < numOfChunks; i++) {
       var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
       var end = start + chunSizeInfBytes; //Vị trí cuối
@@ -1232,9 +1278,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
           },
           uploadFile.name
         );
-        console.log(uploadChunk);
+
+        // if(uploadChunk?.status == 200)
+        // {
+        //   percent += p;
+         
+        // }
       } catch (ex) {}
     }
+    // if(percent >= 100)
+    // {
+    //   let elem =  document.getElementById("circle"+ uploadFile.name);
+    //   if(elem) elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+    // }
     return retUpload;
   }
 
@@ -1438,7 +1494,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   async addFileLargeLong(
     fileItem: FileUpload,
     isAddFile: boolean = true
-  ): Promise<FileUpload> {
+  ): Promise<any> {
     // check dung luong dia cungs
     var ret = fileItem;
     var fileSize = parseInt(fileItem.fileSize);
@@ -1473,8 +1529,23 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.uploadId = '0';
       // this.notificationsService.notify(ex);
     }
-    if (!fileItem.urlPath) return null;
-
+    if (!fileItem.urlPath)
+    {
+      let elem =  document.getElementById("circle"+ uploadFile.name);
+      if(elem) {
+        elem.style.strokeDashoffset = "0";
+        elem.style.stroke = "red";
+      }
+      return {
+        fileName : fileItem.fileName,
+        isError: true
+      }
+    }
+    else
+    {
+      let elem =  document.getElementById("circle"+ uploadFile.name);
+      if(elem) elem.style.strokeDashoffset = (0).toString();
+    }
     //this.closeBtnUp = false;
     return fileItem;
   }
