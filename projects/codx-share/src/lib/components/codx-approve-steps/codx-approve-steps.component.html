@@ -68,52 +68,13 @@
                           <ng-container *ngFor="let approver of item?.approvers">
                             <div class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                               <codx-temp-full cardCss="card-template p-3" [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userID"
-                                [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver | vll : 'ES014' : 'text' | async"
-                                [subTitle]="approver?.position ? approver?.position: approver?.approver | vll : 'ES014' : 'text' | async"
+                              [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
+                              [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
                                 [imageSrc]="approver?.roleType !='U' && !approver?.userID ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
                                 [imgCss]="approver?.roleType !='U' && !approver?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
-                                [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3"
+                                [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3"
                                 [footer]="footer1" [dataItem]="item">
                               </codx-temp-full>
-
-                              
-                              <template>
-                                <codx-temp-full cardCss="card-template p-3" *ngIf="
-                                approver?.roleType=='U' ||
-                                approver?.roleType == 'PA' 
-                              " [imageId]="approver?.approver" [title]="approver?.name" [subTitle]="
-                                approver?.position ?? positionDefault
-                              " [status]="lstStep.status" [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3"
-                                  [footer]="footer1" [dataItem]="item">
-                                </codx-temp-full>
-
-                                <codx-temp-full cardCss="card-template p-3" *ngIf="
-                                approver?.roleType=='P'" [imageId]="approver?.userID" [title]="approver?.name"
-                                  [subTitle]="approver?.userName" [status]="lstStep.status" [imageObjType]="'AD_Users'"
-                                  [modeImgs]="true" [titleLine]="3" [footer]="footer1" [dataItem]="item">
-                                </codx-temp-full>
-
-                                <codx-temp-full cardCss="card-template p-3" *ngIf="                                  
-                            approver?.roleType!='U' &&
-                            approver?.roleType != 'PA' &&
-                            approver?.roleType != 'P' 
-                              " [imageSrc]="
-                                './assets/themes/sys/default/img/' +
-                                (item?.icon ? item?.icon : 'share_default.svg')
-                              " imgCss="me-3 p-3 user-mini-icon w-40px h-40px" [title]="
-                                approver?.approver
-                                  | vll : 'ES014' : 'text'
-                                  | async
-                              " [subTitle]="
-                                approver?.approver
-                                  | vll : 'ES014' : 'text'
-                                  | async
-                              " [status]="lstStep.status" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
-                                  [dataItem]="item">
-                                </codx-temp-full>
-                              </template>
-
-
                               <ng-template #footer1 let-data>
                                 <div class="d-flex align-items-center justify-content-end">
                                   <span class="icon-access_time icon-14 me-1"></span>{{ data.leadtime }} giờ
@@ -151,7 +112,7 @@
 </div>
 
 <ng-container *ngIf="type == '1'">
-  <div *ngIf="lstStep?.length == 0">
+  <div *ngIf="lstStep?.length == 0 && isAfterRender" >
     <div class="d-flex flex-column flex-center text-center">
       <div class="list-empty py-15 py-lg-20">
         <div class="nondata-container">
@@ -205,48 +166,13 @@
                     <ng-container *ngFor="let approver of item?.approvers">
                       <div class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2">
                         <codx-temp-full cardCss="card-template p-3" [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID"
-                          [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver | vll : 'ES014' : 'text' | async"
-                          [subTitle]="approver?.position ? approver?.position: approver?.approver | vll : 'ES014' : 'text' | async"
+                        [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
+                        [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
                           [imageSrc]="approver?.roleType !='U' && !approver?.userID ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-                          [imgCss]="approver?.roleType !='U' && !approver?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
-                          [status]="lstStep.status"
+                          [imgCss]="approver?.roleType !='U' && !approver?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
                           [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
                           [dataItem]="item">
                         </codx-temp-full>
-
-                        <template>
-                          <codx-temp-full cardCss="card-template p-3" *ngIf="
-                          approver?.roleType=='U' ||
-                          approver?.roleType == 'PA' 
-                        " [imageId]="approver?.approver" [title]="approver?.name"
-                            [subTitle]="approver?.position ?? positionDefault" [status]="lstStep.status"
-                            [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
-                            [dataItem]="item">
-                          </codx-temp-full>
-
-                          <codx-temp-full cardCss="card-template p-3" *ngIf="
-                          approver?.roleType=='P' " [title]="approver?.name" [imageId]="approver?.userID"
-                            [subTitle]="approver?.userName" [status]="lstStep.status" [imageObjType]="'AD_Users'"
-                            [modeImgs]="true" [titleLine]="3" [footer]="footer1" [dataItem]="item">
-                          </codx-temp-full>
-
-                          <codx-temp-full cardCss="card-template p-3" *ngIf="
-                          approver?.roleType !='U' &&
-                          approver?.roleType != 'P' &&
-                          approver?.roleType != 'PA' 
-                        " [imageSrc]="
-                          './assets/themes/sys/default/img/' +
-                          (item?.icon ? item?.icon : 'share_default.svg')
-                        " imgCss="me-3 p-3 user-mini-icon w-40px h-40px" [title]="
-                          approver?.approver | vll : 'ES014' : 'text' | async
-                        " [subTitle]="
-                          approver?.approver | vll : 'ES014' : 'text' | async
-                        " [status]="lstStep.status" [modeImgs]="true" [titleLine]="3" [footer]="footer1"
-                            [dataItem]="item">
-                          </codx-temp-full>
-                        </template>
-
-
                         <ng-template #footer1 let-data>
                           <div class="d-flex align-items-center justify-content-end">
                             <span class="icon-access_time icon-14 me-1"></span>{{ data.leadtime }} h

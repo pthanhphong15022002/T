@@ -128,8 +128,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupSelectTemplateComponent } from './components/codx-dashboard/popup-select-template/popup-select-template.component';
 import { PopupMoreChartComponent } from './components/codx-dashboard/popup-more-chart/popup-more-chart.component';
 import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clear-cache.component';
-import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.component';
-import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
 import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
 import { CodxViewFilesComponent } from './components/codx-view-files/codx-view-files.component';
 import { PopupAddEducationsComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/popup/popup-add-educations/popup-add-educations.component';
@@ -192,7 +190,6 @@ import { PopupTitleComponent } from './components/calendar-notes/add-note/save-n
 import { SaveNoteComponent } from './components/calendar-notes/add-note/save-note/save-note.component';
 import { UpdateNotePinComponent } from './components/calendar-notes/update-note-pin/update-note-pin.component';
 import { CodxCreateIndexComponent } from './components/codx-create-index/codx-create-index.component';
-import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { CodxStepChartComponent } from './components/codx-step/codx-step-chart/codx-step-chart.component';
 import { CodxTaskGoalTempComponent } from './components/codx-task-goal-temp/codx-task-goal-temp.component';
 import { UsingHistoryComponent } from './components/dynamic-form/using-history/using-history.component';
@@ -218,6 +215,8 @@ import { CodxFilesAttachmentViewComponent } from './components/codx-files-attach
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
+import { NgxCaptureModule } from 'ngx-capture';
+import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -311,8 +310,6 @@ const T_Component: Type<any>[] = [
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
   PopupMoreChartComponent,
-  CodxCalendarComponent,
-  CalendarCenterComponent,
   CodxViewCardComponent,
   CodxViewFilesComponent,
   PopupAddEducationsComponent,
@@ -370,7 +367,6 @@ const T_Component: Type<any>[] = [
   CodxStepChartComponent,
   CodxIconStepComponent,
   //CO
-  CalendarCenterComponent,
   AddNoteComponent,
   PopupTitleComponent,
   SaveNoteComponent,
@@ -388,7 +384,7 @@ const T_Component: Type<any>[] = [
   CodxGetTemplateSignFileComponent,
 
   //View
-  CodxView2Component
+  CodxView2Component,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -403,6 +399,7 @@ const T_Pipe: Type<any>[] = [
   FillterReferType,
   GroupModulePipe,
   FileSizePipe,
+  FormatDataValuePipe,
 ];
 
 @NgModule({
@@ -457,7 +454,7 @@ const T_Pipe: Type<any>[] = [
     LazyLoadImageModule,
     DragDropModule,
     ProgressBarAllModule,
-    SpeedDialModule,
+    NgxCaptureModule,
   ],
 })
 export class CodxShareModule {

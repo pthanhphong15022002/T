@@ -491,7 +491,11 @@
         <!-- //test -->
         <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
           <ng-container *ngIf="data.dataFormat == 'C'">
-            <span>{{ getViewText(data.refValue, data.dataValue) }}</span>
+            <span
+              [innerHTML]="
+                data.dataValue | formatDataValue : 'C' : data.refValue | async
+              "
+            ></span>
           </ng-container>
 
           <ng-container *ngIf="data.dataFormat == 'V'">

@@ -830,7 +830,8 @@ export class PdfComponent
 
       //trinh ky
       if (!this.isSignMode) {
-        if (this.curPage == 1 && this.needSuggest) {
+        // this.curPage == 1 && 
+        if (this.needSuggest) {
           this.curPage = this.pageMax;
         }
       } else {
@@ -847,7 +848,8 @@ export class PdfComponent
         }
         if (firstAreaOfSigner != null) {
           this.curPage = firstAreaOfSigner.location.pageNumber + 1;
-        } else if (this.curPage == 1 && this.needSuggest) {
+          // this.curPage == 1 && 
+        } else if (this.needSuggest) {
           this.curPage = this.pageMax;
         }
       }

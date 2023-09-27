@@ -2,8 +2,10 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -22,6 +24,10 @@ export class CampaignsDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() gridViewSetup: any;
+
+  @Output() clickMoreFunc = new EventEmitter<any>();
+
+
   id: any;
   loaded: boolean;
 
@@ -99,7 +105,10 @@ export class CampaignsDetailComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    this.clickMoreFunc.emit({ e: e, data: data });
+
+  }
 
   //#region event element HTML
   clickShowTab(isShow) {

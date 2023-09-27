@@ -31,6 +31,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   public grvVouchersLine: CodxGridviewV2Component;
   @ViewChild('formVoucherIssue') public formVoucherIssue: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
+  @ViewChild('cbxReasonID') cbxReasonID: any;
 
   private destroy$ = new Subject<void>();
 
@@ -120,7 +121,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
@@ -289,8 +289,15 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           }
         }
         break;
-      case 'reasonID':
-        e.data.note = e.itemData.ReasonName;
+      case 'note':
+        if(e?.itemData?.ReasonID)
+        {
+          e.data.reasonID = e.itemData.ReasonID;
+        }
+        else
+        {
+          e.data.reasonID = '';
+        }
         break;
     }
 
@@ -403,19 +410,19 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.vouchers.unbounds.isAddNew = true;
         }
         else {
-          if(this.formType == 'edit')
+          if(res?.update?.data)
           {
-            this.dialog.close({
-              update: true,
-              data: res,
-            });
+            this.dialog.dataService.update(res.update.data).subscribe();
+            this.onDestroy();
           }
-          else
+          else if(!res?.save)
           {
-            this.dialog.close();
+            this.dialog.dataService.update(res).subscribe();
+            this.onDestroy();
           }
+          this.dialog.close();
+          this.detectorRef.detectChanges();
         }
-        this.dt.detectChanges();
       });
   }
 
@@ -545,8 +552,6 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if (this.formVoucherIssue.validation())
-      return;
     this.formVoucherIssue
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
@@ -556,13 +561,13 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
             this.vouchers.voucherNo = res.save.data.voucherNo;
             this.formVoucherIssue.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
-          this.checkModeGridBeforeAddLine();
+          this.addLine();
         }
       });
   }
 
   /** Kiểm tra mode grid trước khi thêm dòng */
-  checkModeGridBeforeAddLine() {
+  addLine() {
     let data = new VouchersLines();
     let idx;
     this.api
@@ -573,6 +578,10 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
+          let indexReason = this.cbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.cbxReasonID?.ComponentCurrent?.value);
+          if (indexReason > -1) {
+            res.note = this.cbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
+          }
           switch (this.modeGrid) {
             case '1':
               idx = this.grvVouchersLine.dataSource.length;

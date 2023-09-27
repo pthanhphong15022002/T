@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -52,7 +53,7 @@ export class CodxApproveStepsComponent
   @Input() isTemplate = false; //signFile của template mẫu  
   @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
   @Input() vllShare = null;
-  @Input() isSettingMode = true;
+  @Input() isSettingMode = true;//True: ko hiện user nếu chọn role position
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -64,7 +65,7 @@ export class CodxApproveStepsComponent
   dialogApproval: DialogRef;
   formModel: FormModel;
   approvers = [];
-  lstStep: any;
+  lstStep = [];
   lstDeleteStep = [];
   isDeleteAll = false;
   justView = false;
@@ -76,6 +77,7 @@ export class CodxApproveStepsComponent
 
   model: any;
   isRequestListStep = false; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
+  isAfterRender =false;
   constructor(
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -96,7 +98,7 @@ export class CodxApproveStepsComponent
 
       this.dialogApproval = dialog;
       this.isRequestListStep = dialogData?.data?.isRequestListStep ?? false; // Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
-      this.lstStep = dialogData?.data?.lstStep; // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
+      this.lstStep = dialogData?.data?.lstStep ?? []; // Thảo thêm ngày 20/04/2023 để gui danh sach step qua ve
       this.justView = dialogData?.data.justView ?? false;
       this.isAddNew = dialogData?.data?.isAddNew ?? true;
     } else {
@@ -143,49 +145,27 @@ export class CodxApproveStepsComponent
       this.currentStepNo = this.lstStep.length + 1;
     } else {
       if (this.transId != '') {
-        let gridModels = new DataRequest();
-        gridModels.dataValue = this.transId;
-        gridModels.predicate = 'TransID=@0';
-        gridModels.funcID = this.formModel.funcID;
-        gridModels.entityName = this.formModel.entityName;
-        gridModels.gridViewName = this.formModel.gridViewName;
-        gridModels.pageLoading = false;
-        gridModels.srtColumns = 'StepNo';
-        gridModels.srtDirections = 'asc';
-
-        this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-          if (res && res?.length >= 0) {
-            this.lstStep = res;
-            let listPosition=[];
-            for(let step of this.lstStep){
-              for(let approve of step.approvers){
-                if(approve?.roleType=='P' && !listPosition.includes(approve?.approver)){
-                  listPosition.push(approve?.approver);
-                }
-              }
-            }
-            if(listPosition?.length>0){
-              this.shareService.getUserIDByPositionsID(listPosition).subscribe(lstUserInfo=>{
-                if(lstUserInfo){
-                  for(let step of this.lstStep){
-                    for(let approve of step.approvers){
-                      if(approve?.roleType=='P'){
-                        let crrApprover = lstUserInfo.filter(x=>x?.positionID == approve?.approver);
-                        if(crrApprover?.length>0){
-                          approve.userID= crrApprover[0].userID;
-                          approve.userName= crrApprover[0].userName;
-                          this.cr.detectChanges();
-                        }
-                      }
+        this.shareService.viewApprovalStep(this.transId,this.isSettingMode).subscribe((res)=>{
+          if (res && res?.length == 2) {
+            this.lstStep = res[0] ?? [];
+            if(res[1]?.length>0){
+              let apInfos = res[1];
+              this.lstStep.forEach(st=>{
+                if(st?.approvers){
+                  st?.approvers.forEach(ap=>{
+                    let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+                    if(curAp?.length>0){
+                      ap.userID = curAp[0]?.userID;
+                      ap.userName = curAp[0]?.userName;
+                      ap.employeeID = curAp[0]?.employeeID;
+                      ap.position = ap?.position ?? curAp[0]?.positionName;
                     }
-                  }
+                  })
                 }
               });
             }
-            this.currentStepNo = this.lstStep.length + 1; 
-            this.cr.detectChanges();
-            
-          }
+          }          
+          this.isAfterRender = true;
         });
       } else {
         this.lstStep = [];

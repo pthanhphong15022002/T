@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-codx-co',
+  selector: 'lib-codx-pr',
   template: `
     <p>
-      codx-co works!
+      codx-pr works!
     </p>
   `,
   styles: [
   ]
 })
-export class CodxCoComponent {
+export class CodxPrComponent {
 
 }

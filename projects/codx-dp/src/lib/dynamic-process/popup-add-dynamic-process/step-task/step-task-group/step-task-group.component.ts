@@ -89,9 +89,12 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    this.taskGroup['roles'] = e || [];
-    if (this.taskGroup?.roles?.length > 0) {
-      this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
+    if(e){
+      let listRole = e?.map(role => {return {...role, roleType: "O"}}) || [];
+      this.taskGroup['roles'] = listRole;
+      if (this.taskGroup?.roles?.length > 0) {
+        this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
+      }
     }
   }
 

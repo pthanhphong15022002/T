@@ -6,14 +6,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
   DataRequest,
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType,
+  ViewType
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
@@ -47,8 +46,6 @@ export class PurchaseinvoicesComponent
 
   master: IPurchaseInvoice;
   journal: IJournal;
-
-  gvsAcctTrans: any;
 
   constructor(
     inject: Injector,
@@ -157,7 +154,7 @@ export class PurchaseinvoicesComponent
     }
   }
 
-  onClickMF(e, data) {
+  onClickMF(e: any, data: IPurchaseInvoice): void {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
@@ -170,6 +167,12 @@ export class PurchaseinvoicesComponent
         break;
       case 'SYS002':
         this.export(data);
+        break;
+      case MF.KiemTraTinhHopLe:
+        this.purchaseInvoiceService.validate(e, data);
+        break;
+      case MF.GhiSo:
+        this.purchaseInvoiceService.post(e, data);
         break;
     }
   }
