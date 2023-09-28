@@ -13,7 +13,7 @@
 <ng-template #tmpHeader>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
     <div class="d-flex flex-column h-310px">
-      <span class="pt-2 ms-4 fw-bold">Đã ghim</span>
+      <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
       <div class="d-flex flex-wrap h-auto pt-2 px-4">
         <ng-container *ngFor="let item of listBookMarks">
           <codx-card-img

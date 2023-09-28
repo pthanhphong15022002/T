@@ -139,10 +139,10 @@
               default="Tài khoản nợ"
             ></codx-label>
             <codx-input
-              #cbxCashAcctID
               field="cashAcctID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (render)="onAfterRendering($event, 'cashAcctID')"
             ></codx-input>
           </div>
           <div class="col-3 form-group">
@@ -152,10 +152,10 @@
               default="Tài khoản có"
             ></codx-label>
             <codx-input
-              #cbxOffsetAcctID
               field="offsetAcctID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (render)="onAfterRendering($event, 'offsetAcctID')"
             ></codx-input>
           </div>
           <div class="col-2 form-group">

@@ -114,6 +114,7 @@ export class PopupJobComponent implements OnInit {
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
+      this.stepsTasks.assignControl = this.stepsTasks?.createTask ? '0' : null;
     } else if (this.action == 'copy') {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
@@ -477,8 +478,12 @@ export class PopupJobComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
-    if (event?.field == 'createTask' && !event?.data) {
-      this.stepsTasks.assignControl = null;
+    if (event?.field == 'createTask') {
+      if(event?.data){
+        this.stepsTasks.assignControl = '0';
+      }else{
+        this.stepsTasks.assignControl = null;
+      }
     }
   }
 
