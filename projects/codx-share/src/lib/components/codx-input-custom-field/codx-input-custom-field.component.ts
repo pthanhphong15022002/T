@@ -217,14 +217,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.listContacts[idxDefault].isDefault = false;
               }
             } else {
-              this.listContacts.push(contact);
+              if (type == 'addAndSave') this.listContacts.push(contact);
             }
             this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
             this.valueChangeCustom.emit({
               e: JSON.stringify(this.listContacts),
               data: this.customField,
               result: contact,
-              type: 'addAndSave',
+              type: type,
             });
             this.codxShareSv.listContactBehavior.next(null);
           }

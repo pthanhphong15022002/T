@@ -2854,8 +2854,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region task
-  openPopupChooseTask() {
-    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580);
+  openPopupChooseTask(isShowGroup = true) {
+    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580,null,{isShowGroup});
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
         if (value?.event['value'] == 'G') {
@@ -3118,7 +3118,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openPopupChooseTask();
+        this.openPopupChooseTask(false);
         break;
       case 'DP12':
         this.viewTask(data, 'G');
