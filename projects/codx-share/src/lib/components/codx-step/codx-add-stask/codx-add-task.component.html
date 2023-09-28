@@ -157,7 +157,7 @@
           <div class="d-flex justify-content-between row">
             <div class="col-6 position-relative">
               <codx-input field="durationDay" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.durationDay"
-                (valueChange)="valueChangeText($event)" [disabled]="isStart" type="number" min="0">
+                (valueChange)="valueChangeText($event)" [disabled]="isStart ||stepsTasks?.isTaskDefault " type="number" min="0">
               </codx-input>
               <div class="position-absolute text-gray-400" style="top: 8px; right: 14px">
                 <codx-label name="titleDate" [formModel]="form?.formModel" default="Ngày">
@@ -167,7 +167,7 @@
 
             <div class="col-6 position-relative">
               <codx-input field="durationHour" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.durationHour"
-                (valueChange)="valueChangeText($event)" type="number" min="0" [disabled]="isStart">
+                (valueChange)="valueChangeText($event)" type="number" min="0" [disabled]="isStart || stepsTasks?.isTaskDefault">
               </codx-input>
               <div class="position-absolute text-gray-400" style="top: 8px; right: 14px">
                 <codx-label name="titleHour" [formModel]="form?.formModel" default="Giờ">

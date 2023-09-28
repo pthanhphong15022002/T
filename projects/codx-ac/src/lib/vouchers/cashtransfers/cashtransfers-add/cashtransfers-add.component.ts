@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { SwitchComponent } from '@syncfusion/ej2-angular-buttons';
 import {
   CRUDService,
+  CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   CodxService,
@@ -40,8 +41,6 @@ import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 export class CashtransferAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
-  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   @ViewChild('switchHasInvoice') switchHasInvoice: SwitchComponent;
   @ViewChild('diM1') diM1: CodxInputComponent;
   @ViewChild('diM2') diM2: CodxInputComponent;
@@ -71,7 +70,9 @@ export class CashtransferAddComponent extends UIComponent {
   ];
   journal: IJournal;
   hiddenFields: string[] = [];
+
   journalSubject = new BehaviorSubject<boolean>(false);
+  vatInvoiceSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
@@ -141,13 +142,13 @@ export class CashtransferAddComponent extends UIComponent {
               this.vatInvoice = this.fmVATInvoice.currentData = res[0];
               this.fgVatInvoice.patchValue(res[0]);
 
-              this.loadDims(this.journal, true);
+              this.vatInvoiceSubject.next(true);
             } else {
               this.invoiceService.addNew().subscribe((res) => {
                 this.vatInvoice = this.fmVATInvoice.currentData = res;
                 this.fgVatInvoice.patchValue(res);
 
-                this.loadDims(this.journal, false);
+                this.vatInvoiceSubject.next(true);
               });
             }
           });
@@ -156,7 +157,7 @@ export class CashtransferAddComponent extends UIComponent {
             this.vatInvoice = this.fmVATInvoice.currentData = res;
             this.fgVatInvoice.patchValue(res);
 
-            this.loadDims(this.journal, false);
+            this.vatInvoiceSubject.next(true);
           });
         }
       });
@@ -170,11 +171,7 @@ export class CashtransferAddComponent extends UIComponent {
   //#region Event
   onAfterFormInit(): void {
     this.journalSubject.subscribe((loaded) => {
-      if (!loaded) {
-        return;
-      }
-
-      if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+      if (loaded && this.journal.assignRule === Vll075.TuDongKhiLuu) {
         this.form.setRequire([
           {
             field: 'voucherNo',
@@ -182,27 +179,6 @@ export class CashtransferAddComponent extends UIComponent {
           },
         ]);
       }
-
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'drAcctControl',
-        'drAcctID',
-        'AccountID',
-        this.cbxCashAcctID,
-        this.form.formGroup,
-        'cashAcctID',
-        this.isEdit
-      );
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'crAcctControl',
-        'crAcctID',
-        'AccountID',
-        this.cbxOffsetAcctID,
-        this.form.formGroup,
-        'offsetAcctID',
-        this.isEdit
-      );
     });
 
     let predicates: string = '';
@@ -243,6 +219,95 @@ export class CashtransferAddComponent extends UIComponent {
           this.detectorRef.markForCheck();
         }
       });
+  }
+
+  onAfterRendering(cbx: CodxComboboxComponent, field: string): void {
+    if (field === 'cashAcctID') {
+      this.journalSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'drAcctControl',
+          'drAcctID',
+          'AccountID',
+          cbx,
+          this.form.formGroup,
+          'cashAcctID',
+          this.isEdit
+        );
+      });
+    } else if (field === 'offsetAcctID') {
+      this.journalSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'crAcctControl',
+          'crAcctID',
+          'AccountID',
+          cbx,
+          this.form.formGroup,
+          'offsetAcctID',
+          this.isEdit
+        );
+      });
+    } else if (field === 'diM1') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM1Control',
+          'diM1',
+          'DepartmentID',
+          cbx,
+          this.fgVatInvoice,
+          'diM1',
+          this.isEdit
+        );
+      });
+    } else if (field === 'diM2') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM2Control',
+          'diM2',
+          'CostCenterID',
+          cbx,
+          this.fgVatInvoice,
+          'diM2',
+          this.isEdit
+        );
+      });
+    } else if (field === 'diM3') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM3Control',
+          'diM3',
+          'CostItemID',
+          cbx,
+          this.fgVatInvoice,
+          'diM3',
+          this.isEdit
+        );
+      });
+    }
   }
 
   onInputChange(e): void {
@@ -331,11 +396,11 @@ export class CashtransferAddComponent extends UIComponent {
     }
   }
 
-  onClickClose() {
+  onCloseClick() {
     this.dialogRef.close();
   }
 
-  onClickDiscard() {
+  onDiscardClick() {
     this.masterService
       .delete(
         [this.cashTransfer],
@@ -362,7 +427,7 @@ export class CashtransferAddComponent extends UIComponent {
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
   }
 
-  onClickSave(closeAfterSave: boolean): void {
+  onSaveClick(closeAfterSave: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
 
@@ -449,7 +514,7 @@ export class CashtransferAddComponent extends UIComponent {
           this.fgVatInvoice.patchValue(res);
 
           setTimeout(() => {
-            this.loadDims(this.journal, false); // bùa
+            this.loadDims(); // bùa
           });
         });
       });
@@ -461,37 +526,45 @@ export class CashtransferAddComponent extends UIComponent {
     return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
   }
 
-  loadDims(journal: IJournal, isEdit: boolean) {
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM1Control',
-      'diM1',
-      'DepartmentID',
-      this.diM1,
-      this.fgVatInvoice,
-      'diM1',
-      isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM2Control',
-      'diM2',
-      'CostCenterID',
-      this.diM2,
-      this.fgVatInvoice,
-      'diM2',
-      isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM3Control',
-      'diM3',
-      'CostItemID',
-      this.diM3,
-      this.fgVatInvoice,
-      'diM3',
-      isEdit
-    );
+  loadDims(): void {
+    if (!this.hiddenFields.includes('DIM1')) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM1Control',
+        'diM1',
+        'DepartmentID',
+        this.diM1.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM1',
+        this.isEdit
+      );
+    }
+    
+    if (!this.hiddenFields.includes("DIM2")) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM2Control',
+        'diM2',
+        'CostCenterID',
+        this.diM2.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM2',
+        this.isEdit
+      );
+    }
+    
+    if (!this.hiddenFields.includes("DIM3")) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM3Control',
+        'diM3',
+        'CostItemID',
+        this.diM3.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM3',
+        this.isEdit
+      );
+    }
   }
 
   generateMemo(): string {

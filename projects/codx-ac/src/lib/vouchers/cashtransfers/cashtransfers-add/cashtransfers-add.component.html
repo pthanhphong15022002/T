@@ -1,12 +1,12 @@
 <codx-form
   #form
+  ngClass="ac-dialog"
   [body]="body"
   [footer]="footer"
   [formModel]="dialogRef.formModel"
   [dialog]="dialogRef"
   [customToolbar]="customToolbar"
   [data]="cashTransfer"
-  ngClass="ac-dialog"
   (onAfterInit)="onAfterFormInit()"
   (afterValidate)="onAfterValidation()"
 >
@@ -25,8 +25,8 @@
                 class="fw-bold"
                 style="font-size: 14px !important"
                 fiedName="lblGeneralInfoTab"
-                [formModel]="form.formModel"
                 default="Thông tin chung"
+                [formModel]="form.formModel"
               ></codx-label>
             </div>
           </ng-template>
@@ -47,8 +47,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="cashBookID"
-              [formModel]="form.formModel"
               default="Chuyển từ"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="cashBookID"
@@ -60,8 +60,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="cashBookName1"
-              [formModel]="form.formModel"
               default="Đối tượng chuyển"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               type="text"
@@ -74,8 +74,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="reasonID"
-              [formModel]="form.formModel"
               default="Lý do"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="reasonID"
@@ -90,8 +90,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="cashBookID2"
-              [formModel]="form.formModel"
               default="Chuyển đến"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="cashBookID2"
@@ -103,8 +103,8 @@
           <div class="col-8 form-group">
             <codx-label
               fiedName="cashBookName2"
-              [formModel]="form.formModel"
               default="Đối tượng nhận"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               type="text"
@@ -120,8 +120,8 @@
           <div class="col-12 form-group">
             <codx-label
               fiedName="memo"
-              [formModel]="form.formModel"
               default="Diễn giải"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="memo"
@@ -135,34 +135,34 @@
           <div class="col-3 form-group">
             <codx-label
               fiedName="cashAcctID"
-              [formModel]="form.formModel"
               default="Tài khoản nợ"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              #cbxCashAcctID
               field="cashAcctID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (render)="onAfterRendering($event, 'cashAcctID')"
             ></codx-input>
           </div>
           <div class="col-3 form-group">
             <codx-label
               fiedName="offsetAcctID"
-              [formModel]="form.formModel"
               default="Tài khoản có"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
-              #cbxOffsetAcctID
               field="offsetAcctID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (render)="onAfterRendering($event, 'offsetAcctID')"
             ></codx-input>
           </div>
           <div class="col-2 form-group">
             <codx-label
               fiedName="exchangeAmt"
-              [formModel]="form.formModel"
               default="Số tiền"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="exchangeAmt"
@@ -174,8 +174,8 @@
           <div class="col-2 form-group">
             <codx-label
               fiedName="fees"
-              [formModel]="form.formModel"
               default="Tiền phí"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="fees"
@@ -186,8 +186,8 @@
           <div class="col-2 form-group">
             <codx-label
               fiedName="feeControl"
-              [formModel]="form.formModel"
               default="Phí trong"
+              [formModel]="form.formModel"
             ></codx-label>
             <div>
               <codx-input
@@ -208,8 +208,8 @@
           <div class="col-6 form-group">
             <codx-label
               fiedName="currencyID"
-              [formModel]="form.formModel"
               default="Tiền tệ"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="currencyID"
@@ -222,8 +222,8 @@
           <div class="col-6 form-group">
             <codx-label
               fiedName="exchangeRate"
-              [formModel]="form.formModel"
               default="Tỷ giá"
+              [formModel]="form.formModel"
             ></codx-label>
             <codx-input
               field="exchangeRate"
@@ -239,8 +239,8 @@
         <div class="form-group">
           <codx-label
             fiedName="voucherDate"
-            [formModel]="form.formModel"
             default="Ngày chứng từ"
+            [formModel]="form.formModel"
           ></codx-label>
           <codx-input
             field="voucherDate"
@@ -251,8 +251,8 @@
         <div class="form-group">
           <codx-label
             fiedName="voucherNo"
-            [formModel]="form.formModel"
             default="Số chứng từ"
+            [formModel]="form.formModel"
           ></codx-label>
           <codx-input
             field="voucherNo"
@@ -281,12 +281,15 @@
     <codx-label
       class="fw-bold fs-6"
       fiedName="hasInvoice"
-      [formModel]="form.formModel"
       default="Cập nhật hóa đơn"
+      [formModel]="form.formModel"
     ></codx-label>
   </div>
 
-  <div class="border mt-2 bg-gray-100 rounded-2 py-4 px-6" *ngIf="(fgVatInvoice?.controls | keyvalue)?.length">
+  <div
+    class="border mt-2 bg-gray-100 rounded-2 py-4 px-6"
+    *ngIf="(fgVatInvoice?.controls | keyvalue)?.length"
+  >
     <div class="row">
       <div class="col-4 row pe-9">
         <div class="col-12 form-group">
@@ -366,8 +369,8 @@
         <div class="col-12 form-group">
           <codx-label
             fiedName="goods"
-            [formModel]="fmVATInvoice"
             default="Hàng hóa dịch vụ"
+            [formModel]="fmVATInvoice"
           ></codx-label>
           <codx-input
             field="goods"
@@ -382,8 +385,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="vatBase"
-              [formModel]="fmVATInvoice"
               default="Số tiền"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               field="vatBase"
@@ -395,8 +398,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="vatid"
-              [formModel]="fmVATInvoice"
               default="Thuế GTGT"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               field="vatid"
@@ -408,8 +411,8 @@
           <div class="col-4 form-group">
             <codx-label
               fiedName="vatAmt"
-              [formModel]="fmVATInvoice"
               default="Tiền thuế"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               field="vatAmt"
@@ -428,8 +431,8 @@
           <codx-label
             class="fw-bold"
             fiedName="note"
-            [formModel]="fmVATInvoice"
             default="Ghi chú"
+            [formModel]="fmVATInvoice"
           ></codx-label>
           <codx-input
             field="note"
@@ -444,8 +447,8 @@
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM3')">
             <codx-label
               fiedName="diM3"
-              [formModel]="fmVATInvoice"
               default="Mục phí"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               #diM3
@@ -458,8 +461,8 @@
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM1')">
             <codx-label
               fiedName="diM1"
-              [formModel]="fmVATInvoice"
               default="Phòng ban"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               #diM1
@@ -472,8 +475,8 @@
           <div class="col-4 form-group" *ngIf="!hiddenFields.includes('DIM2')">
             <codx-label
               fiedName="diM2"
-              [formModel]="fmVATInvoice"
               default="Trung tâm chi phí"
+              [formModel]="fmVATInvoice"
             ></codx-label>
             <codx-input
               #diM2
@@ -492,10 +495,10 @@
   <div class="d-flex justify-content-end me-12 mt-4 mb-5">
     <div class="d-flex align-items-center">
       <codx-label
-        default="Tổng cộng:"
-        fiedName="lblTotalAmount"
-        [formModel]="form.formModel"
         class="fw-bold fs-3 me-2 text-dark"
+        fiedName="lblTotalAmount"
+        default="Tổng cộng:"
+        [formModel]="form.formModel"
       ></codx-label>
       <span class="fw-bold fs-3 text-primary">
         {{
@@ -529,7 +532,7 @@
       <button
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
-        (click)="onClickDiscard()"
+        (click)="onDiscardClick()"
         *ngIf="form.data._isEdit && cashTransfer.status == '7'"
       >
         <i class="icon-cancel icon-16"></i>
@@ -546,14 +549,14 @@
         type="button"
         style="border: 1px solid var(--primary-dark) !important"
         class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
-        (click)="onClickSave(false)"
+        (click)="onSaveClick(false)"
       >
         <i class="icon-add_to_photos icon-16"></i>
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblSaveAndClear"
-          [formModel]="form.formModel"
           default="Lưu & thêm"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
 
@@ -564,14 +567,14 @@
           border: 1px solid var(--primary-dark) !important;
         "
         class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
-        (click)="onClickSave(true)"
+        (click)="onSaveClick(true)"
       >
         <i class="icon-save_alt icon-16"></i>
         <codx-label
           class="fs-6 fw-normal"
           fiedName="lblSave"
-          [formModel]="form.formModel"
           default="Lưu"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
@@ -594,12 +597,12 @@
       </div>
       <div class="ms-3 input-circle input-sm">
         <codx-vll
-          [formModel]="form.formModel"
+          class="badge badge-light badge-md"
           field="Status"
+          [formModel]="form.formModel"
           [value]="cashTransfer.status"
           [showText]="true"
           [showBgColor]="true"
-          class="badge badge-light badge-md"
         >
         </codx-vll>
       </div>
@@ -607,7 +610,7 @@
 
     <button
       class="btn btn-icon btn-light-danger btn-circle"
-      (click)="onClickClose()"
+      (click)="onCloseClick()"
     >
       <i class="icon-close icon-18"></i>
     </button>

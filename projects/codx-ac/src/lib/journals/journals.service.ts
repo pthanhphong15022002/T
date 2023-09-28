@@ -6,11 +6,10 @@ import {
   CacheService,
   CodxComboboxComponent,
   CodxFormComponent,
-  CodxInputComponent,
   DataRequest,
   NotificationsService,
   PageLink,
-  PageTitleService,
+  PageTitleService
 } from 'codx-core';
 import { Observable, Subject, combineLatest, map, tap } from 'rxjs';
 import { CodxAcService } from '../codx-ac.service';
@@ -195,7 +194,7 @@ export class JournalService {
     vll067Prop: string,
     valueProp: string,
     filterKey: string,
-    cbx: CodxInputComponent,
+    cbx: CodxComboboxComponent,
     formGroup: FormGroup,
     patchKey: string,
     isEdit: boolean
@@ -203,7 +202,7 @@ export class JournalService {
     if (
       [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(journal[vll067Prop])
     ) {
-      (cbx.ComponentCurrent as CodxComboboxComponent).dataService.setPredicates(
+      cbx.dataService.setPredicates(
         [`@0.Contains(${filterKey})`],
         [`[${journal[valueProp]}]`]
       );

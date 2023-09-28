@@ -83,6 +83,9 @@ erm-quick-links-inner .dropdown-menu {
   height: 0.5rem !important;
 }
 
+.badge-dark.bg-badge-75{
+  background-color: rgb(0 0 0 / 65%);
+}
 
 .border-gray-200 {
   border-color: var(--gray-200) !important;
@@ -3268,7 +3271,7 @@ codx-toolbar-report{
 }
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-  color: var(--gray-700);
+  color: var(--gray-700)!important;
 }
 .text-primary-dark{
   color: var(--primary-dark);

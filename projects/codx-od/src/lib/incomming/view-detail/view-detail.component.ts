@@ -260,7 +260,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     if (isObservable(funcList)) {
       funcList.subscribe((fuc) => {
         this.funcList = fuc;
-        this.defaultValue = this.funcList?.defaultValue.split(";")[0];
+        this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
         this.formModels = {
           entityName: this.funcList?.entityName,
           formName: this.funcList?.formName,
@@ -285,7 +285,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       });
     } else {
       this.funcList = funcList;
-      this.defaultValue = this.funcList?.defaultValue.split(";")[0];
+      this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
       this.formModels = {
         entityName: this.funcList?.entityName,
         formName: this.funcList?.formName,
