@@ -12,25 +12,31 @@
 </ng-container>
 <ng-template #tmpHeader>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
-    <div class="d-flex flex-column h-310px">
-      <span class="pt-2 ms-4 fw-bold">Đã ghim</span>
+    <div class="d-flex flex-column h-310px position-relative">
+      <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
       <div class="d-flex flex-wrap h-auto pt-2 px-4">
-        <ng-container *ngFor="let item of listBookMarks">
-          <codx-card-img
-            imgCss="h-170px rounded "
-            cardCss="border rounded h-100"
-            [imageSrc]="item?.background || imgDefault"
-            [footer]="footer"
-            ngClass="h-100 mx-2 w-250px"
-            (click)="selectedChange(item)"
-          >
-          </codx-card-img>
+        <ng-container *ngFor="let item of listBookMarks ; let i = index">
+          <ng-container *ngIf="i < (countBookMarks - 1)">
+            <codx-card-img
+              imgCss="h-170px rounded "
+              cardCss="border rounded h-100"
+              [imageSrc]="item?.background || imgDefault"
+              [footer]="footer"
+              ngClass="h-100 mx-2 w-250px"
+              (click)="selectedChange(item)"
+            >
+            </codx-card-img>
+          </ng-container>
           <ng-template #footer>
             <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item , bookmark:false}"></ng-container>
           </ng-template>
         </ng-container>
       </div>
-   
+      <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
+        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer">
+          <i class="icon-more_horiz"></i>
+        </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-template>

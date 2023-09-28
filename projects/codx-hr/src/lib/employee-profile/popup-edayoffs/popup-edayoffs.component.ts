@@ -180,7 +180,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
             this.dayoffObj.employeeID = this.employId;
             this.dayoffObj.periodType = '1';
             this.dayoffObj.totalSubDays = 0;
-            console.log(this.dayoffObj);
             this.formModel.currentData = this.dayoffObj;
             this.formGroup.patchValue(this.dayoffObj);
             this.isAfterRender = true;

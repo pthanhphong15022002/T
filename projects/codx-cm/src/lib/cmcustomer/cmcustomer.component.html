@@ -20,6 +20,7 @@
   (viewChanged)="viewChanged($event)"
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
+  (onMoreMulti)="onMoreMulti($event)"
 ></codx-views>
 
 <!--grid view-->
@@ -304,4 +305,48 @@
     (addressNameCMEmit)="addressNameCMEmit($event)"
   >
   </codx-cmcustomer-detail>
+</ng-template>
+
+<!--status-->
+<ng-template #updateStatus>
+  <codx-form
+    [headerText]="titleAction"
+    [body]="bodyStatus"
+    [footer]="footerStatus"
+    [dialog]="dialogStatus"
+  >
+    <ng-template #bodyStatus>
+      <div class="mt-5">
+        <div class="form-group">
+          <codx-label
+            fiedName="Status"
+            [formModel]="view.formModel"
+          ></codx-label>
+          <codx-input
+            field="status"
+            [formModel]="view.formModel"
+            [crrValue]="status"
+            (valueChange)="changValueStatus($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #footerStatus>
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onSave()"
+        >
+          <codx-label
+            name="lblSuscess"
+            [formModel]="view.formModel"
+            default="Đồng ý"
+          ></codx-label>
+        </button>
+      </div>
+    </ng-template>
+  </codx-form>
 </ng-template>

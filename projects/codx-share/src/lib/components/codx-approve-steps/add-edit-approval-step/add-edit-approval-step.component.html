@@ -65,7 +65,7 @@
         <div class="w-100">
             
             <codx-temp-full cardCss="card-template mb-4 w-100"  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
-            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver) : (item?.roleType )" 
+            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)" 
             [subTitle]="item?.position" [imageObjType]="'AD_Users'"
             [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
             [dataItem]="item" typeMF="hover" 
