@@ -108,6 +108,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   plancehoderVll: any;
   mutiSelectVll = false;
   crrValueVll = ''; //value mutilSelect
+  columns = []; //array colum
+  arrDataValue = [];
 
   constructor(
     private cache: CacheService,
@@ -141,6 +143,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.customField.dataType) {
+      case 'TA':
+        this.getColumnTable(this.customField.dataFormat);
+        break;
       case 'D':
         if (this.customField.dataFormat == '3') this.formatDate = 'd';
         if (
@@ -636,4 +641,43 @@ export class CodxInputCustomFieldComponent implements OnInit {
       data: this.customField,
     });
   }
+
+  //--------------format table---------------//
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.columns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) this.columns = arr;
+    else this.columns = [];
+
+    if (data.dataValue) {
+      let arrDataValue = JSON.parse(data.dataValue);
+      if (Array.isArray(arrDataValue)) {
+        this.arrDataValue = arrDataValue;
+        return;
+      }
+    }
+    this.arrDataValue = [];
+  }
+
+  formatViewTable(value) {
+    let arrTable = [];
+    if (this.columns?.length > 0) {
+      this.columns.forEach((x) => {
+        let object = Object.assign(x, {
+          dataValue: value?.[x.fieldName],
+        });
+        arrTable.push(object);
+      });
+    }
+    return arrTable;
+  }
+
+  updateLine(value, index) {}
+  removeLine(value, index) {}
+
+  clickAddLine() {}
+  //--------------end------------//
 }
