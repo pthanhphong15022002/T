@@ -2864,8 +2864,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#endregion
   //#region task
-  openPopupChooseTask() {
-    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580);
+  openPopupChooseTask(isShowGroup = true) {
+    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580,null,{isShowGroup});
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
         if (value?.event['value'] == 'G') {
@@ -3128,7 +3128,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openPopupChooseTask();
+        this.openPopupChooseTask(false);
         break;
       case 'DP12':
         this.viewTask(data, 'G');
@@ -4246,14 +4246,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.stepSuccess.icon = this.iconReasonSuccess?.icon;
         this.stepFail.icon = this.iconReasonFail?.icon;
 
-        this.stepSuccess.backgroundColor = null;
-        this.stepFail.backgroundColor = null;
+        this.stepSuccess.backgroundColor = '#fff';
+        this.stepFail.backgroundColor = '#fff';
 
-        this.stepSuccess.textColor = null;
-        this.stepFail.textColor = null;
+        this.stepSuccess.textColor = '#808080';
+        this.stepFail.textColor = '#808080';
 
-        this.stepSuccess.iconColor = null;
-        this.stepFail.iconColor = null;
+        this.stepSuccess.iconColor = '#808080';
+        this.stepFail.iconColor = '#808080';
 
         this.stepSuccess.stepName = this.iconReasonSuccess?.text;
         this.stepFail.stepName = this.iconReasonFail?.text;
@@ -4418,8 +4418,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   setColorTestStep(step) {
     if (this.process?.stepsColorMode) {
-      if (step?.isFailStep || step?.isSuccessStep) {
-        return '#ffffff';
+      if (step?.isFailStep) {
+        return this.iconReasonFail?.textColor;
+      }else if(step?.isSuccessStep){
+        return this.iconReasonSuccess?.textColor
       } else {
         let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep / 2);

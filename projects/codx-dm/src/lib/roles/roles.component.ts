@@ -377,6 +377,7 @@ export class RolesComponent implements OnInit {
             }
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
+            this.dmSV.fileEditing.next( this.fileEditing);
             this.changeDetectorRef.detectChanges();
           }
         }
@@ -584,6 +585,7 @@ export class RolesComponent implements OnInit {
       this.fileEditing.permissions[this.currentPemission].startDate = this.startDate;
       this.fileEditing.permissions[this.currentPemission].endDate = this.endDate;
       this.fileEditing.permissions[this.currentPemission].assign = this.assign;
+      this.fileEditing.permissions[this.currentPemission].isActive = true;
     }
 
     this.dmSV.fileEditing.next(this.fileEditing);

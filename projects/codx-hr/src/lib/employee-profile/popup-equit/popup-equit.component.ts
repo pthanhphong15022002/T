@@ -66,7 +66,13 @@ export class PopupEquitComponent extends UIComponent {
 
   initFormAdd() {
     this.hrSevice
-      .getDataDefault(this.formModel.funcID, this.formModel.entityName, 'RecID')
+      .getDataDefault(
+        this.formModel.funcID.includes('WS')
+          ? 'HRTPro08'
+          : this.formModel.funcID,
+        this.formModel.entityName,
+        'RecID'
+      )
       .subscribe((res: any) => {
         if (res) {
           if (this.employeeObj) {

@@ -74,7 +74,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.lstCampainsHadAdd = res[0] ?? [];
-            this.countHadLeadCus = res[1];
+            // this.countHadLeadCus = res[1];
           }
         });
     }
@@ -93,9 +93,9 @@ export class PopupAddCampaignContactComponent implements OnInit {
           [lstSaves]
         )
         .subscribe((res) => {
-          if(res){
+          if (res) {
             this.dialog.close(res);
-            this.notiSv.notifyCode('Thêm thành công');
+            this.notiSv.notifyCode('SYS006');
           }
         });
     } else {
@@ -134,12 +134,16 @@ export class PopupAddCampaignContactComponent implements OnInit {
       tmp['called'] = 0;
       tmp['owner'] = item?.owner;
       tmp['industries'] = item?.industries;
+      tmp['provinceID'] = item?.provinceID;
+      tmp['districtID'] = item?.districtID;
       if (this.objectType == '3') {
+        tmp['leadStatus'] = item?.status;
         tmp['contactName'] = item?.contactName;
         tmp['jobTitle'] = item?.jobTitle;
         tmp['phone'] = item?.phone;
         tmp['email'] = item?.email;
       } else {
+        tmp['customerStatus'] = item?.status;
         if (lstContactsCus != null && lstContactsCus.length > 0) {
           var contactTmp = lstContactsCus.find(
             (x) => x.objectID == item?.recID
@@ -163,46 +167,48 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      this[e?.field] = e?.data;
-      switch (e?.field) {
-        case 'isProvince':
-          if (!this.isProvince) {
-            if (this.cbxProvince) {
-              this.cbxProvince.value = [];
-              this.cbxProvince.selectedItems = [];
-              this.cbxProvince.setValue([]);
+      if (this[e?.field] != e?.data) {
+        this[e?.field] = e?.data;
+        switch (e?.field) {
+          case 'isProvince':
+            if (!this.isProvince) {
+              if (this.cbxProvince) {
+                this.cbxProvince.value = [];
+                this.cbxProvince.selectedItems = [];
+                this.cbxProvince.setValue([]);
+              }
+              this.provinceIDs = [];
+              this.bindingCountCompaign();
             }
-            this.provinceIDs = [];
+            break;
+          case 'isDistrict':
+            if (!this.isDistrict) {
+              this.districtIDs = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isIndustries':
+            if (!this.isIndustries) {
+              this.industries = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          case 'isStatus':
+            if (!this.isStatus) {
+              this.status = [];
+              this.bindingCountCompaign();
+            }
+            break;
+          default:
             this.bindingCountCompaign();
-          }
-          break;
-        case 'isDistrict':
-          if (!this.isDistrict) {
-            this.districtIDs = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isIndustries':
-          if (!this.isIndustries) {
-            this.industries = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isStatus':
-          if (!this.isStatus) {
-            this.status = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        default:
-          this.bindingCountCompaign();
-          break;
-        // case 'districtIDs':
-        //   break;
-        // case 'industries':
-        //   break;
-        // case 'status':
-        //   break;
+            break;
+          // case 'districtIDs':
+          //   break;
+          // case 'industries':
+          //   break;
+          // case 'status':
+          //   break;
+        }
       }
     }
 
@@ -210,19 +216,63 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   bindingCountCompaign() {
-    // if(this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0){
-    //   let count = 0;
+    // if (this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0) {
     //   let lstHadSearchs = [];
-    //   if(this.provinceIDs != null && this.provinceIDs){
-    //     let lstPro = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //   let lever = 0;
+    //   if (this.provinceIDs != null && this.provinceIDs.length > 0) {
+    //     let lstPro = this.lstCampainsHadAdd.filter((x) =>
+    //       this.provinceIDs.includes(x.provinceID)
+    //     );
     //     lstHadSearchs = lstPro;
+    //     lever++;
     //   }
 
-    //   if(this.districtIDs != null && this.districtIDs.length > 0){
-    //     let lstDis = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
+    //   if (this.districtIDs != null && this.districtIDs.length > 0) {
+    //     let lstDis = this.lstCampainsHadAdd.filter((x) =>
+    //       this.districtIDs.includes(x.districtID)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstDis;
+    //     } else {
+    //       lstHadSearchs = lstDis.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
+    //   }
+    //   if (this.industries != null && this.industries.length > 0) {
+    //     let lstInd = this.lstCampainsHadAdd.filter((x) =>
+    //       this.industries.includes(x.industries)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstInd;
+    //     } else {
+    //       lstHadSearchs = lstInd.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
     //   }
 
-    // } //Có field sẽ làm đoạn này
+    //   if (this.status != null && this.status.length > 0) {
+    //     let lstStatus = this.lstCampainsHadAdd.filter(
+    //       (x) =>
+    //         this.status.includes(x.leadStatus) ||
+    //         this.status.includes(x.customerStatus)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstStatus;
+    //     } else {
+    //       lstHadSearchs = lstStatus.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
+    //   }
+    //   this.countHadLeadCus = lstHadSearchs.length;
+    // } else {
+    //   this.countHadLeadCus = 0;
+    // }
 
     this.api
       .execSv<any>(
@@ -251,6 +301,10 @@ export class PopupAddCampaignContactComponent implements OnInit {
           lstAllSearchs,
           this.lstCampainsHadAdd
         );
+        this.countHadLeadCus = this.countHadLists(
+          lstAllSearchs,
+          this.lstCampainsHadAdd
+        );
         this.countAdd =
           this.lstCampainsAdd != null ? this.lstCampainsAdd.length : 0;
       });
@@ -270,6 +324,22 @@ export class PopupAddCampaignContactComponent implements OnInit {
     }
 
     return mergedList;
+  }
+
+  countHadLists(list1 = [], list2 = []) {
+    const mergedList = [];
+    let count = 0;
+    for (const item of list1) {
+      const isDuplicate = list2.some(
+        (mergedItem) => mergedItem.objectID === item.recID
+      );
+
+      if (isDuplicate) {
+        mergedList.push(item);
+      }
+    }
+    count = mergedList.length;
+    return count;
   }
   //#endregion
 }

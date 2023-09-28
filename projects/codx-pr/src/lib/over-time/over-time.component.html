@@ -1,0 +1,82 @@
+<codx-views
+  #view
+  service="PR"
+  assemblyName="ERM.Business.PR"
+  entityName="PR_TimeKeepingRequest"
+  className="TimeKeepingRequest"
+  method="GetListAsync"
+  [views]="views"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttons"
+  [funcID]="funcID"
+>
+</codx-views>
+
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3 when-hover-box"
+    [moreFuncCss]="'me-5'"
+    [imageId]=""
+    [imageObjType]="'HR_Employees'"
+    [imageObjName]=""
+    [imageWidth]="35"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]=""
+    [typeMF]="'view'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
+    [subTitle]=""
+    [subTitleCss]="'fs-7 text-gray-500'"
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+  >
+  </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span>aaaa</span>
+  </ng-template>
+
+  <ng-template #descTmp>
+    <span>bbbb</span>
+  </ng-template>
+
+  <ng-template #desc2Tmp> ccc </ng-template>
+</ng-template>
+
+<ng-template #resourceHeader let-data>
+  <div class="container">aaaaaaaaa</div>
+</ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #cellTemplate let-data>
+  <div [innerHtml]="getCellContent(data.date)"></div>
+</ng-template>
+
+<ng-template #contentTmp let-data> </ng-template>
+
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate fw-bold">aaaa</span>
+      <span class="w-100 text-truncate fw-bold">{{ data?.title }}</span>
+    </div>
+  </div>
+</ng-template>

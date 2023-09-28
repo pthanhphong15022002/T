@@ -18,6 +18,15 @@ export class CodxWsService {
     private api: ApiHttpService,
   ) {}
 
+  updateCache(keyRoot:any , key:any , data:any)
+  {
+    if (this.caches.has(keyRoot))
+    {
+      let c = this.caches.get(keyRoot);
+      c?.set(key, data);
+    }
+  }
+
   loadData(
     paras:any,
     keyRoot:any,
@@ -134,4 +143,6 @@ export class CodxWsService {
     let keyRoot = "WSFCs" + moduleIDs;
     return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetListFunctionListByModuleIDAsync")
   }
+
+ 
 }

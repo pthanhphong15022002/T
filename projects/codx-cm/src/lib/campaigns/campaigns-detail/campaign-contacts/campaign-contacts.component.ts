@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
@@ -15,6 +16,7 @@ import {
   DataRequest,
   DialogModel,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
@@ -70,6 +72,7 @@ export class CampaignContactsComponent implements OnInit {
     private callFc: CallFuncService,
     private codxService: CodxService,
     private cmSv: CodxCmService,
+    private notiSv: NotificationsService
   ) {}
   async ngOnInit() {
     this.gridViewSetup = await firstValueFrom(
@@ -98,12 +101,12 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerIndustries,
         template: this.tempIndustries,
-        width: 250,
+        width: 200,
       },
       {
         headerTemplate: this.headerContact,
         template: this.tempContact,
-        width: 250,
+        width: 150,
       },
       {
         headerTemplate: this.headerOwner,
@@ -113,12 +116,12 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerStatus,
         template: this.tempStatus,
-        width: 150,
+        width: 100,
       },
       {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
-        width: 80,
+        width: 150,
       },
     ];
     this.detector.detectChanges();
@@ -177,22 +180,39 @@ export class CampaignContactsComponent implements OnInit {
       );
   }
 
-  getFunctionList(funcID){
+  getFunctionList(funcID) {
     this.cache.functionList(funcID).subscribe((res) => {
-      if(res){
+      if (res) {
         this.url = res?.url;
       }
     });
   }
 
   //#region  more
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
 
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
   //#endregion
 
   //#region navigate
-  clickNavigate(data){
+  clickNavigate(data) {
     // this.cmSv.navigateCampaign.next({recID: data.recID});
     this.codxService.navigate('', this.url, {
       recID: data?.rowData?.objectID,
@@ -237,6 +257,38 @@ export class CampaignContactsComponent implements OnInit {
             });
         }
       });
+  }
+
+  delete(data) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiSv.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api
+          .execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CampaignsBusiness',
+            'DeleteCampaignContactsAsync',
+            [data?.recID]
+          )
+          .subscribe((res) => {
+            if (res) {
+              let idx = this.lstCampContacts.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idx != -1) {
+                this.lstCampContacts.splice(idx, 1);
+                this.lstCampContacts = JSON.parse(
+                  JSON.stringify(this.lstCampContacts)
+                );
+              }
+              this.notiSv.notifyCode('SYS008');
+            }
+            this.detector.detectChanges();
+          });
+      }
+    });
   }
   //#endregion
 }

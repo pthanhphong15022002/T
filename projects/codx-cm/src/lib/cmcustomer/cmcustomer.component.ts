@@ -13,6 +13,7 @@ import {
   AlertConfirmInputConfig,
   ButtonModel,
   CacheService,
+  DialogRef,
   FormModel,
   NotificationsService,
   RequestOption,
@@ -59,7 +60,10 @@ export class CmCustomerComponent
   itemContactName: TemplateRef<any>;
   @ViewChild('itemMoreFunc', { static: true })
   itemMoreFunc: TemplateRef<any>;
+  @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
   @ViewChild('itemFields', { static: true })
+  dialogStatus: DialogRef;
+
   itemFields: TemplateRef<any>;
   dataObj?: any;
   columnGrids = [];
@@ -87,6 +91,7 @@ export class CmCustomerComponent
   lstCustGroups = [];
   loaded: boolean;
   queryParams: any;
+  status = '';
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -270,15 +275,15 @@ export class CmCustomerComponent
       case 'CM0102_2':
         this.deleteContactToCM(data);
         break;
-      //tạm ngưng
-      case 'CM0105_4':
-      case 'CM0101_4':
-        this.updateStatusCustomer('99', data);
+      //Cập nhật status
+      case 'CM0105_6':
+      case 'CM0101_6':
+        this.updateStatusCustomer(data.status);
         break;
-      //mở lại
+      //update address
       case 'CM0105_5':
       case 'CM0101_5':
-        this.updateStatusCustomer('2', data);
+        this.updateAutoAddress(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -292,6 +297,17 @@ export class CmCustomerComponent
         // this.df.detectChanges();
         break;
       }
+    }
+  }
+
+  onMoreMulti(e) {
+    let event = e?.event;
+    this.titleAction = event?.text;
+    switch (event?.functionID) {
+      case 'CM0105_5':
+      case 'CM0101_5':
+        this.updateAutoAddress(e?.dataSelected);
+        break;
     }
   }
 
@@ -336,21 +352,14 @@ export class CmCustomerComponent
               )
                 res.disabled = true;
               break;
-            case 'CM0105_4':
-            case 'CM0101_4':
-              if (!data.write || data.status === '99') res.disabled = true;
-              break;
-            case 'CM0105_5':
-            case 'CM0101_5':
-              if (!data.write || data.status !== '99') res.disabled = true;
-              break;
             default:
               break;
           }
         } else {
           switch (res.functionID) {
-            case 'CM0105_5':
-            case 'CM0101_5':
+            case 'CM0105_6':
+            case 'CM0101_6':
+              res.disabled = false;
               break;
             default:
               res.disabled = true;
@@ -623,50 +632,44 @@ export class CmCustomerComponent
       });
   }
 
-  async updateStatusCustomer(status, data) {
+  //Status
+  async updateStatusCustomer(status) {
     var check = false;
-    check = await firstValueFrom(
-      this.api.execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'DealsBusiness',
-        'IsExitDealStatusByCustomerIDAsync',
-        data?.recID
-      )
-    );
-    if (check) {
-      this.notiService.notifyCode('CM020');
-      return;
-    }
-    var config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
-    this.notiService
-      .alertCode(
-        'CM007',
-        null,
-        this.titleAction?.toLocaleLowerCase(),
-        "'" + data?.customerName + "'"
-      )
-      .subscribe((x) => {
-        if (x?.event?.status == 'Y') {
-          this.cmSv
-            .updateStatusCustoemr(data.recID, status)
-            .subscribe((res) => {
-              if (res) {
-                this.dataSelected.status = status;
-                this.customerDetail.dataSelected = JSON.parse(
-                  JSON.stringify(this.dataSelected)
-                );
-                // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-                this.view.dataService.update(this.dataSelected).subscribe();
-                this.notiService.notifyCode('SYS007');
-                this.detectorRef.detectChanges();
-              }
-            });
+
+    this.status = status;
+    this.dialogStatus = this.callfc.openForm(this.updateStatus, '', 500, 350);
+    this.dialogStatus.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.status = this.status;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notiService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  onSave() {
+    this.cmSv
+      .updateStatusCustoemr(this.dataSelected.recID, this.status)
+      .subscribe((res) => {
+        if (res) {
+          this.dialogStatus.close(res);
         }
       });
   }
 
+  changValueStatus(e) {
+    this[e.field] = e?.data;
+    this.detectorRef.detectChanges();
+  }
+
+  //auto update address
+  updateAutoAddress(datas = []){
+    let lstObjIds = [];
+  }
+
+  //contact
   async deleteContactToCM(data) {
     var check = await firstValueFrom(
       this.api.execSv<any>(
@@ -736,7 +739,7 @@ export class CmCustomerComponent
     this.dataSelected.address = e ? e?.adressName : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
-    this.dataSelected.wardID = e ? e?.wrovinceID : null;
+    this.dataSelected.wardID = e ? e?.wardID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
   }
