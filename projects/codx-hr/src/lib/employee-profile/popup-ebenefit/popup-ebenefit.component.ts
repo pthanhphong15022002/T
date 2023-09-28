@@ -239,7 +239,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
-        if (p[0] != null) {
+        if (p != null) {
           this.notify.notifyCode('SYS007');
           if (this.useForQTNS) {
             p.emp = this.employeeObj.emp ?? this.employeeObj;
