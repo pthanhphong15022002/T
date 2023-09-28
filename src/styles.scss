@@ -74,7 +74,9 @@ erm-quick-links-inner .dropdown-menu {
 .table.table-bordered tbody tr:last-child td {
   border: 1px var(--gray-150) solid !important;
 }
-
+.text-underline{
+  text-decoration: underline;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
