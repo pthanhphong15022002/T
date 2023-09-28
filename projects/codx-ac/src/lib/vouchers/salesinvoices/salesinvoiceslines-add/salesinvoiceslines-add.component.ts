@@ -93,8 +93,8 @@ export class SalesinvoiceslinesAddComponent
       this.journal,
       'diM1Control',
       'diM1',
-      this.diM1,
       'DepartmentID',
+      this.diM1,
       this.form.formGroup,
       'diM1',
       this.isEdit
@@ -103,8 +103,8 @@ export class SalesinvoiceslinesAddComponent
       this.journal,
       'diM2Control',
       'diM2',
-      this.diM2,
       'CostCenterID',
+      this.diM2,
       this.form.formGroup,
       'diM2',
       this.isEdit
@@ -113,8 +113,8 @@ export class SalesinvoiceslinesAddComponent
       this.journal,
       'diM3Control',
       'diM3',
-      this.diM3,
       'CostItemID',
+      this.diM3,
       this.form.formGroup,
       'diM3',
       this.isEdit
