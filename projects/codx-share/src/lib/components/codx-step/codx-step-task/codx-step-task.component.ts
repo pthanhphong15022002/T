@@ -253,10 +253,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         group['isChangeAuto'] = true;
       });
     }
-    if (changes?.isChangeOwner) {
-      if(changes?.isChangeOwner?.currentValue){
-        this.setOwnerByChangeOwnerInstance(this.currentStep?.instancesID,this.currentStep?.recID);
-      }
+    if (changes?.isChangeOwner && changes?.isChangeOwner?.currentValue) {
+      this.setOwnerByChangeOwnerInstance(this.currentStep?.instanceID,this.currentStep?.recID);
     }
     this.changeDetectorRef.markForCheck();
   }
@@ -279,14 +277,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
-  async getStepById() {
-    if (this.stepId) {
+  async getStepById(isLoad = false, recIDStep = '') {
+    if (this.stepId || isLoad) {
+      let stepID = this.stepId || recIDStep
       this.currentStep = await firstValueFrom(
         this.api.exec<any>(
           'DP',
           'InstanceStepsBusiness',
           'GetStepByIdAsync',
-          this.stepId
+          stepID
         )
       );
     } else {
@@ -314,15 +313,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       };
     });
     // this.currentStep['taskGroups'] = taskGroupConvert;
-    this.listGroupTask = taskGroupConvert;
+    let listGroupTask = taskGroupConvert;
     if (taskGroupList['null']) {
       let taskGroup = {};
       taskGroup['task'] =
         taskGroupList['null']?.sort((a, b) => a['indexNo'] - b['indexNo']) ||
         [];
       taskGroup['recID'] = null; // group task rỗng để kéo ra ngoài
-      this.listGroupTask.push(taskGroup);
+      taskGroup['refID'] = '';
+      listGroupTask.push(taskGroup);
     }
+    this.listGroupTask = listGroupTask;
     this.listTask = this.currentStep['tasks'];
   }
 
@@ -2427,13 +2428,34 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region set owner
   setOwnerByChangeOwnerInstance(instanceID, insStepID){
-    this.api
-    .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
-    .subscribe(res => {
-      if(res){
-        console.log(res);
-      }
-    })
+    // this.getStepById(true, this.currentStep?.recID);
+    // this.api
+    // .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
+    // .subscribe(res => {
+    //   if(res){
+    //     res?.forEach(element => {
+    //       if(!element?.taskGroupID && !element.taskID && element.stepID == this.currentStep?.recID){
+    //         this.currentStep.owner = element?.objectID;
+    //       }else if(element.taskGroupID && !element.taskID){
+    //         let group = this.listGroupTask?.find(g => g.recID == element.taskGroupID);
+    //         if(group){
+    //           group.owner = element?.objectID;
+    //         }
+    //       }else if(element.taskID){
+    //         let group = this.listGroupTask?.find(g => g.refID == element.taskGroupID);
+    //         if(group?.task?.length > 0){
+    //           let task = group?.task?.find(t => t.recID == element.taskID);
+    //           if(task){
+    //             task.owner = element?.objectID;
+    //           }
+    //         }
+    //       }
+    //     });
+    //     console.log(res);
+    //     console.log(this.listGroupTask);
+    //     console.log(this.currentStep);
+    //   }
+    // })
   }
   //#endregion
 }
