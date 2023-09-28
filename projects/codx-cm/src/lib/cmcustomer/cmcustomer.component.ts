@@ -92,6 +92,7 @@ export class CmCustomerComponent
   loaded: boolean;
   queryParams: any;
   status = '';
+  leverSetting = 0;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -160,11 +161,21 @@ export class CmCustomerComponent
     }
   }
 
-  onInit(): void {
+  async onInit() {
     this.button = {
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -283,7 +294,9 @@ export class CmCustomerComponent
       //update address
       case 'CM0105_5':
       case 'CM0101_5':
-        this.updateAutoAddress(data);
+        let lst = [];
+        lst.push(Object.assign({}, data));
+        this.updateAutoAddress(lst);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -665,8 +678,51 @@ export class CmCustomerComponent
   }
 
   //auto update address
-  updateAutoAddress(datas = []){
-    let lstObjIds = [];
+  async updateAutoAddress(datas = []) {
+    let lsts = datas.filter(
+      (x) => x.address != null && x.address?.trim() != ''
+    );
+    for (var item of lsts) {
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [item?.address, this.leverSetting]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        if (item.provinceID != lstDis?.ProvinceID)
+          item.provinceID = lstDis?.ProvinceID;
+        if (item.districtID != lstDis?.DistrictID)
+          item.districtID = lstDis?.DistrictID;
+        if (item.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+      } else {
+        item.provinceID = null;
+        item.districtID = null;
+        item.wardID = null;
+      }
+    }
+
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CustomersBusiness',
+        'UpdateAutoAddressAsync',
+        [lsts, null]
+      )
+      .subscribe((res) => {
+        if (res) {
+          lsts.forEach((ele) => {
+            this.view.dataService.update(ele).subscribe();
+          });
+          this.notiService.notifyCode('Cập nhật tự động thành công');
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   //contact

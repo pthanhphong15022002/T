@@ -55,6 +55,8 @@
       </ng-container>
       <ng-container *ngSwitchCase="'3'" [ngTemplateOutlet]="tmpOTP">
       </ng-container>
+      <ng-container *ngSwitchCase="'4'" [ngTemplateOutlet]="tmpOTP">
+      </ng-container>
       <ng-container *ngIf="clickQueue[clickQueue.length - 1] != '1'">
         <div class="d-flex align-items-center my-2">
           <div class="d-flex justify-content-start me-2">
@@ -220,7 +222,7 @@
           </div>
         </div>
       </div>
-      <div class="otp-btn w-100">
+      <div *ngIf="curLgType == 'otp'" class="otp-btn w-100">
         <button
           [disabled]="otpTimeout > 0 || email == '' || email == null"
           type="button"
@@ -251,3 +253,88 @@
     </form>
   </div>
 </ng-template>
+<!-- <ng-template #tmpTOTP>
+  <div class="text-start mt-3 mb-3">
+    <form [formGroup]="loginFG" method="post" (ngSubmit)="login2FAOTP('totp')">
+      <div class="form-group mb-5 fv-plugins-icon-container">
+        <label class="fw-bold">
+          <codx-label fiedName="totp" formModel="" default="TOTP"></codx-label
+        ></label>
+        <div
+          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+        >
+          <div class="row inputs" id="inputs">
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-0"
+              (change)="changeTOTP($event, 0)"
+            />
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-1"
+              (change)="changeTOTP($event, 1)"
+            />
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-2"
+              (change)="changeTOTP($event, 2)"
+            />
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-3"
+              (change)="changeTOTP($event, 3)"
+            />
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-4"
+              (change)="changeTOTP($event, 4)"
+            />
+            <input
+              class="col-2"
+              inputmode="numeric"
+              type="text"
+              maxlength="1"
+              id="otp-5"
+              (change)="changeTOTP($event, 5)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="otp-btn w-100">
+        <button
+          type="button"
+          (click)="testTOTP()"
+          tabindex="-1"
+          class="btn btn-full btn-outline-primary"
+        >
+          <codx-label
+            formModel=""
+            class="text-primary"
+            default="Test TOTP"
+          ></codx-label>
+        </button>
+      </div>
+
+      <div class="form-group d-grid gap-2 mb-5 mt-5">
+        <button type="submit" class="btn btn-primary fw-bold px-6 py-3">
+          {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template> -->
