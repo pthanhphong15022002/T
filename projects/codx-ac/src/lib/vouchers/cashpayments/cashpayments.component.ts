@@ -137,14 +137,6 @@ export class CashPaymentsComponent extends UIComponent {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
-        subModel: {
-          gridviewName: 'grvCashPaymentsLines',
-          formName: 'CashPaymentsLines',
-          entityName: 'AC_CashPaymentsLines',
-          service: 'AC',
-          predicates: 'TransID=@0',
-          rowNoField: 'rowNo',
-        },
         model: {
           template2: this.templateGrid,
         },
@@ -156,11 +148,18 @@ export class CashPaymentsComponent extends UIComponent {
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
     this.optionSidebar.isFull = true;
-    console.log(this.view);
   }
 
   ngOnDestroy() {
     this.onDestroy();
+  }
+
+  /**
+   * *Hàm hủy các obsevable subcrible
+   */
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   //#endregion
@@ -727,13 +726,6 @@ export class CashPaymentsComponent extends UIComponent {
     );
   }
 
-  /**
-   * *Hàm hủy các obsevable subcrible
-   */
-  onDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
   //#endregion
 
   //#region Bankhub

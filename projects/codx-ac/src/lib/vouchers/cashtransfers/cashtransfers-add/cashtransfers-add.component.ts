@@ -12,6 +12,7 @@ import {
   CRUDService,
   CodxFormComponent,
   CodxInputComponent,
+  CodxService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -19,13 +20,14 @@ import {
   UIComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { BehaviorSubject } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import {
   IJournal,
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { CashtransfersService } from '../cashtransfers.service';
+import { fmVATInvoice } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 
@@ -69,12 +71,13 @@ export class CashtransferAddComponent extends UIComponent {
   ];
   journal: IJournal;
   hiddenFields: string[] = [];
+  journalSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
     private acService: CodxAcService,
     private journalService: JournalService,
-    cashTransferService: CashtransfersService,
+    codxService: CodxService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {
@@ -87,8 +90,12 @@ export class CashtransferAddComponent extends UIComponent {
       Number(this.cashTransfer.feeControl)
     );
 
-    this.fmVATInvoice = cashTransferService.fmVATInvoice;
-    this.fgVatInvoice = cashTransferService.fgVatInvoice;
+    this.fmVATInvoice = fmVATInvoice;
+    this.fgVatInvoice = codxService.buildFormGroup(
+      fmVATInvoice.formName,
+      fmVATInvoice.gridViewName,
+      fmVATInvoice.entityName
+    );
     this.invoiceService = acService.createCRUDService(
       injector,
       this.fmVATInvoice,
@@ -113,27 +120,7 @@ export class CashtransferAddComponent extends UIComponent {
       .getJournal$(this.cashTransfer.journalNo)
       .subscribe((res) => {
         this.journal = res;
-
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'drAcctControl',
-          'drAcctID',
-          this.cbxCashAcctID,
-          'AccountID',
-          this.form.formGroup,
-          'cashAcctID',
-          this.isEdit
-        );
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'crAcctControl',
-          'crAcctID',
-          this.cbxOffsetAcctID,
-          'AccountID',
-          this.form.formGroup,
-          'offsetAcctID',
-          this.isEdit
-        );
+        this.journalSubject.next(true);
 
         this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
@@ -182,14 +169,41 @@ export class CashtransferAddComponent extends UIComponent {
 
   //#region Event
   onAfterFormInit(): void {
-    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
-      this.form.setRequire([
-        {
-          field: 'voucherNo',
-          require: false,
-        },
-      ]);
-    }
+    this.journalSubject.subscribe((loaded) => {
+      if (!loaded) {
+        return;
+      }
+
+      if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+        this.form.setRequire([
+          {
+            field: 'voucherNo',
+            require: false,
+          },
+        ]);
+      }
+
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'drAcctControl',
+        'drAcctID',
+        'AccountID',
+        this.cbxCashAcctID,
+        this.form.formGroup,
+        'cashAcctID',
+        this.isEdit
+      );
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'crAcctControl',
+        'crAcctID',
+        'AccountID',
+        this.cbxOffsetAcctID,
+        this.form.formGroup,
+        'offsetAcctID',
+        this.isEdit
+      );
+    });
 
     let predicates: string = '';
     let dataValues: string[] = [];
@@ -272,14 +286,12 @@ export class CashtransferAddComponent extends UIComponent {
           this.cashTransfer,
         ])
         .subscribe((res: ICashTransfer) => {
-          if (res) {
-            this.form.formGroup.patchValue({
-              currencyID: res.currencyID,
-              exchangeRate: res.exchangeRate,
-              multi: res.multi,
-              exchangeAmt2: res.exchangeAmt2,
-            });
-          }
+          this.form.formGroup.patchValue({
+            currencyID: res.currencyID,
+            exchangeRate: res.exchangeRate,
+            multi: res.multi,
+            cashAcctID: res.cashAcctID,
+          });
         });
     }
   }
@@ -454,8 +466,8 @@ export class CashtransferAddComponent extends UIComponent {
       journal,
       'diM1Control',
       'diM1',
-      this.diM1,
       'DepartmentID',
+      this.diM1,
       this.fgVatInvoice,
       'diM1',
       isEdit
@@ -464,8 +476,8 @@ export class CashtransferAddComponent extends UIComponent {
       journal,
       'diM2Control',
       'diM2',
-      this.diM2,
       'CostCenterID',
+      this.diM2,
       this.fgVatInvoice,
       'diM2',
       isEdit
@@ -474,8 +486,8 @@ export class CashtransferAddComponent extends UIComponent {
       journal,
       'diM3Control',
       'diM3',
-      this.diM3,
       'CostItemID',
+      this.diM3,
       this.fgVatInvoice,
       'diM3',
       isEdit
