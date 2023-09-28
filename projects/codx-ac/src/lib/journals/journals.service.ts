@@ -194,8 +194,8 @@ export class JournalService {
     journal: IJournal,
     vll067Prop: string,
     valueProp: string,
-    cbx: CodxInputComponent,
     filterKey: string,
+    cbx: CodxInputComponent,
     formGroup: FormGroup,
     patchKey: string,
     isEdit: boolean

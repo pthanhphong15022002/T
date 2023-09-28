@@ -15,7 +15,6 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { JournalService } from '../../journals/journals.service';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
-import { CashtransfersService } from './cashtransfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 
 @Component({
@@ -43,7 +42,6 @@ export class CashtransfersComponent
   constructor(
     injector: Injector,
     private journalService: JournalService,
-    cashTransferService: CashtransfersService // don't remove this, please
   ) {
     super(injector);
 

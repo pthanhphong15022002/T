@@ -216,47 +216,63 @@ export class PopupAddCampaignContactComponent implements OnInit {
   }
 
   bindingCountCompaign() {
-    if(this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0){
-      let lstHadSearchs = [];
-      let lever = 0;
-      if(this.provinceIDs != null && this.provinceIDs.length > 0){
-        let lstPro = this.lstCampainsHadAdd.filter(x => this.provinceIDs.includes(x.provinceID));
-        lstHadSearchs = lstPro;
-        lever++;
-      }
+    // if (this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0) {
+    //   let lstHadSearchs = [];
+    //   let lever = 0;
+    //   if (this.provinceIDs != null && this.provinceIDs.length > 0) {
+    //     let lstPro = this.lstCampainsHadAdd.filter((x) =>
+    //       this.provinceIDs.includes(x.provinceID)
+    //     );
+    //     lstHadSearchs = lstPro;
+    //     lever++;
+    //   }
 
-      if(this.districtIDs != null && this.districtIDs.length > 0){
-        let lstDis = this.lstCampainsHadAdd.filter(x => this.districtIDs.includes(x.districtID));
-        if(lever == 0){
-          lstHadSearchs = lstDis;
-        }else{
-          lstHadSearchs = lstDis.filter(x => lstHadSearchs.some(y => y.recID == x.recID));
-        }
-        lever++;
-      }
-      if(this.industries != null && this.industries.length > 0){
-        let lstInd = this.lstCampainsHadAdd.filter(x => this.industries.includes(x.industries));
-        if(lever == 0){
-          lstHadSearchs = lstInd;
-        }else{
-          lstHadSearchs = lstInd.filter(x => lstHadSearchs.some(y => y.recID == x.recID));
-        }
-        lever++;
-      }
+    //   if (this.districtIDs != null && this.districtIDs.length > 0) {
+    //     let lstDis = this.lstCampainsHadAdd.filter((x) =>
+    //       this.districtIDs.includes(x.districtID)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstDis;
+    //     } else {
+    //       lstHadSearchs = lstDis.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
+    //   }
+    //   if (this.industries != null && this.industries.length > 0) {
+    //     let lstInd = this.lstCampainsHadAdd.filter((x) =>
+    //       this.industries.includes(x.industries)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstInd;
+    //     } else {
+    //       lstHadSearchs = lstInd.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
+    //   }
 
-      if(this.status != null && this.status.length > 0){
-        let lstStatus = this.lstCampainsHadAdd.filter(x => this.status.includes(x.leadStatus) || this.status.includes(x.customerStatus));
-        if(lever == 0){
-          lstHadSearchs = lstStatus;
-        }else{
-          lstHadSearchs = lstStatus.filter(x => lstHadSearchs.some(y => y.recID == x.recID));
-        }
-        lever++;
-      }
-      this.countHadLeadCus = lstHadSearchs.length;
-    } else{
-      this.countHadLeadCus = 0;
-    }
+    //   if (this.status != null && this.status.length > 0) {
+    //     let lstStatus = this.lstCampainsHadAdd.filter(
+    //       (x) =>
+    //         this.status.includes(x.leadStatus) ||
+    //         this.status.includes(x.customerStatus)
+    //     );
+    //     if (lever == 0) {
+    //       lstHadSearchs = lstStatus;
+    //     } else {
+    //       lstHadSearchs = lstStatus.filter((x) =>
+    //         lstHadSearchs.some((y) => y.recID == x.recID)
+    //       );
+    //     }
+    //     lever++;
+    //   }
+    //   this.countHadLeadCus = lstHadSearchs.length;
+    // } else {
+    //   this.countHadLeadCus = 0;
+    // }
 
     this.api
       .execSv<any>(
@@ -285,6 +301,10 @@ export class PopupAddCampaignContactComponent implements OnInit {
           lstAllSearchs,
           this.lstCampainsHadAdd
         );
+        this.countHadLeadCus = this.countHadLists(
+          lstAllSearchs,
+          this.lstCampainsHadAdd
+        );
         this.countAdd =
           this.lstCampainsAdd != null ? this.lstCampainsAdd.length : 0;
       });
@@ -304,6 +324,22 @@ export class PopupAddCampaignContactComponent implements OnInit {
     }
 
     return mergedList;
+  }
+
+  countHadLists(list1 = [], list2 = []) {
+    const mergedList = [];
+    let count = 0;
+    for (const item of list1) {
+      const isDuplicate = list2.some(
+        (mergedItem) => mergedItem.objectID === item.recID
+      );
+
+      if (isDuplicate) {
+        mergedList.push(item);
+      }
+    }
+    count = mergedList.length;
+    return count;
   }
   //#endregion
 }
