@@ -104,4 +104,14 @@ export class LoginService {
       email
     );
   }
+
+  checkTOTP() {
+    return this.api.execSv<string>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'CheckTOTPAsync',
+      []
+    );
+  }
 }
