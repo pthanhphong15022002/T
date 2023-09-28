@@ -1226,7 +1226,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
-            this.isChangeOwner = ownerIdOld != e.event;
+            this.isChangeOwner = ownerIdOld != e.event.owner;
             this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
