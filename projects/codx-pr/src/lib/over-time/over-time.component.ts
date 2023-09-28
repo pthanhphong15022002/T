@@ -55,6 +55,12 @@ export class OverTimeComponent extends UIComponent {
       id: 'btnAdd',
     };
 
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'AddAsync')
+      .subscribe((res: any) => {
+        console.log(res);
+      });
+
     this.getSchedule();
   }
 
