@@ -235,7 +235,6 @@ export class IncommingComponent
       // option.zIndex = 499;
       option.DataService = this.view?.currentView?.dataService;
       var list = this.funcList?.defaultValue.split(";");
-
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
         {

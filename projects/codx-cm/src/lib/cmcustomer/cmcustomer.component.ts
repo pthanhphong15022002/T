@@ -86,6 +86,7 @@ export class CmCustomerComponent
   gridViewSetup: any;
   lstCustGroups = [];
   loaded: boolean;
+  queryParams: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -99,6 +100,7 @@ export class CmCustomerComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.loaded = false;
@@ -110,6 +112,7 @@ export class CmCustomerComponent
         this.loaded = true;
       }
     });
+
     // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
   }
 
@@ -125,8 +128,10 @@ export class CmCustomerComponent
         this.method = 'GetListCustomersAsync';
         this.className = 'CustomersBusiness';
         this.entityName = 'CM_Customers';
-        this.predicate = '';
-        this.dataValue = '';
+        if (this.queryParams?.recID) {
+          this.predicate = 'RecID=@0';
+          this.dataValue = this.queryParams?.recID;
+        }
         break;
       case 'CM0102':
         this.method = 'GetListContactAsync';
@@ -151,12 +156,10 @@ export class CmCustomerComponent
   }
 
   onInit(): void {
-
     this.button = {
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
-
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -733,7 +736,7 @@ export class CmCustomerComponent
     this.dataSelected.address = e ? e?.adressName : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
-    this.dataSelected.wardID = e ? e?.wrovinceID : null;
+    this.dataSelected.wardID = e ? e?.wardID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
   }

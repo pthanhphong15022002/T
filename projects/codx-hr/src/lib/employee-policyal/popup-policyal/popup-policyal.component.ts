@@ -138,19 +138,19 @@ export class PopupPolicyalComponent
   currentCbxValue: any = [];
 
   formModel: FormModel;
-  formGroup: FormGroup;
+  //formGroup: FormGroup;
   dialog: DialogRef;
   actionType: string;
   idField = 'PolicyID';
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   alpolicyObj: any;
-  grvSetup
+  // grvSetup
   grvSetupPolicyDetail
 
 
-  originPolicyId = '';
-  originPolicyALObj = '';
+  // originPolicyId = '';
+  // originPolicyALObj = '';
 
   cbxName:any;
   isHidden=true;
@@ -212,14 +212,15 @@ export class PopupPolicyalComponent
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
+    debugger
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    if(this.alpolicyObj && this.actionType == 'edit'){
-      this.originPolicyId = this.alpolicyObj.policyID;
-      this.originPolicyALObj = JSON.parse(JSON.stringify(this.alpolicyObj));
-    }
+    // if(this.alpolicyObj && this.actionType == 'edit'){
+    //   this.originPolicyId = this.alpolicyObj.policyID;
+    //   this.originPolicyALObj = JSON.parse(JSON.stringify(this.alpolicyObj));
+    // }
   }
 
   openFormUploadFile() {
@@ -242,6 +243,10 @@ export class PopupPolicyalComponent
       'GetApplyObjsAsync',
       ['AL', this.alpolicyObj.policyID, 0]
     );
+  }
+
+  onAfterInitForm(evt){
+    debugger
   }
 
   loadEmpFullInfo(empID){
@@ -391,29 +396,31 @@ export class PopupPolicyalComponent
       ]
     }
 
-    if (!this.formModel)
-      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+    this.initForm();
+
+    // if (!this.formModel)
+    //   this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrSevice
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrSevice
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
   }
   
   // checkExistInEmptyRec(lst, rec){
@@ -448,14 +455,14 @@ export class PopupPolicyalComponent
     this.hrSevice.getHeaderText(this.formModel.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     })
-    this.cache
-    .gridViewSetup(
-      this.formModel.formName,
-      this.formModel.gridViewName
-    )
-    .subscribe((res) => {
-      this.grvSetup = res;
-    });
+    // this.cache
+    // .gridViewSetup(
+    //   this.formModel.formName,
+    //   this.formModel.gridViewName
+    // )
+    // .subscribe((res) => {
+    //   this.grvSetup = res;
+    // });
 
     this.cache
     .gridViewSetup(
@@ -489,10 +496,10 @@ export class PopupPolicyalComponent
             }
             this.alpolicyObj = res?.data;
             
-            this.formModel.currentData = this.alpolicyObj;
-            this.formGroup.patchValue(this.alpolicyObj);
+            // this.formModel.currentData = this.alpolicyObj;
+            // this.formGroup.patchValue(this.alpolicyObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -549,14 +556,14 @@ export class PopupPolicyalComponent
           this.lstPolicyBeneficiariesExclude = res.filter((obj) => obj.category == 1);
         this.lstPolicyBeneficiariesExclude = this.hrSevice.sortAscByProperty(this.lstPolicyBeneficiariesExclude, 'priority');
           this.SplitToSubList(this.lstPolicyBeneficiariesExclude);
-          this.formGroup.patchValue(this.alpolicyObj);
-          this.formModel.currentData = this.alpolicyObj;
+          // this.formGroup.patchValue(this.alpolicyObj);
+          // this.formModel.currentData = this.alpolicyObj;
         })
-        this.formGroup.patchValue(this.alpolicyObj);
-        this.formModel.currentData = this.alpolicyObj;
+        // this.formGroup.patchValue(this.alpolicyObj);
+        // this.formModel.currentData = this.alpolicyObj;
         
         this.cr.detectChanges();
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
       }
     }
 
@@ -851,7 +858,7 @@ export class PopupPolicyalComponent
       'HR',
       'PolicyALBusiness',
       'UpdatePolicyALPolicyIDChangedAsync',
-      [this.alpolicyObj, this.originPolicyId]
+      [this.alpolicyObj, this.form.form.preData.policyID]
     );
   }
 
@@ -951,8 +958,8 @@ export class PopupPolicyalComponent
   }
 
   async onSaveForm(){
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -1026,13 +1033,14 @@ export class PopupPolicyalComponent
         })
       }
       else if(this.actionType === 'edit'){
-        if(this.originPolicyId != '' && this.originPolicyId != this.alpolicyObj.policyID){
-          this.DeletePolicyAL(this.originPolicyId).subscribe((x) => {
+        debugger
+        if(this.form.data.policyID != '' && this.form.form.preData.policyID != this.form.data.policyID){
+          this.DeletePolicyAL(this.form.form.preData.policyID).subscribe((x) => {
             this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
               if(res){
                 this.notify.notifyCode('SYS007');
   
-                this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
+                this.DeletePolicyBeneficiaries(this.form.form.preData.policyID).subscribe((res) => {
               if(this.alpolicyObj.hasIncludeObjects == true || this.alpolicyObj.hasExcludeObjects == true){
                   for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
                     this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
@@ -1045,7 +1053,7 @@ export class PopupPolicyalComponent
                 }
                 })
                 this.alpolicyObj.editPrimaryKey = true;
-                this.alpolicyObj.oldData = this.originPolicyALObj;
+                this.alpolicyObj.oldData = this.form.form.preData;
                 this.dialog && this.dialog.close(this.alpolicyObj);
               }
               else{
@@ -1118,7 +1126,7 @@ DeletePolicyAL(data){
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
         if(res[0] == true){
-          this.originPolicyId = this.alpolicyObj.policyID;
+          // this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView1.dataSource.length;
           // if(idx > 1){
           //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
@@ -1146,7 +1154,7 @@ DeletePolicyAL(data){
     if(this.alpolicyObj.policyID){
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
         if(res[0] == true){
-          this.originPolicyId = this.alpolicyObj.policyID;
+          // this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView2.dataSource.length;
           // if(idx > 1){
           //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));

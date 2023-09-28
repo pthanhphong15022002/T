@@ -1868,30 +1868,19 @@
               [ngStyle]="{ 'background-color': setColorStep(stepSuccess) }"
             >
               <div
-                class="order"
-                [ngStyle]="{ background: iconReasonSuccess?.textColor }"
-              >
-                <i
-                  [class]="stepSuccess?.icon"
-                  [ngStyle]="
-                    process?.stepsColorMode
-                      ? {}
-                      : { color: stepSuccess?.iconColor }
-                  "
-                >
-                </i>
-              </div>
-              <div
                 class="d-flex flex-column"
-                [ngStyle]="{ color: setColorTestStep(stepSuccess) }"
               >
-                <div class="fw-bold">
-                  {{ stepSuccess?.stepName }}
+                <div class="fw-bold d-flex align-items-center">
+                  <i
+                    class="me-1"
+                    [ngClass]="stepSuccess?.icon"
+                    [ngStyle]="process?.stepsColorMode ? {color: iconReasonSuccess?.textColor} : { color: stepSuccess?.iconColor }"
+                  ></i>
+                  <span  [ngStyle]="{ color: setColorTestStep(stepSuccess) }">{{ stepSuccess?.stepName }}</span>
                 </div>
-                <div class="fs-7 line-clamp line-clamp-1">
-                  {{ noteSuccess }}
-                </div>
+                <div class="fs-7 line-clamp line-clamp-1" [ngStyle]="{ color: setColorTestStep(stepSuccess) }">{{ noteSuccess }}</div>
               </div>
+
               <codx-mfunc
                 *ngIf="formModelMF"
                 [dataItem]="moreDefaut"
@@ -1910,29 +1899,17 @@
               [ngStyle]="{ 'background-color': setColorStep(stepFail) }"
             >
               <div
-                class="order"
-                [ngStyle]="{ background: iconReasonFail?.textColor }"
-              >
-                <i
-                  [class]="stepFail?.icon"
-                  [ngStyle]="
-                    process?.stepsColorMode
-                      ? {}
-                      : { color: stepFail?.iconColor }
-                  "
-                >
-                </i>
-              </div>
-              <div
                 class="d-flex flex-column"
-                [ngStyle]="{ color: setColorTestStep(stepFail) }"
               >
-                <div class="fw-bold">
-                  {{ stepFail?.stepName }}
+                <div class="fw-bold d-flex align-items-center">
+                  <i
+                    class="me-1"
+                    [ngClass]="stepFail?.icon"
+                    [ngStyle]="process?.stepsColorMode ? {color: iconReasonFail?.textColor} : { color: stepFail?.iconColor }"
+                  ></i>
+                  <span  [ngStyle]="{ color: setColorTestStep(stepFail) }">{{ stepFail?.stepName }}</span>
                 </div>
-                <div class="fs-7 line-clamp line-clamp-1">
-                  {{ noteFail }}
-                </div>
+                <div class="fs-7 line-clamp line-clamp-1" [ngStyle]="{ color: setColorTestStep(stepFail) }">{{ noteFail }}</div>
               </div>
               <codx-mfunc
                 *ngIf="formModelMF"

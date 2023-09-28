@@ -41,6 +41,7 @@ import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-d
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { stringify } from 'querystring';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -87,7 +88,8 @@ export class LeadsComponent
   className = 'LeadsBusiness';
   method = 'GetListLeadsAsync';
   idField = 'recID';
-
+  predicate = '';
+  dataValue = '';
   // data structure
   listCustomer: CM_Customers[] = [];
   listCategory: any[] = [];
@@ -142,7 +144,7 @@ export class LeadsComponent
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   applyApprover = '0';
-
+  queryParams: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -155,6 +157,11 @@ export class LeadsComponent
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    }
+    this.queryParams = this.router.snapshot.queryParams;
+    if (this.queryParams?.recID) {
+      this.predicate = 'RecID=@0';
+      this.dataValue = this.queryParams?.recID;
     }
     this.executeApiCalls();
     this.loadParam();

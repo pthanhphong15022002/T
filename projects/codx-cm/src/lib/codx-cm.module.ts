@@ -105,6 +105,7 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { CampaignContactsComponent } from './campaigns/campaigns-detail/campaign-contacts/campaign-contacts.component';
 import { PopupAddCampaignContactComponent } from './campaigns/campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
+import { CampaignDealsComponent } from './campaigns/campaigns-detail/campaign-deals/campaign-deals.component';
 
 export const routes: Routes = [
   {
@@ -258,7 +259,7 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component, CampaignContactsComponent, PopupAddCampaignContactComponent],
+  declarations: [T_Component, CampaignContactsComponent, PopupAddCampaignContactComponent, CampaignDealsComponent],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

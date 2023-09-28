@@ -16,7 +16,7 @@
 </codx-layout-add>
 
 <ng-template #cerOveralInf>
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <codx-label
       fiedName="CertificateType"
       [formModel]="formModel"
@@ -30,7 +30,7 @@
     ></codx-input>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
       <codx-label
       fiedName="CertificateID"
       [formModel]="formModel"
@@ -45,7 +45,7 @@
     ></codx-input>
   </div>
 
-  <div class="form-group row mt-5">
+  <div class="form-group row mx-0 mt-5">
     <div class="col-6">
       <codx-label
         fiedName="CertificateGradeID"
@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
       <codx-input
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label
         fiedName="EffectedDate"
@@ -122,7 +122,7 @@
     </div>
   </div>
 
-  <div class="form-group row mt-5">
+  <div class="form-group row mx-0 mt-5">
     <div class="col-6">
       <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
       <codx-input
@@ -144,7 +144,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
     <codx-input
     [disabled]="disabledInput"
@@ -154,7 +154,7 @@
     ></codx-input>
   </div>
 
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3"
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3"
   *ngIf="certificateObj?.attachments > 0"
   >
     <codx-label
@@ -189,7 +189,7 @@
 </ng-template>
 
 <ng-template #cerMoreInf>
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
     <codx-label
       name="lblTraining"
       [formModel]="formModel"
@@ -198,7 +198,7 @@
     </codx-label>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <codx-label
       fiedName="TrainSupplierID"
       [formModel]="formModel"
@@ -211,7 +211,7 @@
     ></codx-input>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label
         fiedName="TrainCourseID"
@@ -235,7 +235,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
       <!-- <codx-input
@@ -249,7 +249,7 @@
         [emptyText]="headerTextCalendar[0]"
         [firstChange]="isNullFrom"
       [disabled]="disabledInput"
-      cssPopup="h-300px w-400px"
+      cssPopup="h-350px w-550px"
         [value]="Date(certificateObj.trainFromDate)"
         [selectedType]="fromDateFormat"
         [displayOption]="ops"
@@ -267,7 +267,7 @@
       [emptyText]="headerTextCalendar[1]"
       [firstChange]="isNullTo"
       [disabled]="disabledInput"
-      cssPopup="h-300px w-400px"
+      cssPopup="h-350px w-550px"
       [value]="Date(certificateObj.trainToDate)"
       [selectedType]="toDateFormat"
       [displayOption]="ops"
@@ -280,7 +280,7 @@
     </div>
   </div>
 
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+  <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
     <codx-label
       name="lblCertInfo"
       [formModel]="formModel"
@@ -289,7 +289,7 @@
     </codx-label>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
       <codx-input
@@ -310,7 +310,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="col-6">
       <codx-label
         fiedName="CertificateNo"
@@ -334,7 +334,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <div class="d-flex flex-stack">
       <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
 
@@ -360,7 +360,7 @@
     ></codx-input>
   </div>
 
-  <div class="form-group row">
+  <div class="form-group row mx-0">
     <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
     <codx-input
     [disabled]="disabledInput"
@@ -371,7 +371,7 @@
   </div>
 
   <div *ngIf="displayForeignCert == true">
-    <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+    <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
       <codx-label
         name="lblForeignSkillPoint"
         [formModel]="formModel"
@@ -380,7 +380,7 @@
       </codx-label>
     </div>
   
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="ScoreListening"
@@ -409,7 +409,7 @@
       </div>
     </div>
   
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="ScoreReading"
@@ -478,7 +478,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <codx-label
         fiedName="CertificateType"
         [formModel]="formModel"
@@ -492,7 +492,7 @@
       ></codx-input>
     </div>
 
-    <div class="form-group row mt-5">
+    <div class="form-group row mx-0 mt-5">
       <div class="col-6">
         <codx-label
           fiedName="CertificateID"
@@ -522,7 +522,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <codx-label
         fiedName="TrainSupplierID"
         [formModel]="formModel"
@@ -535,7 +535,7 @@
       ></codx-input>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="TrainCourseID"
@@ -559,7 +559,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
         <codx-dropdown-calendar
@@ -593,7 +593,7 @@
       </div>
     </div>
 
-    <div class="form-group row mt-5">
+    <div class="form-group row mx-0 mt-5">
       <div class="col-6">
         <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
         <codx-input
@@ -623,7 +623,7 @@
       </codx-label>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="ScoreListening"
@@ -652,7 +652,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="ScoreReading"
@@ -681,7 +681,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
@@ -702,7 +702,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="CertificateNo"
@@ -726,7 +726,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="d-flex flex-stack">
         <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
 
@@ -752,7 +752,7 @@
       ></codx-input>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
@@ -762,7 +762,7 @@
       ></codx-input>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
         <codx-input
@@ -786,7 +786,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <div class="col-6">
         <codx-label
           fiedName="EffectedDate"
@@ -810,7 +810,7 @@
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row mx-0">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"

@@ -941,7 +941,9 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
-
+    if(!this.data.category){
+      this.data.category = this.refType;
+    }
     if (!this.isSaved && this.isAddNew) {
       if (this.data.refType == null || this.data.refType == '') {
         this.data.refType = this.refType;

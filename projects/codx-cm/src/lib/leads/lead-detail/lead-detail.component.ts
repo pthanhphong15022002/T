@@ -148,7 +148,7 @@ export class LeadDetailComponent implements OnInit {
           this.hasRunOnce = true;
           //  this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
-          this.isLoadOwner = true;
+
         }
         !this.hasRunOnce && this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
@@ -195,6 +195,7 @@ export class LeadDetailComponent implements OnInit {
   // }
 
   async promiseAllLoad() {
+    this.isLoadOwner = true;
     this.seesionID = this.dataSelected.recID; //da doi lai lay bang recID
     this.loadTree(this.seesionID);
     this.isDataLoading = true;
