@@ -334,7 +334,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   valueChangeMaster(event: any) {
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if (event && value ) { //? nếu data có thay đổi
+    if (event && value && this.formCashPayment.hasChange(this.formCashPayment.preData,this.formCashPayment.data)) { //? nếu data có thay đổi
       this.formCashPayment.setValue(field,value,{onlySelf: true,emitEvent: false,}); //? gán data mới cho field thay đổi
       switch (field.toLowerCase()) {
         //* Sổ quỹ
@@ -928,9 +928,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * *Hàm hủy các observable api
    */
   onDestroy() {
-    if(this.eleGridCashPayment) this.eleGridCashPayment.onDestroy();
-    if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.onDestroy();
-    if(this.eleGridVatInvoices) this.eleGridVatInvoices.onDestroy();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -1670,9 +1667,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     }
     this.formCashPayment.setRequire(lstDisable);
   }
-  onSelected(e){
-    console.log(e);
-  }
+
   @HostListener('click', ['$event']) //? focus out grid
   onClick(e) {
     if (
@@ -1684,17 +1679,41 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       if (this.eleGridCashPayment && this.eleGridCashPayment?.gridRef?.isEdit) {
         this.eleGridCashPayment.saveRow((res:any)=>{ //? save lưới trước
           if(res){
-            
+            this.eleGridCashPayment.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
           }
         })
       }
       if (this.eleGridSettledInvoices && this.eleGridSettledInvoices?.gridRef?.isEdit) {
-        this.eleGridVatInvoices.isSaveOnClick = false;
-        this.eleGridSettledInvoices.endEdit();
+        this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridSettledInvoices.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
       }
       if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
-        this.eleGridVatInvoices.isSaveOnClick = false;
-        this.eleGridVatInvoices.endEdit();
+        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridVatInvoices.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
       }
     }
   }
