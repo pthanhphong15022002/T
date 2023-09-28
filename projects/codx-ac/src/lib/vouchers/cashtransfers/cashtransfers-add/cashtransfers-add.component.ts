@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { SwitchComponent } from '@syncfusion/ej2-angular-buttons';
 import {
   CRUDService,
+  CodxComboboxComponent,
   CodxFormComponent,
   CodxInputComponent,
   CodxService,
@@ -40,8 +41,6 @@ import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 export class CashtransferAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('cbxCashAcctID') cbxCashAcctID: CodxInputComponent;
-  @ViewChild('cbxOffsetAcctID') cbxOffsetAcctID: CodxInputComponent;
   @ViewChild('switchHasInvoice') switchHasInvoice: SwitchComponent;
   @ViewChild('diM1') diM1: CodxInputComponent;
   @ViewChild('diM2') diM2: CodxInputComponent;
@@ -182,27 +181,6 @@ export class CashtransferAddComponent extends UIComponent {
           },
         ]);
       }
-
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'drAcctControl',
-        'drAcctID',
-        'AccountID',
-        this.cbxCashAcctID,
-        this.form.formGroup,
-        'cashAcctID',
-        this.isEdit
-      );
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'crAcctControl',
-        'crAcctID',
-        'AccountID',
-        this.cbxOffsetAcctID,
-        this.form.formGroup,
-        'offsetAcctID',
-        this.isEdit
-      );
     });
 
     let predicates: string = '';
@@ -243,6 +221,38 @@ export class CashtransferAddComponent extends UIComponent {
           this.detectorRef.markForCheck();
         }
       });
+  }
+
+  onAfterRendering(cbx: CodxComboboxComponent, field: string): void {
+    this.journalSubject.subscribe((loaded) => {
+      if (!loaded) {
+        return;
+      }
+
+      if (field === 'cashAcctID') {
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'drAcctControl',
+          'drAcctID',
+          'AccountID',
+          cbx,
+          this.form.formGroup,
+          'cashAcctID',
+          this.isEdit
+        );
+      } else if (field === 'offsetAcctID') {
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'crAcctControl',
+          'crAcctID',
+          'AccountID',
+          cbx,
+          this.form.formGroup,
+          'offsetAcctID',
+          this.isEdit
+        );
+      }
+    });
   }
 
   onInputChange(e): void {
@@ -462,36 +472,36 @@ export class CashtransferAddComponent extends UIComponent {
   }
 
   loadDims(journal: IJournal, isEdit: boolean) {
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM1Control',
-      'diM1',
-      'DepartmentID',
-      this.diM1,
-      this.fgVatInvoice,
-      'diM1',
-      isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM2Control',
-      'diM2',
-      'CostCenterID',
-      this.diM2,
-      this.fgVatInvoice,
-      'diM2',
-      isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      journal,
-      'diM3Control',
-      'diM3',
-      'CostItemID',
-      this.diM3,
-      this.fgVatInvoice,
-      'diM3',
-      isEdit
-    );
+    // this.journalService.loadComboboxBy067(
+    //   journal,
+    //   'diM1Control',
+    //   'diM1',
+    //   'DepartmentID',
+    //   this.diM1,
+    //   this.fgVatInvoice,
+    //   'diM1',
+    //   isEdit
+    // );
+    // this.journalService.loadComboboxBy067(
+    //   journal,
+    //   'diM2Control',
+    //   'diM2',
+    //   'CostCenterID',
+    //   this.diM2,
+    //   this.fgVatInvoice,
+    //   'diM2',
+    //   isEdit
+    // );
+    // this.journalService.loadComboboxBy067(
+    //   journal,
+    //   'diM3Control',
+    //   'diM3',
+    //   'CostItemID',
+    //   this.diM3,
+    //   this.fgVatInvoice,
+    //   'diM3',
+    //   isEdit
+    // );
   }
 
   generateMemo(): string {
