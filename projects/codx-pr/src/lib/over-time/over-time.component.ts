@@ -17,9 +17,7 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
-    id: 'btnAdd',
-  };
+  buttons: ButtonModel;
 
   //View schedule
   requestSchedule: ResourceModel;
@@ -27,9 +25,10 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   modelResource: ResourceModel;
   fields = {
-    id: 'taskID',
+    id: 'recID',
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
@@ -42,7 +41,7 @@ export class OverTimeComponent extends UIComponent {
     TextField: 'userName',
     Title: 'Resources',
   };
-  vllStatus = 'TM004';
+  vllStatus = 'EP022';
 
   //#endregion
 
@@ -52,21 +51,43 @@ export class OverTimeComponent extends UIComponent {
 
   //#region Init components
   onInit() {
+    this.buttons = {
+      id: 'btnAdd',
+    };
+
+    let data = {
+      EmployeeID: '1123',
+      RequestType: 'abc',
+      Hours: 1,
+      Days: 1,
+      Minutes: 2,
+      Minutes2: 3,
+    };
+    // this.api
+    //   .execSv('PR', 'ERM.Business.PR', 'TimeKeepingRequest', 'AddAsync', data)
+    //   .subscribe((res: any) => {
+    //     console.log(res);
+    //   });
+
     this.getSchedule();
   }
 
   getSchedule() {
-    this.modelResource.assemblyName = 'HR';
-    this.modelResource.className = 'OrganizationUnitsBusiness';
-    this.modelResource.service = 'HR';
-    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    let resourceType = '1';
 
-    this.requestSchedule.service = 'TM';
-    this.requestSchedule.assemblyName = 'TM';
-    this.requestSchedule.className = 'TaskBusiness';
-    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    this.requestSchedule.idField = 'taskID';
-    this.requestSchedule.dataObj = '';
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'EP';
+    this.modelResource.className = 'BookingsBusiness';
+    this.modelResource.service = 'EP';
+    this.modelResource.method = 'GetResourceAsync';
+    this.modelResource.predicate = 'ResourceType=@0 ';
+    this.modelResource.dataValue = resourceType;
+
+    this.requestSchedule.service = 'PR';
+    this.requestSchedule.assemblyName = 'PR';
+    this.requestSchedule.className = 'TimeKeepingRequest';
+    this.requestSchedule.method = 'GetListAsync';
+    this.requestSchedule.idField = 'recID';
   }
 
   getCellContent(evt: any) {}

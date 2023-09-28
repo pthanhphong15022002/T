@@ -1,15 +1,15 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
-import { AdvancePaymentAddComponent } from './advance-payment-add/advance-payment-add.component';
+import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { Subject, takeUntil } from 'rxjs';
+import { PaymentOrderAddComponent } from './payment-order-add/payment-order-add.component';
 
 @Component({
-  selector: 'lib-advance-payment',
-  templateUrl: './advance-payment.component.html',
-  styleUrls: ['./advance-payment.component.css']
+  selector: 'lib-payment-order',
+  templateUrl: './payment-order.component.html',
+  styleUrls: ['./payment-order.component.css']
 })
-export class AdvancePaymentComponent extends UIComponent{
+export class PaymentOrderComponent extends UIComponent{
  
   //Constructor
 
@@ -140,7 +140,6 @@ export class AdvancePaymentComponent extends UIComponent{
   }
 
   //End Event
-
   //Function
 
   add(e) {
@@ -161,7 +160,7 @@ export class AdvancePaymentComponent extends UIComponent{
           opt.FormModel = this.view.formModel;
           opt.DataService = this.view.dataService;
           var dialog = this.callfc.openForm(
-            AdvancePaymentAddComponent,
+            PaymentOrderAddComponent,
             '',
             700,
             850,
@@ -192,7 +191,7 @@ export class AdvancePaymentComponent extends UIComponent{
         opt.FormModel = this.view.formModel;
         opt.DataService = this.view.dataService;
         var dialog = this.callfc.openForm(
-          AdvancePaymentAddComponent,
+          PaymentOrderAddComponent,
           '',
           700,
           850,
@@ -226,7 +225,7 @@ export class AdvancePaymentComponent extends UIComponent{
             opt.FormModel = this.view.formModel;
             opt.DataService = this.view.dataService;
             var dialog = this.callfc.openForm(
-              AdvancePaymentAddComponent,
+              PaymentOrderAddComponent,
               '',
               700,
               850,
