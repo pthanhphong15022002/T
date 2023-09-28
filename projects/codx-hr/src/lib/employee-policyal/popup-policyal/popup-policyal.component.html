@@ -156,6 +156,8 @@
       hideImageUpload="0"
       hideImageThumb="0"
       [objectId]="alpolicyObj?.policyID"
+      (fileCount)="countFile()"
+      (fileDelete)="deleteFile($event)"
       [allowMultiFile]="1"
       [idBrowse]="'add'"
       displayThumb="full"
@@ -1559,6 +1561,7 @@
   </div>
 </ng-template>
 
+</ng-container>
 
 <ng-template #headTmpGrid1Col1>
   <codx-label
@@ -1637,5 +1640,3 @@
   ></codx-mfunc>
   </div>
 </ng-template>
-
-</ng-container>
