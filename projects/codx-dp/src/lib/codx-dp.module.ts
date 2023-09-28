@@ -57,6 +57,8 @@ import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
 import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
+import { PopupAddVllCustomComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-vll-custom/popup-add-vll-custom.component';
+import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-column-table/popup-add-column-table.component';
 
 export const routes: Routes = [
   {
@@ -145,6 +147,8 @@ const T_Component: Type<any>[] = [
   PopupSelectTempletComponent,
   ViewsTabsDetailsComponent,
   InstanceDashboardComponent,
+  PopupAddVllCustomComponent,
+  PopupAddColumnTableComponent,
 ];
 
 @NgModule({

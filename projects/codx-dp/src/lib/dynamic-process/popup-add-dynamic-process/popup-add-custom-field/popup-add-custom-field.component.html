@@ -421,8 +421,6 @@
           </codx-input>
         </div>
         <div class="form-group">
-          <!-- labelPosition="After"
-      label="Cho phép chọn nhiều giá trị" -->
           <codx-input
             class="me-2"
             type="checkbox"
@@ -481,7 +479,6 @@
                 ></span>
               </div>
             </div>
-            <!-- </div> -->
           </ng-container>
 
           <div class="form-group">
@@ -520,9 +517,9 @@
             </ng-container>
             <ng-container *ngIf="this.crrVll?.multiSelect">
               <ejs-multiselect
-                [dataSource]="datasVllCrr"
+                [dataSource]="datasVll"
                 [mode]="'Default'"
-                [fields]="fieldsCrrVll"
+                [fields]="fieldsResourceVll"
                 [value]=""
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
