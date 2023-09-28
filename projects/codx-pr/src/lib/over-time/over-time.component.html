@@ -1,7 +1,7 @@
 <codx-views
   #view
   service="PR"
-  assemblyName="ERM.Business.PR"
+  assemblyName="PR"
   entityName="PR_TimeKeepingRequest"
   className="TimeKeepingRequest"
   method="GetListAsync"
@@ -11,6 +11,8 @@
   idField="recID"
   [button]="buttons"
   [funcID]="funcID"
+  (buttonClick)="click($event)"
+  (onActions)="onActionClick($event)"
 >
 </codx-views>
 

@@ -1,0 +1,16 @@
+.ws-bookmark-group
+{
+    .active
+    {
+        background-color: var(--primary-lightest);
+        color: var(--title-color);
+    }
+}
+.ws-bookmark-group> div:hover
+{
+    color: var(--title-color);
+}
+.h-270px
+{
+    height: 270px;
+}

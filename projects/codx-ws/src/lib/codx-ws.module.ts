@@ -38,6 +38,7 @@ import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdas
 import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
 
 const routes: Routes = [
   {
@@ -181,6 +182,7 @@ const routes: Routes = [
     DashboardComponent,
     ReportComponent,
     RequestReviewComponent,
+    BookmarkComponent
   ],
   imports: [
     RouterModule.forChild(routes),

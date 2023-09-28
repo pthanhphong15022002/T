@@ -254,7 +254,7 @@ export class AdvancePaymentAddComponent extends UIComponent
       .subscribe((res) => {
         if (res) {
           this.saveFileUpload();
-          this.dialogRef.dataService.update(this.advancedPayment).subscribe();
+          // this.dialogRef.dataService.update(this.advancedPayment).subscribe();
           this.onDestroy();
           this.dialogRef.close();
           this.detectorRef.detectChanges();

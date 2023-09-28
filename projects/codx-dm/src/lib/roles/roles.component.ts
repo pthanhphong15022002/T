@@ -388,33 +388,8 @@ export class RolesComponent implements OnInit {
 
         if (item.status == 6) {
           let newNameMessage = this.renamemessage.replace("{0}", item.data.fileName);
-          // this.confirmationDialogService.confirm(this.titlemessage, item.message + ". " + newNameMessage)
-          //   .then((confirmed) => {
-          //     if (confirmed) {
-          //       this.fileEditing.fileName = item.data.fileName;
-          //       this.fileService.updateFile(this.fileEditing).subscribe(async res => {
-          //         if (res.status == 0) {
-          //           var files = this.dmSV.listFiles.getValue();
-          //           let index = files.findIndex(d => d.recID.toString() === this.id);
-          //           if (index != -1) {
-          //             files[index].fileName = res.data.fileName;
-          //           }
-          //           this.dmSV.listFiles.next(files);
-          //           if (modal != null)
-          //             this.modalService.dismissAll();
-          //           this.changeDetectorRef.detectChanges();
-          //         }
-          //         this.notificationsService.notify(res.message);
-          //       });
-          //     }
-          //   })
-          //   .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-
         }
-        else {
-          this.notificationsService.notify(item.message);
-        }
-
+        else this.notificationsService.notify(item.message);
       });
 
     }

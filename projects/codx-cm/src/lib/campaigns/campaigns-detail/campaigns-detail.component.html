@@ -192,7 +192,7 @@
                       #elementNote
                       [id]="'elementNote'"
                       [class.collapsed]="isCollapsed"
-                      [style.height]="isCollapsed ? '35px' : 'auto'"
+                      [style.height]="'auto'"
                       [ngClass]="
                         isCollapsed
                           ? 'line-clamp line-clamp-2 text-popover'
@@ -209,7 +209,7 @@
                     <div class="mt-1" *ngIf="isCollapsable">
                       <codx-label
                         *ngIf="isCollapsed"
-                        fieldName="lblReadMore"
+                        name="lblReadMore"
                         [formModel]="formModel"
                         default="Xem thêm"
                         class="text-primary text-underline"
@@ -219,7 +219,7 @@
                       ></codx-label>
                       <codx-label
                         *ngIf="!isCollapsed"
-                        fieldName="lblReadLess"
+                        name="lblReadLess"
                         [formModel]="formModel"
                         default="Thu lại"
                         class="text-primary text-underline"
