@@ -6,6 +6,7 @@ import { PaymentOrder } from '../../models/PaymentOrder.model';
 import { PaymentOrderLines } from '../../models/PaymentOrderLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 
 @Component({
   selector: 'lib-payment-order-add',
@@ -28,6 +29,7 @@ export class PaymentOrderAddComponent extends UIComponent
   dialog!: DialogRef;
   isHaveFile: any = false;
   showLabelAttachment: any = false;
+  advancedPayment: AdvancedPayment;
   paymentOrder: PaymentOrder = new PaymentOrder();
   paymentOrderLines: Array<PaymentOrderLines> = [];
   fmPaymentOrderLines: FormModel = {
@@ -35,7 +37,13 @@ export class PaymentOrderAddComponent extends UIComponent
     formName: 'PaymentOrderLines',
     gridViewName: 'grvPaymentOrderLines',
   }
+  fmAdvancedPayment: FormModel = {
+    entityName: 'AC_AdvancedPayment',
+    formName: 'AdvancedPayment',
+    gridViewName: 'grvAdvancedPayment',
+  }
   grvSetupPaymentOrderLines: any;
+  grvSetupAdvancedPayment: any;
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -59,6 +67,12 @@ export class PaymentOrderAddComponent extends UIComponent
       if(res)
         this.grvSetupPaymentOrderLines = res;
     });
+    this.cache.gridViewSetup(this.fmAdvancedPayment.formName, this.fmAdvancedPayment.gridViewName)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res)
+        this.grvSetupAdvancedPayment = res;
+    });
   }
 
   onInit(): void {
@@ -67,6 +81,8 @@ export class PaymentOrderAddComponent extends UIComponent
 
   ngAfterViewInit(){
     if(this.form?.data?.coppyForm) this.form.data._isEdit = true;
+    
+    this.calTotalAmt();
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.paymentOrder.voucherNo) {
@@ -122,6 +138,10 @@ export class PaymentOrderAddComponent extends UIComponent
   lineChange(e: any, i: any)
   {
     this.paymentOrderLines[i][e.field] = e.data
+    if(e.field == 'dr')
+    {
+      this.calTotalAmt();
+    }
   }
 
   onSave(){
@@ -350,6 +370,21 @@ export class PaymentOrderAddComponent extends UIComponent
           this.fileAdded(file);
         }
       });
+    }
+  }
+
+  calTotalAmt()
+  {
+    if(this.paymentOrderLines.length > 0)
+    {
+      let total = 0;
+      this.paymentOrderLines.forEach((line) => {
+        if(line.dr)
+        {
+          total += line.dr;
+        }
+      });
+      this.paymentOrder.totalAmt = total;
     }
   }
 }

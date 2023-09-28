@@ -1,4 +1,4 @@
-import { Component, Injector, Input, SimpleChange } from '@angular/core';
+import { Component, Injector, Input, SimpleChange, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, DataRequest, DialogModel, FormModel, UIComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentOrder } from '../../models/PaymentOrder.model';
@@ -10,7 +10,8 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 @Component({
   selector: 'lib-payment-order-detail',
   templateUrl: './payment-order-detail.component.html',
-  styleUrls: ['./payment-order-detail.component.css']
+  styleUrls: ['./payment-order-detail.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PaymentOrderDetailComponent extends UIComponent {
   
