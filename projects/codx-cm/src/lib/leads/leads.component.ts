@@ -42,6 +42,7 @@ import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgi
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { stringify } from 'querystring';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -145,6 +146,7 @@ export class LeadsComponent
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   applyApprover = '0';
   queryParams: any;
+  leverSetting = 0;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -173,8 +175,18 @@ export class LeadsComponent
     };
   }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
     this.loadViewModel();
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
   }
 
   afterLoad() {
@@ -698,6 +710,8 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
+    let lst = [];
+    lst.push(Object.assign({}, data)); // Đùng để cập nhật tự động address
     const functionMappings = {
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),
@@ -719,6 +733,7 @@ export class LeadsComponent
       CM0205_16: () => this.popupPermissions(data),
       //SYS002: () => this.exportFiles(e, data),
       CM0205_17: () => this.cancelApprover(data),
+      CM0205_18: () => this.updateAutoAddress(lst)
     };
     const executeFunction = functionMappings[e.functionID];
     if (executeFunction) {
@@ -1012,6 +1027,54 @@ export class LeadsComponent
     });
   }
 
+  //auto update address
+  async updateAutoAddress(datas = []) {
+    let lsts = datas.filter(
+      (x) => x.address != null && x.address?.trim() != ''
+    );
+    for (var item of lsts) {
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [item?.address, this.leverSetting]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        if (item.provinceID != lstDis?.ProvinceID)
+          item.provinceID = lstDis?.ProvinceID;
+        if (item.districtID != lstDis?.DistrictID)
+          item.districtID = lstDis?.DistrictID;
+        // if (item?.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+      } else {
+        item.provinceID = null;
+        item.districtID = null;
+        item.wardID = null;
+      }
+    }
+
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CustomersBusiness',
+        'UpdateAutoAddressAsync',
+        [null, lsts]
+      )
+      .subscribe((res) => {
+        if (res) {
+          lsts.forEach((ele) => {
+            this.view.dataService.update(ele).subscribe();
+          });
+          this.notificationsService.notifyCode('Cập nhật tự động thành công');
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
   onMoreMulti(e) {
     let event = e?.event;
     this.titleAction = event?.text;
@@ -1066,6 +1129,9 @@ export class LeadsComponent
             return;
           }
         }
+        break;
+      case 'CM0205_18':
+        this.updateAutoAddress(e?.dataSelected);
         break;
       default:
         break;

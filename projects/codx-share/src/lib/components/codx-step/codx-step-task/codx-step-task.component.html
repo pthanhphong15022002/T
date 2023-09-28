@@ -93,7 +93,7 @@
       >
       </codx-imgs>
       <div
-        class="disabled-inline"
+        class="disabled-inline me-1"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
         [ngClass]="
           checkRoleUpdateProgress(currentStep, 'P')
@@ -436,8 +436,8 @@
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
-        [objectName]="getRole(data?.value)"
-      >
+        >
+        <!-- [objectName]="getRole(data?.value)" -->
       </codx-imgs>
     </span>
     <div

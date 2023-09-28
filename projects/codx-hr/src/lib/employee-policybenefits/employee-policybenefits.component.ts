@@ -231,7 +231,6 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '850px';
     console.log('header text ne', this.view.function.description);
-    
     let dialg = this.callfc.openSide(
       PopupPolicybenefitsComponent,
       {

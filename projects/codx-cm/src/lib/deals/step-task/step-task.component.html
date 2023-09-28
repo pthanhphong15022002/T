@@ -87,6 +87,7 @@
     [isPause]="isPause"
     [entityName]="entityName"
     [owner]="owner"
+    [isAdmin]="isAdmin"
     (saveAssign)="handelSaveAssignTask($event)"
   ></task>
 </div>
@@ -157,6 +158,7 @@
         (isSuccessStep)="susscessStepEnd($event, step)"
         [sessionID]="dataSelected.recID"
         [formModelAssign]="formModel"
+        [isChangeOwner]="isChangeOwner"
       ></codx-step-task>
       <div
         *ngIf="

@@ -39,6 +39,7 @@ export class DealDetailComponent implements OnInit {
   @Input() colorReasonFail: any;
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
+  @Input() isChangeOwner = false;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve

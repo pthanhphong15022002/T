@@ -1,0 +1,337 @@
+<codx-detail-tmp
+  [header]="header"
+  [body]="body"
+  [hideMF]="false"
+  [formModel]="formModel"
+  [dataItem]="dataItem"
+  [footer]="footer"
+  (clickMF)="clickMF($event, dataItem)"
+>
+</codx-detail-tmp>
+<ng-template #header>
+  <div class="d-flex justify-content-between w-100">
+    <div>
+      <img
+        class="position-fixed"
+        src="../assets/themes/ac/default/img/advancedPayment_BG.jpg"
+      />
+      <div class="d-flex align-items-center" style="padding: 0px 70px">
+        <div style="margin-right: 20px">
+          <img src="../assets/themes/ac/default/img/IconDx.jpg" />
+        </div>
+        <div class="d-flex flex-column justify-content-between">
+          <div class="fs-5 fw-bold" [innerHTML]="company?.legalName"></div>
+          <div
+            class="text-gray-600"
+            style="font-size: 10px"
+            [innerHTML]="company?.street"
+          ></div>
+          <div
+            class="text-gray-600"
+            style="font-size: 10px"
+            [innerHTML]="company?.taxCode"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="d-flex justify-content-end align-items-center">
+        <codx-label
+          class="me-2 header-font-size"
+          fiedName="VoucherNo"
+          [formModel]="formModel"
+          [setRequire]="false"
+          [cssClass]="'fs-4'"
+        >
+        </codx-label>
+        <span
+          *ngIf="dataItem?.voucherNo"
+          class="text-gray-600"
+          style="font-size: 12px !important"
+        >
+          {{ dataItem?.voucherNo }}
+        </span>
+        <span
+          *ngIf="!dataItem?.voucherNo"
+          class="text-gray-600"
+          style="font-size: 12px !important"
+        >
+          {{ "AC0028" | mssg | async }}
+        </span>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <codx-label
+          class="me-2 header-font-size"
+          fiedName="VoucherDate"
+          [formModel]="formModel"
+          [setRequire]="false"
+          [cssClass]="'fs-4'"
+        >
+        </codx-label>
+        <span
+          class="text-gray-600"
+          style="font-size: 12px !important"
+        >
+          {{ dataItem?.voucherDate | date : "dd/MM/yyyy" }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="d-flex h-100 w-100 bgEDEDED pt-5" style="padding: 0px 70px">
+    <div
+      class="bg-white rounded-2 d-flex justify-content-between flex-column h-100 w-100"
+    >
+      <!-- Thông tin chung -->
+      <div>
+        <div class="row text-center mt-2 text-primary fw-bold">
+          <codx-label
+            style="font-size: 35px"
+            [default]="headerText"
+          ></codx-label>
+        </div>
+        <div class="row" style="padding-bottom: 5px;">
+          <div>
+            <codx-label
+              class="fw-bold"
+              fiedName="ObjectID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <div>
+              <span
+                #objectID
+                [innerHTML]="
+                  dataItem?.objectID
+                    | formatvalue : formModel : 'objectID' : objectID
+                    | async
+                "
+                class="om-input w-100 dropdow-select"
+                style="font-size: 13px;"
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-7">
+            <div class="row align-items-start">
+              <div>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="ReasonID"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+                <codx-inplace
+                  type="text"
+                  field="reasonID"
+                  [value]="dataItem.reasonID"
+                  [class]="'om-input w-auto'"
+                  [cssClass]="'om-input w-100 fs-4'"
+                  [disabled]="true"
+                >
+                </codx-inplace>
+              </div>
+            </div>
+          </div>
+          <div class="col-5">
+            <div class="row align-items-start">
+              <div>
+                <codx-label
+                  class="fw-bold"
+                  fiedName="PmtMethodID"
+                  [formModel]="formModel"
+                >
+                </codx-label>
+                <div>
+                  <span
+                    #pmtMethodID
+                    [innerHTML]="
+                      dataItem?.pmtMethodID
+                        | formatvalue : formModel : 'pmtMethodID' : pmtMethodID
+                        | async
+                    "
+                    class="om-input w-100 dropdow-select"
+                    style="font-size: 13px;"
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="dataItem.memo != null || dataItem.memo != ''">
+          <div>
+            <codx-label
+              class="fw-bold"
+              fiedName="Memo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <div>
+              <span
+                class="om-input w-100 dropdow-select"
+                style="font-size: 13px;"
+              >{{ dataItem.memo }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-2 text-primary fw-bold fs-5">
+          <codx-label default="Chi tiết"></codx-label>
+        </div>
+      </div>
+      <!-- Header của Chi tiết -->
+      <div class="mt-1">
+        <div class="d-flex justify-content-start flex-column">
+          <div class="d-flex justify-content-start flex-column">
+            <div class="d-flex align-items-center cursor-pointer w-100">
+              <div class="w-50 d-flex align-items-center ps-4">
+                <div class="d-flex align-items-center w-100">
+                  <div
+                    class="ps-3 w-100 min-h-table d-flex justify-content-start align-items-center"
+                  >
+                    <codx-label
+                      class="fw-bold"
+                      fiedName="Note"
+                      [formModel]="fmPaymentOrderLines"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+              </div>
+              <div class="w-50 d-flex justify-content-start pe-4">
+                <div
+                  class="w-100 min-h-table d-flex justify-content-end align-items-center pe-5"
+                >
+                  <codx-label
+                    class="fw-bold"
+                    fiedName="DR"
+                    [formModel]="fmPaymentOrderLines"
+                  >
+                  </codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Nội dung của chi tiết -->
+      <div
+        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
+      >
+        <div class="flex-column d-flex justify-content-start px-6">
+          <div
+            class="d-flex justify-content-start flex-column"
+            *ngFor="let item of paymentOrderLines; let i = index"
+          >
+            <div class="d-flex justify-content-start flex-column">
+              <div
+                class="d-flex align-items-center flex-row cursor-pointer w-100"
+              >
+              <span
+                class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
+                style="font-size: 10px !important;"
+              ></span>
+                <div
+                  class="w-50 d-flex justify-content-start align-items-center"
+                >
+                  <div
+                    class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
+                  >
+                    <codx-inplace
+                      type="text"
+                      field="note"
+                      [class]="'om-input w-100'"
+                      [cssClass]="'om-input w-100 fs-4'"
+                      [value]="item?.note"
+                      [disabled]="true"
+                    ></codx-inplace>
+                  </div>
+                </div>
+
+                <div class="w-50 d-flex justify-content-start h-100">
+                  <div
+                    class="w-100 min-h-table d-flex justify-content-center align-items-center h-100"
+                  >
+                    <codx-inplace
+                      type="text"
+                      field="dr"
+                      [class]="'om-input w-100 amount'"
+                      [cssClass]="'om-input w-100 fs-4'"
+                      [value]="item?.dr"
+                      [disabled]="true"
+                    ></codx-inplace>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Trường kế hoạch công tác -->
+      <!-- <div class="d-flex align-items-center">
+        <button
+          style="border: 1px solid var(--primary-dark) !important"
+          type="button"
+          class="btn btn-md btn-light-primary me-2 rounded-15"
+          (click)="popupUploadFile()"
+        >
+          <div class="d-flex align-items-center">
+            <i class="icon-cloud_upload icon-16"></i>
+            <codx-label
+              class="fw-normal"
+              fiedName="lblUpload"
+              default="Tệp đính kèm"
+            ></codx-label>
+          </div>
+        </button>
+        <div>
+          <button
+            style="border: 1px solid var(--primary-dark) !important"
+            type="button"
+            class="btn btn-md btn-light-primary me-2 rounded-15"
+            (keydown.enter)="onSave(); $event.preventDefault()"
+            (click)="onSave()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-add_to_photos icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSaveAndClear"
+                default="Lưu & Gửi duyệt"
+              ></codx-label>
+            </div>
+          </button>
+          <button
+            id="save"
+            type="button"
+            class="btn btn-md btn-light-primary rounded-15"
+            style="border: 1px solid var(--primary-dark) !important"
+            (keydown.enter)="onSave(); $event.preventDefault()"
+            (click)="onSave()"
+          >
+            <div class="d-flex align-items-center">
+              <i class="icon-save_alt icon-16"></i>
+              <codx-label
+                class="fw-normal"
+                fiedName="lblSave"
+                default="Lưu"
+              ></codx-label>
+            </div>
+          </button>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+    <ng-container *ngIf="dataItem">
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [objectID]="dataItem.recID"
+        [funcID]="formModel.funcID"
+      ></codx-tabs>
+    </ng-container>
+  </ng-template>

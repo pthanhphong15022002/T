@@ -748,9 +748,7 @@
     [typeTask]="2"
     [customerID]="dataSelected?.recID"
     [owner]="dataSelected?.owner"
-    [isPause]="
-      (!isAdmin && user.userID != dataSelected.owner) ||
-      dataSelected?.status == '99'
-    "
+    [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false "
+    [isPause]="(!isAdmin && user.userID != dataSelected.owner) || dataSelected?.status == '99'"
   ></step-task>
 </ng-template>

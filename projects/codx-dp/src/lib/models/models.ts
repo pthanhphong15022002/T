@@ -641,3 +641,29 @@ export class tempVllDP {
   returnValue: string;
   modifiedBy: string;
 }
+
+//model table
+export class ColumnTable {
+  recID: string;
+  fieldName: string;
+  title: string;
+  dataType: string;
+  dataFormat: string;
+  controlType: string;
+  dataValue: string;
+  refType: string;
+  refValue: string;
+  multiselect: boolean;
+  rank: number;
+  rankIcon: string;
+  isRequired: boolean;
+  defaultValue: string;
+  sorting: number;
+  note: string;
+  rowSize: string;
+  columnWidth: string;
+  columnBackground: string;
+  textColorSet: string;
+  colorSet: string;
+  iconSet: string;
+}

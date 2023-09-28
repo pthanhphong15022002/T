@@ -38,7 +38,7 @@ import { ApprovalStepComponent } from '../../setting/approval-step/approval-step
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
-import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ApproveProcess, Approver } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
 
@@ -130,7 +130,7 @@ export class PopupAddSignFileComponent implements OnInit {
   approverProcess: ApproveProcess;
   categoryID: any;
   sfTemplates =[];
-  
+  dynamicApprovers = [];
   fields: Object = { text: 'title', value: 'recID' };
   cbbDriver:any;
   showStepSetting=true;
@@ -175,6 +175,24 @@ export class PopupAddSignFileComponent implements OnInit {
     this.editApprovers = data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
+    if(this.approverProcess){
+      if(this.approverProcess.approvers?.length>0){
+        this.dynamicApprovers.push(this.approverProcess.approvers);
+      }
+      if(this.approverProcess?.data?.employeeID){
+        let appr = new Approver();
+        appr.roleType = "E";
+        appr.approver = this.approverProcess?.data?.employeeID;
+        this.dynamicApprovers.push(appr);
+      }    
+      if(this.approverProcess?.data?.owner){
+        let appr = new Approver();
+        appr.roleType = "OWN";
+        appr.approver = this.approverProcess?.data?.owner;
+        this.dynamicApprovers.push(appr);
+      }
+    }   
+
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
