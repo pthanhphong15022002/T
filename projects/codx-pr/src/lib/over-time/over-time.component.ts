@@ -55,27 +55,39 @@ export class OverTimeComponent extends UIComponent {
       id: 'btnAdd',
     };
 
-    this.api
-      .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'AddAsync')
-      .subscribe((res: any) => {
-        console.log(res);
-      });
+    let data = {
+      EmployeeID: '1123',
+      RequestType: 'abc',
+      Hours: 1,
+      Days: 1,
+      Minutes: 2,
+      Minutes2: 3,
+    };
+    // this.api
+    //   .execSv('PR', 'ERM.Business.PR', 'TimeKeepingRequest', 'AddAsync', data)
+    //   .subscribe((res: any) => {
+    //     console.log(res);
+    //   });
 
     this.getSchedule();
   }
 
   getSchedule() {
-    this.modelResource.assemblyName = 'HR';
-    this.modelResource.className = 'OrganizationUnitsBusiness';
-    this.modelResource.service = 'HR';
-    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    let resourceType = '1';
 
-    this.requestSchedule.service = 'TM';
-    this.requestSchedule.assemblyName = 'TM';
-    this.requestSchedule.className = 'TaskBusiness';
-    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    this.requestSchedule.idField = 'taskID';
-    this.requestSchedule.dataObj = '';
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'EP';
+    this.modelResource.className = 'BookingsBusiness';
+    this.modelResource.service = 'EP';
+    this.modelResource.method = 'GetResourceAsync';
+    this.modelResource.predicate = 'ResourceType=@0 ';
+    this.modelResource.dataValue = resourceType;
+
+    this.requestSchedule.service = 'PR';
+    this.requestSchedule.assemblyName = 'PR';
+    this.requestSchedule.className = 'TimeKeepingRequest';
+    this.requestSchedule.method = 'GetListAsync';
+    this.requestSchedule.idField = 'recID';
   }
 
   getCellContent(evt: any) {}
