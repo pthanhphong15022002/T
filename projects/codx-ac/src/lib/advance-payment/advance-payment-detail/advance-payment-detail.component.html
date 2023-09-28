@@ -127,7 +127,7 @@
                   type="text"
                   field="totalAmt"
                   [value]="dataItem.totalAmt"
-                  [class]="'om-input w-auto amount'"
+                  [class]="'om-input w-auto'"
                   [cssClass]="'om-input w-100 fs-4'"
                   [disabled]="true"
                 >
@@ -255,19 +255,21 @@
                       class="fw-bold"
                       fiedName="Note"
                       [formModel]="fmAdvancedPaymentLines"
+                      [setRequire]="false"
                     >
                     </codx-label>
                   </div>
                 </div>
               </div>
-              <div class="w-50 d-flex justify-content-start">
+              <div class="w-50 d-flex justify-content-start pe-4">
                 <div
-                  class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
+                  class="ps-3 w-100 min-h-table d-flex justify-content-end align-items-center pe-5"
                 >
                   <codx-label
                     class="fw-bold"
                     fiedName="DR"
                     [formModel]="fmAdvancedPaymentLines"
+                    [setRequire]="false"
                   >
                   </codx-label>
                 </div>
