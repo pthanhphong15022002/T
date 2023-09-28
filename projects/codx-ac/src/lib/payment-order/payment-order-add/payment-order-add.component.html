@@ -29,7 +29,7 @@
           <div
             class="text-gray-600"
             style="font-size: 10px"
-            [innerHTML]="company?.phone"
+            [innerHTML]="company?.taxCode"
           ></div>
         </div>
       </div>
@@ -132,7 +132,8 @@
                     [cssClass]="'rounded-pill border-0'"
                     cssPopup="h-350px w-100 fs-4"
                     [isMulti]="false"
-                    type="combobox"
+                    [ngbTooltip]="''"
+                    type="valuelist"
                     field="reasonID"
                     [value]="paymentOrder.reasonID"
                     [refValue]="form?.gridviewSetup?.ReasonID.referedValue"
@@ -160,7 +161,8 @@
                     [cssClass]="'rounded-pill border-0'"
                     cssPopup="h-350px w-100 fs-4"
                     [isMulti]="false"
-                    type="combobox"
+                    [ngbTooltip]="''"
+                    type="valuelist"
                     field="pmtMethodID"
                     [value]="paymentOrder.pmtMethodID"
                     [refValue]="form?.gridviewSetup?.PmtMethodID.referedValue"
@@ -214,9 +216,9 @@
                   </div>
                 </div>
               </div>
-              <div class="w-30 d-flex justify-content-start">
+              <div class="w-30 d-flex justify-content-start pe-4">
                 <div
-                  class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
+                  class="ps-3 w-100 min-h-table d-flex justify-content-end align-items-center pe-5"
                 >
                   <codx-label
                     class="fw-bold"
@@ -258,7 +260,7 @@
                       type="text"
                       field="note"
                       [class]="'om-input w-100'"
-                      [cssClass]="'om-input w-100 fs-4 d-flex'"
+                      [cssClass]="'om-input w-100 fs-4'"
                       [value]="item?.note"
                       [emptyText]="grvSetupPaymentOrderLines?.Note.headerText"
                       (valueChange)="lineChange($event, i)"
@@ -276,7 +278,7 @@
                       type="number"
                       field="dr"
                       [class]="'om-input w-100'"
-                      [cssClass]="'om-input w-100 fs-4 d-flex'"
+                      [cssClass]="'om-input w-100 fs-4'"
                       [value]="item?.dr"
                       [emptyText]="grvSetupPaymentOrderLines?.DR.headerText"
                       (valueChange)="lineChange($event, i)"
@@ -313,21 +315,110 @@
           </div>
         </div>
       </div>
-      <!-- Trường kế hoạch công tác -->
-      <div class="d-flex align-items-center">
-        <span
-          class="text-primary fw-bold"
-          style="margin-right: 15px"
-          [innerHTML]="'Kế hoạch công tác'"
-        ></span>
-        <span style="margin-right: 15px" [innerHTML]="'AR2023010001'"></span>
-        <i class="icon-link text-primary icon-30"></i>
-      </div>
-
-      <div>
+      <!-- Các field tổng tiền -->
+      <div class="align-items-center">
         <div class="row">
-          <div>
-
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalAmt"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalAmt"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="paymentOrder.totalAmt"
+              [emptyText]="form?.gridviewSetup?.TotalAmt.headerText"
+              (valueChange)="valueChange($event)"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalAmt"
+              [formModel]="fmAdvancedPayment"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalAmt"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="advancedPayment?.totalAmt"
+              [emptyText]="grvSetupAdvancedPayment?.TotalAmt.headerText"
+              (valueChange)="valueChange($event)"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalDR"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalDR"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="paymentOrder.totalDR"
+              [emptyText]="form?.gridviewSetup?.TotalDR.headerText"
+              (valueChange)="valueChange($event)"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalCR"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalCR"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="paymentOrder.totalCR"
+              [emptyText]="form?.gridviewSetup?.TotalCR.headerText"
+              (valueChange)="valueChange($event)"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+        </div>
+      </div>
+      <!-- Trường kế hoạch công tác -->
+      <div class="row">
+        <div class="d-flex align-items-center">
+          <div class="col-2">
+            <codx-label
+              class="fw-bold"
+              fiedName="RefNo"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-3">
+            <codx-inplace
+              type="text"
+              field="note"
+              [class]="'om-input'"
+              [cssClass]="'om-input w-100'"
+              [value]="paymentOrder.refNo"
+              [emptyText]="grvSetupPaymentOrderLines?.RefNo.headerText"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            <i
+              class="icon-link text-primary icon-30 cursor-pointer"
+              (click)="openFormAdvancePayment()"
+            ></i>
           </div>
         </div>
       </div>

@@ -1,38 +1,38 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
   Component,
   EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
   SimpleChanges,
+  AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
-  FormModel,
-  NotificationsService,
-  SidebarModel,
   Util,
+  AuthStore,
+  FormModel,
+  CacheService,
+  SidebarModel,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
 } from 'codx-core';
 import {
   DP_Activities,
   DP_Activities_Roles,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
+import { firstValueFrom } from 'rxjs';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import { firstValueFrom } from 'rxjs';
-
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -42,6 +42,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
   @Input() owner: string;
   @Input() isPause = false;
+  @Input() isAdmin = false;
   @Input() entityName = '';
 
   @Input() sessionID = ''; // session giao việc
@@ -49,14 +50,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Output() saveAssign = new EventEmitter<any>();
   activitie: DP_Activities = new DP_Activities();
-  listActivitie: DP_Activities[] = [];
+  user;
+  vllData;
   taskType;
+  titleName = '';
+  dataTooltipDay;
+  isNoData = false;
   listTaskType = [];
   grvMoreFunction: FormModel;
-  isNoData = false;
-  titleName = '';
-  vllData;
-  dataTooltipDay;
+  listActivitie: DP_Activities[] = [];
+
   moreDefaut = {
     share: true,
     write: true,
@@ -65,13 +68,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     delete: true,
   };
   constructor(
-    private cache: CacheService,
-    private callFunc: CallFuncService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
+    private cache: CacheService,
+    private authstore: AuthStore,
+    private stepService: StepService,
+    private callFunc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
-    private stepService: StepService
-  ) {}
+    private notiService: NotificationsService,
+  ) {
+    this.user = this.authstore.get();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.customerID) {
@@ -103,7 +109,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       ])
       .subscribe((res) => {
         if (res?.length > 0) {
-          this.listActivitie = res;
+          this.isPause;
+          if(this.isAdmin){
+            this.listActivitie = res;
+          }else{
+            this.listActivitie = res?.filter(activitie => activitie.owner == this.user?.userID);
+          }
           this.isNoData = false;
         } else {
           this.listActivitie = [];
@@ -348,7 +359,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     dataCopy['recID'] = Util.uid();
     dataCopy['progress'] = 0;
     dataCopy['isTaskDefault'] = false;
-    dataCopy['status'] = '1';
+    // dataCopy['status'] = '1';
     delete dataCopy?.id;
     dataCopy['modifiedOn'] = null;
     dataCopy['modifiedBy'] = null;

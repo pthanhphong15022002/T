@@ -96,17 +96,17 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerCustomerName,
         template: this.tempCustomerName,
-        width: 250,
+        width: 200,
       },
       {
         headerTemplate: this.headerIndustries,
         template: this.tempIndustries,
-        width: 250,
+        width: 200,
       },
       {
         headerTemplate: this.headerContact,
         template: this.tempContact,
-        width: 250,
+        width: 175,
       },
       {
         headerTemplate: this.headerOwner,
@@ -116,12 +116,12 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerStatus,
         template: this.tempStatus,
-        width: 150,
+        width: 100,
       },
       {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
-        width: 80,
+        width: 150,
       },
     ];
     this.detector.detectChanges();
@@ -259,22 +259,34 @@ export class CampaignContactsComponent implements OnInit {
       });
   }
 
-  delete(data){
+  delete(data) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notiSv.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.api.execSv<any>('CM','ERM.Business.CM','CampaignsBusiness','DeleteCampaignContactsAsync',[data?.recID]).subscribe(res => {
-          if(res){
-            let idx = this.lstCampContacts.findIndex(x => x.recID == data.recID);
-            if(idx != -1){
-              this.lstCampContacts.splice(idx, 1);
-              this.lstCampContacts = JSON.parse(JSON.stringify(this.lstCampContacts));
+        this.api
+          .execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CampaignsBusiness',
+            'DeleteCampaignContactsAsync',
+            [data?.recID]
+          )
+          .subscribe((res) => {
+            if (res) {
+              let idx = this.lstCampContacts.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idx != -1) {
+                this.lstCampContacts.splice(idx, 1);
+                this.lstCampContacts = JSON.parse(
+                  JSON.stringify(this.lstCampContacts)
+                );
+              }
+              this.notiSv.notifyCode('SYS008');
             }
-            this.notiSv.notifyCode('SYS008');
-          }
-          this.detector.detectChanges();
-        });
+            this.detector.detectChanges();
+          });
       }
     });
   }

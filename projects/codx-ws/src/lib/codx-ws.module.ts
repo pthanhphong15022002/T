@@ -37,13 +37,14 @@ import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdas
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
 import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
+import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-
       //-----------Khai báo routing nghiệp vu---------------
       {
         path: 'workspace/:funcID',
@@ -94,6 +95,11 @@ const routes: Routes = [
       {
         path: 'edayoffs/:funcID',
         component: EmployeeDayOffComponent,
+      },
+      // HR - QTNS - Đăng ký nghỉ phép
+      {
+        path: 'equit/:funcID',
+        component: EmployeeQuitComponent,
       },
       //Task + duyyet TM
       {
@@ -175,7 +181,8 @@ const routes: Routes = [
     MenuListApprovalComponent,
     DashboardComponent,
     ReportComponent,
-    RequestReviewComponent
+    RequestReviewComponent,
+    BookmarkComponent
   ],
   imports: [
     RouterModule.forChild(routes),

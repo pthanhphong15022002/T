@@ -18,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { OverTimeComponent } from './over-time/over-time.component';
+import { PopupOverTimeComponent } from './over-time/popup-over-time/popup-over-time.component';
 
 export const routes: Routes = [
   {
@@ -32,7 +33,11 @@ export const routes: Routes = [
   },
 ];
 
-const T_Component: Type<any>[] = [LayoutComponent, OverTimeComponent];
+const T_Component: Type<any>[] = [
+  LayoutComponent,
+  OverTimeComponent,
+  PopupOverTimeComponent,
+];
 
 @NgModule({
   imports: [
