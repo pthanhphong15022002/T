@@ -326,6 +326,12 @@ export class CodxListContactsComponent implements OnInit {
           this.isButton = true;
           if (e && e.event != null) {
             if (e.event?.recID) {
+              if (action == 'edit') {
+                this.codxShareSv.listContactBehavior.next({
+                  data: e.event,
+                  type: 'edit',
+                });
+              }
               var index = this.listContacts.findIndex(
                 (x) => x.recID != e.event?.recID && x.isDefault
               );
@@ -341,12 +347,7 @@ export class CodxListContactsComponent implements OnInit {
                 this.cmSv.loadList(e.event, this.listContacts, 'update')
               );
               this.contactEvent.emit({ data: e.event, action: action });
-              if (action == 'edit') {
-                this.codxShareSv.listContactBehavior.next({
-                  data: e.event,
-                  type: 'edit',
-                });
-              }
+
               var index = this.listContacts.findIndex(
                 (x) => x.recID == e.event?.recID
               );

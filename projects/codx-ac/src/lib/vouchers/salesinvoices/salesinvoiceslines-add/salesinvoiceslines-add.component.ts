@@ -89,36 +89,36 @@ export class SalesinvoiceslinesAddComponent
   onInit(): void {
     this.hiddenFields = this.journalService.getHiddenFields(this.journal);
 
-    this.journalService.loadComboboxBy067(
-      this.journal,
-      'diM1Control',
-      'diM1',
-      'DepartmentID',
-      this.diM1,
-      this.form.formGroup,
-      'diM1',
-      this.isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      this.journal,
-      'diM2Control',
-      'diM2',
-      'CostCenterID',
-      this.diM2,
-      this.form.formGroup,
-      'diM2',
-      this.isEdit
-    );
-    this.journalService.loadComboboxBy067(
-      this.journal,
-      'diM3Control',
-      'diM3',
-      'CostItemID',
-      this.diM3,
-      this.form.formGroup,
-      'diM3',
-      this.isEdit
-    );
+    // this.journalService.loadComboboxBy067(
+    //   this.journal,
+    //   'diM1Control',
+    //   'diM1',
+    //   'DepartmentID',
+    //   this.diM1,
+    //   this.form.formGroup,
+    //   'diM1',
+    //   this.isEdit
+    // );
+    // this.journalService.loadComboboxBy067(
+    //   this.journal,
+    //   'diM2Control',
+    //   'diM2',
+    //   'CostCenterID',
+    //   this.diM2,
+    //   this.form.formGroup,
+    //   'diM2',
+    //   this.isEdit
+    // );
+    // this.journalService.loadComboboxBy067(
+    //   this.journal,
+    //   'diM3Control',
+    //   'diM3',
+    //   'CostItemID',
+    //   this.diM3,
+    //   this.form.formGroup,
+    //   'diM3',
+    //   this.isEdit
+    // );
 
     const title$ = this.cache.valueList('AC070').pipe(
       tap((t) => console.log(t)),
