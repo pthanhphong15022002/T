@@ -96,7 +96,7 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerCustomerName,
         template: this.tempCustomerName,
-        width: 250,
+        width: 200,
       },
       {
         headerTemplate: this.headerIndustries,
@@ -106,7 +106,7 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerContact,
         template: this.tempContact,
-        width: 150,
+        width: 175,
       },
       {
         headerTemplate: this.headerOwner,

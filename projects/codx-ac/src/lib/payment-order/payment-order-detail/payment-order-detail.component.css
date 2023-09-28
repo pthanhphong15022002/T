@@ -1,0 +1,13 @@
+.amount .e-editable-value{
+    justify-content: end !important;
+}
+.header-font-size .e-dlg-header, .e-dlg-header *{
+    font-size: 13px;
+}
+.height-attachments .overflow-auto {
+    max-height: 75px;
+}
+.dropdow-select{
+    padding: 0 0.85rem !important;
+    line-height: 26px;
+}

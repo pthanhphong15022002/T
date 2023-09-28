@@ -70,7 +70,9 @@ export class CashtransferAddComponent extends UIComponent {
   ];
   journal: IJournal;
   hiddenFields: string[] = [];
+
   journalSubject = new BehaviorSubject<boolean>(false);
+  vatInvoiceSubject = new BehaviorSubject<boolean>(false);
 
   constructor(
     injector: Injector,
@@ -140,13 +142,13 @@ export class CashtransferAddComponent extends UIComponent {
               this.vatInvoice = this.fmVATInvoice.currentData = res[0];
               this.fgVatInvoice.patchValue(res[0]);
 
-              this.loadDims(this.journal, true);
+              this.vatInvoiceSubject.next(true);
             } else {
               this.invoiceService.addNew().subscribe((res) => {
                 this.vatInvoice = this.fmVATInvoice.currentData = res;
                 this.fgVatInvoice.patchValue(res);
 
-                this.loadDims(this.journal, false);
+                this.vatInvoiceSubject.next(true);
               });
             }
           });
@@ -155,7 +157,7 @@ export class CashtransferAddComponent extends UIComponent {
             this.vatInvoice = this.fmVATInvoice.currentData = res;
             this.fgVatInvoice.patchValue(res);
 
-            this.loadDims(this.journal, false);
+            this.vatInvoiceSubject.next(true);
           });
         }
       });
@@ -169,11 +171,7 @@ export class CashtransferAddComponent extends UIComponent {
   //#region Event
   onAfterFormInit(): void {
     this.journalSubject.subscribe((loaded) => {
-      if (!loaded) {
-        return;
-      }
-
-      if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
+      if (loaded && this.journal.assignRule === Vll075.TuDongKhiLuu) {
         this.form.setRequire([
           {
             field: 'voucherNo',
@@ -224,12 +222,12 @@ export class CashtransferAddComponent extends UIComponent {
   }
 
   onAfterRendering(cbx: CodxComboboxComponent, field: string): void {
-    this.journalSubject.subscribe((loaded) => {
-      if (!loaded) {
-        return;
-      }
+    if (field === 'cashAcctID') {
+      this.journalSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
 
-      if (field === 'cashAcctID') {
         this.journalService.loadComboboxBy067(
           this.journal,
           'drAcctControl',
@@ -240,7 +238,13 @@ export class CashtransferAddComponent extends UIComponent {
           'cashAcctID',
           this.isEdit
         );
-      } else if (field === 'offsetAcctID') {
+      });
+    } else if (field === 'offsetAcctID') {
+      this.journalSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
         this.journalService.loadComboboxBy067(
           this.journal,
           'crAcctControl',
@@ -251,8 +255,59 @@ export class CashtransferAddComponent extends UIComponent {
           'offsetAcctID',
           this.isEdit
         );
-      }
-    });
+      });
+    } else if (field === 'diM1') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM1Control',
+          'diM1',
+          'DepartmentID',
+          cbx,
+          this.fgVatInvoice,
+          'diM1',
+          this.isEdit
+        );
+      });
+    } else if (field === 'diM2') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM2Control',
+          'diM2',
+          'CostCenterID',
+          cbx,
+          this.fgVatInvoice,
+          'diM2',
+          this.isEdit
+        );
+      });
+    } else if (field === 'diM3') {
+      this.vatInvoiceSubject.subscribe((loaded) => {
+        if (!loaded) {
+          return;
+        }
+
+        this.journalService.loadComboboxBy067(
+          this.journal,
+          'diM3Control',
+          'diM3',
+          'CostItemID',
+          cbx,
+          this.fgVatInvoice,
+          'diM3',
+          this.isEdit
+        );
+      });
+    }
   }
 
   onInputChange(e): void {
