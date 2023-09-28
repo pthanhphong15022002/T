@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,14 +6,10 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  SliderTickEventArgs,
-  SliderTickRenderedEventArgs,
-} from '@syncfusion/ej2-angular-inputs';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
   ApiHttpService,
   AuthStore,
-  CacheService,
   CallFuncService,
   CodxFormComponent,
   DataRequest,
@@ -25,42 +20,28 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import {
-  ColumnTable,
-  DP_Steps_Fields,
-  tempVllDP,
-} from '../../../models/models';
+import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
-import { X } from '@angular/cdk/keycodes';
-import test from 'node:test';
-import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { CodxDpService } from '../../../codx-dp.service';
-import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
-import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
 
 @Component({
-  selector: 'lib-popup-add-custom-field',
-  templateUrl: './popup-add-custom-field.component.html',
-  styleUrls: ['./popup-add-custom-field.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'lib-popup-add-column-table',
+  templateUrl: './popup-add-column-table.component.html',
+  styleUrls: ['./popup-add-column-table.component.css'],
 })
-export class PopupAddCustomFieldComponent implements OnInit {
+export class PopupAddColumnTableComponent implements OnInit {
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('addVll') addVll: TemplateRef<any>;
-  @ViewChild('bodyVll') bodyVll: TemplateRef<any>;
-  @ViewChild('footerVll') footerVll: TemplateRef<any>;
+  @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
-  // @ViewChild('viewComboxForm') viewComboxForm: ComboBoxComponent; ///cobx xem truoc ViewForm add VLL
-  @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
 
+  column: ColumnTable;
   dialog: DialogRef;
-  field: DP_Steps_Fields;
-  grvSetup: any;
+  user: any;
   action = 'add';
-  titleAction = 'Thêm';
-  enabled = false;
-  //
+  processNo: any;
+  titleAction = 'Column ne';
+  grvSetup: any;
+  loaded: any = false;
   value: number = 5;
   min: number = 0;
   max: number = 10;
@@ -80,7 +61,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   itemView = '';
   vllDynamic = 'DP0271';
   fileNameArr = [];
-  refValueDataType = 'DP022';
+  refValueDataType = 'DP022_2';
 
   //vll dang DPF..
   listVllCus = [];
@@ -109,95 +90,62 @@ export class PopupAddCustomFieldComponent implements OnInit {
   classNameTemp = 'ValueListBusiness';
   methodTemp = 'GetVllCustomsByFormatAsync';
   requestTemp = new DataRequest();
-  user: any;
   crrVll: tempVllDP;
   crrDatasVll: any;
   // view Crr
   datasVllCrr = [];
-  fieldsCrrVll = { text: 'textValue', value: 'value' };
+  columnsCrrVll = { text: 'textValue', value: 'value' };
   crrValueFirst = '';
   element: any;
   isOpenPopup = false;
-  loaded: boolean = false;
 
   idxEdit = -1;
   popover: any;
   idxDeleted = -1;
-  processNo: any; //de sinh ma vll
   maxNumber = 0;
-
-  //column Table
-  column: ColumnTable;
   listColumns = [];
 
   constructor(
     private changdef: ChangeDetectorRef,
-    private cache: CacheService,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private changeDef: ChangeDetectorRef,
-    private authstore: AuthStore,
     private api: ApiHttpService,
-    private dpService: CodxDpService,
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.user = this.authstore.get();
-    this.field = JSON.parse(JSON.stringify(dt?.data?.field));
+    this.column = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.listColumns = dt?.data?.listColumns;
+    this.user = dt?.data?.user;
     this.action = dt?.data?.action;
-    this.enabled = dt?.data?.enabled;
-    this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
+    this.titleAction = dt?.data?.titleAction;
+    this.grvSetup = dt?.data?.grvSetup;
+    this.loaded = dt?.data?.loaded; ///da load data Vll
 
     if (this.action == 'add' || this.action == 'copy')
-      this.field.recID = Util.uid();
-
-    this.titleAction = dt?.data?.titleAction;
-    this.stepList = dt?.data?.stepList;
-    this.grvSetup = dt.data?.grvSetup;
-    if (this.stepList?.length > 0) {
-      this.stepList.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
-          let arrFn = obj?.fields.map((x) => {
-            let obj = { fieldName: x.fieldName, recID: x.recID };
-            return obj;
-          });
-          this.fileNameArr = this.fileNameArr.concat(arrFn);
-        }
-      });
-    }
-    //this.field.rank = 5;
-    // this.cache
-    //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //     }
-    //   });
+      this.column.recID = Util.uid();
   }
 
   ngOnInit(): void {
-    // this.field.dataType = 'L';
-    // this.field.dataFormat = 'V';
-    if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
+    if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
   }
 
-  valueChangeCbx(e) {}
-
   async valueChange(e) {
     if (e.field == 'multiselect') {
-      this.field[e.field] = e.data;
+      this.column[e.field] = e.data;
       return;
     }
-    if (e && e.data && e.field) this.field[e.field] = e.data;
-    if (e.field == 'title' || e.field == 'fieldName')
+    if (e && e.data && e.column) this.column[e.column] = e.data;
+    if (e.field == 'title' || e.field == 'columnName')
       this.removeAccents(e.data);
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       if (e.data == 'V') this.loadDataVll();
-      this.field.refType = e.data == 'C' ? '3' : '2';
-      if (this.action != 'edit' && !this.field.refValue) {
+      this.column.refType = e.data == 'C' ? '3' : '2';
+      if (this.action != 'edit' && !this.column.refValue) {
         // this.crrVll = new tempVllDP();
         // this.crrVll.language = this.user.language;
         // this.crrVll.createdBy = this.user.userID;
@@ -206,7 +154,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         // await this.getDefaultVll();
       } else {
         this.crrVll = this.listVllCus.find(
-          (x) => x.listName == this.field.refValue
+          (x) => x.listName == this.column.refValue
         );
         // this.changeFormVll();
       }
@@ -216,14 +164,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   changeRequired(e) {
-    this.field.isRequired = e.data;
+    this.column.isRequired = e.data;
   }
   valueChangeIcon(e) {
-    if (e && e?.data) this.field.rankIcon = e.data;
+    if (e && e?.data) this.column.rankIcon = e.data;
   }
 
   sliderChange(e) {
-    this.field.rank = e?.value;
+    this.column.rank = e?.value;
   }
   // khong dc xoa
   // renderingTicks(args: SliderTickEventArgs) {
@@ -241,12 +189,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   }
   // }
   cbxChange(value) {
-    if (value) this.field['stepID'] = value;
+    if (value) this.column['stepID'] = value;
   }
 
   saveData() {
     if (
-      (!this.field.title || this.field.title.trim() == '') &&
+      (!this.column.title || this.column.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
     ) {
       this.notiService.notifyCode(
@@ -257,7 +205,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
     if (
-      (!this.field.fieldName || this.field.fieldName.trim() == '') &&
+      (!this.column.fieldName || this.column.fieldName.trim() == '') &&
       this.grvSetup['FieldName']?.isRequire
     ) {
       this.notiService.notifyCode(
@@ -270,8 +218,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.fileNameArr.length > 0) {
       let check = this.fileNameArr.some(
         (x) =>
-          x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
-          x.recID != this.field.recID
+          x.field.toLowerCase() == this.column?.fieldName?.toLowerCase() &&
+          x.recID != this.column.recID
       );
       if (check) {
         this.notiService.notifyCode(
@@ -282,7 +230,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         return;
       }
     }
-    if (!this.field.dataType && this.grvSetup['DataType']?.isRequire) {
+    if (!this.column.dataType && this.grvSetup['DataType']?.isRequire) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -291,10 +239,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
     if (
-      !this.field.dataFormat &&
-      this.field.dataType != 'R' &&
-      this.field.dataType != 'A' &&
-      this.field.dataType != 'C'
+      !this.column.dataFormat &&
+      this.column.dataType != 'R' &&
+      this.column.dataType != 'A' &&
+      this.column.dataType != 'C'
     ) {
       this.notiService.notifyCode(
         'SYS009',
@@ -304,7 +252,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    // if (this.field.dataType == 'L' && !this.field.refType) {
+    // if (this.column.dataType == 'L' && !this.column.refType) {
     //   this.notiService.notifyCode(
     //     'SYS009',
     //     0,
@@ -313,7 +261,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     //   return;
     // }
 
-    if (this.field.dataType == 'L' && !this.field.refValue) {
+    if (this.column.dataType == 'L' && !this.column.refValue) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -323,7 +271,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     if (
-      (this.field.note == null || this.field.note.trim() == '') &&
+      (this.column.note == null || this.column.note.trim() == '') &&
       this.grvSetup['Note']?.isRequire
     ) {
       this.notiService.notifyCode(
@@ -333,7 +281,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (!this.field.rankIcon && this.field.dataType == 'R') {
+    if (!this.column.rankIcon && this.column.dataType == 'R') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -342,8 +290,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.dialog.close([this.field, this.processNo]);
-    this.field = new DP_Steps_Fields(); //tắt bùa
+    this.dialog.close([this.column, this.processNo]);
+    this.column = new ColumnTable(); //tắt bùa
   }
 
   removeAccents(str) {
@@ -355,60 +303,35 @@ export class PopupAddCustomFieldComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
-    this.field.fieldName = format;
+    this.column.fieldName = format;
   }
 
-  //----------------Value List -----------------------//
   async clickAddVll() {
     // 'add vll'
-    let action = !this.field.refValue ? 'add' : 'edit';
-    if (!this.crrVll) {
-      if (this.maxNumber > 0) {
-        if (!this.crrValueFirst) {
-          this.crrVll = new tempVllDP();
-          this.crrVll.language = this.user.language;
-          this.crrVll.createdBy = this.user.userID;
-          this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-          this.crrVll.version = 'x00.01';
-        }
-        if (!this.processNo) {
-          this.processNo = await firstValueFrom(
-            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-          );
-        }
-        this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
-      } else await this.getDefaultVll(500);
-    }
-
-    if (this.crrVll?.defaultValues) this.changeFormVll();
-    else this.datasVll = [];
-
-    let option = new DialogModel();
-    option.FormModel = this.dialog.formModel;
-    option.zIndex = 1099;
-    // this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
-    let obj = {
-      data: this.crrVll,
-      datasVll: this.datasVll,
-      action: action,
-    };
-    let dialogVll = this.callfc.openForm(
-      PopupAddVllCustomComponent,
-      '',
-      500,
-      550,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogVll.closed.subscribe((res) => {
-      if (res && res.event) {
-        this.crrVll = JSON.parse(JSON.stringify(res.event));
-        this.beforeSaveVll(this.crrVll);
-        this.maxNumber = action == 'edit' ? this.maxNumber : this.maxNumber + 1;
-      }
-    });
+    // if (!this.crrVll) {
+    //   let time = 500;
+    //   if (this.maxNumber > 0) {
+    //     if (!this.crrValueFirst) {
+    //       this.crrVll = new tempVllDP();
+    //       this.crrVll.language = this.user.language;
+    //       this.crrVll.createdBy = this.user.userID;
+    //       this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+    //       this.crrVll.version = 'x00.01';
+    //     }
+    //     if (!this.processNo) {
+    //       this.processNo = await firstValueFrom(
+    //         this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+    //       );
+    //     }
+    //     this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
+    //   }
+    // }
+    // if (this.crrVll?.defaultValues) this.changeFormVll();
+    // else this.datasVll = [];
+    // let option = new DialogModel();
+    // option.FormModel = this.dialog.formModel;
+    // option.zIndex = 1099;
+    // // this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
   }
 
   closeDialog() {}
@@ -418,53 +341,53 @@ export class PopupAddCustomFieldComponent implements OnInit {
     return 'Value List';
   }
 
-  //----------------form Add VLL---------------//
-  // saveVll() {
-  //   if (!this.crrVll.note || this.crrVll.note.trim() == '') {
-  //     this.notiService.notifyCode('Nội dung vll không được để trống !');
-  //     return;
-  //   }
+  saveVll() {
+    if (!this.crrVll.note || this.crrVll.note.trim() == '') {
+      this.notiService.notifyCode('Nội dung vll không được để trống !');
+      return;
+    }
 
-  //   if (!this.datasVll || this.datasVll?.length == 0) {
-  //     this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
-  //     return;
-  //   }
+    if (!this.datasVll || this.datasVll?.length == 0) {
+      this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
+      return;
+    }
 
-  //   // this.crrVll.listName = this.listName;
-  //   // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-  //   // this.crrVll.version = 'x00.01';
-  //   let vl = [];
-  //   if (this.crrVll.listType == '1') {
-  //     vl = this.datasVll.map((x) => {
-  //       return x.textValue;
-  //     });
-  //   } else {
-  //     this.datasVll.forEach((x) => {
-  //       vl.push(x.value);
-  //       vl.push(x.textValue);
-  //     });
-  //   }
-  //   this.crrVll.defaultValues = this.crrVll.customValues = vl.join(';');
+    // this.crrVll.listName = this.listName;
+    // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+    // this.crrVll.version = 'x00.01';
+    let vl = [];
+    if (this.crrVll.listType == '1') {
+      vl = this.datasVll.map((x) => {
+        return x.textValue;
+      });
+    } else {
+      this.datasVll.forEach((x) => {
+        vl.push(x.value);
+        vl.push(x.textValue);
+      });
+    }
+    this.crrVll.defaultValues = this.crrVll.customValues = vl.join(';');
 
-  //   var checkEdit = this.listVllCus.some(
-  //     (x) => x.listName == this.crrVll.listName
-  //   );
+    var checkEdit = this.listVllCus.some(
+      (x) => x.listName == this.crrVll.listName
+    );
 
-  //   let menthol = checkEdit
-  //     ? 'EditValuelistCustomsAsync'
-  //     : 'AddValuelistCustomsAsync';
+    let menthol = checkEdit
+      ? 'EditValuelistCustomsAsync'
+      : 'AddValuelistCustomsAsync';
 
-  //   this.api
-  //     .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.notiService.notifyCode(checkEdit ? 'SYS007' : 'SYS006');
-  //         this.beforeSaveVll(this.crrVll);
-  //         this.maxNumber = checkEdit ? this.maxNumber : this.maxNumber + 1;
-  //         this.dialogVll.close();
-  //       }
-  //     });
-  // }
+    this.api
+      .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
+      .subscribe((res) => {
+        if (res) {
+          this.notiService.notifyCode(checkEdit ? 'SYS007' : 'SYS006');
+          this.beforeSaveVll(this.crrVll);
+          this.maxNumber = checkEdit ? this.maxNumber : this.maxNumber + 1;
+
+          this.dialogVll.close();
+        }
+      });
+  }
 
   // onAddTextValue(e) {
   //   if (!e.value || e.value.trim() == '') return;
@@ -501,11 +424,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // }
 
   // onChangeVll(e) {
-  //   if (e.field == 'multiSelect') {
-  //     this.crrVll[e.field] = e.data;
+  //   if (e.column == 'multiSelect') {
+  //     this.crrVll[e.column] = e.data;
   //     return;
   //   }
-  //   if (e.field == 'listName') {
+  //   if (e.column == 'listName') {
   //     if (!e.data || e.data.trim() == '') {
   //       this.notiService.notifyCode('Tên value list không được để trống !');
   //       return;
@@ -526,41 +449,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //     }
   //   }
 
-  //   this.crrVll[e.field] = e.data;
+  //   this.crrVll[e.column] = e.data;
   // }
 
-  // deletedValue(i) {
-  //   if (i == -1) return;
-  //   this.datasVll.splice(i, 1);
-  //   // this.idxDeleted = -1;
-  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  // }
-
-  // handelTextValue(i) {
-  //   this.idxEdit = i;
-  //   this.changeDef.detectChanges();
-  // }
-
-  // showPopoverDeleted(p, i) {
-  //   this.idxDeleted = i;
-  //   if (this.popover && this.popover.isOpen()) this.popover.close();
-  //   p.open();
-  //   this.popover = p;
-  // }
-  //---------------------form add -------------------//
-
-  async loadDataVll() {
+  loadDataVll() {
     if (this.loaded) return;
-    if (!this.processNo) {
-      this.processNo = await firstValueFrom(
-        this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-      );
-    }
     this.requestTemp.entityName = 'SYS_ValueList';
-    this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
-    this.requestTemp.dataValue = this.user.language + ';DPF' + this.processNo;
-    // this.requestTemp.predicate = 'Language=@0 ';
-    // this.requestTemp.dataValue = this.user.language;
+    // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
+    // this.requestTemp.dataValue = this.user.language + ';DPF';
+    this.requestTemp.predicate = 'Language=@0 ';
+    this.requestTemp.dataValue = this.user.language;
     this.requestTemp.pageLoading = false; //load all
 
     this.fetch().subscribe((item) => {
@@ -607,7 +505,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async cbxChangeVll(value, elm) {
     if (elm) this.element = elm;
-    this.field['refValue'] = value;
+    this.column['refValue'] = value;
     if (!value) {
       //data form
       // this.crrVll = new tempVllDP();
@@ -671,8 +569,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
-    this.form.formGroup.patchValue(this.field);
-    this.crrVll = null;
+    this.form.formGroup.patchValue(this.column);
     this.changeDef.detectChanges();
   }
 
@@ -688,6 +585,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
         });
       }
     }
+  }
+
+  // deletedValue(i) {
+  //   if (i == -1) return;
+  //   this.datasVll.splice(i, 1);
+  //   // this.idxDeleted = -1;
+  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
+  // }
+
+  handelTextValue(i) {
+    this.idxEdit = i;
+    this.changeDef.detectChanges();
+  }
+
+  showPopoverDeleted(p, i) {
+    this.idxDeleted = i;
+    if (this.popover && this.popover.isOpen()) this.popover.close();
+    p.open();
+    this.popover = p;
   }
 
   clickDeletedVll() {
@@ -710,26 +626,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
                 this.listVll.splice(idxDeleted, 1);
                 //data crrVll
               }
-
-              var idxDeletedCus = this.listVllCus.findIndex(
-                (x) => x.value == this.crrVll.listName
-              );
-              if (idxDeletedCus != -1) {
-                this.listVllCus.splice(idxDeletedCus, 1);
-              }
-
-              this.field.refValue = '';
+              this.column.refValue = '';
               this.datasVllCrr = [];
-              this.crrValueFirst = '';
+              this.crrValueFirst = null;
               this.crrVll = null;
-              if (this.comboxView) {
-                this.comboxView.value = '';
-                this.comboxView.refresh();
-              }
-              if (this.datasVllCbx) {
-                this.datasVllCbx.value = '';
-                this.datasVllCbx.refresh();
-              }
+              if (this.comboxView) this.comboxView.refresh();
+              if (this.datasVllCbx) this.comboxView.refresh();
               this.notiService.notifyCode('SYS008');
             } else this.notiService.notifyCode('SYS022');
           });
@@ -762,18 +664,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getDefaultVll(timeOut = 500) {
     setTimeout(async () => {
-      if (!this.crrVll) {
+      if (!this.crrValueFirst) {
         this.crrVll = new tempVllDP();
         this.crrVll.language = this.user.language;
         this.crrVll.createdBy = this.user.userID;
         this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
         this.crrVll.version = 'x00.01';
       }
+
       if (this.loaded) {
-        if (!this.processNo)
-          this.processNo = await firstValueFrom(
-            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-          );
+        // if (!this.processNo) {
+        //   // this.processNo = await firstValueFrom(
+        //   //   this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+        //   // );
+
         this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
       } else {
         timeOut += 500;
@@ -781,36 +685,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     }, timeOut);
   }
-  //---------------------End  Vll-----------------------------//
 
-  //----------------Column Table -----------------------//
-  clickSettingTable() {
-    if (!this.column) this.column = new ColumnTable();
-    let option = new DialogModel();
-    option.FormModel = this.dialog.formModel;
-    option.zIndex = 1050;
-    let obj = {
-      data: this.column,
-      action: 'add',
-      titleAction: 'Thêm column test',
-      grvSetup: this.grvSetup,
-      processNo: this.processNo,
-      user: this.user,
-      listColumns: this.listColumns,
-    };
-    let dialogColumn = this.callfc.openForm(
-      PopupAddColumnTableComponent,
-      '',
-      500,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogColumn.closed.subscribe((res) => {
-      //....................
-    });
-  }
-  //---------------------End Column Table-----------------------------//
+  saveDataAndContinue() {}
 }

@@ -31,22 +31,22 @@
       default="Vui lòng chọn hình thức xác thực bảo mật 2 lớp"
     ></codx-label>
   </div>
-  <div class="content p-2">
+  <div class="content p-3">
     <ng-container [ngSwitch]="clickQueue[clickQueue.length - 1]">
       <div *ngSwitchCase="'1'">
         <div *ngIf="lstOptions">
           <div
-            class="row"
+            class="d-flex align-items-center bg-hover rounded-1 cursor-pointer p-3"
             *ngFor="let option of lstOptions"
             (click)="changeLogin2FAType(option)"
           >
-            <div [class]="'rounded-circle col-2 icon-40 ' + option.icon"></div>
-            <div class="col-8">
-              <div class="text justify-content-start">
+            <div [class]="'rounded-circle me-5 icon-40 ' + option.icon"></div>
+            <div class="w-100">
+              <div class="fs-5">
                 {{ option.text }}
               </div>
             </div>
-            <div class="col-2 icon-arrow_forward_ios"></div>
+            <div class="w-30px ms-4 icon-arrow_forward_ios text-hover-primary"></div>
           </div>
         </div>
       </div>
@@ -58,8 +58,8 @@
       <ng-container *ngSwitchCase="'4'" [ngTemplateOutlet]="tmpOTP">
       </ng-container>
       <ng-container *ngIf="clickQueue[clickQueue.length - 1] != '1'">
-        <div class="d-flex align-items-center my-2">
-          <div class="d-flex justify-content-start me-2">
+        <div class="d-flex align-items-center mt-6 ms-4">
+          <div class="d-flex justify-content-start me-3">
             <!--begin::Switch-->
             <codx-input
               type="checkbox"
@@ -71,7 +71,7 @@
             </codx-input>
             <!--end::Switch-->
           </div>
-          <div class="text-gray-800 text-nowrap">
+          <div class="text-gray-600 text-nowrap">
             <codx-label
               name="lblLg2FAAsk"
               default="Không hỏi lại trên thiết bị này"
@@ -161,18 +161,18 @@
   </div>
 </ng-template>
 <ng-template #tmpOTP>
-  <div class="text-start mt-3 mb-3">
+  <div class="text-start m-3">
     <form [formGroup]="loginFG" method="post" (ngSubmit)="login2FAOTP()">
       <div class="form-group mb-5 fv-plugins-icon-container">
         <label class="fw-bold">
           <codx-label fiedName="otp" formModel="" default="OTP"></codx-label
         ></label>
         <div
-          class="d-flex align-items-center form-control form-control-solid form-control-lg px-3"
+          class="d-flex align-items-center form-control form-control-solid form-control-lg p-3"
         >
-          <div class="row inputs" id="inputs">
+          <div class="row mx-0 inputs" id="inputs">
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"
@@ -180,7 +180,7 @@
               (change)="changeOTP($event, 0)"
             />
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"
@@ -188,7 +188,7 @@
               (change)="changeOTP($event, 1)"
             />
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"
@@ -196,7 +196,7 @@
               (change)="changeOTP($event, 2)"
             />
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"
@@ -204,7 +204,7 @@
               (change)="changeOTP($event, 3)"
             />
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"
@@ -212,7 +212,7 @@
               (change)="changeOTP($event, 4)"
             />
             <input
-              class="col-2"
+              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
               inputmode="numeric"
               type="text"
               maxlength="1"

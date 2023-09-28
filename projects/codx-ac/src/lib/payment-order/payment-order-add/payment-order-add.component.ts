@@ -274,7 +274,7 @@ export class PaymentOrderAddComponent extends UIComponent
       .subscribe((res) => {
         if (res) {
           this.saveFileUpload();
-          this.dialog.dataService.update(this.paymentOrder).subscribe();
+          // this.dialog.dataService.update(this.paymentOrder).subscribe();
           this.onDestroy();
           this.dialog.close();
           this.detectorRef.detectChanges();
