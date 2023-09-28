@@ -36,6 +36,7 @@ import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddas
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
 import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
+import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
 
 const routes: Routes = [
   {
@@ -117,6 +118,10 @@ const routes: Routes = [
       {
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
+      },
+      {
+        path: 'paymentorders/:funcID',
+        component: PaymentOrderComponent,
       },
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------

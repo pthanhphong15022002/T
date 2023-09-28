@@ -17,9 +17,7 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
-    id: 'btnAdd',
-  };
+  buttons: ButtonModel;
 
   //View schedule
   requestSchedule: ResourceModel;
@@ -27,9 +25,10 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   modelResource: ResourceModel;
   fields = {
-    id: 'taskID',
+    id: 'recID',
     subject: { name: 'taskName' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
@@ -42,7 +41,7 @@ export class OverTimeComponent extends UIComponent {
     TextField: 'userName',
     Title: 'Resources',
   };
-  vllStatus = 'TM004';
+  vllStatus = 'EP022';
 
   //#endregion
 
@@ -52,6 +51,10 @@ export class OverTimeComponent extends UIComponent {
 
   //#region Init components
   onInit() {
+    this.buttons = {
+      id: 'btnAdd',
+    };
+
     this.getSchedule();
   }
 
