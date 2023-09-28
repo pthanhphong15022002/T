@@ -1640,7 +1640,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
-  //Popup setiing autoNumber - Thao lam dung sua Please
+  //Popup setiing autoNumber - Thao- Please
   async openAutoNumPopup() {
     // if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
     //   if (this.autoNumberSetting.nativeElement) {
@@ -2130,6 +2130,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             enabled: enabled,
             refValueDataType:
               this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+            processNo: this.process.processNo,
           };
 
           let dialogCustomField = this.callfc.openSide(
@@ -2140,11 +2141,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
               //xu ly data đổ về
-              this.fieldCrr = e.event;
+              this.fieldCrr = e.event[0];
+              if (e.event[1] && !this.process.processNo) {
+                this.process.processNo = e.event[1];
+              }
               this.fieldCrr.sorting = this.step.fields.length + 1;
-              // if (this.step.recID == this.fieldCrr.stepID) {
-              //   this.step.fields.push(this.fieldCrr);
-              // }
+
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID) {
                   x.fields.push(this.fieldCrr);
@@ -2188,6 +2190,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             enabled: enabled,
             refValueDataType:
               this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+            processNo: this.process.processNo,
           };
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2197,7 +2200,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
               //xu ly data đổ về
-              this.fieldCrr = e.event;
+              this.fieldCrr = e.event[0];
+              if (e.event[1] && !this.process.processNo) {
+                this.process.processNo = e.event[1];
+              }
               this.fieldCrr.sorting = this.step.fields.length;
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID) {
@@ -2242,6 +2248,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             enabled: enabled,
             refValueDataType:
               this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+            processNo: this.process.processNo,
           };
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2251,7 +2258,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
               //xu ly data đổ về
-              this.fieldCrr = e.event;
+              this.fieldCrr = e.event[0];
+              if (e.event[1] && !this.process.processNo) {
+                this.process.processNo = e.event[1];
+              }
               if (oldStepID == this.fieldCrr.stepID) {
                 this.stepList.forEach((obj) => {
                   if (obj.recID == this.fieldCrr.stepID) {
@@ -3668,8 +3678,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getRoleName(task) {
     let role =
-      task?.roles.find((role) => role.roleType == 'O') ||
-      task?.roles[0];
+      task?.roles.find((role) => role.roleType == 'O') || task?.roles[0];
     return role?.objectName;
   }
 

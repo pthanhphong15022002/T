@@ -17,18 +17,22 @@ export class ReportComponent extends WSUIComponent{
   listReports: any;
   listBookMarks = [];
   listGroupReport = [];
+  countBookMarks = 0;
   selectedToolBar = "All";
   imgDefault = "assets/themes/ws/default/img/Report_Empty.svg";
   dataModel = new FormModel();
 
   override onInit(): void {
-    this.listReport = [];
-    this.listReports = [];
-    this.listBookMarks = [];
     this.formatListGroupReport();
     this.getModuleByUserID();
+    this.getCountBookMark();
   }
-  
+  getCountBookMark()
+  {
+    let widthBody = document.body.offsetWidth - 40;
+    this.countBookMarks = Math.ceil(widthBody / 260);
+  }
+
   formatListGroupReport()
   {
     var obj = 

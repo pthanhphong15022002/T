@@ -88,6 +88,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   @Input() sessionID = ''; // sesion giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
+  @Input() isChangeOwner = false; 
 
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -251,6 +252,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         group['isChange'] = false;
         group['isChangeAuto'] = true;
       });
+    }
+    if (changes?.isChangeOwner) {
+      if(changes?.isChangeOwner?.currentValue){
+        this.setOwnerByChangeOwnerInstance(this.currentStep?.instancesID,this.currentStep?.recID);
+      }
     }
     this.changeDetectorRef.markForCheck();
   }
@@ -2418,4 +2424,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     return null;
   }
+
+  //#region set owner
+  setOwnerByChangeOwnerInstance(instanceID, insStepID){
+    this.api
+    .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
+    .subscribe(res => {
+      if(res){
+        console.log(res);
+      }
+    })
+  }
+  //#endregion
 }

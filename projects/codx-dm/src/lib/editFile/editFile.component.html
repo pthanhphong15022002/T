@@ -74,7 +74,7 @@
                 <ng-container *ngIf="fileEditing != null && fileEditing?.permissions != null">
                     <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
                         <ng-container
-                            *ngIf="perm.isActive != false && ((!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
+                            *ngIf="perm.isActive">
                             <div class="user-mini-item">
                                 <div class="d-flex align-items-center">
                                     <div class="me-2">
