@@ -33,7 +33,7 @@
         </ng-container>
       </div>
       <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
-        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer">
+        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer" (click)="selectMoreBookmark()">
           <i class="icon-more_horiz"></i>
         </div>
       </ng-container>

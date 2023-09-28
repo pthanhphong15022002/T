@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
 import { isObservable } from 'rxjs';
+import { BookmarkComponent } from '../bookmark/bookmark.component';
 
 @Component({
   selector: 'lib-dashboard',
@@ -181,5 +182,10 @@ export class DashboardComponent extends WSUIComponent{
         }
       }
     });
+  }
+
+  selectMoreBookmark()
+  {
+    this.callFunc.openForm(BookmarkComponent,"",900,700,"",{listGroup:this.listGroupDashboard,listBookMarks:this.listBookMarks,type:'D'});
   }
 }
