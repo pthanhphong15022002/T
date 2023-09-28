@@ -35,8 +35,8 @@ import { X } from '@angular/cdk/keycodes';
 import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
-import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
-import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
+// import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
+// import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -584,12 +584,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field['refValue'] = value;
     if (!value) {
       //data form
-      // this.crrVll = new tempVllDP();
-      // this.crrVll.language = this.user.language;
-      // this.crrVll.createdBy = this.user.userID;
-      // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-      // this.crrVll.version = 'x00.01';
-      await this.getDefaultVll();
+      this.crrVll = new tempVllDP();
+      this.crrVll.language = this.user.language;
+      this.crrVll.createdBy = this.user.userID;
+      this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+      this.crrVll.version = 'x00.01';
+      // await this.getDefaultVll();
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
@@ -763,32 +763,32 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //---------------------End  Vll-----------------------------//
 
   //----------------Column Table -----------------------//
-  addColumnTable() {
-    if (!this.column) this.column = new ColumnTable();
-    let option = new DialogModel();
-    option.FormModel = this.dialog.formModel;
-    option.zIndex = 1050;
-    let obj = {
-      data: this.column,
-      action: 'add',
-      titleAction: 'Thêm column test',
-      grvSetup: this.grvSetup,
-      processNo: this.processNo,
-      user: this.user,
-    };
-    let dialogColumn = this.callfc.openForm(
-      PopupAddColumnTableComponent,
-      '',
-      500,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogColumn.closed.subscribe((res) => {
-      //....................
-    });
-  }
+  // addColumnTable() {
+  //   if (!this.column) this.column = new ColumnTable();
+  //   let option = new DialogModel();
+  //   option.FormModel = this.dialog.formModel;
+  //   option.zIndex = 1050;
+  //   let obj = {
+  //     data: this.column,
+  //     action: 'add',
+  //     titleAction: 'Thêm column test',
+  //     grvSetup: this.grvSetup,
+  //     processNo: this.processNo,
+  //     user: this.user,
+  //   };
+  //   let dialogColumn = this.callfc.openForm(
+  //     PopupAddColumnTableComponent,
+  //     '',
+  //     500,
+  //     700,
+  //     '',
+  //     obj,
+  //     '',
+  //     option
+  //   );
+  //   dialogColumn.closed.subscribe((res) => {
+  //     //....................
+  //   });
+  // }
   //---------------------End Column Table-----------------------------//
 }
