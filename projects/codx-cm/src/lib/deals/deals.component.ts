@@ -167,7 +167,7 @@ export class DealsComponent
   listHeader: any = [];
   listSteps: any[] = [];
   arrFieldIsVisible: any[];
-
+  isChangeOwner = false;
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
   queryParams: any;
@@ -1182,6 +1182,7 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let ownerIdOld = data.owner;
     let dealValueOld = data.dealValue;
     let exchangeRateOld = data.exchangeRate;
     this.view.dataService
@@ -1225,6 +1226,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
+            this.isChangeOwner = ownerIdOld != e.event;
             this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
