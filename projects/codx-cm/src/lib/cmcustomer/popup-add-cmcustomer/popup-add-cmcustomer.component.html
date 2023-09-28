@@ -810,7 +810,7 @@
           <codx-input
             [field]="'contactID'"
             [disabled]="disabledShowInput"
-            [placeholder]="planceHolderAutoNumber"
+            [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           >
@@ -1017,7 +1017,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [disabled]="disabledShowInput"
-          [placeholder]="planceHolderAutoNumber"
+          [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
         >
         </codx-input>

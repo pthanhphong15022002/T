@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentOrder } from '../../models/PaymentOrder.model';
@@ -7,6 +7,7 @@ import { PaymentOrderLines } from '../../models/PaymentOrderLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
+import { AdvancedPaymentLinkComponent } from '../advanced-payment-link/advanced-payment-link.component';
 
 @Component({
   selector: 'lib-payment-order-add',
@@ -29,7 +30,7 @@ export class PaymentOrderAddComponent extends UIComponent
   dialog!: DialogRef;
   isHaveFile: any = false;
   showLabelAttachment: any = false;
-  advancedPayment: AdvancedPayment;
+  advancedPayment: AdvancedPayment = new AdvancedPayment();
   paymentOrder: PaymentOrder = new PaymentOrder();
   paymentOrderLines: Array<PaymentOrderLines> = [];
   fmPaymentOrderLines: FormModel = {
@@ -60,7 +61,14 @@ export class PaymentOrderAddComponent extends UIComponent
     this.paymentOrder.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
     this.headerText = dialogData.data?.headerText;
+    this.advancedPayment.totalAmt = 0;
+    
     this.loadPaymentOrderLines();
+    if(this.paymentOrder.refNo)
+    {
+      this.loadAdvancedPayment();
+    }
+
     this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
@@ -81,8 +89,6 @@ export class PaymentOrderAddComponent extends UIComponent
 
   ngAfterViewInit(){
     if(this.form?.data?.coppyForm) this.form.data._isEdit = true;
-    
-    this.calTotalAmt();
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.paymentOrder.voucherNo) {
@@ -316,6 +322,7 @@ export class PaymentOrderAddComponent extends UIComponent
     .subscribe((res) => {
       if (res) {
         this.paymentOrderLines = res;
+        this.calTotalAmt();
       }
     });
   }
@@ -385,6 +392,61 @@ export class PaymentOrderAddComponent extends UIComponent
         }
       });
       this.paymentOrder.totalAmt = total;
+      this.calTotalCR();
     }
+  }
+
+  calTotalCR()
+  {
+    if(this.paymentOrder?.totalAmt > this.advancedPayment?.totalAmt)
+    {
+      this.paymentOrder.totalCR = this.paymentOrder.totalAmt - this.advancedPayment.totalAmt;
+      this.form.formGroup.patchValue({totalCR: this.paymentOrder.totalCR});
+      this.dt.detectChanges();
+    }
+  }
+
+  loadAdvancedPayment(){
+    this.api
+      .exec<any>('AC', 'AdvancedPaymentBusiness', 'LoadDataByVoucherNoAsync', [
+        this.paymentOrder.refNo,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.advancedPayment = res;
+          this.calTotalCR();
+          this.dt.detectChanges();
+        }
+      });
+  }
+
+  openFormAdvancePayment() {
+    let obj = {
+      paymentOrder: this.form?.data,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel = this.fmAdvancedPayment;
+    opt.FormModel = dataModel;
+    let dialog = this.callfc.openForm(
+      AdvancedPaymentLinkComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      opt
+    );
+    dialog.closed.subscribe((res) => {
+      if (res && res.event && res.event?.advancedPayment) {
+        this.advancedPayment = res.event.advancedPayment;
+        this.paymentOrder.refNo = this.advancedPayment.voucherNo;
+        this.form.formGroup.patchValue({refNo: this.paymentOrder.refNo});
+        this.calTotalCR();
+        this.dt.detectChanges();
+      }
+    });
   }
 }

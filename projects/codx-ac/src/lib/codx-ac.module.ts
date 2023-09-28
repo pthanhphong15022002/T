@@ -100,6 +100,7 @@ import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
 import { PaymentOrderComponent } from './payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './payment-order/payment-order-add/payment-order-add.component';
 import { PaymentOrderDetailComponent } from './payment-order/payment-order-detail/payment-order-detail.component';
+import { AdvancedPaymentLinkComponent } from './payment-order/advanced-payment-link/advanced-payment-link.component';
 export const routes: Routes = [
   {
     path: '',
@@ -337,6 +338,7 @@ export const routes: Routes = [
     PaymentOrderComponent,
     PaymentOrderAddComponent,
     PaymentOrderDetailComponent,
+    AdvancedPaymentLinkComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -1,0 +1,105 @@
+<codx-layout-add
+  #form
+  [title]="title"
+  [body]="body"
+  [formModel]="formModel"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  (setTitle)="setTitle($event)"
+  [openMore]="false"
+  [data]="data"
+>
+  <ng-template #body>
+    <ng-container *ngIf="form && form?.formGroup">
+      <div class="row mx-0 form-group">
+        <div class="col-6">
+          <codx-label fiedName="FromDate" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="fromDate"
+            [crrValue]="data?.fromDate"
+            format="d"
+            type="datetime"
+            class="test-datetime"
+            [disabled]="viewOnly"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-6">
+          <codx-label fiedName="ToDate" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input
+            field="toDate"
+            [crrValue]="data?.toDate"
+            format="d"
+            type="datetime"
+            class="test-datetime"
+            [disabled]="viewOnly"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-6">
+          <codx-label
+            name="FromTime"
+            default="Từ giờ"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="fromTime"
+            [crrValue]="fromTime"
+            format="t"
+            (valueChange)="valueChange($event)"
+            [disabled]="false"
+            [disabled]="viewOnly"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-6">
+          <codx-label
+            name="ToTime"
+            default="Từ giờ"
+            [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            field="toTime"
+            [crrValue]="toTime"
+            format="t"
+            (valueChange)="valueChange($event)"
+            [disabled]="false"
+            [disabled]="viewOnly"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #footer>
+    <ng-container *ngIf="form && form.formGroup">
+      <div class="d-flex justify-content-between">
+        <div class="btn-group">
+          <button class="btn btn-primary" (click)="onSaveForm()">
+            <codx-label
+              name="lblSave"
+              default="Lưu"
+              [formModel]="formModel"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+</codx-layout-add>

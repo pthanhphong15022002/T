@@ -3,6 +3,7 @@ import { WSUIComponent } from '../default/wsui.component';
 import { isObservable } from 'rxjs';
 import { FormModel } from 'codx-core';
 import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
+import { BookmarkComponent } from '../bookmark/bookmark.component';
 
 @Component({
   selector: 'lib-report',
@@ -188,5 +189,10 @@ export class ReportComponent extends WSUIComponent{
         }
       }
     });
+  }
+
+  selectMoreBookmark()
+  {
+    this.callFunc.openForm(BookmarkComponent,"",900,700,"",{listGroup:this.listGroupReport,listBookMarks:this.listBookMarks,type:'R'});
   }
 }

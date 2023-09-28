@@ -167,48 +167,46 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      if (this[e?.field] != e?.data) {
-        this[e?.field] = e?.data;
-        switch (e?.field) {
-          case 'isProvince':
-            if (!this.isProvince) {
-              if (this.cbxProvince) {
-                this.cbxProvince.value = [];
-                this.cbxProvince.selectedItems = [];
-                this.cbxProvince.setValue([]);
-              }
-              this.provinceIDs = [];
-              this.bindingCountCompaign();
+      this[e?.field] = e?.data;
+      switch (e?.field) {
+        case 'isProvince':
+          if (!this.isProvince) {
+            if (this.cbxProvince) {
+              this.cbxProvince.value = [];
+              this.cbxProvince.selectedItems = [];
+              this.cbxProvince.setValue([]);
             }
-            break;
-          case 'isDistrict':
-            if (!this.isDistrict) {
-              this.districtIDs = [];
-              this.bindingCountCompaign();
-            }
-            break;
-          case 'isIndustries':
-            if (!this.isIndustries) {
-              this.industries = [];
-              this.bindingCountCompaign();
-            }
-            break;
-          case 'isStatus':
-            if (!this.isStatus) {
-              this.status = [];
-              this.bindingCountCompaign();
-            }
-            break;
-          default:
+            this.provinceIDs = [];
             this.bindingCountCompaign();
-            break;
-          // case 'districtIDs':
-          //   break;
-          // case 'industries':
-          //   break;
-          // case 'status':
-          //   break;
-        }
+          }
+          break;
+        case 'isDistrict':
+          if (!this.isDistrict) {
+            this.districtIDs = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        case 'isIndustries':
+          if (!this.isIndustries) {
+            this.industries = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        case 'isStatus':
+          if (!this.isStatus) {
+            this.status = [];
+            this.bindingCountCompaign();
+          }
+          break;
+        default:
+          this.bindingCountCompaign();
+          break;
+        // case 'districtIDs':
+        //   break;
+        // case 'industries':
+        //   break;
+        // case 'status':
+        //   break;
       }
     }
 

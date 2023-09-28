@@ -396,11 +396,11 @@ export class CashtransferAddComponent extends UIComponent {
     }
   }
 
-  onClickClose() {
+  onCloseClick() {
     this.dialogRef.close();
   }
 
-  onClickDiscard() {
+  onDiscardClick() {
     this.masterService
       .delete(
         [this.cashTransfer],
@@ -427,7 +427,7 @@ export class CashtransferAddComponent extends UIComponent {
       (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
   }
 
-  onClickSave(closeAfterSave: boolean): void {
+  onSaveClick(closeAfterSave: boolean): void {
     console.log(this.cashTransfer);
     console.log(this.vatInvoice);
 
@@ -514,7 +514,7 @@ export class CashtransferAddComponent extends UIComponent {
           this.fgVatInvoice.patchValue(res);
 
           setTimeout(() => {
-            this.loadDims(this.journal, false); // bùa
+            this.loadDims(); // bùa
           });
         });
       });
@@ -526,37 +526,45 @@ export class CashtransferAddComponent extends UIComponent {
     return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
   }
 
-  loadDims(journal: IJournal, isEdit: boolean) {
-    // this.journalService.loadComboboxBy067(
-    //   journal,
-    //   'diM1Control',
-    //   'diM1',
-    //   'DepartmentID',
-    //   this.diM1,
-    //   this.fgVatInvoice,
-    //   'diM1',
-    //   isEdit
-    // );
-    // this.journalService.loadComboboxBy067(
-    //   journal,
-    //   'diM2Control',
-    //   'diM2',
-    //   'CostCenterID',
-    //   this.diM2,
-    //   this.fgVatInvoice,
-    //   'diM2',
-    //   isEdit
-    // );
-    // this.journalService.loadComboboxBy067(
-    //   journal,
-    //   'diM3Control',
-    //   'diM3',
-    //   'CostItemID',
-    //   this.diM3,
-    //   this.fgVatInvoice,
-    //   'diM3',
-    //   isEdit
-    // );
+  loadDims(): void {
+    if (!this.hiddenFields.includes('DIM1')) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM1Control',
+        'diM1',
+        'DepartmentID',
+        this.diM1.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM1',
+        this.isEdit
+      );
+    }
+    
+    if (!this.hiddenFields.includes("DIM2")) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM2Control',
+        'diM2',
+        'CostCenterID',
+        this.diM2.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM2',
+        this.isEdit
+      );
+    }
+    
+    if (!this.hiddenFields.includes("DIM3")) {
+      this.journalService.loadComboboxBy067(
+        this.journal,
+        'diM3Control',
+        'diM3',
+        'CostItemID',
+        this.diM3.ComponentCurrent as CodxComboboxComponent,
+        this.fgVatInvoice,
+        'diM3',
+        this.isEdit
+      );
+    }
   }
 
   generateMemo(): string {

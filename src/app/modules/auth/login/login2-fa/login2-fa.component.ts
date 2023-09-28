@@ -16,6 +16,7 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-login2-fa',
@@ -31,6 +32,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     private authService: AuthService,
     private adService: CodxAdService,
     private notiService: NotificationsService,
+    private loginService: LoginService,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -82,6 +84,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   otpTimeout = 0;
   otpMinutes = 0;
   otpValues = ['', '', '', '', '', ''];
+  TOTPValues = ['', '', '', '', '', ''];
   //#endregion
 
   //#region 2FA
@@ -108,6 +111,11 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.setOTPEvent();
   }
 
+  testTOTP() {
+    this.loginService.checkTOTP().subscribe((otp) => {
+      console.log('test otp', otp);
+    });
+  }
   setOTPEvent() {
     const inputs = document.getElementById('inputs');
 
@@ -146,12 +154,28 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   }
 
   changeLogin2FAType(option) {
-    this.curLgType =
-      option.value == '2' ? 'qr' : option.value == '3' ? 'otp' : '';
+    switch (option.value) {
+      case '2': {
+        this.curLgType = 'qr';
+        break;
+      }
+      case '3': {
+        this.curLgType = 'otp';
+        break;
+      }
+      case '4': {
+        this.curLgType = 'totp';
+        break;
+      }
+      default: {
+        this.curLgType = '';
+        break;
+      }
+    }
 
     this.clickQueue.push(option.value);
     this.detectorRef.detectChanges();
-    if (option.value == '3') {
+    if (option.value == '3' || option.value == '4') {
       this.setOTPEvent();
     }
   }
@@ -256,8 +280,24 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     // this.loginFG.controls['password'].setValue(evt.data);
   }
 
+  changeTOTP(evt, idx) {
+    if (evt.target.value) {
+      this.TOTPValues[idx] = evt.target.value;
+    }
+    console.log('change totp', this.TOTPValues);
+  }
+
   login2FAOTP() {
     this.loginFG.controls['password'].setValue(this.otpValues.join(''));
+
+    // switch (type) {
+    //   case 'otp': {
+    //     break;
+    //   }
+    //   case 'totp': {
+    //     this.loginFG.controls['password'].setValue(this.TOTPValues.join(''));
+    //   }
+    // }
     this.loginDevice.trust = this.askState;
     const login2FASubscr = this.authService
       .login(
