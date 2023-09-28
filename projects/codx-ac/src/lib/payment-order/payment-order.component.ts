@@ -162,7 +162,7 @@ export class PaymentOrderComponent extends UIComponent{
           var dialog = this.callfc.openForm(
             PaymentOrderAddComponent,
             '',
-            800,
+            700,
             850,
             '',
             obj,
@@ -193,7 +193,7 @@ export class PaymentOrderComponent extends UIComponent{
         var dialog = this.callfc.openForm(
           PaymentOrderAddComponent,
           '',
-          800,
+          700,
           850,
           '',
           obj,
@@ -227,7 +227,7 @@ export class PaymentOrderComponent extends UIComponent{
             var dialog = this.callfc.openForm(
               PaymentOrderAddComponent,
               '',
-              800,
+              700,
               850,
               '',
               obj,

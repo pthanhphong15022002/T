@@ -38,8 +38,8 @@
                     (fileCount)="selectFile($event)">
                 </codx-attachment>
                 <ng-container *ngIf="file">
-                    <div class="d-flex position-relative w-fit-content" style="width: fit-content;">
-                        <div class="my-3 cursor-pointer">
+                    <div class="d-flex py-2 position-relative w-fit-content" style="width: fit-content;">
+                        <div class="me-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
                                 <img [src]="file.source" alt="" class="w-200px h-auto rounded" >
                             </ng-container>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="remove-file">
                             <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger" (click)="removeFile()">
-                                <i class="icon-close icon-18"></i>
+                                <i class="icon-close icon-16"></i>
                             </button>
                         </div>
                     </div>
