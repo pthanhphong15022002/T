@@ -542,9 +542,9 @@
 <ng-template #TmpTabLine>
   <ng-container *ngIf="formCashPayment?.data?.subType == '1' || formCashPayment?.data?.subType == '9'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" (onSelected)="onSelected($event)"
+      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both"
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
-        [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'"
+        [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'" 
         entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
         [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"

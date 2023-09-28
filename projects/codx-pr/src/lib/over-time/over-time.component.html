@@ -1,14 +1,15 @@
 <codx-views
   #view
-  service="HR"
-  assemblyName="ERM.Business.HR"
-  entityName="HR_EQuit"
-  className="EQuitBusiness"
+  service="PR"
+  assemblyName="ERM.Business.PR"
+  entityName="PR_TimeKeepingRequest"
+  className="TimeKeepingRequest"
   method="GetListAsync"
   [views]="views"
   [autoLoad]="true"
   [selectedFirst]="true"
   idField="recID"
+  [button]="buttons"
   [funcID]="funcID"
 >
 </codx-views>
@@ -47,17 +48,7 @@
 </ng-template>
 
 <ng-template #resourceHeader let-data>
-  <div class="container">
-    <codx-temp-full
-      [imageId]="data.resourceData?.owner"
-      [imageObjType]="'AD_Users'"
-      [imageReferType]="'avt'"
-      [title]="data.resourceData.userName"
-      [subTitle]="data.resourceData.postionName"
-      [content]="'(' + data.resourceData.events + ')'"
-    >
-    </codx-temp-full>
-  </div>
+  <div class="container">aaaaaaaaa</div>
 </ng-template>
 
 <ng-template #mfButton let-data>
@@ -78,3 +69,14 @@
 </ng-template>
 
 <ng-template #contentTmp let-data> </ng-template>
+
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate fw-bold">aaaa</span>
+      <span class="w-100 text-truncate fw-bold">{{ data?.title }}</span>
+    </div>
+  </div>
+</ng-template>

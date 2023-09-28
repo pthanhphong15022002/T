@@ -465,7 +465,11 @@ export class EmployeeDayOffComponent extends UIComponent {
             this.dataCategory,
             this.view.formModel.entityName,
             this.view.formModel.funcID,
-            this.view.function.description + ' - ' + this.itemDetail.contractNo,
+            this.view.function.description +
+              ' - ' +
+              this.itemDetail.contractNo +
+              ' - ' +
+              this.itemDetail.employeeID,
             (res: any) => {
               if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
