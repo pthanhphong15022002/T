@@ -223,10 +223,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (this.useForQTNS) {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
-            if (p[1]) {
-              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
-            }
+            p.emp = this.employeeObj.emp ?? this.employeeObj;
             this.dialog && this.dialog.close(p);
           }
         } else {
@@ -245,11 +242,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (p[0] != null) {
           this.notify.notifyCode('SYS007');
           if (this.useForQTNS) {
-            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
-
-            if (p[1]) {
-              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
-            }
+            p.emp = this.employeeObj.emp ?? this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else {
             this.dialog && this.dialog.close(this.benefitObj);
