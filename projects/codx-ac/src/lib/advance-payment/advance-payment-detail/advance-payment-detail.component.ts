@@ -5,6 +5,7 @@ import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { AdvancePaymentAddComponent } from '../advance-payment-add/advance-payment-add.component';
+import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-advance-payment-detail',
@@ -25,6 +26,8 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   dataCategory: any;
   formType: any;
   private destroy$ = new Subject<void>();
+  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
+  loading: any = false;
   advancedPayment: AdvancedPayment;
   advancedPaymentLines: Array<AdvancedPaymentLines> = [];
   fmAdvancedPaymentLines: FormModel = {
@@ -216,6 +219,7 @@ export class AdvancePaymentDetailComponent extends UIComponent {
   //#region Function
 
   loadDataLine(data) {
+    this.loading = true;
     this.api
       .exec('AC', 'AdvancedPaymentLinesBusiness', 'LoadDataAsync', [
         data.recID,
@@ -226,6 +230,7 @@ export class AdvancePaymentDetailComponent extends UIComponent {
         {
           this.advancedPaymentLines = res;
         }
+        this.loading = false;
         this.detectorRef.detectChanges();
       });
   }

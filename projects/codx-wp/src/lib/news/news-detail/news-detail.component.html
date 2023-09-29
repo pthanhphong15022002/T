@@ -41,17 +41,17 @@
                                             </ng-container>
                                         </ng-container>
                                     </div>
-                                    <div class="d-flex flex-center me-4">
-                                        <span class="icon-account_circle me-1 fs-6 "></span>
-                                        <span *ngIf="data.createdName" class="fs-7 ">{{data.createdName}}</span>
+                                    <div class="d-flex flex-center">
+                                        <span class="icon-account_circle me-1"></span>
+                                        <span *ngIf="data.createdName" class="me-4 ">{{data.createdName}}</span>
+                                    </div>
+                                    <div class="d-flex flex-center">
+                                        <span class="icon-calendar_customize me-1"></span>
+                                        <span *ngIf="data.createdOn" class="me-4 ">{{data.createdOn | fmDT}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
-                                        <span class="icon-calendar_customize me-1 fs-6 "></span>
-                                        <span *ngIf="data.createdOn" class="fs-7 ">{{data.createdOn | fmDT}}</span>
-                                    </div>
-                                    <div class="d-flex flex-center me-4">
-                                        <span class="icon-visibility me-1 fs-6 "></span>
-                                        <span *ngIf="data.views" class="fs-7 ">{{data.views}}</span>
+                                        <span class="icon-visibility me-1"></span>
+                                        <span *ngIf="data.views" class="">{{data.views}}</span>
                                     </div>
                                 </div>
                                 <ng-container *ngIf="data.allowShare">

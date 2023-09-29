@@ -503,18 +503,18 @@ export class DealsComponent
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
-  async getValuelistStatusCode() {
-    this.cache.valueList('CRM041').subscribe((func) => {
-      if (func) {
-        this.valueListStatusCode = func.datas
-          .filter((x) => ['2', '3', '5', '7'].includes(x.value))
-          .map((item) => ({
-            text: item.text,
-            value: item.value,
-          }));
-      }
-    });
-  }
+  // async getValuelistStatusCode() {
+  //   this.cache.valueList('CRM041').subscribe((func) => {
+  //     if (func) {
+  //       this.valueListStatusCode = func.datas
+  //         .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+  //         .map((item) => ({
+  //           text: item.text,
+  //           value: item.value,
+  //         }));
+  //     }
+  //   });
+  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -1226,7 +1226,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
-            this.isChangeOwner = ownerIdOld != e.event;
+            this.isChangeOwner = ownerIdOld != e.event.owner;
             this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }

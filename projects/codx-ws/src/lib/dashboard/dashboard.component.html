@@ -13,12 +13,12 @@
 <ng-template #tmpHeader>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
     <div class="d-flex flex-column h-310px position-relative">
-      <codx-label class="pt-2 ms-4 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
+      <codx-label class="pt-2 ms-6 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
       <div class="d-flex flex-wrap h-auto pt-2 px-4">
         <ng-container *ngFor="let item of listBookMarks ; let i = index">
           <ng-container *ngIf="i < (countBookMarks - 1)">
             <codx-card-img
-              imgCss="h-170px rounded "
+              imgCss="h-170px rounded border-bottom"
               cardCss="border rounded h-100"
               [imageSrc]="item?.background || imgDefault"
               [footer]="footer"
@@ -28,12 +28,12 @@
             </codx-card-img>
           </ng-container>
           <ng-template #footer>
-            <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item , bookmark:false}"></ng-container>
+            <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item , bookmark:true}"></ng-container>
           </ng-template>
         </ng-container>
       </div>
       <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
-        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer">
+        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer" (click)="selectMoreBookmark()">
           <i class="icon-more_horiz"></i>
         </div>
       </ng-container>
@@ -45,7 +45,7 @@
     (click)="selectedChange(data)"
   >
     <codx-card-img
-      imgCss="h-170px rounded"
+      imgCss="h-170px rounded border-bottom"
       cardCss="border rounded"
       [imageSrc]="data?.background || imgDefault"
       [footer]="footer"
@@ -59,11 +59,21 @@
 
 <ng-template #tmpRightToolBar >
   <ng-container *ngIf="listGroupDashboard && listGroupDashboard.length > 0">
-    <div class="d-flex flex-wrap ws-dashboard-toolbar-list fw-bold ms-4">
-      <div class="mx-2 cursor-pointer" *ngFor="let item of listGroupDashboard" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
-        <span>{{item?.customName}}</span>
+    <div class="d-flex ms-4 pt-4">
+      <div class="ms-3 me-4 cursor-pointer fw-bold ws-dashboard-toolbar-lists" [class.active]="selectedToolBar == listGroupDashboard[0]?.functionID" (click)="selectedChangeToolBar(listGroupDashboard[0])">
+        <span class="text-nowrap">{{listGroupDashboard[0]?.customName}}</span>
+      </div>
+      <div class="d-flex flex-wrap align-items-center ws-dashboard-toolbar-list">
+        <ng-container *ngFor="let item of listGroupDashboard ; let i = index">
+          <ng-container  *ngIf="i>0">
+            <div class="me-4 mb-2 cursor-pointer fw-bold" [class.active]="selectedToolBar == item?.functionID" (click)="selectedChangeToolBar(item)">
+              <span>{{item?.customName}}</span>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
+   
   </ng-container>
 </ng-template>
 <ng-template #tmpFooter let-data let-bookmark="bookmark">
@@ -75,7 +85,7 @@
         <i class="icon-i-star text-warning icon-14"></i>
         <span class="text-warning ms-1 mt-2px">4.5</span>
         <i class="icon-i-eye icon-18 ms-5"></i>
-        <span class="ms-1 mt-1px">234</span>
+        <span class="ms-1 mt-1px">{{data?.views}}</span>
       </div>
     </div>
     <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">

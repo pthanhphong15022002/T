@@ -494,7 +494,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   setDefaultOwner() {
     let perm = new DP_Processes_Permission();
@@ -608,27 +608,27 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           applyFor == '1'
             ? 'Cơ hội'
             : applyFor == '2'
-            ? 'Sự cố'
-            : applyFor == '3'
-            ? 'Yêu cầu'
-            : applyFor == '4'
-            ? 'Hợp đồng'
-            : applyFor == '5'
-            ? 'Tiềm năng'
-            : '';
+              ? 'Sự cố'
+              : applyFor == '3'
+                ? 'Yêu cầu'
+                : applyFor == '4'
+                  ? 'Hợp đồng'
+                  : applyFor == '5'
+                    ? 'Tiềm năng'
+                    : '';
       } else {
         this.process.autoName =
           applyFor == '1'
             ? 'Deal'
             : applyFor == '2'
-            ? 'Case'
-            : applyFor == '3'
-            ? 'Request'
-            : applyFor == '4'
-            ? 'Contract'
-            : applyFor == '5'
-            ? 'Lead'
-            : '';
+              ? 'Case'
+              : applyFor == '3'
+                ? 'Request'
+                : applyFor == '4'
+                  ? 'Contract'
+                  : applyFor == '5'
+                    ? 'Lead'
+                    : '';
       }
     }
   }
@@ -841,7 +841,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (this.listFileTask?.length > 0) {
             this.dpService
               .deleteFileTask([this.listFileTask])
-              .subscribe((rec) => {});
+              .subscribe((rec) => { });
           }
           // if (this.action == 'add' || this.action == 'copy') {
           //   //xoa Aprover hoi lai cach xu ly nay
@@ -1087,10 +1087,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
-  saveAndClose() {}
+  saveAndClose() { }
 
   //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
-  checkContinue() {}
+  checkContinue() { }
   //Avt
   addAvatar() {
     this.imageAvatar.referType = 'avt';
@@ -1190,10 +1190,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
+                  data.objectType == '9') ||
                   data.objectType == '0'
-                ? data.objectName
-                : data.text;
+                  ? data.objectName
+                  : data.text;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
@@ -1219,10 +1219,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
+                  data.objectType == '9') ||
                   data.objectType == '0'
-                ? data.objectName
-                : data.text;
+                  ? data.objectName
+                  : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -1253,10 +1253,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
+                  data.objectType == '9') ||
                   data.objectType == '0'
-                ? data.objectName
-                : data.text;
+                  ? data.objectName
+                  : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
@@ -1283,10 +1283,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
+                  data.objectType == '9') ||
                   data.objectType == '0'
-                ? data.objectName
-                : data.text;
+                  ? data.objectName
+                  : data.text;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'S';
@@ -1296,10 +1296,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               data.text == null && data.text == '' && data.objectType == 'U'
                 ? data.dataSelected.EmployeeName
                 : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
+                  data.objectType == '9') ||
                   data.objectType == '0'
-                ? data.objectName
-                : data.text;
+                  ? data.objectName
+                  : data.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -1490,7 +1490,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   for (let j = 0; j < roles.length; j++) {
                     if (
                       roles[j].objectID ==
-                        this.process.permissions[index].objectID &&
+                      this.process.permissions[index].objectID &&
                       roles[j].roleType == 'S'
                     ) {
                       roles.splice(j, 1);
@@ -1545,11 +1545,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let indexPerm = this.process.permissions.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'P'
         );
-        let index = this.step.roles.findIndex(
+        let lstRoles = this.step.roles ?? [];
+        let index = lstRoles.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'S'
         );
         if (index > -1) {
-          this.step.roles.splice(index, 1);
+          lstRoles.splice(index, 1);
+          if (lstRoles)
+            this.step.roles = JSON.parse(JSON.stringify(lstRoles));
           if (check.length == 0) {
             if (i <= 1) {
               if (indexPerm != -1) {
@@ -1560,6 +1563,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.updateStepChange(this.step?.recID);
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -1910,8 +1914,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     p.open();
   }
   //Bieu mau
-  clickViewTemp(temp) {}
-  onScroll(e: any) {}
+  clickViewTemp(temp) { }
+  onScroll(e: any) { }
 
   navChanged(e: any) {
     switch (e?.nextId) {
@@ -2833,7 +2837,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.taskGroupList.splice(index, 1);
           this.sumTimeStep();
         }
-        for (let i = 0; i < this.taskList.length; ) {
+        for (let i = 0; i < this.taskList.length;) {
           if (this.taskList[i]['taskGroupID'] === data['recID']) {
             const task = JSON.parse(JSON.stringify(this.taskList[i]));
             this.taskList.splice(i, 1);
@@ -2865,7 +2869,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region task
   openPopupChooseTask(isShowGroup = true) {
-    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580,null,{isShowGroup});
+    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580, null, { isShowGroup });
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
         if (value?.event['value'] == 'G') {
@@ -2981,8 +2985,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let indexGroupOld =
       taskData?.taskGroupID != taskGroupIdOld
         ? this.taskGroupList?.findIndex(
-            (group) => group.recID == taskGroupIdOld
-          )
+          (group) => group.recID == taskGroupIdOld
+        )
         : -1;
     let indexTaskGroup = this.taskGroupList[indexGroup]['task']?.findIndex(
       (task) => task.recID == taskData.recID
@@ -3523,7 +3527,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let check = this.checkExistUserInStep(step, role, 'O');
     if (check) {
       if (action) {
-        this.notiService.notifyCode('DP027', 0, role?.objectName);
+        let name = role.objectType == '1' ? 'Owner' : role?.objectName;
+        this.notiService.notifyCode('DP027', 0, name);
       }
     } else {
       let index = step?.roles?.findIndex(
@@ -4022,7 +4027,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       let inxIsExist = this.step.reasons.findIndex(
         (x) =>
           x.reasonName.trim().toLowerCase() ===
-            this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
+          this.reasonName.trim().toLowerCase() && x.recID !== this.reasonId
       );
       if (inxIsExist !== -1) {
         this.notiService.notifyCode(
@@ -4079,15 +4084,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.headerText =
       viewReason === this.viewStepReasonSuccess
         ? (clickMore?.customName ?? this.titleAdd) +
-          ' ' +
-          this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
-          )
+        ' ' +
+        this.LowercaseFirstPipe(
+          this.joinTwoString(this.stepNameReason, this.stepNameSuccess)
+        )
         : (clickMore?.customName ?? this.titleAdd) +
-          ' ' +
-          this.LowercaseFirstPipe(
-            this.joinTwoString(this.stepNameReason, this.stepNameFail)
-          );
+        ' ' +
+        this.LowercaseFirstPipe(
+          this.joinTwoString(this.stepNameReason, this.stepNameFail)
+        );
     if (
       clickMore?.functionID === 'SYS03' ||
       clickMore?.functionID === 'SYS04'
@@ -4158,7 +4163,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
 
-  defaultCbxProccess() {}
+  defaultCbxProccess() { }
 
   cbxChange($event, view) {
     if (view === this.viewStepReasonSuccess) {
@@ -4420,7 +4425,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep) {
         return this.iconReasonFail?.textColor;
-      }else if(step?.isSuccessStep){
+      } else if (step?.isSuccessStep) {
         return this.iconReasonSuccess?.textColor
       } else {
         let countStep = this.stepList?.length || 0;

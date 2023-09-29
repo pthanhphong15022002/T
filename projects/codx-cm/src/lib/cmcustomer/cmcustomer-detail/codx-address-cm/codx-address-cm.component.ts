@@ -40,6 +40,7 @@ export class CodxAddressCmComponent implements OnInit {
   @Output() convertAddress = new EventEmitter<any>();
   @Input() listAddress = [];
   @Input() selectAll: boolean = false;
+  @Input() isRole = true;
   listAddressDelete = [];
   formModelAddress: FormModel;
   moreFuncAdd = '';
@@ -70,11 +71,13 @@ export class CodxAddressCmComponent implements OnInit {
         changes['id'].currentValue != null &&
         changes['id']?.currentValue?.trim() != ''
       ) {
-        if (changes['id']?.currentValue == this.idOld) return;
-        this.idOld = changes['id']?.currentValue;
-        this.getListAddress();
-      }else{
-        if(!this.loaded) this.loaded = true;
+        if (this.isRole) {
+          if (changes['id']?.currentValue == this.idOld) return;
+          this.idOld = changes['id']?.currentValue;
+          this.getListAddress();
+        }
+      } else {
+        if (!this.loaded) this.loaded = true;
       }
     }
   }

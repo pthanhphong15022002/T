@@ -4,6 +4,7 @@ import {
   Injector,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -30,7 +31,8 @@ declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
   templateUrl: './cashpayments.component.html',
-  styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.css'],
+  styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
@@ -121,8 +123,8 @@ export class CashPaymentsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '30%',
-          resizable: true,
+          widthLeft:'25%'
+          //separatorSize:3
         },
       },
       {

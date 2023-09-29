@@ -35,9 +35,10 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
-import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
+import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
 
 const routes: Routes = [
   {
@@ -51,8 +52,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar/:funcID',
-        //component: CalendarComponent,
-        component: CodxCalendarComponent,
+        component: COCalendarComponent,
       },
       {
         path: 'personal/:funcID',
@@ -181,6 +181,7 @@ const routes: Routes = [
     DashboardComponent,
     ReportComponent,
     RequestReviewComponent,
+    BookmarkComponent
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -17,3 +17,6 @@
  .dropdown-input .text-muted{
     color: #212529 !important;
  }
+ .e-inplaceeditor .e-editable-value-wrapper{
+    padding: 5px 8px 5px 8px !important;
+ }

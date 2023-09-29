@@ -258,8 +258,8 @@
                   ><span
                     ><codx-label
                       [default]="
-                      funcList?.defaultValue == '1' ||
-                        (funcList?.defaultValue == '4' && data?.dispatchType == '4')
+                      defaultValue == '1' ||
+                        (defaultValue == '4' && data?.dispatchType == '4')
                           ? 'Nơi nhận'
                           : 'Nơi gửi'
                       "
@@ -279,8 +279,8 @@
                     <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0 && data?.dispatchType == '2') || (data?.dispatchType == '2' && data?.listInformationRel.length == 1) || data?.dispatchType != '2')">
                       <ng-container
                         *ngIf="
-                          funcList?.defaultValue != '2' ||
-                          (funcList?.defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' )))
+                          defaultValue != '2' ||
+                          (defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' )))
                         "
                       >
                         <div class="list-item has-action-menu-od mb-6">
@@ -584,7 +584,7 @@
       </codx-vll>
 
       <codx-vll
-        *ngIf="funcList?.defaultValue == '2'"
+        *ngIf="defaultValue == '2'"
         [value]="data.oDis.approveStatus"
         [name]="gridViewSetup['ApproveStatus']['referedValue']"
         [showIcon]="true"

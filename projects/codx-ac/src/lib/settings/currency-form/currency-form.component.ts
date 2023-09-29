@@ -26,7 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-currency-form',
   templateUrl: './currency-form.component.html',
-  styleUrls: ['./currency-form.component.css','../../codx-ac.component.css'],
+  styleUrls: ['./currency-form.component.css','../../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

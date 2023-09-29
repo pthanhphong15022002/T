@@ -25,13 +25,13 @@
       class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
       (click)="!disable ?addFile():''"
     ></span>
-    <span *ngIf="customField.dataType == 'P'" class="mx-2 me-5">
-      <button
-        class="btn btn-sm btn-icon"
+    <span *ngIf="customField.dataType == 'P'" class="mx-3">
+      <button type="button"
+        class="btn btn-sm btn-icon btn-light-primary"
         (click)="openUserPopup()"
         [disabled]="disable"
       >
-        <span class="icon-group_add text-primary icon-18"></span>
+        <span class="icon-group_add icon-16"></span>
       </button>
     </span>
     <span

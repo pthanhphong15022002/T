@@ -103,6 +103,7 @@ export class PdfComponent
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
+  @Input() dynamicApprovers = []; 
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -294,6 +295,7 @@ export class PdfComponent
         this.isApprover,
         this.isEditable,
         this.transRecID,
+        this.dynamicApprovers
       ])
       .subscribe((res: any) => {
         console.table('sf', res);

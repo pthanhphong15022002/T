@@ -57,12 +57,29 @@
         >
           <span
             class="fw-bold text-dark"
+            [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
             [innerHTML]="
               dataSelected?.problem
                 | formatvalue : formModel : 'Problem'
                 | async
             "
           ></span>
+          <div>
+            <codx-label
+              *ngIf="!expanding"
+              default="Xem thêm"
+              class="text-primary text-decoration-underline"
+              role="button"
+              (click)="expanding = !expanding"
+            ></codx-label>
+            <codx-label
+              *ngIf="expanding"
+              default="Thu lại"
+              class="text-primary text-decoration-underline"
+              role="button"
+              (click)="expanding = !expanding"
+            ></codx-label>
+          </div>
         </div>
         <div *ngIf="dataSelected?.category == '1'" class="mb-1">
           <codx-vll
