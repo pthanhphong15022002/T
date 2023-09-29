@@ -11,3 +11,6 @@
     padding: 0 0.85rem !important;
     line-height: 26px;
 }
+.responsive-table{
+    height: calc(100vh - 575px) !important
+}
