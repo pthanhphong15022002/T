@@ -7,10 +7,10 @@ import {
   Input,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
-import { CodxCalendarService } from '../codx-calendar.service';
+import { CodxCoService } from '../../codx-co.service';
 
 @Component({
-  selector: 'lib-calendar-center',
+  selector: 'co-calendar-center',
   templateUrl: './calendar-center.component.html',
   styleUrls: ['./calendar-center.component.scss'],
 })
@@ -45,10 +45,7 @@ export class CalendarCenterComponent
   dayoff: any;
   calendarID = 'STD';
 
-  constructor(
-    injector: Injector,
-    private calendarService: CodxCalendarService
-  ) {
+  constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
 
@@ -63,6 +60,7 @@ export class CalendarCenterComponent
         active: true,
         sameData: false,
         model: {
+          isOutSource: true,
           eventModel: this.fields,
           resources: this.resources,
           resourceModel: this.resourceModel,
@@ -117,7 +115,7 @@ export class CalendarCenterComponent
         };
       }
 
-      this.calendarService.dateChange$.next(obj);
+      this.coService.dateChange$.next(obj);
     }
   }
 

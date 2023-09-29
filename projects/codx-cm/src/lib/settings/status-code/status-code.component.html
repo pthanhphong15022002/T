@@ -1,0 +1,31 @@
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [idField]="idField"
+  [moreFuncs]="moreFuncs"
+  [className]="className"
+  [method]="method"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  [button]="button"
+  (buttonClick)="click($event)"
+  (selectedChange)="selectedChange($event)"
+>
+</codx-views>
+
+<ng-template #template let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>

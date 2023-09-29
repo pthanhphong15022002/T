@@ -51,10 +51,10 @@
           [formModel]="form.formModel"
           [default]="'Loại dữ liệu'"
         ></codx-label>
-
+        <!-- ngDefaultControl -->
         <codx-input
+          #valueListType
           type="valuelist"
-          ngDefaultControl
           field="dataType"
           [crrValue]="column?.dataType"
           [refValue]="refValueDataType"
@@ -330,7 +330,7 @@
         >
         </codx-input>
       </div>
-      <!-- <ng-container [ngTemplateOutlet]="tempViewTable"></ng-container> -->
+      <ng-container [ngTemplateOutlet]="tempViewTable"></ng-container>
     </div>
   </ng-template>
   <ng-template #footer>
@@ -346,7 +346,7 @@
           default="Lưu và tiếp tục"
         ></codx-label>
       </button>
-      <button type="button" class="btn btn-primary" (click)="saveData()">
+      <button type="button" class="btn btn-primary ms-2" (click)="saveData()">
         <codx-label name="lblSave" formName="System" default="Lưu"></codx-label>
       </button>
     </div>
@@ -359,23 +359,18 @@
       <tr class="bg-gray-100">
         <ng-container *ngFor="let item of listColumns; let index = index">
           <th scope="col" class="fw-bold ps-4">
-            <codx-label
-              name="lblTitle"
-              formModel=""
-              formModel=""
-              [default]=""
-            ></codx-label>
+            <span>{{ item?.fieldName }}</span>
           </th>
         </ng-container>
-        <th scope="col" class="w-100px fw-bold"></th>
+        <!-- <th scope="col" class="w-100px fw-bold"></th> -->
       </tr>
     </thead>
     <tbody>
       <tr>
         <ng-container *ngFor="let item of listColumns; let index = index">
-          <td class="ps-4">{{ item?.fieldName }}</td>
+          <td class="ps-4">{{ item?.note }}</td>
         </ng-container>
-        <td>
+        <!-- <td>
           <div class="d-flex justify-content-end align-items-center">
             <button class="btn btn-sm btn-icon btn-light-warning">
               <i class="icon icon-14 icon-edit"></i>
@@ -384,7 +379,7 @@
               <i class="icon icon-14 icon-close"></i>
             </button>
           </div>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>

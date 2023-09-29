@@ -12,6 +12,7 @@ import {
   AuthStore,
   CallFuncService,
   CodxFormComponent,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -22,6 +23,7 @@ import {
 } from 'codx-core';
 import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { utils } from 'xlsx';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -33,6 +35,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
+  @ViewChild('valueListType') valueListType: CodxInputComponent;
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -109,7 +112,7 @@ export class PopupAddColumnTableComponent implements OnInit {
     private changdef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
 
     @Optional() dt?: DialogData,
@@ -140,8 +143,10 @@ export class PopupAddColumnTableComponent implements OnInit {
       return;
     }
     if (e && e.data && e.column) this.column[e.column] = e.data;
-    if (e.field == 'title' || e.field == 'columnName')
+    if (e.field == 'title' || e.field == 'columnName') {
       this.removeAccents(e.data);
+    }
+
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       if (e.data == 'V') this.loadDataVll();
       this.column.refType = e.data == 'C' ? '3' : '2';
@@ -402,7 +407,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   //   e.value = '';
   //   e.focus();
   //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onEditTextValue(e, i) {
@@ -420,7 +425,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   //   this.idxEdit = -1;
 
   //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onChangeVll(e) {
@@ -478,7 +483,7 @@ export class PopupAddColumnTableComponent implements OnInit {
       this.maxNumber = this.maxLength();
 
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.markForCheck();
+      this.changeRef.markForCheck();
       this.loaded = true;
     });
   }
@@ -570,7 +575,7 @@ export class PopupAddColumnTableComponent implements OnInit {
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
     this.form.formGroup.patchValue(this.column);
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   changeFormVll() {
@@ -596,7 +601,7 @@ export class PopupAddColumnTableComponent implements OnInit {
 
   handelTextValue(i) {
     this.idxEdit = i;
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   showPopoverDeleted(p, i) {
@@ -686,5 +691,14 @@ export class PopupAddColumnTableComponent implements OnInit {
     }, timeOut);
   }
 
-  saveDataAndContinue() {}
+  saveDataAndContinue() {
+    this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    this.column = new ColumnTable();
+    this.column.recID = Util.uid();
+    this.column.fieldName = '';
+    this.column.dataType = null;
+
+    this.form.formGroup.patchValue(this.column);
+    this.changeRef.detectChanges();
+  }
 }
