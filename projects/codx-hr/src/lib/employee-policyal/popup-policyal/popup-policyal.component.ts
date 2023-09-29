@@ -283,6 +283,8 @@ export class PopupPolicyalComponent
     )
   }
 
+  
+
   deleteApplyExcludeObj(data, from, crrObj?){
     switch(from){
         case 'lstPositionID':
