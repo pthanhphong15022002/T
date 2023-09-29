@@ -184,7 +184,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   }
 
   saveData() {
-    if (this.listColumns || this.listColumns?.length == 0) {
+    if (!this.listColumns || this.listColumns?.length == 0) {
       this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
       return;
     }
