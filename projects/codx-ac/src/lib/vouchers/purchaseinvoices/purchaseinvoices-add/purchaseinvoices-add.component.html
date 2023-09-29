@@ -83,7 +83,7 @@
                   top: -32px;
                   border: 1px solid var(--primary-dark) !important;
                 "
-                (click)="onClickAddRow()"
+                (click)="onAddRowClick()"
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
@@ -134,7 +134,7 @@
                   top: -32px;
                   border: 1px solid var(--primary-dark) !important;
                 "
-                (click)="onClickAddRow()"
+                (click)="onAddRowClick()"
               >
                 <i class="icon-playlist_add icon-16"></i>
                 <codx-label
@@ -194,7 +194,7 @@
 
     <button
       class="btn btn-icon btn-light-danger btn-circle bg"
-      (click)="onClickClose()"
+      (click)="onCloseClick()"
     >
       <i class="icon-close icon-18"></i>
     </button>
@@ -498,7 +498,7 @@
         tab-index="18"
         style="border: 1px solid var(--bs-danger) !important"
         class="btn btn-md btn-light-danger rounded-5 d-flex align-items-center"
-        (click)="onClickDiscard()"
+        (click)="onDiscardClick()"
         *ngIf="form.data._isEdit && master.status == '7'"
       >
         <i class="icon-cancel icon-16"></i>
@@ -516,7 +516,7 @@
         type="button"
         style="border: 1px solid var(--primary-dark) !important"
         class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
-        (click)="onClickSave(false)"
+        (click)="onSaveClick(false)"
       >
         <i class="icon-add_to_photos icon-16"></i>
         <codx-label
@@ -535,7 +535,7 @@
           border: 1px solid var(--primary-dark) !important;
         "
         class="btn btn-md btn-light-primary rounded-5 d-flex align-items-center"
-        (click)="onClickSave(true)"
+        (click)="onSaveClick(true)"
       >
         <i class="icon-save_alt icon-16"></i>
         <codx-label
