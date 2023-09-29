@@ -51,7 +51,7 @@ export class CodxHistoryItemComponent implements OnInit {
         this.data.recID)
       .subscribe((res:any[]) => {
         if(Array.isArray(res)){
-          debugger
+          // debugger
           this.lstFile = res; 
           this.dt.detectChanges();
       }});

@@ -899,7 +899,8 @@
                   [typeTask]="2"
                   [customerID]="dataSelected?.recID"
                   [entityName]="'CM_Leads'"
-                  [isPause]="!dataSelected?.full"
+                  [isAdmin]="dataSelected?.full"
+                  [dataSelected]="dataSelected"
                   (saveAssignTask)="saveAssign($event)"
                   [owner]="dataSelected?.owner"
                 ></step-task>
