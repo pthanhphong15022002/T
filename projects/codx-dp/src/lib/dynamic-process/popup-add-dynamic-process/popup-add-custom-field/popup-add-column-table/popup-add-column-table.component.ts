@@ -107,6 +107,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   idxDeleted = -1;
   maxNumber = 0;
   listColumns = [];
+  isChecked = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -188,7 +189,7 @@ export class PopupAddColumnTableComponent implements OnInit {
       this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
       return;
     }
-    if (!this.checkValidate()) return;
+    if (!this.isChecked && !this.checkValidate()) return;
     this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
     this.dialog.close([this.listColumns, this.processNo]);
     this.column = new ColumnTable(); //tắt bùa
@@ -593,9 +594,9 @@ export class PopupAddColumnTableComponent implements OnInit {
     this.column.recID = Util.uid();
     this.column.fieldName = '';
     this.column.dataType = null;
-
     this.form.formGroup.patchValue(this.column);
     this.changeRef.detectChanges();
+    this.isChecked = true;
   }
 
   checkValidate() {
