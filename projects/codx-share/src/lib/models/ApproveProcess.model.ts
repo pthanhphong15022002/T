@@ -20,8 +20,8 @@ export class ApproveProcess {
   template: any;
 }
 export class Approver {
-  roleID: string;
-  roleType: string = 'RO';
+  approver: string;
+  roleType: string;
 }
 
 export class ResponseModel {

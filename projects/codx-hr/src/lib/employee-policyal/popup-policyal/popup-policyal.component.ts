@@ -230,7 +230,14 @@ export class PopupPolicyalComponent
   async addFiles(evt){
     this.alpolicyObj.attachments = evt.data.length;
   }
-
+  async deleteFile(evt){
+    this.alpolicyObj.attachments = this.attachment.fileUploadList.length
+    this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {
+    })
+  }
+  async countFile(){
+    this.alpolicyObj.attachments = this.attachment.fileUploadList.length
+  }
   fileAdded(evt){
 
   }
@@ -1057,7 +1064,7 @@ export class PopupPolicyalComponent
                 this.dialog && this.dialog.close(this.alpolicyObj);
               }
               else{
-                this.notify.notifyCode('SYS021');
+                // this.notify.notifyCode('SYS021');
               }
             })
           })
@@ -1105,7 +1112,7 @@ export class PopupPolicyalComponent
               this.dialog && this.dialog.close(this.alpolicyObj);
             }
             else{
-              this.notify.notifyCode('SYS023');
+              this.notify.notifyCode('SYS021');
             }
           })
         }

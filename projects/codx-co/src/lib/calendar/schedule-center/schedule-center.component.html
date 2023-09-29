@@ -1,0 +1,14 @@
+<codx-views
+  #view
+  [views]="views"
+  [button]="btnAdd"
+  [autoLoad]="false"
+  [toolbarDisplay]="false"
+  (onActions)="onAction($event)"
+  [viewActiveType]="8"
+>
+</codx-views>
+
+<ng-template #resourceHeader let-data>
+  <div>{{ data.transType }}</div>
+</ng-template>
