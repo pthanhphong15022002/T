@@ -1973,6 +1973,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   }
                 }
               }
+              this.changeDetectorRef.markForCheck();
             }
           });
         break;
@@ -1998,6 +1999,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                     this.dataWord = this.dataWord.filter(
                       (x) => x.recID != item[1][0].recID
                     );
+                  this.changeDetectorRef.markForCheck();
                 } else this.notiService.notifyCode('SYS022');
               });
           }
@@ -2865,7 +2867,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region task
   openPopupChooseTask(isShowGroup = true) {
-    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580,null,{isShowGroup});
+    this.popupJob = this.callfc.openForm(
+      CodxTypeTaskComponent,
+      '',
+      450,
+      580,
+      null,
+      { isShowGroup }
+    );
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
         if (value?.event['value'] == 'G') {
@@ -4420,8 +4429,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep) {
         return this.iconReasonFail?.textColor;
-      }else if(step?.isSuccessStep){
-        return this.iconReasonSuccess?.textColor
+      } else if (step?.isSuccessStep) {
+        return this.iconReasonSuccess?.textColor;
       } else {
         let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep / 2);
