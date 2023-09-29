@@ -108,6 +108,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   maxNumber = 0;
   listColumns = [];
   isChecked = false;
+  formModelTable: FormModel;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -115,11 +116,11 @@ export class PopupAddColumnTableComponent implements OnInit {
     private callfc: CallFuncService,
     private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
-
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.formModelTable = this.dialog.formModel;
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
     this.listColumns = dt?.data?.listColumns;
     this.user = dt?.data?.user;
@@ -204,6 +205,15 @@ export class PopupAddColumnTableComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
+    let isExit = this.listColumns.some((x) => x.fieldName == format);
+    if (isExit) {
+      this.notiService.notifyCode(
+        'DP026',
+        0,
+        '"' + this.grvSetup['FieldName']?.headerText + '"'
+      );
+      return;
+    }
     this.column.fieldName = format;
   }
 

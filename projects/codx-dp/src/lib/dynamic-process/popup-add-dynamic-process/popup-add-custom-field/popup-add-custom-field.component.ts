@@ -815,7 +815,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       //....................
     });
   }
-  //--------------format table---------------//
+
   getColumnTable(data) {
     if (!data.dataFormat) {
       this.listColumns = [];
@@ -825,14 +825,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (Array.isArray(arr)) this.listColumns = arr;
     else this.listColumns = [];
     this.changeRef.detectChanges();
-    // if (data.dataValue) {
-    //   let arrDataValue = JSON.parse(data.dataValue);
-    //   if (Array.isArray(arrDataValue)) {
-    //     this.arrDataValue = arrDataValue;
-    //     return;
-    //   }
-    // }
-    // this.arrDataValue = [];
   }
   //---------------------End Column Table-----------------------------//
 }

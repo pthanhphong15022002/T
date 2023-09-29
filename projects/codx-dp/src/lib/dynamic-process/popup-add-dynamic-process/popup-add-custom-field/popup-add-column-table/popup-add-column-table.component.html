@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="dialog?.formModel"
+  [formModel]="formModelTable"
   [data]="column"
 >
   <ng-template #body>
@@ -35,7 +35,7 @@
           </codx-label>
           <codx-input
             disable="action=='edit'"
-            field="columnName"
+            field="fieldName"
             [type]="'text'"
             [crrValue]="column.fieldName"
             [formName]="'DPStepsFields'"

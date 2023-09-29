@@ -14,13 +14,6 @@
           grvName="grvDPInstancesSteps"
           default="Thông tin nhập liệu"
         ></codx-label>
-        <!-- <codx-label
-            class="title"
-            [formModel]="formModelDefault"
-            fiedName="titleDefault"
-            [default]="titleDefault"
-          >
-          </codx-label> -->
       </span>
       <span class="title-1 fw-bold text-primary" *ngIf="!titleDefault">{{
         dataStep.stepName
@@ -89,7 +82,7 @@
         <div
           class="col-{{
             12 / showColumnControl
-          }} has-action-menu crr-fiels mb-1"
+          }} has-action-menu crr-fiels mb-1 row"
         >
           <!-- p-3 -->
           <ng-container
@@ -104,7 +97,7 @@
 </div>
 
 <!-- co click -->
-<ng-template #viewCustomFields let-data>
+<!-- <ng-template #viewCustomFields let-data>
   <div
     id="{{ viewsCurrent + (titleDefault ? data.recID : 'v-' + data.recID) }}"
     class="show-main border border-gray-200 rounded px-6 py-4 cursor-pointer"
@@ -229,17 +222,6 @@
         </ng-container>
       </ng-container>
 
-      <!-- <ng-container *ngIf="dataStep?.stepStatus < 3">
-          <codx-mfunc
-            [formModel]="formModel"
-            (clickMF)="clickMF($event, data)"
-            [isBookMark]="true"
-            [dataItem]="data"
-            [type]="'hover'"
-            (changeDataMF)="changeFieldMF($event)"
-          >
-          </codx-mfunc>
-        </ng-container> -->
     </div>
   </div>
 
@@ -260,58 +242,52 @@
       ></codx-input-custom-field>
     </div>
   </ng-container>
-</ng-template>
+</ng-template> -->
 
 <!-- view  text-nowrap-->
 <ng-template #viewDetailFieldCurrent let-data>
-  <div class="row">
+  <!-- <div class="row"> -->
+  <div class="d-flex mb-1 row {{ typeView == '1' ? '' : 'ms-3' }} ">
     <div
-      class="d-flex mb-1 row {{ typeView == '1' ? '' : 'ms-3' }} col-{{
-        12 / showColumnControl
+      class="col-{{ showColumnControl <= 3 ? showColumnControl * 2 : '6' }}"
+      [ngClass]="showColumnControl == 1 ? 'min-w-150px' : ''"
+    >
+      <span class="text-gray-600">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
+      </span>
+      <span>
+        <codx-label
+          class="text-gray-600"
+          name="separation"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default=":"
+        >
+        </codx-label>
+      </span>
+    </div>
+
+    <div
+      class="col-{{
+        showColumnControl <= 3 ? 12 - showColumnControl * 2 : '6'
       }}"
     >
-      <div
-        class="col-2"
-        [ngClass]="showColumnControl == 1 ? 'min-w-150px' : 'me-1'"
-      >
-        <span class="text-gray-600">{{ data.title }}</span>
-        <span *ngIf="data.isRequired">
-          <codx-label
-            class="text-danger"
-            name="attentionIsRequired"
-            formName="DPInstancesStepsFields"
-            gridViewName="grvDPInstancesStepsFields"
-            default="*"
-          >
-          </codx-label>
-        </span>
-        <span>
-          <codx-label
-            class="text-gray-600"
-            name="separation"
-            formName="DPInstancesStepsFields"
-            gridViewName="grvDPInstancesStepsFields"
-            default=":"
-          >
-          </codx-label>
-        </span>
-      </div>
-
-      <div class="col-10">
-        <ng-container
-          [ngTemplateOutlet]="viewDataValue"
-          [ngTemplateOutletContext]="{
-            $implicit: data
-          }"
-        ></ng-container>
-      </div>
+      <codx-fields-format-value [data]="data"></codx-fields-format-value>
     </div>
   </div>
+  <!-- </div> -->
 </ng-template>
-
+<!-- 
 <ng-template #viewDataValue let-data>
   <ng-container *ngIf="!data.dataValue">
-    <!-- margin-l -->
     <span class="place-holder" *ngIf="data.dataType != 'R'">
       {{ data.title }}
     </span>
@@ -332,12 +308,12 @@
       </ngb-rating>
     </ng-container>
   </ng-container>
-  <!-- margin-l -->
+
   <ng-container *ngIf="data.dataValue">
     <span class="text-dark" *ngIf="data.dataType == 'T'">
       {{ data.dataValue }}
     </span>
-    <!-- margin-l -->
+
     <span
       class="text-dark"
       *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
@@ -345,7 +321,7 @@
     >
       <span *ngIf="data.dataFormat == 'P'">%</span>
     </span>
-    <!-- margin-l -->
+
     <span class="text-dark" *ngIf="data.dataType == 'D'">
       <span
         *ngIf="
@@ -503,7 +479,7 @@
         </div>
       </ng-template>
     </ng-container>
-    <!-- //test -->
+    
     <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
       <ng-container *ngIf="data.dataFormat == 'C'">
         <span
@@ -522,7 +498,7 @@
       </ng-container>
     </ng-container>
 
-    <!-- table -->
+  
     <ng-container *ngIf="data.dataType == 'TA'">
       <table class="table table-row-bordered" *ngIf="data.dataFormat">
         <thead>
@@ -542,7 +518,6 @@
                 ></codx-label>
               </th>
             </ng-container>
-            <!-- <th scope="col" class="w-100px fw-bold"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -554,28 +529,15 @@
                 *ngFor="let fieldFormat of formatViewTable(data, value)"
               >
                 <td class="ps-4">
-                  <ng-container
-                    [ngTemplateOutlet]="viewDataValue"
-                    [ngTemplateOutletContext]="{
-                      $implicit: fieldFormat
-                    }"
-                  ></ng-container>
+                  <codx-fields-format-value
+                    [data]="data"
+                  ></codx-fields-format-value>
                 </td>
               </ng-container>
-              <!-- <td>
-              <div class="d-flex justify-content-end align-items-center">
-                <button class="btn btn-sm btn-icon btn-light-warning">
-                  <i class="icon icon-14 icon-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-icon btn-light-danger ms-2">
-                  <i class="icon icon-14 icon-close"></i>
-                </button>
-              </div>
-            </td> -->
             </tr>
           </ng-container>
         </tbody>
       </table>
     </ng-container>
   </ng-container>
-</ng-template>
+</ng-template> -->

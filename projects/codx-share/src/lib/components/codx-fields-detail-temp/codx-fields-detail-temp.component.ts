@@ -90,9 +90,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    console.log(this.listFields);
-  }
+  ngOnInit(): void {}
   ngOnChanges() {
     this.changeDetectorRef.detectChanges();
   }
@@ -191,31 +189,31 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     });
   }
 
-  partNum(num): number {
-    return Number.parseInt(num);
-  }
+  // partNum(num): number {
+  //   return Number.parseInt(num);
+  // }
 
-  fomatvalue(df) {
-    //xu ly tam
-    var index = this.dtFormatDate.findIndex((x) => x.value == df);
-    if (index == -1) return '';
-    return this.dtFormatDate[index]?.text;
-  }
-  getFormatTime(dv) {
-    if (!dv) return '';
-    var arrTime = dv.split(':');
-    return moment(new Date())
-      .set({ hour: arrTime[0], minute: arrTime[1] })
-      .toDate();
-  }
-  formatNumber(dt) {
-    if (!dt.dataValue) return '';
-    if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-    return (
-      Number.parseFloat(dt.dataValue).toFixed(2) +
-      (dt.dataFormat == 'P' ? '%' : '')
-    );
-  }
+  // fomatvalue(df) {
+  //   //xu ly tam
+  //   var index = this.dtFormatDate.findIndex((x) => x.value == df);
+  //   if (index == -1) return '';
+  //   return this.dtFormatDate[index]?.text;
+  // }
+  // getFormatTime(dv) {
+  //   if (!dv) return '';
+  //   var arrTime = dv.split(':');
+  //   return moment(new Date())
+  //     .set({ hour: arrTime[0], minute: arrTime[1] })
+  //     .toDate();
+  // }
+  // formatNumber(dt) {
+  //   if (!dt.dataValue) return '';
+  //   if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
+  //   return (
+  //     Number.parseFloat(dt.dataValue).toFixed(2) +
+  //     (dt.dataFormat == 'P' ? '%' : '')
+  //   );
+  // }
 
   clickInput(eleID, dataStep = null, isClick = false) {
     if (this.isSaving) return;
@@ -351,13 +349,13 @@ export class CodxFieldsDetailTempComponent implements OnInit {
       });
   }
 
-  parseValue(dataValue) {
-    return JSON.parse(dataValue);
-  }
+  // parseValue(dataValue) {
+  //   return JSON.parse(dataValue);
+  // }
 
-  listValue(dataValue) {
-    return dataValue?.split(';');
-  }
+  // listValue(dataValue) {
+  //   return dataValue?.split(';');
+  // }
 
   // getViewText(refValue, value) {
   //   this.cache.combobox(refValue).subscribe((data) => {
@@ -391,28 +389,28 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   // }
 
   //--------------format table---------------//
-  formatTable(data) {
-    if (!data.dataFormat) return [];
-    return JSON.parse(data.dataFormat);
-  }
+  // formatTable(data) {
+  //   if (!data.dataFormat) return [];
+  //   return JSON.parse(data.dataFormat);
+  // }
 
-  formatData(dataValue) {
-    if (!dataValue) return [];
-    return JSON.parse(dataValue);
-  }
+  // formatData(dataValue) {
+  //   if (!dataValue) return [];
+  //   return JSON.parse(dataValue);
+  // }
 
-  formatViewTable(data, value) {
-    let arrColumn = JSON.parse(data.dataFormat);
-    let arrField = [];
-    if (Array.isArray(arrColumn)) {
-      arrColumn.forEach((x) => {
-        let object = Object.assign(x, {
-          dataValue: value?.[x.fieldName],
-        });
-        arrField.push(arrField);
-      });
-    }
-    return arrField;
-  }
+  // formatViewTable(data, value) {
+  //   let arrColumn = JSON.parse(data.dataFormat);
+  //   let arrField = [];
+  //   if (Array.isArray(arrColumn)) {
+  //     arrColumn.forEach((x) => {
+  //       let object = Object.assign(x, {
+  //         dataValue: value?.[x.fieldName],
+  //       });
+  //       arrField.push(arrField);
+  //     });
+  //   }
+  //   return arrField;
+  // }
   //--------------end------------//
 }
