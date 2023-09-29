@@ -830,7 +830,7 @@ export class PdfComponent
 
       //trinh ky
       if (!this.isSignMode) {
-        // this.curPage == 1 && 
+        // this.curPage == 1 &&
         if (this.needSuggest) {
           this.curPage = this.pageMax;
         }
@@ -848,7 +848,7 @@ export class PdfComponent
         }
         if (firstAreaOfSigner != null) {
           this.curPage = firstAreaOfSigner.location.pageNumber + 1;
-          // this.curPage == 1 && 
+          // this.curPage == 1 &&
         } else if (this.needSuggest) {
           this.curPage = this.pageMax;
         }
@@ -1655,7 +1655,6 @@ export class PdfComponent
             this.detectorRef.detectChanges();
           }
         };
-
         break;
       }
       default:
@@ -1676,7 +1675,7 @@ export class PdfComponent
     this.detectorRef.detectChanges();
   }
   changeConfirmState(e: any) {
-    if(this.isSigned){
+    if (this.isSigned) {
       this.confirmChange.emit(e);
     }
   }
@@ -2612,10 +2611,30 @@ export class PdfComponent
 
           img.src = url;
           img.onload = () => {
+            let imgFixW = 200;
+            let imgFixH = 200;
+
+            //yeu cau ngay 12/09 chu ky nhay se nho hon 1/2 so voi chu ky chinh
+
+            if (labelType == 'S2') {
+              imgFixW = imgFixW / 2;
+              imgFixH = imgFixH / 2;
+            }
+            let scaleW = imgFixW / img.width;
+            let scaleH = scaleW * (img.height / img.width) * this.yScale;
+            if (img.width < imgFixW) {
+              scaleW = 1;
+            }
+            if (img.height < imgFixH) {
+              scaleH = 1;
+            }
+
+            scaleW *= this.xScale;
+
             let imgArea = new Konva.Image({
               image: img,
-              width: imgW,
-              height: 100,
+              // width: imgW,
+              // height: 100,
               x: unsignIdx[idx],
               y: this.maxTop + row * 100 + 10,
               id: recID,
@@ -2623,13 +2642,17 @@ export class PdfComponent
               draggable: transformable,
               rotation: this.rotate,
             });
-            imgArea.scale({ x: this.xScale, y: this.yScale });
+            // imgArea.scale({ x: this.xScale, y: this.yScale });
+            imgArea.scale({
+              x: scaleW,
+              y: scaleH,
+            });
 
             //save to db
             let y = imgArea.position().y;
             let x = imgArea.position().x;
-            let w = this.xScale;
-            let h = this.yScale;
+            let w = scaleW / this.xScale;
+            let h = scaleH / this.yScale;
 
             let tmpArea: tmpSignArea = {
               signer: person.authorID,
