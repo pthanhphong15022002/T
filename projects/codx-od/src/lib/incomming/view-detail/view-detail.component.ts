@@ -619,6 +619,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               formModel: this.formModel,
               type: 'read',
               data: datas,
+              defaultValue: this.defaultValue
             },
             option
           );
@@ -641,6 +642,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               formModel: this.formModel,
               type: 'edit',
               data: datas,
+              defaultValue: this.defaultValue
             },
             option
           );
@@ -717,6 +719,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
                 (this.funcList?.customName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
+              defaultValue: this.defaultValue
             },
             option
           );
