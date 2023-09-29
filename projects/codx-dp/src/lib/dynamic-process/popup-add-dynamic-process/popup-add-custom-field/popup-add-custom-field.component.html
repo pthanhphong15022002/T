@@ -126,6 +126,10 @@
             </button>
           </div>
         </div>
+        <ng-container
+          *ngIf="field.dataType == 'TA' && field.dataFormat"
+          [ngTemplateOutlet]="tempViewTable"
+        ></ng-container>
 
         <codx-input
           *ngIf="field.dataType == 'N'"
