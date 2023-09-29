@@ -32,7 +32,11 @@ import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
 import { PurchaseinvoicesComponent } from '../purchaseinvoices.component';
-import { MF, PurchaseInvoiceService, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
+import {
+  MF,
+  PurchaseInvoiceService,
+  fmPurchaseInvoicesLines,
+} from '../purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices-detail',
@@ -218,7 +222,9 @@ export class PurchaseinvoicesDetailComponent
         break;
       case '1': // da hop le
         if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
+          disabledFuncs = disabledFuncs.filter(
+            (f) => f !== MF.GuiDuyet && f !== MF.In
+          );
         } else {
           disabledFuncs = disabledFuncs.filter(
             (f) => f !== MF.GhiSo && f !== MF.In
