@@ -42,8 +42,8 @@
           default="Phòng ban" (click)="hideDept('pb')"></codx-label>
       </ng-container>
     </div>
-    <div class="align-items-start" [class.border-bottom]="defaulValue == '2'" style="display: flex" [hidden]="showAgency">
-      <ng-container *ngIf="defaulValue != '2' , else agencies">
+    <div class="align-items-start" [class.border-bottom]="defaultValue == '2'" style="display: flex" [hidden]="showAgency">
+      <ng-container *ngIf="defaultValue != '2' , else agencies">
         <codx-input  [formModel]="form.formModel" [Group]="form.formGroup" field="agencyName" style="width: 100%"
         (valueChange)="changeValueAgency($event)">
       </codx-input>
@@ -90,7 +90,7 @@
     <div class="col-6">
       <codx-label [formModel]="form.formModel" fiedName="CategoryID" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="categoryID"
-        (valueChange)="changeCbb($event)" [disabled]="(defaulValue == '2' && type == 'edit' && dispatch?.approveStatus == '3')?true:false">
+        (valueChange)="changeCbb($event)" [disabled]="(defaultValue == '2' && type == 'edit' && dispatch?.approveStatus == '3')?true:false">
       </codx-input>
     </div>
     <div class="col-6">
@@ -203,7 +203,7 @@
         (valueChange)="valueChangeDate($event)">
       </codx-input>
     </div>
-    <div class="col" *ngIf="defaulValue != '2' && gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'">
+    <div class="col" *ngIf="defaultValue != '2' && gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'">
       <codx-label [formModel]="form.formModel" fiedName="Deadline"></codx-label>
       <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="deadline" [format]="'d'">
       </codx-input> -->
