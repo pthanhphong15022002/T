@@ -27,14 +27,14 @@
     ></span>
     <span
       *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
-      class="mx-2 me-5"
+      class="mx-3"
     >
-      <button
-        class="btn btn-sm btn-icon"
+      <button type="button"
+        class="btn btn-sm btn-icon btn-light-primary"
         (click)="customField.dataType == 'P' ? openUserPopup() : openContact()"
         [disabled]="disable"
       >
-        <span class="icon-group_add text-primary icon-18"></span>
+        <span class="icon-group_add icon-16"></span>
       </button>
     </span>
     <span
