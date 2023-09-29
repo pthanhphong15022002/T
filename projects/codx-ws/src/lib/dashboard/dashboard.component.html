@@ -85,7 +85,7 @@
         <i class="icon-i-star text-warning icon-14"></i>
         <span class="text-warning ms-1 mt-2px">4.5</span>
         <i class="icon-i-eye icon-18 ms-5"></i>
-        <span class="ms-1 mt-1px">234</span>
+        <span class="ms-1 mt-1px">{{data?.views}}</span>
       </div>
     </div>
     <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
