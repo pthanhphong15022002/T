@@ -30,6 +30,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   ) {}
 
   ngOnChanges() {
+    // if (this.data.dataType == 'TA') this.getColumnTable(this.data);
     this.changeRef.detectChanges();
   }
   ngOnInit(): void {

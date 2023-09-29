@@ -27,8 +27,10 @@ export class PopupAddLineTableComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.listColumns = dt?.data?.listColumns ?? [];
-    this.line = dt?.data?.data;
+    this.listColumns = dt?.data?.listColumns
+      ? JSON.parse(JSON.stringify(dt?.data?.listColumns))
+      : [];
+    this.line = JSON.parse(JSON.stringify(dt?.data?.data));
   }
   ngOnInit(): void {
     this.listColumns.forEach((x) => {
