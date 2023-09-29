@@ -96,6 +96,48 @@
   <!-- end -->
 </div>
 
+<!-- view  text-nowrap-->
+<ng-template #viewDetailFieldCurrent let-data>
+  <div class="d-flex mb-1 row {{ typeView == '1' ? '' : 'ms-3' }} ">
+    <div
+      class="col-{{ showColumnControl <= 3 ? showColumnControl * 2 : '6' }}"
+      [ngClass]="showColumnControl == 1 ? 'min-w-150px' : ''"
+    >
+      <span class="text-gray-600">{{ data.title }}</span>
+      <span *ngIf="data.isRequired">
+        <codx-label
+          class="text-danger"
+          name="attentionIsRequired"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default="*"
+        >
+        </codx-label>
+      </span>
+      <span>
+        <codx-label
+          class="text-gray-600"
+          name="separation"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          default=":"
+        >
+        </codx-label>
+      </span>
+    </div>
+
+    <div
+      class="col-{{
+        showColumnControl <= 3 ? 12 - showColumnControl * 2 : '6'
+      }}"
+    >
+      <div class="me-3">
+        <codx-fields-format-value [data]="data"></codx-fields-format-value>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <!-- co click -->
 <!-- <ng-template #viewCustomFields let-data>
   <div
@@ -244,47 +286,6 @@
   </ng-container>
 </ng-template> -->
 
-<!-- view  text-nowrap-->
-<ng-template #viewDetailFieldCurrent let-data>
-  <!-- <div class="row"> -->
-  <div class="d-flex mb-1 row {{ typeView == '1' ? '' : 'ms-3' }} ">
-    <div
-      class="col-{{ showColumnControl <= 3 ? showColumnControl * 2 : '6' }}"
-      [ngClass]="showColumnControl == 1 ? 'min-w-150px' : ''"
-    >
-      <span class="text-gray-600">{{ data.title }}</span>
-      <span *ngIf="data.isRequired">
-        <codx-label
-          class="text-danger"
-          name="attentionIsRequired"
-          formName="DPInstancesStepsFields"
-          gridViewName="grvDPInstancesStepsFields"
-          default="*"
-        >
-        </codx-label>
-      </span>
-      <span>
-        <codx-label
-          class="text-gray-600"
-          name="separation"
-          formName="DPInstancesStepsFields"
-          gridViewName="grvDPInstancesStepsFields"
-          default=":"
-        >
-        </codx-label>
-      </span>
-    </div>
-
-    <div
-      class="col-{{
-        showColumnControl <= 3 ? 12 - showColumnControl * 2 : '6'
-      }}"
-    >
-      <codx-fields-format-value [data]="data"></codx-fields-format-value>
-    </div>
-  </div>
-  <!-- </div> -->
-</ng-template>
 <!-- 
 <ng-template #viewDataValue let-data>
   <ng-container *ngIf="!data.dataValue">

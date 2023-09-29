@@ -22,19 +22,27 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     gridViewName: 'grvDPInstancesStepsFields',
     entityName: 'DP_Instances_Steps_Fields',
   };
+  columns: any[];
+  arrDataValue: any[];
   constructor(
     private cache: CacheService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef
   ) {}
 
   ngOnChanges() {
-    this.changeDetectorRef.detectChanges();
+    this.changeRef.detectChanges();
   }
   ngOnInit(): void {
-    if (this.data.dataType == 'D')
-      this.cache.valueList('DP0274').subscribe((res) => {
-        if (res) this.dtFormatDate = res.datas;
-      });
+    switch (this.data.dataType) {
+      case 'D':
+        this.cache.valueList('DP0274').subscribe((res) => {
+          if (res) this.dtFormatDate = res.datas;
+        });
+        break;
+      case 'TA':
+        this.getColumnTable(this.data);
+        break;
+    }
   }
 
   parseValue(dataValue) {
@@ -46,28 +54,43 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   }
 
   //--------------format table---------------//
-  formatTable(data) {
-    if (!data.dataFormat) return [];
-    return JSON.parse(data.dataFormat);
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.columns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) {
+      this.columns = arr;
+      // this.columns.forEach((x) => {
+      //   this.modelJSON += '"' + x.fieldName + '":"' + '",';
+      // });
+      // let format = this.modelJSON.substring(0, this.modelJSON.length - 1);
+      // this.modelJSON = '{' + format + '}';
+    } else this.columns = [];
+
+    this.arrDataValue = [];
+    if (data.dataValue) {
+      let arrDataValue = JSON.parse(data.dataValue);
+      if (Array.isArray(arrDataValue)) {
+        this.arrDataValue = arrDataValue;
+      }
+    }
+
+    this.changeRef.detectChanges();
   }
 
-  formatData(dataValue) {
-    if (!dataValue) return [];
-    return JSON.parse(dataValue);
-  }
-
-  formatViewTable(data, value) {
-    let arrColumn = JSON.parse(data.dataFormat);
-    let arrField = [];
-    if (Array.isArray(arrColumn)) {
-      arrColumn.forEach((x) => {
+  formatViewTable(value) {
+    let arrTable = [];
+    if (this.columns?.length > 0) {
+      this.columns.forEach((x) => {
         let object = Object.assign(x, {
           dataValue: value?.[x.fieldName],
         });
-        arrField.push(arrField);
+        arrTable.push(object);
       });
     }
-    return arrField;
+    return arrTable;
   }
   //--------------end------------//
 
