@@ -39,7 +39,7 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="isNoData">
+  <div *ngIf="isNoData || listActivitie?.length <= 0">
     <div class="mb-5">
       <codx-no-data [mesCode]="isAdmin ? 'SYS011' : 'SYS032'"></codx-no-data>
     </div>
