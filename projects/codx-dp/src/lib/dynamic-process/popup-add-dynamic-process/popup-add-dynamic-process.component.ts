@@ -1545,11 +1545,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let indexPerm = this.process.permissions.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'P'
         );
-        let index = this.step.roles.findIndex(
+        let lstRoles = this.step.roles ?? [];
+        let index = lstRoles.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'S'
         );
         if (index > -1) {
-          this.step.roles.splice(index, 1);
+          lstRoles.splice(index, 1);
+          if (lstRoles) this.step.roles = JSON.parse(JSON.stringify(lstRoles));
           if (check.length == 0) {
             if (i <= 1) {
               if (indexPerm != -1) {
@@ -1560,6 +1562,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.updateStepChange(this.step?.recID);
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -3532,7 +3535,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let check = this.checkExistUserInStep(step, role, 'O');
     if (check) {
       if (action) {
-        this.notiService.notifyCode('DP027', 0, role?.objectName);
+        let name = role.objectType == '1' ? 'Owner' : role?.objectName;
+        this.notiService.notifyCode('DP027', 0, name);
       }
     } else {
       let index = step?.roles?.findIndex(
