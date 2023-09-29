@@ -87,17 +87,17 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.formModel = dt.data;
-    if(this.formModel?.entityName){
+    if (this.formModel?.entityName) {
       let entityName = this.formModel?.entityName;
       var arObj = entityName.split('_');
-      this.service  = arObj[0];
-      if (this.service ) {
-        switch (this.service .toLocaleLowerCase()) {
+      this.service = arObj[0];
+      if (this.service) {
+        switch (this.service.toLocaleLowerCase()) {
           case 'ad':
-            this.service  = 'sys';
+            this.service = 'sys';
             break;
           case 'pr':
-            this.service  = 'hr';
+            this.service = 'hr';
             break;
         }
       }
@@ -125,10 +125,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   ngOnChanges(changes: SimpleChanges) {}
 
-  getFunctionList()
-  {
-    
-  }
+  getFunctionList() {}
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
   }
@@ -148,7 +145,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         '',
         '',
       ])
-      .subscribe((item) => {});
+      .subscribe((item) => {
+        if (item == '' && this.dialog) (this.dialog as DialogRef).close();
+      });
   }
   getData() {
     this.fetch().subscribe((item) => {
@@ -161,7 +160,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   private fetch(): Observable<any[]> {
     return this.api
       .execSv<Array<any>>(
-        "SYS",
+        'SYS',
         this.assemblyName,
         this.className,
         this.method,
