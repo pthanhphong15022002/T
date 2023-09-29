@@ -1,0 +1,26 @@
+::ng-deep .e-toast-top-right {
+  z-index: 10050 !important;
+}
+
+.no-border {
+  border: none !important;
+  background-color: transparent;
+  outline: none;
+  color: black;
+}
+
+.action-menu-deleted {
+  position: absolute !important;
+  width: 18px;
+  z-index: 99;
+  opacity: 0;
+  right: 0 !important;
+}
+
+.has-action-menu:hover .action-menu-deleted {
+  opacity: 1;
+}
+
+.class-value-vll > .crr-value-vll:hover {
+  background-color: var(--primary-lighter);
+}

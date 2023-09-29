@@ -500,6 +500,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   onActionClick(event?) {
+    debugger;
     if (event.type == 'add' && event.data?.resourceId != null) {
       this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
       this.addNew(event.data);
