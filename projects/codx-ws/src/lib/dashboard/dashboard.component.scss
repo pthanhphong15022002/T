@@ -11,11 +11,11 @@
     background-position: center;
     background-size: 100%;
 }
-.ws-dashboard-toolbar-list>div:hover
+.ws-dashboard-toolbar-list>div:hover , .ws-dashboard-toolbar-lists:hover
 {
     color: var(--text-primary);
 }
-.ws-dashboard-toolbar-list>div.active
+.ws-dashboard-toolbar-list>div.active , .ws-dashboard-toolbar-lists.active
 {
     color: var(--text-primary);
 }

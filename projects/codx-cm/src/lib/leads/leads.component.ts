@@ -147,6 +147,8 @@ export class LeadsComponent
   applyApprover = '0';
   queryParams: any;
   leverSetting = 0;
+  viewActiveType = '';
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -164,6 +166,7 @@ export class LeadsComponent
     if (this.queryParams?.recID) {
       this.predicate = 'RecID=@0';
       this.dataValue = this.queryParams?.recID;
+      this.viewActiveType = '2';
     }
     this.executeApiCalls();
     this.loadParam();
@@ -733,7 +736,7 @@ export class LeadsComponent
       CM0205_16: () => this.popupPermissions(data),
       //SYS002: () => this.exportFiles(e, data),
       CM0205_17: () => this.cancelApprover(data),
-      CM0205_18: () => this.updateAutoAddress(lst)
+      CM0205_18: () => this.updateAutoAddress(lst),
     };
     const executeFunction = functionMappings[e.functionID];
     if (executeFunction) {

@@ -1545,11 +1545,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         let indexPerm = this.process.permissions.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'P'
         );
-        let index = this.step.roles.findIndex(
+        let lstRoles = this.step.roles ?? [];
+        let index = lstRoles.findIndex(
           (x) => x.objectID == objectID && x.roleType == 'S'
         );
         if (index > -1) {
-          this.step.roles.splice(index, 1);
+          lstRoles.splice(index, 1);
+          if (lstRoles) this.step.roles = JSON.parse(JSON.stringify(lstRoles));
           if (check.length == 0) {
             if (i <= 1) {
               if (indexPerm != -1) {
@@ -1560,6 +1562,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.updateStepChange(this.step?.recID);
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -1973,6 +1976,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                   }
                 }
               }
+              this.changeDetectorRef.markForCheck();
             }
           });
         break;
@@ -1998,6 +2002,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
                     this.dataWord = this.dataWord.filter(
                       (x) => x.recID != item[1][0].recID
                     );
+                  this.changeDetectorRef.markForCheck();
                 } else this.notiService.notifyCode('SYS022');
               });
           }
@@ -2865,7 +2870,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
   //#region task
   openPopupChooseTask(isShowGroup = true) {
-    this.popupJob = this.callfc.openForm(CodxTypeTaskComponent, '', 450, 580,null,{isShowGroup});
+    this.popupJob = this.callfc.openForm(
+      CodxTypeTaskComponent,
+      '',
+      450,
+      580,
+      null,
+      { isShowGroup }
+    );
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
         if (value?.event['value'] == 'G') {
@@ -3523,7 +3535,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let check = this.checkExistUserInStep(step, role, 'O');
     if (check) {
       if (action) {
-        this.notiService.notifyCode('DP027', 0, role?.objectName);
+        let name = role.objectType == '1' ? 'Owner' : role?.objectName;
+        this.notiService.notifyCode('DP027', 0, name);
       }
     } else {
       let index = step?.roles?.findIndex(
@@ -4420,8 +4433,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep) {
         return this.iconReasonFail?.textColor;
-      }else if(step?.isSuccessStep){
-        return this.iconReasonSuccess?.textColor
+      } else if (step?.isSuccessStep) {
+        return this.iconReasonSuccess?.textColor;
       } else {
         let countStep = this.stepList?.length || 0;
         let medium = Math.round(countStep / 2);

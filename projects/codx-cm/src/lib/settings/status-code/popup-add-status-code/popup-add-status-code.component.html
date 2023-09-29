@@ -1,0 +1,105 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <ng-container *ngIf="form?.formGroup">
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="StatusID">
+        </codx-label>
+        <!-- <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="statusID"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input> -->
+
+      <codx-input
+      type="text"
+      [placeholder]="
+        disabledShowInput
+          ? planceHolderAutoNumber
+          : gridViewSetup?.['StatusID']?.description
+      "
+      [disabled]="disabledShowInput || action == 'edit'"
+      [crrValue]="data?.statusID"
+      (valueChange)="valueChange($event)"
+      [field]="'StatusID'"
+    >
+    </codx-input>
+
+
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="StatusName">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="statusName"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Category">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="category"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="ObjectStatus">
+        </codx-label>
+        <!-- <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="objectStatus"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input> -->
+
+      <ejs-combobox
+      [dataSource]="valueListStatus"
+      (valueChange)="valueChangeStatus($event)"
+      [fields]="fieldCbxStatus"
+      [placeholder]="gridViewSetup?.ObjectStatus?.description"
+      [allowFiltering]="true"
+      [value]="data?.objectStatus"
+    ></ejs-combobox>
+      </div>
+      <div class="form-group">
+        <codx-label [formModel]="form.formModel" fiedName="Note">
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="note"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="onSave()">
+        <codx-label
+          name="lblSave"
+          [formModel]="dialog.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

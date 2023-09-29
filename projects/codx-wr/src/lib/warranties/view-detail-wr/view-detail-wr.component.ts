@@ -37,6 +37,7 @@ export class ViewDetailWrComponent implements OnInit {
 
   user: any;
   treeTask = [];
+  expanding = false;
 
   tabControl = [
     {
@@ -72,13 +73,8 @@ export class ViewDetailWrComponent implements OnInit {
   ];
 
   constructor(
-    private callFc: CallFuncService,
-    private cache: CacheService,
-    private wrSv: CodxWrService,
-    private api: ApiHttpService,
     private authstore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.user = this.authstore.get();
   }
