@@ -176,7 +176,30 @@ body.tailwind #selected {
   right: 0 !important;
 }
 
-.calendar-left{
+.calendar-left {
   height: calc(100vh - 70px);
   padding-bottom: 15px;
+}
+
+.nav-item {
+  cursor: pointer;
+  p {
+    font-weight: 500;
+    color: #8f9596;
+  }
+}
+
+.nav-item.active {
+  p {
+    font-weight: 500 !important;
+    color: var(--primary) !important;
+  }
+
+  i {
+    color: var(--primary) !important;
+  }
+}
+
+.nav-item.disabled {
+  cursor: default !important;
 }

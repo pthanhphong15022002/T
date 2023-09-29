@@ -135,7 +135,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     private cache: CacheService,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private authstore: AuthStore,
     private api: ApiHttpService,
     private dpService: CodxDpService,
@@ -167,21 +167,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    //this.field.rank = 5;
-    // this.cache
-    //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //     }
-    //   });
   }
 
   ngOnInit(): void {
-    // this.field.dataType = 'L';
-    // this.field.dataFormat = 'V';
     if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
       this.loadDataVll();
+    if (this.field.dataType == 'TA') {
+      this.getColumnTable(this.field);
+    }
   }
 
   valueChangeCbx(e) {}
@@ -479,7 +472,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   e.value = '';
   //   e.focus();
   //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onEditTextValue(e, i) {
@@ -497,7 +490,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   this.idxEdit = -1;
 
   //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onChangeVll(e) {
@@ -538,7 +531,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   // handelTextValue(i) {
   //   this.idxEdit = i;
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // showPopoverDeleted(p, i) {
@@ -580,7 +573,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.maxNumber = this.maxLength();
 
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.markForCheck();
+      this.changeRef.markForCheck();
       this.loaded = true;
     });
   }
@@ -673,7 +666,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.datasVllCbx) this.datasVllCbx.refresh();
     this.form.formGroup.patchValue(this.field);
     this.crrVll = null;
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   changeFormVll() {
@@ -802,15 +795,44 @@ export class PopupAddCustomFieldComponent implements OnInit {
       PopupAddColumnTableComponent,
       '',
       500,
-      700,
+      750,
       '',
       obj,
       '',
       option
     );
     dialogColumn.closed.subscribe((res) => {
+      if (res && res.event) {
+        if (res.event[0]) {
+          this.listColumns = res.event[0];
+          this.field.dataFormat = JSON.stringify(this.listColumns);
+        }
+        if (res.event[1] && !this.processNo) {
+          this.processNo = res.event[1];
+        }
+        this.changeRef.detectChanges();
+      }
       //....................
     });
+  }
+  //--------------format table---------------//
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.listColumns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) this.listColumns = arr;
+    else this.listColumns = [];
+    this.changeRef.detectChanges();
+    // if (data.dataValue) {
+    //   let arrDataValue = JSON.parse(data.dataValue);
+    //   if (Array.isArray(arrDataValue)) {
+    //     this.arrDataValue = arrDataValue;
+    //     return;
+    //   }
+    // }
+    // this.arrDataValue = [];
   }
   //---------------------End Column Table-----------------------------//
 }

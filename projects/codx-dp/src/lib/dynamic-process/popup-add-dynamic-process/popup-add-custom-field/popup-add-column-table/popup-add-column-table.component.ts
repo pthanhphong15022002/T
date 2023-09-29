@@ -12,6 +12,7 @@ import {
   AuthStore,
   CallFuncService,
   CodxFormComponent,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -22,6 +23,7 @@ import {
 } from 'codx-core';
 import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { utils } from 'xlsx';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -33,6 +35,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
+  @ViewChild('valueListType') valueListType: CodxInputComponent;
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -104,12 +107,13 @@ export class PopupAddColumnTableComponent implements OnInit {
   idxDeleted = -1;
   maxNumber = 0;
   listColumns = [];
+  isChecked = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
 
     @Optional() dt?: DialogData,
@@ -139,9 +143,11 @@ export class PopupAddColumnTableComponent implements OnInit {
       this.column[e.field] = e.data;
       return;
     }
-    if (e && e.data && e.column) this.column[e.column] = e.data;
-    if (e.field == 'title' || e.field == 'columnName')
+    if (e && e.data && e.field) this.column[e.field] = e.data;
+    if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+    }
+
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       if (e.data == 'V') this.loadDataVll();
       this.column.refType = e.data == 'C' ? '3' : '2';
@@ -173,124 +179,19 @@ export class PopupAddColumnTableComponent implements OnInit {
   sliderChange(e) {
     this.column.rank = e?.value;
   }
-  // khong dc xoa
-  // renderingTicks(args: SliderTickEventArgs) {
-  //   if (args.tickElement.classList.contains('e-large')) {
-  //     args.tickElement.classList.add('e-custom');
-  //   }
-  // }
-  //thay doi view duoiw
-  // renderedTicks(args: SliderTickRenderedEventArgs) {
-  //   let li = args.ticksWrapper.getElementsByClassName('e-large');
-  //   let remarks: any = ['', '', '', '', '', '', '', '', '', '', '', ''];
-  //   for (let i = 0; i < li.length; ++i) {
-  //     (li[i].querySelectorAll('.e-tick-both')[1] as HTMLElement).innerText =
-  //       remarks[i];
-  //   }
-  // }
+
   cbxChange(value) {
     if (value) this.column['stepID'] = value;
   }
 
   saveData() {
-    if (
-      (!this.column.title || this.column.title.trim() == '') &&
-      this.grvSetup['Title']?.isRequire
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['Title']?.headerText + '"'
-      );
+    if (!this.listColumns || this.listColumns?.length == 0) {
+      this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
       return;
     }
-    if (
-      (!this.column.fieldName || this.column.fieldName.trim() == '') &&
-      this.grvSetup['FieldName']?.isRequire
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['FieldName']?.headerText + '"'
-      );
-      return;
-    }
-    if (this.fileNameArr.length > 0) {
-      let check = this.fileNameArr.some(
-        (x) =>
-          x.field.toLowerCase() == this.column?.fieldName?.toLowerCase() &&
-          x.recID != this.column.recID
-      );
-      if (check) {
-        this.notiService.notifyCode(
-          'DP026',
-          0,
-          '"' + this.grvSetup['FieldName']?.headerText + '"'
-        );
-        return;
-      }
-    }
-    if (!this.column.dataType && this.grvSetup['DataType']?.isRequire) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['DataType']?.headerText + '"'
-      );
-      return;
-    }
-    if (
-      !this.column.dataFormat &&
-      this.column.dataType != 'R' &&
-      this.column.dataType != 'A' &&
-      this.column.dataType != 'C'
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['DataFormat']?.headerText + '"'
-      );
-      return;
-    }
-
-    // if (this.column.dataType == 'L' && !this.column.refType) {
-    //   this.notiService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.grvSetup['RefType']?.headerText + '"'
-    //   );
-    //   return;
-    // }
-
-    if (this.column.dataType == 'L' && !this.column.refValue) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['RefValue']?.headerText + '"'
-      );
-      return;
-    }
-
-    if (
-      (this.column.note == null || this.column.note.trim() == '') &&
-      this.grvSetup['Note']?.isRequire
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['Note']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.column.rankIcon && this.column.dataType == 'R') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.grvSetup['RankIcon']?.headerText + '"'
-      );
-      return;
-    }
-
-    this.dialog.close([this.column, this.processNo]);
+    if (!this.isChecked && !this.checkValidate()) return;
+    this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    this.dialog.close([this.listColumns, this.processNo]);
     this.column = new ColumnTable(); //tắt bùa
   }
 
@@ -402,7 +303,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   //   e.value = '';
   //   e.focus();
   //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onEditTextValue(e, i) {
@@ -420,7 +321,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   //   this.idxEdit = -1;
 
   //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onChangeVll(e) {
@@ -478,7 +379,7 @@ export class PopupAddColumnTableComponent implements OnInit {
       this.maxNumber = this.maxLength();
 
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.markForCheck();
+      this.changeRef.markForCheck();
       this.loaded = true;
     });
   }
@@ -570,7 +471,7 @@ export class PopupAddColumnTableComponent implements OnInit {
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
     this.form.formGroup.patchValue(this.column);
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   changeFormVll() {
@@ -596,7 +497,7 @@ export class PopupAddColumnTableComponent implements OnInit {
 
   handelTextValue(i) {
     this.idxEdit = i;
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   showPopoverDeleted(p, i) {
@@ -686,5 +587,116 @@ export class PopupAddColumnTableComponent implements OnInit {
     }, timeOut);
   }
 
-  saveDataAndContinue() {}
+  saveDataAndContinue() {
+    if (!this.checkValidate()) return;
+    this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    this.column = new ColumnTable();
+    this.column.recID = Util.uid();
+    this.column.fieldName = '';
+    this.column.dataType = null;
+    this.form.formGroup.patchValue(this.column);
+    this.changeRef.detectChanges();
+    this.isChecked = true;
+  }
+
+  checkValidate() {
+    if (
+      (!this.column.title || this.column.title.trim() == '') &&
+      this.grvSetup['Title']?.isRequire
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Title']?.headerText + '"'
+      );
+      return false;
+    }
+    if (
+      (!this.column.fieldName || this.column.fieldName.trim() == '') &&
+      this.grvSetup['FieldName']?.isRequire
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['FieldName']?.headerText + '"'
+      );
+      return false;
+    }
+    if (this.fileNameArr.length > 0) {
+      let check = this.fileNameArr.some(
+        (x) =>
+          x.field.toLowerCase() == this.column?.fieldName?.toLowerCase() &&
+          x.recID != this.column.recID
+      );
+      if (check) {
+        this.notiService.notifyCode(
+          'DP026',
+          0,
+          '"' + this.grvSetup['FieldName']?.headerText + '"'
+        );
+        return false;
+      }
+    }
+    if (!this.column.dataType && this.grvSetup['DataType']?.isRequire) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['DataType']?.headerText + '"'
+      );
+      return false;
+    }
+    if (
+      !this.column.dataFormat &&
+      this.column.dataType != 'R' &&
+      this.column.dataType != 'A' &&
+      this.column.dataType != 'C'
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['DataFormat']?.headerText + '"'
+      );
+      return false;
+    }
+
+    if (this.column.dataType == 'L' && !this.column.refType) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RefType']?.headerText + '"'
+      );
+      return false;
+    }
+
+    if (this.column.dataType == 'L' && !this.column.refValue) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RefValue']?.headerText + '"'
+      );
+      return false;
+    }
+
+    if (
+      (this.column.note == null || this.column.note.trim() == '') &&
+      this.grvSetup['Note']?.isRequire
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Note']?.headerText + '"'
+      );
+      return false;
+    }
+    if (!this.column.rankIcon && this.column.dataType == 'R') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['RankIcon']?.headerText + '"'
+      );
+      return false;
+    }
+
+    return true;
+  }
 }

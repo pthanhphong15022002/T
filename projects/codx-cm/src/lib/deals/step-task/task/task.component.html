@@ -39,14 +39,14 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="isNoData">
+  <div *ngIf="isNoData || listActivitie?.length <= 0">
     <div class="mb-5">
       <codx-no-data [mesCode]="isAdmin ? 'SYS011' : 'SYS032'"></codx-no-data>
     </div>
   </div>
   <div class="d-flex justify-content-center add-contract">
     <button
-      *ngIf="!isPause"
+      *ngIf="!isPause && isAdmin"
       type="button"
       class="btn btn-sm btn btn-primary add-contract d-flex align-items-center"
       (click)="chooseTypeTask()"

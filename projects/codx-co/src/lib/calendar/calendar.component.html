@@ -1,8 +1,8 @@
-<codx-views #view [views]="views" [toolbarDisplay]="true" [autoLoad]="false">
+<codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
   <div class="rounded-3 p-0 position-relative h-100">
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center w-100 h-100">
       <div
         class="w-30 min-w-225px mw-300px me-5 bg-white calendar-left scroll-y"
       >
@@ -86,27 +86,52 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="d-flex justify-content-around align-items-center mt-3">
-              <button
-                class="btn btn-outline-primary btn-md"
-                (click)="resetParams()"
-              >
-                <span>Reset</span>
-              </button>
-              <button class="btn btn-primary btn-md" (click)="saveParams()">
-                <span>Save</span>
-              </button>
-            </div> -->
           </ng-container>
         </div>
+        <div class="w-100 position-absolute left-0 bottom-0">
+          <div class="p-2">
+            <hr class="my-2" />
+            <div class="d-flex justify-content-between align-items-center nav">
+              <div
+                class="d-flex flex-column justify-content-between nav-item active"
+              >
+                <span class="text-center">
+                  <i class="icon-account_circle icon-30"></i>
+                </span>
+                <p class="user-select-none">Cá nhân</p>
+              </div>
+
+              <div class="d-flex flex-column justify-content-between nav-item">
+                <span class="text-center"
+                  ><i class="icon-supervisor_account icon-30"></i
+                ></span>
+                <p class="user-select-none">Nhóm</p>
+              </div>
+
+              <div class="d-flex flex-column justify-content-between nav-item">
+                <span class="text-center">
+                  <i class="icon-i-diagram-3 icon-30"></i>
+                </span>
+                <p class="user-select-none">Công ty</p>
+              </div>
+
+              <div
+                class="d-flex flex-column justify-content-between nav-item disabled"
+              >
+                <span class="text-center">
+                  <i class="icon-settings icon-30"></i>
+                </span>
+                <p class="user-select-none">Thiết lập</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="position-relative w-100 bg-white">
-        <lib-calendar-center
+      <div class="position-relative w-100 h-100 bg-white">
+        <co-calendar-center
           #calendarCenter
           [resources]="resources"
-          [resourceModel]="dataResourceModel"
-        ></lib-calendar-center>
+        ></co-calendar-center>
       </div>
     </div>
   </div>
@@ -129,4 +154,3 @@
     </button>
   </div>
 </ng-template>
-

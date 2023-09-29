@@ -2429,33 +2429,33 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region set owner
   setOwnerByChangeOwnerInstance(instanceID, insStepID){
     // this.getStepById(true, this.currentStep?.recID);
-    // this.api
-    // .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
-    // .subscribe(res => {
-    //   if(res){
-    //     res?.forEach(element => {
-    //       if(!element?.taskGroupID && !element.taskID && element.stepID == this.currentStep?.recID){
-    //         this.currentStep.owner = element?.objectID;
-    //       }else if(element.taskGroupID && !element.taskID){
-    //         let group = this.listGroupTask?.find(g => g.recID == element.taskGroupID);
-    //         if(group){
-    //           group.owner = element?.objectID;
-    //         }
-    //       }else if(element.taskID){
-    //         let group = this.listGroupTask?.find(g => g.refID == element.taskGroupID);
-    //         if(group?.task?.length > 0){
-    //           let task = group?.task?.find(t => t.recID == element.taskID);
-    //           if(task){
-    //             task.owner = element?.objectID;
-    //           }
-    //         }
-    //       }
-    //     });
-    //     console.log(res);
-    //     console.log(this.listGroupTask);
-    //     console.log(this.currentStep);
-    //   }
-    // })
+    this.api
+    .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
+    .subscribe(res => {
+      if(res){
+        res?.forEach(element => {
+          if(!element?.taskGroupID && !element.taskID && element.stepID == this.currentStep?.recID){
+            this.currentStep.owner = element?.objectID;
+          }else if(element.taskGroupID && !element.taskID){
+            let group = this.listGroupTask?.find(g => g.recID == element.taskGroupID);
+            if(group){
+              group.owner = element?.objectID;
+            }
+          }else if(element.taskID){
+            let group = this.listGroupTask?.find(g => g.refID == element.taskGroupID);
+            if(group?.task?.length > 0){
+              let task = group?.task?.find(t => t.recID == element.taskID);
+              if(task){
+                task.owner = element?.objectID;
+              }
+            }
+          }
+        });
+        console.log(res);
+        console.log(this.listGroupTask);
+        console.log(this.currentStep);
+      }
+    })
   }
   //#endregion
 }

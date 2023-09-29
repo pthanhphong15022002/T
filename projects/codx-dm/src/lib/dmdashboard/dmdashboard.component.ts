@@ -70,7 +70,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     private routerActive: ActivatedRoute
   ) {
     super(inject);
-    this.funcID = "DMD";
+    this.funcID = 'DMD';
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
@@ -122,6 +122,10 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  getBackground($event) {
+    console.log('Img in DM', $event);
+  }
+
   getDashboardData(predicates?: string, dataValues?: string, params?: any) {
     let model = new GridModels();
     model.funcID = this.funcID;
@@ -159,7 +163,6 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onActions(e: any) {
-    debugger;
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
       if (this.arrReport.length) {
