@@ -130,8 +130,11 @@
                       [ngbTooltip]="popupAllowCall"
                     >
                       <ng-template #popupAllowCall>
-                        <codx-label [fiedName]="funcID == 'CM0105' ? 'Phone' : 'Mobile'" [formModel]="formModel"></codx-label> </ng-template
-                      >
+                        <codx-label
+                          [fiedName]="funcID == 'CM0105' ? 'Phone' : 'Mobile'"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
                       <span
                         class="text-gray-600 text-primary text-hover-primary"
                         ><span
@@ -151,19 +154,23 @@
                               | async
                           "
                         >
-                        </span></span
-                      >
+                        </span
+                      ></span>
                     </div>
                     <div
                       class="d-flex align-items-center"
                       *ngIf="dataSelected?.email || dataSelected?.personalEmail"
                       [ngbTooltip]="popupAllowEmail"
                     >
-                    <ng-template #popupAllowEmail>
-                      <codx-label [fiedName]="funcID == 'CM0105' ? 'Email' : 'PersonalEmail'" [formModel]="formModel"></codx-label></ng-template
-                      >
-                      <span
-                        class="text-gray-900 text-primary"
+                      <ng-template #popupAllowEmail>
+                        <codx-label
+                          [fiedName]="
+                            funcID == 'CM0105' ? 'Email' : 'PersonalEmail'
+                          "
+                          [formModel]="formModel"
+                        ></codx-label
+                      ></ng-template>
+                      <span class="text-gray-900 text-primary"
                         ><span
                           *ngIf="funcID == 'CM0105'"
                           [innerHTML]="
@@ -183,7 +190,6 @@
                         >
                         </span
                       ></span>
-
                     </div>
                   </div>
                   <div
@@ -214,6 +220,7 @@
                     *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
                   >
                     <codx-vll
+                      [ngbTooltip]="toolTipStatus"
                       [name]="gridViewSetup?.Status?.referedValue"
                       [field]="'Status'"
                       [value]="
@@ -228,6 +235,12 @@
                       class="badge badge-light badge-sm"
                     >
                     </codx-vll>
+                    <ng-template #toolTipStatus>
+                      <codx-label
+                        fiedName="Status"
+                        [formModel]="formModel"
+                      ></codx-label
+                    ></ng-template>
                   </div>
                   <div
                     class="d-flex justify-content-end w-100 mb-1"
@@ -509,6 +522,13 @@
                             : dataSelected?.status == '99'
                         "
                         (addressDefault)="addressDefault($event)"
+                        [isRole]="
+                          funcID == 'CM0101'
+                            ? !isAdmin
+                              ? user.userID == dataSelected.owner
+                              : true
+                            : true
+                        "
                       ></codx-address-cm>
                     </div>
                   </ng-template>
@@ -748,7 +768,10 @@
     [typeTask]="2"
     [customerID]="dataSelected?.recID"
     [owner]="dataSelected?.owner"
-    [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false "
-    [isPause]="(!isAdmin && user.userID != dataSelected.owner) || dataSelected?.status == '99'"
+    [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false"
+    [isPause]="
+      (!isAdmin && user.userID != dataSelected.owner) ||
+      dataSelected?.status == '99'
+    "
   ></step-task>
 </ng-template>

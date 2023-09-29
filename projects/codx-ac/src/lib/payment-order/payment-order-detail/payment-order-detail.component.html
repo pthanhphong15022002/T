@@ -68,10 +68,7 @@
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span
-          class="text-gray-600"
-          style="font-size: 12px !important"
-        >
+        <span class="text-gray-600" style="font-size: 12px !important">
           {{ dataItem?.voucherDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
@@ -91,7 +88,7 @@
             [default]="headerText"
           ></codx-label>
         </div>
-        <div class="row" style="padding-bottom: 5px;">
+        <div class="row" style="padding-bottom: 5px">
           <div>
             <codx-label
               class="fw-bold"
@@ -108,7 +105,7 @@
                     | async
                 "
                 class="om-input w-100 dropdow-select"
-                style="font-size: 13px;"
+                style="font-size: 13px"
               ></span>
             </div>
           </div>
@@ -153,7 +150,7 @@
                         | async
                     "
                     class="om-input w-100 dropdow-select"
-                    style="font-size: 13px;"
+                    style="font-size: 13px"
                   ></span>
                 </div>
               </div>
@@ -162,17 +159,14 @@
         </div>
         <div class="row" *ngIf="dataItem.memo != null || dataItem.memo != ''">
           <div>
-            <codx-label
-              class="fw-bold"
-              fiedName="Memo"
-              [formModel]="formModel"
-            >
+            <codx-label class="fw-bold" fiedName="Memo" [formModel]="formModel">
             </codx-label>
             <div>
               <span
                 class="om-input w-100 dropdow-select"
-                style="font-size: 13px;"
-              >{{ dataItem.memo }}</span>
+                style="font-size: 13px"
+                >{{ dataItem.memo }}</span
+              >
             </div>
           </div>
         </div>
@@ -217,7 +211,7 @@
       </div>
       <!-- Nội dung của chi tiết -->
       <div
-        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
+        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto responsive-table"
       >
         <div class="flex-column d-flex justify-content-start px-6">
           <div
@@ -228,10 +222,10 @@
               <div
                 class="d-flex align-items-center flex-row cursor-pointer w-100"
               >
-              <span
-                class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
-                style="font-size: 10px !important;"
-              ></span>
+                <span
+                  class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
+                  style="font-size: 10px !important"
+                ></span>
                 <div
                   class="w-50 d-flex justify-content-start align-items-center"
                 >
@@ -268,70 +262,113 @@
           </div>
         </div>
       </div>
-      <!-- Trường kế hoạch công tác -->
-      <!-- <div class="d-flex align-items-center">
-        <button
-          style="border: 1px solid var(--primary-dark) !important"
-          type="button"
-          class="btn btn-md btn-light-primary me-2 rounded-15"
-          (click)="popupUploadFile()"
-        >
-          <div class="d-flex align-items-center">
-            <i class="icon-cloud_upload icon-16"></i>
+      <!-- Các field tổng tiền -->
+      <div class="align-items-center">
+        <div class="row">
+          <div class="col-3">
             <codx-label
-              class="fw-normal"
-              fiedName="lblUpload"
-              default="Tệp đính kèm"
-            ></codx-label>
+              class="fw-bold"
+              fiedName="TotalAmt"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalAmt"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="dataItem.totalAmt"
+              [disabled]="true"
+            ></codx-inplace>
           </div>
-        </button>
-        <div>
-          <button
-            style="border: 1px solid var(--primary-dark) !important"
-            type="button"
-            class="btn btn-md btn-light-primary me-2 rounded-15"
-            (keydown.enter)="onSave(); $event.preventDefault()"
-            (click)="onSave()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-add_to_photos icon-16"></i>
-              <codx-label
-                class="fw-normal"
-                fiedName="lblSaveAndClear"
-                default="Lưu & Gửi duyệt"
-              ></codx-label>
-            </div>
-          </button>
-          <button
-            id="save"
-            type="button"
-            class="btn btn-md btn-light-primary rounded-15"
-            style="border: 1px solid var(--primary-dark) !important"
-            (keydown.enter)="onSave(); $event.preventDefault()"
-            (click)="onSave()"
-          >
-            <div class="d-flex align-items-center">
-              <i class="icon-save_alt icon-16"></i>
-              <codx-label
-                class="fw-normal"
-                fiedName="lblSave"
-                default="Lưu"
-              ></codx-label>
-            </div>
-          </button>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalAmt"
+              [formModel]="fmAdvancedPayment"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalAmt"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="advancedPayment?.totalAmt"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalDR"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalDR"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="dataItem.totalDR"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-3">
+            <codx-label
+              class="fw-bold"
+              fiedName="TotalCR"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-inplace
+              type="number"
+              field="totalCR"
+              [class]="'om-input w-100'"
+              [cssClass]="'om-input w-100'"
+              [value]="dataItem.totalCR"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
         </div>
-      </div> -->
+      </div>
+      <!-- Trường kế hoạch công tác -->
+      <div class="row" *ngIf="dataItem.refNo">
+        <div class="d-flex align-items-center">
+          <div class="col-2">
+            <codx-label
+              class="fw-bold"
+              fiedName="RefNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div class="col-3">
+            <codx-inplace
+              type="text"
+              field="note"
+              [class]="'om-input'"
+              [cssClass]="'om-input w-100'"
+              [value]="dataItem.refNo"
+              [emptyText]="grvSetupPaymentOrderLines?.RefNo.headerText"
+              [disabled]="true"
+            ></codx-inplace>
+          </div>
+          <div class="col-2 d-flex align-items-center">
+            <i class="icon-link text-primary icon-30 cursor-pointer"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #footer>
-    <ng-container *ngIf="dataItem">
-      <codx-tabs
-        [entityName]="formModel.entityName"
-        [formModel]="formModel"
-        [objectID]="dataItem.recID"
-        [funcID]="formModel.funcID"
-      ></codx-tabs>
-    </ng-container>
-  </ng-template>
+  <ng-container *ngIf="dataItem">
+    <codx-tabs
+      [entityName]="formModel.entityName"
+      [formModel]="formModel"
+      [objectID]="dataItem.recID"
+      [funcID]="formModel.funcID"
+    ></codx-tabs>
+  </ng-container>
+</ng-template>
