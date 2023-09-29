@@ -123,13 +123,27 @@
         </div>
         <div class="footerCard-item d-flex justify-content-between mt-2">
           <div class="d-flex justify-content-start">
-            <div class="d-flex me-2">
+            <div class="d-flex me-2" [ngbTooltip]="popupCountLeads">
+              <ng-template #popupCountLeads>
+                <codx-label
+                  name="lblCountLeads"
+                  [formModel]="view.formModel"
+                  default="Số lượng khách hàng tiềm năng"
+                ></codx-label>
+              </ng-template>
               <div class="icon-list-checkbox icon-16 me-1"></div>
-              <div>0</div>
+              <div>{{ data.counts }}</div>
             </div>
-            <div class="d-flex me-2">
+            <div class="d-flex me-2" [ngbTooltip]="popupCountDealWons">
+              <ng-template #popupCountDealWons>
+                <codx-label
+                  name="lblCountDealWons"
+                  [formModel]="view.formModel"
+                  default="Số lượng Cơ hội thành công"
+                ></codx-label>
+              </ng-template>
               <div class="icon-assignment_turned_in icon-16"></div>
-              <div>0</div>
+              <div>{{ data.wonDeals }}</div>
             </div>
           </div>
           <div
@@ -183,15 +197,13 @@
         [id]="'elementDescription'"
         class="fs-6 text-gray-800"
         [style.height]="seeMore(data) ? '40px' : 'auto'"
-        [ngClass]="
-        seeMore(data)
-            ? 'line-clamp line-clamp-2 text-popover'
-            : ''
-        "
+        [ngClass]="seeMore(data) ? 'line-clamp line-clamp-2 text-popover' : ''"
         [ngbPopover]="setTextPopover(data?.description)"
         #p1="ngbPopover"
         [openDelay]="500"
-        (mouseenter)="seeMore(data) ? PopoverDetail($event, p1, data, 'description') : null"
+        (mouseenter)="
+          seeMore(data) ? PopoverDetail($event, p1, data, 'description') : null
+        "
         (mouseleave)="p1.close()"
         placement="bottom right top"
         [popoverClass]="data?.recID"
@@ -235,13 +247,27 @@
     </div>
     <div class="footerCard-item d-flex justify-content-between mt-2">
       <div class="d-flex justify-content-start">
-        <div class="d-flex me-2">
+        <div class="d-flex me-2" [ngbTooltip]="popupCountLeads">
+          <ng-template #popupCountLeads>
+            <codx-label
+              name="lblCountLeads"
+              [formModel]="view.formModel"
+              default="Số lượng khách hàng tiềm năng"
+            ></codx-label>
+          </ng-template>
           <div class="icon-list-checkbox icon-16 me-1"></div>
-          <div>0</div>
+          <div>{{ data.counts }}</div>
         </div>
-        <div class="d-flex me-2">
+        <div class="d-flex me-2" [ngbTooltip]="popupCountDealWons">
+          <ng-template #popupCountDealWons>
+            <codx-label
+              name="lblCountDealWons"
+              [formModel]="view.formModel"
+              default="Số lượng Cơ hội thành công"
+            ></codx-label>
+          </ng-template>
           <div class="icon-assignment_turned_in icon-16"></div>
-          <div>0</div>
+          <div>{{ data.wonDeals }}</div>
         </div>
       </div>
       <div
@@ -267,7 +293,6 @@
     [formModel]="view.formModel"
     [gridViewSetup]="gridViewSetup"
     (clickMoreFunc)="clickMoreFunc($event)"
-
   ></codx-campaigns-detail>
 </ng-template>
 <!--End List detail-->

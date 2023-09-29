@@ -252,8 +252,6 @@
    /* css row emptyRecord */
  .ac-empty-record{
      background-color: #f8f9fa !important;
-     border-color: #dee2e6 !important;
-     border-top:1px solid ;
      height: 30px !important;
  }
  .codx-dialog-container{
@@ -262,4 +260,51 @@
  .rounded-15{
     border-radius: 15px !important;
  }
- 
+ .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
+    padding: 0 0 !important;
+ }
+ /* css custom lại footer của lưới */
+ #gridViewV2.e-grid .e-summarycell {
+    border-width: 0px 0 0 !important; 
+    border-left-width: 0px !important;
+ }
+  /* css custom lại codx-view-list-detail spliter */
+ codx-view-list-detail{
+    .codx-view-splitter > .e-static-pane {
+        min-width: unset !important;
+        max-width: unset !important;
+        transition-duration: 0.8s;
+        transition-timing-function: ease;
+     }
+     .codx-view-splitter > .e-split-bar-horizontal .e-resize-handler {
+        visibility: inherit !important;
+     }
+     .codx-view-splitter > .e-split-bar-horizontal:hover {
+        background: var(--primary) !important;
+     }
+     .codx-view-splitter > .e-split-bar-horizontal .e-resize-handler {
+        color: var(--primary) !important;
+     }
+ } 
+ .e-splitter .e-split-bar.e-split-bar-horizontal .e-navigate-arrow::before{
+    border-color: var(--primary) !important;
+    background-color: var(--primary) !important;
+ }
+ .e-splitter .e-split-bar.e-split-bar-horizontal .e-navigate-arrow::after{
+    border-color: var(--primary) !important;
+    background-color: var(--primary) !important;
+ }
+ .e-splitter .e-split-bar.e-split-bar-horizontal .e-navigate-arrow.e-arrow-left:hover{
+    border-color: var(--primary) !important;
+ }
+ .e-splitter .e-split-bar.e-split-bar-horizontal.e-split-bar-hover .e-navigate-arrow.e-arrow-left{
+    border: 1px solid white;
+    border-color: var(--primary) !important;
+ }
+ .e-splitter .e-split-bar.e-split-bar-horizontal .e-navigate-arrow.e-arrow-right:hover{
+    border-color: var(--primary) !important;
+ }
+ .e-splitter .e-split-bar.e-split-bar-horizontal.e-split-bar-hover .e-navigate-arrow.e-arrow-right{
+    border: 1px solid white;
+    border-color: var(--primary) !important;
+ }

@@ -36,17 +36,15 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.request.pageSize = 20
   }
   ngAfterViewInit(): void {
-   
-   const resizeObserver = new ResizeObserver(entries => 
-    this.setHeight()
-    );
-    resizeObserver.observe(document.body);
+    const elem = document.querySelector('#view2-header')
+    new ResizeObserver(this.setHeight).observe(elem)
   }
 
   setHeight()
   {
+    if(!document.getElementById("view2-header")) return;
+    
     var h = document.getElementById("view2-header").offsetHeight;
-    alert(h);
 
     if(h > 0)
     {
@@ -56,7 +54,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     }
     else
     {
-      document.getElementById("codx-view2-body").removeAttribute("height");
+      document.getElementById("codx-view2-body").style.cssText = "height:auto";
     }
   }
 

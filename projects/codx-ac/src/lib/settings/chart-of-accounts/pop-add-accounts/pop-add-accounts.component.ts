@@ -26,7 +26,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 @Component({
   selector: 'lib-pop-add-accounts',
   templateUrl: './pop-add-accounts.component.html',
-  styleUrls: ['./pop-add-accounts.component.css','../../../codx-ac.component.css'],
+  styleUrls: ['./pop-add-accounts.component.css','../../../codx-ac.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopAddAccountsComponent extends UIComponent implements OnInit {

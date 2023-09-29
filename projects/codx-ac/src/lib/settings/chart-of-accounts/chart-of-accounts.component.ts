@@ -25,7 +25,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-chart-of-accounts',
   templateUrl: './chart-of-accounts.component.html',
-  styleUrls: ['./chart-of-accounts.component.css','../../codx-ac.component.css'],
+  styleUrls: ['./chart-of-accounts.component.css','../../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

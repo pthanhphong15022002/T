@@ -54,6 +54,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   elmIDCrr: any;
   dataValueOld: any;
   moreFuncNameEdit = '';
+  listColumns = []; //columfield TA
 
   formModelContact: FormModel = {
     formName: 'CMContacts',
@@ -274,11 +275,6 @@ export class CodxFieldsDetailTempComponent implements OnInit {
           break;
         case 'C':
           result = event?.e;
-          // var type = event?.type ?? '';
-          // var contact = event?.result ?? '';
-          // // this.convertToFieldDp(contact, type);
-          // console.log('contactsJS: ', result);
-          // console.log('contacts: ', JSON.parse(result));
           break;
       }
       field.dataValue = result;
@@ -393,4 +389,30 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   //   });
   //   // return value;
   // }
+
+  //--------------format table---------------//
+  formatTable(data) {
+    if (!data.dataFormat) return [];
+    return JSON.parse(data.dataFormat);
+  }
+
+  formatData(dataValue) {
+    if (!dataValue) return [];
+    return JSON.parse(dataValue);
+  }
+
+  formatViewTable(data, value) {
+    let arrColumn = JSON.parse(data.dataFormat);
+    let arrField = [];
+    if (Array.isArray(arrColumn)) {
+      arrColumn.forEach((x) => {
+        let object = Object.assign(x, {
+          dataValue: value?.[x.fieldName],
+        });
+        arrField.push(arrField);
+      });
+    }
+    return arrField;
+  }
+  //--------------end------------//
 }

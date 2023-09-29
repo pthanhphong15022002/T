@@ -24,7 +24,6 @@ import moment from 'moment';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
 import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
-import { CodxCalendarService } from './codx-calendar.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { FormGroup } from '@angular/forms';
 import { of, switchMap } from 'rxjs';
@@ -38,15 +37,16 @@ import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/compone
 import { AddNoteComponent } from 'projects/codx-share/src/lib/components/calendar-notes/add-note/add-note.component';
 import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
-import { PopupSettingsComponent } from './popup-settings/popup-settings.component';
+import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
+import { CodxCoService } from '../codx-co.service';
 
 @Component({
   selector: 'co-calendar',
-  templateUrl: './codx-calendar.component.html',
-  styleUrls: ['./codx-calendar.component.scss'],
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxCalendarComponent
+export class COCalendarComponent
   extends UIComponent
   implements AfterViewInit
 {
@@ -105,7 +105,7 @@ export class CodxCalendarComponent
 
   constructor(
     injector: Injector,
-    private calendarService: CodxCalendarService,
+    private coService: CodxCoService,
     private cacheService: CacheService,
     private notificationsService: NotificationsService,
     private cfService: CallFuncService
@@ -205,7 +205,7 @@ export class CodxCalendarComponent
       },
     ];
 
-    this.calendarService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
+    this.coService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
       this.roomFM = res;
       this.roomFG = this.codxService.buildFormGroup(
         this.roomFM?.formName,
@@ -219,7 +219,7 @@ export class CodxCalendarComponent
       }
     });
 
-    this.calendarService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
+    this.coService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
       this.carFM = res;
       this.carFG = this.codxService.buildFormGroup(
         this.carFM?.formName,
@@ -233,7 +233,7 @@ export class CodxCalendarComponent
       }
     });
 
-    this.calendarService.getFormModel('TMT0501').then((res) => {
+    this.coService.getFormModel('TMT0501').then((res) => {
       this.meetingFM = res;
       this.meetingFG = this.codxService.buildFormGroup(
         this.meetingFM?.formName,
@@ -241,7 +241,7 @@ export class CodxCalendarComponent
       );
     });
 
-    this.calendarService.getFormModel('TMT0201').then((res) => {
+    this.coService.getFormModel('TMT0201').then((res) => {
       this.myTaskFM = res;
       this.myTaskFG = this.codxService.buildFormGroup(
         this.myTaskFM?.formName,
@@ -249,7 +249,7 @@ export class CodxCalendarComponent
       );
     });
 
-    this.calendarService.getFormModel('TMT0203').then((res) => {
+    this.coService.getFormModel('TMT0203').then((res) => {
       this.assignTaskFM = res;
       this.assignTaskFG = this.codxService.buildFormGroup(
         this.assignTaskFM?.formName,
@@ -304,7 +304,7 @@ export class CodxCalendarComponent
       });
   }
   navigate() {
-    this.calendarService.dateChange$.subscribe((res) => {
+    this.coService.dateChange$.subscribe((res) => {
       if (res?.fromDate === 'Invalid Date' && res?.toDate === 'Invalid Date') {
         return;
       }
@@ -405,7 +405,7 @@ export class CodxCalendarComponent
         this.ejCalendar.value = this.FDdate;
       }
 
-      this.calendarService.calendarData$.next(this.calendarTempData);
+      this.coService.calendarData$.next(this.calendarTempData);
 
       // this.api
       //   .execSv(
@@ -461,7 +461,7 @@ export class CodxCalendarComponent
       this.calendarCenter.resources = this.resources;
     }
 
-    this.calendarService.calendarData$.subscribe((res) => {
+    this.coService.calendarData$.subscribe((res) => {
       if (res) {
         this.calendarCenter && this.calendarCenter.updateData(res);
       }
@@ -523,7 +523,7 @@ export class CodxCalendarComponent
     // }
 
     //reset data
-    this.calendarService.calendarData$.next([]);
+    this.coService.calendarData$.next([]);
     this.api
       .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
         calendarType,
@@ -590,39 +590,37 @@ export class CodxCalendarComponent
   addEvent(args: SpeedDialItemEventArgs) {
     let transType = args.item.id;
 
-    this.calendarService
-      .checkPermission(transType, '')
-      .subscribe((res: boolean) => {
-        if (res && res === true) {
-          switch (transType) {
-            case 'EP_BookingCars':
-              this.addBookingCar();
-              break;
+    this.coService.checkPermission(transType, '').subscribe((res: boolean) => {
+      if (res && res === true) {
+        switch (transType) {
+          case 'EP_BookingCars':
+            this.addBookingCar();
+            break;
 
-            case 'EP_BookingRooms':
-              this.addBookingRoom();
-              break;
+          case 'EP_BookingRooms':
+            this.addBookingRoom();
+            break;
 
-            case 'WP_Notes':
-              this.addNote();
-              break;
+          case 'WP_Notes':
+            this.addNote();
+            break;
 
-            case 'CO_Meetings':
-              this.addMeeting();
-              break;
+          case 'CO_Meetings':
+            this.addMeeting();
+            break;
 
-            case 'TM_MyTasks':
-              this.addMyTask();
-              break;
+          case 'TM_MyTasks':
+            this.addMyTask();
+            break;
 
-            case 'TM_AssignTasks':
-              this.addAssignTask();
-              break;
-          }
-        } else {
-          this.notificationsService.notifyCode('SYS032');
+          case 'TM_AssignTasks':
+            this.addAssignTask();
+            break;
         }
-      });
+      } else {
+        this.notificationsService.notifyCode('SYS032');
+      }
+    });
   }
 
   addBookingCar() {
@@ -900,7 +898,7 @@ export class CodxCalendarComponent
         });
       }
     }
-    this.calendarService.calendarData$.next(this.calendarTempData);
+    this.coService.calendarData$.next(this.calendarTempData);
     this.isChangeMonth = false;
     this.ejCalendar.refresh();
     // this.api

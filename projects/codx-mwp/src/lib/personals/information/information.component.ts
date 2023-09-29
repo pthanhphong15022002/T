@@ -129,6 +129,7 @@ export class InformationComponent extends UIComponent implements OnInit {
   data: any;
   isModeAddES = true;
   user$: Observable<UserModel | null> = of(null);
+  qrBase64: string = '/assets/codx/bg/qrCodx.png';
 
   constructor(
     private injector: Injector,
@@ -169,6 +170,19 @@ export class InformationComponent extends UIComponent implements OnInit {
       document.body.classList.add('codx-theme');
     if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
     this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
+
+    //TOTP
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GenGoogleAuthenQRAsync',
+        []
+      )
+      .subscribe((qrImg) => {
+        this.qrBase64 = 'data:image/png;base64,' + qrImg;
+      });
   }
 
   onInit(): void {
