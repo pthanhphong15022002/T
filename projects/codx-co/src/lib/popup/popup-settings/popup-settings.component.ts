@@ -11,7 +11,6 @@ import { DialogData, DialogRef, UIComponent } from 'codx-core';
   selector: 'popup-settings',
   templateUrl: './popup-settings.component.html',
   styleUrls: ['./popup-settings.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PopupSettingsComponent
   extends UIComponent
@@ -32,7 +31,13 @@ export class PopupSettingsComponent
   }
 
   onInit(): void {
+    const { data } = this.data;
+    console.log(data);
   }
 
   ngAfterViewInit(): void {}
+
+  valueChange(event) {
+    console.log(event);
+  }
 }
