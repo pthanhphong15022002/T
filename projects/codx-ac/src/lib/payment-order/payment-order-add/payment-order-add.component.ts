@@ -392,6 +392,7 @@ export class PaymentOrderAddComponent extends UIComponent
         }
       });
       this.paymentOrder.totalAmt = total;
+      this.form.formGroup.patchValue({totalAmt: this.paymentOrder.totalAmt});
       this.calTotalCR();
     }
   }

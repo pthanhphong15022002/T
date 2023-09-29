@@ -5,6 +5,7 @@ import { PaymentOrder } from '../../models/PaymentOrder.model';
 import { PaymentOrderLines } from '../../models/PaymentOrderLines.model';
 import { PaymentOrderAddComponent } from '../payment-order-add/payment-order-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 
 
 @Component({
@@ -26,12 +27,18 @@ export class PaymentOrderDetailComponent extends UIComponent {
   dataCategory: any;
   formType: any;
   private destroy$ = new Subject<void>();
+  advancedPayment: AdvancedPayment = new AdvancedPayment();
   paymentOrder: PaymentOrder;
   paymentOrderLines: Array<PaymentOrderLines> = [];
   fmPaymentOrderLines: FormModel = {
     entityName: 'AC_PaymentOrderLines',
     formName: 'PaymentOrderLines',
     gridViewName: 'grvPaymentOrderLines',
+  }
+  fmAdvancedPayment: FormModel = {
+    entityName: 'AC_AdvancedPayment',
+    formName: 'AdvancedPayment',
+    gridViewName: 'grvAdvancedPayment',
   }
   grvSetupPaymentOrderLines: any;
   constructor(
@@ -40,6 +47,8 @@ export class PaymentOrderDetailComponent extends UIComponent {
   )
   {
     super(inject);
+
+    this.advancedPayment.totalAmt = 0;
 
     this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
     .pipe(takeUntil(this.destroy$))
@@ -79,6 +88,11 @@ export class PaymentOrderDetailComponent extends UIComponent {
           this.loadDataLine(this.dataItem);
         }
       });
+    }
+
+    if(this.dataItem.refNo)
+    {
+      this.loadAdvancedPayment();
     }
   }  
 
@@ -236,6 +250,20 @@ export class PaymentOrderDetailComponent extends UIComponent {
       data,
       action
     ]);
+  }
+
+  loadAdvancedPayment(){
+    this.api
+      .exec<any>('AC', 'AdvancedPaymentBusiness', 'LoadDataByVoucherNoAsync', [
+        this.dataItem.refNo,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.advancedPayment = res;
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }
 
