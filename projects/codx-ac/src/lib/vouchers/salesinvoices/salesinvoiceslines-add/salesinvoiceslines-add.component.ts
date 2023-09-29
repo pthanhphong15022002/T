@@ -68,7 +68,7 @@ export class SalesinvoiceslinesAddComponent
     @Optional() public dialogData: DialogData
   ) {
     super(injector);
-    this.gvs = this.salesInvoiceService.gvsSalesInvoicesLines;
+    // this.gvs = this.salesInvoiceService.gvsSalesInvoicesLines;
     this.journal = this.salesInvoiceService.journal;
 
     this.dataService = dialogRef.dataService;
