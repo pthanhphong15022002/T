@@ -167,21 +167,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    //this.field.rank = 5;
-    // this.cache
-    //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //     }
-    //   });
   }
 
   ngOnInit(): void {
-    // this.field.dataType = 'L';
-    // this.field.dataFormat = 'V';
     if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
       this.loadDataVll();
+    if (this.field.dataType == 'TA') {
+      this.getColumnTable(this.field);
+    }
   }
 
   valueChangeCbx(e) {}
@@ -821,6 +814,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
       //....................
     });
+  }
+  //--------------format table---------------//
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.listColumns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) this.listColumns = arr;
+    else this.listColumns = [];
+    this.changeRef.detectChanges();
+    // if (data.dataValue) {
+    //   let arrDataValue = JSON.parse(data.dataValue);
+    //   if (Array.isArray(arrDataValue)) {
+    //     this.arrDataValue = arrDataValue;
+    //     return;
+    //   }
+    // }
+    // this.arrDataValue = [];
   }
   //---------------------End Column Table-----------------------------//
 }

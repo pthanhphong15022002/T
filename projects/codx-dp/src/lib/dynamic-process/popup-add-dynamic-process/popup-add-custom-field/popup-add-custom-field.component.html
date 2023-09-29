@@ -127,7 +127,7 @@
           </div>
         </div>
         <ng-container
-          *ngIf="field.dataType == 'TA' && field.dataFormat"
+          *ngIf="field.dataType == 'TA'"
           [ngTemplateOutlet]="tempViewTable"
         ></ng-container>
 
@@ -398,28 +398,23 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table table-row-bordered" *ngIf="listColumns.length">
+  <table class="table table-row-bordered mt-3" *ngIf="listColumns.length">
     <thead>
       <tr class="bg-gray-100">
         <ng-container *ngFor="let item of listColumns; let index = index">
           <th scope="col" class="fw-bold ps-4">
-            <codx-label
-              name="lblTitle"
-              formModel=""
-              formModel=""
-              [default]=""
-            ></codx-label>
+            <span>{{ item?.title }}</span>
           </th>
         </ng-container>
-        <th scope="col" class="w-100px fw-bold"></th>
+        <!-- <th scope="col" class="w-100px fw-bold"></th> -->
       </tr>
     </thead>
     <tbody>
       <tr>
         <ng-container *ngFor="let item of listColumns; let index = index">
-          <td class="ps-4">{{ item?.title }}</td>
+          <td class="ps-4">{{ item?.note }}</td>
         </ng-container>
-        <td>
+        <!-- <td>
           <div class="d-flex justify-content-end align-items-center">
             <button class="btn btn-sm btn-icon btn-light-warning">
               <i class="icon icon-14 icon-edit"></i>
@@ -428,7 +423,7 @@
               <i class="icon icon-14 icon-close"></i>
             </button>
           </div>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>
