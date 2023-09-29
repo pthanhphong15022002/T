@@ -242,6 +242,11 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
       option
     );
     dialg.closed.subscribe((res) => {
+      // if(res.event){
+      //   this.view.dataService.load().subscribe((rrr) => {
+      //     // this.view.dataService.data = rrr;
+      //   });
+      // }
       if (res.event) {
         if (actionType == this.ActionAdd) {
           this.view.dataService.add(res.event, 0).subscribe();
