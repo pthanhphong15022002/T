@@ -61,6 +61,7 @@ export class PurchaseInvoiceService {
       .subscribe();
   }
 
+  /** @deprecated */
   initCache(): void {
     this.apiService
       .exec('IV', 'IVBusiness', 'InitItemInfoListCacheAsync')
