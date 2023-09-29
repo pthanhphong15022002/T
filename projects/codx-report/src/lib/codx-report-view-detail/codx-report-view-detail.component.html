@@ -57,6 +57,13 @@
         ></codx-report-iframe>
       </ng-template>
     </ng-template>
+    <input
+      #upload
+      class="d-none"
+      type="file"
+      accept="image/*"
+      (change)="handleInputChange($event)"
+    />
   </ng-container>
   <!-- <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe> -->
 </ng-template>

@@ -196,6 +196,7 @@ implements OnInit{
   }
 
   onInit(): void {
+    debugger
     if(!this.columnGrid1){
       this.columnGrid1 = [
         {
