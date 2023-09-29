@@ -500,7 +500,6 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   onActionClick(event?) {
-    debugger;
     if (event.type == 'add' && event.data?.resourceId != null) {
       this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
       this.addNew(event.data);
@@ -1241,7 +1240,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   allocate(data: any) {
-    if (data?.approverID != this.curUser?.userID) {
+    if (data?.issueBy != this.curUser?.userID) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }

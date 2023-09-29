@@ -802,7 +802,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       PopupAddColumnTableComponent,
       '',
       500,
-      700,
+      750,
       '',
       obj,
       '',
