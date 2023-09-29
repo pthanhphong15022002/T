@@ -1560,6 +1560,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           }
           this.updateStepChange(this.step?.recID);
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
