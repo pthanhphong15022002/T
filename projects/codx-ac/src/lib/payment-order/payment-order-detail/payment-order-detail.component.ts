@@ -6,7 +6,7 @@ import { PaymentOrderLines } from '../../models/PaymentOrderLines.model';
 import { PaymentOrderAddComponent } from '../payment-order-add/payment-order-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
-
+import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'lib-payment-order-detail',
@@ -27,6 +27,8 @@ export class PaymentOrderDetailComponent extends UIComponent {
   dataCategory: any;
   formType: any;
   private destroy$ = new Subject<void>();
+  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
+  loading: any = false;
   advancedPayment: AdvancedPayment = new AdvancedPayment();
   paymentOrder: PaymentOrder;
   paymentOrderLines: Array<PaymentOrderLines> = [];
@@ -47,15 +49,6 @@ export class PaymentOrderDetailComponent extends UIComponent {
   )
   {
     super(inject);
-
-    this.advancedPayment.totalAmt = 0;
-
-    this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(res)
-        this.grvSetupPaymentOrderLines = res;
-    });
   }
 
   onInit(): void {
@@ -90,10 +83,21 @@ export class PaymentOrderDetailComponent extends UIComponent {
       });
     }
 
+    this.advancedPayment.totalAmt = 0;
+
+    this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(res)
+        this.grvSetupPaymentOrderLines = res;
+    });
+
     if(this.dataItem.refNo)
     {
       this.loadAdvancedPayment();
     }
+
+    this.detectorRef.detectChanges();
   }  
 
   ngAfterViewInit() {
@@ -227,6 +231,7 @@ export class PaymentOrderDetailComponent extends UIComponent {
   //#region Function
 
   loadDataLine(data) {
+    this.loading = true;
     this.api
       .exec('AC', 'PaymentOrderLinesBusiness', 'LoadDataAsync', [
         data.recID,
@@ -237,6 +242,7 @@ export class PaymentOrderDetailComponent extends UIComponent {
         {
           this.paymentOrderLines = res;
         }
+        this.loading = false;
         this.detectorRef.detectChanges();
       });
   }
