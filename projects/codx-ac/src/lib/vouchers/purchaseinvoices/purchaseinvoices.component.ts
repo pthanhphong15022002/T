@@ -12,7 +12,7 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewType
+  ViewType,
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
@@ -118,7 +118,9 @@ export class PurchaseinvoicesComponent
         break;
       case '1': // da hop le
         if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
+          disabledFuncs = disabledFuncs.filter(
+            (f) => f !== MF.GuiDuyet && f !== MF.In
+          );
         } else {
           disabledFuncs = disabledFuncs.filter(
             (f) => f !== MF.GhiSo && f !== MF.In
