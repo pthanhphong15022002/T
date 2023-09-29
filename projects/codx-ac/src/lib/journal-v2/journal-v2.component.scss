@@ -1,6 +1,6 @@
-.breadcrumb-dot .breadcrumb-item {
-  padding-right: 0;
-}
+// .breadcrumb-dot .breadcrumb-item {
+//   padding-right: 0;
+// }
 
 .breadcrumb-dot .breadcrumb-item:after {
   content: "";
@@ -8,6 +8,7 @@
 
 .breadcrumb-dash .breadcrumb-item:after {
   content: "|";
+  color: var(--gray-500);
 }
 
 .breadcrumb-text {
