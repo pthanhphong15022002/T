@@ -14,7 +14,7 @@ import { JournalService } from '../../journals/journals.service';
 @Component({
   selector: 'lib-cashreceipts',
   templateUrl: './cashreceipts.component.html',
-  styleUrls: ['./cashreceipts.component.css', '../../codx-ac.component.css']
+  styleUrls: ['./cashreceipts.component.css', '../../codx-ac.component.scss']
 })
 export class CashreceiptsComponent extends UIComponent {
   //#region Constructor

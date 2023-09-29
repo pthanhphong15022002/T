@@ -799,3 +799,26 @@ export class CM_TargetsLines {
   text: string;
   isExit: boolean = false;
 }
+
+export class CM_StatusCode {
+  statusID: string;
+  statusName: string;
+  statusName2: string;
+  category: string;
+  parentID: string;
+  comment: string;
+  orderStatus: string;
+  partStatus: string;
+  leadtime: number;
+  statusControl: string;
+  objectStatus: string;
+  note: string;
+  sorting: number;
+  stop: boolean;
+  owner: string;
+  bUID: string;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
+}
