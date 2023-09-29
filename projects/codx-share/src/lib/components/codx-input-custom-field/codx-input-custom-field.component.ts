@@ -113,7 +113,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   constructor(
     private cache: CacheService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private codxShareSv: CodxShareService,
@@ -144,7 +144,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   ngOnInit(): void {
     switch (this.customField.dataType) {
       case 'TA':
-        this.getColumnTable(this.customField.dataFormat);
+        this.getColumnTable(this.customField);
         break;
       case 'D':
         if (this.customField.dataFormat == '3') this.formatDate = 'd';
@@ -261,7 +261,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.errorMessage = res.customName || res.defaultName;
               }
               this.showErrMess = true;
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             });
 
             if (!this.checkValid) return;
@@ -278,7 +278,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.errorMessage = res.customName || res.defaultName;
               }
               this.showErrMess = true;
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             });
 
             if (!this.checkValid) return;
@@ -430,7 +430,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 data: this.customField,
                 result: contact,
               });
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             }
           }
         });
@@ -652,14 +652,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
     if (Array.isArray(arr)) this.columns = arr;
     else this.columns = [];
 
-    if (data.dataValue) {
-      let arrDataValue = JSON.parse(data.dataValue);
-      if (Array.isArray(arrDataValue)) {
-        this.arrDataValue = arrDataValue;
-        return;
+    if (!this.disable) {
+      this.arrDataValue = [];
+      if (data.dataValue) {
+        let arrDataValue = JSON.parse(data.dataValue);
+        if (Array.isArray(arrDataValue)) {
+          this.arrDataValue = arrDataValue;
+        }
       }
     }
-    this.arrDataValue = [];
+    this.changeRef.detectChanges();
   }
 
   formatViewTable(value) {

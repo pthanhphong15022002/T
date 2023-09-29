@@ -179,7 +179,9 @@ export class SalesinvoicesComponent
         break;
       case '1': // da hop le
         if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
+          disabledFuncs = disabledFuncs.filter(
+            (f) => f !== MF.GuiDuyet && f !== MF.In
+          );
         } else {
           disabledFuncs = disabledFuncs.filter(
             (f) => f !== MF.GhiSo && f !== MF.In

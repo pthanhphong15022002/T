@@ -212,7 +212,7 @@ export class PurchaseinvoicesAddComponent
     grid.setRequiredFields(requiredFields, true);
   }
 
-  onClickAddRow(): void {
+  onAddRowClick(): void {
     this.form.save(null, null, null, null, false).subscribe((res) => {
       if (res === false || res.save?.error || res.update?.error) {
         return;
@@ -240,7 +240,7 @@ export class PurchaseinvoicesAddComponent
     });
   }
 
-  onClickSave(closeAfterSave: boolean): void {
+  onSaveClick(closeAfterSave: boolean): void {
     this.form.save(null, null, null, null, false).subscribe((res: any) => {
       if (res === false || res.save?.error || res.update?.error) {
         return;
@@ -268,11 +268,11 @@ export class PurchaseinvoicesAddComponent
     });
   }
 
-  onClickClose(): void {
+  onCloseClick(): void {
     this.dialog.close();
   }
 
-  onClickDiscard(): void {
+  onDiscardClick(): void {
     this.masterService
       .delete([this.master], true, null, '', 'AC0010', null, null, false)
       .subscribe((res: any) => {
@@ -432,7 +432,7 @@ export class PurchaseinvoicesAddComponent
       this.gridVatInvoices.startProcess();
       this.api
         .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-          "AC_PurchaseInvoices",
+          'AC_PurchaseInvoices',
           this.master,
           e.data,
           field,
