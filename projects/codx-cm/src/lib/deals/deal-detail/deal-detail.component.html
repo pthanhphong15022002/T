@@ -317,47 +317,43 @@
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
-                    <ng-container
-                      *ngIf="dataSelected.status == '2'; else statusDefault"
+                  <div *ngIf="dataSelected?.statusCodeID">
+                    <codx-vll
+                      [name]="gridViewSetup?.StatusCodeID?.referedValue"
+                      [field]="'StatusCodeID'"
+                      [value]="dataSelected?.statusCodeID"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="color-theme ms-2 "
                     >
-                      <div *ngIf="dataSelected?.statusCodeID">
-                        <codx-vll
-                          [name]="gridViewSetup?.StatusCodeID?.referedValue"
-                          [field]="'StatusCodeID'"
-                          [value]="dataSelected?.statusCodeID"
-                          [showText]="true"
-                          [showBgColor]="true"
-                          class="badge badge-light badge-sm ms-2"
-                        >
-                        </codx-vll>
-                      </div>
+                    </codx-vll>
+                  </div>
 
-                      <div
-                        [ngStyle]="{
-                          'background-color':
-                            dataSelected?.steps['backgroundColor']
-                        }"
-                        class="badge badge-sm d-flex align-items-center me-0"
-                      >
-                        <span
-                          [ngClass]="dataSelected?.steps['icon']"
-                          [ngStyle]="{
-                            color: dataSelected?.steps['iconColor']
-                          }"
-                          class="me-1"
-                        ></span>
-                        <span
-                          class="text-ellipsis line-clamp line-clamp-1"
-                          [ngbTooltip]="dataSelected?.currentStepName"
-                          [ngStyle]="{
-                            color: dataSelected?.steps['textColor']
-                          }"
-                          >{{ dataSelected?.currentStepName }}</span
-                        >
-                      </div>
-                    </ng-container>
+                  <div
+                    [ngStyle]="{
+                      'background-color':
+                        dataSelected?.steps['backgroundColor']
+                    }"
+                    class="badge badge-sm d-flex align-items-center me-0"
+                  >
+                    <span
+                      [ngClass]="dataSelected?.steps['icon']"
+                      [ngStyle]="{
+                        color: dataSelected?.steps['iconColor']
+                      }"
+                      class="me-1"
+                    ></span>
+                    <span
+                      class="text-ellipsis line-clamp line-clamp-1"
+                      [ngbTooltip]="dataSelected?.currentStepName"
+                      [ngStyle]="{
+                        color: dataSelected?.steps['textColor']
+                      }"
+                      >{{ dataSelected?.currentStepName }}</span
+                    >
+                  </div>
 
-                    <ng-template #statusDefault>
+                    <!-- <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
@@ -367,7 +363,7 @@
                         class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
-                    </ng-template>
+                    </ng-template> -->
                     <ng-container
                       *ngIf="
                         dataSelected?.approveStatus &&
