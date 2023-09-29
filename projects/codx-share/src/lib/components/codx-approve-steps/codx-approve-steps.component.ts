@@ -53,6 +53,7 @@ export class CodxApproveStepsComponent
   @Input() isTemplate = false; //signFile của template mẫu  
   @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
   @Input() vllShare = null;
+  @Input() dynamicApprovers = [];
   @Input() isSettingMode = true;//True: ko hiện user nếu chọn role position
   @Output() addEditItem = new EventEmitter();
 
@@ -145,7 +146,7 @@ export class CodxApproveStepsComponent
       this.currentStepNo = this.lstStep.length + 1;
     } else {
       if (this.transId != '') {
-        this.shareService.viewApprovalStep(this.transId,this.isSettingMode).subscribe((res)=>{
+        this.shareService.viewApprovalStep(this.transId,this.isSettingMode,this.dynamicApprovers).subscribe((res)=>{
           if (res && res?.length == 2) {
             this.lstStep = res[0] ?? [];
             if(res[1]?.length>0){
@@ -153,7 +154,13 @@ export class CodxApproveStepsComponent
               this.lstStep.forEach(st=>{
                 if(st?.approvers){
                   st?.approvers.forEach(ap=>{
-                    let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+                    let curAp =[];
+                    if(ap?.roleType !="E" && ap?.roleType !="RO"){
+                      curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+                    }
+                    else{                      
+                      curAp = apInfos.filter(x=> x?.roleType == ap?.roleType);
+                    }
                     if(curAp?.length>0){
                       ap.userID = curAp[0]?.userID;
                       ap.userName = curAp[0]?.userName;

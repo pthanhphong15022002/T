@@ -35,8 +35,8 @@ import { X } from '@angular/cdk/keycodes';
 import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
-// import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
-// import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
+import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
+import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -51,7 +51,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('footerVll') footerVll: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
-  @ViewChild('viewComboxForm') viewComboxForm: ComboBoxComponent; ///cobx xem truoc ViewForm add VLL
+  // @ViewChild('viewComboxForm') viewComboxForm: ComboBoxComponent; ///cobx xem truoc ViewForm add VLL
   @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
 
   dialog: DialogRef;
@@ -128,6 +128,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //column Table
   column: ColumnTable;
+  listColumns = [];
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -362,7 +363,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     // 'add vll'
     let action = !this.field.refValue ? 'add' : 'edit';
     if (!this.crrVll) {
-      let time = 500;
       if (this.maxNumber > 0) {
         if (!this.crrValueFirst) {
           this.crrVll = new tempVllDP();
@@ -371,13 +371,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
           this.crrVll.version = 'x00.01';
         }
-        // if (!this.processNo) {
-        //   this.processNo = await firstValueFrom(
-        //     this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-        //   );
-        // }
-        // this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
-      }
+        if (!this.processNo) {
+          this.processNo = await firstValueFrom(
+            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+          );
+        }
+        this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
+      } else await this.getDefaultVll(500);
     }
 
     if (this.crrVll?.defaultValues) this.changeFormVll();
@@ -386,29 +386,29 @@ export class PopupAddCustomFieldComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 1099;
-    this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
-    // let obj = {
-    //   data: this.crrVll,
-    //   datasVll: this.datasVll,
-    //   action: action,
-    // };
-    // let dialogVll = this.callfc.openForm(
-    //   PopupAddVllCustomComponent,
-    //   '',
-    //   500,
-    //   550,
-    //   '',
-    //   obj,
-    //   '',
-    //   option
-    // );
-    // dialogVll.closed.subscribe((res) => {
-    //   if (res && res.event) {
-    //     this.crrVll = JSON.parse(JSON.stringify(res.event));
-    //     this.beforeSaveVll(this.crrVll);
-    //     this.maxNumber = action == 'edit' ? this.maxNumber : this.maxNumber + 1;
-    //   }
-    // });
+    // this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
+    let obj = {
+      data: this.crrVll,
+      datasVll: this.datasVll,
+      action: action,
+    };
+    let dialogVll = this.callfc.openForm(
+      PopupAddVllCustomComponent,
+      '',
+      500,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogVll.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.crrVll = JSON.parse(JSON.stringify(res.event));
+        this.beforeSaveVll(this.crrVll);
+        this.maxNumber = action == 'edit' ? this.maxNumber : this.maxNumber + 1;
+      }
+    });
   }
 
   closeDialog() {}
@@ -418,123 +418,149 @@ export class PopupAddCustomFieldComponent implements OnInit {
     return 'Value List';
   }
 
-  saveVll() {
-    if (!this.crrVll.note || this.crrVll.note.trim() == '') {
-      this.notiService.notifyCode('Nội dung vll không được để trống !');
-      return;
-    }
+  //----------------form Add VLL---------------//
+  // saveVll() {
+  //   if (!this.crrVll.note || this.crrVll.note.trim() == '') {
+  //     this.notiService.notifyCode('Nội dung vll không được để trống !');
+  //     return;
+  //   }
 
-    if (!this.datasVll || this.datasVll?.length == 0) {
-      this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
-      return;
-    }
+  //   if (!this.datasVll || this.datasVll?.length == 0) {
+  //     this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
+  //     return;
+  //   }
 
-    // this.crrVll.listName = this.listName;
-    // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-    // this.crrVll.version = 'x00.01';
-    let vl = [];
-    if (this.crrVll.listType == '1') {
-      vl = this.datasVll.map((x) => {
-        return x.textValue;
-      });
-    } else {
-      this.datasVll.forEach((x) => {
-        vl.push(x.value);
-        vl.push(x.textValue);
-      });
-    }
-    this.crrVll.defaultValues = this.crrVll.customValues = vl.join(';');
+  //   // this.crrVll.listName = this.listName;
+  //   // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+  //   // this.crrVll.version = 'x00.01';
+  //   let vl = [];
+  //   if (this.crrVll.listType == '1') {
+  //     vl = this.datasVll.map((x) => {
+  //       return x.textValue;
+  //     });
+  //   } else {
+  //     this.datasVll.forEach((x) => {
+  //       vl.push(x.value);
+  //       vl.push(x.textValue);
+  //     });
+  //   }
+  //   this.crrVll.defaultValues = this.crrVll.customValues = vl.join(';');
 
-    var checkEdit = this.listVllCus.some(
-      (x) => x.listName == this.crrVll.listName
-    );
+  //   var checkEdit = this.listVllCus.some(
+  //     (x) => x.listName == this.crrVll.listName
+  //   );
 
-    let menthol = checkEdit
-      ? 'EditValuelistCustomsAsync'
-      : 'AddValuelistCustomsAsync';
+  //   let menthol = checkEdit
+  //     ? 'EditValuelistCustomsAsync'
+  //     : 'AddValuelistCustomsAsync';
 
-    this.api
-      .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
-      .subscribe((res) => {
-        if (res) {
-          this.notiService.notifyCode(checkEdit ? 'SYS007' : 'SYS006');
-          this.beforeSaveVll(this.crrVll);
-          this.maxNumber = checkEdit ? this.maxNumber : this.maxNumber + 1;
-          this.dialogVll.close();
-        }
-      });
-  }
+  //   this.api
+  //     .execSv('SYS', 'SYS', 'ValueListBusiness', menthol, this.crrVll)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.notiService.notifyCode(checkEdit ? 'SYS007' : 'SYS006');
+  //         this.beforeSaveVll(this.crrVll);
+  //         this.maxNumber = checkEdit ? this.maxNumber : this.maxNumber + 1;
+  //         this.dialogVll.close();
+  //       }
+  //     });
+  // }
 
-  onAddTextValue(e) {
-    if (!e.value || e.value.trim() == '') return;
+  // onAddTextValue(e) {
+  //   if (!e.value || e.value.trim() == '') return;
 
-    let dataValue = {
-      textValue: e.value,
-      value: this.datasVll.length,
-    };
+  //   let dataValue = {
+  //     textValue: e.value,
+  //     value: this.datasVll.length,
+  //   };
 
-    this.datasVll.push(dataValue);
+  //   this.datasVll.push(dataValue);
 
-    e.value = '';
-    e.focus();
-    if (this.viewComboxForm) this.viewComboxForm.refresh();
-    this.changeDef.detectChanges();
-  }
+  //   e.value = '';
+  //   e.focus();
+  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
+  //   this.changeDef.detectChanges();
+  // }
 
-  onEditTextValue(e, i) {
-    if (!e.value || e.value.trim() == '') return;
-    let dataValue = {
-      textValue: e.value,
-      value: i,
-    };
-    this.datasVll[i] = dataValue;
-    let eleAdd = document.getElementById('textAddValue');
-    if (eleAdd) {
-      eleAdd.focus();
-      eleAdd.inputMode = '';
-    }
-    this.idxEdit = -1;
+  // onEditTextValue(e, i) {
+  //   if (!e.value || e.value.trim() == '') return;
+  //   let dataValue = {
+  //     textValue: e.value,
+  //     value: i,
+  //   };
+  //   this.datasVll[i] = dataValue;
+  //   let eleAdd = document.getElementById('textAddValue');
+  //   if (eleAdd) {
+  //     eleAdd.focus();
+  //     eleAdd.inputMode = '';
+  //   }
+  //   this.idxEdit = -1;
 
-    if (!this.viewComboxForm) this.viewComboxForm.refresh();
-    this.changeDef.detectChanges();
-  }
+  //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
+  //   this.changeDef.detectChanges();
+  // }
 
-  onChangeVll(e) {
-    if (e.field == 'multiSelect') {
-      this.crrVll[e.field] = e.data;
-      return;
-    }
-    if (e.field == 'listName') {
-      if (!e.data || e.data.trim() == '') {
-        this.notiService.notifyCode('Tên value list không được để trống !');
-        return;
-      }
-      if (e.data.includes(' ')) {
-        this.notiService.notifyCode(
-          'Tên value list không được chứa khoảng trắng để trống !'
-        );
-        return;
-      }
+  // onChangeVll(e) {
+  //   if (e.field == 'multiSelect') {
+  //     this.crrVll[e.field] = e.data;
+  //     return;
+  //   }
+  //   if (e.field == 'listName') {
+  //     if (!e.data || e.data.trim() == '') {
+  //       this.notiService.notifyCode('Tên value list không được để trống !');
+  //       return;
+  //     }
+  //     if (e.data.includes(' ')) {
+  //       this.notiService.notifyCode(
+  //         'Tên value list không được chứa khoảng trắng để trống !'
+  //       );
+  //       return;
+  //     }
 
-      let fm = e.data.substring(0, 3);
-      if (fm != this.fomartVll) {
-        this.notiService.notifyCode(
-          "Tên value list phải có dạng format 'DPF...' !"
-        );
-        return;
-      }
-    }
+  //     let fm = e.data.substring(0, 3);
+  //     if (fm != this.fomartVll) {
+  //       this.notiService.notifyCode(
+  //         "Tên value list phải có dạng format 'DPF...' !"
+  //       );
+  //       return;
+  //     }
+  //   }
 
-    this.crrVll[e.field] = e.data;
-  }
+  //   this.crrVll[e.field] = e.data;
+  // }
 
-  loadDataVll() {
+  // deletedValue(i) {
+  //   if (i == -1) return;
+  //   this.datasVll.splice(i, 1);
+  //   // this.idxDeleted = -1;
+  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
+  // }
+
+  // handelTextValue(i) {
+  //   this.idxEdit = i;
+  //   this.changeDef.detectChanges();
+  // }
+
+  // showPopoverDeleted(p, i) {
+  //   this.idxDeleted = i;
+  //   if (this.popover && this.popover.isOpen()) this.popover.close();
+  //   p.open();
+  //   this.popover = p;
+  // }
+  //---------------------form add -------------------//
+
+  async loadDataVll() {
     if (this.loaded) return;
+    if (!this.processNo) {
+      this.processNo = await firstValueFrom(
+        this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+      );
+    }
     this.requestTemp.entityName = 'SYS_ValueList';
-    // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
-    // this.requestTemp.dataValue = this.user.language + ';DPF';
-    this.requestTemp.predicate = 'Language=@0 ';
-    this.requestTemp.dataValue = this.user.language;
+    this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
+    this.requestTemp.dataValue = this.user.language + ';DPF' + this.processNo;
+    // this.requestTemp.predicate = 'Language=@0 ';
+    // this.requestTemp.dataValue = this.user.language;
     this.requestTemp.pageLoading = false; //load all
 
     this.fetch().subscribe((item) => {
@@ -584,12 +610,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.field['refValue'] = value;
     if (!value) {
       //data form
-      this.crrVll = new tempVllDP();
-      this.crrVll.language = this.user.language;
-      this.crrVll.createdBy = this.user.userID;
-      this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-      this.crrVll.version = 'x00.01';
-      // await this.getDefaultVll();
+      // this.crrVll = new tempVllDP();
+      // this.crrVll.language = this.user.language;
+      // this.crrVll.createdBy = this.user.userID;
+      // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+      // this.crrVll.version = 'x00.01';
+      await this.getDefaultVll();
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
@@ -646,6 +672,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
     this.form.formGroup.patchValue(this.field);
+    this.crrVll = null;
     this.changeDef.detectChanges();
   }
 
@@ -661,25 +688,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
         });
       }
     }
-  }
-
-  deletedValue(i) {
-    if (i == -1) return;
-    this.datasVll.splice(i, 1);
-    // this.idxDeleted = -1;
-    if (this.viewComboxForm) this.viewComboxForm.refresh();
-  }
-
-  handelTextValue(i) {
-    this.idxEdit = i;
-    this.changeDef.detectChanges();
-  }
-
-  showPopoverDeleted(p, i) {
-    this.idxDeleted = i;
-    if (this.popover && this.popover.isOpen()) this.popover.close();
-    p.open();
-    this.popover = p;
   }
 
   clickDeletedVll() {
@@ -702,12 +710,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
                 this.listVll.splice(idxDeleted, 1);
                 //data crrVll
               }
+
+              var idxDeletedCus = this.listVllCus.findIndex(
+                (x) => x.value == this.crrVll.listName
+              );
+              if (idxDeletedCus != -1) {
+                this.listVllCus.splice(idxDeletedCus, 1);
+              }
+
               this.field.refValue = '';
               this.datasVllCrr = [];
-              this.crrValueFirst = null;
+              this.crrValueFirst = '';
               this.crrVll = null;
-              if (this.comboxView) this.comboxView.refresh();
-              if (this.datasVllCbx) this.comboxView.refresh();
+              if (this.comboxView) {
+                this.comboxView.value = '';
+                this.comboxView.refresh();
+              }
+              if (this.datasVllCbx) {
+                this.datasVllCbx.value = '';
+                this.datasVllCbx.refresh();
+              }
               this.notiService.notifyCode('SYS008');
             } else this.notiService.notifyCode('SYS022');
           });
@@ -740,21 +762,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getDefaultVll(timeOut = 500) {
     setTimeout(async () => {
-      if (!this.crrValueFirst) {
+      if (!this.crrVll) {
         this.crrVll = new tempVllDP();
         this.crrVll.language = this.user.language;
         this.crrVll.createdBy = this.user.userID;
         this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
         this.crrVll.version = 'x00.01';
       }
-      if (!this.processNo) {
-        this.processNo = await firstValueFrom(
-          this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-        );
-      }
-      if (this.loaded)
+      if (this.loaded) {
+        if (!this.processNo)
+          this.processNo = await firstValueFrom(
+            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+          );
         this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
-      else {
+      } else {
         timeOut += 500;
         this.getDefaultVll(timeOut);
       }
@@ -763,32 +784,33 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //---------------------End  Vll-----------------------------//
 
   //----------------Column Table -----------------------//
-  // addColumnTable() {
-  //   if (!this.column) this.column = new ColumnTable();
-  //   let option = new DialogModel();
-  //   option.FormModel = this.dialog.formModel;
-  //   option.zIndex = 1050;
-  //   let obj = {
-  //     data: this.column,
-  //     action: 'add',
-  //     titleAction: 'Thêm column test',
-  //     grvSetup: this.grvSetup,
-  //     processNo: this.processNo,
-  //     user: this.user,
-  //   };
-  //   let dialogColumn = this.callfc.openForm(
-  //     PopupAddColumnTableComponent,
-  //     '',
-  //     500,
-  //     700,
-  //     '',
-  //     obj,
-  //     '',
-  //     option
-  //   );
-  //   dialogColumn.closed.subscribe((res) => {
-  //     //....................
-  //   });
-  // }
+  clickSettingTable() {
+    if (!this.column) this.column = new ColumnTable();
+    let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
+    option.zIndex = 1050;
+    let obj = {
+      data: this.column,
+      action: 'add',
+      titleAction: 'Thêm column test',
+      grvSetup: this.grvSetup,
+      processNo: this.processNo,
+      user: this.user,
+      listColumns: this.listColumns,
+    };
+    let dialogColumn = this.callfc.openForm(
+      PopupAddColumnTableComponent,
+      '',
+      500,
+      750,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn.closed.subscribe((res) => {
+      //....................
+    });
+  }
   //---------------------End Column Table-----------------------------//
 }

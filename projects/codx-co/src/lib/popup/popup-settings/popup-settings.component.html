@@ -48,22 +48,22 @@
             </td>
             <td style="vertical-align: middle;">
               <div class="d-flex justify-content-center align-items-center">
-                <span
-                  class="border"
-                  style="width: 20px; height: 20px; border-radius: 25%"
-                  [ngStyle]="{ backgroundColor: param?.value.ShowColor }"
-                ></span>
+                <codx-colorpicker
+                  field="color"
+                  mode="Picker"
+                  [value]="param?.value.ShowColor"
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
               </div>
             </td>
             <td>
               <div class="d-flex justify-content-center align-items-center">
-                <span
-                  class="border"
-                  style="width: 20px; height: 20px; border-radius: 25%"
-                  [ngStyle]="{
-                    backgroundColor: param?.value.ShowBackground
-                  }"
-                ></span>
+                <codx-colorpicker
+                  field="backgroundColor"
+                  mode="Picker"
+                  [value]="param?.value.ShowBackground"
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
               </div>
             </td>
             <td>

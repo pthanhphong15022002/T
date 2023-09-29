@@ -246,7 +246,8 @@ export class IncommingComponent
           formModel: this.view.formModel,
           service: this.view.service,
           dispatchType: defaultValue,
-          data: res
+          data: res,
+          defaultValue: this.defaultValue
         },
         option
       );

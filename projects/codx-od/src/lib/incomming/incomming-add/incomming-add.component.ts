@@ -78,6 +78,7 @@ export class IncommingAddComponent implements OnInit {
   crrAgencies: any = '';
   employees:any;
   organizationUnits:any;
+  defaulValue:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -101,12 +102,11 @@ export class IncommingAddComponent implements OnInit {
 
     this.user = this.auth.get();
 
-    if (this.dialog?.dataService?.keyField || this.type == 'edit')
-      this.keyField = true;
+    if (this.dialog?.dataService?.keyField || this.type == 'edit') this.keyField = true;
+    this.defaulValue = this.data?.defaulValue;
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
-
     this.formModel = this.data?.formModel;
     this.service = this.data?.service;
     this.dataRq.entityName = this.formModel?.entityName;
@@ -124,7 +124,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.agencyName = null;
         // this.dispatch.departmentID = "BGĐ"
         // this.getDispathOwner("BGĐ");
-        if (this.formModel?.funcID == 'ODT41') {
+        if (this.defaulValue == "2") {
           this.dispatch.owner = this.user?.userID;
           // this.getInforByUser(this.dispatch.owner).subscribe(item=>{
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
@@ -135,23 +135,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.dispatchNo = null;
         this.dispatch.isBookmark = false;
       }
-      // if(!this.dispatch.dispatchNo)
-      // {
-      //   //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm
-      //   this.odService.autoNumber(
-      //     this.formModel.formName,
-      //     this.formModel.funcID,
-      //     this.formModel.entityName,
-      //     "DispatchNo")
-      //   .subscribe(item=>{
-      //     if(item) {
-      //       this.dispatch.dispatchNo = item;
-      //       this.myForm.formGroup.patchValue({
-      //         dispatchNo: this.dispatch.dispatchNo,
-      //       });
-      //     }
-      //   })
-      // }
+     
       this.dispatch.createdOn = new Date();
     } 
     else if (this.type == 'edit') 
@@ -159,7 +143,7 @@ export class IncommingAddComponent implements OnInit {
       if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if (this.dispatch.agencyName)
         this.dispatch.agencyName = this.dispatch.agencyName.toString();
-      if (this.formModel?.funcID == 'ODT41') {
+      if (this.defaulValue == "2") {
         if (this.dispatch.agencies && this.dispatch.agencies.length > 0) {
           if ('agencyID' in this.dispatch.agencies[0])
             this.crrAgencies = this.dispatch.agencies
@@ -596,8 +580,8 @@ export class IncommingAddComponent implements OnInit {
       var data = this.dispatch[field];
       if (
         !data &&
-        ((this.formModel?.funcID == 'ODT31' && field != 'agencies') ||
-          (this.formModel?.funcID == 'ODT41' && field != 'agencyName'))
+        ((this.defaulValue == "1" && field != 'agencies') ||
+          (this.defaulValue == "2" && field != 'agencyName'))
       )
         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
     }
