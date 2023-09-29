@@ -78,7 +78,7 @@ export class IncommingAddComponent implements OnInit {
   crrAgencies: any = '';
   employees:any;
   organizationUnits:any;
-  defaulValue:any;
+  defaultValue:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -103,7 +103,7 @@ export class IncommingAddComponent implements OnInit {
     this.user = this.auth.get();
 
     if (this.dialog?.dataService?.keyField || this.type == 'edit') this.keyField = true;
-    this.defaulValue = this.data?.defaulValue;
+    this.defaultValue = this.data?.defaultValue;
     this.gridViewSetup = this.data?.gridViewSetup;
     this.headerText = this.data?.headerText;
     this.subHeaderText = this.data?.subHeaderText;
@@ -124,7 +124,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.agencyName = null;
         // this.dispatch.departmentID = "BGĐ"
         // this.getDispathOwner("BGĐ");
-        if (this.defaulValue == "2") {
+        if (this.defaultValue == "2") {
           this.dispatch.owner = this.user?.userID;
           // this.getInforByUser(this.dispatch.owner).subscribe(item=>{
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
@@ -143,7 +143,7 @@ export class IncommingAddComponent implements OnInit {
       if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if (this.dispatch.agencyName)
         this.dispatch.agencyName = this.dispatch.agencyName.toString();
-      if (this.defaulValue == "2") {
+      if (this.defaultValue == "2") {
         if (this.dispatch.agencies && this.dispatch.agencies.length > 0) {
           if ('agencyID' in this.dispatch.agencies[0])
             this.crrAgencies = this.dispatch.agencies
@@ -580,8 +580,8 @@ export class IncommingAddComponent implements OnInit {
       var data = this.dispatch[field];
       if (
         !data &&
-        ((this.defaulValue == "1" && field != 'agencies') ||
-          (this.defaulValue == "2" && field != 'agencyName'))
+        ((this.defaultValue == "1" && field != 'agencies') ||
+          (this.defaultValue == "2" && field != 'agencyName'))
       )
         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
     }

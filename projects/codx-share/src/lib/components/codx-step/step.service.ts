@@ -178,16 +178,7 @@ export class StepService {
     return check;
   }
 
-  checkUpdateProgress(
-    dataUpdate,
-    type,
-    step,
-    isRoleAll,
-    isOnlyView,
-    isUpdateProgressGroup,
-    isUpdateProgressStep,
-    user
-  ) {
+  checkUpdateProgress(dataUpdate,type,step,isRoleAll,isOnlyView,isUpdateProgressGroup,isUpdateProgressStep,user){
     if (isOnlyView) {
       if (type == 'P') {
         return isUpdateProgressStep && isRoleAll ? true : false;
@@ -198,9 +189,6 @@ export class StepService {
         }
         return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
       } else {
-        // if(dataUpdate?.status == "1"){
-        //   return false;
-        // }
         let isGroup = false;
         let isTask = false;
         if (!isRoleAll) {

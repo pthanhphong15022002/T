@@ -443,11 +443,7 @@
     <div
       class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
-      [ngClass]="
-        checkRoleUpdateProgress(data?.value, data?.type)
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
+      [ngClass]="checkRoleUpdateProgress(data?.value, data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
     >
       <div 
         *ngIf="data?.value?.assigned == '1'"  

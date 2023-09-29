@@ -241,7 +241,7 @@
         </div>
     </div>
 
-    <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits.length > 0">
+    <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits && lstSelectedBenefits?.length > 0">
         <div *ngFor="let obj of lstSelectedBenefits">
             <!-- <codx-vll
             [showText]="true"
