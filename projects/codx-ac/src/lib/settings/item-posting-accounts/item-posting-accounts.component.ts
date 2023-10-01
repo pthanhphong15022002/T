@@ -22,7 +22,6 @@ import {
   DialogRef,
   RequestOption,
 } from 'codx-core';
-import { PopAddAccountsComponent } from '../chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
 import { PopAddItemComponent } from './pop-add-item/pop-add-item.component';
 
 @Component({
