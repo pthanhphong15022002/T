@@ -293,6 +293,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         ? JSON.parse(JSON.stringify(this.dataSources))
         : this.dataSources;
     }
+    this.isRoleAll = this.isRoleAll ? this.isRoleAll : this.currentStep?.owner == this.user?.userID;
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
       this.currentStep?.progressTaskGroupControl || false;
@@ -481,7 +482,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            res.isblur = this.isOnlyView ? !(this.isRoleAll || isGroup || isTask) : !(this.isTaskFirst && this.isRoleAll);
+            res.isblur = this.isOnlyView ? !((this.isRoleAll || isGroup || isTask) && (task?.startDate && task?.endDate)) : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
             if (
@@ -803,7 +804,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           );
           if (taskFind) {
             taskFind.status = '2';
-            taskFind.modifiedBy = this.user.userID;
+            taskFind.modifiedBy = this.user?.userID;
             taskFind.modifiedOn = new Date();
           }
           this.notiService.notifyCode('SYS007');

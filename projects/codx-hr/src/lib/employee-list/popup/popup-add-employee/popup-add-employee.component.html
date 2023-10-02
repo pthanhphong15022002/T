@@ -207,7 +207,7 @@
           <div class="birthday">
             <codx-label [formModel]="formModel" fiedName="Birthday">
             </codx-label>
-            <codx-input field="birthday" [formModel]="formModel" [Group]="form.formGroup"
+            <codx-input #birthDayInput field="birthday" [formModel]="formModel" [Group]="form.formGroup"
               (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -516,7 +516,7 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="clickBtnSave()"
-      [disabled]="!hasChangedData && action == 'edit'">
+      [disabled]="!formModel.currentData.updateColumn">
       <codx-label [formModel]="formModel" name="lblSubmit" [default]="'Lưu'">
       </codx-label>
     </button>

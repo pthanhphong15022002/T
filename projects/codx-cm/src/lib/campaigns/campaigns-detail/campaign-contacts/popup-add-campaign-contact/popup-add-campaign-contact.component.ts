@@ -168,110 +168,62 @@ export class PopupAddCampaignContactComponent implements OnInit {
   valueChange(e) {
     if (e) {
       this[e?.field] = e?.data;
-      switch (e?.field) {
-        case 'isProvince':
-          if (!this.isProvince) {
-            if (this.cbxProvince) {
-              this.cbxProvince.value = [];
-              this.cbxProvince.selectedItems = [];
-              this.cbxProvince.setValue([]);
-            }
-            this.provinceIDs = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isDistrict':
-          if (!this.isDistrict) {
-            this.districtIDs = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isIndustries':
-          if (!this.isIndustries) {
-            this.industries = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        case 'isStatus':
-          if (!this.isStatus) {
-            this.status = [];
-            this.bindingCountCompaign();
-          }
-          break;
-        default:
-          this.bindingCountCompaign();
-          break;
-        // case 'districtIDs':
-        //   break;
-        // case 'industries':
-        //   break;
-        // case 'status':
-        //   break;
-      }
+      this.setBinding(e?.field);
     }
 
     this.detector.detectChanges();
   }
 
+  valueChangeClick(isChecked, field) {
+    this[field] = !isChecked;
+    this.setBinding(field);
+    this.detector.detectChanges();
+  }
+
+  setBinding(field) {
+    switch (field) {
+      case 'isProvince':
+        if (!this.isProvince) {
+          if (this.cbxProvince) {
+            this.cbxProvince.value = [];
+            this.cbxProvince.selectedItems = [];
+            this.cbxProvince.setValue([]);
+          }
+          this.provinceIDs = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isDistrict':
+        if (!this.isDistrict) {
+          this.districtIDs = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isIndustries':
+        if (!this.isIndustries) {
+          this.industries = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isStatus':
+        if (!this.isStatus) {
+          this.status = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      default:
+        this.bindingCountCompaign();
+        break;
+      // case 'districtIDs':
+      //   break;
+      // case 'industries':
+      //   break;
+      // case 'status':
+      //   break;
+    }
+  }
+
   bindingCountCompaign() {
-    // if (this.lstCampainsHadAdd != null && this.lstCampainsHadAdd.length > 0) {
-    //   let lstHadSearchs = [];
-    //   let lever = 0;
-    //   if (this.provinceIDs != null && this.provinceIDs.length > 0) {
-    //     let lstPro = this.lstCampainsHadAdd.filter((x) =>
-    //       this.provinceIDs.includes(x.provinceID)
-    //     );
-    //     lstHadSearchs = lstPro;
-    //     lever++;
-    //   }
-
-    //   if (this.districtIDs != null && this.districtIDs.length > 0) {
-    //     let lstDis = this.lstCampainsHadAdd.filter((x) =>
-    //       this.districtIDs.includes(x.districtID)
-    //     );
-    //     if (lever == 0) {
-    //       lstHadSearchs = lstDis;
-    //     } else {
-    //       lstHadSearchs = lstDis.filter((x) =>
-    //         lstHadSearchs.some((y) => y.recID == x.recID)
-    //       );
-    //     }
-    //     lever++;
-    //   }
-    //   if (this.industries != null && this.industries.length > 0) {
-    //     let lstInd = this.lstCampainsHadAdd.filter((x) =>
-    //       this.industries.includes(x.industries)
-    //     );
-    //     if (lever == 0) {
-    //       lstHadSearchs = lstInd;
-    //     } else {
-    //       lstHadSearchs = lstInd.filter((x) =>
-    //         lstHadSearchs.some((y) => y.recID == x.recID)
-    //       );
-    //     }
-    //     lever++;
-    //   }
-
-    //   if (this.status != null && this.status.length > 0) {
-    //     let lstStatus = this.lstCampainsHadAdd.filter(
-    //       (x) =>
-    //         this.status.includes(x.leadStatus) ||
-    //         this.status.includes(x.customerStatus)
-    //     );
-    //     if (lever == 0) {
-    //       lstHadSearchs = lstStatus;
-    //     } else {
-    //       lstHadSearchs = lstStatus.filter((x) =>
-    //         lstHadSearchs.some((y) => y.recID == x.recID)
-    //       );
-    //     }
-    //     lever++;
-    //   }
-    //   this.countHadLeadCus = lstHadSearchs.length;
-    // } else {
-    //   this.countHadLeadCus = 0;
-    // }
-
     this.api
       .execSv<any>(
         'CM',
