@@ -187,6 +187,16 @@
               "
             ></span>
             &nbsp;
+            <span
+              class="fw-bold"
+              #vatAcctID
+              [innerHTML]="
+                item?.vatAcctID
+                  | formatvalue : fmVatPosting : 'vatAcctID' : vatAcctID
+                  | async
+              "
+            ></span>
+            &nbsp;
             <span class="fs-3">&#183;</span>
             &nbsp;
             <codx-label
@@ -201,6 +211,16 @@
               [innerHTML]="
                 item?.postOffset
                   | formatvalue : fmVatPosting : 'postOffset' : postOffset
+                  | async
+              "
+            ></span>
+            &nbsp;
+            <span
+              class="fw-bold"
+              #offsetAcctID
+              [innerHTML]="
+                item?.offsetAcctID
+                  | formatvalue : fmVatPosting : 'offsetAcctID' : offsetAcctID
                   | async
               "
             ></span>

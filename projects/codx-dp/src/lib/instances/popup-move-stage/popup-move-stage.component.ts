@@ -539,7 +539,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
           comment: this.instancesStepOld?.note,
           expectedClosed: this.expectedClosed,
-          permissionCM:  res[2],
+          permissionCM: res[2],
         };
         if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [
@@ -676,6 +676,7 @@ export class PopupMoveStageComponent implements OnInit {
         case 'A':
         case 'C':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }

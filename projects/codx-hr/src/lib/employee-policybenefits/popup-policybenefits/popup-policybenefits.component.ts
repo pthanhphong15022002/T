@@ -196,6 +196,7 @@ implements OnInit{
   }
 
   onInit(): void {
+    debugger
     if(!this.columnGrid1){
       this.columnGrid1 = [
         {
@@ -439,21 +440,26 @@ implements OnInit{
     this.attachment.uploadFile();
   }
 
-  async addFiles(evt){
-    this.benefitPolicyObj.attachments = evt.data.length;
+ addFiles(evt){
+  debugger
+    this.benefitPolicyObj.attachments = this.benefitPolicyObj.attachments + 1;
   }
   deleteFile(evt){
-    let index = this.attachment.data.indexOf(evt[0])
-    if(index > 0){
-      this.attachment.data = this.attachment.data.splice(index,1);
+    if(evt){
+      this.benefitPolicyObj.attachments -= evt.length;
     }
-    this.benefitPolicyObj.attachments = this.attachment.data.length
+    debugger
+    // let index = this.attachment.data.indexOf(evt[0])
+    // if(index > -1){
+    //   this.attachment.data = this.attachment.data.splice(index,1);
+    // }
+    // this.benefitPolicyObj.attachments = this.attachment.data.length
     this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
     })
   }
-  async countFile(){
+  countFile(){
     debugger
-    this.benefitPolicyObj.attachments = this.attachment.fileUploadList.length
+    // this.benefitPolicyObj.attachments = this.attachment.fileUploadList.length
   }
   fileAdded(evt){
 
@@ -1002,6 +1008,10 @@ implements OnInit{
         if(this.benefitPolicyObj.adjustKows){
           this.lstKow = this.benefitPolicyObj.adjustKows.split(';')
         }
+        if(this.benefitPolicyObj.isConstraintKow == true){
+          this.expandContraintKow = true;
+          this.constraintKowDisabled = false;
+        }
 
         if(this.benefitPolicyObj.isConstraintOther){
           this.lstSelectedConstraintBy = this.benefitPolicyObj.constraintBy.split(';')
@@ -1010,7 +1020,24 @@ implements OnInit{
           });
           this.GetPolicyConstraint(this.benefitPolicyObj.policyID).subscribe((res) => {
             console.log('constraint obj ne', this.constraintsObj);
-            this.constraintsObj = res;
+            if(res){
+              this.constraintsObj = res;
+            }
+            else {
+              this.constraintsObj = {
+                policyID: '',
+                gender: '',
+                ageFrom: 0,
+                policyType: 'Benefit',
+                ageTo: 0,
+                relative: '',
+                relativeAgeFrom: 0,
+                relativeAgeTo: 0,
+                trainLevel: '',
+                trainField: '',
+                certificate: ''
+              };
+            }
             this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
             this.fmPolicyConstraints.currentData = this.constraintsObj;
             this.SplitConstraint();
@@ -1023,7 +1050,7 @@ implements OnInit{
           this.df.detectChanges();
         });
         if(this.benefitPolicyObj.hasIncludeBenefits == true){
-          this.lstSelectedBenefits = this.benefitPolicyObj.includeBenefits.split(';')
+          this.lstSelectedBenefits = this.benefitPolicyObj?.includeBenefits?.split(';')
         }
         if(this.benefitPolicyObj.isAdjustKow == true){
         }
@@ -1298,7 +1325,7 @@ implements OnInit{
     this.isHidden2 = true;
 
     if(this.benefitPolicyObj.includeBenefits){
-      this.lstSelectedBenefits = this.benefitPolicyObj.includeBenefits.split(';')
+      this.lstSelectedBenefits = this.benefitPolicyObj?.includeBenefits?.split(';')
     }
     else{
       this.lstSelectedBenefits = [];
@@ -1608,6 +1635,7 @@ implements OnInit{
 
 
   async onSaveForm(){
+    debugger
     if (this.form.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);

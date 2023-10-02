@@ -37,6 +37,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() updateComment = new EventEmitter<any>();
+  @Output() updateAssignEngineerEmit = new EventEmitter<any>();
 
   user: any;
   treeTask = [];
@@ -100,6 +101,10 @@ export class ViewDetailWrComponent implements OnInit {
 
   updateCommentWarranty(e, data) {
     this.updateComment.emit({ e: e, data: data });
+  }
+
+  updateAssignEngineer(data) {
+    this.updateAssignEngineerEmit.emit({ data: data });
   }
 
   listOrderUpdate(lstUpdate) {

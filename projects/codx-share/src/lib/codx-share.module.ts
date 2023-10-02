@@ -217,6 +217,8 @@ import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-v
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 import { NgxCaptureModule } from 'ngx-capture';
 import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
+import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -362,6 +364,7 @@ const T_Component: Type<any>[] = [
 
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
+  CodxFieldsFormatValueComponent,
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
@@ -422,6 +425,7 @@ const T_Pipe: Type<any>[] = [
     CodxListReportsComponent,
     CodxFilesAttachmentComponent,
     CodxFilesAttachmentViewComponent,
+    PopupAddLineTableComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

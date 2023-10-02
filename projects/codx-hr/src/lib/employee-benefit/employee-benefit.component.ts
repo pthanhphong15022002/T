@@ -195,6 +195,10 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
+    if (!this.view.formModel.currentData) {
+      this.view.formModel.currentData = this.editStatusObj;
+    }
+
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,

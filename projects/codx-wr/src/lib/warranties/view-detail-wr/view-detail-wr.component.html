@@ -839,6 +839,17 @@
                                     | async
                                 "
                               ></span>
+                              <span class="ms-1" *ngIf="dataSelected.status != '7' && dataSelected.status != '5'">
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-icon btn-light-primary"
+                                  (click)="updateAssignEngineer(dataSelected)"
+                                >
+                                  <span
+                                    class="icon-edit icon-16"
+                                  ></span>
+                                </button>
+                              </span>
                             </div>
                           </div>
                         </div>
