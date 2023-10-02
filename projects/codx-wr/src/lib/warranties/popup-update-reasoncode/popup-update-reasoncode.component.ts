@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -24,7 +26,7 @@ import { CodxWrService } from '../../codx-wr.service';
   templateUrl: './popup-update-reasoncode.component.html',
   styleUrls: ['./popup-update-reasoncode.component.css'],
 })
-export class PopupUpdateReasonCodeComponent implements OnInit {
+export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   data = new WR_WorkOrderUpdates();
@@ -49,12 +51,14 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   countFileDelete = 0;
   gridViewSetup: any;
   countValidate = 0;
+  lstTimeVll = [];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private wrSv: CodxWrService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -65,6 +69,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.data.engineerID = dt?.data?.engineerID;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
+
   ngOnInit(): void {
     if (
       this.data != null &&
@@ -81,10 +86,22 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.setDataCommentAndDate(res?.dateControl, res?.commentControl, res?.comment);
+            this.setDataCommentAndDate(
+              res?.dateControl,
+              res?.commentControl,
+              res?.comment
+            );
           }
         });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.cache.valueList('WR007').subscribe((res) => {
+      if (res && res?.datas) {
+        this.lstTimeVll = res?.data ?? [];
+      }
+    });
   }
 
   //#region save
@@ -173,7 +190,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         this.dateControl == '2' ? true : false;
       this.gridViewSetup.ScheduleTime.isRequire =
         this.dateControl == '2' ? true : false;
-      this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
+      this.setSchedule();
     } else {
       this.data.scheduleStart = null;
       this.data.scheduleTime = '';
@@ -191,6 +208,33 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     }
   }
 
+  setSchedule() {
+    let timeList = this.lstTimeVll ?? [];
+    let currentDate = new Date();
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours() * 100 + currentTime.getMinutes();
+
+    // Tìm thời gian bắt đầu gần nhất và lớn hơn hoặc bằng thời gian hiện tại
+    let closestStartTime = null;
+
+    for (const hourItem of timeList) {
+      const timeRange = hourItem?.text?.split(' - ');
+      const startTime = timeRange[0].replace('h', '').replace('h', '');
+
+      if (parseInt(startTime) >= currentHour) {
+        closestStartTime = hourItem?.value;
+        break;
+      }
+    }
+
+    if (!closestStartTime) {
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      closestStartTime = timeList[0]?.value;
+    }
+    this.data.scheduleStart = currentDate;
+    this.data.scheduleTime = closestStartTime;
+  }
   //#region date schedule
 
   setTimeEdit() {

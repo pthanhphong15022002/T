@@ -1,4 +1,4 @@
-<div class="list-contracts h-100">
+<div class="list-contracts h-100" *ngIf="!isLoad">
   <div *ngIf="!isNoData">
     <ng-container *ngFor="let task of listActivitie; let i = index">
       <div
