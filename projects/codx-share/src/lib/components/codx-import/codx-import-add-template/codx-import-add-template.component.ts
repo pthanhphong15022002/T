@@ -203,6 +203,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   async onSave() {
     if (this.type == 'add') {
       this.attachment.objectId = this.dataIEConnections.recID;
+      this.attachment.fileUploadList.forEach(elm=>{
+        elm.objectType ='AD_ExcelTemplates';
+        elm.funcID = "AD003";
+      });
       for (var i = 0; i < this.gridView.dataService.data.length; i++) {
         this.gridView.dataService.data[i].sourceTable =
           this.importAddTmpGroup.value.sheetImport;

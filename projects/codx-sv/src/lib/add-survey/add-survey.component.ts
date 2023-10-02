@@ -11,12 +11,6 @@ import { AESCryptoService, AuthStore, CallFuncService, CodxMoreFunctionComponent
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Questions } from '../models/SV_Questions';
 import { SV_Surveys } from '../models/SV_Surveys';
-import { NgxCaptureService } from 'ngx-capture';
-import { tap } from 'rxjs';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { FileUpload } from '@shared/models/file.model';
-import { environment } from 'src/environments/environment';
 import { CopylinkComponent } from '../copylink/copylink.component';
 import { SharelinkComponent } from '../sharelink/sharelink.component';
 @Component({
