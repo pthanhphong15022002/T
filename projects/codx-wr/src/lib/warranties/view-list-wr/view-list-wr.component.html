@@ -150,6 +150,7 @@
           [formModel]="formModel"
         ></codx-label>
         <span
+          [ngbTooltip]="data?.problem"
           [innerHTML]="
             data.problem | formatvalue : formModel : 'Problem' | async
           "
@@ -163,6 +164,7 @@
           [formModel]="formModel"
         ></codx-label>
         <span
+          [ngbTooltip]="data?.currentState"
           [innerHTML]="
             data.currentState | formatvalue : formModel : 'CurrentState' | async
           "
@@ -176,6 +178,7 @@
           [formModel]="formModel"
         ></codx-label>
         <span
+          [ngbTooltip]="data?.comment"
           [innerHTML]="
             data.comment | formatvalue : formModel : 'Comment' | async
           "
@@ -224,11 +227,13 @@
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-sm"
+          [ngbTooltip]="gridViewSetup['Status']?.headerText"
         >
         </codx-vll>
       </div>
       <div class="mb-1">
         <span
+          [ngbTooltip]="gridViewSetup['LastUpdatedOn']?.headerText"
           [innerHTML]="
             data.lastUpdatedOn
               | formatvalue : formModel : 'LastUpdatedOn'

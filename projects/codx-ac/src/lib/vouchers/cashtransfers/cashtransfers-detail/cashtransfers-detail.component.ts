@@ -12,15 +12,13 @@ import {
   CRUDService,
   DataRequest,
   FormModel,
-  SidebarModel,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
 import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
-import { CashtransferAddComponent } from '../cashtransfers-add/cashtransfers-add.component';
+import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 
 @Component({
@@ -55,7 +53,11 @@ export class CashtransfersDetailComponent
     { name: 'Link', textDefault: 'Liên kết', isActive: false },
   ];
 
-  constructor(private injector: Injector, private acService: CodxAcService) {
+  constructor(
+    private injector: Injector,
+    private acService: CodxAcService,
+    private cashTransferService: CashtransfersService
+  ) {
     super(injector);
   }
   //#endregion
@@ -104,83 +106,23 @@ export class CashtransfersDetailComponent
   //#endregion
 
   //#region Event
-  onClickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-    }
+  onClickMF(e, data): void {
+    this.cashTransferService.onClickMF(
+      e,
+      data,
+      this.functionName,
+      this.formModel,
+      this.dataService
+    );
   }
 
-  onClickShowLess(): void {
+  onShowLessClick(): void {
     this.expanding = !this.expanding;
     this.detectorRef.detectChanges();
   }
   //#endregion
 
   //#region Method
-  edit(data): void {
-    console.log('edit', { data });
-
-    const copiedData = { ...data };
-    this.dataService.dataSelected = copiedData;
-    this.dataService.edit(copiedData).subscribe((res: any) => {
-      console.log({ res });
-
-      let options = new SidebarModel();
-      options.DataService = this.dataService;
-      options.FormModel = this.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        CashtransferAddComponent,
-        {
-          formType: 'edit',
-          formTitle: this.functionName,
-        },
-        options,
-        this.formModel.funcID
-      );
-    });
-  }
-
-  copy(data): void {
-    console.log('copy', { data });
-
-    this.dataService.dataSelected = data;
-    this.dataService.copy().subscribe((res) => {
-      console.log(res);
-
-      let options = new SidebarModel();
-      options.DataService = this.dataService;
-      options.FormModel = this.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        CashtransferAddComponent,
-        {
-          formType: 'add',
-          formTitle: this.functionName,
-        },
-        options,
-        this.formModel.funcID
-      );
-    });
-  }
-
-  delete(data): void {
-    this.dataService.delete([data]).subscribe();
-  }
-
   loadDetailData(): void {
     if (!this.viewData) {
       return;
@@ -208,27 +150,5 @@ export class CashtransfersDetailComponent
   //#endregion
 
   //#region Function
-  export(data): void {
-    const gridModel = new DataRequest();
-    gridModel.formName = this.formModel.formName;
-    gridModel.entityName = this.formModel.entityName;
-    gridModel.funcID = this.formModel.funcID;
-    gridModel.gridViewName = this.formModel.gridViewName;
-    gridModel.page = this.dataService.request.page;
-    gridModel.pageSize = this.dataService.request.pageSize;
-    gridModel.predicate = this.dataService.request.predicates;
-    gridModel.dataValue = this.dataService.request.dataValues;
-    gridModel.entityPermission = this.formModel.entityPer;
-    gridModel.groupFields = 'createdBy'; //Chưa có group
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
   //#endregion
 }

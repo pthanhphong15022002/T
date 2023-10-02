@@ -54,11 +54,10 @@ export class SalesinvoicesComponent
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       this.salesInvoiceService.loadJournal(this.journalNo);
+      this.journalService.setChildLinks(this.journalNo);
     });
 
     this.emitDefault();
-
-    this.journalService.setChildLinks(this.journalNo);
   }
 
   ngAfterViewInit(): void {
