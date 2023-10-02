@@ -49,9 +49,8 @@ export class CashtransfersComponent
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       this.journalService.setChildLinks(this.journalNo);
+      this.emitDefault();
     });
-
-    this.emitDefault();
   }
 
   ngAfterViewInit(): void {
