@@ -59,7 +59,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   listTaskType = [];
   grvMoreFunction: FormModel;
   listActivitie: DP_Activities[] = [];
-
+  isLoad = false;
   moreDefaut = {
     share: true,
     write: true,
@@ -81,7 +81,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.customerID) {
+      this.isLoad = true;
       this.isNoData = false;
+      this.listActivitie = [];
       this.getActivities();
     }
   }
@@ -105,7 +107,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#region get data
   getActivities(): void {
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetActivitiesAsync', [
+      .exec<any>('DP', 'ActivitiesBusiness', 'GetActivitiesAsync', [
         this.customerID,
       ])
       .subscribe((res) => {
@@ -121,6 +123,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listActivitie = [];
           this.isNoData = true;
         }
+        this.isLoad = false;
       });
   }
 
