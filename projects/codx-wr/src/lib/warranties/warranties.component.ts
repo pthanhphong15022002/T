@@ -645,7 +645,8 @@ export class WarrantiesComponent
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
-          this.dataSelected.comment = e?.event[1];
+          this.dataSelected.owner = e?.event[0];
+          this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
@@ -663,6 +664,12 @@ export class WarrantiesComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  updateAssignEngineerEmit(e){
+    if(e && e?.data){
+      this.updateAssignEngineer(e?.data);
+    }
   }
   //#endregion
 
