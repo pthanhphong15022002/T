@@ -165,6 +165,40 @@ export class ScheduleCenterComponent
     return timeString;
   }
 
+  getCellContent(evt: any) {
+    if (this.dayoff && this.dayoff.length > 0) {
+      for (let i = 0; i < this.dayoff.length; i++) {
+        let day = new Date(this.dayoff[i].startDate);
+        if (
+          day &&
+          evt.getFullYear() === day.getFullYear() &&
+          evt.getMonth() === day.getMonth() &&
+          evt.getDate() === day.getDate()
+        ) {
+          let time = evt.getTime();
+          let ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.backgroundColor = this.dayoff[i].color;
+            });
+            return (
+              '<icon class="' +
+              this.dayoff[i].symbol +
+              '"></icon>' +
+              '<span>' +
+              this.dayoff[i].note +
+              '</span>'
+            );
+          } else {
+            return '';
+          }
+        }
+      }
+    }
+
+    return ''; // Return a default value if no conditions are met
+  }
+
   getDayOff(id = null) {
     if (id) this.calendarID = id;
     this.api
@@ -180,5 +214,22 @@ export class ScheduleCenterComponent
           this.dayoff = res;
         }
       });
+  }
+
+  valueChangeCB(e, note, index) {
+    for (let i = 0; i < note.checkList.length; i++) {
+      if (index == i) note.checkList[i].status = e.data;
+    }
+    note.createdOn = note.calendarDate;
+
+    // if ((note as any).data != null) {
+    //   note.createdOn = (note as any).data.createdOn;
+    // }
+    this.api
+      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
+        note?.transID,
+        note,
+      ])
+      .subscribe();
   }
 }
