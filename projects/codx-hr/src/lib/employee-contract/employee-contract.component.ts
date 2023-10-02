@@ -111,8 +111,6 @@ export class EmployeeContractComponent extends UIComponent {
 
   onInit(): void {
     this.user = this.authStore.get();
-    console.log(this.user);
-
     this.GetGvSetup();
   }
 
