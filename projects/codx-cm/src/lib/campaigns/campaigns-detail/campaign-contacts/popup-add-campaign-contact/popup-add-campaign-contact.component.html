@@ -18,12 +18,17 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblProvince"
-        default="Tỉnh/Thành phố"
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isProvince, 'isProvince')"
       >
-      </codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblProvince"
+          default="Tỉnh/Thành phố"
+        >
+        </codx-label>
+      </div>
     </div>
     <div class="col-8">
       <!-- <codx-input
@@ -58,12 +63,17 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblDistrict"
-        default="Quận/Huyện"
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isDistrict, 'isDistrict')"
       >
-      </codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblDistrict"
+          default="Quận/Huyện"
+        >
+        </codx-label>
+      </div>
     </div>
     <div class="col-8">
       <codx-dropdown-select
@@ -97,12 +107,17 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblIndustries"
-        default="Lĩnh vực hoạt động"
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isIndustries, 'isIndustries')"
       >
-      </codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblIndustries"
+          default="Lĩnh vực hoạt động"
+        >
+        </codx-label>
+      </div>
     </div>
     <div class="col-8">
       <codx-dropdown-select
@@ -137,12 +152,17 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblStatus"
-        default="Trạng thái"
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isStatus, 'isStatus')"
       >
-      </codx-label>
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblStatus"
+          default="Trạng thái"
+        >
+        </codx-label>
+      </div>
     </div>
     <div class="col-8">
       <codx-dropdown-select

@@ -10,18 +10,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   Optional,
 } from '@angular/core';
 import { DP_Steps_TaskGroups } from 'projects/codx-dp/src/lib/models/models';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-step-task-group',
   templateUrl: './step-task-group.component.html',
   styleUrls: ['./step-task-group.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StepTaskGroupComponent implements OnInit {
+export class StepTaskGroupComponent implements OnInit, OnDestroy {
   REQUIRE = ['taskGroupName'];
   dialog!: DialogRef;
   formModel: FormModel;
@@ -44,6 +47,9 @@ export class StepTaskGroupComponent implements OnInit {
     D: 'Share_Departments_Sgl',
     O: 'Share_OrgUnits_Sgl',
   };
+  //detroy
+  private detroyFormGroup$: Subject<void> = new Subject<void>();
+
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -74,10 +80,19 @@ export class StepTaskGroupComponent implements OnInit {
       });
     }
   }
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
+
+  onDestroy(): void {
+    this.detroyFormGroup$.next();
+    this.detroyFormGroup$.complete();
+  }
 
   getFormModel() {
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .pipe(takeUntil(this.detroyFormGroup$))
       .subscribe((res) => {
         for (let key in res) {
           if (res[key]['isRequire']) {
@@ -89,8 +104,11 @@ export class StepTaskGroupComponent implements OnInit {
   }
 
   changeUser(e) {
-    if(e){
-      let listRole = e?.map(role => {return {...role, roleType: "O"}}) || [];
+    if (e) {
+      let listRole =
+        e?.map((role) => {
+          return { ...role, roleType: 'O' };
+        }) || [];
       this.taskGroup['roles'] = listRole;
       if (this.taskGroup?.roles?.length > 0) {
         this.taskGroup.owner = this.taskGroup?.roles[0]?.objectID;
@@ -135,6 +153,7 @@ export class StepTaskGroupComponent implements OnInit {
 
   close() {
     this.dialog.close();
+    this.onDestroy();
   }
 
   getHour(data) {
@@ -191,10 +210,12 @@ export class StepTaskGroupComponent implements OnInit {
             this.step['durationDay'] = Math.floor(timeStep / 24);
             this.step['durationHour'] = timeStep % 24;
             this.dialog.close(this.taskGroup);
+            this.onDestroy();
           }
         });
       } else {
         this.dialog.close(this.taskGroup);
+        this.onDestroy();
       }
     }
   }
