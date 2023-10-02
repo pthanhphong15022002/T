@@ -181,7 +181,7 @@
                     </ng-template>
                 </div>
                 <div class="align-items-center">
-                    <span class="icon-month text-primary" (click)="onShowEAnnualLeaveMonth(data)"></span>
+                    <span *ngIf="data.isMonth" class="icon-month text-primary" (click)="onShowEAnnualLeaveMonth(data)"></span>
                 </div>
             </div>
         </div>

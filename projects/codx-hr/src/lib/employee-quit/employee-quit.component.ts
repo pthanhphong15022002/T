@@ -214,6 +214,10 @@ export class EmployeeQuitComponent extends UIComponent {
     this.editStatusObj.employeeID = data.emp.employeeID;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
+    if (!this.view.formModel.currentData) {
+      this.view.formModel.currentData = this.editStatusObj;
+    }
+
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,

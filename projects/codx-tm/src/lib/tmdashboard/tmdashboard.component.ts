@@ -456,12 +456,57 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         switch (res.funcID) {
           case 'TMD001':
             this.getMyDashboardData();
+            this.api
+              .execSv(
+                'rpttm',
+                'Codx.RptBusiness.TM',
+                'TaskDataSetBusiness',
+                'GetReportSourceAsync',
+                []
+              )
+              .subscribe((res: TM_DashBoard[]) => {
+                this.dataset = res;
+
+                setTimeout(() => {
+                  this.isLoaded = true;
+                }, 500);
+              });
             break;
           case 'TMD002':
             this.getTeamDashboardData();
+            this.api
+              .execSv(
+                'rpttm',
+                'Codx.RptBusiness.TM',
+                'TaskDataSetBusiness',
+                'GetReportSourceAsync',
+                []
+              )
+              .subscribe((res: TM_DashBoard[]) => {
+                this.dataset = res;
+
+                setTimeout(() => {
+                  this.isLoaded = true;
+                }, 500);
+              });
             break;
           case 'TMD003':
             this.getAssignDashboardData();
+            this.api
+              .execSv(
+                'rpttm',
+                'Codx.RptBusiness.TM',
+                'TaskDataSetBusiness',
+                'GetReportSourceAsync',
+                []
+              )
+              .subscribe((res: TM_DashBoard[]) => {
+                this.dataset = res;
+
+                setTimeout(() => {
+                  this.isLoaded = true;
+                }, 500);
+              });
             break;
           default:
             break;

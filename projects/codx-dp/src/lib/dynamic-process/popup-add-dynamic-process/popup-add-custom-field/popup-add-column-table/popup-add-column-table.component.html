@@ -4,7 +4,7 @@
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="dialog?.formModel"
+  [formModel]="formModelTable"
   [data]="column"
 >
   <ng-template #body>
@@ -35,7 +35,7 @@
           </codx-label>
           <codx-input
             disable="action=='edit'"
-            field="columnName"
+            field="fieldName"
             [type]="'text'"
             [crrValue]="column.fieldName"
             [formName]="'DPStepsFields'"
@@ -354,15 +354,14 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table table-row-bordered" *ngIf="listColumns.length">
+  <table class="table table-row-bordered mt-3" *ngIf="listColumns.length">
     <thead>
       <tr class="bg-gray-100">
         <ng-container *ngFor="let item of listColumns; let index = index">
           <th scope="col" class="fw-bold ps-4">
-            <span>{{ item?.fieldName }}</span>
+            <span>{{ item?.title }}</span>
           </th>
         </ng-container>
-        <!-- <th scope="col" class="w-100px fw-bold"></th> -->
       </tr>
     </thead>
     <tbody>
@@ -370,16 +369,6 @@
         <ng-container *ngFor="let item of listColumns; let index = index">
           <td class="ps-4">{{ item?.note }}</td>
         </ng-container>
-        <!-- <td>
-          <div class="d-flex justify-content-end align-items-center">
-            <button class="btn btn-sm btn-icon btn-light-warning">
-              <i class="icon icon-14 icon-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-icon btn-light-danger ms-2">
-              <i class="icon icon-14 icon-close"></i>
-            </button>
-          </div>
-        </td> -->
       </tr>
     </tbody>
   </table>

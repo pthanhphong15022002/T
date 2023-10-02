@@ -12,7 +12,6 @@
       color: var(--primary-dark);
       font-size: 1.1rem;
     }
-
   }
 
   .show-main {
@@ -46,7 +45,6 @@
   margin-left: 10px;
 }
 
-
 .rating-group {
   position: relative;
 }
@@ -59,7 +57,7 @@
   overflow: hidden;
 }
 
-.card-rating .rating-group+div {
+.card-rating .rating-group + div {
   text-align: center;
 }
 
@@ -69,21 +67,21 @@
 }
 
 .filled {
-  color: #FFA800 !important
-    /* #1e90ff;*/
+  color: #ffa800 !important;
+  /* #1e90ff;*/
 }
 
 //Thao css
 // .class-field>.crr-fiels{
 //   border: 1px transparent solid;
 // }
-.class-field>.crr-fiels:hover {
+.class-field > .crr-fiels:hover {
   // box-shadow: 0 0px 10px 0 rgba(0, 174, 255, 0.2) inset;
   //border-radius: 5px;
   //background-color: #f0f8ff;
   border-color: var(--gray-150);
 }
 
-::ng-deep .e-toast-top-right{
+::ng-deep .e-toast-top-right {
   z-index: 10050 !important;
 }

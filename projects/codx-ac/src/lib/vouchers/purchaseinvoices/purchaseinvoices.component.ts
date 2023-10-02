@@ -8,19 +8,16 @@ import {
 } from '@angular/core';
 import {
   ButtonModel,
-  DataRequest,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType
 } from 'codx-core';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { BehaviorSubject, Observable, distinctUntilKeyChanged } from 'rxjs';
-import { IJournal } from '../../journals/interfaces/IJournal.interface';
+import { BehaviorSubject, distinctUntilKeyChanged } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
 import { IPurchaseInvoice } from './interfaces/IPurchaseInvoice.inteface';
 import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
-import { MF, PurchaseInvoiceService } from './purchaseinvoices.service';
+import { PurchaseInvoiceService } from './purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -42,10 +39,8 @@ export class PurchaseinvoicesComponent
   button: ButtonModel = { id: 'btnAdd' };
   funcName: string;
   journalNo: string;
-  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
-
   master: IPurchaseInvoice;
-  journal: IJournal;
+  defaultSubject = new BehaviorSubject<IPurchaseInvoice>(null);
 
   constructor(
     inject: Injector,
@@ -53,23 +48,18 @@ export class PurchaseinvoicesComponent
     private journalService: JournalService
   ) {
     super(inject);
-
-    this.router.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-    });
   }
   //#endregion
 
   //#region Init
   onInit(): void {
-    this.emitDefault();
-
-    this.journalService.getJournal$(this.journalNo).subscribe((journal) => {
-      this.purchaseInvoiceService.journal = this.journal = journal;
+    this.router.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+      this.purchaseInvoiceService.loadJournal(this.journalNo);
+      this.journalService.setChildLinks(this.journalNo);
+      this.emitDefault();
     });
-
-    this.journalService.setChildLinks(this.journalNo);
-
+    
     // this.purchaseInvoiceService.initCache();
   }
 
@@ -101,83 +91,21 @@ export class PurchaseinvoicesComponent
   //#endregion
 
   //#region Event
-  onInitMF(mfs: any, data: IPurchaseInvoice): void {
-    let disabledFuncs: MF[] = [
-      MF.GuiDuyet,
-      MF.GhiSo,
-      MF.HuyYeuCauDuyet,
-      MF.In,
-      MF.KhoiPhuc,
-      MF.KiemTraTinhHopLe,
-    ];
-    switch (data.status) {
-      case '7': // phac thao
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
-        );
-        break;
-      case '1': // da hop le
-        if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
-        } else {
-          disabledFuncs = disabledFuncs.filter(
-            (f) => f !== MF.GhiSo && f !== MF.In
-          );
-        }
-        break;
-      case '3': // cho duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
-        );
-        break;
-      case '5': // da duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-      case '6': // da ghi so
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KhoiPhuc && f !== MF.In
-        );
-        break;
-      case '9': // khoi phuc
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-    }
-
-    for (const mf of mfs) {
-      if (disabledFuncs.includes(mf.functionID)) {
-        mf.disabled = true;
-      }
-    }
+  async onInitMF(mfs: any, data: IPurchaseInvoice): Promise<void> {
+    await this.purchaseInvoiceService.onInitMFAsync(mfs, data);
   }
 
   onClickMF(e: any, data: IPurchaseInvoice): void {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-      case MF.KiemTraTinhHopLe:
-        this.purchaseInvoiceService.validate(e, data);
-        break;
-      case MF.GhiSo:
-        this.purchaseInvoiceService.post(e, data);
-        break;
-    }
+    this.purchaseInvoiceService.onClickMF(
+      e,
+      data,
+      this.funcName,
+      this.view.formModel,
+      this.view.dataService
+    );
   }
 
-  onClickAdd(e) {
+  onAddClick(e) {
     this.view.dataService
       .addNew(() =>
         this.defaultSubject
@@ -185,7 +113,6 @@ export class PurchaseinvoicesComponent
           .pipe(distinctUntilKeyChanged('recID'))
       )
       .subscribe((res: any) => {
-        console.log('onClickAdd', res);
         if (res) {
           let options = new SidebarModel();
           options.DataService = this.view.dataService;
@@ -224,92 +151,18 @@ export class PurchaseinvoicesComponent
   //#endregion
 
   //#region Method
-  getDefault$(): Observable<any> {
-    return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
-      this.journalNo,
-    ]);
-  }
-
-  edit(data): void {
-    const copiedData = { ...data };
-    this.view.dataService.dataSelected = copiedData;
-    this.view.dataService.edit(copiedData).subscribe((res: any) => {
-      const options = new SidebarModel();
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        PurchaseinvoicesAddComponent,
-        {
-          formType: 'edit',
-          formTitle: this.funcName,
-        },
-        options,
-        this.view.funcID
-      );
-    });
-  }
-
-  copy(data): void {
-    this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .copy(() => this.getDefault$())
-      .subscribe((res: any) => {
-        if (res) {
-          const options = new SidebarModel();
-          options.DataService = this.view.dataService;
-          options.FormModel = this.view.formModel;
-          options.isFull = true;
-          this.callfc.openSide(
-            PurchaseinvoicesAddComponent,
-            {
-              formType: 'add',
-              formTitle: this.funcName,
-            },
-            options,
-            this.view.funcID
-          );
-        }
-      });
-  }
-
-  delete(data: IPurchaseInvoice): void {
-    this.view.dataService.delete([data], true).subscribe();
-  }
-
-  export(data): void {
-    const gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    gridModel.groupFields = 'createdBy'; //Chưa có group
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-  //#endregion
-
-  //#region Function
   emitDefault(): void {
-    this.getDefault$().subscribe((res) => {
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
+      this.journalNo,
+    ]).subscribe((res: any) => {
       this.defaultSubject.next({
         ...res,
         recID: res.data.recID,
       });
     });
   }
+  //#endregion
+
+  //#region Function
   //#endregion
 }

@@ -18,6 +18,7 @@ import {
   AuthStore,
   DialogModel,
   LayoutService,
+  NotificationsService,
   PageLink,
   PageTitleService,
   UIComponent,
@@ -49,6 +50,7 @@ export class CodxReportViewDetailComponent
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!: ElementRef<any>;
+  @ViewChild('upload') upload: ElementRef<any>;
 
   views: ViewModel[];
   viewType = ViewType;
@@ -72,6 +74,11 @@ export class CodxReportViewDetailComponent
       icon: 'icon-insert_photo',
       text: 'Screenshot',
     },
+    {
+      id: 'btnUploadAvatar',
+      icon: 'icon-cloud_upload',
+      text: 'Upload avatar',
+    },
   ];
   rootFunction: any;
   data: any;
@@ -86,6 +93,7 @@ export class CodxReportViewDetailComponent
     private auth: AuthStore,
     private authSV: AuthService,
     private apihttp: HttpClient,
+    private notiService: NotificationsService,
     private captureService: NgxCaptureService
   ) {
     super(injector);
@@ -280,6 +288,9 @@ export class CodxReportViewDetailComponent
       case 'btnScreenshot':
         this.screenshot();
         break;
+      case 'btnUploadAvatar':
+        this.uploadAvatar();
+        break;
     }
   }
 
@@ -317,7 +328,49 @@ export class CodxReportViewDetailComponent
             'ScreenshotAsync',
             [recID, imgBase64]
           )
-          .subscribe();
+          .subscribe((res: boolean) => {
+            if (res) {
+              this.notiService.notifyCode('SYS034');
+            } else {
+              this.notiService.notifyCode('SYS021');
+            }
+          });
+      });
+  }
+
+  uploadAvatar() {
+    this.upload.nativeElement.click();
+  }
+
+  handleInputChange(e) {
+    let file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
+    let pattern = /image-*/;
+    var reader = new FileReader();
+    if (!file.type.match(pattern)) {
+      alert('invalid format');
+      return;
+    }
+    reader.onload = this._handleReaderLoaded.bind(this);
+    reader.readAsDataURL(file);
+  }
+  _handleReaderLoaded(e) {
+    let recID = this.router.snapshot.params['funcID'];
+    let reader = e.target;
+    let imgBase64 = reader.result;
+    this.api
+      .execSv(
+        'rptrp',
+        'Codx.RptBusiness.RP',
+        'ReportListBusiness',
+        'ScreenshotAsync',
+        [recID, imgBase64]
+      )
+      .subscribe((res: boolean) => {
+        if (res) {
+          this.notiService.notifyCode('SYS034');
+        } else {
+          this.notiService.notifyCode('SYS021');
+        }
       });
   }
 

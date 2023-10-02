@@ -54,10 +54,12 @@
             dataSelected?.category == '1' &&
             dataSelected?.problem?.trim() != ''
           "
+          [ngClass]="!expanding ? 'd-flex' : ''"
         >
           <span
+            #problem
             class="fw-bold text-dark"
-            [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
+            [ngClass]="!expanding ? 'line-clamp line-clamp-1' : ''"
             [innerHTML]="
               dataSelected?.problem
                 | formatvalue : formModel : 'Problem'
@@ -68,13 +70,16 @@
             <codx-label
               *ngIf="!expanding"
               default="Xem thêm"
+              style="white-space: nowrap"
               class="text-primary text-decoration-underline"
+              [ngClass]="!overflowed ? 'd-none' : ''"
               role="button"
               (click)="expanding = !expanding"
             ></codx-label>
             <codx-label
               *ngIf="expanding"
               default="Thu lại"
+              style="white-space: nowrap"
               class="text-primary text-decoration-underline"
               role="button"
               (click)="expanding = !expanding"
@@ -89,6 +94,7 @@
             [showText]="true"
             [showBgColor]="true"
             class="badge badge-light badge-sm"
+            [ngbTooltip]="gridViewSetup['Status']?.headerText"
           >
           </codx-vll>
         </div>
@@ -833,6 +839,17 @@
                                     | async
                                 "
                               ></span>
+                              <span class="ms-1" *ngIf="dataSelected.status != '7' && dataSelected.status != '5'">
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-icon btn-light-primary"
+                                  (click)="updateAssignEngineer(dataSelected)"
+                                >
+                                  <span
+                                    class="icon-edit icon-16"
+                                  ></span>
+                                </button>
+                              </span>
                             </div>
                           </div>
                         </div>

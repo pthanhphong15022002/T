@@ -10,7 +10,6 @@ import {
 } from 'codx-core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Reason } from './models/Reason.model';
-import { toPascalCase } from './utils';
 
 @Injectable({
   providedIn: 'root',

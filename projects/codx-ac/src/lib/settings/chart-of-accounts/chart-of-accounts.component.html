@@ -1,8 +1,0 @@
-<codx-views #view idField="accountID" [views]="views" [button]="buttons" [entityName]="view.entityName"
-  (buttonClick)="toolBarClick($event)" (onActions)="onActions($event)">
-</codx-views>
-<!-- [autoLoad]="false" -->
-<ng-template #templateMore let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
-</ng-template>
