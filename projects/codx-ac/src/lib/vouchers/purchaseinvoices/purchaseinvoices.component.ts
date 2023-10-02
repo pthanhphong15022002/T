@@ -57,10 +57,9 @@ export class PurchaseinvoicesComponent
       this.journalNo = params?.journalNo;
       this.purchaseInvoiceService.loadJournal(this.journalNo);
       this.journalService.setChildLinks(this.journalNo);
+      this.emitDefault();
     });
-
-    this.emitDefault();
-
+    
     // this.purchaseInvoiceService.initCache();
   }
 
