@@ -4,7 +4,9 @@
       <div class="form-group">
         <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>
         <ejs-dropdownlist  id="template" #templateCBB [dataSource]="sfTemplates" [fields]="fields" 
-          (valueChange)="valueChange($event)"></ejs-dropdownlist>        
+          (valueChange)="valueChange($event)"></ejs-dropdownlist>       
+        <!-- <ejs-multiselect   id="template" #templateCBB [dataSource]="sfTemplates" [fields]="fields" 
+        (valueChange)="valueChange($event)"></ejs-multiselect >     -->
       </div>
     </div>
 
