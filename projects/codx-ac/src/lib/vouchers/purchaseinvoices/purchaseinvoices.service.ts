@@ -169,11 +169,16 @@ export class PurchaseInvoiceService {
       case MF.GhiSo:
         this.post(e, data);
         break;
+      case MF.KhoiPhuc:
+        this.unpost(e, data);
+        break;
       case MF.GuiDuyet:
         this.submitForApproval(e, data, formModel, dataService);
         break;
       case MF.HuyYeuCauDuyet:
         this.cancelApprovalRequest(e, data, formModel, dataService);
+        break;
+      case MF.In:
         break;
     }
   }
@@ -284,6 +289,17 @@ export class PurchaseInvoiceService {
   post(e: any, data: IPurchaseInvoice): void {
     this.apiService
       .exec('AC', 'PurchaseInvoicesBusiness', 'PostAsync', data)
+      .subscribe((res) => {
+        if (res) {
+          Object.assign(data, res);
+          this.notiService.notifyCode('AC0029', 0, e.text);
+        }
+      });
+  }
+
+  unpost(e: any, data: IPurchaseInvoice): void {
+    this.apiService
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UnpostAsync', data)
       .subscribe((res) => {
         if (res) {
           Object.assign(data, res);

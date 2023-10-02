@@ -244,7 +244,7 @@ export class EmployeeListComponent extends UIComponent {
           {
             action: 'edit',
             text: moreFunc.defaultName ?? moreFunc.text,
-            data: res,
+            data: data,
           },
           option
         );

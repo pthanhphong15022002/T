@@ -3,18 +3,13 @@ import {
   Component,
   Injector,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import {
-  DataRequest,
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewType
-} from 'codx-core';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { BehaviorSubject, distinctUntilKeyChanged } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
+import { CashtransfersService } from './cashtransfers.service';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
 
 @Component({
@@ -38,22 +33,24 @@ export class CashtransfersComponent
   master: ICashTransfer;
   functionName: string;
   journalNo: string;
+  defaultSubject = new BehaviorSubject<ICashTransfer>(null);
 
   constructor(
     injector: Injector,
     private journalService: JournalService,
+    private cashTransferService: CashtransfersService
   ) {
     super(injector);
-
-    this.router.queryParams.subscribe((params) => {
-      this.journalNo = params?.journalNo;
-    });
   }
   //#endregion
 
   //#region Init
   onInit(): void {
-    this.journalService.setChildLinks(this.journalNo);
+    this.router.queryParams.subscribe((params) => {
+      this.journalNo = params?.journalNo;
+      this.journalService.setChildLinks(this.journalNo);
+      this.emitDefault();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -86,20 +83,13 @@ export class CashtransfersComponent
 
   //#region Event
   onClickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-    }
+    this.cashTransferService.onClickMF(
+      e,
+      data,
+      this.functionName,
+      this.view.formModel,
+      this.view.dataService
+    );
   }
 
   onSelectChange(e): void {
@@ -112,108 +102,49 @@ export class CashtransfersComponent
     }
   }
 
-  onClickAdd(e): void {
+  onAddClick(e): void {
     this.view.dataService
       .addNew(() =>
-        this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
-          this.journalNo,
-        ])
+        this.defaultSubject
+          .asObservable()
+          .pipe(distinctUntilKeyChanged('recID'))
       )
       .subscribe((res: any) => {
         let options = new SidebarModel();
         options.DataService = this.view.dataService;
         options.FormModel = this.view.formModel;
         options.isFull = true;
-        this.callfc.openSide(
-          CashtransferAddComponent,
-          {
-            formType: 'add',
-            formTitle: this.functionName,
-          },
-          options,
-          this.view.funcID
-        );
-      });
+        this.callfc
+          .openSide(
+            CashtransferAddComponent,
+            {
+              formType: 'add',
+              formTitle: this.functionName,
+            },
+            options,
+            this.view.funcID
+          )
+          .closed.subscribe(() => {
+            this.emitDefault();
+          });
+      })
+      .unsubscribe();
   }
   //#endregion
 
   //#region Method
-  edit(data): void {
-    console.log('edit', { data });
-
-    const copiedData = { ...data };
-    this.view.dataService.dataSelected = copiedData;
-    this.view.dataService.edit(copiedData).subscribe((res: any) => {
-      console.log({ res });
-
-      let options = new SidebarModel();
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        CashtransferAddComponent,
-        {
-          formType: 'edit',
-          formTitle: this.functionName,
-        },
-        options,
-        this.view.funcID
-      );
-    });
-  }
-
-  copy(data): void {
-    console.log('copy', { data });
-
-    this.view.dataService.dataSelected = data;
-    this.view.dataService.copy().subscribe((res) => {
-      console.log(res);
-
-      let options = new SidebarModel();
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        CashtransferAddComponent,
-        {
-          formType: 'add',
-          formTitle: this.functionName,
-        },
-        options,
-        this.view.funcID
-      );
-    });
-  }
-
-  delete(data): void {
-    this.view.dataService.delete([data]).subscribe();
+  emitDefault(): void {
+    this.api
+      .exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [this.journalNo])
+      .subscribe((res: any) => {
+        this.defaultSubject.next({
+          ...res,
+          recID: res.data.recID,
+        });
+      });
   }
   //#endregion
 
   //#region Function
-  export(data): void {
-    const gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    gridModel.groupFields = 'createdBy'; //Chưa có group
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
   //#endregion
 }

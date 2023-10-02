@@ -19,13 +19,13 @@
         ></codx-input>
       </div>
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Comment">
+        <codx-label [formModel]="form.formModel" fiedName="FeedbackComment">
         </codx-label>
         <codx-input
           [formModel]="form.formModel"
-          [crrValue]="comment"
+          [crrValue]="feedbackComment"
           (valueChange)="valueChange($event)"
-          field="comment"
+          field="feedbackComment"
         ></codx-input>
       </div>
     </ng-container>
