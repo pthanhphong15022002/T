@@ -99,7 +99,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.cache.valueList('WR007').subscribe((res) => {
       if (res && res?.datas) {
-        this.lstTimeVll = res?.data ?? [];
+        this.lstTimeVll = res?.datas ?? [];
       }
     });
   }
