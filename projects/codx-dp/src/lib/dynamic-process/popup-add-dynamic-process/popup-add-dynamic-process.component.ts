@@ -472,6 +472,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         }
         this.process.autoName =
           this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+
         this.setDefaultOwner();
         break;
       case 'edit':
@@ -483,13 +484,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           (x) => x.groupID == this.process?.groupID
         );
         this.processNameBefore = this.process?.processName;
-        this.permissions = this.process.permissions;
-        if (this.permissions.length > 0) {
+        this.permissions = this.process?.permissions;
+        if (this.permissions?.length > 0) {
           let perm = this.permissions.filter((x) => x.roleType == 'P');
           this.lstParticipants = perm;
         }
         this.processTab = 3;
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         this.instanceNoSetting = this.process.instanceNoSetting;
         break;
       case 'copy':
@@ -501,7 +502,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.permissions = [];
         this.instanceNoSetting = this.process.instanceNoSetting;
         let valueListStr = this.listValueCopy.join(';');
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         if (
           this.listValueCopy.includes('2') &&
           !this.listValueCopy.includes('3')
@@ -1134,15 +1135,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAvatar(process) {
+  getAvatar(objectID, proccessName) {
     let avatar = [
       '',
       this.funcID,
-      process?.recID,
+      objectID,
       'DP_Processes',
       'inline',
       1000,
-      process?.processName,
+      proccessName,
       'avt',
       false,
     ];
