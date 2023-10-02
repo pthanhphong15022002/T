@@ -119,7 +119,7 @@ export class CmCustomerComponent
       }
     });
 
-    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','SendMailNotificationAsync').subscribe(res => {});
+    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','SendMailNotificationAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
