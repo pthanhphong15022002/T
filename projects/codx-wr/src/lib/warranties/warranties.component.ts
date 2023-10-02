@@ -806,4 +806,15 @@ export class WarrantiesComponent
       }
     });
   }
+
+  getIcon($event) {
+    if ($event == 'O') {
+      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    } else if ($event == 'I') {
+      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
+    } else if ($event == 'F') {
+      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+  }
 }

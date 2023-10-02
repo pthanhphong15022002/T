@@ -770,5 +770,6 @@
     [owner]="dataSelected?.owner"
     [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false"
     [isPause]="dataSelected?.status == '99'"
+    [entityName]="entityName"
   ></step-task>
 </ng-template>

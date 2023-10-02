@@ -176,10 +176,27 @@
 </ng-template>
 
 <ng-template #main>
+  <!-- tham chiếu -->
+  <hr />
+  <div>
+    <div>
+      <codx-label
+        class="fw-bold text-dark"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Tham chiếu:"
+      ></codx-label>
+    </div>
+    <div class="ms-5">
+      <ng-container [ngTemplateOutlet]="reference"></ng-container>
+    </div>
+  </div>
+  <!-- user -->
   <hr />
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
-  <div *ngIf="type == 'P'">
+  <!-- trường nhập liệu -->
+  <div *ngIf="type != 'G'">
     <codx-label
       class="fw-bold text-dark"
       fiedName=""
@@ -187,11 +204,6 @@
       default="Trường nhập liệu:"
     >
     </codx-label>
-    <!-- <ul *ngIf="dataView?.fields?.length > 0">
-      <li *ngFor="let feild of dataView?.fields" class="fs-6">
-        {{ feild?.fieldName }}: {{ feild?.dataValue }}
-      </li>
-    </ul> -->
     <div>
       <codx-fields-detail-temp
         *ngIf="instanceStep"
@@ -203,7 +215,19 @@
       </codx-fields-detail-temp>
     </div>
   </div>
-
+  <!-- Ghi chú -->
+  <hr *ngIf="type !== 'G' && type !== 'P'" />
+  <div *ngIf="type !== 'P'">
+    <codx-label
+      class="text-dark fw-bold me-3 label-colon"
+      fiedName="memo"
+      [formModel]="frmModel"
+      default="Ghi chú"
+    >
+    </codx-label>
+    <p [innerHTML]="dataView?.memo"></p>
+  </div>
+  <!-- Công việc -->
   <hr *ngIf="type == 'P'" />
   <div *ngIf="type == 'P'">
     <div>
@@ -232,57 +256,8 @@
       ></codx-step-task>
     </div>
   </div>
-
-  <div
-    class="d-flex justify-content-start"
-    *ngIf="type !== 'G' && type !== 'P'"
-  >
-    <div class="mt-2">
-      <codx-label
-        class="text-dark fw-bold me-3"
-        fiedName=""
-        [formModel]="frmModel"
-        default="Tài liệu:"
-      >
-      </codx-label>
-    </div>
-
-    <div>
-      <codx-attachment
-        #attachment
-        [objectType]="dialog.formModel.entityName"
-        [objectId]="dataView?.recID"
-        hideFolder="1"
-        hideImageUpload="0"
-        hideImageThumb="0"
-        hideUploadBtn="1"
-        [showMessage]="0"
-        hideDes="1"
-        type="inline"
-        allowMultiFile="1"
-        referType="source"
-        [formModel]="dialog.formModel"
-        displayThumb="full"
-        [hideDelete]="1"
-        [hideMoreF]="0"
-      >
-      </codx-attachment>
-    </div>
-  </div>
-  <hr *ngIf="type !== 'G' && type !== 'P'" />
-
-  <div *ngIf="type !== 'P'">
-    <codx-label
-      class="text-dark fw-bold me-3"
-      fiedName="memo"
-      [formModel]="frmModel"
-      default="Ghi chú: "
-    >
-    </codx-label>
-    <p [innerHTML]="dataView?.memo"></p>
-  </div>
+  <!-- công việc liên kết -->
   <hr *ngIf="type !== 'P'" />
-
   <div *ngIf="type !== 'P'">
     <codx-label
       *ngIf="type !== 'G'"
@@ -315,6 +290,183 @@
           <span class="fs-6 fw-bold">{{ task?.taskName }}</span>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- Tài liệu mẫu-->
+  <hr />
+  <div
+    class="d-flex justify-content-start"
+    *ngIf="type !== 'G' && type !== 'P'"
+  >
+    <div class="mt-2">
+      <codx-label
+        class="text-dark fw-bold me-3"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Tài liệu mẫu:"
+      >
+      </codx-label>
+    </div>
+
+    <div>
+      <codx-attachment
+      #attachment
+      [objectType]="'DP_Steps_Tasks'"
+      [objectId]="dataView?.refID"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      [showMessage]="0"
+      hideDes="1"
+      type="block"
+      allowMultiFile="1"
+      referType="source"
+      [formModel]="dialog.formModel"
+      displayThumb="full"
+      [hideDelete]="1"
+      [hideMoreF]="0"
+    >
+    </codx-attachment>
+    </div>
+  </div>
+  <!-- Tài liệu đính kèm-->
+  <hr />
+  <div
+    class="d-flex justify-content-start"
+    *ngIf="type !== 'G' && type !== 'P'"
+  >
+    <div class="mt-2">
+      <codx-label
+        class="text-dark fw-bold me-3"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Tài liệu đính kèm:"
+      >
+      </codx-label>
+    </div>
+
+    <div>
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="dataView?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
+        displayThumb="full"
+        [hideDelete]="1"
+        [hideMoreF]="0"
+      >
+      </codx-attachment>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #reference>
+  <div>
+    <div class="">
+      <codx-label
+        class="text-gray-500 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Khách hàng"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
+    </div>
+    <div class="">
+      <codx-label
+        class="text-gray-500 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Cơ hội"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
+    </div>
+    <div class="">
+      <codx-label
+        class="text-gray-500 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Giai đoạn"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
+    </div>
+    <div class="">
+      <codx-label
+        class="text-gray-500 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Nhóm công việc"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
+    </div>
+    <div class="">
+      <codx-label
+        class="text-gray-500"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Địa điểm:"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
+    </div>
+    <div class="">
+      <codx-label
+        class="text-gray-500"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Chi phí dự kiến:"
+      ></codx-label>
+      <!-- <span
+        class="me-3 text-dark fw-bold"
+        [innerHTML]="
+          contract?.delActualDate
+            | formatvalue : formModel : 'DelActualDate'
+            | async
+        "
+      ></span> -->
     </div>
   </div>
 </ng-template>
@@ -444,6 +596,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #history>
   <div>
     <codx-history
@@ -453,6 +606,7 @@
     ></codx-history>
   </div>
 </ng-template>
+
 <ng-template #comment>
   <codx-tree-comment
     [objectID]="dataView?.recID"
@@ -461,6 +615,7 @@
   >
   </codx-tree-comment>
 </ng-template>
+
 <ng-template #attachments>
   <div class="ms-4">
     <codx-attachment
