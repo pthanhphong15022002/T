@@ -34,8 +34,7 @@ import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-mo
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
-import { FieldDetailComponent } from './instances/instance-detail/field-detail/field-detail.component';
-import { PopupCustomFieldComponent } from './instances/instance-detail/field-detail/popup-custom-field/popup-custom-field.component';
+
 import { StagesDetailComponent } from './instances/instance-detail/stages-detail/stages-detail.component';
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupPropertiesComponent } from './dynamic-process/popup-properties/popup-properties.component';
@@ -129,12 +128,10 @@ const T_Component: Type<any>[] = [
   InstanceDetailComponent,
   PopupAddInstanceComponent,
   StagesDetailComponent,
-  FieldDetailComponent,
   InputCustomFieldComponent,
   PopupMoveStageComponent,
   PopupMoveReasonComponent,
   ViewJobComponent,
-  PopupCustomFieldComponent,
   StepTaskGroupComponent,
   UserComponent,
   PopupPropertiesComponent,

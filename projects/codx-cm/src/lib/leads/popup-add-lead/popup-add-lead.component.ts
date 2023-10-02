@@ -226,7 +226,7 @@ export class PopupAddLeadComponent
     this.executeApiCalls();
   }
 
-  async getParameterAddress(){
+  async getParameterAddress() {
     debugger;
     let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
@@ -373,11 +373,11 @@ export class PopupAddLeadComponent
         let lstDis = JSON.parse(json);
         this.lead.provinceID = lstDis?.ProvinceID;
         this.lead.districtID = lstDis?.DistrictID;
-      //  this.lead.wardID = lstDis?.WardID;
-      }else{
+        //  this.lead.wardID = lstDis?.WardID;
+      } else {
         this.lead.provinceID = null;
         this.lead.districtID = null;
-    //    this.lead.wardID = null;
+        //    this.lead.wardID = null;
       }
     }
 
@@ -402,8 +402,8 @@ export class PopupAddLeadComponent
   valueChangeOwner($event, view) {
     if ($event && view === this.viewOwnerDefault) {
       let ownerName = '';
-        this.owner = $event?.data;
-        ownerName = $event?.component?.itemsSelected[0]?.UserName;
+      this.owner = $event?.data;
+      ownerName = $event?.component?.itemsSelected[0]?.UserName;
       this.searchOwner('1', 'O', '0', this.owner, ownerName);
     } else if ($event && view === this.viewOwnerProcess) {
       this.owner = $event;
@@ -570,7 +570,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-   this.lead.applyProcess && this.addPermission(this.lead.processID);
+    this.lead.applyProcess && this.addPermission(this.lead.processID);
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -637,8 +637,7 @@ export class PopupAddLeadComponent
       await this.saveFileContact(this.contactId);
     }
     if (this.isLoading) {
-    }
-     else {
+    } else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
         await this.onAdd();
@@ -921,6 +920,7 @@ export class PopupAddLeadComponent
         case 'R':
         case 'A':
         case 'L':
+        case 'TA':
           // case 'C': lead ko co
           result = event.e;
           break;

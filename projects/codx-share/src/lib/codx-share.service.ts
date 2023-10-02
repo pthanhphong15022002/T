@@ -1496,6 +1496,10 @@ export class CodxShareService {
       )
       .subscribe((res: ResponseModel) => {
         if (res) {
+          //Thông báo khi gửi duyệt thành công và category?.releaseControl == "4" (Dạng ko mở popup ký số)
+          if(!res?.msgCodeError && res?.rowCount>0 && (approveProcess?.category?.releaseControl =="4")){
+            this.notificationsService.notifyCode("SYS034");
+          }
           releaseCallback && releaseCallback(res, this.callBackComponent);
         }
       });
@@ -1737,7 +1741,7 @@ export class CodxShareService {
                   exportedFile?.extension
                 ).subscribe((res) => {
                   if(res){
-
+                    this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
                   }
                   else{
                     this.notificationsService.notify(
@@ -1745,11 +1749,10 @@ export class CodxShareService {
                       '2'
                     );
                   }
-
                 });
               }
               else{
-
+                this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
               }
               break;
           }
@@ -1769,10 +1772,10 @@ export class CodxShareService {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
       this.getFileByObjectID(approveProcess.recID).subscribe(
         (lstFile: any) => {
-          let signFile = this.apCreateSignFile(
-            approveProcess,
-            lstFile
-          );
+          // let signFile = this.apCreateSignFile(
+          //   approveProcess,
+          //   lstFile
+          // );
           if (lstFile?.length > 0) {
             this.apOpenViewSignFile(
               approveProcess,
@@ -1794,7 +1797,6 @@ export class CodxShareService {
         this.apBaseRelease(approveProcess, releaseCallback);
       break;
     }
-
   }
 
   apOpenViewSignFile(

@@ -49,8 +49,34 @@
   <ng-template #desc2Tmp> ccc </ng-template>
 </ng-template>
 
+<!-- Content schedule left -->
 <ng-template #resourceHeader let-data>
-  <div class="container">aaaaaaaaa</div>
+  <div class="container">
+    <div class="d-flex pb-1">
+      <codx-img
+        [width]="35"
+        class="me-4"
+        [objectId]="data.resourceData.emp.employeeName"
+        [referType]="'avt'"
+        [objectName]="data.resourceData.emp.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+      <div class="text-wrap">
+        <div class="text-dark fw-bold">
+          <span>
+            {{ data.resourceData.emp.employeeName }}
+          </span>
+        </div>
+        <span
+          class="text-gray-500 fs-7"
+          *ngIf="data.resourceData.emp?.positionName"
+        >
+          {{ data.resourceData.emp?.positionName }}
+        </span>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #mfButton let-data>
@@ -66,8 +92,16 @@
   </div>
 </ng-template>
 
-<ng-template #cellTemplate let-data>
-  <div [innerHtml]="getCellContent(data.date)"></div>
+<ng-template #cardTemplate let-data>
+  <div [style.background-color]="getColorItem(data.status)">
+    <div class="d-flex">
+      <span>
+        {{ getHour(data.fromTime) }}
+      </span>
+      <span> - </span>
+      <span>{{ getHour(data.toTime) }}</span>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #contentTmp let-data> </ng-template>

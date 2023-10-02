@@ -14,8 +14,6 @@ import { APPostingAccountsComponent } from './apposting-accounts/apposting-accou
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
 import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.component';
-import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.component';
-import { PopAddAccountsComponent } from './chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
 import { CurrencyFormComponent } from './currency-form/currency-form.component';
 import { PopAddCurrencyComponent } from './currency-form/pop-add-currency/pop-add-currency.component';
 import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
@@ -60,6 +58,8 @@ import { VATCodesComponent } from './vatcodes/vatcodes.component';
 import { PopAddVatcodesComponent } from './vatcodes/pop-add-vatcodes/pop-add-vatcodes.component';
 import { PopAddVatpostingComponent } from './vatcodes/pop-add-vatposting/pop-add-vatposting.component';
 import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods/fiscal-periods-add/fiscal-periods-auto-create.component';
+import { AccountsComponent } from './account-categories/accounts.component';
+import { AccountsAddComponent } from './account-categories/accounts-add/accounts-add.component';
 
 var routes: Routes = [
   {
@@ -72,7 +72,7 @@ var routes: Routes = [
       },
       {
         path: 'chartofaccounts/:funcID',
-        component: ChartOfAccountsComponent,
+        component: AccountsComponent,
       },
       {
         path: 'customers/:funcID',
@@ -148,8 +148,8 @@ var routes: Routes = [
     PopAddCurrencyComponent,
     PopSettingExchangeComponent,
     PopAddExchangerateComponent,
-    ChartOfAccountsComponent,
-    PopAddAccountsComponent,
+    AccountsComponent,
+    AccountsAddComponent,
     CustomersComponent,
     PopAddCustomersComponent,
     PopAddBankComponent,

@@ -6,11 +6,9 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
-  [data]="fiels"
-  [openMore]="false"
 ></codx-form>
 <ng-template #body>
-  <ng-container *ngFor="let item of fiels">
+  <ng-container *ngFor="let item of fieldFormat">
     <div class="form-group">
       <codx-input-custom-field
         [customField]="item"
@@ -18,6 +16,7 @@
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
         (valueChangeCustom)="valueChangeCustom($event)"
+        (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
     </div>
   </ng-container>

@@ -645,25 +645,25 @@ export class tempVllDP {
 //model table
 export class ColumnTable {
   recID: string;
-  fieldName: string;
-  title: string;
-  dataType: string;
-  dataFormat: string;
-  controlType: string;
-  dataValue: string;
-  refType: string;
-  refValue: string;
-  multiselect: boolean;
-  rank: number;
-  rankIcon: string;
-  isRequired: boolean;
+  fieldName: string = '';
+  title: string = '';
+  dataType: string = '';
+  dataFormat: string = '';
+  controlType: string = '';
+  dataValue: string = '';
+  refType: string = '';
+  refValue: string = '';
+  multiselect: boolean = false;
+  rank: number = 0;
+  rankIcon: string = '';
+  isRequired: boolean = false;
   defaultValue: string;
   sorting: number;
-  note: string;
+  note: string = '';
   rowSize: string;
-  columnWidth: string;
-  columnBackground: string;
-  textColorSet: string;
-  colorSet: string;
-  iconSet: string;
+  columnWidth: number = 0;
+  columnBackground: string = '';
+  textColorSet: string = '';
+  colorSet: string = '';
+  iconSet: string = '';
 }

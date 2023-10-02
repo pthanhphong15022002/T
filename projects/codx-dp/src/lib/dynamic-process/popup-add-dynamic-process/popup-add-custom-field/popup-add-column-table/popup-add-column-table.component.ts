@@ -23,7 +23,9 @@ import {
 } from 'codx-core';
 import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
-import { utils } from 'xlsx';
+
+import { PopupAddVllCustomComponent } from '../popup-add-vll-custom/popup-add-vll-custom.component';
+import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -108,6 +110,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   maxNumber = 0;
   listColumns = [];
   isChecked = false;
+  formModelTable: FormModel;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -115,19 +118,25 @@ export class PopupAddColumnTableComponent implements OnInit {
     private callfc: CallFuncService,
     private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
-
+    private dpService: CodxDpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.formModelTable = this.dialog.formModel;
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
     this.listColumns = dt?.data?.listColumns;
     this.user = dt?.data?.user;
     this.action = dt?.data?.action;
-    this.processNo = dt?.data?.processNo; //de sinh vll
+
     this.titleAction = dt?.data?.titleAction;
     this.grvSetup = dt?.data?.grvSetup;
     this.loaded = dt?.data?.loaded; ///da load data Vll
+    //vll
+    this.processNo = dt?.data?.processNo; //de sinh vll
+    this.maxNumber = dt?.data?.maxNumber ?? 0;
+    this.listVllCus = dt?.data?.listVllCus ?? [];
+    this.listVll = dt?.data?.listVll ?? [];
 
     if (this.action == 'add' || this.action == 'copy')
       this.column.recID = Util.uid();
@@ -204,35 +213,68 @@ export class PopupAddColumnTableComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
+    let isExit = this.listColumns.some((x) => x.fieldName == format);
+    if (isExit) {
+      this.notiService.notifyCode(
+        'DP026',
+        0,
+        '"' + this.grvSetup['FieldName']?.headerText + '"'
+      );
+      return;
+    }
     this.column.fieldName = format;
   }
 
   async clickAddVll() {
     // 'add vll'
-    // if (!this.crrVll) {
-    //   let time = 500;
-    //   if (this.maxNumber > 0) {
-    //     if (!this.crrValueFirst) {
-    //       this.crrVll = new tempVllDP();
-    //       this.crrVll.language = this.user.language;
-    //       this.crrVll.createdBy = this.user.userID;
-    //       this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-    //       this.crrVll.version = 'x00.01';
-    //     }
-    //     if (!this.processNo) {
-    //       this.processNo = await firstValueFrom(
-    //         this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-    //       );
-    //     }
-    //     this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
-    //   }
-    // }
-    // if (this.crrVll?.defaultValues) this.changeFormVll();
-    // else this.datasVll = [];
-    // let option = new DialogModel();
-    // option.FormModel = this.dialog.formModel;
-    // option.zIndex = 1099;
-    // // this.dialogVll = this.callfc.openForm(this.addVll, '', 500, 550, '');
+    let action = !this.column.refValue ? 'add' : 'edit';
+    if (!this.crrVll) {
+      if (this.maxNumber > 0) {
+        if (!this.crrValueFirst) {
+          this.crrVll = new tempVllDP();
+          this.crrVll.language = this.user.language;
+          this.crrVll.createdBy = this.user.userID;
+          this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
+          this.crrVll.version = 'x00.01';
+        }
+        if (!this.processNo) {
+          this.processNo = await firstValueFrom(
+            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+          );
+        }
+        this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
+      } else await this.getDefaultVll(500);
+    }
+
+    if (this.crrVll?.defaultValues) this.changeFormVll();
+    else this.datasVll = [];
+
+    let option = new DialogModel();
+    option.FormModel = this.dialog.formModel;
+    option.zIndex = 1099;
+
+    let obj = {
+      data: this.crrVll,
+      datasVll: this.datasVll,
+      action: action,
+    };
+    let dialogVll = this.callfc.openForm(
+      PopupAddVllCustomComponent,
+      '',
+      500,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogVll.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.crrVll = JSON.parse(JSON.stringify(res.event));
+        this.beforeSaveVll(this.crrVll);
+        this.maxNumber = action == 'edit' ? this.maxNumber : this.maxNumber + 1;
+      }
+    });
   }
 
   closeDialog() {}
@@ -353,13 +395,16 @@ export class PopupAddColumnTableComponent implements OnInit {
   //   this.crrVll[e.column] = e.data;
   // }
 
-  loadDataVll() {
+  async loadDataVll() {
     if (this.loaded) return;
+    if (!this.processNo) {
+      this.processNo = await firstValueFrom(
+        this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+      );
+    }
     this.requestTemp.entityName = 'SYS_ValueList';
-    // this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
-    // this.requestTemp.dataValue = this.user.language + ';DPF';
-    this.requestTemp.predicate = 'Language=@0 ';
-    this.requestTemp.dataValue = this.user.language;
+    this.requestTemp.predicate = 'Language=@0 && ListName.StartsWith(@1)';
+    this.requestTemp.dataValue = this.user.language + ';DPF' + this.processNo;
     this.requestTemp.pageLoading = false; //load all
 
     this.fetch().subscribe((item) => {
@@ -574,10 +619,10 @@ export class PopupAddColumnTableComponent implements OnInit {
       }
 
       if (this.loaded) {
-        // if (!this.processNo) {
-        //   // this.processNo = await firstValueFrom(
-        //   //   this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
-        //   // );
+        if (!this.processNo)
+          this.processNo = await firstValueFrom(
+            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+          );
 
         this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
       } else {

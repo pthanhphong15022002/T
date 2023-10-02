@@ -1,8 +1,10 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
   AuthService,
   AuthStore,
   CacheService,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -10,6 +12,7 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
@@ -26,16 +29,19 @@ export class PopupOverTimeComponent extends UIComponent {
   viewOnly = false;
   dialogRef: DialogRef;
   formModel: FormModel;
-  title: string;
+  // title: string;
   grView: any;
   fromTime: string;
   toTime: string;
+  formGroup: FormGroup;
+  employeeObj;
   @ViewChild('form') form: any;
 
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
+    private hrService: CodxHrService,
     private authService: AuthService,
     private cacheService: CacheService,
     private authStore: AuthStore,
@@ -48,28 +54,32 @@ export class PopupOverTimeComponent extends UIComponent {
     this.funcType = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
-    if (dialogData?.data[4] != null && dialogData?.data[4] == true) {
-      this.viewOnly = true;
+
+    //data employee login if exists
+    if (dialogData?.data[4]) {
+      this.employeeObj = dialogData?.data[4];
     }
+
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
 
-    console.log(this.data);
-    // this.form?.formGroup.patchValue(this.data);
-
-    if (this.funcType != 'add') {
-      let tmpStartTime = new Date(this.data?.fromTime);
-      let tmpEndTime = new Date(this.data?.toTime);
-      this.fromTime =
-        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-      this.toTime =
-        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+    if (this.funcType === 'add') {
+      this.data.fromDate = null;
+      this.data.toDate = null;
     }
+    // if (this.funcType != 'add') {
+    //   let tmpStartTime = new Date(this.data?.fromTime);
+    //   let tmpEndTime = new Date(this.data?.toTime);
+    //   this.fromTime =
+    //     ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+    //     ':' +
+    //     ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+    //   this.toTime =
+    //     ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+    //     ':' +
+    //     ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+    // }
   }
 
   getGrvSetup() {
@@ -82,14 +92,107 @@ export class PopupOverTimeComponent extends UIComponent {
       });
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getGrvSetup();
 
-  setTitle(e: any) {
-    this.title = this.tmpTitle;
-    this.detectorRef.detectChanges();
+    this.hrService
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName,
+        this.formModel
+      )
+      .then((fg) => {
+        if (fg) {
+          this.formGroup = fg;
+          this.formGroup.patchValue(this.data);
+        }
+      });
   }
 
-  valueChange(e) {}
+  valueChange(e) {
+    if (e?.field) {
+      if (e.data instanceof Object) {
+        this.data[e.field] = e.data.value;
+      } else {
+        this.data[e.field] = e.data;
+      }
+    }
+  }
 
-  onSaveForm() {}
+  handleSelectEmp(evt) {
+    if (evt.data) {
+      this.getEmployeeInfoById(evt.data);
+    } else {
+      delete this.employeeObj;
+    }
+  }
+
+  getEmployeeInfoById(empId: string) {
+    this.api
+      .execSv<any>(
+        'HR',
+        'HR',
+        'EmployeesBusiness',
+        'GetEmployeeByUserIDAsync',
+        [empId, 'getEmployee']
+      )
+      .subscribe((res) => {
+        this.employeeObj = res;
+
+        //Set employee data to field
+
+        this.data.orgUnitID = this.employeeObj.orgUnitID;
+
+        this.data.positionID = this.employeeObj.positionID;
+      });
+  }
+
+  valueToTimeChange(e) {
+    if (e.data.toDate) {
+      this.data[e.field] = e.data.toDate;
+    }
+  }
+
+  Add(data: any) {
+    return this.api.execSv<any>(
+      'PR',
+      'ERM.Business.PR',
+      'TimeKeepingRequest',
+      'AddAsync',
+      data
+    );
+  }
+
+  validateForm() {
+    console.log(this.data);
+    if (!this.data.fromDate) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grView['fromDate']['headerText'] + '"'
+      );
+      return false;
+    }
+    if (!this.data.toDate) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grView['toDate']['headerText'] + '"'
+      );
+      return false;
+    } else return true;
+  }
+
+  onSaveForm() {
+    if (this.validateForm() === true) {
+      console.log(this.data);
+      if (this.funcType === 'add') {
+        this.data.requestType = 'OT';
+
+        this.Add(this.data).subscribe((res) => {
+          console.log(res);
+        });
+      }
+    }
+  }
 }

@@ -403,12 +403,9 @@
             <tr>
               <ng-container *ngFor="let fieldFormat of formatViewTable(value)">
                 <td class="ps-4">
-                  <!-- <ng-container
-                  [ngTemplateOutlet]="viewDataValue"
-                  [ngTemplateOutletContext]="{
-                    $implicit: fieldFormat
-                  }"
-                ></ng-container> -->
+                  <codx-fields-format-value
+                    [data]="fieldFormat"
+                  ></codx-fields-format-value>
                 </td>
               </ng-container>
               <td>

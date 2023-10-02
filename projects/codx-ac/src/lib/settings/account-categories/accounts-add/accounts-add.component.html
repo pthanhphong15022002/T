@@ -1,7 +1,9 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
-  [dialog]="dialog" (setTitle)="setTitle()" [openMore]="true" [tabContent]="[tabDescription, tabestablish]"
-  [data]="accounts" class="ac-animation-slideRight">
+  [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish]" (setTitle)="setTitle($event)"
+  [data]="dataDefault" class="ac-animation-slideRight">
 </codx-layout-add>
+
+<!-- Start: TabDescription -->
 <ng-template #tabDescription>
   <ng-container *ngIf="form?.formGroup">
     <div class="row">
@@ -9,8 +11,8 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            [disabled]="keyField == 'AccountID' ? true : false || formType == 'edit' ? true : false"
-            field="accountID" (valueChange)="valueChange($event)">
+            [disabled]="form?.form?.data?._keyAuto == 'AccountID' ? true : false || form?.form?.data?._isEdit ? true : false"
+            field="accountID" (controlBlur)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -26,7 +28,7 @@
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="AccountName"></codx-label>
       <codx-input [Group]="form.formGroup" field="accountName"
-        [formModel]="form.formModel" (valueChange)="valueChange($event)">
+        [formModel]="form.formModel" (controlBlur)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
@@ -44,16 +46,14 @@
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="multiCurrency" (valueChange)="valueChange($event)"
-        >
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="multiCurrency" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="MultiCurrency"></codx-label>
     </div>
     <div class="d-flex align-items-center mb-4">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="subLGControl" (valueChange)="valueChange($event)"
-        >
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="subLGControl" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="SubLGControl"></codx-label>
@@ -62,7 +62,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="SubLGType"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+          <codx-input [disabled]="!form.form.data.subLGControl ? true : false" [Group]="form.formGroup" [formModel]="form.formModel"
             field="subLGType" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -70,7 +70,7 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="ObjectID"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
+          <codx-input [disabled]="!form.form.data.subLGControl ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
           (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -78,21 +78,20 @@
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="postDetail" (valueChange)="valueChange($event)"
-        >
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="postDetail" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="PostDetail"></codx-label>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="note"
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="note" tab-index = "13"
         (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="d-flex align-items-center">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)"
+        <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)" tab-index=""
         [Group]="form.formGroup">
         </codx-input>
       </div>
@@ -100,6 +99,9 @@
     </div>
   </ng-container>
 </ng-template>
+<!-- End: TabDescription -->
+
+<!-- Start: TabEstablish -->
 <ng-template #tabestablish>
   <ng-container *ngIf="form?.formGroup">
     <div class="mb-3 text-primary fw-bold fs-6">
@@ -107,7 +109,7 @@
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM1Control"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.diM1Control"
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
         field="diM1Control" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
@@ -119,25 +121,25 @@
     </div> -->
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM2Control"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.diM2Control"
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
         field="diM2Control" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM3Control"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.diM3Control"
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
         field="diM3Control" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="LoanControl"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.loanControl"
-        field="loanControl" (valueChange)="valueChangeloan($event)">
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+        field="loanControl" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="AssetControl"></codx-label>
-      <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.assetControl"
+      <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
         field="assetControl" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
@@ -148,7 +150,7 @@
       <div class="col">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="BudgetControl"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.budgetControl"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
             field="budgetControl" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -156,7 +158,7 @@
       <div class="col">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="balControl"></codx-label>
-          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" [crrValue]="accounts.balControl"
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
             field="balControl" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
@@ -164,11 +166,27 @@
     </div>
   </ng-container>
 </ng-template>
+<!-- End: TabEstablish -->
+
+<!-- Start: Footer -->
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
-      <codx-label fiedName="lblSave" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
-        default="Lưu"></codx-label>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+      style="border: 1px solid var(--primary-dark) !important" type="button"
+      (keydown.enter)="onSaveAdd(); $event.preventDefault()" (click)="onSaveAdd()" class="btn btn-md btn-light-primary me-2">
+      <div class="d-flex align-items-center">
+        <i class="icon-add_to_photos icon-16"></i>
+        <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+      </div>
+    </button>
+    <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+      <div class="d-flex align-items-center">
+        <i class="icon-save_alt icon-16"></i>
+        <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+      </div>
     </button>
   </div>
 </ng-template>
+<!-- End: Footer -->
