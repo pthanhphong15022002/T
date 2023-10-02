@@ -6,29 +6,25 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   CRUDService,
   DataRequest,
   FormModel,
-  SidebarModel,
-  UIComponent,
+  UIComponent
 } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../../journals/journals.service';
 import { groupBy } from '../../../utils';
 import { IAcctTran } from '../interfaces/IAcctTran.interface';
 import { ISalesInvoice } from '../interfaces/ISalesInvoice.interface';
 import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from '../models/TableColumn.model';
-import { SalesinvoicesAddComponent } from '../salesinvoices-add/salesinvoices-add.component';
-import { SalesinvoicesComponent } from '../salesinvoices.component';
-import { MF, fmSalesInvoicesLines } from '../salesinvoices.service';
+import {
+  SalesInvoiceService,
+  fmSalesInvoicesLines
+} from '../salesinvoices.service';
 
 @Component({
   selector: 'lib-salesinvoices-detail',
@@ -53,7 +49,6 @@ export class SalesinvoicesDetailComponent
   loading: boolean = false;
   acctLoading: boolean = false;
 
-  journal: IJournal;
   viewData: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
@@ -70,13 +65,11 @@ export class SalesinvoicesDetailComponent
 
   constructor(
     private injector: Injector,
-    parentComponent: SalesinvoicesComponent,
     private acService: CodxAcService,
-    private journalService: JournalService
+    private salesInvoiceService: SalesInvoiceService
   ) {
     super(injector);
 
-    this.journal = parentComponent?.journal;
     this.fmSalesInvoicesLines = fmSalesInvoicesLines;
 
     this.columns = [
@@ -172,75 +165,18 @@ export class SalesinvoicesDetailComponent
   //#endregion
 
   //#region Event
-  onClickMF(e, data): void {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-    }
+  async onInitMF(mfs: any, data: ISalesInvoice): Promise<void> {
+    await this.salesInvoiceService.onInitMFAsync(mfs, data);
   }
 
-  onInitMF(mfs: any, data: ISalesInvoice): void {
-    // console.log(mfs.filter((f) => !f.disabled));
-    let disabledFuncs: MF[] = [
-      MF.GuiDuyet,
-      MF.GhiSo,
-      MF.HuyYeuCauDuyet,
-      MF.In,
-      MF.KhoiPhuc,
-      MF.KiemTraTinhHopLe,
-    ];
-    switch (data.status) {
-      case '7': // phac thao
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
-        );
-        break;
-      case '1': // da hop le
-        if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
-        } else {
-          disabledFuncs = disabledFuncs.filter(
-            (f) => f !== MF.GhiSo && f !== MF.In
-          );
-        }
-        break;
-      case '3': // cho duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
-        );
-        break;
-      case '5': // da duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-      case '6': // da ghi so
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KhoiPhuc && f !== MF.In
-        );
-        break;
-      case '9': // khoi phuc
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-    }
-
-    for (const mf of mfs) {
-      if (disabledFuncs.includes(mf.functionID)) {
-        mf.disabled = true;
-      }
-    }
+  onClickMF(e, data): void {
+    this.salesInvoiceService.onClickMF(
+      e,
+      data,
+      this.functionName,
+      this.formModel,
+      this.dataService
+    );
   }
 
   onClickShowLess(): void {
@@ -250,95 +186,9 @@ export class SalesinvoicesDetailComponent
   //#endregion
 
   //#region Method
-  getDefault(): Observable<any> {
-    return this.api.exec('AC', 'SalesInvoicesBusiness', 'GetDefaultAsync', [
-      this.journal.journalNo,
-    ]);
-  }
-
-  delete(data: ISalesInvoice): void {
-    this.dataService.delete([data], true).subscribe();
-  }
-
-  edit(data): void {
-    console.log('edit', { data });
-
-    const copiedData = { ...data };
-    this.dataService.dataSelected = copiedData;
-    this.dataService.edit(copiedData).subscribe((res) => {
-      let options = new SidebarModel();
-      options.DataService = this.dataService;
-      options.FormModel = this.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        SalesinvoicesAddComponent,
-        {
-          formType: 'edit',
-          formTitle: this.functionName,
-        },
-        options,
-        this.formModel.funcID
-      );
-    });
-  }
-
-  copy(data): void {
-    console.log('copy', { data });
-
-    this.dataService.dataSelected = data;
-    this.dataService.copy().subscribe((res) => {
-      let options = new SidebarModel();
-      options.DataService = this.dataService;
-      options.FormModel = this.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        SalesinvoicesAddComponent,
-        {
-          formType: 'add',
-          formTitle: this.functionName,
-        },
-        options,
-        this.formModel.funcID
-      );
-    });
-  }
-
-  export(data): void {
-    const gridModel = new DataRequest();
-    gridModel.formName = this.formModel.formName;
-    gridModel.entityName = this.formModel.entityName;
-    gridModel.funcID = this.formModel.funcID;
-    gridModel.gridViewName = this.formModel.gridViewName;
-    gridModel.page = this.dataService.request.page;
-    gridModel.pageSize = this.dataService.request.pageSize;
-    gridModel.predicate = this.dataService.request.predicates;
-    gridModel.dataValue = this.dataService.request.dataValues;
-    gridModel.entityPermission = this.formModel.entityPer;
-    gridModel.groupFields = 'createdBy'; //Chưa có group
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-
   loadDetailData(): void {
     if (!this.viewData) {
       return;
-    }
-
-    if (!this.journal) {
-      this.journalService
-        .getJournal$(this.viewData.journalNo)
-        .subscribe((res) => {
-          this.journal = res;
-        });
     }
 
     this.expanding = false;

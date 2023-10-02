@@ -463,6 +463,7 @@ export class PopupAddDealComponent
         case 'R':
         case 'A':
         case 'L':
+        case 'TA':
           result = event?.e;
           break;
         case 'C':
@@ -550,7 +551,8 @@ export class PopupAddDealComponent
   }
 
   lstContactEmit(e) {
-    this.lstContactDeal = e != null && e?.length > 0 ? JSON.parse(JSON.stringify(e)) : [];
+    this.lstContactDeal =
+      e != null && e?.length > 0 ? JSON.parse(JSON.stringify(e)) : [];
     this.changeDetectorRef.detectChanges();
     // if (!this.isCheckContact) this.isCheckContact = true;
   }

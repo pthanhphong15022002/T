@@ -1699,6 +1699,7 @@ export class PdfComponent
     let data = {
       data: model,
       setupShowForm: setupShowForm,
+      isPublic: this.isPublic,
     };
 
     switch (area.labelType) {
@@ -2077,6 +2078,7 @@ export class PdfComponent
       email: this.signerInfo?.userID, //email của approver là đối tác
       fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
+      isPublic: this.isPublic,
     };
     let data = {
       data: model,

@@ -410,7 +410,7 @@ export class PopupConvertLeadComponent implements OnInit {
           this.customer.provinceID = lstDis?.ProvinceID;
           this.customer.districtID = lstDis?.DistrictID;
           this.customer.wardID = lstDis?.WardID;
-        }else{
+        } else {
           this.customer.provinceID = null;
           this.customer.districtID = null;
           this.customer.wardID = null;
@@ -699,6 +699,7 @@ export class PopupConvertLeadComponent implements OnInit {
         case 'R':
         case 'A':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
         case 'C':

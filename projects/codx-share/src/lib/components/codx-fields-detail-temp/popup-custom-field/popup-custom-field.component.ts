@@ -13,7 +13,7 @@ import {
   styleUrls: ['./popup-custom-field.component.css'],
 })
 export class PopupCustomFieldComponent implements OnInit {
-  fiels = [];
+  fields = [];
   dialog: any;
   titleHeader = '';
   currentRate = 3.5;
@@ -35,7 +35,7 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.fiels = JSON.parse(JSON.stringify(dt.data.data));
+    this.fields = JSON.parse(JSON.stringify(dt.data.data));
     this.titleHeader = dt.data?.titleHeader;
     this.objectIdParent = dt.data?.objectIdParent;
     this.customerID = dt.data?.customerID;
@@ -63,13 +63,14 @@ export class PopupCustomFieldComponent implements OnInit {
         case 'A':
         case 'C':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }
 
-      var index = this.fiels.findIndex((x) => x.recID == field.recID);
+      var index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
-        this.fiels[index].dataValue = result;
+        this.fields[index].dataValue = result;
       }
     }
   }
@@ -107,11 +108,11 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   onSave() {
-    if (this.fiels?.length == 0 || !this.isAddComplete) return;
+    if (this.fields?.length == 0 || !this.isAddComplete) return;
 
     let check = true;
     let checkFormat = true;
-    this.fiels.forEach((f) => {
+    this.fields.forEach((f) => {
       if (!f.dataValue || f.dataValue?.toString().trim() == '') {
         if (f.isRequired) {
           this.notiService.notifyCode('SYS009', 0, '"' + f.title + '"');
@@ -122,7 +123,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    var data = [this.fiels[0]?.stepID, this.fiels];
+    var data = [this.fields[0]?.stepID, this.fields];
     this.api
       .exec<any>(
         'DP',
@@ -132,8 +133,8 @@ export class PopupCustomFieldComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(this.fiels);
-          this.notiService.alertCode('SYS007');
+          this.dialog.close(this.fields);
+          this.notiService.notifyCode('SYS007');
         } else this.dialog.close();
       });
   }

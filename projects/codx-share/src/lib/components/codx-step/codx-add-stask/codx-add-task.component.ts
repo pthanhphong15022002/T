@@ -276,7 +276,7 @@ export class CodxAddTaskComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
-    if(event?.field == 'isOnline' && !event?.data){
+    if (event?.field == 'isOnline' && !event?.data) {
       this.stepsTasks.reference = '';
     }
   }
@@ -660,6 +660,7 @@ export class CodxAddTaskComponent implements OnInit {
         case 'A':
         case 'C':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }
@@ -742,13 +743,7 @@ export class CodxAddTaskComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 3000;
-    this.dialogPopupLink = this.callfc.openForm(
-      addLink,
-      '',
-      500,
-      300,
-      ''
-    );
+    this.dialogPopupLink = this.callfc.openForm(addLink, '', 500, 300, '');
     this.dialogPopupLink.closed.subscribe((res: any) => {
       if (res?.event?.attendee != null || res?.event?.owner != null) {
         this.stepsTasks.reference = res?.event?.attendee || '';
