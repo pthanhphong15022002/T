@@ -44,9 +44,9 @@
       <div
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
-        ngbTooltip="Thêm công việc"
+        ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
         placement="top"
-        *ngIf="dataSelected?.status == '2'"
+        *ngIf="dataSelected?.status == '2' && dataSelected?.full"
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
