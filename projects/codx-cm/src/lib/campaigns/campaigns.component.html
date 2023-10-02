@@ -38,6 +38,7 @@
     [footer]="footerCard"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
+    (dblclick)="doubleClickDetail(data)"
   >
   </codx-card-img>
   <ng-template #footerCard>
@@ -296,3 +297,30 @@
   ></codx-campaigns-detail>
 </ng-template>
 <!--End List detail-->
+
+<ng-template #templateViewDetail >
+  <codx-form [body]="dbClickDetail" [customToolbar]="headerToolBar" [dialog]="dialogViewDetail"> </codx-form>
+  <ng-template #headerToolBar>
+    <div class="d-flex justify-content-end" style="width: 100% !important;">
+      <button
+        class="button-close"
+        style="border: none; outline: none; background: none;"
+        (click)="dialogViewDetail.close()"
+      >
+        <i class="icon-close icon-18 text-hover-danger p-1"></i>
+      </button>
+    </div>
+  </ng-template>
+  <ng-template #dbClickDetail>
+    <div class="scroll-detail">
+      <codx-campaigns-detail
+        [dataService]="view.dataService"
+        [dataSelected]="dataSelected"
+        [formModel]="view.formModel"
+        [gridViewSetup]="gridViewSetup"
+        (clickMoreFunc)="clickMoreFunc($event)"
+        [isDoubleClick]="true"
+      ></codx-campaigns-detail>
+    </div>
+  </ng-template>
+</ng-template>
