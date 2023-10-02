@@ -283,16 +283,16 @@
                       ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
-                        default="Khách hàng tiềm năng"
+                        default="Khách hàng"
                         [formModel]="formModel"
-                        name="lblCustomerLeads"
+                        name="lblCustomers"
                       ></codx-label>
                     </div>
                   </ng-template>
                   <ng-template #content>
                     <codx-campaign-contacts
                       [transID]="dataSelected?.recID"
-                      [objectType]="'3'"
+                      [objectType]="'1'"
                       [isShow]="isShow"
                     ></codx-campaign-contacts>
                   </ng-template>
@@ -305,16 +305,16 @@
                       ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
-                        default="Khách hàng"
+                        default="Khách hàng tiềm năng"
                         [formModel]="formModel"
-                        name="lblCustomers"
+                        name="lblCustomerLeads"
                       ></codx-label>
                     </div>
                   </ng-template>
                   <ng-template #content>
                     <codx-campaign-contacts
                       [transID]="dataSelected?.recID"
-                      [objectType]="'1'"
+                      [objectType]="'3'"
                       [isShow]="isShow"
                     ></codx-campaign-contacts>
                   </ng-template>
