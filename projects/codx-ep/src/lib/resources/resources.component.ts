@@ -534,7 +534,7 @@ export class ResourcesComponent extends UIComponent {
         if (!x?.event) this.view.dataService.clear();
         if (x?.event != null) {
           x.event.modifiedOn = new Date();
-          this.view.dataService.add(x?.event).subscribe();
+          this.view.dataService.update(x?.event).subscribe();
         }
       });
     });
