@@ -1,5 +1,6 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
+  AuthStore,
   ButtonModel,
   DialogRef,
   FormModel,
@@ -27,6 +28,7 @@ export class EmployeeQuitComponent extends UIComponent {
   console = console;
   constructor(
     inject: Injector,
+    private authStore: AuthStore,
     private hrService: CodxHrService,
     private notify: NotificationsService,
     private activatedRoute: ActivatedRoute,
@@ -50,6 +52,8 @@ export class EmployeeQuitComponent extends UIComponent {
   editStatusObj;
   dialogEditStatus: any;
   fmContract;
+  user;
+  userLogin;
 
   //More function
   @ViewChild('templateUpdateStatus', { static: true })
@@ -97,6 +101,21 @@ export class EmployeeQuitComponent extends UIComponent {
     this.fmContract.gridViewName = 'grvEContracts';
     this.fmContract.formName = 'EContracts';
 
+    this.user = this.authStore.get();
+    if (this.user.userID) {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeByUserIDAsync',
+          this.user.userID
+        )
+        .subscribe((res: any) => {
+          this.userLogin = res;
+        });
+    }
+
     this.GetGvSetup();
   }
 
@@ -136,7 +155,11 @@ export class EmployeeQuitComponent extends UIComponent {
             res,
             this.view.formModel.entityName,
             this.view.formModel.funcID,
-            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            this.view.function.description +
+              ' - ' +
+              this.itemDetail.decisionNo +
+              ' - ' +
+              this.itemDetail.employeeID,
             (res: any) => {
               if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
@@ -191,6 +214,10 @@ export class EmployeeQuitComponent extends UIComponent {
     this.editStatusObj.employeeID = data.emp.employeeID;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
+    if (!this.view.formModel.currentData) {
+      this.view.formModel.currentData = this.editStatusObj;
+    }
+
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
@@ -336,7 +363,7 @@ export class EmployeeQuitComponent extends UIComponent {
         formGroup: this.formGroup,
         actionType: actionType,
         dataObj: data,
-        empObj: this.currentEmpObj,
+        empObj: this.currentEmpObj ?? this.userLogin,
         headerText: actionHeaderText,
         funcID: this.view.funcID,
       },

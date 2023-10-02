@@ -6,6 +6,8 @@
   [entityName]="entityName"
   [className]="className"
   [method]="method"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
@@ -19,6 +21,7 @@
   (searchChanged)="searchChanged($event)"
   (onActions)="onActions($event)"
   (onMoreMulti)="onMoreMulti($event)"
+  [viewActiveType]="viewActiveType"
 ></codx-views>
 
 <ng-template #itemTemplate let-data>

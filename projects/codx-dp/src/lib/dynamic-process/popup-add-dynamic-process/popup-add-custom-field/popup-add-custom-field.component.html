@@ -104,12 +104,33 @@
           field.dataType != 'C'
         "
       >
-        <codx-label
-          fiedName="DataFormat"
-          [formModel]="form.formModel"
-          [default]="'Định dạng dữ liệu'"
-        >
-        </codx-label>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center">
+            <codx-label
+              fiedName="DataFormat"
+              [formModel]="form.formModel"
+              [default]="'Định dạng dữ liệu'"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="d-flex justify-content-end"
+            *ngIf="field.dataType == 'TA'"
+          >
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-light-primary me-2"
+              (click)="clickSettingTable()"
+            >
+              <i class="icon-settings icon-16"></i>
+            </button>
+          </div>
+        </div>
+        <ng-container
+          *ngIf="field.dataType == 'TA'"
+          [ngTemplateOutlet]="tempViewTable"
+        ></ng-container>
+
         <codx-input
           *ngIf="field.dataType == 'N'"
           type="valuelist"
@@ -243,6 +264,7 @@
             <codx-input
               *ngIf="field.dataFormat == 'C'"
               type="combobox"
+              [refType]="field.refType"
               [refValue]="field.refValue"
             >
             </codx-input>
@@ -264,7 +286,7 @@
                 [dataSource]="datasVllCrr"
                 [mode]="'Default'"
                 [fields]="fieldsCrrVll"
-                [value]=""
+                [value]="crrValueFirst"
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
               ></ejs-multiselect>
@@ -375,8 +397,40 @@
   </ng-template>
 </codx-form>
 
+<ng-template #tempViewTable>
+  <table class="table table-row-bordered mt-3" *ngIf="listColumns.length">
+    <thead>
+      <tr class="bg-gray-100">
+        <ng-container *ngFor="let item of listColumns; let index = index">
+          <th scope="col" class="fw-bold ps-4">
+            <span>{{ item?.title }}</span>
+          </th>
+        </ng-container>
+        <!-- <th scope="col" class="w-100px fw-bold"></th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <ng-container *ngFor="let item of listColumns; let index = index">
+          <td class="ps-4">{{ item?.note }}</td>
+        </ng-container>
+        <!-- <td>
+          <div class="d-flex justify-content-end align-items-center">
+            <button class="btn btn-sm btn-icon btn-light-warning">
+              <i class="icon icon-14 icon-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-icon btn-light-danger ms-2">
+              <i class="icon icon-14 icon-close"></i>
+            </button>
+          </div>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
+
 <!-- //form Add VLL -->
-<ng-template #addVll>
+<!-- <ng-template #addVll>
   <codx-form
     [headerText]="titleForm"
     [body]="bodyVll"
@@ -420,8 +474,6 @@
           </codx-input>
         </div>
         <div class="form-group">
-          <!-- labelPosition="After"
-      label="Cho phép chọn nhiều giá trị" -->
           <codx-input
             class="me-2"
             type="checkbox"
@@ -480,7 +532,6 @@
                 ></span>
               </div>
             </div>
-            <!-- </div> -->
           </ng-container>
 
           <div class="form-group">
@@ -519,9 +570,9 @@
             </ng-container>
             <ng-container *ngIf="this.crrVll?.multiSelect">
               <ejs-multiselect
-                [dataSource]="datasVllCrr"
+                [dataSource]="datasVll"
                 [mode]="'Default'"
-                [fields]="fieldsCrrVll"
+                [fields]="fieldsResourceVll"
                 [value]=""
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
@@ -543,4 +594,4 @@
       </div>
     </ng-template>
   </codx-form>
-</ng-template>
+</ng-template> -->

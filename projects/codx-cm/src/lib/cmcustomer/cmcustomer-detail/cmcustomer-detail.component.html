@@ -129,26 +129,13 @@
                       *ngIf="dataSelected?.phone || dataSelected?.mobile"
                       [ngbTooltip]="popupAllowCall"
                     >
+                      <ng-template #popupAllowCall>
+                        <codx-label
+                          [fiedName]="funcID == 'CM0105' ? 'Phone' : 'Mobile'"
+                          [formModel]="formModel"
+                        ></codx-label>
+                      </ng-template>
                       <span
-                        [ngClass]="
-                          dataSelected?.allowCall
-                            ? 'text-primary text-hover-primary'
-                            : 'icon-phonelink_erase me-2'
-                        "
-                        class="icon-14 text-gray-700"
-                        ><ng-template #popupAllowCall>
-                          <codx-label
-                            name="lblAllowCall"
-                            [formModel]="formModel"
-                            [default]="
-                              dataSelected?.allowCall
-                                ? 'Cho phép điện thoại'
-                                : 'Không cho phép điện thoại'
-                            "
-                          ></codx-label> </ng-template
-                      ></span>
-                      <span
-                        *ngIf="dataSelected?.allowCall"
                         class="text-gray-600 text-primary text-hover-primary"
                         ><span
                           *ngIf="funcID == 'CM0105'"
@@ -167,45 +154,23 @@
                               | async
                           "
                         >
-                          {{ dataSelected?.mobile }}
-                        </span></span
-                      >
-                      <span
-                        *ngIf="!dataSelected?.allowCall"
-                        class="text-gray-600"
-                        ><span *ngIf="funcID == 'CM0105'">
-                          {{ dataSelected?.phone }} </span
-                        ><span *ngIf="funcID == 'CM0102'">
-                          {{ dataSelected?.mobile }}
-                        </span></span
-                      >
+                        </span
+                      ></span>
                     </div>
                     <div
                       class="d-flex align-items-center"
                       *ngIf="dataSelected?.email || dataSelected?.personalEmail"
                       [ngbTooltip]="popupAllowEmail"
                     >
-                      <span
-                        [ngClass]="
-                          dataSelected?.allowEmail
-                            ? 'text-primary text-hover-primary'
-                            : 'icon-print_disabled me-2'
-                        "
-                        class="icon-14 text-gray-700"
-                        ><ng-template #popupAllowEmail>
-                          <codx-label
-                            name="lblAllowEmail"
-                            [formModel]="formModel"
-                            [default]="
-                              dataSelected?.allowEmail
-                                ? 'Cho phép gửi mail'
-                                : 'Không cho phép gửi mail'
-                            "
-                          ></codx-label> </ng-template
-                      ></span>
-                      <span
-                        *ngIf="dataSelected?.allowEmail"
-                        class="text-gray-900 text-primary"
+                      <ng-template #popupAllowEmail>
+                        <codx-label
+                          [fiedName]="
+                            funcID == 'CM0105' ? 'Email' : 'PersonalEmail'
+                          "
+                          [formModel]="formModel"
+                        ></codx-label
+                      ></ng-template>
+                      <span class="text-gray-900 text-primary"
                         ><span
                           *ngIf="funcID == 'CM0105'"
                           [innerHTML]="
@@ -225,15 +190,6 @@
                         >
                         </span
                       ></span>
-                      <span
-                        *ngIf="!dataSelected?.allowEmail"
-                        class="text-gray-900"
-                        ><span *ngIf="funcID == 'CM0105'">
-                          {{ dataSelected?.email }} </span
-                        ><span *ngIf="funcID == 'CM0102'">
-                          {{ dataSelected?.personalEmail }}
-                        </span></span
-                      >
                     </div>
                   </div>
                   <div
@@ -264,6 +220,7 @@
                     *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
                   >
                     <codx-vll
+                      [ngbTooltip]="toolTipStatus"
                       [name]="gridViewSetup?.Status?.referedValue"
                       [field]="'Status'"
                       [value]="
@@ -278,6 +235,12 @@
                       class="badge badge-light badge-sm"
                     >
                     </codx-vll>
+                    <ng-template #toolTipStatus>
+                      <codx-label
+                        fiedName="Status"
+                        [formModel]="formModel"
+                      ></codx-label
+                    ></ng-template>
                   </div>
                   <div
                     class="d-flex justify-content-end w-100 mb-1"
@@ -559,6 +522,13 @@
                             : dataSelected?.status == '99'
                         "
                         (addressDefault)="addressDefault($event)"
+                        [isRole]="
+                          funcID == 'CM0101'
+                            ? !isAdmin
+                              ? user.userID == dataSelected.owner
+                              : true
+                            : true
+                        "
                       ></codx-address-cm>
                     </div>
                   </ng-template>
@@ -798,9 +768,8 @@
     [typeTask]="2"
     [customerID]="dataSelected?.recID"
     [owner]="dataSelected?.owner"
-    [isPause]="
-      (!isAdmin && user.userID != dataSelected.owner) ||
-      dataSelected?.status == '99'
-    "
+    [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false"
+    [isPause]="dataSelected?.status == '99'"
+    [entityName]="entityName"
   ></step-task>
 </ng-template>

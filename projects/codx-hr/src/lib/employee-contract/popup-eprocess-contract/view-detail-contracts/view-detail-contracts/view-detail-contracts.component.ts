@@ -134,7 +134,6 @@ export class ViewDetailContractsComponent implements OnInit {
       this.lstBenefit = JSON.parse(this.itemDetail.benefits);
     }
 
-    this.lstFile = [];
     this.getFileDataAsync(this.itemDetail?.recID);
   }
 
@@ -162,6 +161,7 @@ export class ViewDetailContractsComponent implements OnInit {
   }
 
   getFileDataAsync(pObjectID: string) {
+    this.lstFile = [];
     if (pObjectID) {
       this.api
         .execSv(

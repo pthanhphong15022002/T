@@ -14,8 +14,8 @@
     <div class="d-flex justify-content-between py-2 hhder">
       <div class="main-list">
         <div class="my-3 d-flex justify-content-between flex-column">
-          <div class="codx-breadcrumb">
-            <ol class="breadcrumb breadcrumb-dash fs-3 fw-semibold">
+          <div class="codx-breadcrumb mb-2">
+            <ol class="breadcrumb breadcrumb-dash fs-3 fw-bold">
               <li class="breadcrumb-item" *ngFor="let item of vll86">
                 <a
                   (click)="changePredicate(item.value, 'mainFilterValue')"
@@ -28,7 +28,7 @@
             </ol>
           </div>
           <div class="codx-breadcrumb">
-            <ol class="breadcrumb breadcrumb-dot fs-6 fw-semibold">
+            <ol class="breadcrumb breadcrumb-dot fs-6 fw-bold">
               <li
                 class="breadcrumb-item"
                 [ngClass]="
@@ -148,9 +148,9 @@
 </ng-template>
 
 <ng-template #titleTmp let-data>
-    <div class="d-flex py-3 gap-2">
+    <div class="d-flex py-3 gap-2 w-100" [title]="data?.journalDesc">
         <span [class]="data?.journalType | vll : 'AC064' : 'icon' | async"></span>
-        <div>
+        <!-- <div>
             <div class="fs-6 fw-bold text-dark w-100">
                 {{
                 vllJournalTypes064
@@ -159,7 +159,8 @@
             </div>
             <div class="fst-italic text-truncate" style="width: 174px" [title]="data?.journalDesc">{{ data?.journalDesc
                 }}</div>
-        </div>
+        </div> -->
+        <div class="fw-bold text-truncate">{{ data?.journalDesc }}</div>
     </div>
 </ng-template>
 

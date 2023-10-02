@@ -216,8 +216,10 @@ import { CodxViewReleaseSignFileComponent } from './components/codx-approval-pro
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 import { NgxCaptureModule } from 'ngx-capture';
+import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
+import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
-
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -362,6 +364,7 @@ const T_Component: Type<any>[] = [
 
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
+  CodxFieldsFormatValueComponent,
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
@@ -399,6 +402,7 @@ const T_Pipe: Type<any>[] = [
   FillterReferType,
   GroupModulePipe,
   FileSizePipe,
+  FormatDataValuePipe,
   TimeFromPipe
 ];
 
@@ -422,6 +426,7 @@ const T_Pipe: Type<any>[] = [
     CodxListReportsComponent,
     CodxFilesAttachmentComponent,
     CodxFilesAttachmentViewComponent,
+    PopupAddLineTableComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

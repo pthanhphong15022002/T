@@ -29,8 +29,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add-post.component';
-import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
-import { TooltipModule } from '@syncfusion/ej2-angular-popups';
+import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
 
 export const routes: Routes = [
   {
@@ -80,7 +79,7 @@ export const routes: Routes = [
     children: [
       {
         path: ':funcID',
-        component: CodxCalendarComponent,
+        component: COCalendarComponent,
       },
     ],
   },

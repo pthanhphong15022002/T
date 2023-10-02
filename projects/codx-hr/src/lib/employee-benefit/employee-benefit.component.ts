@@ -195,6 +195,10 @@ export class EmployeeBenefitComponent extends UIComponent {
     this.editStatusObj = data;
     this.currentEmpObj = data.emp;
     this.formGroup.patchValue(this.editStatusObj);
+    if (!this.view.formModel.currentData) {
+      this.view.formModel.currentData = this.editStatusObj;
+    }
+
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
       null,
@@ -244,7 +248,11 @@ export class EmployeeBenefitComponent extends UIComponent {
             this.dataCategory,
             this.view.formModel.entityName,
             this.view.formModel.funcID,
-            this.view.function.description + ' - ' + this.itemDetail.decisionNo,
+            this.view.function.description +
+              ' - ' +
+              this.itemDetail.decisionNo +
+              ' - ' +
+              this.itemDetail.employeeID,
             (res: any) => {
               if (res?.msgCodeError == null && res?.rowCount) {
                 this.notify.notifyCode('ES007');
@@ -462,12 +470,11 @@ export class EmployeeBenefitComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         if (actionType == 'add') {
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
         } else if (actionType == 'copy') {
-          console.log(res.event);
-          this.view.dataService.add(res.event[0], 0).subscribe((res) => {});
+          this.view.dataService.add(res.event, 0).subscribe((res) => {});
         } else if (actionType == 'edit') {
-          this.view.dataService.update(res.event[0]).subscribe((res) => {});
+          this.view.dataService.update(res.event).subscribe((res) => {});
         }
         this.df.detectChanges();
       }

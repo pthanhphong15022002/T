@@ -36,7 +36,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './pop-add-currency.component.html',
   styleUrls: [
     './pop-add-currency.component.css',
-    '../../../codx-ac.component.css',
+    '../../../codx-ac.component.scss',
   ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

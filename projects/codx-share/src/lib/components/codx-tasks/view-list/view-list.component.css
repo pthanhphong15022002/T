@@ -39,10 +39,10 @@ td p {
   min-width: 120px;
 }
 .taskPopoverClass {
-  width: 370px !important;
+  width: 320px !important;
 }
 .taskPopoverClass .popover-body {
-  width: 370px !important;
+  width: 320px !important;
   background-color: white;
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }

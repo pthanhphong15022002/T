@@ -1,0 +1,93 @@
+<codx-form
+    [headerText]="'Đã ghim'"
+    [dialog]="dialog"
+    [body]="body"
+>
+</codx-form>
+
+<ng-template #body>
+    <div class="d-flex align-items-center w-100 h-100">
+        <div class="d-flex flex-column w-300px h-100 scroll-y ws-bookmark-group border-right pe-10">
+            <div class="p-2 cursor-pointer" *ngFor="let item of listGroup" [class.active]="item?.functionID == index" (click)="selectedGroup(item)">
+                <span class="fw-bold">{{item?.customName}}</span>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100 h-100 ps-10 ">
+            <div class="d-flex align-items-center justify-content-between pb-5 w-100">
+                <div class="d-flex align-items-center justify-content-start w-200px ps-2" *ngIf="listBookMark && listBookMark.length > 0">
+                    <span lass="fw-bold">{{listBookMark.length}} items</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-end w-100">
+                    <codx-searchbar
+                        class="mt-1"
+                        [type]="'slide'"
+                        (searchEvent)="onSearch($event)"
+                    ></codx-searchbar>
+                    <codx-toolbar-choose
+                        class="mt-2 mx-2"
+                        [views]="viewList"
+                        (viewChange)="viewChanged($event)"
+                        (sortChange)="sortChanged($event)"
+                    >
+                    </codx-toolbar-choose>
+                    <codx-toolbar-more
+                        class="mt-2 me-2"
+                        [buttons]="fMoreFuncs"
+                        (buttonClick)="clickToolbarMore($event)"
+                    >
+                    </codx-toolbar-more>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap h-100 w-100 scroll-y">
+                <ng-container *ngIf="listBookMark && listBookMark.length > 0 , else defaulEmpt">
+                    <ng-container *ngFor="let item of listBookMark ; let i = index">
+                        <div class="d-flex w-250px h-270px mb-5">
+                            <codx-card-img
+                                imgCss="h-170px rounded "
+                                cardCss="border rounded h-100"
+                                [imageSrc]="item?.background || imgDefault"
+                                [footer]="footer"
+                                ngClass="h-100 mx-2 w-250px"
+                                (click)="selectedChange(item)"
+                            >
+                            </codx-card-img>
+                        </div>
+                      <ng-template #footer>
+                        <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: item }"></ng-container>
+                      </ng-template>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tmpFooter let-data>
+    <div class="d-flex align-items-center justify-content-between h-70px pb-6">
+        <div class="d-flex flex-column justify-content-center text-dark py-2">
+        <span class="fs-5-sm line-clamp text-wrap">{{data.customName}}</span>
+        <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+        <div class="d-flex align-items-center py-1 position-absolute bottom-0 ">
+            <i class="icon-i-star text-warning icon-14"></i>
+            <span class="text-warning ms-1 mt-2px">4.5</span>
+            <i class="icon-i-eye icon-18 ms-5"></i>
+            <span class="ms-1 mt-1px">234</span>
+        </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #defaulEmpt>
+    <div class="container h-100">
+        <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+            <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+            />
+            <div class="fw-bold mt-1 text-center">
+            {{ "SYS011" | mssg | async }}
+            </div>
+            <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+        </div>
+        </div>
+    </div>
+</ng-template>

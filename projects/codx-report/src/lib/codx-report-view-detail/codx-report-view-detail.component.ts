@@ -18,6 +18,7 @@ import {
   AuthStore,
   DialogModel,
   LayoutService,
+  NotificationsService,
   PageLink,
   PageTitleService,
   UIComponent,
@@ -31,6 +32,8 @@ import { PopupShowDatasetComponent } from '../popup-show-dataset/popup-show-data
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { setTime } from '@syncfusion/ej2-angular-schedule';
+import { NgxCaptureService } from 'ngx-capture';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'codx-report-view-detail',
@@ -47,6 +50,7 @@ export class CodxReportViewDetailComponent
   @ViewChild('report') report: TemplateRef<any>;
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('breadCrumb') breadCrumb!: ElementRef<any>;
+  @ViewChild('upload') upload: ElementRef<any>;
 
   views: ViewModel[];
   viewType = ViewType;
@@ -65,6 +69,16 @@ export class CodxReportViewDetailComponent
       icon: 'icon-list-chechbox',
       text: 'Thông tin báo cáo',
     },
+    {
+      id: 'btnScreenshot',
+      icon: 'icon-insert_photo',
+      text: 'Screenshot',
+    },
+    {
+      id: 'btnUploadAvatar',
+      icon: 'icon-cloud_upload',
+      text: 'Upload avatar',
+    },
   ];
   rootFunction: any;
   data: any;
@@ -78,7 +92,9 @@ export class CodxReportViewDetailComponent
     private routerNg: Router,
     private auth: AuthStore,
     private authSV: AuthService,
-    private apihttp: HttpClient
+    private apihttp: HttpClient,
+    private notiService: NotificationsService,
+    private captureService: NgxCaptureService
   ) {
     super(injector);
     this.user = this.auth.get();
@@ -92,7 +108,7 @@ export class CodxReportViewDetailComponent
       }
     });
     let objFormat: any = {};
-    objFormat["timeZone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    objFormat['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this._formatString = JSON.stringify(objFormat);
     this.getMessageDefault();
   }
@@ -269,10 +285,14 @@ export class CodxReportViewDetailComponent
       case 'btnAddReport':
         this.editReport();
         break;
+      case 'btnScreenshot':
+        this.screenshot();
+        break;
+      case 'btnUploadAvatar':
+        this.uploadAvatar();
+        break;
     }
   }
-
-  
 
   editReport() {
     if (this.data) {
@@ -295,6 +315,65 @@ export class CodxReportViewDetailComponent
     }
   }
 
+  screenshot() {
+    let recID = this.router.snapshot.params['funcID'];
+    this.captureService
+      .getImage(document.body, true)
+      .subscribe((imgBase64: string) => {
+        this.api
+          .execSv(
+            'rptrp',
+            'Codx.RptBusiness.RP',
+            'ReportListBusiness',
+            'ScreenshotAsync',
+            [recID, imgBase64]
+          )
+          .subscribe((res: boolean) => {
+            if (res) {
+              this.notiService.notifyCode('SYS034');
+            } else {
+              this.notiService.notifyCode('SYS021');
+            }
+          });
+      });
+  }
+
+  uploadAvatar() {
+    this.upload.nativeElement.click();
+  }
+
+  handleInputChange(e) {
+    let file = e.dataTransfer ? e.dataTransfer.files[0] : e.target.files[0];
+    let pattern = /image-*/;
+    var reader = new FileReader();
+    if (!file.type.match(pattern)) {
+      alert('invalid format');
+      return;
+    }
+    reader.onload = this._handleReaderLoaded.bind(this);
+    reader.readAsDataURL(file);
+  }
+  _handleReaderLoaded(e) {
+    let recID = this.router.snapshot.params['funcID'];
+    let reader = e.target;
+    let imgBase64 = reader.result;
+    this.api
+      .execSv(
+        'rptrp',
+        'Codx.RptBusiness.RP',
+        'ReportListBusiness',
+        'ScreenshotAsync',
+        [recID, imgBase64]
+      )
+      .subscribe((res: boolean) => {
+        if (res) {
+          this.notiService.notifyCode('SYS034');
+        } else {
+          this.notiService.notifyCode('SYS021');
+        }
+      });
+  }
+
   filterReportChange(e: any) {
     if (this.isRunMode) this.isRunMode = false;
     if (e == null) return;
@@ -303,29 +382,27 @@ export class CodxReportViewDetailComponent
     let objFormat: any = {};
     // parameters
     if (e[1]) {
-      Object.keys(e[1]).map(key => {
+      Object.keys(e[1]).map((key) => {
         objParam[key] = e[1][key];
       });
       this._paramString = JSON.stringify(objParam);
     }
     // labels
     if (e[2]) {
-      Object.keys(e[2]).map(key => {
+      Object.keys(e[2]).map((key) => {
         objLabel[key] = e[2][key];
       });
       this._labelString = JSON.stringify(objLabel);
-    } 
+    }
     // formats
-    if(e[4])
-    {
-      Object.keys(e[4]).map(key => {
+    if (e[4]) {
+      Object.keys(e[4]).map((key) => {
         objFormat[key] = e[4][key];
       });
       this._formatString = JSON.stringify(objFormat);
     }
     // get report PDF
-    if (this.data.displayMode == '3' || this.data.displayMode == '4')
-    {
+    if (this.data.displayMode == '3' || this.data.displayMode == '4') {
       this.getReportPDF(this.data.recID);
     }
   }

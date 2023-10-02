@@ -57,6 +57,8 @@ export class PopupSignatureComponent extends UIComponent {
   // PA Signature
   paEmail:any;
   paFullName:any;
+  isPublic=false;
+  signatureFuncID: string;
 
   constructor(
     private inject: Injector,
@@ -75,6 +77,9 @@ export class PopupSignatureComponent extends UIComponent {
     this.data = data?.data?.data;
     this.paEmail=data?.data?.data?.email;
     this.paFullName=data?.data?.data?.fullName;
+    this.isPublic=data?.data?.data?.isPublic ?? false;
+    this.signatureFuncID = !this.isPublic ? "ESS21" : "ESS23";
+    
 
     if (!this.setupShowForm) {
       this.setupShowForm = new SetupShowSignature();
@@ -111,7 +116,7 @@ export class PopupSignatureComponent extends UIComponent {
               this.data = res[0];
               this.data.fullName = this.data.fullName ?? this.paFullName;
               this.data.email = this.data.email ?? this.paEmail;
-              this.data.supplier = this.data.supplier =='1'? '3':this.data.supplier;
+              this.data.supplier = this.data?.signatureType =='1' ? '3': '1';
               this.isAddNew = res[1];
 
               //Mới tạo và chữ ký công cộng -> mở popup chọn Supplier

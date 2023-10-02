@@ -262,7 +262,9 @@ export class PopupAddInstanceComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        case 'C':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }

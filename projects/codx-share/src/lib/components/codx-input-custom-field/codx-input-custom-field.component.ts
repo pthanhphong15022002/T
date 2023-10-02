@@ -23,6 +23,7 @@ import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustom
 import { CodxShareService } from '../../codx-share.service';
 import { Observable, finalize, map } from 'rxjs';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -108,10 +109,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   plancehoderVll: any;
   mutiSelectVll = false;
   crrValueVll = ''; //value mutilSelect
+  columns = []; //array colum
+  arrDataValue = [];
+  modelJSON: string = '';
 
   constructor(
     private cache: CacheService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
     private codxShareSv: CodxShareService,
@@ -141,6 +145,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     switch (this.customField.dataType) {
+      case 'TA':
+        this.getColumnTable(this.customField);
+        break;
       case 'D':
         if (this.customField.dataFormat == '3') this.formatDate = 'd';
         if (
@@ -217,14 +224,14 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.listContacts[idxDefault].isDefault = false;
               }
             } else {
-              this.listContacts.push(contact);
+              if (type == 'addAndSave') this.listContacts.push(contact);
             }
             this.listContacts = JSON.parse(JSON.stringify(this.listContacts));
             this.valueChangeCustom.emit({
               e: JSON.stringify(this.listContacts),
               data: this.customField,
               result: contact,
-              type: 'addAndSave',
+              type: type,
             });
             this.codxShareSv.listContactBehavior.next(null);
           }
@@ -256,7 +263,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.errorMessage = res.customName || res.defaultName;
               }
               this.showErrMess = true;
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             });
 
             if (!this.checkValid) return;
@@ -273,7 +280,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 this.errorMessage = res.customName || res.defaultName;
               }
               this.showErrMess = true;
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             });
 
             if (!this.checkValid) return;
@@ -349,18 +356,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
     this.addFileCompleted.emit(this.addSuccess);
   }
   rateChange(e) {
-    //rank
-    // if (this.customField.dataFormat == 'R') {
     this.valueChangeCustom.emit({
       e: e,
       data: this.customField,
     });
-    //  return;
-    //}//
   }
-  controlBlur(e) {
-    // if (e.crrValue) this.valueChange(e.crrValue);
-  }
+  controlBlur(e) {}
 
   //Type Contact
   openContact() {
@@ -425,7 +426,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
                 data: this.customField,
                 result: contact,
               });
-              this.changeDef.detectChanges();
+              this.changeRef.detectChanges();
             }
           }
         });
@@ -598,17 +599,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   cbxChangeVll(value) {
-    // this.customField.dataValue = value;
     this.valueChangeCustom.emit({
       e: value,
       data: this.customField,
     });
   }
   cbxChangeVllMutilSelect(value) {
-    // if (value?.length > 0) {
-    //   this.customField.dataValue = value.join(';');
-    // } else this.customField.dataValue = '';
-
     this.valueChangeCustom.emit({
       e: value?.length > 0 ? value.join(';') : '',
       data: this.customField,
@@ -636,4 +632,124 @@ export class CodxInputCustomFieldComponent implements OnInit {
       data: this.customField,
     });
   }
+
+  //--------------format table---------------//
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.columns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) {
+      this.columns = arr;
+      this.columns.forEach((x) => {
+        this.modelJSON += '"' + x.fieldName + '":"' + '",';
+      });
+      let format = this.modelJSON.substring(0, this.modelJSON.length - 1);
+      this.modelJSON = '{' + format + '}';
+    } else this.columns = [];
+
+    if (!this.disable) {
+      this.arrDataValue = [];
+      if (data.dataValue) {
+        let arrDataValue = JSON.parse(data.dataValue);
+        if (Array.isArray(arrDataValue)) {
+          this.arrDataValue = arrDataValue;
+        }
+      }
+    }
+    this.changeRef.detectChanges();
+  }
+
+  formatViewTable(value) {
+    let arrTable = [];
+    if (this.columns?.length > 0) {
+      this.columns.forEach((x) => {
+        let object = Object.assign(x, {
+          dataValue: value?.[x.fieldName],
+        });
+        arrTable.push(object);
+      });
+    }
+    return arrTable;
+  }
+
+  //add
+  clickAddLine() {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.zIndex = 1050;
+    let obj = {
+      data: JSON.parse(this.modelJSON),
+      action: 'add',
+      titleAction: 'Thêm dòng',
+      listColumns: this.columns,
+    };
+    let dialogColumn = this.callfc.openForm(
+      PopupAddLineTableComponent,
+      '',
+      500,
+      750,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.arrDataValue.push(res.event);
+        this.valueChangeCustom.emit({
+          e: JSON.stringify(this.arrDataValue),
+          data: this.customField,
+        });
+      }
+    });
+  }
+
+  // edit
+  updateLine(value, index) {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.zIndex = 1050;
+    let obj = {
+      data: { ...JSON.parse(this.modelJSON), ...value },
+      action: 'edit',
+      titleAction: 'Chỉnh sửa',
+      listColumns: this.columns,
+    };
+    let dialogColumn = this.callfc.openForm(
+      PopupAddLineTableComponent,
+      '',
+      500,
+      750,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.arrDataValue[index] = res.event;
+        this.valueChangeCustom.emit({
+          e: JSON.stringify(this.arrDataValue),
+          data: this.customField,
+        });
+      }
+    });
+  }
+
+  // deleted;
+  removeLine(value, index) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.arrDataValue.splice(index, 1);
+        this.valueChangeCustom.emit({
+          e: JSON.stringify(this.arrDataValue),
+          data: this.customField,
+        });
+      }
+    });
+  }
+
+  //--------------end------------//
 }

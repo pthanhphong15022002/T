@@ -93,7 +93,7 @@
       >
       </codx-imgs>
       <div
-        class="disabled-inline"
+        class="disabled-inline me-1"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
         [ngClass]="
           checkRoleUpdateProgress(currentStep, 'P')
@@ -265,7 +265,7 @@
                       <codx-fields-detail-temp
                         *ngIf="task?.fieldID"
                         [listFields]="getFields(currentStep?.fields, task?.fieldID)"
-                        [showColumnControl]="4"
+                        [showColumnControl]="1"
                         [isShowTitle]="false"
                       >
                       </codx-fields-detail-temp>
@@ -436,18 +436,14 @@
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
-        [objectName]="getRole(data?.value)"
-      >
+        >
+        <!-- [objectName]="getRole(data?.value)" -->
       </codx-imgs>
     </span>
     <div
       class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
-      [ngClass]="
-        checkRoleUpdateProgress(data?.value, data?.type)
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
+      [ngClass]="checkRoleUpdateProgress(data?.value, data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
     >
       <div 
         *ngIf="data?.value?.assigned == '1'"  

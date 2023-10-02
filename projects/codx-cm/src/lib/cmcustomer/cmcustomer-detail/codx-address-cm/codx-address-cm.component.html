@@ -15,48 +15,49 @@
     </button>
   </div>
 </div> -->
-
-<ng-container *ngIf="loaded">
-  <div
-    class="mb-3"
-    *ngIf="listAddress != null && listAddress.length > 0; else noData"
-  >
-    <div class="d-flex mb-1" *ngIf="selectAll">
-      <input
-        type="checkbox"
-        [(ngModel)]="isCheckedAll"
-        (change)="toggleAll($event)"
-      />
-      <codx-label
-        class="ms-1"
-        name="lblSelectAll"
-        [formModel]="formModelAddress"
-        default="Chọn tất cả"
-      ></codx-label>
-    </div>
-    <div *ngFor="let item of listAddress">
-      <ng-container
-        [ngTemplateOutlet]="address"
-        [ngTemplateOutletContext]="{ $implicit: item }"
-      >
-      </ng-container>
-    </div>
-  </div>
-  <div [class]="'d-flex justify-content-center mt-1'" *ngIf="!hidden && id">
-    <button
-      type="button"
-      class="btn btn-sm btn-icon btn-primary me-2 d-flex"
-      style="min-width: 100px"
-      (click)="openPopupAddress(null, 'add')"
+<ng-container *ngIf="isRole; else noData">
+  <ng-container *ngIf="loaded">
+    <div
+      class="mb-3"
+      *ngIf="listAddress != null && listAddress.length > 0; else noData"
     >
-      <i class="icon-add_location_alt icon-16 me-1"></i>
-      <codx-label
-        name="lblAddAddress"
-        [formModel]="formModelAddress"
-        default="Thêm"
-      ></codx-label>
-    </button>
-  </div>
+      <div class="d-flex mb-1" *ngIf="selectAll">
+        <input
+          type="checkbox"
+          [(ngModel)]="isCheckedAll"
+          (change)="toggleAll($event)"
+        />
+        <codx-label
+          class="ms-1"
+          name="lblSelectAll"
+          [formModel]="formModelAddress"
+          default="Chọn tất cả"
+        ></codx-label>
+      </div>
+      <div *ngFor="let item of listAddress">
+        <ng-container
+          [ngTemplateOutlet]="address"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        >
+        </ng-container>
+      </div>
+    </div>
+    <div [class]="'d-flex justify-content-center mt-1'" *ngIf="!hidden && id">
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-primary me-2 d-flex"
+        style="min-width: 100px"
+        (click)="openPopupAddress(null, 'add')"
+      >
+        <i class="icon-add_location_alt icon-16 me-1"></i>
+        <codx-label
+          name="lblAddAddress"
+          [formModel]="formModelAddress"
+          default="Thêm"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-container>
 </ng-container>
 <ng-template #noData>
   <div class="empty-data">
@@ -67,8 +68,11 @@
             src="../assets/themes/sys/default/img/DataEmpty.svg"
             class="w-200px"
           />
-          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="isRole">
             {{ "SYS011" | mssg | async }}
+          </div>
+          <div class="fs-5 text-dark fw-bold mt-2 text-center" *ngIf="!isRole">
+            {{ "SYS032" | mssg | async }}
           </div>
         </div>
       </div>

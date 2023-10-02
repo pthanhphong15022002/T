@@ -1,0 +1,10 @@
+<codx-views #view idField="accountID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolBarClick($event)">
+</codx-views>
+
+<!-- Start: TemplateGrid -->
+<ng-template #templateGrid let-data>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="view"></codx-mfunc>
+</ng-template>
+<!-- End: TemplateGrid -->

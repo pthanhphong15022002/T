@@ -1,6 +1,5 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   Component,
   ElementRef,
   Injector,
@@ -9,19 +8,9 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  CRUDService,
-  DataRequest,
-  FormModel,
-  SidebarModel,
-  UIComponent,
-} from 'codx-core';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CRUDService, DataRequest, FormModel, UIComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Observable } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
-import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../../journals/journals.service';
 import { groupBy } from '../../../utils';
 import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
 import {
@@ -30,9 +19,10 @@ import {
 } from '../../salesinvoices/models/TableColumn.model';
 import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
-import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
-import { PurchaseinvoicesComponent } from '../purchaseinvoices.component';
-import { MF, PurchaseInvoiceService, fmPurchaseInvoicesLines } from '../purchaseinvoices.service';
+import {
+  PurchaseInvoiceService,
+  fmPurchaseInvoicesLines,
+} from '../purchaseinvoices.service';
 
 @Component({
   selector: 'lib-purchaseinvoices-detail',
@@ -57,14 +47,55 @@ export class PurchaseinvoicesDetailComponent
   loading: boolean = false;
   acctLoading: boolean = false;
 
-  journal: IJournal;
   viewData: IPurchaseInvoice;
   lines: IPurchaseInvoiceLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
-  columns: TableColumn[] = [];
+  columns: TableColumn[] = [
+    new TableColumn({
+      labelName: 'Num',
+      headerText: 'STT',
+    }),
+    new TableColumn({
+      labelName: 'Item',
+      headerText: 'Mặt hàng',
+      footerText: 'Tổng cộng',
+      footerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'Quantity',
+      field: 'quantity',
+      headerText: 'Số lượng',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+    }),
+    new TableColumn({
+      labelName: 'PurchasePrice',
+      field: 'purcPrice',
+      headerText: 'Đơn giá',
+      headerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'NetAmt',
+      field: 'netAmt',
+      headerText: 'Thành tiền',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+    new TableColumn({
+      labelName: 'Vatid',
+      field: 'vatAmt',
+      headerText: 'Thuế GTGT',
+      headerClass: 'text-end pe-3',
+      footerClass: 'text-end pe-3',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+  ];
 
-  fmPurchaseInvoicesLines: FormModel;
-
+  fmPurchaseInvoicesLines: FormModel = fmPurchaseInvoicesLines;
   funcName: string;
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -75,60 +106,10 @@ export class PurchaseinvoicesDetailComponent
 
   constructor(
     private injector: Injector,
-    parentComponent: PurchaseinvoicesComponent,
     private acService: CodxAcService,
-    private purchaseInvoiceService: PurchaseInvoiceService,
-    private journalService: JournalService
+    private purchaseInvoiceService: PurchaseInvoiceService
   ) {
     super(injector);
-
-    this.journal = parentComponent?.journal;
-    this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
-
-    this.columns = [
-      new TableColumn({
-        labelName: 'Num',
-        headerText: 'STT',
-      }),
-      new TableColumn({
-        labelName: 'Item',
-        headerText: 'Mặt hàng',
-        footerText: 'Tổng cộng',
-        footerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'Quantity',
-        field: 'quantity',
-        headerText: 'Số lượng',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-      }),
-      new TableColumn({
-        labelName: 'PurchasePrice',
-        field: 'purcPrice',
-        headerText: 'Đơn giá',
-        headerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'NetAmt',
-        field: 'netAmt',
-        headerText: 'Thành tiền',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-      new TableColumn({
-        labelName: 'Vatid',
-        field: 'vatAmt',
-        headerText: 'Thuế GTGT',
-        headerClass: 'text-end pe-3',
-        footerClass: 'text-end pe-3',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-    ];
   }
   //#endregion
 
@@ -178,178 +159,30 @@ export class PurchaseinvoicesDetailComponent
   //#endregion
 
   //#region Event
+  async onInitMF(mfs: any, data: IPurchaseInvoice): Promise<void> {
+    await this.purchaseInvoiceService.onInitMFAsync(mfs, data);
+  }
+
   onClickMF(e, data): void {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
-      case MF.KiemTraTinhHopLe:
-        this.purchaseInvoiceService.validate(e, data);
-        break;
-      case MF.GhiSo:
-        this.purchaseInvoiceService.post(e, data);
-        break;
-    }
+    this.purchaseInvoiceService.onClickMF(
+      e,
+      data,
+      this.funcName,
+      this.formModel,
+      this.dataService
+    );
   }
 
-  onInitMF(mfs: any, data: IPurchaseInvoice): void {
-    let disabledFuncs: MF[] = [
-      MF.GuiDuyet,
-      MF.GhiSo,
-      MF.HuyYeuCauDuyet,
-      MF.In,
-      MF.KhoiPhuc,
-      MF.KiemTraTinhHopLe,
-    ];
-    switch (data.status) {
-      case '7': // phac thao
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KiemTraTinhHopLe && f !== MF.In
-        );
-        break;
-      case '1': // da hop le
-        if (['1', '2'].includes(this.journal.approvalControl)) {
-          disabledFuncs = disabledFuncs.filter((f) => f !== MF.GuiDuyet);
-        } else {
-          disabledFuncs = disabledFuncs.filter(
-            (f) => f !== MF.GhiSo && f !== MF.In
-          );
-        }
-        break;
-      case '3': // cho duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.HuyYeuCauDuyet && f !== MF.In
-        );
-        break;
-      case '5': // da duyet
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-      case '6': // da ghi so
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.KhoiPhuc && f !== MF.In
-        );
-        break;
-      case '9': // khoi phuc
-        disabledFuncs = disabledFuncs.filter(
-          (f) => f !== MF.GhiSo && f !== MF.In
-        );
-        break;
-    }
-
-    for (const mf of mfs) {
-      if (disabledFuncs.includes(mf.functionID)) {
-        mf.disabled = true;
-      }
-    }
-  }
-
-  onClickShowLess(): void {
+  onShowLessClick(): void {
     this.expanding = !this.expanding;
     this.detectorRef.detectChanges();
   }
   //#endregion
 
   //#region Method
-  getDefault(): Observable<any> {
-    return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
-      this.journal.journalNo,
-    ]);
-  }
-
-  edit(data): void {
-    const copiedData = { ...data };
-    this.dataService.dataSelected = copiedData;
-    this.dataService.edit(copiedData).subscribe((res: any) => {
-      let options = new SidebarModel();
-      options.DataService = this.dataService;
-      options.FormModel = this.formModel;
-      options.isFull = true;
-
-      this.callfc.openSide(
-        PurchaseinvoicesAddComponent,
-        {
-          formType: 'edit',
-          formTitle: this.funcName,
-        },
-        options,
-        this.formModel.funcID
-      );
-    });
-  }
-
-  copy(data): void {
-    this.dataService.dataSelected = data;
-    this.dataService
-      .copy(() => this.getDefault())
-      .subscribe((res: any) => {
-        if (res) {
-          var obj = {
-            formType: 'add',
-            formTitle: this.funcName,
-          };
-          let option = new SidebarModel();
-          option.DataService = this.dataService;
-          option.FormModel = this.formModel;
-          option.isFull = true;
-          this.callfc.openSide(
-            PurchaseinvoicesAddComponent,
-            obj,
-            option,
-            this.formModel.funcID
-          );
-        }
-      });
-  }
-
-  delete(data: IPurchaseInvoice): void {
-    this.dataService.delete([data], true).subscribe();
-  }
-
-  export(data): void {
-    const gridModel = new DataRequest();
-    gridModel.formName = this.formModel.formName;
-    gridModel.entityName = this.formModel.entityName;
-    gridModel.funcID = this.formModel.funcID;
-    gridModel.gridViewName = this.formModel.gridViewName;
-    gridModel.page = this.dataService.request.page;
-    gridModel.pageSize = this.dataService.request.pageSize;
-    gridModel.predicate = this.dataService.request.predicates;
-    gridModel.dataValue = this.dataService.request.dataValues;
-    gridModel.entityPermission = this.formModel.entityPer;
-    gridModel.groupFields = 'createdBy'; //Chưa có group
-    this.callfc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-
   loadDetailData(): void {
     if (!this.viewData) {
       return;
-    }
-
-    if (!this.journal) {
-      this.journalService
-        .getJournal$(this.viewData.journalNo)
-        .subscribe((res) => {
-          this.journal = res;
-        });
     }
 
     this.expanding = false;

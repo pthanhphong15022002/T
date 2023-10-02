@@ -33,6 +33,9 @@ export class CodxCmService {
 
   contactSubject = new BehaviorSubject<any>(null);
   viewActiveType = new BehaviorSubject<any>(null);
+  navigateCampaign = new BehaviorSubject<any>(null);
+
+  countLeadsBehavior = new BehaviorSubject<number>(0);
 
   constructor(
     private api: ApiHttpService,

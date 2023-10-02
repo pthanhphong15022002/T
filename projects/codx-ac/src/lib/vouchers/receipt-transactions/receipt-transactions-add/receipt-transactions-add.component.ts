@@ -32,6 +32,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   public grvVouchersLine: CodxGridviewV2Component;
   @ViewChild('formVoucherReceipt') public formVoucherReceipt: CodxFormComponent;
   @ViewChild('tab') tab: TabComponent;
+  @ViewChild('cbxReasonID') cbxReasonID: any;
 
   private destroy$ = new Subject<void>();
 
@@ -121,7 +122,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
@@ -287,8 +287,15 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           }
         }
         break;
-      case 'reasonID':
-        e.data.note = e.itemData.ReasonName;
+      case 'note':
+        if(e?.itemData?.ReasonID)
+        {
+          e.data.reasonID = e.itemData.ReasonID;
+        }
+        else
+        {
+          e.data.reasonID = '';
+        }
         break;
     }
 
@@ -543,8 +550,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Function Line
   saveMasterBeforeAddLine() {
-    if (this.formVoucherReceipt.validation())
-      return;
     this.formVoucherReceipt
       .save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
@@ -554,13 +559,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             this.vouchers.voucherNo = res.save.data.voucherNo;
             this.formVoucherReceipt.formGroup?.patchValue({ voucherNo: this.vouchers.voucherNo });
           }
-          this.checkModeGridBeforeAddLine();
+          this.addLine();
         }
       });
   }
 
   /** Kiểm tra mode grid trước khi thêm dòng */
-  checkModeGridBeforeAddLine() {
+  addLine() {
     let data = new VouchersLines();
     let idx;
     this.api
@@ -571,6 +576,10 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
+          let indexReason = this.cbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.cbxReasonID?.ComponentCurrent?.value);
+          if (indexReason > -1) {
+            res.note = this.cbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
+          }
           switch (this.modeGrid) {
             case '1':
               idx = this.grvVouchersLine.dataSource.length;

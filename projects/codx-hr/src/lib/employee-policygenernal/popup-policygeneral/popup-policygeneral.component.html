@@ -1,258 +1,262 @@
-<codx-form
+
+<ng-container *ngIf="policyGeneralObj">
+    <codx-form
     #form
     [headerText] = "headerText"
     [body]="body"
-    [formModel]="formModel"
+    [formModel]="dialog.formModel"
     [footer]="footer"
-    [group]="formGroup"
     [dialog]="dialog"
     [data]="policyGeneralObj"
-    *ngIf="isAfterRender"
 >
 </codx-form>
 
 <ng-template #body>
+<ng-container *ngIf="form.formGroup">
     <div class="form-group row mt-5">
-            <codx-label
-                fiedName="PolicyType"
-                [formModel]="formModel"
-            ></codx-label>
-            <codx-input
-                field="policyType"
-                [formModel]="formModel"
-                [Group]="formGroup"
-            ></codx-input>
-    </div>
-
-    <div class="form-group row">
         <codx-label
-            fiedName="PolicyID"
-            [formModel]="formModel"
+            fiedName="PolicyType"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
-            field="policyID"
-            [disabled]="autoNumField == 'PolicyID'"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            field="policyType"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
 </div>
 
 <div class="form-group row">
     <codx-label
-        fiedName="PolicyName"
-        [formModel]="formModel"
+        fiedName="PolicyID"
+        [formModel]="form.formModel"
     ></codx-label>
     <codx-input
-        field="policyName"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        field="policyID"
+        [disabled]="autoNumField == 'PolicyID'"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
     ></codx-input>
 </div>
 
 <div class="form-group row">
-    <div class="col-4">
-        <codx-label
-            fiedName="ActiveOn"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            field="activeOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-    <div class="col-4">
-        <codx-label
-            fiedName="ExpiredOn"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            field="expiredOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-    <div class="col-4 d-flex flex-column">
-        <codx-label
-            fiedName="Stop"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-            class="mt-3"
-            field="stop"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
+<codx-label
+    fiedName="PolicyName"
+    [formModel]="form.formModel"
+></codx-label>
+<codx-input
+    field="policyName"
+    [formModel]="form.formModel"
+    [Group]="form.formGroup"
+></codx-input>
 </div>
 
 <div class="form-group row">
+<div class="col-4">
     <codx-label
-        fiedName="Note"
-        [formModel]="formModel"
+        fiedName="ActiveOn"
+        [formModel]="form.formModel"
     ></codx-label>
     <codx-input
-        field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        field="activeOn"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
     ></codx-input>
 </div>
-
-<div class="form-group row">
+<div class="col-4">
     <codx-label
-        [default]="'Quy định'"
-        [name]="'lblRule'"
-        [formModel]="formModel"
+        fiedName="ExpiredOn"
+        [formModel]="form.formModel"
     ></codx-label>
+    <codx-input
+        field="expiredOn"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
 </div>
-
-<div class="form-group row">
-    <div class="col-6 d-flex flex-column">
-        <codx-label
-            fiedName="FixedAmt"
-            [formModel]="formModel"
-        ></codx-label>
-        <span>{{grvSetup.FixedAmt.headerNote}}</span>
-    </div>
-    <div class="col-6">
-        <codx-input
-            field="fixedAmt"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
-</div>
-
-<div class="form-group row">
-    <div class="col-6 d-flex flex-column">
-        <codx-label
-            fiedName="FixedAmtPerHour"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-label
-            [name]="'FixedAmtPerHourDes'"
-            [default]="grvSetup.FixedAmtPerHour.headerNote"
-            [formModel]="formModel"
+<div class="col-4 d-flex flex-column">
+    <codx-label
+        fiedName="Stop"
+        [formModel]="form.formModel"
     ></codx-label>
-    </div>
-    <div class="col-6">
-        <codx-input
-            field="fixedAmtPerHour"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
+    <codx-input
+        class="mt-3"
+        field="stop"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
+</div>
 </div>
 
 <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
-        <codx-label
-            fiedName="Percentage"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-label
-        [name]="'PercentageDes'"
-        [default]="grvSetup.Percentage.headerNote"
-        [formModel]="formModel"
+<codx-label
+    fiedName="Note"
+    [formModel]="form.formModel"
 ></codx-label>
-    </div>
-    <div class="col-6">
-        <codx-input
-            field="percentage"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
+<codx-input
+    field="note"
+    [formModel]="form.formModel"
+    [Group]="form.formGroup"
+></codx-input>
 </div>
 
 <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
-        <codx-label
-            fiedName="PercentageOn"
-            [formModel]="formModel"
-        ></codx-label>
-
-        <codx-label
-        [name]="'PercentageOnDes'"
-        [default]="grvSetup.PercentageOn.headerNote"
-        [formModel]="formModel"
+<codx-label
+    [default]="'Quy định'"
+    [name]="'lblRule'"
+    [formModel]="form.formModel"
 ></codx-label>
-    </div>
-    <div class="col-6">
-        <codx-input
-            field="percentageOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
-        ></codx-input>
-    </div>
 </div>
 
 <div class="form-group row">
-    <div class="col-6 d-flex flex-column">
-        <codx-label
-            fiedName="HasIncludeBenefits"
-            [formModel]="formModel"
-        ></codx-label>
-        <codx-label
-        [name]="'HasIncludeBenefits'"
-        [default]="grvSetup.HasIncludeBenefits.headerNote"
-        
-        [formModel]="formModel"
-        >       
-        </codx-label>
-    </div>
-    <div class="col-6 d-flex align-items-center justify-content-end">
-        <span class="me-2">
-            <codx-input
-                class="mt-2"
-                field="hasIncludeBenefits"
-                [formModel]="formModel"
-                [Group]="formGroup"
-                (valueChange)="ValChangeHasBenefit($event)"
-            ></codx-input>
-        </span>
-        <button type="button"
-        class="btn btn-icon btn-sm"
-        (click)="onClickOpenCbxBenefit()"
-        [ngClass]="policyGeneralObj.hasIncludeBenefits? 'btn-light-primary':'btn-disabled'"
-        >
-            <span class="icon-edit-one icon-16"></span>
+<div class="col-6 d-flex flex-column">
+    <codx-label
+        fiedName="FixedAmt"
+        [formModel]="form.formModel"
+    ></codx-label>
+    <!-- <span>{{form.gridviewSetup.FixedAmt.headerNote}}</span> -->
+</div>
+<div class="col-6">
+    <codx-input
+        field="fixedAmt"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
+</div>
+</div>
+
+<div class="form-group row">
+<div class="col-6 d-flex flex-column">
+    <codx-label
+        fiedName="FixedAmtPerHour"
+        [formModel]="form.formModel"
+    ></codx-label>
+    <!-- <codx-label
+        [name]="'FixedAmtPerHourDes'"
+        [default]="form.gridviewSetup.FixedAmtPerHour.headerNote"
+        [formModel]="form.formModel"
+></codx-label> -->
+</div>
+<div class="col-6">
+    <codx-input
+        field="fixedAmtPerHour"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
+</div>
+</div>
+
+<div class="form-group row">
+<div class="col-6 d-flex flex-column">
+    <codx-label
+        fiedName="Percentage"
+        [formModel]="form.formModel"
+    ></codx-label>
+    <!-- <codx-label
+    [name]="'PercentageDes'"
+    [default]="form.gridviewSetup.Percentage.headerNote"
+    [formModel]="form.formModel"
+></codx-label> -->
+</div>
+<div class="col-6">
+    <codx-input
+        field="percentage"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
+</div>
+</div>
+
+<div class="form-group row">
+<div class="col-6 d-flex flex-column">
+    <codx-label
+        fiedName="PercentageOn"
+        [formModel]="form.formModel"
+    ></codx-label>
+
+    <!-- <codx-label
+    [name]="'PercentageOnDes'"
+    [default]="form.gridviewSetup.PercentageOn.headerNote"
+    [formModel]="form.formModel"
+></codx-label> -->
+</div>
+<div class="col-6">
+    <codx-input
+        field="percentageOn"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+    ></codx-input>
+</div>
+</div>
+
+<div class="form-group row">
+<div class="col-6 d-flex flex-column">
+    <codx-label
+        fiedName="HasIncludeBenefits"
+        [formModel]="form.formModel"
+    ></codx-label>
+    <!-- <codx-label
+    [name]="'HasIncludeBenefits'"
+    [default]="form.gridviewSetup.HasIncludeBenefits.headerNote"
+    
+    [formModel]="form.formModel"
+    >       
+    </codx-label> -->
+</div>
+<div class="col-6 d-flex align-items-center justify-content-end">
+    <span class="me-2">
+        <codx-input
+            class="mt-2"
+            field="hasIncludeBenefits"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="ValChangeHasBenefit($event)"
+        ></codx-input>
+    </span>
+    <button type="button"
+    class="btn btn-icon btn-sm"
+    (click)="onClickOpenCbxBenefit()"
+    [ngClass]="policyGeneralObj?.hasIncludeBenefits? 'btn-light-primary':'btn-disabled'"
+    >
+        <span class="icon-edit-one icon-16"></span>
+    </button>
+</div>
+</div>
+<div class="d-flex flex-wrap ps-5" *ngIf="policyGeneralObj?.hasIncludeBenefits && lstBenefit.length > 0">
+<div *ngFor="let benefit of lstBenefit">
+    <div class="badge-with-delete mb-2 me-2">
+        <span
+        class="badge badge-light-primary badge-md"
+        [innerHTML]="benefit
+            | formatvalue : benefitFormModel : 'benefitID'
+            | async"
+        ></span>
+        <button (click)="deleteBenefitInclude(benefit)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+            <span class="icon-close icon-16"></span>
         </button>
     </div>
 </div>
-<div class="d-flex flex-wrap ps-5" *ngIf="policyGeneralObj.hasIncludeBenefits && lstBenefit.length > 0">
-    <div *ngFor="let benefit of lstBenefit">
-        <div class="badge-with-delete mb-2 me-2">
-            <span
-            class="badge badge-light-primary badge-md"
-            [innerHTML]="benefit
-                | formatvalue : benefitFormModel : 'benefitID'
-                | async"
-            ></span>
-            <button type="button" class="btn btn-sm btn-icon btn-light-danger">
-                <span class="icon-close icon-16"></span>
-            </button>
-        </div>
-    </div>
 </div>
 
-    <codx-combobox-popup
-    *ngIf="!isHidden && policyGeneralObj.hasIncludeBenefits"
-    [comboboxName]="'HRBenefits'"
-    [multiple]="true"
-    [width]="600"
-    [height]="500"
-    [value]="policyGeneralObj.includeBenefits"
-    (clickSave)="onClickHideComboboxPopup($event)"
-    >
-    </codx-combobox-popup>
+<codx-combobox-popup
+*ngIf="!isHidden && policyGeneralObj?.hasIncludeBenefits"
+[comboboxName]="'HRBenefits'"
+[multiple]="true"
+[width]="600"
+[height]="500"
+[value]="policyGeneralObj.includeBenefits"
+(clickSave)="onClickHideComboboxPopup($event)"
+>
+</codx-combobox-popup>
+</ng-container>
+
 </ng-template>
 
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveForm()">
             <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
         </button>
     </div>
 </ng-template>
+</ng-container>

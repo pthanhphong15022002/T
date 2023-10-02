@@ -6,11 +6,11 @@
   [footer]="footer"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
-  [data]="fiels"
+  [data]="fields"
   [openMore]="false"
 ></codx-form>
 <ng-template #body>
-  <ng-container *ngFor="let item of fiels">
+  <ng-container *ngFor="let item of fields">
     <div class="form-group">
       <codx-input-custom-field
         [customField]="item"

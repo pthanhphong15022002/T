@@ -121,6 +121,8 @@ export class JournalsAddComponent extends UIComponent implements AfterViewInit {
     this.prevJournal = { ...this.journal };
 
     this.journal.vatControl = this.journal.vatControl === '1';
+    this.journal.autoPost = this.journal.autoPost === 1;
+    
     this.isEdit = dialogData.data.formType === 'edit';
   }
   //#endregion

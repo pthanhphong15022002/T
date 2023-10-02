@@ -1,6 +1,23 @@
-import { Component, Injector, Input, SimpleChange, ViewChild } from '@angular/core';
+import {
+  Component,
+  Injector,
+  Input,
+  SimpleChange,
+  ViewChild,
+} from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations/src/tab/tab.component';
-import { AuthStore, DataRequest, DialogModel, FormModel, NotificationsService, PageTitleService, SidebarModel, TenantStore, UIComponent, Util } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  DialogModel,
+  FormModel,
+  NotificationsService,
+  PageTitleService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  Util,
+} from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -12,7 +29,10 @@ declare var jsBh: any;
 @Component({
   selector: 'cashreciept-detail',
   templateUrl: './cashreciept-detail.component.html',
-  styleUrls: ['./cashreciept-detail.component.css', '../../codx-ac.component.css']
+  styleUrls: [
+    './cashreciept-detail.component.css',
+    '../../codx-ac.component.scss',
+  ],
 })
 export class CashrecieptDetailComponent extends UIComponent {
   //#region Constructor
@@ -28,7 +48,7 @@ export class CashrecieptDetailComponent extends UIComponent {
   @Input() dataDefault: any;
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-  itemSelected : any;
+  itemSelected: any;
   totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
   totalAcctCR: any = 0; //? tông tiền có tab hạch toán
   totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
@@ -79,7 +99,7 @@ export class CashrecieptDetailComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -88,9 +108,7 @@ export class CashrecieptDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {
-    
-  }
+  onInit(): void {}
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -104,8 +122,8 @@ export class CashrecieptDetailComponent extends UIComponent {
   }
 
   ngOnChanges(value: SimpleChange) {
-    this.getDataDetail(this.dataItem,this.recID);
-  }   
+    this.getDataDetail(this.dataItem, this.recID);
+  }
 
   ngOnDestroy() {
     this.onDestroy();
@@ -179,12 +197,15 @@ export class CashrecieptDetailComponent extends UIComponent {
 
   //#region Function
   /**
-   * *Hàm get data chi tiết 
+   * *Hàm get data chi tiết
    * @param data
    */
-  getDataDetail(dataItem,recID) {
+  getDataDetail(dataItem, recID) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [dataItem,recID])
+      .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [
+        dataItem,
+        recID,
+      ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
@@ -192,7 +213,6 @@ export class CashrecieptDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
-    
   }
 
   /**
@@ -201,7 +221,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any, data: any, type: any = '') {
     let arrBookmark = event.filter(
       // danh sách các morefunction
       (x: { functionID: string }) =>
@@ -217,7 +237,7 @@ export class CashrecieptDetailComponent extends UIComponent {
         x.functionID == 'ACT040108' || // Mf in (PT)
         x.functionID == 'ACT042907' || // Mf in (UNC)
         x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
-        x.functionID == 'ACT042902'    // MF kiểm tra tính hợp lệ (UNC)
+        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -228,7 +248,12 @@ export class CashrecieptDetailComponent extends UIComponent {
       switch (data?.status) {
         case '7':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT040103' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042902' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT040103' ||
+              element.functionID == 'ACT040108' ||
+              element.functionID == 'ACT042902' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -238,7 +263,12 @@ export class CashrecieptDetailComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+              if (
+                element.functionID == 'ACT040106' ||
+                element.functionID == 'ACT040108' ||
+                element.functionID == 'ACT042905' ||
+                element.functionID == 'ACT042907'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -246,7 +276,12 @@ export class CashrecieptDetailComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if ((element.functionID == 'ACT040104' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042903' || element.functionID == 'ACT042907')) {
+              if (
+                element.functionID == 'ACT040104' ||
+                element.functionID == 'ACT040108' ||
+                element.functionID == 'ACT042903' ||
+                element.functionID == 'ACT042907'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -256,7 +291,12 @@ export class CashrecieptDetailComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT040105' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042904' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT040105' ||
+              element.functionID == 'ACT040108' ||
+              element.functionID == 'ACT042904' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -265,7 +305,12 @@ export class CashrecieptDetailComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT040106' ||
+              element.functionID == 'ACT040108' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -274,7 +319,12 @@ export class CashrecieptDetailComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT040107' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042906' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT040107' ||
+              element.functionID == 'ACT040108' ||
+              element.functionID == 'ACT042906' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -283,7 +333,12 @@ export class CashrecieptDetailComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if ((element.functionID == 'ACT040106' || element.functionID == 'ACT040108') || (element.functionID == 'ACT042905' || element.functionID == 'ACT042907')) {
+            if (
+              element.functionID == 'ACT040106' ||
+              element.functionID == 'ACT040108' ||
+              element.functionID == 'ACT042905' ||
+              element.functionID == 'ACT042907'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -310,8 +365,8 @@ export class CashrecieptDetailComponent extends UIComponent {
       ele.hideTab(0, false);
       switch (type) {
         case '11':
-        //case '3':
-        //case '4':
+          //case '3':
+          //case '4':
           ele.hideTab(1, true);
           ele.hideTab(2, true);
           break;
@@ -341,7 +396,10 @@ export class CashrecieptDetailComponent extends UIComponent {
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
 
-    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
+    if (
+      this.itemSelected?.listAcctrants &&
+      this.itemSelected?.listAcctrants.length > 0
+    ) {
       this.itemSelected?.listAcctrants.forEach((item) => {
         if (this.itemSelected.currencyID == this.baseCurr) {
           if (!item.crediting) {
@@ -349,7 +407,7 @@ export class CashrecieptDetailComponent extends UIComponent {
           } else {
             this.totalAcctCR += item.transAmt;
           }
-        }else{
+        } else {
           if (!item.crediting) {
             this.totalAcctDR += item.transAmt2;
             this.totalTransAmt += item.transAmt;
@@ -360,7 +418,10 @@ export class CashrecieptDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listSettledInvoices && this.itemSelected?.listSettledInvoices.length > 0) {
+    if (
+      this.itemSelected?.listSettledInvoices &&
+      this.itemSelected?.listSettledInvoices.length > 0
+    ) {
       this.itemSelected?.listSettledInvoices.forEach((item) => {
         this.totalbalAmt += item.balAmt;
         this.totalsettledAmt += item.settledAmt;
@@ -371,7 +432,10 @@ export class CashrecieptDetailComponent extends UIComponent {
       });
     }
 
-    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
+    if (
+      this.itemSelected?.listVATInvoices &&
+      this.itemSelected?.listVATInvoices.length > 0
+    ) {
       this.itemSelected?.listVATInvoices.forEach((item) => {
         this.totalVatAtm += item.vatAmt;
         this.totalVatBase += item.vatBase;
@@ -518,11 +582,7 @@ export class CashrecieptDetailComponent extends UIComponent {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
           //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
@@ -628,7 +688,7 @@ export class CashrecieptDetailComponent extends UIComponent {
       data: data,
       reportList: reportList,
       url: 'ac/report/detail/',
-      formModel:this.view.formModel
+      formModel: this.view.formModel,
     };
     let opt = new DialogModel();
     var dialog = this.callfc.openForm(

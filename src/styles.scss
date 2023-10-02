@@ -74,13 +74,18 @@ erm-quick-links-inner .dropdown-menu {
 .table.table-bordered tbody tr:last-child td {
   border: 1px var(--gray-150) solid !important;
 }
-
+.text-underline{
+  text-decoration: underline;
+}
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem !important;
   height: 0.5rem !important;
 }
 
+.badge-dark.bg-badge-75{
+  background-color: rgb(0 0 0 / 65%);
+}
 
 .border-gray-200 {
   border-color: var(--gray-200) !important;
@@ -3266,7 +3271,7 @@ codx-toolbar-report{
 }
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
-  color: var(--gray-700);
+  color: var(--gray-700)!important;
 }
 .text-primary-dark{
   color: var(--primary-dark);
@@ -3909,4 +3914,50 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   .form-control:focus{
     background-color: transparent!important;
   }
+}
+
+.cm-scroll{
+  position: relative;
+  .btn.tab-action{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 99;
+  }
+  &.cm-full{
+    position: absolute;
+    inset: 42px 15px 0;
+    //top: 42px;
+    //bottom: 0;
+    //left: 20px;
+    //right: 20px;
+    background-color: var(--bg-body);
+    
+    .e-content{
+      height: calc(100vh - 244px)!important;
+      overflow: auto;
+      padding: 0 10px;
+      
+      main.main-step{
+        height: calc(100vh - 294px)!important;
+      }
+     
+      //border: 1px rgb(241, 29, 178) solid;
+    }
+  }
+  .e-dlg-content .cm-scroll.cm-full{
+    top: 25px;
+    .e-content {
+      height: calc(100vh - 165px) !important;
+      overflow: auto;
+      overflow-x: hidden;
+  }
+  }
+  ejs-tab{
+    height: 100%!important;
+   // border: 1px rgb(0, 17, 255) solid;
+  }
+  // .mb-5px {
+  //   margin-bottom: 50px;
+  // }
 }

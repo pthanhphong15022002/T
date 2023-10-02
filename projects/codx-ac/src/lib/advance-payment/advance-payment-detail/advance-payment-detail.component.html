@@ -29,7 +29,7 @@
           <div
             class="text-gray-600"
             style="font-size: 10px"
-            [innerHTML]="company?.phone"
+            [innerHTML]="company?.taxCode"
           ></div>
         </div>
       </div>
@@ -68,11 +68,8 @@
           [cssClass]="'fs-4'"
         >
         </codx-label>
-        <span
-          class="text-gray-600"
-          style="font-size: 12px !important"
-        >
-          {{ formatDate(dataItem?.voucherDate) }}
+        <span class="text-gray-600" style="font-size: 12px !important">
+          {{ dataItem?.voucherDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
     </div>
@@ -91,7 +88,7 @@
             [default]="headerText"
           ></codx-label>
         </div>
-        <div class="row" style="padding-bottom: 5px;">
+        <div class="row" style="padding-bottom: 5px">
           <div>
             <codx-label
               class="fw-bold"
@@ -108,7 +105,7 @@
                     | async
                 "
                 class="om-input w-100 dropdow-select"
-                style="font-size: 13px;"
+                style="font-size: 13px"
               ></span>
             </div>
           </div>
@@ -127,7 +124,7 @@
                   type="text"
                   field="totalAmt"
                   [value]="dataItem.totalAmt"
-                  [class]="'om-input w-auto amount'"
+                  [class]="'om-input w-auto'"
                   [cssClass]="'om-input w-100 fs-4'"
                   [disabled]="true"
                 >
@@ -193,7 +190,7 @@
                         | async
                     "
                     class="om-input w-100 dropdow-select"
-                    style="font-size: 13px;"
+                    style="font-size: 13px"
                   ></span>
                 </div>
               </div>
@@ -211,8 +208,9 @@
             <div>
               <span
                 class="om-input w-100 dropdow-select"
-                style="font-size: 13px;"
-              >{{ dataItem.memo }}</span>
+                style="font-size: 13px"
+                >{{ dataItem.memo }}</span
+              >
             </div>
           </div>
         </div>
@@ -255,19 +253,21 @@
                       class="fw-bold"
                       fiedName="Note"
                       [formModel]="fmAdvancedPaymentLines"
+                      [setRequire]="false"
                     >
                     </codx-label>
                   </div>
                 </div>
               </div>
-              <div class="w-50 d-flex justify-content-start">
+              <div class="w-50 d-flex justify-content-start pe-4">
                 <div
-                  class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
+                  class="ps-3 w-100 min-h-table d-flex justify-content-end align-items-center pe-5"
                 >
                   <codx-label
                     class="fw-bold"
                     fiedName="DR"
                     [formModel]="fmAdvancedPaymentLines"
+                    [setRequire]="false"
                   >
                   </codx-label>
                 </div>
@@ -278,9 +278,12 @@
       </div>
       <!-- Nội dung của chi tiết -->
       <div
-        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto"
+        class="flex-grow-1 flex-column d-flex justify-content-start overflow-auto responsive-table"
       >
-        <div class="flex-column d-flex justify-content-start px-6">
+        <div
+          class="flex-column d-flex justify-content-start px-6"
+          *ngIf="!loading"
+        >
           <div
             class="d-flex justify-content-start flex-column"
             *ngFor="let item of advancedPaymentLines; let i = index"
@@ -289,10 +292,10 @@
               <div
                 class="d-flex align-items-center flex-row cursor-pointer w-100"
               >
-              <span
-                class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
-                style="font-size: 10px !important;"
-              ></span>
+                <span
+                  class="icon-brightness_1 fs-10px d-flex align-items-center text-warning mr-2"
+                  style="font-size: 10px !important"
+                ></span>
                 <div
                   class="w-50 d-flex justify-content-start align-items-center"
                 >
@@ -353,9 +356,57 @@
             </div>
           </div> -->
         </div>
+        <div
+          *ngIf="loading"
+          style="background-color: white"
+          class="ac-empty h-100"
+        >
+          <div
+            style="padding-top: 0px !important"
+            class="list-empty card card-flush h-100"
+          >
+            <div class="d-flex flex-column flex-center justify-content-center">
+              <ejs-progressbar
+                #pgbDetail
+                id="load-detail-container"
+                type="Circular"
+                [maximum]="100"
+                [minimum]="0"
+                [value]="75"
+                width="50"
+                height="50"
+                [animation]="animation"
+                [isIndeterminate]="true"
+                [trackThickness]="1"
+                [a]
+                [progressThickness]="3"
+              >
+                <e-progressbar-annotations>
+                  <e-progressbar-annotation content=" ">
+                  </e-progressbar-annotation>
+                </e-progressbar-annotations>
+              </ejs-progressbar>
+            </div>
+          </div>
+        </div>
+        <!-- <div *ngIf="!loading">
+        <div *ngIf="paymentOrderLines.length == 0" class="container w-90 h-90">
+          <div class="list-empty card card-flush h-100 mt-20">
+            <div class="d-flex flex-column flex-center justify-content-center">
+              <img
+                src="../assets/themes/sys/default/img/DataEmpty.svg"
+                class="w-200px"
+              />
+              <div class="fs-5 text-dark fw-bold mt-2 text-center">
+                {{ "SYS011" | mssg | async }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
       </div>
       <!-- Trường kế hoạch công tác -->
-      <!-- <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center">
         <span
           class="text-primary fw-bold"
           style="margin-right: 15px"
@@ -363,7 +414,7 @@
         ></span>
         <span style="margin-right: 15px" [innerHTML]="'AR2023010001'"></span>
         <i class="icon-link text-primary icon-30"></i>
-      </div> -->
+      </div>
 
       <!-- Các tệp đính kèm -->
       <!-- <div class="d-flex flex-column height-attachments">
@@ -438,12 +489,12 @@
 </ng-template>
 
 <ng-template #footer>
-    <ng-container *ngIf="dataItem">
-      <codx-tabs
-        [entityName]="formModel.entityName"
-        [formModel]="formModel"
-        [objectID]="dataItem.recID"
-        [funcID]="formModel.funcID"
-      ></codx-tabs>
-    </ng-container>
-  </ng-template>
+  <ng-container *ngIf="dataItem">
+    <codx-tabs
+      [entityName]="formModel.entityName"
+      [formModel]="formModel"
+      [objectID]="dataItem.recID"
+      [funcID]="formModel.funcID"
+    ></codx-tabs>
+  </ng-container>
+</ng-template>

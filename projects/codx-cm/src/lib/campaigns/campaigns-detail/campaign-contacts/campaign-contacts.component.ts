@@ -8,15 +8,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxService,
   DataRequest,
   DialogModel,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
+import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -27,6 +31,7 @@ export class CampaignContactsComponent implements OnInit {
   @Input() transID: any;
   @Input() objectType: any;
   @Input() isShow: boolean;
+  @Input() isDoubleClick: boolean = false;
   @ViewChild('headerCustomerName') headerCustomerName: TemplateRef<any>;
   @ViewChild('tempCustomerName') tempCustomerName: TemplateRef<any>;
   @ViewChild('headerIndustries') headerIndustries: TemplateRef<any>;
@@ -60,11 +65,15 @@ export class CampaignContactsComponent implements OnInit {
   columnsGrid = [];
   gridViewSetup: any;
   moreFuncAdd = '';
+  url = '';
   constructor(
     private api: ApiHttpService,
     private detector: ChangeDetectorRef,
     private cache: CacheService,
-    private callFc: CallFuncService
+    private callFc: CallFuncService,
+    private codxService: CodxService,
+    private cmSv: CodxCmService,
+    private notiSv: NotificationsService
   ) {}
   async ngOnInit() {
     this.gridViewSetup = await firstValueFrom(
@@ -88,32 +97,32 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerCustomerName,
         template: this.tempCustomerName,
-        width: 200,
+        width: !this.isDoubleClick ? 200 : 300,
       },
       {
         headerTemplate: this.headerIndustries,
         template: this.tempIndustries,
-        width: 400,
+        width: !this.isDoubleClick ? 200 : 300,
       },
       {
         headerTemplate: this.headerContact,
         template: this.tempContact,
-        width: 250,
+        width: !this.isDoubleClick ? 175 : 275,
       },
       {
         headerTemplate: this.headerOwner,
         template: this.tempOwner,
-        width: 150,
+        width: !this.isDoubleClick ? 150 : 250,
       },
       {
         headerTemplate: this.headerStatus,
         template: this.tempStatus,
-        width: 150,
+        width: !this.isDoubleClick ? 100 : 175,
       },
       {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
-        width: 80,
+        width: !this.isDoubleClick ? 150 : 250,
       },
     ];
     this.detector.detectChanges();
@@ -129,6 +138,8 @@ export class CampaignContactsComponent implements OnInit {
         this.objectTypeOld = changes['objectType']?.currentValue;
         this.formModel.funcID =
           this.objectType == '1' ? 'CM0301_1' : 'CM0301_2';
+        let funcID = this.objectType == '1' ? 'CM0101' : 'CM0205';
+        this.getFunctionList(funcID);
         this.getList();
       } else {
         if (!this.loaded) this.loaded = true;
@@ -142,6 +153,7 @@ export class CampaignContactsComponent implements OnInit {
     this.request.dataValues = this.transID + ';' + this.objectType;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
+    this.request.funcID = this.formModel.funcID;
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstCampContacts = item ?? [];
@@ -169,10 +181,44 @@ export class CampaignContactsComponent implements OnInit {
       );
   }
 
-  //#region  more
-  clickMF(e, data) {}
+  getFunctionList(funcID) {
+    this.cache.functionList(funcID).subscribe((res) => {
+      if (res) {
+        this.url = res?.url;
+      }
+    });
+  }
 
-  changeDataMF(e, data) {}
+  //#region  more
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        switch (res.functionID) {
+          case 'SYS03':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
+    }
+  }
+  //#endregion
+
+  //#region navigate
+  clickNavigate(data) {
+    // this.cmSv.navigateCampaign.next({recID: data.recID});
+    this.codxService.navigate('', this.url, {
+      recID: data?.rowData?.objectID,
+    });
+  }
   //#endregion
 
   //#region crud
@@ -207,11 +253,53 @@ export class CampaignContactsComponent implements OnInit {
             .closed.subscribe((e) => {
               if (e && e?.event) {
                 this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
+                if (this.objectType == '3') {
+                  this.cmSv.countLeadsBehavior.next(
+                    this.lstCampContacts.length
+                  );
+                }
                 this.detector.detectChanges();
               }
             });
         }
       });
+  }
+
+  delete(data) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notiSv.alertCode('SYS030').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api
+          .execSv<any>(
+            'CM',
+            'ERM.Business.CM',
+            'CampaignsBusiness',
+            'DeleteCampaignContactsAsync',
+            [data?.recID]
+          )
+          .subscribe((res) => {
+            if (res) {
+              let idx = this.lstCampContacts.findIndex(
+                (x) => x.recID == data.recID
+              );
+              if (idx != -1) {
+                this.lstCampContacts.splice(idx, 1);
+                this.lstCampContacts = JSON.parse(
+                  JSON.stringify(this.lstCampContacts)
+                );
+                if (this.objectType == '3') {
+                  this.cmSv.countLeadsBehavior.next(
+                    this.lstCampContacts.length
+                  );
+                }
+              }
+              this.notiSv.notifyCode('SYS008');
+            }
+            this.detector.detectChanges();
+          });
+      }
+    });
   }
   //#endregion
 }

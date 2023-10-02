@@ -1,0 +1,118 @@
+<codx-views
+  #view
+  service="PR"
+  assemblyName="PR"
+  entityName="PR_TimeKeepingRequest"
+  className="TimeKeepingRequest"
+  method="GetListAsync"
+  [views]="views"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttons"
+  [funcID]="funcID"
+  (buttonClick)="click($event)"
+  (onActions)="onActionClick($event)"
+>
+</codx-views>
+
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3 when-hover-box"
+    [moreFuncCss]="'me-5'"
+    [imageId]=""
+    [imageObjType]="'HR_Employees'"
+    [imageObjName]=""
+    [imageWidth]="35"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [imgOn]=""
+    [typeMF]="'view'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
+    [subTitle]=""
+    [subTitleCss]="'fs-7 text-gray-500'"
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+  >
+  </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span>aaaa</span>
+  </ng-template>
+
+  <ng-template #descTmp>
+    <span>bbbb</span>
+  </ng-template>
+
+  <ng-template #desc2Tmp> ccc </ng-template>
+</ng-template>
+
+<!-- Content schedule left -->
+<ng-template #resourceHeader let-data>
+  <div class="container">
+    <div class="d-flex pb-1">
+      <codx-img
+        [width]="35"
+        class="me-4"
+        [objectId]="data.resourceData.emp.employeeName"
+        [referType]="'avt'"
+        [objectName]="data.resourceData.emp.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+      <div class="text-wrap">
+        <div class="text-dark fw-bold">
+          <span>
+            {{ data.resourceData.emp.employeeName }}
+          </span>
+        </div>
+        <span
+          class="text-gray-500 fs-7"
+          *ngIf="data.resourceData.emp?.positionName"
+        >
+          {{ data.resourceData.emp?.positionName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #cardTemplate let-data>
+  <div [style.background-color]="getColorItem(data.status)">
+    <div class="d-flex">
+      <span>
+        {{ getHour(data.fromTime) }}
+      </span>
+      <span> - </span>
+      <span>{{ getHour(data.toTime) }}</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentTmp let-data> </ng-template>
+
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+    </codx-img>
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate fw-bold">aaaa</span>
+      <span class="w-100 text-truncate fw-bold">{{ data?.title }}</span>
+    </div>
+  </div>
+</ng-template>

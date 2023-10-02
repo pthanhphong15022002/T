@@ -1,0 +1,9 @@
+.action-menu-column {
+  position: absolute;
+  z-index: 99;
+  opacity: 0;
+}
+
+.has-action-menu:hover .action-menu-column {
+  opacity: 1;
+}

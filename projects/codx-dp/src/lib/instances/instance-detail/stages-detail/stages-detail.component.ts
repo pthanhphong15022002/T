@@ -35,9 +35,10 @@ import {
 import { firstValueFrom } from 'rxjs';
 import { CodxDpService } from '../../../codx-dp.service';
 import { InstancesComponent } from '../../instances.component';
-import { PopupCustomFieldComponent } from '../field-detail/popup-custom-field/popup-custom-field.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { PopupCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+
 @Component({
   selector: 'codx-stages-detail',
   templateUrl: './stages-detail.component.html',
@@ -974,14 +975,14 @@ export class StagesDetailComponent implements OnInit {
     this.saveAssign.emit(e);
   }
 
-  setIdAndUserRole(data, type){
+  setIdAndUserRole(data, type) {
     var result = '';
     var index = -1;
-    if(data != null && data.length > 0){
-      index = data.findIndex(x => x.roleType == 'S');
+    if (data != null && data.length > 0) {
+      index = data.findIndex((x) => x.roleType == 'S');
     }
 
-    if(index != -1){
+    if (index != -1) {
       result = type == 'id' ? data[index]?.objectID : data[index]?.objectName;
     }
     return result;

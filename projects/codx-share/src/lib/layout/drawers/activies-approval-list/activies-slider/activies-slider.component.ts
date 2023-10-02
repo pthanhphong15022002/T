@@ -239,11 +239,21 @@ export class ActiviesSliderComponent implements OnInit {
           '',
           dialogModel
         );
-        // dialogApprove.closed.subscribe((x) => {
-        //   // if (x.event?.result) {
-        //   
-        //   }
-        // });
+        dialogApprove.closed.subscribe((res) => {
+          if (!res?.event?.msgCodeError && res?.event?.rowCount>0) {
+            //let mssgCodeNoti = res?.event?.returnStatus == ApprovalStatus.approved ? "WP005" : "WP007";
+            this.lstApproval=this.lstApproval.filter(x=>x?.transID != data?.transID);
+            //this.notiSV.notifyCode(mssgCodeNoti);            
+            this.api.execSv(
+              'BG',
+              'ERM.Business.BG',
+              'NotificationBusinesss',
+              'UpdateAsync', 
+              [data?.recID]).subscribe();
+            this.dt.detectChanges();
+            
+          }
+        });
       }
       else{
         this.notiSV.notifyCode("SYS001");

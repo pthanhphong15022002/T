@@ -35,14 +35,16 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
-import { CodxCalendarComponent } from 'projects/codx-co/src/lib/codx-calendar/codx-calendar.component';
+import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
+import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
+import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-
       //-----------Khai báo routing nghiệp vu---------------
       {
         path: 'workspace/:funcID',
@@ -50,8 +52,7 @@ const routes: Routes = [
       },
       {
         path: 'calendar/:funcID',
-        //component: CalendarComponent,
-        component: CodxCalendarComponent,
+        component: COCalendarComponent,
       },
       {
         path: 'personal/:funcID',
@@ -94,6 +95,11 @@ const routes: Routes = [
         path: 'edayoffs/:funcID',
         component: EmployeeDayOffComponent,
       },
+      // HR - QTNS - Đăng ký nghỉ phép
+      {
+        path: 'equit/:funcID',
+        component: EmployeeQuitComponent,
+      },
       //Task + duyyet TM
       {
         path: 'tasks/:funcID',
@@ -117,6 +123,10 @@ const routes: Routes = [
       {
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
+      },
+      {
+        path: 'paymentorders/:funcID',
+        component: PaymentOrderComponent,
       },
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
@@ -170,7 +180,8 @@ const routes: Routes = [
     MenuListApprovalComponent,
     DashboardComponent,
     ReportComponent,
-    RequestReviewComponent
+    RequestReviewComponent,
+    BookmarkComponent
   ],
   imports: [
     RouterModule.forChild(routes),

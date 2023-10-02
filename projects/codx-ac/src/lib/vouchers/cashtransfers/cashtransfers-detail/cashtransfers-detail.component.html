@@ -10,7 +10,10 @@
 </codx-detail-tmp>
 
 <ng-template #header>
-  <div class="d-flex align-items-center ac-cashID mt-n8">
+  <div
+    class="d-flex align-items-center ac-cashID mt-n8 position-relative"
+    style="z-index: 100; width: fit-content"
+  >
     <div
       class="w-25px h-25px rounded-circle bg-primary d-flex flex-center me-2"
     >
@@ -143,7 +146,7 @@
         default="&nbsp;Thu lại"
         class="text-primary"
         role="button"
-        (click)="onClickShowLess()"
+        (click)="onShowLessClick()"
       ></codx-label>
     </div>
 

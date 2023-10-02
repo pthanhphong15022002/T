@@ -108,7 +108,8 @@ export class DealsComponent
   className = 'DealsBusiness';
   method = 'GetListDealsAsync';
   idField = 'recID';
-
+  predicate = '';
+  dataValue = '';
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -166,9 +167,10 @@ export class DealsComponent
   listHeader: any = [];
   listSteps: any[] = [];
   arrFieldIsVisible: any[];
-
+  isChangeOwner = false;
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
+  queryParams: any;
 
   constructor(
     private inject: Injector,
@@ -183,6 +185,11 @@ export class DealsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
+    if (this.queryParams?.recID) {
+      this.predicate = 'RecID=@0';
+      this.dataValue = this.queryParams?.recID;
+    }
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -285,7 +292,10 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-
+    if(this.queryParams?.recID){
+      this.request.predicate = this.predicate;
+      this.request.dataValue = this.dataValue;
+    }
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
@@ -493,18 +503,18 @@ export class DealsComponent
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
-  async getValuelistStatusCode() {
-    this.cache.valueList('CRM041').subscribe((func) => {
-      if (func) {
-        this.valueListStatusCode = func.datas
-          .filter((x) => ['2', '3', '5', '7'].includes(x.value))
-          .map((item) => ({
-            text: item.text,
-            value: item.value,
-          }));
-      }
-    });
-  }
+  // async getValuelistStatusCode() {
+  //   this.cache.valueList('CRM041').subscribe((func) => {
+  //     if (func) {
+  //       this.valueListStatusCode = func.datas
+  //         .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+  //         .map((item) => ({
+  //           text: item.text,
+  //           value: item.value,
+  //         }));
+  //     }
+  //   });
+  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -1172,6 +1182,7 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let ownerIdOld = data.owner;
     let dealValueOld = data.dealValue;
     let exchangeRateOld = data.exchangeRate;
     this.view.dataService
@@ -1215,6 +1226,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
+            this.isChangeOwner = ownerIdOld != e.event.owner;
             this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }

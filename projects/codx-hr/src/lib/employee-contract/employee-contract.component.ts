@@ -172,6 +172,10 @@ export class EmployeeContractComponent extends UIComponent {
     this.editStatusObj = data;
     //this.currentEmpObj = data?.inforEmployee;
 
+    if (!this.view.formModel.currentData) {
+      this.view.formModel.currentData = this.editStatusObj;
+    }
+
     this.formGroup.patchValue(this.editStatusObj);
     this.dialogEditStatus = this.callfc.openForm(
       this.templateUpdateStatus,
@@ -530,7 +534,11 @@ export class EmployeeContractComponent extends UIComponent {
             this.dataCategory,
             this.view.formModel.entityName,
             this.view.formModel.funcID,
-            this.view.function.description + ' - ' + this.itemDetail.contractNo,
+            this.view.function.description +
+              ' - ' +
+              this.itemDetail.contractNo +
+              ' - ' +
+              this.itemDetail.employeeID,
             (res: any) => {
               if (res?.msgCodeError == null && res?.rowCount) {
                 //this.notify.notifyCode('ES007');
