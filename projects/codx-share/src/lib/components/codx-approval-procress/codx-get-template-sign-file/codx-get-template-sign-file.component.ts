@@ -14,6 +14,7 @@ import {
   TemplateRef,
   ChangeDetectorRef,
 } from '@angular/core';
+import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
   selector: 'codx-get-template-sign-file',
@@ -27,9 +28,13 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
   sfTemplates=[];
   fields: Object = { text: 'title', value: 'recID' };
   crrTemplate: any;
+  signFileFM: import("codx-core").FormModel;
+  isAfterRender=false;
+  selectedTemplate=[];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
+    private codxShareService: CodxShareService,
     // private cache: CacheService,
     // private apiHttpService: ApiHttpService,
     // private authStore: AuthStore,
@@ -42,9 +47,17 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+    this.codxShareService.getFormModel('EST011').then((res) => {
+      if (res) {
+        this.signFileFM = res;
+        this.sfTemplates.forEach(temp=>{
+          temp.isSelected = false;
+        })
+        this.isAfterRender= true;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
-
   onSaveForm() {
     if(this.crrTemplate==null)
     {
@@ -52,6 +65,17 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
       return;
     }
     this.dialogRef && this.dialogRef.close(this.crrTemplate);
+  }
+  onSaveForm1() {
+    this.selectedTemplate= this.sfTemplates.filter(x=>x.isSelected);
+    if(this.selectedTemplate?.length >0)
+    {
+      this.dialogRef && this.dialogRef.close(this.selectedTemplate);      
+    }
+    else{
+      this.notificationsService.notify("Quy trình mẫu ko đc bỏ trống!",'2',null);
+      return;
+    }
   }
 
   
@@ -67,6 +91,12 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
       this.detectorRef.detectChanges();
     }
   }
-
+  checkChange(recID:any,isSelected:boolean){
+    let crrTemplate = this.sfTemplates.filter(x=>x?.recID == recID);
+    if(crrTemplate?.length>0){
+      crrTemplate[0].isSelected = !isSelected;
+      this.detectorRef.detectChanges();
+    }
+  }
   
 }
