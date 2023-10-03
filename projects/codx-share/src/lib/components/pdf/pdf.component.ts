@@ -103,7 +103,7 @@ export class PdfComponent
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
-  @Input() dynamicApprovers = []; 
+  @Input() dynamicApprovers = [];
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -295,7 +295,7 @@ export class PdfComponent
         this.isApprover,
         this.isEditable,
         this.transRecID,
-        this.dynamicApprovers
+        this.dynamicApprovers,
       ])
       .subscribe((res: any) => {
         console.table('sf', res);
@@ -1575,11 +1575,11 @@ export class PdfComponent
         break;
 
       case 'img': {
-        let img = document.createElement('img') as HTMLImageElement;
+        const img = document.createElement('img') as HTMLImageElement;
         console.log('run addArea', url);
 
-        img.setAttribute('crossOrigin', 'anonymous');
-        img.referrerPolicy = 'noreferrer';
+        // img.setAttribute('crossOrigin', 'anonymous');
+        // img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
           let imgFixW = 200;
@@ -1699,6 +1699,7 @@ export class PdfComponent
     let data = {
       data: model,
       setupShowForm: setupShowForm,
+      isPublic: this.isPublic,
     };
 
     switch (area.labelType) {
@@ -1731,7 +1732,8 @@ export class PdfComponent
         return;
       }
       if (res?.event[0]) {
-        area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
+        // environment.urlUpload + '/' +
+        area.labelValue = res.event[0].pathDisk;
         this.detectorRef.detectChanges();
         console.log('run changeSignature_StampImg');
 
@@ -1747,8 +1749,8 @@ export class PdfComponent
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       const img = document.createElement('img') as HTMLImageElement;
-      img.setAttribute('crossOrigin', 'anonymous');
-      img.referrerPolicy = 'noreferrer';
+      // img.setAttribute('crossOrigin', 'anonymous');
+      // img.referrerPolicy = 'noreferrer';
       img.src = fileReader.result.toString();
       let min = 0;
       let scale = 1;
@@ -1999,9 +2001,11 @@ export class PdfComponent
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
     let w =
-      (this.curSelectedArea.scale().x / this.xScale) *
+      this.curSelectedArea.scale().x *
       (isTxt ? this.curSelectedArea.width() : 1);
-    let h = this.curSelectedArea.scale().y / this.yScale;
+    let h =
+      this.curSelectedArea.scale().y *
+      (isTxt ? this.curSelectedArea.height() : 1);
 
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,
@@ -2074,6 +2078,7 @@ export class PdfComponent
       email: this.signerInfo?.userID, //email của approver là đối tác
       fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
+      isPublic: this.isPublic,
     };
     let data = {
       data: model,
@@ -2608,8 +2613,8 @@ export class PdfComponent
             });
         } else {
           const img = document.createElement('img') as HTMLImageElement;
-          img.setAttribute('crossOrigin', 'anonymous');
-          img.referrerPolicy = 'noreferrer';
+          // img.setAttribute('crossOrigin', 'anonymous');
+          // img.referrerPolicy = 'noreferrer';
 
           img.src = url;
           img.onload = () => {

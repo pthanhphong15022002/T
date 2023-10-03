@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -7,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -24,11 +26,12 @@ import { CodxWrService } from '../../codx-wr.service';
   templateUrl: './popup-update-reasoncode.component.html',
   styleUrls: ['./popup-update-reasoncode.component.css'],
 })
-export class PopupUpdateReasonCodeComponent implements OnInit {
+export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
+  dataWorkOrder: any;
   title = '';
   showLabelAttachment = false;
   isHaveFile = false;
@@ -49,12 +52,17 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
   countFileDelete = 0;
   gridViewSetup: any;
   countValidate = 0;
+  createdBy: any;
+  lstTimeVll = [];
+  lstUsers = [];
+  scheduleTime: any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private wrSv: CodxWrService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -63,8 +71,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
+    this.createdBy = dt?.data?.createdBy;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
+
   ngOnInit(): void {
     if (
       this.data != null &&
@@ -81,10 +91,48 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.setDataCommentAndDate(res?.dateControl, res?.commentControl, res?.comment);
+            this.setDataCommentAndDate(
+              res?.dateControl,
+              res?.commentControl,
+              res?.comment
+            );
           }
         });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.cache.valueList('WR007').subscribe((res) => {
+      if (res && res?.datas) {
+        this.lstTimeVll = res?.datas ?? [];
+      }
+    });
+
+    let lstIds = [];
+    if (this.createdBy) {
+      lstIds.push(this.createdBy);
+    }
+
+    if (this.data?.engineerID != null && this.data?.engineerID?.trim() != '') {
+      lstIds.push(this.data?.engineerID);
+    }
+    if (lstIds != null && lstIds.length > 0) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.AD',
+          'UsersBusiness',
+          'GetUserByIDAsync',
+          [lstIds]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.lstUsers = res;
+          }
+        });
+    }
+
+    this.detectorRef.detectChanges();
   }
 
   //#region save
@@ -94,7 +142,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       return;
     }
     if (this.data.scheduleStart) {
-      if (new Date(this.data.scheduleStart) < new Date()) {
+      if (new Date(this.data.scheduleStart).getDate() < new Date().getDate()) {
         this.notiService.notifyCode('WR003');
         return;
       }
@@ -173,7 +221,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
         this.dateControl == '2' ? true : false;
       this.gridViewSetup.ScheduleTime.isRequire =
         this.dateControl == '2' ? true : false;
-      this.data.scheduleStart = new Date(new Date().getTime() + 3600000);
+      this.setSchedule();
     } else {
       this.data.scheduleStart = null;
       this.data.scheduleTime = '';
@@ -181,16 +229,75 @@ export class PopupUpdateReasonCodeComponent implements OnInit {
       this.gridViewSetup.ScheduleTime.isRequire = false;
     }
     this.commentControl = commentControl;
-    if (this.commentControl != '0') {
-      this.gridViewSetup.Comment.isRequire =
-        this.dateControl == '2' ? true : false;
-      this.data.comment = comment;
-    } else {
-      this.gridViewSetup.Comment.isRequire = false;
-      this.data.comment = '';
-    }
+    this.setComment(comment, this.commentControl);
   }
 
+  setSchedule() {
+    let timeList = this.lstTimeVll ?? [];
+    let currentDate = new Date();
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours() * 100 + currentTime.getMinutes();
+    let closestStartTime = null;
+    let scheduleTime = null;
+    for (const hourItem of timeList) {
+      const timeRange = hourItem?.text?.split(' - ');
+      const startTime = timeRange[0].replace('h', '').replace('h', '');
+
+      if (parseInt(startTime) >= currentHour) {
+        closestStartTime = hourItem?.value;
+        scheduleTime = hourItem?.text;
+        break;
+      }
+    }
+
+    if (!closestStartTime) {
+      currentDate.setDate(currentDate.getDate() + 1);
+
+      closestStartTime = timeList[0]?.value;
+      scheduleTime = timeList[0]?.text;
+    }
+    this.data.scheduleStart = currentDate;
+    this.data.scheduleTime = closestStartTime;
+    this.scheduleTime = scheduleTime;
+  }
+
+  setComment(comment, commentControl) {
+    let commentRep = comment;
+
+    if (comment != null && comment?.trim() != '') {
+      if (
+        this.data?.engineerID != null &&
+        this.data?.engineerID?.trim() != ''
+      ) {
+        let indx = -1;
+
+        if (commentControl == '1') {
+          indx = this.lstUsers.findIndex(
+            (x) => x.userID == this.data?.engineerID
+          );
+        } else {
+          indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
+        }
+
+        if (indx != -1) {
+          commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
+        } else {
+          commentRep = commentRep.replace('{0}', this.createdBy);
+        }
+      }
+
+      if (this.scheduleTime)
+        commentRep = commentRep.replace('{1}', this.scheduleTime);
+
+      if (this.data.scheduleStart) {
+        let date = moment(new Date(this.data.scheduleStart)).format(
+          'DD/MM/YYYY'
+        );
+        commentRep = commentRep.replace('{2}', date);
+      }
+    }
+    this.data.comment = commentRep;
+  }
   //#region date schedule
 
   setTimeEdit() {

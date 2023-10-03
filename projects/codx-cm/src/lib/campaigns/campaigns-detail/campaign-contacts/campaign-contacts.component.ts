@@ -31,6 +31,7 @@ export class CampaignContactsComponent implements OnInit {
   @Input() transID: any;
   @Input() objectType: any;
   @Input() isShow: boolean;
+  @Input() isDoubleClick: boolean = false;
   @ViewChild('headerCustomerName') headerCustomerName: TemplateRef<any>;
   @ViewChild('tempCustomerName') tempCustomerName: TemplateRef<any>;
   @ViewChild('headerIndustries') headerIndustries: TemplateRef<any>;
@@ -96,32 +97,32 @@ export class CampaignContactsComponent implements OnInit {
       {
         headerTemplate: this.headerCustomerName,
         template: this.tempCustomerName,
-        width: 200,
+        width: !this.isDoubleClick ? 200 : 300,
       },
       {
         headerTemplate: this.headerIndustries,
         template: this.tempIndustries,
-        width: 200,
+        width: !this.isDoubleClick ? 200 : 300,
       },
       {
         headerTemplate: this.headerContact,
         template: this.tempContact,
-        width: 175,
+        width: !this.isDoubleClick ? 175 : 275,
       },
       {
         headerTemplate: this.headerOwner,
         template: this.tempOwner,
-        width: 150,
+        width: !this.isDoubleClick ? 150 : 250,
       },
       {
         headerTemplate: this.headerStatus,
         template: this.tempStatus,
-        width: 100,
+        width: !this.isDoubleClick ? 100 : 175,
       },
       {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
-        width: 150,
+        width: !this.isDoubleClick ? 150 : 250,
       },
     ];
     this.detector.detectChanges();
@@ -252,6 +253,11 @@ export class CampaignContactsComponent implements OnInit {
             .closed.subscribe((e) => {
               if (e && e?.event) {
                 this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
+                if (this.objectType == '3') {
+                  this.cmSv.countLeadsBehavior.next(
+                    this.lstCampContacts.length
+                  );
+                }
                 this.detector.detectChanges();
               }
             });
@@ -282,6 +288,11 @@ export class CampaignContactsComponent implements OnInit {
                 this.lstCampContacts = JSON.parse(
                   JSON.stringify(this.lstCampContacts)
                 );
+                if (this.objectType == '3') {
+                  this.cmSv.countLeadsBehavior.next(
+                    this.lstCampContacts.length
+                  );
+                }
               }
               this.notiSv.notifyCode('SYS008');
             }

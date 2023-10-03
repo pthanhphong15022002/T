@@ -33,6 +33,7 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 })
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
+  @Input() dataWorkOrder: any;
   @Output() listChange = new EventEmitter<any>();
   @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
@@ -321,6 +322,7 @@ export class ViewTabUpdateComponent implements OnInit {
             title: this.titleAction,
             transID: this.transID,
             engineerID: data?.engineerID,
+            createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
           };
           this.callFc

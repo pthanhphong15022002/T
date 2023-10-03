@@ -99,6 +99,7 @@ export class DealsComponent
 
   // type any for view detail
   @Input() dataObj?: any;
+  @Input() showButtonAdd = false;
   kanban: any;
 
   // config api get data
@@ -117,7 +118,7 @@ export class DealsComponent
   customerName: string = '';
   oldIdDeal: string = '';
 
-  @Input() showButtonAdd = false;
+
 
   columnGrids = [];
   // showButtonAdd = false;
@@ -137,6 +138,9 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  readonly fieldCbxStatus = { text: 'text', value: 'value' };
+
+
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
@@ -196,12 +200,13 @@ export class DealsComponent
       this.functionModule = f.module;
       this.nameModule = f.customName;
       this.executeApiCallFunctionID(f.formName, f.gridViewName);
+
     });
     this.getColorReason();
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-
+    this.getListStatusCode();
     this.codxCmService.getProcessDefault('1').subscribe((res) => {
       if (res) {
         this.processIDDefault = res.recID;
@@ -459,7 +464,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data.status != '2' || data.closed;
+      eventItem.disabled = data?.alloweStatus == '1' || data.closed;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -503,6 +508,20 @@ export class DealsComponent
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+                  text: item.statusName,
+                  value: item.statusID,
+                }));
+
+      }
+      else {
+        this.valueListStatusCode = [];
+      }
+    });
+}
   // async getValuelistStatusCode() {
   //   this.cache.valueList('CRM041').subscribe((func) => {
   //     if (func) {
@@ -1893,7 +1912,7 @@ export class DealsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = data.status;
+    this.statusDefault = data.statusCodeID;
     this.dialogQuestionForm = this.callfc.openForm(
       this.popUpQuestionStatus,
       '',
@@ -1903,11 +1922,14 @@ export class DealsComponent
   }
   valueChangeStatusCode($event) {
     if ($event) {
-      this.statusDefault = $event.data;
+      this.statusDefault = $event;
+    }
+    else {
+      this.statusDefault = null;
     }
   }
   saveStatus() {
-    if (this.dataSelected.status === this.statusDefault) {
+    if (this.dataSelected.statusCodeID === this.statusDefault) {
       this.dialogQuestionForm.close();
       this.notificationsService.notifyCode('SYS007');
     } else {

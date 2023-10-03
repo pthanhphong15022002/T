@@ -210,7 +210,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             //   },
             // },
             {
-              sameData: false,
+              sameData: true,
               type: ViewType.grid,
               active: true,
               model: {

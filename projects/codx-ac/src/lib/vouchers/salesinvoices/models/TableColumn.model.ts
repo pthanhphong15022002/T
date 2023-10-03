@@ -12,7 +12,7 @@ export class TableColumn {
   footerClass: string;
   hasSum: boolean = false;
   sum: number = 0;
-  sumFormat: string = SumFormat.Normal;
+  sumFormat: SumFormat = SumFormat.Normal;
 
   constructor(init?: Partial<TableColumn>) {
     Object.assign(this, init);

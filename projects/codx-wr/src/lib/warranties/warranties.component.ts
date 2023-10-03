@@ -148,7 +148,6 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
-
     this.detectorRef.detectChanges();
   }
 
@@ -580,6 +579,7 @@ export class WarrantiesComponent
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
+            createdBy: data?.createdBy,
             gridViewSetup: res,
           };
           this.callFc
@@ -645,7 +645,8 @@ export class WarrantiesComponent
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
-          this.dataSelected.comment = e?.event[1];
+          this.dataSelected.owner = e?.event[0];
+          this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
@@ -663,6 +664,12 @@ export class WarrantiesComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  updateAssignEngineerEmit(e) {
+    if (e && e?.data) {
+      this.updateAssignEngineer(e?.data);
+    }
   }
   //#endregion
 
@@ -798,5 +805,16 @@ export class WarrantiesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+
+  getIcon($event) {
+    if ($event == 'O') {
+      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    } else if ($event == 'I') {
+      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
+    } else if ($event == 'F') {
+      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
   }
 }

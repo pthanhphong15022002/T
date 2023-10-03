@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -17,6 +18,7 @@ import {
 } from 'codx-core';
 import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
 import moment from 'moment';
+import { CodxFieldsFormatValueComponent } from './codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'codx-fields-detail-temp',
@@ -181,9 +183,14 @@ export class CodxFieldsDetailTempComponent implements OnInit {
       if (e && e?.event) {
         var fields = e?.event;
         fields.forEach((obj) => {
-          var idx = this.dataStep.fields.findIndex((x) => x.recID == obj.recID);
-          if (idx != -1) this.dataStep.fields[idx].dataValue = obj.dataValue;
+          var idx = this.dataStep.fields.findIndex(
+            (x) => x.recID == obj.recID && x.dataValue != obj.dataValue
+          );
+          if (idx != -1) {
+            this.dataStep.fields[idx].dataValue = obj.dataValue;
+          }
         });
+
         this.saveDataStep.emit(this.dataStep);
       }
     });

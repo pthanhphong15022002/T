@@ -674,9 +674,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     return arrTable;
   }
 
-  updateLine(value, index) {}
-  removeLine(value, index) {}
-
+  //add
   clickAddLine() {
     let option = new DialogModel();
     option.FormModel = this.formModel;
@@ -707,5 +705,51 @@ export class CodxInputCustomFieldComponent implements OnInit {
       }
     });
   }
+
+  // edit
+  updateLine(value, index) {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    option.zIndex = 1050;
+    let obj = {
+      data: { ...JSON.parse(this.modelJSON), ...value },
+      action: 'edit',
+      titleAction: 'Chỉnh sửa',
+      listColumns: this.columns,
+    };
+    let dialogColumn = this.callfc.openForm(
+      PopupAddLineTableComponent,
+      '',
+      500,
+      750,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.arrDataValue[index] = res.event;
+        this.valueChangeCustom.emit({
+          e: JSON.stringify(this.arrDataValue),
+          data: this.customField,
+        });
+      }
+    });
+  }
+
+  // deleted;
+  removeLine(value, index) {
+    this.notiService.alertCode('SYS030').subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.arrDataValue.splice(index, 1);
+        this.valueChangeCustom.emit({
+          e: JSON.stringify(this.arrDataValue),
+          data: this.customField,
+        });
+      }
+    });
+  }
+
   //--------------end------------//
 }

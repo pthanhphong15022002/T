@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import {
   Util,
@@ -23,6 +24,8 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-popup-job',
@@ -30,7 +33,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
   styleUrls: ['./popup-step-task.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupJobComponent implements OnInit {
+export class PopupJobComponent implements OnInit, OnDestroy {
   @ViewChild('sample') comboBoxObj: ComboBoxComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
@@ -77,6 +80,8 @@ export class PopupJobComponent implements OnInit {
     R: 'Share_UserRoles_Sgl',
     D: 'Share_Departments_Sgl',
   };
+  //detroy
+  private detroyFormTask$: Subject<void> = new Subject<void>();
 
   constructor(
     private cache: CacheService,
@@ -124,6 +129,15 @@ export class PopupJobComponent implements OnInit {
       this.showLabelAttachment = true;
     }
   }
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
+
+  onDestroy(): void {
+    this.detroyFormTask$.next();
+    this.detroyFormTask$.complete();
+  }
+
   async ngOnInit() {
     this.getFormModel();
 
@@ -168,6 +182,7 @@ export class PopupJobComponent implements OnInit {
         this.dialog?.formModel?.formName,
         this.dialog?.formModel?.gridViewName
       )
+      .pipe(takeUntil(this.detroyFormTask$))
       .subscribe((res) => {
         for (let key in res) {
           if (res[key]['isRequire']) {
@@ -271,22 +286,24 @@ export class PopupJobComponent implements OnInit {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
       if (this.attachment && this.attachment.fileUploadList.length) {
-        (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          this.attachment?.clearData();
+        (await this.attachment.saveFilesObservable())
+          .pipe(takeUntil(this.detroyFormTask$))
+          .subscribe((res) => {
+            this.attachment?.clearData();
 
-          if (res) {
-            if (res?.length >= 0) {
-              res.forEach((item) => {
-                if (item['data']['recID']) {
-                  this.listFileTask.push(item['data']['recID']);
-                }
-              });
-            } else {
-              this.listFileTask.push(res['data']['recID']);
+            if (res) {
+              if (res?.length >= 0) {
+                res.forEach((item) => {
+                  if (item['data']['recID']) {
+                    this.listFileTask.push(item['data']['recID']);
+                  }
+                });
+              } else {
+                this.listFileTask.push(res['data']['recID']);
+              }
+              this.handelSave();
             }
-            this.handelSave();
-          }
-        });
+          });
       } else {
         this.handelSave();
       }
@@ -328,10 +345,12 @@ export class PopupJobComponent implements OnInit {
                 data: this.stepsTasks,
                 status: this.action,
               });
+              this.onDestroy();
             }
           });
         } else {
           this.dialog.close({ data: this.stepsTasks, status: this.action });
+          this.onDestroy();
         }
       } else {
         // tính thời gian dựa vào công việc liên quan rồi mới so sánh
@@ -348,10 +367,12 @@ export class PopupJobComponent implements OnInit {
               this.step['durationDay'] = Math.floor(maxtime / 24 || 0);
               this.step['durationHour'] = maxtime % 24 || 0;
               this.dialog.close({ data: this.stepsTasks, status: this.action });
+              this.onDestroy();
             }
           });
         } else {
           this.dialog.close({ data: this.stepsTasks, status: this.action });
+          this.onDestroy();
         }
       }
     }
@@ -380,6 +401,7 @@ export class PopupJobComponent implements OnInit {
             this.step['durationHour'] = sumGroup % 24;
           }
           this.dialog.close({ data: this.stepsTasks, status: this.action });
+          this.onDestroy();
         }
       });
     }
@@ -479,9 +501,9 @@ export class PopupJobComponent implements OnInit {
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
     if (event?.field == 'createTask') {
-      if(event?.data){
+      if (event?.data) {
         this.stepsTasks.assignControl = '0';
-      }else{
+      } else {
         this.stepsTasks.assignControl = null;
       }
     }
@@ -512,7 +534,9 @@ export class PopupJobComponent implements OnInit {
       let index = this.participant?.findIndex(
         (role) => role?.objectID == this.stepsTasks.owner
       );
-      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index, 1);
+      index >= 0 &&
+        this.participant?.length > 0 &&
+        this.participant?.splice(index, 1);
       this.participant = [...this.participant];
     }
     if (roleType == 'P') {

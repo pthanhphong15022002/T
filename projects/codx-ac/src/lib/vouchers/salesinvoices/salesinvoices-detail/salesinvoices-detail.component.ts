@@ -8,12 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  CRUDService,
-  DataRequest,
-  FormModel,
-  UIComponent
-} from 'codx-core';
+import { CRUDService, DataRequest, FormModel, UIComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
@@ -23,7 +18,7 @@ import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SumFormat, TableColumn } from '../models/TableColumn.model';
 import {
   SalesInvoiceService,
-  fmSalesInvoicesLines
+  fmSalesInvoicesLines,
 } from '../salesinvoices.service';
 
 @Component({
@@ -52,9 +47,52 @@ export class SalesinvoicesDetailComponent
   viewData: ISalesInvoice;
   lines: ISalesInvoicesLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
-  columns: TableColumn[] = [];
+  columns: TableColumn[] = [
+    new TableColumn({
+      labelName: 'Num',
+      headerText: 'STT',
+    }),
+    new TableColumn({
+      labelName: 'Item',
+      headerText: 'Mặt hàng',
+      footerText: 'Tổng cộng',
+      footerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'Quantity',
+      field: 'quantity',
+      headerText: 'Số lượng',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+    }),
+    new TableColumn({
+      labelName: 'SalesPrice',
+      field: 'salesPrice',
+      headerText: 'Đơn giá',
+      headerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'NetAmt',
+      field: 'netAmt',
+      headerText: 'Thành tiền',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+    new TableColumn({
+      labelName: 'Vatid',
+      field: 'vatAmt',
+      headerText: 'Thuế GTGT',
+      headerClass: 'text-end pe-3',
+      footerClass: 'text-end pe-3',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+  ];
 
-  fmSalesInvoicesLines: FormModel;
+  fmSalesInvoicesLines: FormModel = fmSalesInvoicesLines;
   functionName: string;
   tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
@@ -69,53 +107,6 @@ export class SalesinvoicesDetailComponent
     private salesInvoiceService: SalesInvoiceService
   ) {
     super(injector);
-
-    this.fmSalesInvoicesLines = fmSalesInvoicesLines;
-
-    this.columns = [
-      new TableColumn({
-        labelName: 'Num',
-        headerText: 'STT',
-      }),
-      new TableColumn({
-        labelName: 'Item',
-        headerText: 'Mặt hàng',
-        footerText: 'Tổng cộng',
-        footerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'Quantity',
-        field: 'quantity',
-        headerText: 'Số lượng',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-      }),
-      new TableColumn({
-        labelName: 'SalesPrice',
-        field: 'salesPrice',
-        headerText: 'Đơn giá',
-        headerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'NetAmt',
-        field: 'netAmt',
-        headerText: 'Thành tiền',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-      new TableColumn({
-        labelName: 'Vatid',
-        field: 'vatAmt',
-        headerText: 'Thuế GTGT',
-        headerClass: 'text-end pe-3',
-        footerClass: 'text-end pe-3',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-    ];
   }
   //#endregion
 
