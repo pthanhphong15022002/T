@@ -265,25 +265,30 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     let commentRep = comment;
 
     if (comment != null && comment?.trim() != '') {
-      if (
-        this.data?.engineerID != null &&
-        this.data?.engineerID?.trim() != ''
-      ) {
-        let indx = -1;
+      let indx = -1;
 
-        if (commentControl == '1') {
+      if (commentControl == '1') {
+        if (
+          this.data?.engineerID != null &&
+          this.data?.engineerID?.trim() != ''
+        ) {
           indx = this.lstUsers.findIndex(
             (x) => x.userID == this.data?.engineerID
           );
-        } else {
+        }
+      } else {
+        if (
+          this.createdBy != null &&
+          this.createdBy?.trim() != ''
+        ) {
           indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
         }
+      }
 
-        if (indx != -1) {
-          commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
-        } else {
-          commentRep = commentRep.replace('{0}', this.createdBy);
-        }
+      if (indx != -1) {
+        commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
+      } else {
+        commentRep = commentRep.replace('{0}', this.createdBy);
       }
 
       if (this.scheduleTime)
