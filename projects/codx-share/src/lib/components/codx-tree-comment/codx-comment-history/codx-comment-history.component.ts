@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -15,6 +16,7 @@ import {
   CacheService,
   CallFuncService,
   DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
   Util,
@@ -62,6 +64,8 @@ export class CodxCommentHistoryComponent implements OnInit {
   };
 
   @ViewChild('codxATM') codxATM: AttachmentComponent;
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
+
   constructor(
     private api: ApiHttpService,
     private auth: AuthService,
@@ -151,7 +155,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     evt.preventDefault();
     this.deleteComment;
     if (!this.message && !this.files) {
-      this.notifySV.notifyCode('SYS010');
+      this.notifySV.notify('Nội dung không được phép bỏ trống',"2");
       return;
     }
     let data = new tmpHistory();
@@ -276,4 +280,59 @@ export class CodxCommentHistoryComponent implements OnInit {
       option
     );
   }
+
+  //open popup comment
+  openPopupComment(value:string = null){
+    if(value)
+      this.content = value;
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    this.callFuc.openForm(
+      this.popupComment,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    ).closed.subscribe(() => {
+      this.content = "";
+    });
+  }
+
+  content:string = "";
+  valuePopupChange(event){
+    if (event.data) {
+      this.content = event.data;
+    }
+  }
+
+  // send comment
+  sendCommentPopup(dialog:DialogRef) {
+    if (this.content == "" || this.content == null) 
+    {
+      this.notifySV.notify('Nội dung không được phép bỏ trống',"2");
+      return;
+    }
+    let data = new tmpHistory();
+    data.recID = Util.uid();
+    data.comment = this.content;
+    data.objectID = this.objectID;
+    data.objectType = this.objectType;
+    data.functionID = this.funcID;
+    data.reference = this.reference;
+    this.api.execSv(
+      'BG',
+      'ERM.Business.BG',
+      'CommentLogsBusiness',
+      'InsertCommentAsync',
+      [data]).subscribe((res: any[]) => {
+      this.evtSend.emit(res[1]);
+      this.notifySV.notifyCode(res[0] != null ? 'WP034' : 'SYS023');
+      this.content = "";
+      dialog.close();
+    });
+  }
+  
 }

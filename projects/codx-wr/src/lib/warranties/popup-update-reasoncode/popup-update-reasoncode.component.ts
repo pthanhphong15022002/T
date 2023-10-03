@@ -31,6 +31,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
+  dataWorkOrder: any;
   title = '';
   showLabelAttachment = false;
   isHaveFile = false;
@@ -51,7 +52,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   countFileDelete = 0;
   gridViewSetup: any;
   countValidate = 0;
+  createdBy: any;
   lstTimeVll = [];
+  lstUsers = [];
+  scheduleTime: any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -67,6 +71,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.title = dt?.data?.title;
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
+    this.createdBy = dt?.data?.createdBy;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
 
@@ -102,6 +107,32 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         this.lstTimeVll = res?.datas ?? [];
       }
     });
+
+    let lstIds = [];
+    if (this.createdBy) {
+      lstIds.push(this.createdBy);
+    }
+
+    if (this.data?.engineerID != null && this.data?.engineerID?.trim() != '') {
+      lstIds.push(this.data?.engineerID);
+    }
+    if (lstIds != null && lstIds.length > 0) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.AD',
+          'UsersBusiness',
+          'GetUserByIDAsync',
+          [lstIds]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.lstUsers = res;
+          }
+        });
+    }
+
+    this.detectorRef.detectChanges();
   }
 
   //#region save
@@ -111,7 +142,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.data.scheduleStart) {
-      if (new Date(this.data.scheduleStart) < new Date()) {
+      if (new Date(this.data.scheduleStart).getDate() < new Date().getDate()) {
         this.notiService.notifyCode('WR003');
         return;
       }
@@ -198,14 +229,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       this.gridViewSetup.ScheduleTime.isRequire = false;
     }
     this.commentControl = commentControl;
-    if (this.commentControl != '0') {
-      this.gridViewSetup.Comment.isRequire =
-        this.dateControl == '2' ? true : false;
-      this.data.comment = comment;
-    } else {
-      this.gridViewSetup.Comment.isRequire = false;
-      this.data.comment = '';
-    }
+    this.setComment(comment, this.commentControl);
   }
 
   setSchedule() {
@@ -213,16 +237,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     let currentDate = new Date();
     const currentTime = new Date();
     const currentHour = currentTime.getHours() * 100 + currentTime.getMinutes();
-
-    // Tìm thời gian bắt đầu gần nhất và lớn hơn hoặc bằng thời gian hiện tại
     let closestStartTime = null;
-
+    let scheduleTime = null;
     for (const hourItem of timeList) {
       const timeRange = hourItem?.text?.split(' - ');
       const startTime = timeRange[0].replace('h', '').replace('h', '');
 
       if (parseInt(startTime) >= currentHour) {
         closestStartTime = hourItem?.value;
+        scheduleTime = hourItem?.text;
         break;
       }
     }
@@ -231,9 +254,61 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       currentDate.setDate(currentDate.getDate() + 1);
 
       closestStartTime = timeList[0]?.value;
+      scheduleTime = timeList[0]?.text;
     }
     this.data.scheduleStart = currentDate;
     this.data.scheduleTime = closestStartTime;
+    this.scheduleTime = scheduleTime;
+  }
+
+  setComment(comment, commentControl) {
+    let commentRep = comment;
+
+    if (comment != null && comment?.trim() != '') {
+      let indx = -1;
+
+      if (commentControl == '1') {
+        if (
+          this.data?.engineerID != null &&
+          this.data?.engineerID?.trim() != ''
+        ) {
+          indx = this.lstUsers.findIndex(
+            (x) => x.userID == this.data?.engineerID
+          );
+          if (indx != -1) {
+            commentRep = commentRep.replace(
+              '{0}',
+              this.lstUsers[indx]?.userName
+            );
+          } else {
+            commentRep = commentRep.replace('{0}', this.data?.engineerID);
+          }
+        }
+      } else {
+        if (this.createdBy != null && this.createdBy?.trim() != '') {
+          indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
+          if (indx != -1) {
+            commentRep = commentRep.replace(
+              '{0}',
+              this.lstUsers[indx]?.userName
+            );
+          } else {
+            commentRep = commentRep.replace('{0}', this.createdBy);
+          }
+        }
+      }
+
+      if (this.scheduleTime)
+        commentRep = commentRep.replace('{1}', this.scheduleTime);
+
+      if (this.data.scheduleStart) {
+        let date = moment(new Date(this.data.scheduleStart)).format(
+          'DD/MM/YYYY'
+        );
+        commentRep = commentRep.replace('{2}', date);
+      }
+    }
+    this.data.comment = commentRep;
   }
   //#region date schedule
 

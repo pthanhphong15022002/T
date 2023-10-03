@@ -99,6 +99,7 @@ export class DealsComponent
 
   // type any for view detail
   @Input() dataObj?: any;
+  @Input() showButtonAdd = false;
   kanban: any;
 
   // config api get data
@@ -116,8 +117,6 @@ export class DealsComponent
   // type of string
   customerName: string = '';
   oldIdDeal: string = '';
-
-  @Input() showButtonAdd = false;
 
   columnGrids = [];
   // showButtonAdd = false;
@@ -137,6 +136,9 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
@@ -201,7 +203,7 @@ export class DealsComponent
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-
+    this.getListStatusCode();
     this.codxCmService.getProcessDefault('1').subscribe((res) => {
       if (res) {
         this.processIDDefault = res.recID;
@@ -292,7 +294,7 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-    if(this.queryParams?.recID){
+    if (this.queryParams?.recID) {
       this.request.predicate = this.predicate;
       this.request.dataValue = this.dataValue;
     }
@@ -459,7 +461,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data.status != '2' || data.closed;
+      eventItem.disabled = data?.alloweStatus == '1' || data.closed;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -502,6 +504,18 @@ export class DealsComponent
   executeApiCallFunctionID(formName, gridViewName) {
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
+  }
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+          text: item.statusName,
+          value: item.statusID,
+        }));
+      } else {
+        this.valueListStatusCode = [];
+      }
+    });
   }
   // async getValuelistStatusCode() {
   //   this.cache.valueList('CRM041').subscribe((func) => {
@@ -846,7 +860,7 @@ export class DealsComponent
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.permissionCM
+                e.event?.permissionCM,
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -1070,7 +1084,7 @@ export class DealsComponent
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      data:data,
+      data: data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
       applyFor: '1',
@@ -1893,7 +1907,7 @@ export class DealsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = data.status;
+    this.statusDefault = data.statusCodeID;
     this.dialogQuestionForm = this.callfc.openForm(
       this.popUpQuestionStatus,
       '',
@@ -1903,11 +1917,13 @@ export class DealsComponent
   }
   valueChangeStatusCode($event) {
     if ($event) {
-      this.statusDefault = $event.data;
+      this.statusDefault = $event;
+    } else {
+      this.statusDefault = null;
     }
   }
   saveStatus() {
-    if (this.dataSelected.status === this.statusDefault) {
+    if (this.dataSelected.statusCodeID === this.statusDefault) {
       this.dialogQuestionForm.close();
       this.notificationsService.notifyCode('SYS007');
     } else {

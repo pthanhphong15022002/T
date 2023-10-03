@@ -93,7 +93,7 @@ import { PopupAddEventComponent } from './components/setting-calendar/popup-add-
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
 import { ActiviesApprovalListComponent } from './layout/drawers/activies-approval-list/activies-approval-list.component';
 import { ActiviesSliderComponent } from './layout/drawers/activies-approval-list/activies-slider/activies-slider.component';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
+import { DialogModule, TooltipModule } from '@syncfusion/ej2-angular-popups';
 import {
   DocumentEditorAllModule,
   DocumentEditorContainerAllModule,
@@ -220,7 +220,7 @@ import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-
 import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
-
+import { TimeFromPipe } from './pipe/format-datetime.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -407,6 +407,7 @@ const T_Pipe: Type<any>[] = [
   GroupModulePipe,
   FileSizePipe,
   FormatDataValuePipe,
+  TimeFromPipe
 ];
 
 @NgModule({
@@ -463,6 +464,7 @@ const T_Pipe: Type<any>[] = [
     DragDropModule,
     ProgressBarAllModule,
     NgxCaptureModule,
+    TooltipModule
   ],
 })
 export class CodxShareModule {

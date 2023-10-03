@@ -90,6 +90,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModelAssign: FormModel; // formModel của giao việc
   @Input() isChangeOwner = false; 
 
+  @Input() customerName: string;
+  @Input() dealName: string;
+  @Input() contractName: string;
+  @Input() leadName: string;
+
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
   @Output() isChangeProgress = new EventEmitter<any>();
@@ -103,6 +108,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   user: any;
   id: string;
   taskType: any;
+  listFieldTask;
   listTask = [];
   moveStageData = [];
   idStepOld = '';
@@ -171,6 +177,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
+    // this.api.execSv<any>('DP','ERM.Business.DP','InstanceStepsBusiness','SendMailNotificationAsync').subscribe(res => {});
   }
 
   async ngOnInit(): Promise<void> {
@@ -1721,6 +1728,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         instanceStep: this.currentStep,
         sessionID: this.sessionID, // session giao việc
         formModelAssign: this.formModelAssign, // formModel của giao việc
+        customerName: this.customerName,
+        dealName: this.dealName,
+        contractName: this.contractName,
+        leadName: this.leadName,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -2409,8 +2420,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   getFields(listField, fieldID) {
     if (listField?.length > 0) {
-      let a = listField?.filter((field) => fieldID.includes(field?.recID));
-      return a;
+      this.listFieldTask = listField?.filter((field) => fieldID.includes(field?.recID));
+      return this.listFieldTask;
     }
     return null;
   }
