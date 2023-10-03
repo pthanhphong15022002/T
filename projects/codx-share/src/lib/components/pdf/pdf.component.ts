@@ -1578,8 +1578,8 @@ export class PdfComponent
         let img = document.createElement('img') as HTMLImageElement;
         console.log('run addArea', url);
 
-        img.setAttribute('crossOrigin', 'anonymous');
-        img.referrerPolicy = 'noreferrer';
+        // img.setAttribute('crossOrigin', 'anonymous');
+        // img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
           let imgFixW = 200;
@@ -1748,8 +1748,8 @@ export class PdfComponent
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       const img = document.createElement('img') as HTMLImageElement;
-      img.setAttribute('crossOrigin', 'anonymous');
-      img.referrerPolicy = 'noreferrer';
+      // img.setAttribute('crossOrigin', 'anonymous');
+      // img.referrerPolicy = 'noreferrer';
       img.src = fileReader.result.toString();
       let min = 0;
       let scale = 1;
@@ -2610,8 +2610,8 @@ export class PdfComponent
             });
         } else {
           const img = document.createElement('img') as HTMLImageElement;
-          img.setAttribute('crossOrigin', 'anonymous');
-          img.referrerPolicy = 'noreferrer';
+          // img.setAttribute('crossOrigin', 'anonymous');
+          // img.referrerPolicy = 'noreferrer';
 
           img.src = url;
           img.onload = () => {
