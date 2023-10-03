@@ -275,20 +275,27 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           indx = this.lstUsers.findIndex(
             (x) => x.userID == this.data?.engineerID
           );
+          if (indx != -1) {
+            commentRep = commentRep.replace(
+              '{0}',
+              this.lstUsers[indx]?.userName
+            );
+          } else {
+            commentRep = commentRep.replace('{0}', this.data?.engineerID);
+          }
         }
       } else {
-        if (
-          this.createdBy != null &&
-          this.createdBy?.trim() != ''
-        ) {
+        if (this.createdBy != null && this.createdBy?.trim() != '') {
           indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
+          if (indx != -1) {
+            commentRep = commentRep.replace(
+              '{0}',
+              this.lstUsers[indx]?.userName
+            );
+          } else {
+            commentRep = commentRep.replace('{0}', this.createdBy);
+          }
         }
-      }
-
-      if (indx != -1) {
-        commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
-      } else {
-        commentRep = commentRep.replace('{0}', this.createdBy);
       }
 
       if (this.scheduleTime)
