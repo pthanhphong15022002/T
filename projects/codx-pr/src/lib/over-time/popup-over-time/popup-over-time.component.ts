@@ -9,6 +9,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   UIComponent,
   Util,
 } from 'codx-core';
@@ -55,6 +56,8 @@ export class PopupOverTimeComponent extends UIComponent {
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
 
+    console.log(this.data);
+
     //data employee login if exists
     if (dialogData?.data[4]) {
       this.employeeObj = dialogData?.data[4];
@@ -64,10 +67,15 @@ export class PopupOverTimeComponent extends UIComponent {
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
 
-    if (this.funcType === 'add') {
+    if (
+      this.funcType === 'add' &&
+      this.data.fromDate == '0001-01-01T00:00:00' &&
+      this.data.fromDate == '0001-01-01T00:00:00'
+    ) {
       this.data.fromDate = null;
       this.data.toDate = null;
     }
+
     // if (this.funcType != 'add') {
     //   let tmpStartTime = new Date(this.data?.fromTime);
     //   let tmpEndTime = new Date(this.data?.toTime);
@@ -164,7 +172,6 @@ export class PopupOverTimeComponent extends UIComponent {
   }
 
   validateForm() {
-    console.log(this.data);
     if (!this.data.fromDate) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -180,18 +187,44 @@ export class PopupOverTimeComponent extends UIComponent {
         '"' + this.grView['toDate']['headerText'] + '"'
       );
       return false;
+    }
+    if (!this.data.employeeID) {
+      console.log(this.grView['employeeID']);
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + 'Nhân viên' + '"'
+      );
+      return false;
     } else return true;
+  }
+
+  beforeSave(option: RequestOption) {
+    option.methodName = 'AddAsync';
+    option.className = 'TimeKeepingRequest';
+    option.assemblyName = 'PR';
+    option.service = 'PR';
+    option.data = this.data;
+    return true;
   }
 
   onSaveForm() {
     if (this.validateForm() === true) {
-      console.log(this.data);
       if (this.funcType === 'add') {
         this.data.requestType = 'OT';
-
-        this.Add(this.data).subscribe((res) => {
-          console.log(res);
-        });
+        console.log(this.data);
+        this.dialogRef.dataService
+          .save(
+            (opt: RequestOption) => this.beforeSave(opt),
+            0,
+            null,
+            null,
+            true
+          )
+          .subscribe(async (res) => {
+            console.log(res);
+            this.dialogRef && this.dialogRef.close(res.save);
+          });
       }
     }
   }
