@@ -20,15 +20,21 @@
         <div class="feed-icon btn-send">
           <span
             class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
+            (click)="openPopupComment()"
+          >
+            <i class="icon-open_in_new icon-18 text-gray-600"></i>
+          </span>
+          <span
+            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
             (click)="uploadFile()"
           >
-            <span class="icon-attach_file icon-18 text-gray-600"></span>
+            <i class="icon-attach_file icon-18 text-gray-600"></i>
           </span>
           <span
             class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
             (click)="sendComments($event)"
           >
-            <span class="icon-send icon-18"></span>
+            <i class="icon-send icon-18"></i>
           </span>
         </div>
       </div>
@@ -109,7 +115,15 @@
               </span>
             </div>
             <ng-container *ngIf="data.comment">
-              <div class="w-100 text-gray-500" [innerHTML]="data.comment"></div>
+              <div class="w-100 text-gray-500">
+                <span>
+                  {{data.comment | maxlenght:300}}
+                </span>
+                <ng-container *ngIf="data.comment.length > 300">
+                  <span class="cursor-pointer fw-bold font-italic" (click)="openPopupComment(data.comment)">xem thêm</span>
+                </ng-container>
+              </div>
+              
             </ng-container>
           </div>
           <ng-container *ngIf="allowEdit && user.userID == data.createdBy">
@@ -262,4 +276,43 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+
+<ng-template #popupComment let-dialog>
+<div class="popup">
+  <div class="popup-header">
+    <div class="popup-header_title">
+      <h3>Bình luận</h3>
+    </div>
+    <div class="popup-header_close">
+      <button (click)="dialog.close()" type="button" class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
+        <span class="icon-close icon-18"></span>
+      </button>
+    </div>
+    
+  </div>
+  <div class="popup-body">
+    <codx-input
+      type="textarea"
+      format="ed2"
+      copyStyle="plainText"
+      placeholder="Nhập bình luận"
+      class="text-justify border-none h-100 overflow-auto"
+      [crrValue]="content"
+      (valueChange)="valuePopupChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="popup-footer" *ngIf="new;else templateView">
+    <button class="popup-footer_button btn btn-primary" (click)="sendCommentPopup(dialog)">
+      Gửi
+    </button>
+  </div>
+  <ng-template #templateView>
+    <button *ngIf="data.createdBy == user.userID" class="popup-footer_button btn btn-primary" (click)="sendCommentPopup(dialog)">
+      Chỉnh sửa
+    </button>
+  </ng-template>
+</div>
 </ng-template>

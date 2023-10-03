@@ -108,17 +108,22 @@
         </div>
         <div class="w-100 footer-comt">
           <div class="">
-            <p
+            <div
               *ngIf="data.description"
               class="m-0"
               [innerHTML]="data.description"
-            ></p>
-            <p *ngIf="data.createdOn" class="m-0 text-gray-400">
+            ></div>
+            <div *ngIf="data.createdOn" class="m-0 text-gray-400">
               {{ data.createdOn | timefrom }}
-            </p>
-            <p *ngIf="!isNullOrEmpty(data.comment)" class="log-comment">
-              {{ data.comment }}
-            </p>
+            </div>
+            <div *ngIf="!isNullOrEmpty(data.comment)" class="log-comment">
+              <span>
+                {{ data.comment | maxlenght:300}}
+              </span>
+              <ng-container *ngIf="data.comment.length > 300">
+                <span class="cursor-pointer fw-bold font-italic" (click)="openPopupComment()">xem thêm</span>
+              </ng-container>
+            </div>
           </div>
           <ng-container *ngIf="lstFile">
             <div class="row mt-2">
@@ -948,3 +953,30 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Popup comment -->
+<ng-template #popupComment let-dialog>
+  <div class="popup">
+    <div class="popup-header">
+      <div class="popup-header_title">
+        <h3>Bình luận</h3>
+      </div>
+      <div class="popup-header_close">
+        <button (click)="dialog.close()" type="button" class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
+          <span class="icon-close icon-18"></span>
+        </button>
+      </div>
+      
+    </div>
+    <div class="popup-body">
+      <codx-input
+        type="textarea"
+        format="ed2"
+        copyStyle="plainText"
+        class="text-justify border-none h-100 overflow-auto"
+        [crrValue]="data.comment"
+      >
+      </codx-input>
+    </div>
+  </div>
+  </ng-template>

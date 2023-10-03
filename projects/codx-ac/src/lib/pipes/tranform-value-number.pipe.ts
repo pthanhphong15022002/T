@@ -4,7 +4,8 @@ import {Internationalization} from '@syncfusion/ej2-base';
 import { map } from 'rxjs';
 
 @Pipe({
-  name: 'tranformValueNumber'
+  name: 'tranformValueNumber',
+  standalone: true,
 })
 export class TranformValueNumberPipe implements PipeTransform {
   constructor(
