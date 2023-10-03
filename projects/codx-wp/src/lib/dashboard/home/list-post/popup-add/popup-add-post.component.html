@@ -105,76 +105,74 @@
     
   </div>
   <!-- template emoji, tag, uploadFile -->
-  <div
-  class="d-flex justify-content-between align-items-center body-function"
->
-  <div class="text-gray-500 fw-bold">
-    <codx-label
-      [formModel]="formModel"
-      name="lblMore"
-      default="Thêm vào bài viết"
-    >
-    </codx-label>
-  </div>
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="btn-emoji">
-      <div ngbDropdown class="symbol-more">
-        <div
-          ngbDropdownToggle
-          id="dropdownMenuButton"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <button
-            type="button"
-            title="Cảm xúc"
-            class="btn btn-icon btn-md ms-2 btn-emoji"
+  <div class="d-flex justify-content-between align-items-center body-function">
+    <div class="text-gray-500 fw-bold">
+      <codx-label
+        [formModel]="formModel"
+        name="lblMore"
+        default="Thêm vào bài viết"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="btn-emoji">
+        <div ngbDropdown class="symbol-more">
+          <div
+            ngbDropdownToggle
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
           >
-            <i class="icon-tag_faces icon-24 text-warning"></i>
-          </button>
-        </div>
-        <div
-          ngbDropdownMenu
-          class="dropdown-menu p-3"
-          aria-labelledby="dropdownMenuButton"
-        >
-          <emoji-mart
-            [showSingleCategory]="true"
-            [showPreview]="emojiPreview"
-            [set]="emojiMode"
-            [maxFrequentRows]="emojiMaxFrequentRows"
-            [perLine]="emojiPerLine"
-            (emojiSelect)="addEmoji($event)"
+            <button
+              type="button"
+              title="Cảm xúc"
+              class="btn btn-icon btn-md ms-2 btn-emoji"
+            >
+              <i class="icon-tag_faces icon-24 text-warning"></i>
+            </button>
+          </div>
+          <div
+            ngbDropdownMenu
+            class="dropdown-menu p-3"
+            aria-labelledby="dropdownMenuButton"
           >
-          </emoji-mart>
+            <emoji-mart
+              [showSingleCategory]="true"
+              [showPreview]="emojiPreview"
+              [set]="emojiMode"
+              [maxFrequentRows]="emojiMaxFrequentRows"
+              [perLine]="emojiPerLine"
+              (emojiSelect)="addEmoji($event)"
+            >
+            </emoji-mart>
+          </div>
         </div>
       </div>
-    </div>
-    <div>
-      <button
-        (click)="clickTagsUser()"
-        type="button"
-        data-toggle="tooltip"
-        title="Gắn thẻ"
-        class="btn btn-icon btn-md ms-2"
-      >
-        <i class="icon-local_offer icon-24 text-primary"></i>
-      </button>
-    </div>
-    <div class="btn-upload">
-      <button
-        (click)="clickUploadFile()"
-        type="button"
-        data-toggle="tooltip"
-        title="Đính kèm file"
-        class="btn btn-icon btn-md ms-2 ng-star-inserted"
-      >
-        <i class="icon-photo icon-24 text-success"></i>
-      </button>
+      <div>
+        <button
+          (click)="clickTagsUser()"
+          type="button"
+          data-toggle="tooltip"
+          title="Gắn thẻ"
+          class="btn btn-icon btn-md ms-2"
+        >
+          <i class="icon-local_offer icon-24 text-primary"></i>
+        </button>
+      </div>
+      <div class="btn-upload">
+        <button
+          (click)="clickUploadFile()"
+          type="button"
+          data-toggle="tooltip"
+          title="Đính kèm file"
+          class="btn btn-icon btn-md ms-2 ng-star-inserted"
+        >
+          <i class="icon-photo icon-24 text-success"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div>
   <!-- template permissions chia sẻ -->
   <ng-template #templateShares let-post>
     <div ngbDropdown class="symbol-more">
