@@ -22,9 +22,9 @@ import {
 import { environment } from 'src/environments/environment';
 import { CodxShareService } from '../../../codx-share.service';
 import { tmpHistory } from '../../../models/tmpComments.model';
-import { AttachmentComponent } from '../../attachment/attachment.component';
 import { PopupVoteComponent } from '../../treeview-comment/popup-vote/popup-vote.component';
-import { ViewFileDialogComponent } from '../../viewFileDialog/viewFileDialog.component';
+import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-comment-history',

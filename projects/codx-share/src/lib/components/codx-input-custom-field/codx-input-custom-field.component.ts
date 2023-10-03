@@ -8,7 +8,6 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AttachmentComponent } from '../attachment/attachment.component';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -23,6 +22,7 @@ import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustom
 import { CodxShareService } from '../../codx-share.service';
 import { Observable, finalize, map } from 'rxjs';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-input-custom-field',

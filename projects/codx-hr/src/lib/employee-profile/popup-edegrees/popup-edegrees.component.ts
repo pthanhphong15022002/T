@@ -14,7 +14,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-edegrees',
   templateUrl: './popup-edegrees.component.html',
@@ -44,7 +44,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   isNullFrom: boolean = true;
   isNullTo: boolean = true;
   //default degreeName
-  fieldHeaderTexts
+  fieldHeaderTexts;
   levelText: string;
   trainFieldText: string;
   @ViewChild('form') form: LayoutAddComponent;
@@ -69,7 +69,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.formModel = dialog?.formModel;
@@ -77,19 +77,16 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
   }
 
-  handleControlType(evt){
-    if(evt == 'day'){
+  handleControlType(evt) {
+    if (evt == 'day') {
       return 'd';
-    }
-    else if(evt == 'month'){
+    } else if (evt == 'month') {
       return 'm';
-    }
-    else if(evt == 'year'){
+    } else if (evt == 'year') {
       return 'y';
     }
     return 'd';
   }
-
 
   // changeCalendar(event, changeType: string) {
   //   let yearFromDate = event.fromDate.getFullYear();
@@ -129,7 +126,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   // }
 
   changeCalendar(event, changeType: string) {
-    debugger
+    debugger;
     if (changeType === 'FromDate') {
       this.degreeObj.trainFrom = event.type;
       this.degreeObj.trainFromDate = event.fromDate;
@@ -142,7 +139,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.formGroup.patchValue(this.degreeObj);
   }
 
-  ClickCalendar(event){
+  ClickCalendar(event) {
     this.changedInForm = true;
   }
 
@@ -156,10 +153,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       icon: 'icon-info',
       text: 'Thông tin thêm',
       name: 'degreeMoreInf',
-    }
+    },
   ];
 
-  async addFiles(evt){
+  async addFiles(evt) {
     this.changedInForm = true;
     this.degreeObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.degreeObj);
@@ -169,8 +166,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
-  setTitle(evt: any){
-    this.headerText += " " +  evt;
+  setTitle(evt: any) {
+    this.headerText += ' ' + evt;
     this.cr.detectChanges();
   }
 
@@ -205,7 +202,11 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         }
       });
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName,
+        this.formModel
+      )
       .then((item) => {
         this.formGroup = item;
         if (this.actionType == 'add') {
@@ -279,26 +280,26 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
 
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
-    })
+    });
   }
 
   async onSaveForm() {
     this.degreeObj.employeeID = this.employId;
-    
+
     let ddd = new Date();
-    if(this.degreeObj.issuedDate > ddd.toISOString()){
-      this.notify.notifyCode('HR014',0, this.fieldHeaderTexts['IssuedDate']);
+    if (this.degreeObj.issuedDate > ddd.toISOString()) {
+      this.notify.notifyCode('HR014', 0, this.fieldHeaderTexts['IssuedDate']);
       return;
     }
 
-    if(this.degreeObj.trainTo && this.degreeObj.trainFrom){
+    if (this.degreeObj.trainTo && this.degreeObj.trainFrom) {
       if (Number(this.degreeObj.trainTo) < Number(this.degreeObj.trainFrom)) {
         this.hrService.notifyInvalidFromTo(
           'TrainTo',
           'TrainFrom',
           this.formModel
-          )
-          return;
+        );
+        return;
       }
     }
 
@@ -312,31 +313,30 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     //       return;
     //   }
     // }
-    if(this.formGroup.invalid){
+    if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.form.validation(false)
+      this.form.form.validation(false);
       return;
     }
 
-    if(
+    if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
-      ) {
-      this.attachment.objectId=this.degreeObj?.recID;
-      (await (this.attachment.saveFilesObservable())).subscribe(
-      (item2:any)=>{
-            debugger
-          });
-      }
+    ) {
+      this.attachment.objectId = this.degreeObj?.recID;
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        debugger;
+      });
+    }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
-      if(this.actionType === 'add'){
+      if (this.actionType === 'add') {
         localStorage.setItem('add', JSON.stringify(this.degreeObj));
       }
-      if(this.actionType === 'copy'){
+      if (this.actionType === 'copy') {
         localStorage.setItem('copy', JSON.stringify(this.degreeObj));
       }
-      
+
       this.hrService.AddEmployeeDegreeInfo(this.degreeObj).subscribe((p) => {
         if (p != null) {
           console.log(p);
@@ -399,7 +399,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           this.cr.detectChanges();
         }
       }
-    } 
+    }
     // else {
     //   this.notify.notifyCode('Nhap thong tin noi dao tao');
     // }

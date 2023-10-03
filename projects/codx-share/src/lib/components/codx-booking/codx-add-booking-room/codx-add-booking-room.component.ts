@@ -20,7 +20,6 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBookingService } from '../codx-booking.service';
 import {
   BookingAttendees,
@@ -31,6 +30,7 @@ import {
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
 import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -107,8 +107,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       name: 'tabReminder',
     },
   ];
-  approvalRule='1';
-  categoryID=EPCONST.ES_CategoryID.Room;
+  approvalRule = '1';
+  categoryID = EPCONST.ES_CategoryID.Room;
   listRoles = [];
   curUser: any;
   resources = [];
@@ -130,7 +130,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   listFilePermission: any[];
   busyAttendees: string;
   returnData: any;
-  title='';
+  title = '';
   checkLoop: boolean;
   showAllResource: any;
   isPopupStationeryCbb: boolean;
@@ -141,7 +141,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   viewOnly = false;
   onSaving = false;
   isEP = true;
-  resourceOwner=null;
+  resourceOwner = null;
   autoApproveItem: any;
   approvalRuleSta: any;
   constructor(
@@ -352,28 +352,55 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-    this.cacheService.viewSettingValues(_EPParameters).subscribe(sv=>{
-      if(sv){
-        let roomSetting_1 = this.codxBookingService.getCacheSettingValue(sv,_EPRoomParameters,'1');
-        if(roomSetting_1!=null){
+    this.cacheService.viewSettingValues(_EPParameters).subscribe((sv) => {
+      if (sv) {
+        let roomSetting_1 = this.codxBookingService.getCacheSettingValue(
+          sv,
+          _EPRoomParameters,
+          '1'
+        );
+        if (roomSetting_1 != null) {
           this.dueDateControl = roomSetting_1?.dueDateControl;
           this.guestControl = roomSetting_1?.guestControl;
         }
-        let roomSetting_4 = this.codxBookingService.getCacheSettingValue(sv,null,'4',EPCONST.ES_CategoryID.Room);
+        let roomSetting_4 = this.codxBookingService.getCacheSettingValue(
+          sv,
+          null,
+          '4',
+          EPCONST.ES_CategoryID.Room
+        );
         if (roomSetting_4 != null) {
-          this.approvalRule = roomSetting_4?.approvalRule != null? roomSetting_4?.approvalRule : '1';  
-          this.categoryID = roomSetting_4?.categoryID != null? roomSetting_4?.categoryID : EPCONST.ES_CategoryID.Room;
+          this.approvalRule =
+            roomSetting_4?.approvalRule != null
+              ? roomSetting_4?.approvalRule
+              : '1';
+          this.categoryID =
+            roomSetting_4?.categoryID != null
+              ? roomSetting_4?.categoryID
+              : EPCONST.ES_CategoryID.Room;
         }
-        let staSetting_1 =this.codxBookingService.getCacheSettingValue(sv,_EPStationeryParameters,'1');
-        if(staSetting_1!=null){
-          this.autoApproveItem = staSetting_1?.autoApproveItem;  
+        let staSetting_1 = this.codxBookingService.getCacheSettingValue(
+          sv,
+          _EPStationeryParameters,
+          '1'
+        );
+        if (staSetting_1 != null) {
+          this.autoApproveItem = staSetting_1?.autoApproveItem;
         }
-        let staSetting_4 = this.codxBookingService.getCacheSettingValue(sv,null,'4',EPCONST.ES_CategoryID.Stationery);
+        let staSetting_4 = this.codxBookingService.getCacheSettingValue(
+          sv,
+          null,
+          '4',
+          EPCONST.ES_CategoryID.Stationery
+        );
         if (staSetting_4 != null) {
-          this.approvalRuleSta = staSetting_4?.approvalRule !=null? staSetting_4?.approvalRule :'1';
+          this.approvalRuleSta =
+            staSetting_4?.approvalRule != null
+              ? staSetting_4?.approvalRule
+              : '1';
         }
       }
-    });    
+    });
     // Lấy list role người tham gia
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -438,9 +465,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         .subscribe((res: any) => {
           if (res) {
             this.roomCapacity = res?.capacity;
-            
-            let tempApprover = new Approver ();
-            tempApprover.roleID=res?.owner;
+
+            let tempApprover = new Approver();
+            tempApprover.roleID = res?.owner;
             this.resourceOwner = [tempApprover];
           }
         });
@@ -965,7 +992,11 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
-    if(approval && this.funcType == _editMF && this.authService?.userValue?.userID != this.data.createdBy){      
+    if (
+      approval &&
+      this.funcType == _editMF &&
+      this.authService?.userValue?.userID != this.data.createdBy
+    ) {
       this.notificationsService.notifyCode('SYS032');
       return;
     }
@@ -1287,8 +1318,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       });
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
-        let tempApprover = new Approver ();
-        tempApprover.roleID=selectResource[0]?.owner;
+        let tempApprover = new Approver();
+        tempApprover.roleID = selectResource[0]?.owner;
         this.resourceOwner = [tempApprover];
         this.data.resourceID = evt;
         this.tmplstDevice = [];
@@ -1428,18 +1459,19 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                     });
                 });
             } else {
-              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
-                if(approveData!=null){
-                  this.returnData.approveStatus=approveData?.approveStatus;
-                  this.returnData.write = false;
-                  this.returnData.delete = false;
-                  this.notificationsService.notifyCode('SYS034');
-                  this.dialogRef && this.dialogRef.close(this.returnData);
-                }
-                else{
-                  return;
-                }
-              });
+              this.codxBookingService
+                .approvedManual(this.returnData?.recID)
+                .subscribe((approveData: any) => {
+                  if (approveData != null) {
+                    this.returnData.approveStatus = approveData?.approveStatus;
+                    this.returnData.write = false;
+                    this.returnData.delete = false;
+                    this.notificationsService.notifyCode('SYS034');
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  } else {
+                    return;
+                  }
+                });
             }
 
             this.dialogRef && this.dialogRef.close(this.returnData);
@@ -1458,54 +1490,70 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
         .subscribe((category: any) => {
-          this.codxShareService
-            .codxReleaseDynamic(
-              'EP',
-              this.returnData,
-              category,
-              this.formModel?.entityName,
-              this.formModel.funcID,
-              this.returnData?.title,
-              (res:ResponseModel) => {
-                if (res?.msgCodeError == null && res?.rowCount) {
-                  this.returnData.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
-                  this.returnData.write = false;
-                  this.returnData.delete = false;
-                  (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
-                  this.notificationsService.notifyCode('SYS034');
-                  if(this.returnData?.approveStatus == EPCONST.A_STATUS.Approved && this.returnData?.items?.length>0){
-                    //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
-                    if(this.autoApproveItem=='1' || this.approvalRuleSta=='0'){
-                      this.codxBookingService.autoApproveStationery(null,this.returnData?.recID).subscribe(result=>{});
-                    }
-                    else{
-                      this.codxBookingService.releaseStationeryOfRoom(null,this.returnData?.recID,null).subscribe(result=>{})
-                    }                    
+          this.codxShareService.codxReleaseDynamic(
+            'EP',
+            this.returnData,
+            category,
+            this.formModel?.entityName,
+            this.formModel.funcID,
+            this.returnData?.title,
+            (res: ResponseModel) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.returnData.approveStatus =
+                  res.returnStatus ?? EPCONST.A_STATUS.Released;
+                this.returnData.write = false;
+                this.returnData.delete = false;
+                (this.dialogRef.dataService as CRUDService)
+                  .update(this.returnData)
+                  .subscribe();
+                this.notificationsService.notifyCode('SYS034');
+                if (
+                  this.returnData?.approveStatus == EPCONST.A_STATUS.Approved &&
+                  this.returnData?.items?.length > 0
+                ) {
+                  //Xử lý cấp phát VPP cho phòng họp trường hợp tự duyệt
+                  if (
+                    this.autoApproveItem == '1' ||
+                    this.approvalRuleSta == '0'
+                  ) {
+                    this.codxBookingService
+                      .autoApproveStationery(null, this.returnData?.recID)
+                      .subscribe((result) => {});
+                  } else {
+                    this.codxBookingService
+                      .releaseStationeryOfRoom(
+                        null,
+                        this.returnData?.recID,
+                        null
+                      )
+                      .subscribe((result) => {});
                   }
-                  this.dialogRef && this.dialogRef.close(this.returnData);
-                } else {
-                  this.notificationsService.notifyCode(res?.msgCodeError);
-                  // Thêm booking thành công nhưng gửi duyệt thất bại
-                  this.dialogRef && this.dialogRef.close(this.returnData);
                 }
-              },
-              this.returnData?.createdBy,
-              this.resourceOwner,
-            )
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+                // Thêm booking thành công nhưng gửi duyệt thất bại
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              }
+            },
+            this.returnData?.createdBy,
+            this.resourceOwner
+          );
         });
-    } else { 
-      this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
-        if(approveData!=null){
-          this.returnData.approveStatus=approveData?.approveStatus;
-          this.returnData.write = false;
-          this.returnData.delete = false;
-          this.notificationsService.notifyCode('SYS034');
-          this.dialogRef && this.dialogRef.close(this.returnData);
-        }
-        else{
-          return;
-        }
-      });
+    } else {
+      this.codxBookingService
+        .approvedManual(this.returnData?.recID)
+        .subscribe((approveData: any) => {
+          if (approveData != null) {
+            this.returnData.approveStatus = approveData?.approveStatus;
+            this.returnData.write = false;
+            this.returnData.delete = false;
+            this.notificationsService.notifyCode('SYS034');
+            this.dialogRef && this.dialogRef.close(this.returnData);
+          } else {
+            return;
+          }
+        });
     }
   }
   //---------------------------------------------------------------------------------//
@@ -1530,12 +1578,12 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             tmpRes.resourceName = item?.resourceName;
             tmpRes.capacity = item?.capacity;
             tmpRes.equipments = item?.equipments;
-            tmpRes.owner=item?.owner
+            tmpRes.owner = item?.owner;
             this.cbbResource.push(tmpRes);
           });
           let resourceStillAvailable = false;
           if (this.data.resourceID != null) {
-            for(let i=0;i<this.cbbResource?.length;i++){
+            for (let i = 0; i < this.cbbResource?.length; i++) {
               if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
                 resourceStillAvailable = true;
               }

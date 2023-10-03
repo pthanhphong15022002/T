@@ -69,7 +69,7 @@ import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
@@ -258,7 +258,11 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component, CampaignContactsComponent, PopupAddCampaignContactComponent],
+  declarations: [
+    T_Component,
+    CampaignContactsComponent,
+    PopupAddCampaignContactComponent,
+  ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

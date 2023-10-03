@@ -22,7 +22,7 @@ import {
 } from '../../../../models/models';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -507,7 +507,9 @@ export class PopupJobComponent implements OnInit {
       let index = this.participant?.findIndex(
         (role) => role?.objectID == this.stepsTasks.owner
       );
-      index >= 0 && this.participant?.length > 0 && this.participant?.splice(index, 1);
+      index >= 0 &&
+        this.participant?.length > 0 &&
+        this.participant?.splice(index, 1);
       this.participant = [...this.participant];
     }
     if (roleType == 'P') {

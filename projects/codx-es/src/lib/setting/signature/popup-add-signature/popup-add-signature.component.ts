@@ -23,7 +23,7 @@ import {
   NotificationsService,
   RequestOption,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupSignatureComponent } from '../popup-signature/popup-signature.component';
@@ -122,15 +122,17 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
           this.grvSetup = res;
         }
       });
-      this.cache.viewSettingValues('ESParameters').subscribe(setting=>{
-        if(setting){
-          let setting_1 = setting.filter(x=>x.category=="1" && x.transType ==null);
-          if(setting_1?.length>0){
-            this.esSetting = JSON.parse(setting_1[0].dataValue);
-            this.data.password= this.esSetting?.PWDefault;
-          }
+    this.cache.viewSettingValues('ESParameters').subscribe((setting) => {
+      if (setting) {
+        let setting_1 = setting.filter(
+          (x) => x.category == '1' && x.transType == null
+        );
+        if (setting_1?.length > 0) {
+          this.esSetting = JSON.parse(setting_1[0].dataValue);
+          this.data.password = this.esSetting?.PWDefault;
         }
-      })
+      }
+    });
   }
 
   valueChange(event: any) {
@@ -361,9 +363,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
     this.cr.detectChanges();
   }
-  passwordChange(evt:any){
-    if(evt){
-      this.data.password= evt?.data;
+  passwordChange(evt: any) {
+    if (evt) {
+      this.data.password = evt?.data;
       this.form?.formGroup.patchValue({
         password: this.data?.password,
       });

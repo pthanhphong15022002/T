@@ -13,7 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { PopupViewPlanVersionComponent } from '../popup-view-plan-version/popup-view-plan-version.component';
 import { OMCONST } from '../../codx-om.constant';
@@ -25,26 +25,26 @@ import { OMCONST } from '../../codx-om.constant';
 })
 export class PopupChangeTargetComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
-  headerText='';
+  headerText = '';
 
   dialogRef: DialogRef;
   formModel: FormModel;
   dataKR: any;
   okrFM: any;
-  versions =[];
+  versions = [];
   isAfterRender: boolean;
   okrGrv: any;
   quarterVLL: any;
   monthVLL: any;
-  totalTargets=0;
-  disabledTargets=0;
-  enabledTargets=0;  
-  newTarget=0; 
-  targetChecked=0;
-  backupTar=[];
+  totalTargets = 0;
+  disabledTargets = 0;
+  enabledTargets = 0;
+  newTarget = 0;
+  targetChecked = 0;
+  backupTar = [];
   planVLL: any[];
-  kr:any;
-  viewMode=false;
+  kr: any;
+  viewMode = false;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -55,25 +55,24 @@ export class PopupChangeTargetComponent extends UIComponent {
     super(injector);
     this.dataKR = dialogData?.data[0];
     this.headerText = dialogData?.data[1];
-    this.viewMode = dialogData?.data[2]
+    this.viewMode = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
-
   }
 
   onInit(): void {
-    this.getData(); 
+    this.getData();
   }
 
-  getData(){
-    this.codxOmService.getOKRByID(this.dataKR?.recID).subscribe(res=>{
-      if(res){
-        this.kr=res;         
-        this.isAfterRender=true;
+  getData() {
+    this.codxOmService.getOKRByID(this.dataKR?.recID).subscribe((res) => {
+      if (res) {
+        this.kr = res;
+        this.isAfterRender = true;
       }
-    })
+    });
   }
-  getCache(){    
+  getCache() {
     this.cache.valueList('OM020').subscribe((vll) => {
       if (vll?.datas && vll?.datas.length > 0) {
       }
@@ -92,14 +91,13 @@ export class PopupChangeTargetComponent extends UIComponent {
       return;
     }
     this.codxOmService
-    .editKRTargets(this.kr?.recID, this.kr?.targets)
-    .subscribe((res) => {  
-      if(res){
-        this.notificationsService.notifyCode('SYS007');
-        this.dialogRef?.close();
-      }    
-    });
-    
+      .editKRTargets(this.kr?.recID, this.kr?.targets)
+      .subscribe((res) => {
+        if (res) {
+          this.notificationsService.notifyCode('SYS007');
+          this.dialogRef?.close();
+        }
+      });
   }
 
   valuePlanTargetChange(evt: any, index: number) {
@@ -136,5 +134,4 @@ export class PopupChangeTargetComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-  
 }

@@ -16,7 +16,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { DispatchService } from '../../services/dispatch.service';
 import {
   capitalizeFirstLetter,
@@ -76,8 +76,8 @@ export class IncommingAddComponent implements OnInit {
   keyField = false; //Kiểm tra số công văn tự động
   fileModule: any;
   crrAgencies: any = '';
-  employees:any;
-  organizationUnits:any;
+  employees: any;
+  organizationUnits: any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -153,9 +153,7 @@ export class IncommingAddComponent implements OnInit {
       //   })
       // }
       this.dispatch.createdOn = new Date();
-    } 
-    else if (this.type == 'edit') 
-    {
+    } else if (this.type == 'edit') {
       if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if (this.dispatch.agencyName)
         this.dispatch.agencyName = this.dispatch.agencyName.toString();
@@ -193,8 +191,7 @@ export class IncommingAddComponent implements OnInit {
         this.activeDiv = 'dv';
         this.hidepb = false;
       }
-    }
-    else if(this.type == 'read') this.disableSave = true;
+    } else if (this.type == 'read') this.disableSave = true;
 
     this.getKeyRequied();
   }
@@ -242,7 +239,11 @@ export class IncommingAddComponent implements OnInit {
       this.getInforByUser(event?.data).subscribe((item) => {
         if (item) {
           this.dispatch.departmentID = item.orgUnitID;
-          if(!this.organizationUnits || (this.organizationUnits && this.organizationUnits.orgUnitID != item.orgUnitID))
+          if (
+            !this.organizationUnits ||
+            (this.organizationUnits &&
+              this.organizationUnits.orgUnitID != item.orgUnitID)
+          )
             this.myForm.formGroup.patchValue({
               departmentID: item.orgUnitID,
             });
@@ -261,7 +262,7 @@ export class IncommingAddComponent implements OnInit {
   changeValueBUID(event: any) {
     // this.dispatch.departmentID = event?.data?.value[0];
     // if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
-  
+
     if (event?.data) this.getDispathOwner(event.data);
   }
 
@@ -277,8 +278,10 @@ export class IncommingAddComponent implements OnInit {
       .subscribe((item: any) => {
         if (item != null && item.length > 0) {
           this.organizationUnits = item[0];
-          if(!this.employees || (this.employees && this.employees?.orgUnitID != item[0].orgUnitID))
-          {
+          if (
+            !this.employees ||
+            (this.employees && this.employees?.orgUnitID != item[0].orgUnitID)
+          ) {
             this.dispatch.owner = item[0].domainUser;
             this.myForm.formGroup.patchValue({
               owner: this.dispatch.owner,
@@ -289,9 +292,7 @@ export class IncommingAddComponent implements OnInit {
           //   if(item) this.dispatch.orgUnitID = item.orgUnitID
           // })
           this.ref.detectChanges();
-        } 
-        else 
-        {
+        } else {
           this.dispatch.owner = '';
         }
         this.dispatch.departmentID = data;
@@ -405,7 +406,7 @@ export class IncommingAddComponent implements OnInit {
   /////// lưu/câp nhật công văn
   async onSave() {
     //chế độ chỉ xem
-    if(this.type == "read") return;
+    if (this.type == 'read') return;
 
     this.disableSave = true;
 

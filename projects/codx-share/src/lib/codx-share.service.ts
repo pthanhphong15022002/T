@@ -1,15 +1,12 @@
 import {
-  async,
   BehaviorSubject,
   finalize,
   isObservable,
   map,
   Observable,
-  of,
   share,
 } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
   ApiHttpService,
   AuthService,
@@ -24,7 +21,6 @@ import {
   TenantStore,
   Util,
 } from 'codx-core';
-import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 import {
   FormBuilder,
   FormControl,
@@ -33,11 +29,9 @@ import {
 } from '@angular/forms';
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 import { environment } from 'src/environments/environment';
-import { AssignTaskModel } from './models/assign-task.model';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
-import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import {
   ApproveProcess,
@@ -57,6 +51,7 @@ import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
+import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -88,43 +83,42 @@ export class CodxShareService {
     private signalRSV: SignalRService,
     private httpClient: HttpClient
   ) {}
-  
+
   loadDataCache(
-    paras:any,
-    keyRoot:any,
-    service:any,
-    assemly:any,
-    className:any,
-    method:any
-  ): Observable<any>
-  {
+    paras: any,
+    keyRoot: any,
+    service: any,
+    assemly: any,
+    className: any,
+    method: any
+  ): Observable<any> {
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
       if (c && c.has(key)) {
         return c.get(key);
       }
-    }
-    else {
+    } else {
       this.caches.set(keyRoot, new Map<any, any>());
     }
 
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.api.execSv(service,assemly,className,method,paras)
-    .pipe(
-      map((res) => {
-        if (res) {
-          let c = this.caches.get(keyRoot);
-          c?.set(key, res);
-          return res;
-        }
-        return null
-      }),
-      share(),
-      finalize(() => this.cachedObservables.delete(key))
-    );
+    let observable = this.api
+      .execSv(service, assemly, className, method, paras)
+      .pipe(
+        map((res) => {
+          if (res) {
+            let c = this.caches.get(keyRoot);
+            c?.set(key, res);
+            return res;
+          }
+          return null;
+        }),
+        share(),
+        finalize(() => this.cachedObservables.delete(key))
+      );
     this.cachedObservables.set(key, observable);
     return observable;
   }
@@ -163,15 +157,28 @@ export class CodxShareService {
     let paras = [functionID];
     let keyRoot = 'MFunc' + functionID;
 
-    return this.loadDataCache(paras,keyRoot,"SYS","SYS","MoreFunctionsBusiness","GetAsync");
-    
+    return this.loadDataCache(
+      paras,
+      keyRoot,
+      'SYS',
+      'SYS',
+      'MoreFunctionsBusiness',
+      'GetAsync'
+    );
   }
   checkStatusApproval(recID: any, status): Observable<any> {
     let paras = [recID];
     let keyRoot = recID + status;
-    return this.loadDataCache(paras,keyRoot,"ES","ES","ApprovalTransBusiness","CheckRestoreAsync");
+    return this.loadDataCache(
+      paras,
+      keyRoot,
+      'ES',
+      'ES',
+      'ApprovalTransBusiness',
+      'CheckRestoreAsync'
+    );
   }
-  
+
   defaultMoreFunc(
     val: any,
     data: any,
@@ -190,8 +197,7 @@ export class CodxShareService {
       case 'SYS204':
       case 'SYS205':
       case 'SYS206':
-      case 'SYS200': 
-      {
+      case 'SYS200': {
         if (data?.unbounds?.eSign == true) {
           let option = new SidebarModel();
           option.Width = '800px';
@@ -200,7 +206,10 @@ export class CodxShareService {
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
 
-          var listApproveMF = this.getMoreFunction(funcID,data?.unbounds?.stepType);
+          var listApproveMF = this.getMoreFunction(
+            funcID,
+            data?.unbounds?.stepType
+          );
 
           let dialogApprove = this.callfunc.openForm(
             PopupSignForApprovalComponent,
@@ -264,10 +273,14 @@ export class CodxShareService {
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {
                   data.unbounds.statusApproval = status ?? res2?.returnStatus;
-                  //Cập nhật lại status duyệt 
-                  var index = dataService.data.findIndex(x=>x.transID == data.recID);
-                  if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
-                  
+                  //Cập nhật lại status duyệt
+                  var index = dataService.data.findIndex(
+                    (x) => x.transID == data.recID
+                  );
+                  if (index >= 0)
+                    dataService.data[index].unbounds.statusApproval =
+                      status ?? res2?.returnStatus;
+
                   dataService.update(data).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   //afterSave(data.statusApproval);// Chung CMT trước đo rồi
@@ -285,12 +298,16 @@ export class CodxShareService {
             ).subscribe((res2: any) => {
               if (!res2?.msgCodeError) {
                 data.unbounds.statusApproval = status ?? res2?.returnStatus;
-                 //Cập nhật lại status duyệt 
-                 var index = dataService.data.findIndex(x=>x.transID == data.recID);
-                 if(index >= 0) dataService.data[index].unbounds.statusApproval = status ?? res2?.returnStatus;
+                //Cập nhật lại status duyệt
+                var index = dataService.data.findIndex(
+                  (x) => x.transID == data.recID
+                );
+                if (index >= 0)
+                  dataService.data[index].unbounds.statusApproval =
+                    status ?? res2?.returnStatus;
 
                 dataService.update(data).subscribe();
-               
+
                 this.notificationsService.notifyCode('SYS007');
                 afterSave(data);
               } else this.notificationsService.notify(res2?.msgCodeError);
@@ -304,14 +321,16 @@ export class CodxShareService {
           (res: any) => {
             if (res) {
               data.unbounds.statusApproval = res?.status;
-              //Cập nhật lại status duyệt 
-              var index = dataService.data.findIndex(x=>x.transID == data.recID);
-              if(index >= 0) dataService.data[index].unbounds.statusApproval =  res?.status;
+              //Cập nhật lại status duyệt
+              var index = dataService.data.findIndex(
+                (x) => x.transID == data.recID
+              );
+              if (index >= 0)
+                dataService.data[index].unbounds.statusApproval = res?.status;
 
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
-            }
-            else this.notificationsService.notify(res?.msgCodeError);
+            } else this.notificationsService.notify(res?.msgCodeError);
           }
         );
         break;
@@ -1016,7 +1035,7 @@ export class CodxShareService {
     }
   }
 
-  changeMFApproval(data: any, value: object | any = null) {    
+  changeMFApproval(data: any, value: object | any = null) {
     var datas = value;
     if (datas) {
       var list = data.filter(
@@ -1055,9 +1074,7 @@ export class CodxShareService {
           list[i].disabled = true;
       }
 
-      
-      if(datas?.eSign)
-      {
+      if (datas?.eSign) {
         var listDis = data.filter(
           (x) =>
             x.functionID == 'SYS202' ||
@@ -1066,13 +1083,12 @@ export class CodxShareService {
             x.functionID == 'SYS205' ||
             x.functionID == 'SYS206' ||
             x.functionID == 'SYS201'
-            
         );
         for (var i = 0; i < listDis.length; i++) {
           listDis[i].disabled = true;
         }
 
-        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        var sys200 = data.filter((x) => x.functionID == 'SYS200');
         sys200[0].disabled = false;
       }
       // this.listApproveMF = list.filter(
@@ -1116,41 +1132,40 @@ export class CodxShareService {
     }
   }
 
-  getMoreFunction(funcID: any,stepType:any=null) {
+  getMoreFunction(funcID: any, stepType: any = null) {
     var listApproveMF = [];
-    if(stepType==null){
+    if (stepType == null) {
       if (funcID == 'SYS201') {
         var consensus = {
           functionID: 'SYS201',
           text: 'Duyệt',
           color: '#666666',
         };
-  
+
         listApproveMF.push(consensus);
       }
-  
+
       if (funcID == 'SYS202') {
         var consensus = {
           functionID: 'SYS202',
           text: 'Ký',
           color: '#666666',
         };
-  
+
         listApproveMF.push(consensus);
       }
-  
+
       if (funcID == 'SYS203') {
         var consensus = {
           functionID: 'SYS203',
           text: 'Đồng thuận',
           color: '#666666',
         };
-  
+
         listApproveMF.push(consensus);
       }
-    }
-    else{
-      switch(stepType){
+    } else {
+      switch (stepType) {
         //R;Kiểm tra;C;Góp ý;A1;Đồng thuận;---------;S1;Ký nháy;S2;Ký chính;----------S3;Đóng dấu;A2;Duyệt
         case 'R':
         case 'C':
@@ -1159,7 +1174,7 @@ export class CodxShareService {
             functionID: 'SYS203',
             text: 'Đồng thuận',
             color: '#666666',
-          };    
+          };
           listApproveMF.push(consensus);
           break;
 
@@ -1171,7 +1186,7 @@ export class CodxShareService {
             text: 'Ký',
             color: '#666666',
           };
-    
+
           listApproveMF.push(consensus);
           break;
 
@@ -1182,12 +1197,11 @@ export class CodxShareService {
             text: 'Duyệt',
             color: '#666666',
           };
-    
+
           listApproveMF.push(consensus);
           break;
       }
     }
-    
 
     //Từ chối
     var tc = {
@@ -1245,13 +1259,13 @@ export class CodxShareService {
       refType
     );
   }
-  getTemplateSF(cateID,category) {
+  getTemplateSF(cateID, category) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetTemplateSFAsync',
-      [cateID,category]
+      [cateID, category]
     );
   }
 
@@ -1308,13 +1322,13 @@ export class CodxShareService {
       listPositionID
     );
   }
-  getCompanyApprover(companyID,roleType) {
+  getCompanyApprover(companyID, roleType) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetCompanyApproverAsync',
-      [companyID,roleType]
+      [companyID, roleType]
     );
   }
   viewApprovalStep(transID) {
@@ -1508,7 +1522,7 @@ export class CodxShareService {
   ): ES_SignFile {
     let signFile = new ES_SignFile();
     signFile.recID = approveProcess?.recID;
-    signFile.approveControl = "2";
+    signFile.approveControl = '2';
     signFile.processID = approveProcess?.template?.processID;
     signFile.categoryID = approveProcess?.category?.categoryID;
     signFile.category = approveProcess?.category?.category;
@@ -1730,26 +1744,21 @@ export class CodxShareService {
 
             case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
             case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-            //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
+              //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
               if (exportedFile?.extension != '.pdf') {
                 this.convertFileToPDF(
                   exportedFile?.recID,
                   exportedFile?.extension
                 ).subscribe((res) => {
-                  if(res){
-
-                  }
-                  else{
+                  if (res) {
+                  } else {
                     this.notificationsService.notify(
                       'Xuất tài liệu PDF thất bại!',
                       '2'
                     );
                   }
-
                 });
-              }
-              else{
-
+              } else {
               }
               break;
           }
@@ -1762,39 +1771,31 @@ export class CodxShareService {
 
   apReleaseWithoutSignFile(
     approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel, component: any) => void,
-  ){
+    releaseCallback: (response: ResponseModel, component: any) => void
+  ) {
     switch (approveProcess?.category?.releaseControl) {
-
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
-      this.getFileByObjectID(approveProcess.recID).subscribe(
-        (lstFile: any) => {
-          let signFile = this.apCreateSignFile(
-            approveProcess,
-            lstFile
-          );
-          if (lstFile?.length > 0) {
-            this.apOpenViewSignFile(
-              approveProcess,
-              releaseCallback,
-              approveProcess.template,
-              lstFile
-            );
-          } else {
-            this.notificationsService.notify(
-              'Không tìm thấy tài liệu!',
-              '2'
-            );
+        this.getFileByObjectID(approveProcess.recID).subscribe(
+          (lstFile: any) => {
+            let signFile = this.apCreateSignFile(approveProcess, lstFile);
+            if (lstFile?.length > 0) {
+              this.apOpenViewSignFile(
+                approveProcess,
+                releaseCallback,
+                approveProcess.template,
+                lstFile
+              );
+            } else {
+              this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
+            }
           }
-        }
-      );
-      break;
+        );
+        break;
 
       case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
         this.apBaseRelease(approveProcess, releaseCallback);
-      break;
+        break;
     }
-
   }
 
   apOpenViewSignFile(
@@ -1963,8 +1964,8 @@ export class Approvers {
   createdOn: any = new Date();
   delete: boolean = true;
   write: boolean = false;
-  userID:string;
-  userName:string;
+  userID: string;
+  userName: string;
 }
 export class ExportUpload {
   templateRecID: string;

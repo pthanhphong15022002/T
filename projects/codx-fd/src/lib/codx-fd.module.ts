@@ -1,7 +1,7 @@
 import { AddBehaviorRuleComponent } from './setting/category/behavior-rule/add-behavior-rule/add-behavior-rule.component';
 import { AddProposedFieldComponent } from './setting/category/proposed-field/add-proposed-field/add-proposed-field.component';
 import { AddGiftGroupComponent } from './setting/category/gift-group/add-gift-group/add-gift-group.component';
-import { LayoutNoAsideComponent } from './../../../codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { BehaviorComponent } from './setting/category/behavior/behavior.component';
 import { GiftsComponent } from './setting/category/gifts/gifts.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -19,14 +19,9 @@ import {
   AccumulationChartModule,
   ChartAllModule,
 } from '@syncfusion/ej2-angular-charts';
-import {
-  ProgressBar,
-  ProgressBarModule,
-} from '@syncfusion/ej2-angular-progressbar';
+import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
-import path from 'path';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { CodxWpModule } from 'projects/codx-wp/src/public-api';
 import { AchievementComponent } from './achievement/achievement.component';
 import { CardsComponent } from './cards/cards.component';
 import { PopupAddCardsComponent } from './cards/popup-add-cards/popup-add-cards.component';
@@ -42,7 +37,7 @@ import { WalletsComponent } from './wallets/wallets.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
 import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
 import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';

@@ -24,8 +24,8 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-add-stask',
@@ -276,7 +276,7 @@ export class CodxAddTaskComponent implements OnInit {
 
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
-    if(event?.field == 'isOnline' && !event?.data){
+    if (event?.field == 'isOnline' && !event?.data) {
       this.stepsTasks.reference = '';
     }
   }
@@ -742,13 +742,7 @@ export class CodxAddTaskComponent implements OnInit {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
     option.zIndex = 3000;
-    this.dialogPopupLink = this.callfc.openForm(
-      addLink,
-      '',
-      500,
-      300,
-      ''
-    );
+    this.dialogPopupLink = this.callfc.openForm(addLink, '', 500, 300, '');
     this.dialogPopupLink.closed.subscribe((res: any) => {
       if (res?.event?.attendee != null || res?.event?.owner != null) {
         this.stepsTasks.reference = res?.event?.attendee || '';

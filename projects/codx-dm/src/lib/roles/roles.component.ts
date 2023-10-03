@@ -1,11 +1,39 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  CallFuncService,
+  DataRequest,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  TenantService,
+  ViewsComponent,
+} from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
-import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder } from '@shared/models/file.model';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
+import {
+  FileInfo,
+  FileUpload,
+  HistoryFile,
+  ItemInterval,
+  Permission,
+  SubFolder,
+} from '@shared/models/file.model';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 
@@ -13,7 +41,7 @@ import { FileService } from '@shared/services/file.service';
   selector: 'roles',
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RolesComponent implements OnInit {
   @Input() formModel: any;
@@ -61,7 +89,7 @@ export class RolesComponent implements OnInit {
   commenttext: string;
   fullName: string;
   newfile: string;
-  updateversion: boolean
+  updateversion: boolean;
   type: string;
   copy: boolean;
   view: string;
@@ -77,8 +105,8 @@ export class RolesComponent implements OnInit {
   listNodeAdd: any;
   listFolder: FolderInfo[];
   listFiles: FileInfo[];
-  folderName = "folder";
-  fileName = [];//"file";
+  folderName = 'folder';
+  fileName = []; //"file";
   datafile: ArrayBuffer[];
   percent = '0%';
   listTag: any;
@@ -103,7 +131,7 @@ export class RolesComponent implements OnInit {
   confirmAll: boolean;
   isSystem: boolean;
   comment: string;
-  mytitle = 0;;
+  mytitle = 0;
   interval: ItemInterval[];
   intervalCount = 0;
   fileUploadList: FileUpload[];
@@ -151,14 +179,14 @@ export class RolesComponent implements OnInit {
   public loading = false;
   private onScrolling = true;
   dataSelcected: any = [];
-  entityName = "";
-  predicate = "";
-  dataValue = "";
-  viewMember = "";
-  valueMember = "";
-  service = "";
+  entityName = '';
+  predicate = '';
+  dataValue = '';
+  viewMember = '';
+  valueMember = '';
+  service = '';
   objUser: any;
-  parentIdField = "";
+  parentIdField = '';
   permissonActiveId: string;
   floor: string;
   range: string;
@@ -170,7 +198,7 @@ export class RolesComponent implements OnInit {
   readonly = false;
   isSharing: boolean;
   isDownload: boolean;
-  requestRight = "1";
+  requestRight = '1';
   modeShare: string;
   modeRequest: string;
   isShare: boolean;
@@ -204,7 +232,7 @@ export class RolesComponent implements OnInit {
   //objectType="";
   indexSub: number;
   subItemLevel: string;
-  comboboxName = "";
+  comboboxName = '';
   listLanguages: any;
   showAll: boolean;
   emailTemplate: string;
@@ -219,7 +247,7 @@ export class RolesComponent implements OnInit {
   //treeAdd: TreeviewComponent;
   item: any = {};
   objectUpdate = {};
-  fieldUpdate = "";
+  fieldUpdate = '';
   data: any;
   isNewFolder = false;
   @ViewChild('fileNameCtrl') fileNameCtrl;
@@ -242,17 +270,17 @@ export class RolesComponent implements OnInit {
   ) {
     //   this.read = true;
     this.data = data.data;
-    if (this.data[0] == "1") this.modePermission = true;
+    if (this.data[0] == '1') this.modePermission = true;
     else this.modePermission = false;
-    if(this.data[2]) this.codxView = this.data[2];
-    if(this.data[4]) this.propertiesFolder = true;
-    if(this.data[5]) this.titleDialog = this.data[5];
+    if (this.data[2]) this.codxView = this.data[2];
+    if (this.data[4]) this.propertiesFolder = true;
+    if (this.data[5]) this.titleDialog = this.data[5];
     this.fileEditing = JSON.parse(JSON.stringify(this.dmSV.dataFileEditing));
     this.id = this.fileEditing.recID;
-    this.folderName = this.fileEditing.folderName
-    if (this.fileEditing.fileName ) this.type = 'file';
+    this.folderName = this.fileEditing.folderName;
+    if (this.fileEditing.fileName) this.type = 'file';
     else {
-      if(!this.fileEditing.folderName) this.isNewFolder = true;
+      if (!this.fileEditing.folderName) this.isNewFolder = true;
       this.type = 'folder';
     }
 
@@ -268,23 +296,24 @@ export class RolesComponent implements OnInit {
   }
   getData(recID: any) {
     this.api
-      .execSv("DM", 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', recID)
-      .subscribe((item) => {
-
-      });
+      .execSv('DM', 'DM', 'FolderBussiness', 'GetFoldersByIDAsync', recID)
+      .subscribe((item) => {});
   }
   getRoleShare() {
-    if (this.fileEditing?.permissions && this.fileEditing?.permissions.length > 0) {
-
-      var item = this.fileEditing?.permissions.filter(x => x.objectID == this.user?.userID);
+    if (
+      this.fileEditing?.permissions &&
+      this.fileEditing?.permissions.length > 0
+    ) {
+      var item = this.fileEditing?.permissions.filter(
+        (x) => x.objectID == this.user?.userID
+      );
       this.hasShare = item[0]?.assign;
     }
   }
   onSaveRightChanged($event, ctrl) {
     var value = $event.data;
     switch (ctrl) {
-
-      case "full":
+      case 'full':
         this.full = value;
         if (this.isSetFull) {
           this.create = value;
@@ -302,14 +331,12 @@ export class RolesComponent implements OnInit {
           this.download = value;
           this.assign = value;
         }
-        break;      
-      case "fromdate":
-        if (value != null)
-          this.startDate = value.fromDate;
         break;
-      case "todate":
-        if (value != null)
-          this.endDate = value.fromDate;
+      case 'fromdate':
+        if (value != null) this.startDate = value.fromDate;
+        break;
+      case 'todate':
+        if (value != null) this.endDate = value.fromDate;
         break;
       default:
         this.isSetFull = false;
@@ -317,61 +344,74 @@ export class RolesComponent implements OnInit {
         break;
     }
 
-    if (ctrl != 'full' && ctrl != 'copyrightsControl' && ctrl != 'revision' && ctrl != 'physical' && ctrl != 'approval' && value == false)
+    if (
+      ctrl != 'full' &&
+      ctrl != 'copyrightsControl' &&
+      ctrl != 'revision' &&
+      ctrl != 'physical' &&
+      ctrl != 'approval' &&
+      value == false
+    )
       this.full = false;
 
-    if (this.assign && this.create && this.read && this.delete && this.update && this.upload && this.share && this.download)
+    if (
+      this.assign &&
+      this.create &&
+      this.read &&
+      this.delete &&
+      this.update &&
+      this.upload &&
+      this.share &&
+      this.download
+    )
       this.full = true;
 
     this.changeDetectorRef.detectChanges();
   }
 
   checkCurrentRightUpdate(owner = true) {
+    if (this.propertiesFolder) return true;
 
-    if(this.propertiesFolder) return true
-    
     if (!this.isSystem) {
       if (this.user.administrator) return false;
-      else  return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
-    }
-    else return true;
-      // if (owner) {
-      //   if (this.objectType === "7")
-      //     return true;
-      //   else // objectType == 1
-      //   //  return !this.dmSV.parentAssign && !this.userID == this.user.userID
-      //    return !this.fileEditing.assign && !this.user.administrator;
-      // }
-      // else
-      //   return true;
+      else return !this.fileEditing.assign; //!this.assignRight;//this.fileEditing.assign;
+    } else return true;
+    // if (owner) {
+    //   if (this.objectType === "7")
+    //     return true;
+    //   else // objectType == 1
+    //   //  return !this.dmSV.parentAssign && !this.userID == this.user.userID
+    //    return !this.fileEditing.assign && !this.user.administrator;
+    // }
+    // else
+    //   return true;
     //}
   }
 
   checkCurrentRightUpdate1() {
     if (!this.fileEditing.permissions[this.currentPemission].isSystem) {
-      return !this.fileEditing.permissions[this.currentPemission].assign;//this.fileEditing.assign;
-    }
-    else {
+      return !this.fileEditing.permissions[this.currentPemission].assign; //this.fileEditing.assign;
+    } else {
       return true;
     }
   }
 
   onSaveEditingFile() {
-    if (this.fileEditing.fileName === "") {
+    if (this.fileEditing.fileName === '') {
       return;
     }
 
-    if (this.id != "") {
+    if (this.id != '') {
       // update file
       // save permisson
-      this.fileService.updateFile(this.fileEditing).subscribe(item => {
+      this.fileService.updateFile(this.fileEditing).subscribe((item) => {
         if (item.status == 0) {
           let res = item.data;
           if (res != null) {
             this.fileEditing = res;
             this.changePermission(0);
             var files = this.dmSV.listFiles;
-            let index = files.findIndex(d => d.recID.toString() === this.id);
+            let index = files.findIndex((d) => d.recID.toString() === this.id);
             if (index != -1) {
               files[index].fileName = res.fileName;
             }
@@ -379,14 +419,16 @@ export class RolesComponent implements OnInit {
             this.dmSV.ChangeData.next(true);
             this.changeDetectorRef.detectChanges();
           }
-        }
-        else {
+        } else {
           this.errorshow = true;
           this.changeDetectorRef.detectChanges();
         }
 
         if (item.status == 6) {
-          let newNameMessage = this.renamemessage.replace("{0}", item.data.fileName);
+          let newNameMessage = this.renamemessage.replace(
+            '{0}',
+            item.data.fileName
+          );
           // this.confirmationDialogService.confirm(this.titlemessage, item.message + ". " + newNameMessage)
           //   .then((confirmed) => {
           //     if (confirmed) {
@@ -408,19 +450,16 @@ export class RolesComponent implements OnInit {
           //     }
           //   })
           //   .catch(() => console.log('User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)'));
-
-        }
-        else {
+        } else {
           this.notificationsService.notify(item.message);
         }
-
       });
-
-    }
-    else {
-      let index = this.fileUploadList.findIndex(d => d.fileName.toString() === this.fileEditing.fileName.toString()); //find index in your array
+    } else {
+      let index = this.fileUploadList.findIndex(
+        (d) => d.fileName.toString() === this.fileEditing.fileName.toString()
+      ); //find index in your array
       if (index > -1) {
-        this.fileUploadList.splice(index, 1);//remove element from array
+        this.fileUploadList.splice(index, 1); //remove element from array
         // this.fileUploadList.push(new Object(), this.fileEditing);
         this.fileUploadList.push(Object.assign({}, this.fileEditing));
         // this.dmSV.fileUploadList.next(this.fileUploadList);
@@ -428,14 +467,10 @@ export class RolesComponent implements OnInit {
     }
   }
 
-
-
   checkItemRight(i) {
     //isSystem
-    if (!this.fileEditing.permissions[i].isSystem)
-      return !this.assignRight;
-    else
-      return true;
+    if (!this.fileEditing.permissions[i].isSystem) return !this.assignRight;
+    else return true;
   }
 
   changePermission(index) {
@@ -445,10 +480,14 @@ export class RolesComponent implements OnInit {
     // this.currentPemission = index;
 
     let isSystem = false;
-    let objectType = "";
+    let objectType = '';
     if (this.currentPemission > -1) {
       let oldIndex = this.currentPemission; //find index in your array
-      if (oldIndex != index && oldIndex > -1 && this.fileEditing.permissions[oldIndex] != null) {
+      if (
+        oldIndex != index &&
+        oldIndex > -1 &&
+        this.fileEditing.permissions[oldIndex] != null
+      ) {
         this.fileEditing.permissions[oldIndex].full = this.full;
         this.fileEditing.permissions[oldIndex].create = this.create;
         this.fileEditing.permissions[oldIndex].read = this.read;
@@ -466,7 +505,15 @@ export class RolesComponent implements OnInit {
 
     // load new permission
     if (this.fileEditing.permissions[index] != null) {
-      this.full = this.fileEditing.permissions[index].create && this.fileEditing.permissions[index].read && this.fileEditing.permissions[index].update && this.fileEditing.permissions[index].delete && this.fileEditing.permissions[index].download && this.fileEditing.permissions[index].share && this.fileEditing.permissions[index].upload && this.fileEditing.permissions[index].assign;
+      this.full =
+        this.fileEditing.permissions[index].create &&
+        this.fileEditing.permissions[index].read &&
+        this.fileEditing.permissions[index].update &&
+        this.fileEditing.permissions[index].delete &&
+        this.fileEditing.permissions[index].download &&
+        this.fileEditing.permissions[index].share &&
+        this.fileEditing.permissions[index].upload &&
+        this.fileEditing.permissions[index].assign;
       //  this.isSetFull = true;
       this.create = this.fileEditing.permissions[index].create;
       this.read = this.fileEditing.permissions[index].read;
@@ -485,8 +532,7 @@ export class RolesComponent implements OnInit {
       this.objectType = objectType;
       this.isSystem = this.fileEditing.permissions[index].isSystem;
       this.permissonActiveId = index;
-    }
-    else {
+    } else {
       this.full = false;
       this.create = false;
       this.read = false;
@@ -509,7 +555,6 @@ export class RolesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-
   removeUserRight(index, list: Permission[] = null) {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
@@ -518,49 +563,69 @@ export class RolesComponent implements OnInit {
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
           if (list == null) {
-            if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
-              this.fileEditing.permissions.splice(index, 1);//remove element from array
+            if (
+              this.fileEditing &&
+              this.fileEditing.permissions &&
+              this.fileEditing.permissions.length > 0
+            ) {
+              this.fileEditing.permissions.splice(index, 1); //remove element from array
               this.currentPemission = 0;
-              if (this.userID && this.userID.toLocaleLowerCase() != "admin" && !this.isNewFolder) {
-                var check = this.fileEditing.permissions.filter(x => x.objectID == this.userID && x.objectType != "1" && x.objectType != "7");
-                var checkEveryOne = this.fileEditing.permissions.filter(x => x.objectType == "9");
-                if (check.length == 0 && checkEveryOne.length == 0) this.fileEditing.assign = false;
+              if (
+                this.userID &&
+                this.userID.toLocaleLowerCase() != 'admin' &&
+                !this.isNewFolder
+              ) {
+                var check = this.fileEditing.permissions.filter(
+                  (x) =>
+                    x.objectID == this.userID &&
+                    x.objectType != '1' &&
+                    x.objectType != '7'
+                );
+                var checkEveryOne = this.fileEditing.permissions.filter(
+                  (x) => x.objectType == '9'
+                );
+                if (check.length == 0 && checkEveryOne.length == 0)
+                  this.fileEditing.assign = false;
               }
-              if(!this.isNewFolder) this.changePermission(0);
+              if (!this.isNewFolder) this.changePermission(0);
             }
-          }
-          else if(list && list.length > 0) list.splice(index, 1);//remove element from array
+          } else if (list && list.length > 0) list.splice(index, 1); //remove element from array
 
-          if (this.type == "file") this.onSaveEditingFile();
+          if (this.type == 'file') this.onSaveEditingFile();
           else {
             this.fileEditing.folderName = this.folderName;
             this.fileEditing.folderID = this.dmSV.getFolderId();
             this.fileEditing.recID = this.id;
-            if(!this.isNewFolder)
-            {
-              this.folderService.updateFolder(this.fileEditing).subscribe(res => {
-                if(res)
-                {
-                  this.fileEditing = res.data;
-                  this.codxView?.dataService.update(this.fileEditing).subscribe();
-                  this.changePermission(0);
-                  this.dmSV.fileEditing.next(this.fileEditing);
-                }
-              });
+            if (!this.isNewFolder) {
+              this.folderService
+                .updateFolder(this.fileEditing)
+                .subscribe((res) => {
+                  if (res) {
+                    this.fileEditing = res.data;
+                    this.codxView?.dataService
+                      .update(this.fileEditing)
+                      .subscribe();
+                    this.changePermission(0);
+                    this.dmSV.fileEditing.next(this.fileEditing);
+                  }
+                });
             }
             //else this.fileEditing.permissions[0].assign = this.assign;
           }
           this.changeDetectorRef.detectChanges();
-        };
+        }
       });
   }
 
   allowSetRight() {
     // this.fileEditing.assign
-    var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.assignRight;
+    var right =
+      this.dmSV.idMenuActive != '6' &&
+      this.dmSV.idMenuActive != '7' &&
+      this.assignRight;
     //var right = this.dmSV.idMenuActive != '6' && this.dmSV.idMenuActive != '7' && this.fileEditing.assign;
     right = true;
-   
+
     return right;
   }
 
@@ -571,43 +636,53 @@ export class RolesComponent implements OnInit {
       return;
     }
     // save current permisssion
-    if (this.currentPemission > -1 && this.fileEditing.permissions[this.currentPemission] != null && this.fileEditing.permissions[this.currentPemission].objectType != "7") {
+    if (
+      this.currentPemission > -1 &&
+      this.fileEditing.permissions[this.currentPemission] != null &&
+      this.fileEditing.permissions[this.currentPemission].objectType != '7'
+    ) {
       //  this.fileEditing.permissions[this.currentPemission].isSharing = this.modeSharing;
       this.fileEditing.permissions[this.currentPemission].full = this.full;
       this.fileEditing.permissions[this.currentPemission].create = this.create;
       this.fileEditing.permissions[this.currentPemission].read = this.read;
       this.fileEditing.permissions[this.currentPemission].update = this.update;
       this.fileEditing.permissions[this.currentPemission].delete = this.delete;
-      this.fileEditing.permissions[this.currentPemission].download = this.download;
+      this.fileEditing.permissions[this.currentPemission].download =
+        this.download;
       this.fileEditing.permissions[this.currentPemission].share = this.share;
       this.fileEditing.permissions[this.currentPemission].upload = this.upload;
-      this.fileEditing.permissions[this.currentPemission].startDate = this.startDate;
-      this.fileEditing.permissions[this.currentPemission].endDate = this.endDate;
+      this.fileEditing.permissions[this.currentPemission].startDate =
+        this.startDate;
+      this.fileEditing.permissions[this.currentPemission].endDate =
+        this.endDate;
       this.fileEditing.permissions[this.currentPemission].assign = this.assign;
     }
 
     this.dmSV.fileEditing.next(this.fileEditing);
     this.changeDetectorRef.detectChanges();
     if (this.modePermission) {
-      if (this.type == "file") {
-        this.fileService.updatePermisson(this.fileEditing).subscribe(async res => {
-          if (res) {
-            this.notificationsService.notify(res.message);
-          }
-        });
+      if (this.type == 'file') {
+        this.fileService
+          .updatePermisson(this.fileEditing)
+          .subscribe(async (res) => {
+            if (res) {
+              this.notificationsService.notify(res.message);
+            }
+          });
         //this.onSaveEditingFile();
-      }
-      else {
+      } else {
         // this.fileEditing.folderName = this.folderName;
         this.fileEditing.folderID = this.dmSV.getFolderId();
         // this.folderService.updateFolder(this.fileEditing).subscribe(async res => {
         // });
-        this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
-          if (res) {
-            this.dmSV.fileEditing.next(this.fileEditing);
-            this.notificationsService.notify(res.message);
-          }
-        });
+        this.folderService
+          .updateFolderPermisson(this.fileEditing)
+          .subscribe(async (res) => {
+            if (res) {
+              this.dmSV.fileEditing.next(this.fileEditing);
+              this.notificationsService.notify(res.message);
+            }
+          });
       }
     }
 
@@ -715,23 +790,23 @@ export class RolesComponent implements OnInit {
 
   checkedValue(type) {
     switch (type) {
-      case "full":
+      case 'full':
         return this.fileEditing.permissions[this.currentPemission].full;
-      case "read":
+      case 'read':
         return this.fileEditing.permissions[this.currentPemission].read;
-      case "create":
+      case 'create':
         return this.fileEditing.permissions[this.currentPemission].create;
-      case "update":
+      case 'update':
         return this.fileEditing.permissions[this.currentPemission].update;
-      case "delete":
+      case 'delete':
         return this.fileEditing.permissions[this.currentPemission].delete;
-      case "download":
+      case 'download':
         return this.fileEditing.permissions[this.currentPemission].download;
-      case "share":
+      case 'share':
         return this.fileEditing.permissions[this.currentPemission].share;
-      case "upload":
+      case 'upload':
         return this.fileEditing.permissions[this.currentPemission].upload;
-      case "assign":
+      case 'assign':
         return this.fileEditing.permissions[this.currentPemission].assign;
     }
     return false;
@@ -741,10 +816,13 @@ export class RolesComponent implements OnInit {
     var index = -1;
     if (list != null) {
       if (item != null && list.length > 0) {
-        index = list.findIndex(d => (d.objectID != null && d.objectID.toString() === item.objectID) || (d.objectID == null && d.objectType == item.objectType));
+        index = list.findIndex(
+          (d) =>
+            (d.objectID != null && d.objectID.toString() === item.objectID) ||
+            (d.objectID == null && d.objectType == item.objectType)
+        );
       }
-    }
-    else {
+    } else {
       list = [];
     }
 
@@ -781,12 +859,12 @@ export class RolesComponent implements OnInit {
   }
 
   onSaveRole($event) {
-    if(this.propertiesFolder) return
+    if (this.propertiesFolder) return;
     if ($event.data != undefined) {
       var data = $event.data;
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
-        var perm = new Permission;
+        var perm = new Permission();
         // if (this.startDate != undefined && this.startDate != null)
         perm.startDate = this.startDate;
         // if (this.endDate != undefined && this.endDate != null)
@@ -797,7 +875,10 @@ export class RolesComponent implements OnInit {
         perm.objectID = item.id;
         perm.objectType = item.objectType;
         perm.read = true;
-        this.fileEditing.permissions = this.addRoleToList(this.fileEditing.permissions, perm);
+        this.fileEditing.permissions = this.addRoleToList(
+          this.fileEditing.permissions,
+          perm
+        );
       }
       this.changePermission(this.currentPemission);
       //   this.changePermission(this.currentPemission);

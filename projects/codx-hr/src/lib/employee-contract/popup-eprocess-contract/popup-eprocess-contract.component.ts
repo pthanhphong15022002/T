@@ -21,7 +21,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxHrService } from '../../codx-hr.service';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupContractbenefitComponent } from './popup-contractbenefit/popup-contractbenefit.component';

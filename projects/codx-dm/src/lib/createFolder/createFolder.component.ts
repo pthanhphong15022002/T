@@ -29,7 +29,7 @@ import {
 } from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import {
   FileInfo,
   FileUpload,
@@ -378,7 +378,7 @@ export class CreateFolderComponent implements OnInit {
         if (this.edit) {
           this.noeditName = false;
           this.checkPermission();
-          this.updateRight = res.write
+          this.updateRight = res.write;
           this.fileEditing = res;
           this.assignRight = res.assign;
           this.folderName = res.folderName;
@@ -386,11 +386,11 @@ export class CreateFolderComponent implements OnInit {
           this.icon = res.icon;
           this.listSubFolder = this.fileEditing.subFolder;
           //  this.checkSecurity = this.fileEditing.checkSecurity;
-          if (this.fileEditing.hasSubFolder == true) this.createSubFolder = true;
+          if (this.fileEditing.hasSubFolder == true)
+            this.createSubFolder = true;
           else this.createSubFolder = false;
 
-          if (this.fileEditing.location) 
-          {
+          if (this.fileEditing.location) {
             let list = this.fileEditing.location.split('|');
             this.floor = list[0];
             this.range = list[1];
@@ -409,8 +409,7 @@ export class CreateFolderComponent implements OnInit {
           //    this.openFileDialog('dms_folder');
           //this.validate('folderName');
           this.changeDetectorRef.detectChanges();
-        } 
-        else {
+        } else {
           this.noeditName = false;
           //this.folderName = "";
           this.floor = '';
@@ -421,11 +420,18 @@ export class CreateFolderComponent implements OnInit {
           this.fileEditing = new FileUpload();
           this.fileEditing.folderID = res.recID;
           this.fileEditing.permissions = res.permissions;
-          var check = this.fileEditing.permissions.filter(x=>x.objectType == "1")
-          if(check.length == 0)
-          {
-            var check2 = this.fileEditing.permissions.filter(x=> x.objectID == this.user.userID)
-            if(check2 && check2.length > 0) this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != check2[0].id)
+          var check = this.fileEditing.permissions.filter(
+            (x) => x.objectType == '1'
+          );
+          if (check.length == 0) {
+            var check2 = this.fileEditing.permissions.filter(
+              (x) => x.objectID == this.user.userID
+            );
+            if (check2 && check2.length > 0)
+              this.fileEditing.permissions =
+                this.fileEditing.permissions.filter(
+                  (x) => x.id != check2[0].id
+                );
             var perm = new Permission();
             perm.objectType = '1';
             perm.objectID = this.user.userID;
@@ -463,16 +469,16 @@ export class CreateFolderComponent implements OnInit {
         this.noeditName = false;
         //this.folderName = "";
         this.security = false;
-        this.revision =  false;//this.dmSV.parentRevision;
-        this.physical = false;//this.dmSV.parentPhysical;
-        this.copyrightsControl =  false ;//this.dmSV.parentCopyrights;
-        this.approval =  false;//this.dmSV.parentApproval;
+        this.revision = false; //this.dmSV.parentRevision;
+        this.physical = false; //this.dmSV.parentPhysical;
+        this.copyrightsControl = false; //this.dmSV.parentCopyrights;
+        this.approval = false; //this.dmSV.parentApproval;
         this.viewThumb = false;
         this.alert = false;
         this.email = false;
-        this.location = ""; //this.dmSV.parentLocation;
-        this.approvers = ""; //this.dmSV.parentApprovers;
-        this.revisionNote = ""; //this.dmSV.parentRevisionNote;
+        this.location = ''; //this.dmSV.parentLocation;
+        this.approvers = ''; //this.dmSV.parentApprovers;
+        this.revisionNote = ''; //this.dmSV.parentRevisionNote;
         this.floor = '';
         this.range = '';
         this.shelf = '';
@@ -500,12 +506,13 @@ export class CreateFolderComponent implements OnInit {
   setFolderAS(data: any) {
     this.revision = data?.revision == null ? false : data?.revision;
     this.physical = data?.physical == null ? false : data?.physical;
-    this.copyrightsControl = data?.copyrights  == null ? false : data?.copyrights;
+    this.copyrightsControl =
+      data?.copyrights == null ? false : data?.copyrights;
     this.approval = data?.approval == null ? false : data?.approval;
     this.security = data?.checkSecurity == null ? false : data?.checkSecurity;
-    this.location = data?.location == null ? "" : data?.location;
-    this.approvers = data?.approvers == null ? "" : data?.approvers;
-    this.revisionNote = data?.revisionNote == null ? "" : data?.revisionNote;
+    this.location = data?.location == null ? '' : data?.location;
+    this.approvers = data?.approvers == null ? '' : data?.approvers;
+    this.revisionNote = data?.revisionNote == null ? '' : data?.revisionNote;
     this.viewThumb = data?.viewThumb == null ? false : data?.viewThumb;
     this.alert = data?.isAlert == null ? false : data?.isAlert;
     this.email = data?.isEmail == null ? false : data?.isEmail;
@@ -618,7 +625,7 @@ export class CreateFolderComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  checkPermission(res:any=null) {
+  checkPermission(res: any = null) {
     //this.isSystem = false;
     this.readRight = this.dmSV.parentRead;
     this.createRight = this.dmSV.parentCreate;
@@ -656,7 +663,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
-    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
+    this.fileEditing.checkSecurity =
+      this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
@@ -935,7 +943,7 @@ export class CreateFolderComponent implements OnInit {
       950,
       650,
       '',
-      [this.functionID , null , null ,null, this.propertiesFolder],
+      [this.functionID, null, null, null, this.propertiesFolder],
       ''
     );
   }

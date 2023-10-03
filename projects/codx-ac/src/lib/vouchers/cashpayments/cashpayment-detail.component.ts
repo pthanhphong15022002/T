@@ -783,7 +783,7 @@ export class CashpaymentDetailComponent extends UIComponent {
             'AC',
             'CashPaymentsBusiness',
             'TransferToBankAsync',
-            [data.recID, tk, 'accNet']
+            [data.recID, tk, 'test']
           )
           .subscribe((res) => {
             console.log(res);

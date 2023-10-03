@@ -22,9 +22,9 @@ import {
 import { environment } from 'src/environments/environment';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
-import { AttachmentComponent } from '../attachment/attachment.component';
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { FileComponent } from './file/file.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-note',

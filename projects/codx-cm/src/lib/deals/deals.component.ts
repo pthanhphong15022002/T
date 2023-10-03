@@ -1,14 +1,10 @@
-import { comment } from './../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
-import { async } from '@angular/core/testing';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   Injector,
   Input,
-  OnChanges,
   OnInit,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -25,7 +21,6 @@ import {
   RequestOption,
   NotificationsService,
   DialogModel,
-  CRUDService,
   Util,
   AlertConfirmInputConfig,
   DialogRef,
@@ -36,13 +31,9 @@ import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component
 import { CM_Customers } from '../models/cm_model';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
-import { PopupSelectTempletComponent } from 'projects/codx-dp/src/lib/instances/popup-select-templet/popup-select-templet.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
-import { AnyNsRecord } from 'dns';
-import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
-import { PopupOwnerDealComponent } from './popup-owner-deal/popup-owner-deal.component';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
@@ -836,7 +827,7 @@ export class DealsComponent
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.permissionCM
+                e.event?.permissionCM,
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -1060,7 +1051,7 @@ export class DealsComponent
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      data:data,
+      data: data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
       applyFor: '1',

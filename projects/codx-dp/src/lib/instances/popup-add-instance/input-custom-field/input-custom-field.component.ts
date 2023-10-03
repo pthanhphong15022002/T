@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CacheService } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { DP_Steps_Fields } from '../../../models/models';
 
 @Component({
@@ -144,7 +144,9 @@ export class InputCustomFieldComponent implements OnInit {
       if (!this.listIdUser || this.customField.dataFormat == '1')
         this.listIdUser = e.id;
       else this.listIdUser += ';' + e.id;
-      this.arrIdUser = Array.from(new Set(this.listIdUser ? this.listIdUser.split(';') : []));
+      this.arrIdUser = Array.from(
+        new Set(this.listIdUser ? this.listIdUser.split(';') : [])
+      );
     }
     this.valueChangeCustom.emit({ e: this.listIdUser, data: this.customField });
   }

@@ -1,17 +1,5 @@
-import { comment } from './../../../../../codx-share/src/lib/components/pdf/model/tmpSignArea.model';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import {
-  DP_Instances_Permissions,
-  DP_Instances_Steps_Roles,
-} from './../../models/models';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  Optional,
-  ViewChild,
-} from '@angular/core';
-import {
-  CodxInputComponent,
   DialogData,
   DialogRef,
   FormModel,
@@ -26,7 +14,6 @@ import {
   DP_Instances_Steps,
   DP_Instances_Steps_Reasons,
 } from '../../models/models';
-import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-move-stage',
@@ -539,7 +526,7 @@ export class PopupMoveStageComponent implements OnInit {
           isReason: this.isReason,
           comment: this.instancesStepOld?.note,
           expectedClosed: this.expectedClosed,
-          permissionCM:  res[2],
+          permissionCM: res[2],
         };
         if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [

@@ -28,7 +28,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Observable, Subscription, range } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
@@ -41,6 +40,7 @@ import { PopupQuestionOtherComponent } from './template-survey-other.component/p
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'app-questions',
   templateUrl: './questions.component.html',
@@ -48,13 +48,16 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
-export class QuestionsComponent extends UIComponent implements OnInit , OnChanges {
+export class QuestionsComponent
+  extends UIComponent
+  implements OnInit, OnChanges
+{
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @Input() dataSV :any
+  @Input() dataSV: any;
 
-  avatar:any;
-  primaryColor:any;
-  backgroudColor:any;
+  avatar: any;
+  primaryColor: any;
+  backgroudColor: any;
   surveys: SV_Surveys = new SV_Surveys();
   respondResults: any = new Array();
   formats: any = new Array();
@@ -63,12 +66,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   answers: any = new Array();
   isModeAdd = true;
   functionList: any;
-  emptyText = 'Mẫu không có tiêu đề'
+  emptyText = 'Mẫu không có tiêu đề';
   en = environment;
   valueFrom = 1;
   valueTo = 5;
-  valueRFrom = "";
-  valueRTo = "";
+  valueRFrom = '';
+  valueRTo = '';
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -120,46 +123,45 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     VIDEO: 'video',
     APPLICATION: 'application',
   };
-  defaultMoreFunc: any
-  listMoreFunc =
-  [
+  defaultMoreFunc: any;
+  listMoreFunc = [
     {
-      id: "T",
-      name: "Trả lời ngắn",
-      icon: "icon-short_text"
+      id: 'T',
+      name: 'Trả lời ngắn',
+      icon: 'icon-short_text',
     },
     {
-      id: "T2",
-      name: "Trả lời đoạn",
-      icon: "icon-text_snippet",
-      group: true
+      id: 'T2',
+      name: 'Trả lời đoạn',
+      icon: 'icon-text_snippet',
+      group: true,
     },
     {
-      id: "O",
-      name: "Trắc nghiệm",
-      icon: "icon-radio_button_checked"
+      id: 'O',
+      name: 'Trắc nghiệm',
+      icon: 'icon-radio_button_checked',
     },
     {
-      id: "C",
-      name: "Hộp kiểm",
-      icon: "icon-check_box"
+      id: 'C',
+      name: 'Hộp kiểm',
+      icon: 'icon-check_box',
     },
     {
-      id: "L",
-      name: "Menu thả xuống",
-      icon: "icon-arrow_drop_down_circle",
-      group: true
+      id: 'L',
+      name: 'Menu thả xuống',
+      icon: 'icon-arrow_drop_down_circle',
+      group: true,
     },
     {
-      id: "A",
-      name: "Tải lên tệp",
-      icon: "icon-cloud_upload",
-      group: true
+      id: 'A',
+      name: 'Tải lên tệp',
+      icon: 'icon-cloud_upload',
+      group: true,
     },
     {
-      id: "R",
-      name: "Phạm vi tuyến tính",
-      icon: "fa fa-ellipsis-h"
+      id: 'R',
+      name: 'Phạm vi tuyến tính',
+      icon: 'fa fa-ellipsis-h',
     },
     // {
     //   id: "O2",
@@ -174,16 +176,16 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     //   group: true
     // },
     {
-      id: "D",
-      name: "Ngày",
-      icon: "icon-calendar_today"
+      id: 'D',
+      name: 'Ngày',
+      icon: 'icon-calendar_today',
     },
     {
-      id: "H",
-      name: "Giờ",
-      icon: "icon-access_time"
-    }
-  ]
+      id: 'H',
+      name: 'Giờ',
+      icon: 'icon-access_time',
+    },
+  ];
   dataAnswer: any = new Array();
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
@@ -192,12 +194,12 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   itemActive: any;
   indexSessionA = 0;
   indexQuestionA = 0;
-  idSession = "";
+  idSession = '';
   public r = range(1, 10);
   @Input() changeModeQ: any;
   @Input() formModel: any;
   @Input() dataService: any;
-  @Input() recID = "";
+  @Input() recID = '';
 
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
@@ -209,7 +211,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
-    private shareService : CodxShareService,
+    private shareService: CodxShareService,
     private notification: NotificationsService,
     private sanitizer: DomSanitizer
   ) {
@@ -223,30 +225,34 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     };
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if ( changes?.funcID && changes.funcID?.previousValue != changes.funcID?.currentValue)
-    {
+    if (
+      changes?.funcID &&
+      changes.funcID?.previousValue != changes.funcID?.currentValue
+    ) {
       this.funcID = changes.funcID?.currentValue;
       //if(this.funcID) this.loadDataFunc();
     }
-    if(changes?.recID && changes.recID?.previousValue != changes.recID?.currentValue)
-    {
+    if (
+      changes?.recID &&
+      changes.recID?.previousValue != changes.recID?.currentValue
+    ) {
       this.recID = changes.recID?.currentValue;
       this.loadDataFunc();
     }
-    if(changes?.dataSV && changes.dataSV?.previousValue != changes.dataSV?.currentValue)
-    {
-      this.dataSV =  changes.dataSV?.currentValue;
+    if (
+      changes?.dataSV &&
+      changes.dataSV?.previousValue != changes.dataSV?.currentValue
+    ) {
+      this.dataSV = changes.dataSV?.currentValue;
       this.getAvatar();
     }
   }
   //lấy answerType
-  setAnswerType(answerType:any , type:any)
-  {
-    return this.listMoreFunc.filter(x=>x.id == answerType)[0][type];
+  setAnswerType(answerType: any, type: any) {
+    return this.listMoreFunc.filter((x) => x.id == answerType)[0][type];
   }
 
-  createNewQ()
-  {
+  createNewQ() {
     this.questions = [
       {
         seqNo: 0,
@@ -279,35 +285,39 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     ];
     this.questions[0].children[0]['active'] = true;
     this.itemActive = this.questions[0].children[0];
-    this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == "O")[0];
+    this.defaultMoreFunc = this.listMoreFunc.filter((x) => x.id == 'O')[0];
   }
 
   onInit(): void {
-   //this.getAvatar();
+    //this.getAvatar();
   }
 
-  getAvatar()
-  {
-    if(this.dataSV && this.dataSV.settings) {
-      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      if(this.dataSV?.settings?.image) this.avatar = this.shareService.getThumbByUrl(this.dataSV?.settings?.image , 120) ;
-      if(this.dataSV?.settings?.primaryColor) this.primaryColor = this.dataSV?.settings?.primaryColor;
-      if(this.dataSV?.settings?.backgroudColor) {
+  getAvatar() {
+    if (this.dataSV && this.dataSV.settings) {
+      if (typeof this.dataSV.settings == 'string')
+        this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      if (this.dataSV?.settings?.image)
+        this.avatar = this.shareService.getThumbByUrl(
+          this.dataSV?.settings?.image,
+          120
+        );
+      if (this.dataSV?.settings?.primaryColor)
+        this.primaryColor = this.dataSV?.settings?.primaryColor;
+      if (this.dataSV?.settings?.backgroudColor) {
         this.backgroudColor = this.dataSV?.settings?.backgroudColor;
-        document.getElementById("bg-color-sv").style.backgroundColor = this.backgroudColor
+        document.getElementById('bg-color-sv').style.backgroundColor =
+          this.backgroudColor;
       }
     }
   }
 
-  loadDataFunc()
-  {
+  loadDataFunc() {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionList = res;
         if (this.recID) {
           this.loadData(this.recID);
-        }
-        else this.createNewQ();
+        } else this.createNewQ();
       }
     });
   }
@@ -334,7 +344,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   loadData(recID) {
     this.questions = null;
     this.api
-      .execSv("SV",'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
+      .execSv('SV', 'SV', 'QuestionsBusiness', 'GetByRecIDAsync', recID)
       .subscribe((res: any) => {
         if (res && res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
@@ -344,7 +354,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           ).subscribe((res: any) => {
             if (res) {
               res.forEach((x) => {
-                if (x.referType == this.recID +"_"+ this.REFER_TYPE.VIDEO)
+                if (x.referType == this.recID + '_' + this.REFER_TYPE.VIDEO)
                   x['srcVideo'] = `${environment.urlUpload}/${x.pathDisk}`;
               });
               this.lstEditIV = res;
@@ -361,7 +371,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
               mandatory: false,
               answerType: null,
               category: 'S',
-              transID:this.recID,
+              transID: this.recID,
               children: [
                 {
                   recID: this.generateGUID(),
@@ -386,66 +396,55 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
           ];
           var list = [];
           list.push(this.questions[0]);
-          list = list.concat(this.questions[0].children)
+          list = list.concat(this.questions[0].children);
           this.addNewQ(list);
         }
         this.questions[0].children[0]['active'] = true;
         this.itemActive = this.questions[0].children[0];
       });
   }
-  addNewQ(listQ:any)
-  {
+  addNewQ(listQ: any) {
     this.api
-    .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-      this.recID,
-      listQ,
-      true,
-    ]).subscribe((item:any)=>{
-      if(item)
-      {
-
-        this.idSession = item.idSession;
-        this.questions[0].children = item.lst;
-        this.questions[0].children[0]['active'] = true;
-      }
-    });
+      .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+        this.recID,
+        listQ,
+        true,
+      ])
+      .subscribe((item: any) => {
+        if (item) {
+          this.idSession = item.idSession;
+          this.questions[0].children = item.lst;
+          this.questions[0].children[0]['active'] = true;
+        }
+      });
   }
-  getHierarchy(dtS :any , dtQ: any) {
-    if(dtS)
-    {
-      for(var i = 0 ; i < dtS.length ; i++)
-      {
-        debugger
-        dtS[i].children = dtQ.filter(x=>x.parentID == dtS[i].recID);
-        dtQ = dtQ.filter(x=>x.parentID != dtS[i].recID);
-        if(dtS[i].children && dtS[i].children.length>0)
-        {
-          for(var a = 0 ; a < dtS[i].children.length ; a++)
-          {
+  getHierarchy(dtS: any, dtQ: any) {
+    if (dtS) {
+      for (var i = 0; i < dtS.length; i++) {
+        debugger;
+        dtS[i].children = dtQ.filter((x) => x.parentID == dtS[i].recID);
+        dtQ = dtQ.filter((x) => x.parentID != dtS[i].recID);
+        if (dtS[i].children && dtS[i].children.length > 0) {
+          for (var a = 0; a < dtS[i].children.length; a++) {
             //Phạm vi tuyến tính
-            if(dtS[i].children[a].answerType == "R")
-            {
-              if(dtS[i].children[a].answers[0].answer)
-              {
-                var split = dtS[i].children[a].answers[0].answer.split("/");
-                if(split && split.length > 0)
-                {
+            if (dtS[i].children[a].answerType == 'R') {
+              if (dtS[i].children[a].answers[0].answer) {
+                var split = dtS[i].children[a].answers[0].answer.split('/');
+                if (split && split.length > 0) {
                   this.valueFrom = split[0];
                   this.valueTo = split[1];
                   this.valueRFrom = split[2];
                   this.valueRTo = split[3];
                 }
               }
-            }
-            else if(dtS[i].children[a].answers)
-            {
-              var check = dtS[i].children[a].answers.filter(x=>x.other);
-              if(check && check.length>0) dtS[i].children[a].other = true;
+            } else if (dtS[i].children[a].answers) {
+              var check = dtS[i].children[a].answers.filter((x) => x.other);
+              if (check && check.length > 0) dtS[i].children[a].other = true;
             }
           }
         }
       }
-      if(dtS[0].children && dtS[0].children.length>0)
+      if (dtS[0].children && dtS[0].children.length > 0)
         dtS[0].children[0]['active'] = true;
 
       return dtS;
@@ -466,13 +465,17 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       event.previousIndex,
       event.currentIndex
     );
-    this.questions[seqNoSession].children.forEach((x,index)=> (x.seqNo = index));
+    this.questions[seqNoSession].children.forEach(
+      (x, index) => (x.seqNo = index)
+    );
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(this.questions[seqNoSession].children, false);
   }
 
   dropAnswer(event: CdkDragDrop<string[]>, idParent) {
-    var index = this.questions[0].children.findIndex((x) => x.seqNo == idParent);
+    var index = this.questions[0].children.findIndex(
+      (x) => x.seqNo == idParent
+    );
     this.dataAnswer = this.questions[0].children[index].answers;
     moveItemInArray(this.dataAnswer, event.previousIndex, event.currentIndex);
     this.dataAnswer.forEach((x, index) => (x.seqNo = index));
@@ -487,7 +490,6 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     seqNoQuestion,
     answerType
   ) {
-
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -623,9 +625,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
-    var data = this.questions[indexSession].children[indexQuestion].answers
+    var data = this.questions[indexSession].children[indexQuestion].answers;
     var i = data.findIndex((x) => x.seqNo == dataAnswer.seqNo);
-    data.splice(i,1);
+    data.splice(i, 1);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
@@ -726,7 +728,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       isColumn: false,
       hasPicture: false,
     };
-    var data = this.questions[indexSession].children[indexQuestion].answers
+    var data = this.questions[indexSession].children[indexQuestion].answers;
     data.push(dataAnswerTemp);
     //this.questions[indexSession].children[indexQuestion]!.answers = data;
     this.questions[indexSession].children[indexQuestion]['other'] = true;
@@ -1078,7 +1080,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       data: this.itemActive,
       inline: inline,
       itemAnswer: itemAnswer,
-      referType: this.recID
+      referType: this.recID,
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -1115,8 +1117,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
                 this.questions[seqNoSession].children[seqNoQuestion].qPicture =
                   true;
               }
-              for(var i = 0 ; i < res.event[0].dataUpload.length ; i++)
-              {
+              for (var i = 0; i < res.event[0].dataUpload.length; i++) {
                 this.lstEditIV.push(res.event[0].dataUpload[i]);
               }
               this.lstEditIV = [...this.lstEditIV];
@@ -1183,20 +1184,21 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   generateGUID() {
-     return Util.uid();
+    return Util.uid();
   }
 
   addCard(itemActive, seqNoSession = null, category) {
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
-    }
-    else if(this.questions[0].children && this.questions[0].children.length < 1) {
+    } else if (
+      this.questions[0].children &&
+      this.questions[0].children.length < 1
+    ) {
       this.addNewQuestion();
     }
   }
-  addNewQuestion()
-  {
+  addNewQuestion() {
     this.questions[0].children = [];
     var newQ = {
       seqNo: 0,
@@ -1214,7 +1216,7 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       mandatory: false,
       answerType: 'O',
       category: 'Q',
-      parentID: this.questions[0].recID
+      parentID: this.questions[0].recID,
     };
     this.questions[0].children.push(newQ);
     this.addNewQ(this.questions[0].children);
@@ -1304,12 +1306,10 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
       //Update lại parentID cho đúng với session mới tạo
       lstUp.forEach((x) => (x.parentID = this.questions[seqNoSession].recID));
 
-      if(lstDown.length > 0)
-      {
-        for(var i = 0 ; i < lstDown.length ; i++)
-        {
+      if (lstDown.length > 0) {
+        for (var i = 0; i < lstDown.length; i++) {
           lstDown[i].parentID = this.questions[seqNoSession + 1].recID;
-          lstDown[i].seqNo = i ;
+          lstDown[i].seqNo = i;
         }
       }
 
@@ -1484,7 +1484,9 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
     if (answerType) {
-      this.defaultMoreFunc = this.listMoreFunc.filter(x=>x.id == answerType)[0];
+      this.defaultMoreFunc = this.listMoreFunc.filter(
+        (x) => x.id == answerType
+      )[0];
       var data = this.questions[seqNoSession].children[itemQuestion.seqNo];
       data.answerType = answerType;
       if (
@@ -1507,67 +1509,71 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
         //   };
         //   data.answers.push(dataAnswerTemp);
         // }
-          if (answerType != 'O' && answerType != 'C' && answerType != 'L' && answerType != 'R') {
-            data.answers = new Array();
-            let dataAnswerTemp = {
-              recID: recID,
-              seqNo: 0,
-              answer: 'Tùy chọn 1',
-              other: false,
-            };
-            data.answers.push(dataAnswerTemp);
-          }
-
-          if(answerType == 'R')
-          {
-            data.answers = new Array();
-            let dataAnswerTemp = {
-              recID: recID,
-              seqNo: 0,
-              answer: '1/5//',
-              other: false,
-            };
-            data.answers.push(dataAnswerTemp);
-          }
-
-          //Xóa File
-          if (answerType != 'O' && answerType != 'C')
-          {
-            this.lstEditIV = this.lstEditIV.filter(x=>x.objectID != itemQuestion.recID);
-            this.SVServices.deleteFilesByContainRefer(itemQuestion.recID).subscribe();
-          }
-
+        if (
+          answerType != 'O' &&
+          answerType != 'C' &&
+          answerType != 'L' &&
+          answerType != 'R'
+        ) {
+          data.answers = new Array();
+          let dataAnswerTemp = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Tùy chọn 1',
+            other: false,
+          };
+          data.answers.push(dataAnswerTemp);
         }
-        else if (answerType == 'O2' || answerType == 'C2')
-        {
-          if ( itemQuestion.answerType != 'O2' && itemQuestion.answerType != 'C2') {
-            data.answers = new Array();
-            let dataAnswerR = {
-              recID: recID,
-              seqNo: 0,
-              answer: 'Hàng 1',
-              isColumn: false,
-            };
-            data.answers.push(dataAnswerR);
-            this.generateGuid();
-            let dataAnswerC = {
-              recID: this.GUID,
-              seqNo: 0,
-              answer: 'Cột 1',
-              isColumn: true,
-            };
-            data.answers.push(dataAnswerC);
-          }
-          else
-          {
-            itemQuestion.answers[0].answer = "Hàng 1"
-          }
+
+        if (answerType == 'R') {
+          data.answers = new Array();
+          let dataAnswerTemp = {
+            recID: recID,
+            seqNo: 0,
+            answer: '1/5//',
+            other: false,
+          };
+          data.answers.push(dataAnswerTemp);
         }
+
+        //Xóa File
+        if (answerType != 'O' && answerType != 'C') {
+          this.lstEditIV = this.lstEditIV.filter(
+            (x) => x.objectID != itemQuestion.recID
+          );
+          this.SVServices.deleteFilesByContainRefer(
+            itemQuestion.recID
+          ).subscribe();
+        }
+      } else if (answerType == 'O2' || answerType == 'C2') {
+        if (
+          itemQuestion.answerType != 'O2' &&
+          itemQuestion.answerType != 'C2'
+        ) {
+          data.answers = new Array();
+          let dataAnswerR = {
+            recID: recID,
+            seqNo: 0,
+            answer: 'Hàng 1',
+            isColumn: false,
+          };
+          data.answers.push(dataAnswerR);
+          this.generateGuid();
+          let dataAnswerC = {
+            recID: this.GUID,
+            seqNo: 0,
+            answer: 'Cột 1',
+            isColumn: true,
+          };
+          data.answers.push(dataAnswerC);
+        } else {
+          itemQuestion.answers[0].answer = 'Hàng 1';
+        }
+      }
 
       //Lọc câu hỏi "khác"
-      if(answerType == 'L' && data.answers && data.answers.length>0)
-      {
-        data.answers = data.answers.filter(x=>!x.other);
+      if (answerType == 'L' && data.answers && data.answers.length > 0) {
+        data.answers = data.answers.filter((x) => !x.other);
         data.other = false;
       }
       //this.questions[seqNoSession].children[itemQuestion.seqNo] = data;
@@ -1660,31 +1666,35 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     }
   }
 
+  changeRating(
+    value,
+    type,
+    seqNoQuestion = null,
+    itemQuestion = null,
+    itemAnswer = null
+  ) {
+    debugger;
+    var valueFrom = '1';
+    var valueTo = '5';
+    var valueRFrom = '';
+    var valueRTo = '';
 
-  changeRating(value, type ,seqNoQuestion = null, itemQuestion = null,itemAnswer = null) {
-    debugger
-    var valueFrom = "1";
-    var valueTo = "5";
-    var valueRFrom = "";
-    var valueRTo = "";
-
-    var split = itemAnswer.answer.split("/");
+    var split = itemAnswer.answer.split('/');
     valueFrom = split[0];
     valueTo = split[1];
     valueRFrom = split[2];
     valueRTo = split[3];
 
     if (type == 'FROM') valueFrom = value;
-    else if(type == "TO") valueTo = value;
-    else if(type == "RFROM" ) valueRFrom = value?.data;
-    else if(type == "RTO") valueRTo = value?.data;
+    else if (type == 'TO') valueTo = value;
+    else if (type == 'RFROM') valueRFrom = value?.data;
+    else if (type == 'RTO') valueRTo = value?.data;
 
-    var data =
-    {
-      data : valueFrom + "/" + valueTo + "/" + valueRFrom + "/" + valueRTo,
-      field : "answer"
-    }
-    this.valueChangeAnswer(data,seqNoQuestion,itemQuestion,itemAnswer);
+    var data = {
+      data: valueFrom + '/' + valueTo + '/' + valueRFrom + '/' + valueRTo,
+      field: 'answer',
+    };
+    this.valueChangeAnswer(data, seqNoQuestion, itemQuestion, itemAnswer);
   }
 
   sortSession() {
@@ -1723,8 +1733,8 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   }
 
   getSrcImage(data) {
-    if(data?.avatar) return data?.avatar
-    return environment.urlUpload + "/" +data?.pathDisk;
+    if (data?.avatar) return data?.avatar;
+    return environment.urlUpload + '/' + data?.pathDisk;
   }
 
   getSrcVideo(data) {
@@ -1917,28 +1927,23 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
     }
   }
 
-  convertAnswer(answer:any,type=null)
-  {
-    if(answer)
-    {
-      var spilts = answer.split("/");
-      if(spilts && spilts.length > 0)
-      {
-        if(type == 'l') return spilts[2]
-        else if(type == 'r') return spilts[3]
-        else if(type == 'f') return spilts[0] ? spilts[0] : "1"
-        else if(type == 't') return spilts[1] ? spilts[1] : "5"
-        else
-        {
+  convertAnswer(answer: any, type = null) {
+    if (answer) {
+      var spilts = answer.split('/');
+      if (spilts && spilts.length > 0) {
+        if (type == 'l') return spilts[2];
+        else if (type == 'r') return spilts[3];
+        else if (type == 'f') return spilts[0] ? spilts[0] : '1';
+        else if (type == 't') return spilts[1] ? spilts[1] : '5';
+        else {
           var arr = [];
-          for(var i = Number(spilts[0]) ; i<= spilts[1] ; i++)
-          {
+          for (var i = Number(spilts[0]); i <= spilts[1]; i++) {
             arr.push(i);
           }
-          return arr
+          return arr;
         }
       }
-      return null
+      return null;
     }
     return null;
   }
@@ -1951,25 +1956,28 @@ export class QuestionsComponent extends UIComponent implements OnInit , OnChange
   //     [data]
   //   );
   // }
-  updateAvatar()
-  {
+  updateAvatar() {
     this.attachment.uploadFile();
   }
-  fileAdded(e:any)
-  {
-    if(e?.pathDisk)
-    {
-      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk , 120);
-      if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-      this.dataSV.settings.image = this.shareService.getThumbByUrl(e?.pathDisk , 120);
+  fileAdded(e: any) {
+    if (e?.pathDisk) {
+      this.avatar = this.shareService.getThumbByUrl(e?.pathDisk, 120);
+      if (typeof this.dataSV.settings == 'string')
+        this.dataSV.settings = JSON.parse(this.dataSV.settings);
+      this.dataSV.settings.image = this.shareService.getThumbByUrl(
+        e?.pathDisk,
+        120
+      );
       this.SVServices.signalSave.next('saving');
       this.dataSV.settings = JSON.stringify(this.dataSV.settings);
       this.changeAvatar.emit(this.dataSV.settings);
-      this.SVServices.updateSV(this.dataSV.recID,this.dataSV).subscribe((res) => {
-        if (res) {
-          this.SVServices.signalSave.next('done');
+      this.SVServices.updateSV(this.dataSV.recID, this.dataSV).subscribe(
+        (res) => {
+          if (res) {
+            this.SVServices.signalSave.next('done');
+          }
         }
-      });
+      );
     }
   }
 }

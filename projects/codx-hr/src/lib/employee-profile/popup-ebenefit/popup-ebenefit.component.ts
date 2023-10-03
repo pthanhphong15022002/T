@@ -11,7 +11,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { FormGroup } from '@angular/forms';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import moment from 'moment';
 
 @Component({
