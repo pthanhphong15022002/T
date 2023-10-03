@@ -15,8 +15,7 @@ import { AdvancedPaymentLinkComponent } from '../advanced-payment-link/advanced-
   styleUrls: ['./payment-order-add.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PaymentOrderAddComponent extends UIComponent
-{
+export class PaymentOrderAddComponent extends UIComponent {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -56,39 +55,38 @@ export class PaymentOrderAddComponent extends UIComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    this.paymentOrder = {...dialogData.data?.advancedPayment};
+    this.paymentOrder = { ...dialogData.data?.advancedPayment };
     this.company = dialogData.data?.company;
     this.paymentOrder.currencyID = this.company.baseCurr;
     this.formType = dialogData.data?.formType;
     this.headerText = dialogData.data?.headerText;
     this.advancedPayment.totalAmt = 0;
-    
+
     this.loadPaymentOrderLines();
-    if(this.paymentOrder.refNo)
-    {
+    if (this.paymentOrder.refNo) {
       this.loadAdvancedPayment();
     }
 
     this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(res)
-        this.grvSetupPaymentOrderLines = res;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res)
+          this.grvSetupPaymentOrderLines = res;
+      });
     this.cache.gridViewSetup(this.fmAdvancedPayment.formName, this.fmAdvancedPayment.gridViewName)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if(res)
-        this.grvSetupAdvancedPayment = res;
-    });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res)
+          this.grvSetupAdvancedPayment = res;
+      });
   }
 
   onInit(): void {
     this.showLabelAttachment = this.paymentOrder?.attachments > 0 ? true : false;
   }
 
-  ngAfterViewInit(){
-    if(this.form?.data?.coppyForm) this.form.data._isEdit = true;
+  ngAfterViewInit() {
+    if (this.form?.data?.coppyForm) this.form.data._isEdit = true;
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.paymentOrder.voucherNo) {
@@ -110,20 +108,17 @@ export class PaymentOrderAddComponent extends UIComponent
     this.destroy$.complete();
   }
 
-  onClose()
-  {
+  onClose() {
     this.dialog.close();
   }
 
-  valueChange(e: any){
+  valueChange(e: any) {
     this.paymentOrder[e.field] = e.data;
-    this.form.formGroup.patchValue({[e.field]: this.paymentOrder[e.field]});
+    this.form.formGroup.patchValue({ [e.field]: this.paymentOrder[e.field] });
   }
 
-  dropdownChange(e: any)
-  {
-    switch(e.field)
-    {
+  dropdownChange(e: any) {
+    switch (e.field) {
       case 'objectID':
         this.paymentOrder[e.field] = e.data[0];
         break;
@@ -138,26 +133,23 @@ export class PaymentOrderAddComponent extends UIComponent
         this.paymentOrder[e.field] = e.data[0];
         break;
     }
-    this.form.formGroup.patchValue({[e.field]: this.paymentOrder[e.field]});
+    this.form.formGroup.patchValue({ [e.field]: this.paymentOrder[e.field] });
   }
 
-  lineChange(e: any, i: any)
-  {
+  lineChange(e: any, i: any) {
     this.paymentOrderLines[i][e.field] = e.data
-    if(e.field == 'dr')
-    {
+    if (e.field == 'dr') {
       this.calTotalAmt();
     }
   }
 
-  onSave(){
+  onSave() {
     this.inputValidate();
 
     if (this.form.validation())
       return;
-    
-    if(this.validate != 0)
-    {
+
+    if (this.validate != 0) {
       this.validate = 0;
       return;
     }
@@ -174,14 +166,11 @@ export class PaymentOrderAddComponent extends UIComponent
           this.paymentOrder.status = '7';
           this.form.formGroup.patchValue({ status: this.paymentOrder.status });
         }
-        else
-        {
-          if(res?.update?.data)
-          {
+        else {
+          if (res?.update?.data) {
             this.paymentOrder = res.update.data;
           }
-          else if(!res?.save)
-          {
+          else if (!res?.save) {
             this.paymentOrder = res;
           }
           this.saveLine();
@@ -189,7 +178,7 @@ export class PaymentOrderAddComponent extends UIComponent
       });
   }
 
-  onSaveAndRelease(){
+  onSaveAndRelease() {
     if (this.form.validation())
       return;
     if (this.paymentOrder.status == '7') {
@@ -204,68 +193,66 @@ export class PaymentOrderAddComponent extends UIComponent
           this.paymentOrder.status = '7';
           this.form.formGroup.patchValue({ status: this.paymentOrder.status });
         }
-        else
-        {
+        else {
           this.api
-          .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SaveListPaymentOrderAsync', [
-            this.paymentOrderLines
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res) => {
-            if (res) {
-              this.saveFileUpload();
-              if(res?.save?.data)
-              {
-                this.onRelease('', res.save.data);
-              } else if(res?.update?.data)
-              {
-                this.onRelease('', res.update.data);
+            .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SaveListPaymentOrderAsync', [
+              this.paymentOrderLines
+            ])
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                this.saveFileUpload();
+                this.onRelease('', this.form.data);
+                this.detectorRef.detectChanges();
               }
-              this.detectorRef.detectChanges();
-            }
-          });
+            });
         }
         this.dt.detectChanges();
       });
   }
-  
-  onRelease(text: any, data: any){
+
+  onRelease(text: any, data: any) {
     this.acService
       .getCategoryByEntityName(this.form.formModel.entityName)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.dataCategory = res;
-        this.shareService
-          .codxRelease(
-            'AC',
-            data.recID,
-            this.dataCategory.processID,
-            this.form.formModel.entityName,
-            this.form.formModel.funcID,
-            '',
-            '',
-            ''
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((result: any) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              data.status = result?.returnStatus;
-              this.dialog.dataService.updateDatas.set(data['_uuid'], data);
-              this.dialog.dataService
-                .save(null, 0, '', '', false)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res: any) => {
-                  if (res && !res.update.error) {
-                    this.notification.notifyCode('AC0029', 0, text);
-                    this.dialog.close();
-                  }
-                });
-            } else this.notification.notifyCode(result?.msgCodeError);
-          });
+        if (res) {
+          this.dataCategory = res;
+          this.shareService
+            .codxRelease(
+              'AC',
+              data.recID,
+              this.dataCategory.processID,
+              this.form.formModel.entityName,
+              this.form.formModel.funcID,
+              '',
+              '',
+              ''
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((result: any) => {
+              if (result?.msgCodeError == null && result?.rowCount) {
+                data.status = result?.returnStatus;
+                this.dialog.dataService.updateDatas.set(data['_uuid'], data);
+                this.dialog.dataService
+                  .save(null, 0, '', '', false)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res: any) => {
+                    if (res && !res.update.error) {
+                      this.notification.notifyCode('AC0029', 0, text);
+                      this.dialog.close();
+                    }
+                  });
+              } else this.notification.notifyCode(result?.msgCodeError);
+            });
+        }
+        else {
+          this.dialog.close();
+        }
       });
   }
 
-  saveLine(){
+  saveLine() {
     this.api
       .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SaveListPaymentOrderAsync', [
         this.paymentOrderLines
@@ -282,8 +269,7 @@ export class PaymentOrderAddComponent extends UIComponent
       });
   }
 
-  addLine()
-  {
+  addLine() {
     let data = new PaymentOrderLines();
     this.api
       .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SetDefaultAsync', [
@@ -298,37 +284,35 @@ export class PaymentOrderAddComponent extends UIComponent
       });
   }
 
-  deleteLine(index: any){
+  deleteLine(index: any) {
     this.api
-    .exec<any>('AC', 'PaymentOrderLinesBusiness', 'DeleteAsync', [
-      this.paymentOrderLines[index]
-    ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.paymentOrderLines.splice(index,1);
-        this.detectorRef.detectChanges();
-      }
-    });
+      .exec<any>('AC', 'PaymentOrderLinesBusiness', 'DeleteAsync', [
+        this.paymentOrderLines[index]
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.paymentOrderLines.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
-  loadPaymentOrderLines()
-  {
+  loadPaymentOrderLines() {
     this.api
-    .exec<any>('AC', 'PaymentOrderLinesBusiness', 'LoadDataAsync', [
-      this.paymentOrder.recID
-    ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.paymentOrderLines = res;
-        this.calTotalAmt();
-      }
-    });
+      .exec<any>('AC', 'PaymentOrderLinesBusiness', 'LoadDataAsync', [
+        this.paymentOrder.recID
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.paymentOrderLines = res;
+          this.calTotalAmt();
+        }
+      });
   }
 
-  inputValidate()
-  {
+  inputValidate() {
     for (let line of this.paymentOrderLines) {
       if (line.note == null || line.note == '') {
         this.notification.notifyCode(
@@ -336,7 +320,7 @@ export class PaymentOrderAddComponent extends UIComponent
           0,
           '"' + this.grvSetupPaymentOrderLines.Note.headerText + '"'
         );
-        this.validate ++;
+        this.validate++;
       }
       if (line.dr == null || line.dr == '') {
         this.notification.notifyCode(
@@ -344,7 +328,7 @@ export class PaymentOrderAddComponent extends UIComponent
           0,
           '"' + this.grvSetupPaymentOrderLines.DR.headerText + '"'
         );
-        this.validate ++;
+        this.validate++;
       }
     }
     return null;
@@ -361,16 +345,16 @@ export class PaymentOrderAddComponent extends UIComponent
     this.showLabelAttachment = this.isHaveFile;
   }
 
-  addFiles(evt){
+  addFiles(evt) {
     this.paymentOrder.attachments = evt.data.length;
-    this.form.formGroup.patchValue({attachments: this.paymentOrder.attachments});
+    this.form.formGroup.patchValue({ attachments: this.paymentOrder.attachments });
   }
 
   popupUploadFile() {
     this.attachment.uploadFile();
   }
 
-  async saveFileUpload(){
+  async saveFileUpload() {
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((file: any) => {
         if (file?.status == 0) {
@@ -380,34 +364,29 @@ export class PaymentOrderAddComponent extends UIComponent
     }
   }
 
-  calTotalAmt()
-  {
-    if(this.paymentOrderLines.length > 0)
-    {
+  calTotalAmt() {
+    if (this.paymentOrderLines.length > 0) {
       let total = 0;
       this.paymentOrderLines.forEach((line) => {
-        if(line.dr)
-        {
+        if (line.dr) {
           total += line.dr;
         }
       });
       this.paymentOrder.totalAmt = total;
-      this.form.formGroup.patchValue({totalAmt: this.paymentOrder.totalAmt});
+      this.form.formGroup.patchValue({ totalAmt: this.paymentOrder.totalAmt });
       this.calTotalCR();
     }
   }
 
-  calTotalCR()
-  {
-    if(this.paymentOrder?.totalAmt > this.advancedPayment?.totalAmt)
-    {
+  calTotalCR() {
+    if (this.paymentOrder?.totalAmt > this.advancedPayment?.totalAmt) {
       this.paymentOrder.totalCR = this.paymentOrder.totalAmt - this.advancedPayment.totalAmt;
-      this.form.formGroup.patchValue({totalCR: this.paymentOrder.totalCR});
+      this.form.formGroup.patchValue({ totalCR: this.paymentOrder.totalCR });
       this.dt.detectChanges();
     }
   }
 
-  loadAdvancedPayment(){
+  loadAdvancedPayment() {
     this.api
       .exec<any>('AC', 'AdvancedPaymentBusiness', 'LoadDataByVoucherNoAsync', [
         this.paymentOrder.refNo,
@@ -444,7 +423,7 @@ export class PaymentOrderAddComponent extends UIComponent
       if (res && res.event && res.event?.advancedPayment) {
         this.advancedPayment = res.event.advancedPayment;
         this.paymentOrder.refNo = this.advancedPayment.voucherNo;
-        this.form.formGroup.patchValue({refNo: this.paymentOrder.refNo});
+        this.form.formGroup.patchValue({ refNo: this.paymentOrder.refNo });
         this.calTotalCR();
         this.dt.detectChanges();
       }
