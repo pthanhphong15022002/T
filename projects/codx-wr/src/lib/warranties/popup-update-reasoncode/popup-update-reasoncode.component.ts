@@ -213,8 +213,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     let currentDate = new Date();
     const currentTime = new Date();
     const currentHour = currentTime.getHours() * 100 + currentTime.getMinutes();
-
-    // Tìm thời gian bắt đầu gần nhất và lớn hơn hoặc bằng thời gian hiện tại
     let closestStartTime = null;
 
     for (const hourItem of timeList) {
