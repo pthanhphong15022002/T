@@ -171,6 +171,8 @@ export class PopupAddLeadComponent
   // number
   leverSetting: number;
 
+  convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
+  transIDCamp: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -211,6 +213,12 @@ export class PopupAddLeadComponent
         this.planceHolderAutoNumber = this.lead.leadID;
       }
     } else {
+      //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
+      this.convertCustomerToLead = dt?.data?.convertCustomerToLead ?? false;
+      this.transIDCamp = dt?.data?.transIDCamp ?? null;
+      if (this.convertCustomerToLead) {
+        this.lead = JSON.parse(JSON.stringify(dt?.data?.dataConvert));
+      } //end Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
@@ -226,7 +234,7 @@ export class PopupAddLeadComponent
     this.executeApiCalls();
   }
 
-  async getParameterAddress(){
+  async getParameterAddress() {
     let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -570,17 +578,33 @@ export class PopupAddLeadComponent
 
   onAdd() {
     this.lead.applyProcess && this.addPermission(this.lead.processID);
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        if (res?.save[0]) {
-          //bua save avata
-          (this.dialog.dataService as CRUDService)
-            .update(res.save[0])
-            .subscribe();
-          this.dialog.close(res.save[0]);
-        }
-      });
+    if (this.convertCustomerToLead) {
+      this.api
+        .execSv<any>('CM', 'ERM.Business.CM', 'LeadsBusiness', 'AddLeadAsync', [
+          this.lead,
+          this.leadId,
+          this.contactId,
+          this.transIDCamp,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+            this.notificationsService.notifyCode('SYS006');
+          }
+        });
+    } else {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe((res) => {
+          if (res?.save[0]) {
+            //bua save avata
+            (this.dialog.dataService as CRUDService)
+              .update(res.save[0])
+              .subscribe();
+            this.dialog.close(res.save[0]);
+          }
+        });
+    }
   }
   onEdit() {
     this.dialog.dataService

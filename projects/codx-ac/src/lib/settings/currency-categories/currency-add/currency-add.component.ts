@@ -54,7 +54,10 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   dialogData!: DialogData;
   gridViewSetup: any;
   title: any;
-  moreFuncNameAdd: any;
+  lblAdd: any;
+  lblEdit: any;
+  lblExChangeRate:any;
+  lblExChangeRateSetting:any;
   moreFuncNameEdit: any;
   funcName: any;
   multiplication:any;
@@ -101,24 +104,31 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let add = res.find((x) => x.functionID == 'SYS01');
-        let edit = res.find((x) => x.functionID == 'SYS03');
-        if (add) this.moreFuncNameAdd = add.defaultName;
-        if (edit) this.moreFuncNameEdit = edit.customName;
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
       }
     });
 
-    // this.cache.moreFunction('ExchangeRates','grvExchangeRates')
-    // .pipe(takeUntil(this.destroy$))
-    // .subscribe((res) => {
-    //   if (res && res.length) {
-    //     let m = res.find((x) => x.functionID == 'ACS20801');
-    //     if (m) this.funcName = m.defaultName;
-    //   }
-    // });
+    this.cache.message('AC0034').subscribe((res) => {
+      if (res) {
+        this.lblEdit = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0036').subscribe((res) => {
+      if (res) {
+        this.lblExChangeRate = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0037').subscribe((res) => {
+      if (res) {
+        this.lblExChangeRateSetting = res?.customName;
+      }
+    });
     
+    //? get data exchangerate by currencyID
     if (this.dataDefault._isEdit) {
       this.api
         .exec(
@@ -189,7 +199,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    */
   openFormSettingExChange(){
     let data = {
-      headerText: ('Thiết lập' + ' ' + this.funcName).toUpperCase(),
+      headerText: this.lblExChangeRateSetting.toUpperCase(),
       dataDefault: {...this.form.data},
     };
     let option = new DialogModel()
@@ -218,7 +228,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    */
   addNewExchangeRate() {
     let data = {
-      headerText: (this.moreFuncNameAdd + ' ' + this.funcName).toUpperCase(),
+      headerText: (this.lblAdd + ' ' + this.lblExChangeRate).toUpperCase(),
       dataDefaultExRate: {...this.dataDefaultExRate},
       lstExchangeRate: this.lstExchangeRate,
     };
@@ -260,9 +270,9 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    * @param dataEdit 
    */
   editExchangeRate(dataEdit: any) {
-    dataEdit._isEdit = true;
+    dataEdit.isEdit = true;
     let data = {
-      headerText: (this.moreFuncNameEdit + ' ' + this.funcName).toUpperCase(),
+      headerText: (this.lblEdit + ' ' + this.lblExChangeRate).toUpperCase(),
       dataDefaultExRate: {...dataEdit},
       lstExchangeRate: this.lstExchangeRate,
     };
@@ -309,6 +319,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   trackByFn(index, item) {
     return item.recID;
   }
+
   //#endregion Function
 
   //#region Method
@@ -339,14 +350,15 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
               }else{
                 this.dialog.dataService.addNew().subscribe((res: any) => {
                   if (res) {
+                    res.isAdd = true;
                     this.form.refreshData({...res});
                     this.lstExchangeRate = [];
-                    this.headerText = (this.moreFuncNameAdd + ' ' + this.funcName).toUpperCase()
+                    if(this.form.data.isAdd || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
                     this.detectorRef.detectChanges();
                   }
                 });
               }
-              if (this.form.data._isEdit && (this.form.data._isAdd || this.form.data._isCopy))
+              if (this.form.data.isAdd || this.form.data.isCopy)
                 this.notification.notifyCode('SYS006');
               else 
                 this.notification.notifyCode('SYS007');

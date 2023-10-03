@@ -125,7 +125,7 @@ export class AccountsComponent extends UIComponent {
    * @param e 
    */
   addNew(e) {
-    this.headerText = e.text + ' ' + this.funcName;
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     let data = {
       headerText: this.headerText,
       dataDefault:{...this.dataDefault}
@@ -133,6 +133,7 @@ export class AccountsComponent extends UIComponent {
     if(!this.dataDefault){
       this.view.dataService.addNew().subscribe((res: any) => {
         if(res){
+          res.isAdd = true;
           this.dataDefault = {...res};
           data.dataDefault = {...this.dataDefault};
           let dialog = this.callfunc.openSide(
@@ -160,21 +161,24 @@ export class AccountsComponent extends UIComponent {
    * @param dataEdit 
    */
   edit(e, dataEdit) {
-    this.headerText = e.text + ' ' + this.funcName;
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     if (dataEdit) this.view.dataService.dataSelected = dataEdit;
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{}
-    };
     this.view.dataService
       .edit(dataEdit)
       .subscribe((res: any) => {
-        data.dataDefault = {...res};
-        let dialog = this.callfunc.openSide(
-          AccountsAddComponent,
-          data,
-          this.optionSidebar
-        );
+        if (res) {
+          res.isEdit = true;
+          let data = {
+            headerText: this.headerText,
+            dataDefault:{...res},
+            funcName:this.funcName
+          };
+          let dialog = this.callfunc.openSide(
+            AccountsAddComponent,
+            data,
+            this.optionSidebar
+          );
+        }
       });
   }
 
@@ -184,21 +188,24 @@ export class AccountsComponent extends UIComponent {
    * @param dataCopy 
    */
   copy(e, dataCopy) {
-    this.headerText = e.text + ' ' + this.funcName;
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     if (dataCopy) this.view.dataService.dataSelected = dataCopy;
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{}
-    };
     this.view.dataService
       .copy()
       .subscribe((res: any) => {
-        data.dataDefault = {...res};
-        let dialog = this.callfunc.openSide(
-          AccountsAddComponent,
-          data,
-          this.optionSidebar
-        );
+        if (res) {
+          res.isCopy = true;
+          let data = {
+            headerText: this.headerText,
+            dataDefault:{...res},
+            funcName:this.funcName
+          };
+          let dialog = this.callfunc.openSide(
+            AccountsAddComponent,
+            data,
+            this.optionSidebar
+          );
+        }
       });
   }
 

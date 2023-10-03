@@ -124,4 +124,22 @@ export class CodxHistoryItemComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
+
+  //open popup comment
+  openPopupComment(){
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    this.callFuc.openForm(
+      this.popupComment,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+
 }
