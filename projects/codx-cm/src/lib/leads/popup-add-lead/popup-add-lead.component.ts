@@ -172,7 +172,7 @@ export class PopupAddLeadComponent
   leverSetting: number;
 
   convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
-
+  transIDCamp: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -215,6 +215,7 @@ export class PopupAddLeadComponent
     } else {
       //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
       this.convertCustomerToLead = dt?.data?.convertCustomerToLead ?? false;
+      this.transIDCamp = dt?.data?.transIDCamp ?? null;
       if (this.convertCustomerToLead) {
         this.lead = JSON.parse(JSON.stringify(dt?.data?.dataConvert));
       } //end Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
@@ -583,7 +584,7 @@ export class PopupAddLeadComponent
           this.lead,
           this.leadId,
           this.contactId,
-          this.convertCustomerToLead,
+          this.transIDCamp,
         ])
         .subscribe((res) => {
           if (res) {
