@@ -265,31 +265,34 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     let commentRep = comment;
 
     if (comment != null && comment?.trim() != '') {
-
       if (
         this.data?.engineerID != null &&
         this.data?.engineerID?.trim() != ''
       ) {
-      }
-      let indx = -1;
+        let indx = -1;
 
-      if (commentControl == '1') {
-        indx = this.lstUsers.findIndex(
-          (x) => x.userID == this.data?.engineerID
-        );
-      } else {
-        indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
-      }
+        if (commentControl == '1') {
+          indx = this.lstUsers.findIndex(
+            (x) => x.userID == this.data?.engineerID
+          );
+        } else {
+          indx = this.lstUsers.findIndex((x) => x.userID == this.createdBy);
+        }
 
-      if (indx != -1) {
-        commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
+        if (indx != -1) {
+          commentRep = commentRep.replace('{0}', this.lstUsers[indx]?.userName);
+        } else {
+          commentRep = commentRep.replace('{0}', this.createdBy);
+        }
       }
 
       if (this.scheduleTime)
         commentRep = commentRep.replace('{1}', this.scheduleTime);
 
       if (this.data.scheduleStart) {
-        let date = moment(new Date(this.data.scheduleStart)).format('DD/MM/YYYY');
+        let date = moment(new Date(this.data.scheduleStart)).format(
+          'DD/MM/YYYY'
+        );
         commentRep = commentRep.replace('{2}', date);
       }
     }
