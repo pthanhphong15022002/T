@@ -79,7 +79,7 @@ export class ExchangerateAddComponent extends UIComponent implements OnInit {
         );
         return;
       }  
-    if (!this.form?.data._isEdit) {
+    if (!this.form?.data.isEdit) {
       this.dialogData.data?.lstExchangeRate?.push({...this.form?.data});
     }else{
       let index = this.dialogData.data?.lstExchangeRate.findIndex(x => x.recID == this.form.data.recID);
