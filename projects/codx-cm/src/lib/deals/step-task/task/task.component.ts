@@ -59,7 +59,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   listTaskType = [];
   grvMoreFunction: FormModel;
   listActivitie: DP_Activities[] = [];
-
+  isLoad = false;
   moreDefaut = {
     share: true,
     write: true,
@@ -81,6 +81,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.customerID) {
+      this.isLoad = true;
+      this.isNoData = false;
+      this.listActivitie = [];
       this.getActivities();
     }
   }
@@ -104,7 +107,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#region get data
   getActivities(): void {
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetActivitiesAsync', [
+      .exec<any>('DP', 'ActivitiesBusiness', 'GetActivitiesAsync', [
         this.customerID,
       ])
       .subscribe((res) => {
@@ -120,6 +123,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listActivitie = [];
           this.isNoData = true;
         }
+        this.isLoad = false;
       });
   }
 
@@ -289,7 +293,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.objectID = this.customerID;
       this.activitie.objectType = this.entityName;
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
           this.entityName,
         ])
@@ -305,15 +309,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async editTask(task) {
-    this.getTypeTask(task);
-    let taskOutput = await this.openPopupTask('edit', task);
+    let taskEdit = JSON.parse(JSON.stringify(task));
+    this.getTypeTask(taskEdit);
+    let taskOutput = await this.openPopupTask('edit', taskEdit);
     if (taskOutput?.event) {
       if (!taskOutput?.event?.objectID) {
         task['objectID'] = this.customerID;
       }
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event,
+        .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+          taskOutput?.event?.task,
           this.entityName,
         ])
         .subscribe((res) => {
@@ -335,7 +340,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+          .exec<any>('DP', 'ActivitiesBusiness', 'DeleteActivitiesAsync', [
             task?.recID,
             this.entityName,
           ])
@@ -380,7 +385,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
         ])
         .subscribe((res) => {

@@ -883,7 +883,7 @@
       <div class="position-relative" style="height: 90%">
         <div
           class="position-absolute scroll-hover"
-          style="max-height: 100%; width: 100%"
+          style="max-height: 95%; width: 100%"
         >
           <div
             class="mx-2 my-5"
@@ -907,7 +907,7 @@
                     class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
                     <span class="fw-bold" style="font-size: 0.5vw"
-                      >{{ data.percentage }}%</span
+                      >{{ toFixed(data.percentage) }}%</span
                     >
                   </div>
                   <ejs-progressbar
@@ -1580,7 +1580,7 @@
       <div class="position-relative" style="height: 90%">
         <div
           class="scroll-hover position-absolute"
-          style="max-height: 100%; width: 100%"
+          style="max-height: 95%; width: 100%"
         >
           <div
             class="mx-2 my-5"
@@ -1604,7 +1604,7 @@
                     class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
                     <span class="fw-bold" style="font-size: 0.5vw"
-                      >{{ data.percentage }}%</span
+                      >{{ toFixed(data.percentage) }}%</span
                     >
                   </div>
                   <ejs-progressbar

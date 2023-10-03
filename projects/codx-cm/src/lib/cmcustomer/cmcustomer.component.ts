@@ -119,7 +119,7 @@ export class CmCustomerComponent
       }
     });
 
-    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','UpdateStatusCustomersRPAAsync').subscribe(res => {});
+    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','ReportBeginningDayAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {

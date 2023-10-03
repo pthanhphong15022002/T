@@ -265,7 +265,7 @@
                       <codx-fields-detail-temp
                         *ngIf="task?.fieldID"
                         [listFields]="getFields(currentStep?.fields, task?.fieldID)"
-                        [showColumnControl]="4"
+                        [showColumnControl]="1"
                         [isShowTitle]="false"
                       >
                       </codx-fields-detail-temp>
@@ -443,11 +443,7 @@
     <div
       class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
-      [ngClass]="
-        checkRoleUpdateProgress(data?.value, data?.type)
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
+      [ngClass]="checkRoleUpdateProgress(data?.value, data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
     >
       <div 
         *ngIf="data?.value?.assigned == '1'"  

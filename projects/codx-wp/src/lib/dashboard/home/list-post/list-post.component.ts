@@ -31,7 +31,6 @@ import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
-
 const SHARECONTROLS = {
   OWNER: '1',
   MYGROUP: '2',
@@ -104,7 +103,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    console.clear();
+  }
 
   ngOnInit(): void {
     // get queryParam từ URL set predicates

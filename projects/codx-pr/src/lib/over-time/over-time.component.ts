@@ -1,6 +1,8 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
+  AuthStore,
   ButtonModel,
+  CacheService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -8,6 +10,8 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupOverTimeComponent } from './popup-over-time/popup-over-time.component';
+import { DataVll } from 'projects/codx-hr/src/lib/model/HR_OrgChart.model';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-over-time',
@@ -15,6 +19,7 @@ import { PopupOverTimeComponent } from './popup-over-time/popup-over-time.compon
   styleUrls: ['./over-time.component.css'],
 })
 export class OverTimeComponent extends UIComponent {
+  console = console;
   //#region declare properties
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
@@ -22,34 +27,40 @@ export class OverTimeComponent extends UIComponent {
   buttons: ButtonModel;
   popupTitle;
   funcIDName = '';
+  user;
+  userLogin;
+  dataVll: Array<DataVll>;
+  vllStatus = 'HRS104';
 
   //View schedule
   requestSchedule: ResourceModel;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   modelResource: ResourceModel;
   eventModel = {
     id: 'recID',
-    //subject: { name: 'title' },
+    subject: { name: 'employeeID' },
     startTime: { name: 'fromDate' },
     endTime: { name: 'toDate' },
-    resourceId: { name: 'resourceID' }, //trung voi idField của resourceModel
+    resourceId: { name: 'employeeID' }, //trung voi idField của resourceModel
   };
   resourceModel = {
-    Name: 'Resources',
-    Field: 'resourceID',
-    IdField: 'resourceID',
-    TextField: 'resourceName',
-    Title: 'Resources',
+    Name: 'employeeID',
+    Field: 'employeeID',
+    IdField: 'employeeID',
+    TextField: 'employeeID',
+    Title: 'employeeID',
   };
-  vllStatus = 'EP022';
 
   //#endregion
 
-  constructor(injector: Injector) {
+  constructor(
+    injector: Injector,
+    private authStore: AuthStore,
+    private cacheService: CacheService
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((funcList) => {
@@ -59,25 +70,62 @@ export class OverTimeComponent extends UIComponent {
     });
   }
 
+  //Get user default login
+  getUserLogin() {
+    this.user = this.authStore.get();
+    if (this.user.userID) {
+      this.api
+        .execSv(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetEmployeeByUserIDAsync',
+          this.user.userID
+        )
+        .subscribe((res: any) => {
+          this.userLogin = res;
+        });
+    }
+  }
+
+  getColorItem(data: any) {
+    return this.dataVll
+      .filter((item) => item.value === data)
+      .map((obj) => obj.color)
+      .toString();
+  }
+
+  getHour(data) {
+    return moment(data).format('HH : mm');
+  }
+
   //#region Init components
   onInit() {
+    this.cacheService.valueList(this.vllStatus).subscribe((res) => {
+      if (res) {
+        this.dataVll = res.datas;
+      }
+    });
+
     this.buttons = {
       id: 'btnAdd',
     };
-
+    this.getUserLogin();
     this.getSchedule();
   }
 
   getSchedule() {
-    let resourceType = '1';
+    //let resourceType = '1';
+  }
 
+  getCellContent(evt: any) {}
+
+  ngAfterViewInit() {
     this.modelResource = new ResourceModel();
-    this.modelResource.assemblyName = 'EP';
-    this.modelResource.className = 'BookingsBusiness';
-    this.modelResource.service = 'EP';
-    this.modelResource.method = 'GetResourceAsync';
-    this.modelResource.predicate = 'ResourceType=@0 ';
-    this.modelResource.dataValue = resourceType;
+    this.modelResource.assemblyName = 'PR';
+    this.modelResource.className = 'TimeKeepingRequest';
+    this.modelResource.service = 'PR';
+    this.modelResource.method = 'GetEmployeeAsync';
 
     this.requestSchedule = new ResourceModel();
     this.requestSchedule.service = 'PR';
@@ -85,11 +133,7 @@ export class OverTimeComponent extends UIComponent {
     this.requestSchedule.className = 'TimeKeepingRequest';
     this.requestSchedule.method = 'GetListAsync';
     // this.requestSchedule.idField = 'recID';
-  }
 
-  getCellContent(evt: any) {}
-
-  ngAfterViewInit() {
     this.views = [
       {
         type: ViewType.listdetail,
@@ -103,17 +147,17 @@ export class OverTimeComponent extends UIComponent {
       {
         type: ViewType.schedule,
         active: true,
-        sameData: false,
-        request: this.requestSchedule,
+        sameData: true,
+        //request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
         showFilter: true,
         model: {
           eventModel: this.eventModel,
           resourceModel: this.resourceModel,
+          template: this.cardTemplate,
           template4: this.resourceHeader,
           template6: this.mfButton, //header
-          template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
         },
@@ -151,10 +195,10 @@ export class OverTimeComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '800px';
+      option.Width = '550px';
       let dialogAdd = this.callfc.openSide(
         PopupOverTimeComponent,
-        [res, 'add', this.popupTitle, evt ? evt : null],
+        [res, 'add', this.popupTitle, evt ? evt : null, this.userLogin],
         option
       );
       dialogAdd.closed.subscribe((res) => {

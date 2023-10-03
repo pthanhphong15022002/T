@@ -30,6 +30,7 @@ import { OrderHistoryComponent } from './order-history/order-history.component';
 import { UsingHistoryComponent } from './using-history/using-history.component';
 import { AccessHistoryComponent } from './access-history/access-history.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -61,7 +62,8 @@ export class DynamicFormComponent extends UIComponent {
     private layout: LayoutService,
     private notifySvr: NotificationsService,
     private userStore: AuthStore,
-    private pageTitle: PageTitleService
+    private pageTitle: PageTitleService,
+    private shareService: CodxShareService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -99,7 +101,7 @@ export class DynamicFormComponent extends UIComponent {
 
     // console.log('view ne', this.views);
     // console.log('view base ne', this.viewBase);
-    
+
     this.detectorRef.detectChanges();
   }
 
@@ -310,6 +312,18 @@ export class DynamicFormComponent extends UIComponent {
       case 'btnAdd':
         this.addNew();
         break;
+      default:
+        let f = evt.data;
+        let data = this.viewBase.dataService.dataSelected;
+        this.shareService.defaultMoreFunc(
+          f,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
     }
   }
 
@@ -320,7 +334,7 @@ export class DynamicFormComponent extends UIComponent {
       option.Width = '550px';
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      debugger
+      debugger;
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
         {
@@ -337,7 +351,7 @@ export class DynamicFormComponent extends UIComponent {
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         dialog.closed.subscribe((item) => {
           var dt = item?.event?.save;
-          dt.data.category = "OD_Dispatches";
+          dt.data.category = 'OD_Dispatches';
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
@@ -372,8 +386,8 @@ export class DynamicFormComponent extends UIComponent {
       //Xử lý riêng của OD
       if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
         this.dialog.closed.subscribe((item) => {
-          var dt = item?.event?.update?.data;          
-          dt.category = "OD_Dispatches";
+          var dt = item?.event?.update?.data;
+          dt.category = 'OD_Dispatches';
           if (dt && dt?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
@@ -475,62 +489,126 @@ export class DynamicFormComponent extends UIComponent {
 
   //#region Edit process by dong san pham
   async openEditProcess(data, evt) {
-    var process = await firstValueFrom(
-      this.api.execSv<any>(
+    //VTHAO-2/10/2023
+    this.api
+      .execSv<any>(
         'DP',
         'ERM.Business.DP',
         'ProcessesBusiness',
-        'GetAsync',
+        'GetProcessSettingAsync',
         [data?.processID]
       )
-    );
-    if (process) {
-      this.api
-        .execSv<any>(
-          'DP',
-          'ERM.Business.DP',
-          'ProcessGroupsBusiness',
-          'GetAsync'
-        )
-        .subscribe((groups) => {
-          if (groups && groups.length > 0) {
-            this.cache
-              .gridViewSetup('DPProcesses', 'grvDPProcesses')
-              .subscribe((res) => {
-                let dialogModel = new DialogModel();
-                dialogModel.IsFull = true;
-                dialogModel.zIndex = 999;
-                let formModel = new FormModel();
-                formModel.entityName = 'DP_Processes';
-                formModel.formName = 'DPProcesses';
-                formModel.gridViewName = 'grvDPProcesses';
-                formModel.funcID = 'DP01';
-                // dialogModel.DataService = this.view?.dataService;
-                dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
-                if (res) {
-                  var obj = {
-                    action: 'edit',
-                    titleAction: evt ? evt.text : '',
-                    gridViewSetup: res,
-                    lstGroup: groups,
-                    systemProcess: '2',
-                    data: process,
-                  };
-                  this.callfc.openForm(
-                    PopupAddDynamicProcessComponent,
-                    '',
-                    Util.getViewPort().height - 100,
-                    Util.getViewPort().width - 100,
-                    '',
-                    obj,
-                    '',
-                    dialogModel
-                  );
-                }
-              });
-          }
-        });
-    }
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          let process = res[0];
+          let grv = res[1];
+          let groups = res[2];
+          let action = res[3] ? 'edit' : 'add';
+
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          let formModel = new FormModel();
+          formModel.entityName = 'DP_Processes';
+          formModel.formName = 'DPProcesses';
+          formModel.gridViewName = 'grvDPProcesses';
+          formModel.funcID = 'DP01';
+
+          dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
+
+          var obj = {
+            action: action,
+            titleAction: evt ? evt.text : '',
+            gridViewSetup: grv,
+            lstGroup: groups,
+            systemProcess: '2',
+            data: process,
+          };
+          let dialogProcess = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            Util.getViewPort().height - 100,
+            Util.getViewPort().width - 100,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialogProcess.closed.subscribe((e) => {
+            if (e && e?.event && e?.event?.recID && action == 'add') {
+              data.processID = e.event?.recID;
+              this.viewBase.dataService.update(data).subscribe();
+              this.api
+                .execSv<any>(
+                  'CM',
+                  'ERM.Business.CM',
+                  'BusinessLinesBusiness',
+                  'SetProcessIDAsync',
+                  [data?.businessLineID, e.event?.recID]
+                )
+                .subscribe();
+            }
+          });
+        }
+      });
+
+    //code cu
+    // var process = await firstValueFrom(
+    // //   this.api.execSv<any>(
+    // //     'DP',
+    // //     'ERM.Business.DP',
+    // //     'ProcessesBusiness',
+    // //     'GetAsync',
+    // //     [data?.processID]
+    // //   )
+    // );
+    // if (process) {
+    //   this.api
+    //     .execSv<any>(
+    //       'DP',
+    //       'ERM.Business.DP',
+    //       'ProcessGroupsBusiness',
+    //       'GetAsync'
+    //     )
+    //     .subscribe((groups) => {
+    //       if (groups && groups.length > 0) {
+    //         this.cache
+    //           .gridViewSetup('DPProcesses', 'grvDPProcesses')
+    //           .subscribe((res) => {
+    //             let dialogModel = new DialogModel();
+    //             dialogModel.IsFull = true;
+    //             dialogModel.zIndex = 999;
+    //             let formModel = new FormModel();
+    //             formModel.entityName = 'DP_Processes';
+    //             formModel.formName = 'DPProcesses';
+    //             formModel.gridViewName = 'grvDPProcesses';
+    //             formModel.funcID = 'DP01';
+    //             // dialogModel.DataService = this.view?.dataService;
+    //             dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
+    //             if (res) {
+    //               var obj = {
+    //                 action: 'edit',
+    //                 titleAction: evt ? evt.text : '',
+    //                 gridViewSetup: res,
+    //                 lstGroup: groups,
+    //                 systemProcess: '2',
+    //                 data: process,
+    //               };
+    //               this.callfc.openForm(
+    //                 PopupAddDynamicProcessComponent,
+    //                 '',
+    //                 Util.getViewPort().height - 100,
+    //                 Util.getViewPort().width - 100,
+    //                 '',
+    //                 obj,
+    //                 '',
+    //                 dialogModel
+    //               );
+    //             }
+    //           });
+    //       }
+    //     });
+    // }
   }
   //#endregion
 }

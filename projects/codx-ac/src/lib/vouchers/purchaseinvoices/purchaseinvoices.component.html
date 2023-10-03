@@ -1,33 +1,33 @@
 <codx-views
   #view
-  [views]="views"
-  [button]="button"
   entityName="AC_PurchaseInvoices"
-  (buttonClick)="onClickAdd($event)"
   predicates="JournalNo=@0"
   [dataValues]="journalNo"
+  [views]="views"
+  [button]="button"
   [isSubView]="true"
+  (buttonClick)="onAddClick($event)"
   (selectedChange)="onSelectChange($event)"
 >
 </codx-views>
 
 <ng-template #templateMore let-data>
   <codx-mfunc
+    type="view"
     [dataItem]="data"
     [formModel]="view.formModel"
+    [isBookMark]="false"
     (clickMF)="onClickMF($event, data)"
     (changeDataMF)="onInitMF($event, data)"
-    [isBookMark]="false"
-    type="view"
   ></codx-mfunc>
 </ng-template>
 
 <ng-template #siderTemplate let-data>
   <codx-temp-full
+    cardCss="card-template border-bottom p-3 list-task"
     [titleTmp]="titleTmp"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
-    cardCss="card-template border-bottom p-3 list-task"
     [formModel]="view.formModel"
     [modeImgs]="true"
     [titleLine]="2"

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -31,12 +32,17 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() listRoles = [];
 
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
+  @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
+
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() updateComment = new EventEmitter<any>();
+  @Output() updateAssignEngineerEmit = new EventEmitter<any>();
 
   user: any;
   treeTask = [];
+  expanding = false;
+  overflowed: boolean = false;
 
   tabControl = [
     {
@@ -72,18 +78,18 @@ export class ViewDetailWrComponent implements OnInit {
   ];
 
   constructor(
-    private callFc: CallFuncService,
-    private cache: CacheService,
-    private wrSv: CodxWrService,
-    private api: ApiHttpService,
     private authstore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.user = this.authstore.get();
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewChecked(): void {
+    const element: HTMLElement = this.memo?.nativeElement;
+    this.overflowed = element?.scrollHeight > element?.clientHeight;
+  }
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
@@ -95,6 +101,10 @@ export class ViewDetailWrComponent implements OnInit {
 
   updateCommentWarranty(e, data) {
     this.updateComment.emit({ e: e, data: data });
+  }
+
+  updateAssignEngineer(data) {
+    this.updateAssignEngineerEmit.emit({ data: data });
   }
 
   listOrderUpdate(lstUpdate) {

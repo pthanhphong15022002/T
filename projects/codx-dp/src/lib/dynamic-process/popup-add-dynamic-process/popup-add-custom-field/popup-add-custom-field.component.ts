@@ -135,7 +135,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     private cache: CacheService,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
-    private changeDef: ChangeDetectorRef,
+    private changeRef: ChangeDetectorRef,
     private authstore: AuthStore,
     private api: ApiHttpService,
     private dpService: CodxDpService,
@@ -167,21 +167,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
         }
       });
     }
-    //this.field.rank = 5;
-    // this.cache
-    //   .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.grvSetup = res;
-    //     }
-    //   });
   }
 
   ngOnInit(): void {
-    // this.field.dataType = 'L';
-    // this.field.dataFormat = 'V';
     if (this.field.dataType == 'L' && this.field.dataFormat == 'V')
       this.loadDataVll();
+    if (this.field.dataType == 'TA') {
+      this.getColumnTable(this.field);
+    }
   }
 
   valueChangeCbx(e) {}
@@ -355,6 +348,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
+    while (format.includes('__')) {
+      format = format.replaceAll('__', '_');
+    }
     this.field.fieldName = format;
   }
 
@@ -479,7 +475,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   e.value = '';
   //   e.focus();
   //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onEditTextValue(e, i) {
@@ -497,7 +493,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   this.idxEdit = -1;
 
   //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // onChangeVll(e) {
@@ -538,7 +534,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   // handelTextValue(i) {
   //   this.idxEdit = i;
-  //   this.changeDef.detectChanges();
+  //   this.changeRef.detectChanges();
   // }
 
   // showPopoverDeleted(p, i) {
@@ -580,7 +576,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.maxNumber = this.maxLength();
 
       if (this.datasVllCbx) this.datasVllCbx.refresh();
-      this.changeDef.markForCheck();
+      this.changeRef.markForCheck();
       this.loaded = true;
     });
   }
@@ -673,7 +669,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.datasVllCbx) this.datasVllCbx.refresh();
     this.form.formGroup.patchValue(this.field);
     this.crrVll = null;
-    this.changeDef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   changeFormVll() {
@@ -787,30 +783,61 @@ export class PopupAddCustomFieldComponent implements OnInit {
   clickSettingTable() {
     if (!this.column) this.column = new ColumnTable();
     let option = new DialogModel();
-    option.FormModel = this.dialog.formModel;
-    option.zIndex = 1050;
-    let obj = {
-      data: this.column,
-      action: 'add',
-      titleAction: 'Thêm column test',
-      grvSetup: this.grvSetup,
-      processNo: this.processNo,
-      user: this.user,
-      listColumns: this.listColumns,
-    };
-    let dialogColumn = this.callfc.openForm(
-      PopupAddColumnTableComponent,
-      '',
-      500,
-      700,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogColumn.closed.subscribe((res) => {
-      //....................
-    });
+    let formModelTable = new FormModel();
+    formModelTable.formName = this.dialog.formModel.formName;
+    formModelTable.gridViewName = this.dialog.formModel.gridViewName;
+    formModelTable.entityName = this.dialog.formModel.entityName;
+
+    this.dpService
+      .getFormGroup(formModelTable.formName, formModelTable.gridViewName)
+      .then(async (fg) => {
+        formModelTable.formGroup = fg;
+        option.FormModel = formModelTable;
+
+        option.zIndex = 1050;
+        let obj = {
+          data: this.column,
+          action: 'add',
+          titleAction: 'Thêm column test',
+          grvSetup: this.grvSetup,
+          processNo: this.processNo,
+          user: this.user,
+          listColumns: this.listColumns,
+        };
+        let dialogColumn = this.callfc.openForm(
+          PopupAddColumnTableComponent,
+          '',
+          550,
+          750,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialogColumn.closed.subscribe((res) => {
+          if (res && res.event) {
+            if (res.event[0]) {
+              this.listColumns = res.event[0];
+              this.field.dataFormat = JSON.stringify(this.listColumns);
+            }
+            if (res.event[1] && !this.processNo) {
+              this.processNo = res.event[1];
+            }
+          }
+          //....................
+        });
+      });
+  }
+
+  getColumnTable(data) {
+    if (!data.dataFormat) {
+      this.listColumns = [];
+      return;
+    }
+    let arr = JSON.parse(data.dataFormat);
+    if (Array.isArray(arr)) this.listColumns = arr;
+    else this.listColumns = [];
+    this.changeRef.detectChanges();
   }
   //---------------------End Column Table-----------------------------//
 }

@@ -111,16 +111,16 @@
                         [ngbTooltip]="hoverSeniorityMonthTemplate"></i>
                     <ng-template #hoverSeniorityMonthTemplate>
                         <div class="d-flex flex-column w-250px">
-                            <codx-label class="fs-5 mb-2" [fiedName]="'lblSeniority'" [formModel]="view.formModel"
+                            <codx-label class="fs-5 mb-2 text-start" [fiedName]="'lblSeniority'" [formModel]="view.formModel"
                                 [default]="'Phép năm tăng theo thâm niên'">
                             </codx-label>
-                            <div class="d-flex align-items-center mb-1 ms-2">
+                            <div class="d-flex align-items-center mb-1">
                                 <codx-label class="label-colon label-text-color" [setRequire]="false"
                                     [fiedName]="'SeniorityMonth'" [formModel]="view.formModel"
                                     [default]="'Tháng tăng: '"></codx-label>
                                 <span class="data-text-color">{{data?.seniorityMonth}}</span>
                             </div>
-                            <div class="d-flex align-items-center mb-1 ms-2">
+                            <div class="d-flex align-items-center mb-1">
                                 <codx-label class="label-colon label-text-color" [setRequire]="false"
                                     [fiedName]="'SeniorityAdd'" [formModel]="view.formModel"
                                     [default]="'Số ngày tăng: '"></codx-label>
@@ -181,7 +181,7 @@
                     </ng-template>
                 </div>
                 <div class="align-items-center">
-                    <span class="icon-month text-primary" (click)="onShowEAnnualLeaveMonth(data)"></span>
+                    <span *ngIf="data.isMonth" class="icon-month text-primary" (click)="onShowEAnnualLeaveMonth(data)"></span>
                 </div>
             </div>
         </div>
