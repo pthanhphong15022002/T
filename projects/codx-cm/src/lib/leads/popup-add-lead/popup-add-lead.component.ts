@@ -226,8 +226,7 @@ export class PopupAddLeadComponent
     this.executeApiCalls();
   }
 
-  async getParameterAddress() {
-    debugger;
+  async getParameterAddress(){
     let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );

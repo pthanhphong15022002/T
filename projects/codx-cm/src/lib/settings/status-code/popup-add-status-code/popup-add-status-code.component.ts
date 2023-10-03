@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
+import { components } from './../../../../../../codx-ws/src/lib/approvals/routing';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   CacheService,
   ApiHttpService,
@@ -10,6 +17,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../../../codx-cm.service';
 import { CM_StatusCode } from '../../../models/cm_model';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'lib-popup-add-status-code',
@@ -17,20 +25,27 @@ import { CM_StatusCode } from '../../../models/cm_model';
   styleUrls: ['./popup-add-status-code.component.scss'],
 })
 export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
+  @ViewChild('samples') public samples?: ComboBoxComponent;
+
   dialog: any;
   gridViewSetup: any;
 
   action: string = '';
   headerText: string = '';
-  planceHolderAutoNumber:string = '';
+  valueList: string = '';
+  objectStatus: string = '';
+  planceHolderAutoNumber: string = '';
 
-  data:CM_StatusCode = new CM_StatusCode();
+  data: CM_StatusCode = new CM_StatusCode();
 
   disabledShowInput = false;
 
-  valueListStatus:any[]=[];
+  valueListStatus: any[] = [];
 
-
+  // const
+  readonly actionAdd: string = 'add';
+  readonly actionCopy: string = 'copy';
+  readonly actionEdit: string = 'edit';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
 
   constructor(
@@ -49,54 +64,60 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
 
     // this.data.category = '5'
     this.promiseAll();
+    if (this.action !== this.actionAdd) {
+      this.objectStatus = this.data.objectStatus;
+    }
   }
 
   ngAfterViewInit(): void {}
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   async promiseAll() {
-   await this.getAutoNumber();
-   this.data.category &&  await this.getValueListStatus('CRM042');
+    await this.getAutoNumber();
+    this.data?.category &&
+      (await this.getValueListStatus(
+        this.getValueTypeCategory(this.data?.category)
+      ));
   }
 
-  async getAutoNumber(){
+  async getAutoNumber() {
     this.codxCmService
-    .getFieldAutoNoDefault(
-      this.dialog?.formModel?.funcID,
-      this.dialog?.formModel?.entityName
-    )
-    .subscribe((res) => {
-      if (res && !res.stop) {
-        this.disabledShowInput = true;
-        this.cache.message('AD019').subscribe((mes) => {
-          if (mes)
-            this.planceHolderAutoNumber = mes?.customName || mes?.description;
-        });
-      } else {
-        this.disabledShowInput = false;
-      }
-    });
+      .getFieldAutoNoDefault(
+        this.dialog?.formModel?.funcID,
+        this.dialog?.formModel?.entityName
+      )
+      .subscribe((res) => {
+        if (res && !res.stop) {
+          this.disabledShowInput = true;
+          this.cache.message('AD019').subscribe((mes) => {
+            if (mes)
+              this.planceHolderAutoNumber = mes?.customName || mes?.description;
+          });
+        } else {
+          this.disabledShowInput = false;
+        }
+      });
   }
 
-  async getValueListStatus(valueList){
-    this.cache.valueList(valueList).subscribe((func) => {
-      if (func) {
-        this.valueListStatus= func.datas.map((item) => ({
+  async getValueListStatus(value) {
+    if (value) {
+      this.cache.valueList(value).subscribe((func) => {
+        if (func) {
+          this.valueListStatus = func.datas.map((item) => ({
             text: item.text,
             value: item.value,
           }));
-          debugger;
-      }
-    });
+        }
+      });
+    } else {
+      this.valueListStatus = [];
+      this.samples.focusIn();
+    }
   }
 
   //#region save
   onSave() {
-    if (
-      !this.data?.statusName || this.data?.statusName?.trim() == ''
-    ) {
+    if (!this.data?.statusName || this.data?.statusName?.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -104,9 +125,7 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       );
       return;
     }
-    if (
-      !this.data?.category
-    ) {
+    if (!this.data?.category) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -114,21 +133,23 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       );
       return;
     }
-    if (
-      !this.data?.objectStatus && this.data?.objectStatus != '0'
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup?.ObjectStatus?.headerText + '"'
-      );
-      return;
-    }
-    if (this.action == 'edit') {
-      this.onEdit();
-    } else {
-      this.onAdd();
-    }
+    let data = [
+      this.data.category,
+      this.data.objectStatus,
+      this.data.statusID,
+      this.data.statusName,
+    ];
+    this.codxCmService.checkStatusCode(data).subscribe((res) => {
+      if (res) {
+        this.getMessageError(res, this.gridViewSetup);
+      } else {
+        if (this.action == 'edit') {
+          this.onEdit();
+        } else {
+          this.onAdd();
+        }
+      }
+    });
   }
 
   onAdd() {
@@ -149,7 +170,6 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
           (this.dialog.dataService as CRUDService)
             .update(res.update)
             .subscribe();
-
           this.dialog.close(res.update);
         }
       });
@@ -160,7 +180,8 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
     if (this.action === 'add' || this.action == 'copy') {
       option.methodName = 'AddStatusCodeAsync';
     } else {
-    //  op.method = 'EditAsync';
+      //  op.method = 'EditAsync';
+      option.methodName = 'EditStatusCodeAsync';
     }
     option.className = 'StatusCodesBusiness';
     option.data = datas;
@@ -170,19 +191,47 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
   //#endregion
 
   valueChange($event) {
-    this.data[$event?.field] = $event?.data?.trim();
+    if ($event) {
+      this.data[$event?.field] = $event?.data?.trim();
+      if ($event?.field === 'category') {
+        this.valueList = $event?.data;
+        this.getValueListStatus(this.getValueTypeCategory(this.valueList));
+      }
+    }
   }
   valueChangeStatus($event) {
-    if($event) {
-      this.data.objectStatus= $event;
-      // if(this.valueListStatus && this.valueListStatus?.length > 0) {
+    this.objectStatus = $event;
+    this.data.objectStatus = this.objectStatus;
+  }
 
-      //   let obj = this.valueListStatus.filter(x=>x.value == $event)[0];
-
-
-      // }
-
+  // hard code
+  getValueTypeCategory(value) {
+    if (value == '1') {
+      return 'CRM039';
+    } else if (value == '3') {
+      return 'CRM041';
+    } else if (value == '5') {
+      return 'CRM042';
+    } else if (value == '7') {
+      return 'CRM015';
     }
+    return '';
+  }
 
+  getMessageError(value, gridViewSetup) {
+    let headerName = '';
+    if (value != '0') {
+      // existing name
+      if (value == '1') {
+        headerName = gridViewSetup?.StatusName?.headerText;
+      }
+      // existing status
+      else if (value == '2') {
+        headerName = gridViewSetup?.ObjectStatus?.headerText;
+      }
+      this.notiService.notifyCode('CM003', 0, '"' + headerName + '"');
+      return;
+    }
+    return;
   }
 }

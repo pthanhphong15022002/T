@@ -33,7 +33,7 @@ import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
   styleUrls: ['./popup-add-column-table.component.css'],
 })
 export class PopupAddColumnTableComponent implements OnInit {
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('formTable') formTable: CodxFormComponent;
   @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
@@ -125,7 +125,7 @@ export class PopupAddColumnTableComponent implements OnInit {
     this.dialog = dialog;
     this.formModelTable = this.dialog.formModel;
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.listColumns = dt?.data?.listColumns;
+    this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
     this.user = dt?.data?.user;
     this.action = dt?.data?.action;
 
@@ -193,19 +193,11 @@ export class PopupAddColumnTableComponent implements OnInit {
     if (value) this.column['stepID'] = value;
   }
 
-  saveData() {
-    if (!this.listColumns || this.listColumns?.length == 0) {
-      this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
+  removeAccents(str) {
+    if (!str) {
+      this.column.fieldName = '';
       return;
     }
-    if (!this.isChecked && !this.checkValidate()) return;
-    this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-    this.dialog.close([this.listColumns, this.processNo]);
-    this.column = new ColumnTable(); //tắt bùa
-  }
-
-  removeAccents(str) {
-    if (!str) return;
     var format = str
       .trim()
       .normalize('NFD')
@@ -213,7 +205,14 @@ export class PopupAddColumnTableComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
-    let isExit = this.listColumns.some((x) => x.fieldName == format);
+
+    while (format.includes('__')) {
+      format = format.replaceAll('__', '_');
+    }
+
+    let isExit = this.listColumns.some(
+      (x) => x.recID != this.column?.recID && x.fieldName == format
+    );
     if (isExit) {
       this.notiService.notifyCode(
         'DP026',
@@ -331,69 +330,6 @@ export class PopupAddColumnTableComponent implements OnInit {
         }
       });
   }
-
-  // onAddTextValue(e) {
-  //   if (!e.value || e.value.trim() == '') return;
-
-  //   let dataValue = {
-  //     textValue: e.value,
-  //     value: this.datasVll.length,
-  //   };
-
-  //   this.datasVll.push(dataValue);
-
-  //   e.value = '';
-  //   e.focus();
-  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeRef.detectChanges();
-  // }
-
-  // onEditTextValue(e, i) {
-  //   if (!e.value || e.value.trim() == '') return;
-  //   let dataValue = {
-  //     textValue: e.value,
-  //     value: i,
-  //   };
-  //   this.datasVll[i] = dataValue;
-  //   let eleAdd = document.getElementById('textAddValue');
-  //   if (eleAdd) {
-  //     eleAdd.focus();
-  //     eleAdd.inputMode = '';
-  //   }
-  //   this.idxEdit = -1;
-
-  //   if (!this.viewComboxForm) this.viewComboxForm.refresh();
-  //   this.changeRef.detectChanges();
-  // }
-
-  // onChangeVll(e) {
-  //   if (e.column == 'multiSelect') {
-  //     this.crrVll[e.column] = e.data;
-  //     return;
-  //   }
-  //   if (e.column == 'listName') {
-  //     if (!e.data || e.data.trim() == '') {
-  //       this.notiService.notifyCode('Tên value list không được để trống !');
-  //       return;
-  //     }
-  //     if (e.data.includes(' ')) {
-  //       this.notiService.notifyCode(
-  //         'Tên value list không được chứa khoảng trắng để trống !'
-  //       );
-  //       return;
-  //     }
-
-  //     let fm = e.data.substring(0, 3);
-  //     if (fm != this.fomartVll) {
-  //       this.notiService.notifyCode(
-  //         "Tên value list phải có dạng format 'DPF...' !"
-  //       );
-  //       return;
-  //     }
-  //   }
-
-  //   this.crrVll[e.column] = e.data;
-  // }
 
   async loadDataVll() {
     if (this.loaded) return;
@@ -515,7 +451,7 @@ export class PopupAddColumnTableComponent implements OnInit {
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
-    this.form.formGroup.patchValue(this.column);
+    this.formTable.formGroup.patchValue(this.column);
     this.changeRef.detectChanges();
   }
 
@@ -631,15 +567,36 @@ export class PopupAddColumnTableComponent implements OnInit {
       }
     }, timeOut);
   }
+  //---------------------SAVE-----------------------//
+
+  saveData() {
+    if (!this.listColumns || this.listColumns?.length == 0) {
+      this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
+      return;
+    }
+    if (!this.isChecked && !this.checkValidate()) return;
+    let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
+    if (idx == -1)
+      this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    else this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+
+    this.dialog.close([this.listColumns, this.processNo]);
+
+    this.column = new ColumnTable(); //tắt bùa
+  }
 
   saveDataAndContinue() {
     if (!this.checkValidate()) return;
-    this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
+    if (idx == -1)
+      this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    else this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+
     this.column = new ColumnTable();
     this.column.recID = Util.uid();
     this.column.fieldName = '';
     this.column.dataType = null;
-    this.form.formGroup.patchValue(this.column);
+    this.formTable.formGroup.patchValue(this.column);
     this.changeRef.detectChanges();
     this.isChecked = true;
   }
@@ -743,5 +700,22 @@ export class PopupAddColumnTableComponent implements OnInit {
     }
 
     return true;
+  }
+
+  editColumn(value) {
+    this.column = JSON.parse(JSON.stringify(value));
+    if (this.column.dataFormat == 'V') this.loadDataVll();
+    this.formTable.formGroup.patchValue(this.column);
+    this.changeRef.detectChanges();
+  }
+
+  deleteColumn(idx) {
+    this.notiService.alertCode('SYS030').subscribe((res) => {
+      if (res?.event && res?.event?.status == 'Y') {
+        this.listColumns.splice(idx, 1);
+        this.changeRef.detectChanges();
+        this.isChecked = true;
+      }
+    });
   }
 }
