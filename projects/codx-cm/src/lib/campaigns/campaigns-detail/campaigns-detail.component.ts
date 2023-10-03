@@ -24,7 +24,7 @@ export class CampaignsDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() gridViewSetup: any;
-
+  @Input() isDoubleClick: boolean = false;
   @Output() clickMoreFunc = new EventEmitter<any>();
 
 
@@ -93,9 +93,9 @@ export class CampaignsDetailComponent implements OnInit {
         this.dataSelected?.description == null ||
         this.dataSelected.description?.trim() == ''
       ) {
-        height = 35;
+        height = 40;
       }
-      if (height > 35) {
+      if (height > 40) {
         this.isCollapsed = true;
         this.isCollapsable = true;
       }

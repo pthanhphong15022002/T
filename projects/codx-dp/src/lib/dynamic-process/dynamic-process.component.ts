@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { PopupAddDynamicProcessComponent } from './popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AuthStore,
   ButtonModel,
@@ -27,6 +27,8 @@ import {
   FormModel,
   CRUDService,
   CodxLabelComponent,
+  UrlUtil,
+  LayoutService,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -135,9 +137,11 @@ export class DynamicProcessComponent
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
+    private route: Router,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
+    private layoutService: LayoutService,
     private dpService: CodxDpService,
     private codxShareService: CodxShareService
   ) {
@@ -849,12 +853,13 @@ export class DynamicProcessComponent
   //#endregion đang test
 
   viewDetailProcess(data) {
-    //thao test khong dc xoa
     if (!data.read) return;
     this.dpService.dataProcess.next(data);
-    //this.codxService.navigate('', `instances/DPT04/${data.recID}`);
-    this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
 
+    this.codxService.navigate('', `dp/instances/DPT04/${data.recID}`);
+    this.detectorRef.detectChanges();
+    // let url = '/' + UrlUtil.getTenant() + '/dp/instances/DPT04/' + data.recID;
+    // this.route.navigate([url]);
     // let isRead = this.checkPermissionRead(data);
     // if (!isRead) {
     //   return;
@@ -904,7 +909,6 @@ export class DynamicProcessComponent
     //     }
     //   }
     // });
-    this.detectorRef.detectChanges();
   }
 
   // nvthuan

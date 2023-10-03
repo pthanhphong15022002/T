@@ -490,62 +490,126 @@ export class DynamicFormComponent extends UIComponent {
 
   //#region Edit process by dong san pham
   async openEditProcess(data, evt) {
-    var process = await firstValueFrom(
-      this.api.execSv<any>(
+    //VTHAO-2/10/2023
+    this.api
+      .execSv<any>(
         'DP',
         'ERM.Business.DP',
         'ProcessesBusiness',
-        'GetAsync',
+        'GetProcessSettingAsync',
         [data?.processID]
       )
-    );
-    if (process) {
-      this.api
-        .execSv<any>(
-          'DP',
-          'ERM.Business.DP',
-          'ProcessGroupsBusiness',
-          'GetAsync'
-        )
-        .subscribe((groups) => {
-          if (groups && groups.length > 0) {
-            this.cache
-              .gridViewSetup('DPProcesses', 'grvDPProcesses')
-              .subscribe((res) => {
-                let dialogModel = new DialogModel();
-                dialogModel.IsFull = true;
-                dialogModel.zIndex = 999;
-                let formModel = new FormModel();
-                formModel.entityName = 'DP_Processes';
-                formModel.formName = 'DPProcesses';
-                formModel.gridViewName = 'grvDPProcesses';
-                formModel.funcID = 'DP01';
-                // dialogModel.DataService = this.view?.dataService;
-                dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
-                if (res) {
-                  var obj = {
-                    action: 'edit',
-                    titleAction: evt ? evt.text : '',
-                    gridViewSetup: res,
-                    lstGroup: groups,
-                    systemProcess: '2',
-                    data: process,
-                  };
-                  this.callfc.openForm(
-                    PopupAddDynamicProcessComponent,
-                    '',
-                    Util.getViewPort().height - 100,
-                    Util.getViewPort().width - 100,
-                    '',
-                    obj,
-                    '',
-                    dialogModel
-                  );
-                }
-              });
-          }
-        });
-    }
+      .subscribe((res) => {
+        if (res && res?.length > 0) {
+          let process = res[0];
+          let grv = res[1];
+          let groups = res[2];
+          let action = res[3] ? 'edit' : 'add';
+
+          let dialogModel = new DialogModel();
+          dialogModel.IsFull = true;
+          dialogModel.zIndex = 999;
+          let formModel = new FormModel();
+          formModel.entityName = 'DP_Processes';
+          formModel.formName = 'DPProcesses';
+          formModel.gridViewName = 'grvDPProcesses';
+          formModel.funcID = 'DP01';
+
+          dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
+
+          var obj = {
+            action: action,
+            titleAction: evt ? evt.text : '',
+            gridViewSetup: grv,
+            lstGroup: groups,
+            systemProcess: '2',
+            data: process,
+          };
+          let dialogProcess = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            Util.getViewPort().height - 100,
+            Util.getViewPort().width - 100,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialogProcess.closed.subscribe((e) => {
+            if (e && e?.event && e?.event?.recID && action == 'add') {
+              data.processID = e.event?.recID;
+              this.viewBase.dataService.update(data).subscribe();
+              this.api
+                .execSv<any>(
+                  'CM',
+                  'ERM.Business.CM',
+                  'BusinessLinesBusiness',
+                  'SetProcessIDAsync',
+                  [data?.businessLineID, e.event?.recID]
+                )
+                .subscribe();
+            }
+          });
+        }
+      });
+
+    //code cu
+    // var process = await firstValueFrom(
+    // //   this.api.execSv<any>(
+    // //     'DP',
+    // //     'ERM.Business.DP',
+    // //     'ProcessesBusiness',
+    // //     'GetAsync',
+    // //     [data?.processID]
+    // //   )
+    // );
+    // if (process) {
+    //   this.api
+    //     .execSv<any>(
+    //       'DP',
+    //       'ERM.Business.DP',
+    //       'ProcessGroupsBusiness',
+    //       'GetAsync'
+    //     )
+    //     .subscribe((groups) => {
+    //       if (groups && groups.length > 0) {
+    //         this.cache
+    //           .gridViewSetup('DPProcesses', 'grvDPProcesses')
+    //           .subscribe((res) => {
+    //             let dialogModel = new DialogModel();
+    //             dialogModel.IsFull = true;
+    //             dialogModel.zIndex = 999;
+    //             let formModel = new FormModel();
+    //             formModel.entityName = 'DP_Processes';
+    //             formModel.formName = 'DPProcesses';
+    //             formModel.gridViewName = 'grvDPProcesses';
+    //             formModel.funcID = 'DP01';
+    //             // dialogModel.DataService = this.view?.dataService;
+    //             dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
+    //             if (res) {
+    //               var obj = {
+    //                 action: 'edit',
+    //                 titleAction: evt ? evt.text : '',
+    //                 gridViewSetup: res,
+    //                 lstGroup: groups,
+    //                 systemProcess: '2',
+    //                 data: process,
+    //               };
+    //               this.callfc.openForm(
+    //                 PopupAddDynamicProcessComponent,
+    //                 '',
+    //                 Util.getViewPort().height - 100,
+    //                 Util.getViewPort().width - 100,
+    //                 '',
+    //                 obj,
+    //                 '',
+    //                 dialogModel
+    //               );
+    //             }
+    //           });
+    //       }
+    //     });
+    // }
   }
   //#endregion
 }

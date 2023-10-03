@@ -8,12 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {
-  CRUDService,
-  DataRequest,
-  FormModel,
-  UIComponent
-} from 'codx-core';
+import { CRUDService, DataRequest, FormModel, UIComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
@@ -26,7 +21,7 @@ import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
 import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
 import {
   PurchaseInvoiceService,
-  fmPurchaseInvoicesLines
+  fmPurchaseInvoicesLines,
 } from '../purchaseinvoices.service';
 
 @Component({
@@ -55,10 +50,52 @@ export class PurchaseinvoicesDetailComponent
   viewData: IPurchaseInvoice;
   lines: IPurchaseInvoiceLine[] = [];
   acctTranLines: IAcctTran[][] = [[]];
-  columns: TableColumn[] = [];
+  columns: TableColumn[] = [
+    new TableColumn({
+      labelName: 'Num',
+      headerText: 'STT',
+    }),
+    new TableColumn({
+      labelName: 'Item',
+      headerText: 'Mặt hàng',
+      footerText: 'Tổng cộng',
+      footerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'Quantity',
+      field: 'quantity',
+      headerText: 'Số lượng',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+    }),
+    new TableColumn({
+      labelName: 'PurchasePrice',
+      field: 'purcPrice',
+      headerText: 'Đơn giá',
+      headerClass: 'text-end',
+    }),
+    new TableColumn({
+      labelName: 'NetAmt',
+      field: 'netAmt',
+      headerText: 'Thành tiền',
+      headerClass: 'text-end',
+      footerClass: 'text-end',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+    new TableColumn({
+      labelName: 'Vatid',
+      field: 'vatAmt',
+      headerText: 'Thuế GTGT',
+      headerClass: 'text-end pe-3',
+      footerClass: 'text-end pe-3',
+      hasSum: true,
+      sumFormat: SumFormat.Currency,
+    }),
+  ];
 
-  fmPurchaseInvoicesLines: FormModel;
-
+  fmPurchaseInvoicesLines: FormModel = fmPurchaseInvoicesLines;
   funcName: string;
   tabInfo: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -70,56 +107,9 @@ export class PurchaseinvoicesDetailComponent
   constructor(
     private injector: Injector,
     private acService: CodxAcService,
-    private purchaseInvoiceService: PurchaseInvoiceService,
+    private purchaseInvoiceService: PurchaseInvoiceService
   ) {
     super(injector);
-
-    this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
-
-    this.columns = [
-      new TableColumn({
-        labelName: 'Num',
-        headerText: 'STT',
-      }),
-      new TableColumn({
-        labelName: 'Item',
-        headerText: 'Mặt hàng',
-        footerText: 'Tổng cộng',
-        footerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'Quantity',
-        field: 'quantity',
-        headerText: 'Số lượng',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-      }),
-      new TableColumn({
-        labelName: 'PurchasePrice',
-        field: 'purcPrice',
-        headerText: 'Đơn giá',
-        headerClass: 'text-end',
-      }),
-      new TableColumn({
-        labelName: 'NetAmt',
-        field: 'netAmt',
-        headerText: 'Thành tiền',
-        headerClass: 'text-end',
-        footerClass: 'text-end',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-      new TableColumn({
-        labelName: 'Vatid',
-        field: 'vatAmt',
-        headerText: 'Thuế GTGT',
-        headerClass: 'text-end pe-3',
-        footerClass: 'text-end pe-3',
-        hasSum: true,
-        sumFormat: SumFormat.Currency,
-      }),
-    ];
   }
   //#endregion
 
@@ -174,7 +164,13 @@ export class PurchaseinvoicesDetailComponent
   }
 
   onClickMF(e, data): void {
-    this.purchaseInvoiceService.onClickMF(e, data, this.funcName, this.formModel, this.dataService);
+    this.purchaseInvoiceService.onClickMF(
+      e,
+      data,
+      this.funcName,
+      this.formModel,
+      this.dataService
+    );
   }
 
   onShowLessClick(): void {
