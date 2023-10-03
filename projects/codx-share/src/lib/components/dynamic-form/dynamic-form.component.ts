@@ -314,7 +314,8 @@ export class DynamicFormComponent extends UIComponent {
         break;
       default:
         let f = evt.data;
-        let data = this.viewBase.dataService.dataSelected;
+        let data = evt.model;
+        if (!data) data = this.viewBase.dataService.dataSelected;
         this.shareService.defaultMoreFunc(
           f,
           data,
