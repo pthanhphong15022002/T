@@ -206,13 +206,20 @@
     </codx-label>
     <div>
       <codx-fields-detail-temp
+        *ngIf="listField?.length > 0"
+        [listFields]="listField"
+        [showColumnControl]="1"
+        [isShowTitle]="false"
+      >
+      </codx-fields-detail-temp>
+      <!-- <codx-fields-detail-temp
         *ngIf="instanceStep"
         [dataStep]="instanceStep"
         [showColumnControl]="1"
         [isUpdate]="false"
         [isShowTitle]="false"
       >
-      </codx-fields-detail-temp>
+      </codx-fields-detail-temp> -->
     </div>
   </div>
   <!-- Ghi chú -->

@@ -40,7 +40,7 @@ export class CodxViewTaskComponent implements OnInit {
   dealName: string;
   contractName: string;
   leadName: string;
-
+  listField;
   //#endregion
   groupTask;
   title = ''; // tiêu đề

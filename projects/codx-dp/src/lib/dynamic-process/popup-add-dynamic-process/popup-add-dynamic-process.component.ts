@@ -3019,6 +3019,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
     this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
+    //  this.changeDetectorRef.detectChanges();
   }
 
   editTask(taskData, taskGroupIdOld, roleOld) {
@@ -3061,6 +3062,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
     this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
+    // this.changeDetectorRef.detectChanges();
   }
 
   deleteTask(taskList, task) {
@@ -3089,6 +3091,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           });
         }
         this.updateStepChange(task?.stepID);
+        // this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -3613,7 +3617,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   checkExistUserInStep(step: any, role: any, type: string): boolean {
     const check = (data) => {
       for (const element of data) {
-        if (element?.roles?.some((x) => x.objectID === role?.objectID)) {
+        if (element?.roles?.some((x) => x.objectID === role?.objectID || (role?.objectType == '1' && x.objectType == role?.objectType))) {
           return true;
         }
       }
