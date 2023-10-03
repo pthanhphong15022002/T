@@ -53,7 +53,6 @@ export class CampaignContactsComponent implements OnInit {
     gridViewName: 'grvCMCampaignsContacts',
     entityName: 'CM_CampaignsContacts',
   };
-
   request = new DataRequest();
   predicates = 'TransID=@0 && ObjectType=@1';
   dataValues = '';
@@ -132,7 +131,7 @@ export class CampaignContactsComponent implements OnInit {
     this.detector.detectChanges();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges) {
     if (changes['transID']) {
       if (
         changes['transID'].currentValue != null &&
@@ -200,8 +199,10 @@ export class CampaignContactsComponent implements OnInit {
       case 'SYS02':
         this.delete(data);
         break;
-      default:
+      case 'CM0301_2_1':
         this.convertCustomerToLeads(data);
+        break;
+      default:
         break;
     }
   }
@@ -378,7 +379,7 @@ export class CampaignContactsComponent implements OnInit {
                   listCategory: lstCategory,
                   dataConvert: lead,
                   convertCustomerToLead: true,
-                  transIDCamp: this.transID
+                  transIDCamp: this.transID,
                 };
                 let dialogCustomDeal = this.callFc.openSide(
                   PopupAddLeadComponent,
