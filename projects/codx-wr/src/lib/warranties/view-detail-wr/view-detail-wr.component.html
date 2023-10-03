@@ -48,7 +48,7 @@
 
       <div class="d-flex flex-row justify-content-between">
         <div
-          class="mb-1"
+          class="mb-1 me-1"
           *ngIf="
             dataSelected?.recID &&
             dataSelected?.category == '1' &&
@@ -58,8 +58,8 @@
         >
           <span
             #problem
-            class="fw-bold text-dark"
-            [ngClass]="!expanding ? 'line-clamp line-clamp-1' : ''"
+            class="fw-bold text-dark me-1 mb-1"
+            [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
             [innerHTML]="
               dataSelected?.problem
                 | formatvalue : formModel : 'Problem'
@@ -71,7 +71,7 @@
               *ngIf="!expanding"
               default="Xem thêm"
               style="white-space: nowrap"
-              class="text-primary text-decoration-underline"
+              class="text-primary text-decoration-underline me-1 mb-1"
               [ngClass]="!overflowed ? 'd-none' : ''"
               role="button"
               (click)="expanding = !expanding"
@@ -80,7 +80,7 @@
               *ngIf="expanding"
               default="Thu lại"
               style="white-space: nowrap"
-              class="text-primary text-decoration-underline"
+              class="text-primary text-decoration-underline me-1 mb-1"
               role="button"
               (click)="expanding = !expanding"
             ></codx-label>
@@ -663,7 +663,7 @@
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
                             >
                               <codx-label
-                                fiedName="CompletedOn"
+                                fiedName="ATA"
                                 class="nowrap label-colon"
                                 [setRequire]="false"
                                 [formModel]="formModel"
@@ -672,8 +672,8 @@
                             <div class="text-dark codx-textcontent">
                               <span
                                 [innerHTML]="
-                                  dataSelected?.completedOn
-                                    | formatvalue : formModel : 'CompletedOn'
+                                  dataSelected?.ata
+                                    | formatvalue : formModel : 'ATA'
                                     | async
                                 "
                               ></span>
@@ -732,7 +732,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -758,7 +758,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -793,7 +793,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -819,7 +819,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -839,15 +839,19 @@
                                     | async
                                 "
                               ></span>
-                              <span class="ms-1" *ngIf="dataSelected.status != '7' && dataSelected.status != '5'">
+                              <span
+                                class="ms-1"
+                                *ngIf="
+                                  dataSelected.status != '7' &&
+                                  dataSelected.status != '5'
+                                "
+                              >
                                 <button
                                   type="button"
                                   class="btn btn-sm btn-icon btn-light-primary"
                                   (click)="updateAssignEngineer(dataSelected)"
                                 >
-                                  <span
-                                    class="icon-edit icon-16"
-                                  ></span>
+                                  <span class="icon-edit icon-16"></span>
                                 </button>
                               </span>
                             </div>
@@ -856,7 +860,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
