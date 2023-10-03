@@ -579,6 +579,7 @@ export class WarrantiesComponent
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
+            createdBy: data?.createdBy,
             gridViewSetup: res,
           };
           this.callFc
