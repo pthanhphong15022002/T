@@ -94,7 +94,7 @@ export class LeadsComponent
   // data structure
   listCustomer: CM_Customers[] = [];
   listCategory: any[] = [];
-
+  valueListStatusCode:any[] = [];
   // type of string
   oldIdDeal: string = '';
 
@@ -144,6 +144,8 @@ export class LeadsComponent
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+  
   applyApprover = '0';
   queryParams: any;
   leverSetting = 0;
@@ -215,6 +217,7 @@ export class LeadsComponent
     this.getValuelistStatus();
     this.getValuelistCategory();
     this.getProcessSetting();
+    this.getListStatusCode();
   }
   getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
@@ -235,6 +238,20 @@ export class LeadsComponent
       }
     });
   }
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+                  text: item.statusName,
+                  value: item.statusID,
+                }));
+
+      }
+      else {
+        this.valueListStatusCode = [];
+      }
+    });
+}
   async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
