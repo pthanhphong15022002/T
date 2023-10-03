@@ -70,12 +70,13 @@
         </codx-input> -->
 
       <ejs-combobox
-      [dataSource]="valueListStatus"
+      #samples
+      [dataSource]="valueListStatus && valueListStatus?.length > 0  ? valueListStatus: [] "
       (valueChange)="valueChangeStatus($event)"
       [fields]="fieldCbxStatus"
       [placeholder]="gridViewSetup?.ObjectStatus?.description"
       [allowFiltering]="true"
-      [value]="data?.objectStatus"
+      [value]="objectStatus"
     ></ejs-combobox>
       </div>
       <div class="form-group">
