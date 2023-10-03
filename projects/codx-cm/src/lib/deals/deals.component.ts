@@ -118,8 +118,6 @@ export class DealsComponent
   customerName: string = '';
   oldIdDeal: string = '';
 
-
-
   columnGrids = [];
   // showButtonAdd = false;
   button?: ButtonModel;
@@ -139,7 +137,7 @@ export class DealsComponent
   // const set value
   readonly btnAdd: string = 'btnAdd';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
-
+  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -200,7 +198,6 @@ export class DealsComponent
       this.functionModule = f.module;
       this.nameModule = f.customName;
       this.executeApiCallFunctionID(f.formName, f.gridViewName);
-
     });
     this.getColorReason();
 
@@ -297,7 +294,7 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-    if(this.queryParams?.recID){
+    if (this.queryParams?.recID) {
       this.request.predicate = this.predicate;
       this.request.dataValue = this.dataValue;
     }
@@ -512,16 +509,14 @@ export class DealsComponent
     this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
       if (res) {
         this.valueListStatusCode = res.map((item) => ({
-                  text: item.statusName,
-                  value: item.statusID,
-                }));
-
-      }
-      else {
+          text: item.statusName,
+          value: item.statusID,
+        }));
+      } else {
         this.valueListStatusCode = [];
       }
     });
-}
+  }
   // async getValuelistStatusCode() {
   //   this.cache.valueList('CRM041').subscribe((func) => {
   //     if (func) {
@@ -865,7 +860,7 @@ export class DealsComponent
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.permissionCM
+                e.event?.permissionCM,
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
@@ -1089,7 +1084,7 @@ export class DealsComponent
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
-      data:data,
+      data: data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
       applyFor: '1',
@@ -1923,8 +1918,7 @@ export class DealsComponent
   valueChangeStatusCode($event) {
     if ($event) {
       this.statusDefault = $event;
-    }
-    else {
+    } else {
       this.statusDefault = null;
     }
   }

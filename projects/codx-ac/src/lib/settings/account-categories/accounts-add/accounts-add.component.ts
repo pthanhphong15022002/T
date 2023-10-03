@@ -38,7 +38,9 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   dialogData?: DialogData
   dataDefault: any;
-  title: any;
+  headerText: any;
+  funcName: any;
+  lblAdd:any;
   formModel: FormModel;
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
@@ -56,6 +58,7 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.funcName = dialogData.data?.funcName;
 
     //* Set data default
     if(!dialogData?.data?.dataDefault._isEdit) dialogData.data.dataDefault.detail = true;
@@ -76,7 +79,13 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
 
   //#region Init
 
-  onInit(): void {}
+  onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+  }
   ngAfterViewInit() {
     (this.form.form as CodxFormComponent).onAfterInit.subscribe((res:any)=>{
       if(res){
@@ -110,33 +119,42 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
   /**
    * *Hàm lưu tài khoản
    */
-  onSave() {
+  onSave(type) {
     this.formatData();
-    (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    (this.form.form as CodxFormComponent).save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) {
         return;
       }
       if((res.save && !res.save.error) || (res.update && !res.update.error)){
-        this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
-        this.dialog.close(); 
-      }
-    });
-  }
+        if (type === 'save') {
+          this.dialog.close(); 
+        }else{
+          this.dialog.dataService.addNew().subscribe((res: any) => {
+            if (res) {
+              res.detail = true;
+              if(res.loanControl)
+                res.loanControl = '1';
+              else  
+                res.loanControl = '0';
+              
+              if(res.postDetail == '1')
+                res.postDetail = true;
+              else
+                res.postDetail = false;
+              res.isAdd = true;
+              (this.form.form as CodxFormComponent).refreshData({...res}); //? set lại data default cho form
+              if((this.form.form as CodxFormComponent).data.isAdd || (this.form.form as CodxFormComponent).data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        if (this.form.data.isAdd || this.form.data.isCopy)
+            this.notification.notifyCode('SYS006');
+        else 
+            this.notification.notifyCode('SYS007');
 
-  /**
-   * *Hàm lưu & thêm tài khoản
-   */
-  onSaveAdd() {
-    this.formatData();
-    (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
-      if((res.save && !res.save.error) || (res.update && !res.update.error)){
         this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
-        (this.form.form as CodxFormComponent).refreshData({...this.dialogData?.data?.dataDefault}); //? set lại data default cho form
       }
     });
   }
@@ -150,7 +168,7 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
    * @param event 
    */
   setTitle(event) {
-    this.title = this.dialogData?.data?.headerText;
+    this.headerText = this.dialogData?.data?.headerText;
   }
 
   /**

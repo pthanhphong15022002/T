@@ -10,7 +10,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="CurrencyID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="currencyID" (controlBlur)="valueChange($event)"
-            [disabled]="form?.data?._keyAuto == 'CurrencyID' ? true : false || form?.data?._isEdit ? true : false">
+            [disabled]="form?.data?._keyAuto == 'CurrencyID' ? true : false || form?.data?.isEdit ? true : false">
           </codx-input>
         </div>
       </div>
