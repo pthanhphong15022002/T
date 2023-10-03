@@ -119,7 +119,7 @@ export class CmCustomerComponent
       }
     });
 
-    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','ReportBeginningDayAsync').subscribe(res => {});
+    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','ReportBeginningDayAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -256,6 +256,19 @@ export class CmCustomerComponent
     switch (evt.id) {
       case 'btnAdd':
         if (this.isButton) this.add();
+        break;
+      default:
+        let f = evt.data;
+        let data = evt.model;
+        if (!data) data = this.view.dataService.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          f,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
         break;
     }
   }

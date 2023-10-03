@@ -21,7 +21,7 @@
         >
         </ejs-calendar>
         <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
-          <div ngbAccordionItem>
+          <div ngbAccordionItem [collapsed]="false">
             <h2 ngbAccordionHeader>
               <button ngbAccordionButton>
                 <div class="w-100 p-2">
@@ -151,9 +151,9 @@
                 [ngClass]="{ active: calendarType == 'COT03' }"
                 (click)="changeCalendarType('COT03')"
               >
-                <span class="text-center">
-                  <i class="icon-account_circle icon-30"></i>
-                </span>
+                <span class="text-center"
+                  ><i class="icon-account_circle icon-30"></i
+                ></span>
                 <p class="user-select-none">Cá nhân</p>
               </div>
 

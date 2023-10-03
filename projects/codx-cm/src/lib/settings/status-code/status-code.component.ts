@@ -37,7 +37,7 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   headerText;
   currentView!: CatagoryComponent;
   @ViewChild('template') template: TemplateRef<any>;
-
+  @ViewChild('templateObjectStatus') templateObjectStatus: TemplateRef<any>;
   // config BE
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -118,40 +118,30 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   }
 
   getColumsGrid(grvSetup) {
-    // let arrField = Object.values(grvSetup).filter(
-    //   (x: any) => x.isVisible
-    // );
-    // if (Array.isArray(arrField)) {
-    //   this.arrFieldIsVisible = arrField
-    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //     .map((x: any) => x.fieldName);
-    //   // this.getColumsGrid(this.gridViewSetup);
-    // }
-    // this.columnGrids = [];
-    // if (this.arrFieldIsVisible?.length > 0) {
-    //   this.arrFieldIsVisible.forEach((key) => {
-    //     let field = Util.camelize(key);
-    //     let template: any;
-    //     let colums: any;
-    //     if (template) {
-    //       colums = {
-    //         field: field,
-    //         headerText: grvSetup[key].headerText,
-    //         width: grvSetup[key].width,
-    //         template: template,
-    //         // textAlign: 'center',
-    //       };
-    //     } else {
-    //       colums = {
-    //         field: field,
-    //         headerText: grvSetup[key].headerText,
-    //         width: grvSetup[key].width,
-    //       };
-    //     }
-    //     this.columnGrids.push(colums);
-    //   });
-    // }
-
+    let arrField = Object.values(grvSetup).filter(
+      (x: any) => x.isVisible
+    );
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+      // this.getColumsGrid(this.gridViewSetup);
+    }
+    if (this.arrFieldIsVisible?.length > 0) {
+      this.arrFieldIsVisible.forEach((key) => {
+        let field = Util.camelize(key);
+        let template: any;
+        let colums: any;
+        debugger;
+        switch (key) {
+          case 'ObjectStatus':
+            template = this.templateObjectStatus;
+            break;
+          default:
+            break;
+        }
+      });
+    }
 
   }
 

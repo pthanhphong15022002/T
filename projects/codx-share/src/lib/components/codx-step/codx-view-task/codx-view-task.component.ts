@@ -36,6 +36,11 @@ export class CodxViewTaskComponent implements OnInit {
   isUpdateProgressStep = false;
   instanceStep: DP_Instances_Steps;
   isActivitie = false;
+  customerName: string;
+  dealName: string;
+  contractName: string;
+  leadName: string;
+
   //#endregion
 
   title = ''; // tiêu đề

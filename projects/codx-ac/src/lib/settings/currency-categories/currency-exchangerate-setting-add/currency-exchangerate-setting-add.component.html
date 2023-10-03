@@ -1,0 +1,130 @@
+<codx-form #form [body]="body" [headerText]="headerText" [formModel]="dialog.formModel" [dialog]="dialog" [footer]="footer"
+[data]="dataDefault">
+</codx-form>
+
+<!-- Start: TmpBody -->
+<ng-template #body>
+  <div class="row">
+    <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Calculation"></codx-label>
+  </div>
+  <div class="row mt-4">
+    <div class="col-6">
+      <div class="d-flex justify-content-start">
+        <div class="me-3">
+          <codx-input *ngIf="form?.data?.calculation == '1'" type="checkbox" [checked]="true"  [disabled]="true" class="check-circle">
+          </codx-input>
+          <codx-input *ngIf="form?.data?.calculation == '2'" type="checkbox"  [checked]="false" [disabled]="false" class="check-circle" name="currentDate" field="currencyDate" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <codx-label style="margin-top: 0.1rem !important;" class="fw-bold" [formModel]="form.formModel"
+          default="Ngày chính xác"></codx-label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex justify-content-start">
+        <div class="me-3">
+          <codx-input *ngIf="form?.data?.calculation == '2'" type="checkbox" [checked]="true"  [disabled]="true" class="check-circle">
+          </codx-input>
+          <codx-input *ngIf="form?.data?.calculation == '1'" type="checkbox" [checked]="false"  [disabled]="false" class="check-circle" name="forwardDate" field="currencyDate" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <codx-label style="margin-top: 0.1rem !important;" class="fw-bold" [formModel]="form.formModel"
+          default="Ngày gần nhất"></codx-label>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Multi"></codx-label>
+  </div>
+  <div class="row mt-4">
+    <div class="col-6">
+      <div class="d-flex justify-content-start">
+        <div class="me-3">
+          <codx-input *ngIf="multiplication" [checked]="true"  [disabled]="true" type="checkbox" class="check-circle" field="currencyMulti">
+          </codx-input>
+          <codx-input *ngIf="!multiplication" name="multiplication" [checked]="false"  [disabled]="false" type="checkbox" class="check-circle" field="currencyMulti" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <codx-label style="margin-top: 0.1rem !important;" class="fw-bold" [formModel]="form.formModel"
+          default="Nhân"></codx-label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex justify-content-start">
+        <div class="me-3">
+          <codx-input *ngIf="division" [checked]="true"  [disabled]="true" type="checkbox" class="check-circle" field="currencyMulti">
+          </codx-input>
+          <codx-input *ngIf="!division" [checked]="false"  [disabled]="false" name="division" type="checkbox" class="check-circle" field="currencyMulti" (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <codx-label style="margin-top: 0.1rem !important;" class="fw-bold" [formModel]="form.formModel"
+          default="Chia"></codx-label>
+      </div>
+    </div>
+  </div>
+  <!-- <ng-container *ngIf="form?.formGroup">
+    <div class="mt-5 mb-3">
+      <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Calculation"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="currentdate" [formModel]="form.formModel" class="check-circle"
+               [checked]="currentdate" [disabled]="currentdate" field="calculation" (valueChange)="valueChangeCalculation($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" default="Ngày chính xác"></codx-label>
+          </div>
+      </div>
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="forwarddate" [formModel]="form.formModel" class="check-circle"
+                [checked]="forwarddate" [disabled]="forwarddate" field="calculation" (valueChange)="valueChangeCalculation($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" default="Ngày gần nhất"></codx-label>
+          </div>
+      </div>
+  </div>
+    <div class="mt-5 mb-3">
+      <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" fiedName="Multi"></codx-label>
+    </div>
+    <div class="row">
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="multiplication" [formModel]="form.formModel" class="check-circle"
+               [checked]="multiplication" [disabled]="multiplication" field="multi" (valueChange)="valueChangeMulti($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" default="Nhân"></codx-label>
+          </div>
+      </div>
+      <div class="col-5">
+          <div class="d-flex align-items-top mb-2">
+              <div class="me-2">
+                <codx-input name="division" [formModel]="form.formModel" class="check-circle"
+                [checked]="division" [disabled]="division" field="multi" (valueChange)="valueChangeMulti($event)">
+                </codx-input>
+              </div>
+              <codx-label [formModel]="form.formModel" default="Chia"></codx-label>
+          </div>
+      </div>
+  </div>
+  </ng-container> -->
+</ng-template>
+<!-- End: TmpBody -->
+
+<!-- Start: TmpFooter -->
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+<!-- End: TmpFooter -->

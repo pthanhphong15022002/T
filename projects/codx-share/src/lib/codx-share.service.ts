@@ -1290,6 +1290,15 @@ export class CodxShareService {
       [recID]
     );
   }
+  getListRpListByTemplateID(recIDs:any) {
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetListByTemplateIDAsync',
+      [recIDs]
+    );
+  }
   convertFileToPDF(fileRecID: string, fileExtension: string) {
     return this.api.execSv(
       'ES',
@@ -1611,8 +1620,8 @@ export class CodxShareService {
       let dialogTemplate = this.callfunc.openForm(
         CodxGetTemplateSignFileComponent,
         '',
-        400,
-        250,
+        400,//700,
+        250,//500,
         '',
         { sfTemplates: sfTemplates },
         ''
@@ -1644,6 +1653,63 @@ export class CodxShareService {
   }
 
   apExportFileWithTemplate(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel, component: any) => void,
+    template: any,
+    releaseBackground: boolean = false
+  ) {
+    approveProcess.template = template;
+    if (template?.templateID == null && template?.templateType == null) {
+      //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
+      this.notificationsService.alertCode('AP0001').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
+        } else {
+          return;
+        }
+      });
+    } else if (template?.templateID != null && template?.templateID != null) {
+      let exportUpload = new ExportUpload();
+      exportUpload.templateRecID = template?.templateID;
+      exportUpload.templateType = template?.templateType;
+      exportUpload.convertToPDF = false;
+      exportUpload.title = approveProcess.title;
+      exportUpload.entityName = approveProcess.entityName;
+      exportUpload.module = approveProcess.module;
+      exportUpload.objectID = approveProcess.recID;
+      exportUpload.objectType = approveProcess.entityName;
+      exportUpload.referType = 'source';
+      exportUpload.functionID = approveProcess.funcID;
+
+      this.getRpListByTemplateID(template?.templateID).subscribe(
+        (rpList: any) => {
+          if (rpList) {
+            exportUpload.reportRecID = rpList?.recID;
+            exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+            this.apCreateExportFile(
+              approveProcess,
+              releaseCallback,
+              exportUpload
+            );
+          } else {
+            exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
+            this.apCreateExportFile(
+              approveProcess,
+              releaseCallback,
+              exportUpload
+            );
+          }
+        }
+      );
+    } else {
+      this.notificationsService.notify(
+        'Vui lòng kiểm tra lại mẫu thiết lập',
+        '2'
+      );
+      return;
+    }
+  }
+  apExportFileWithMultiTemplate(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
     template: any,
