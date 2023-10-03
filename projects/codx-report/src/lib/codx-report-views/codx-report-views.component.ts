@@ -65,7 +65,8 @@ export class CodxReportViewsComponent
     this.router.params.subscribe((param: any) => {
       if (param) {
         this.funcID = param['funcID'];
-        this.cacheSv.functionList(this.funcID).subscribe((res: any) => {
+        this.cacheSv.functionList(this.funcID)
+        .subscribe((res: any) => {
           if (res) {
             this.funcItem = res;
             this.module = res.module ? res.module.toLowerCase() : '';
@@ -76,8 +77,11 @@ export class CodxReportViewsComponent
         });
       }
     });
-
     this.user = this.auth.get();
+    this.api.execSv("rptrp", 'Codx.RptBusiness.RP', "ReportListBusiness", "GetReportsByModuleAsync", ["R", "TM"])
+    .subscribe(res => {
+      debugger
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {}

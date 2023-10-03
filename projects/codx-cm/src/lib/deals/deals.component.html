@@ -536,6 +536,7 @@
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     [listSteps]="listSteps"
+    [valueListStatusCode]="valueListStatusCode"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
@@ -758,13 +759,15 @@
 </ng-template>
 
 <ng-template #bodyPopup>
-  <codx-input
-    [formModel]="view.formModel"
-    field="statusCodeID"
-    [placeholder]="gridViewSetup?.StatusCodeID?.description"
-    (valueChange)="valueChangeStatusCode($event)"
-  >
-  </codx-input>
+  <ejs-combobox
+  [dataSource]="valueListStatusCode "
+  (valueChange)="valueChangeStatusCode($event)"
+  [fields]="fieldCbxStatusCode"
+  [placeholder]="gridViewSetup?.ObjectStatus?.description"
+  [allowFiltering]="true"
+  [value]="statusDefault"
+></ejs-combobox>
+
 </ng-template>
 
 <ng-template #footerPopup>

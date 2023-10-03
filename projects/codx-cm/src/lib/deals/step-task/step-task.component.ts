@@ -81,11 +81,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   isZoomIn = false;
   isZoomOut = false;
   isShow = false;
-  // formModel: FormModel = {
-  //   entityName: 'DP_Instances_Steps_Reasons',
-  //   formName: 'DPInstancesStepsReasons',
-  //   gridViewName: 'grvDPInstancesStepsReasons',
-  // };
   moreDefaut = {
     share: true,
     write: true,

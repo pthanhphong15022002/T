@@ -145,6 +145,7 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.tmpOrgChart,
           collapsed: true,
+          resizable: true,
         },
       },
     ];

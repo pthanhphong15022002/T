@@ -139,10 +139,6 @@ export class PopupPermissionsComponent implements OnInit {
       this.currentPemission = index;
     }
     this.changeDetectorRef.detectChanges();
-    console.log('full: ', this.full);
-    console.log('update: ', this.update);
-    console.log('per: ', this.lstPermissions[index].objectName);
-    console.log('per1: ', this.lstPermissions[index].update);
   }
 
   changUsers(e) {

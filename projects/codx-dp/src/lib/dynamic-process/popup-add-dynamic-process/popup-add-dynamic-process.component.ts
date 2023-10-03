@@ -472,6 +472,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         }
         this.process.autoName =
           this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+
         this.setDefaultOwner();
         break;
       case 'edit':
@@ -483,13 +484,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           (x) => x.groupID == this.process?.groupID
         );
         this.processNameBefore = this.process?.processName;
-        this.permissions = this.process.permissions;
-        if (this.permissions.length > 0) {
+        this.permissions = this.process?.permissions;
+        if (this.permissions?.length > 0) {
           let perm = this.permissions.filter((x) => x.roleType == 'P');
           this.lstParticipants = perm;
         }
         this.processTab = 3;
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         this.instanceNoSetting = this.process.instanceNoSetting;
         break;
       case 'copy':
@@ -501,7 +502,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.permissions = [];
         this.instanceNoSetting = this.process.instanceNoSetting;
         let valueListStr = this.listValueCopy.join(';');
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         if (
           this.listValueCopy.includes('2') &&
           !this.listValueCopy.includes('3')
@@ -1134,15 +1135,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  getAvatar(process) {
+  getAvatar(objectID, proccessName) {
     let avatar = [
       '',
       this.funcID,
-      process?.recID,
+      objectID,
       'DP_Processes',
       'inline',
       1000,
-      process?.processName,
+      proccessName,
       'avt',
       false,
     ];
@@ -3018,6 +3019,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
     this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
+    //  this.changeDetectorRef.detectChanges();
   }
 
   editTask(taskData, taskGroupIdOld, roleOld) {
@@ -3060,6 +3062,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     });
     this.changeDetectorRef.markForCheck();
     this.updateStepChange(taskData?.stepID);
+    // this.changeDetectorRef.detectChanges();
   }
 
   deleteTask(taskList, task) {
@@ -3088,6 +3091,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           });
         }
         this.updateStepChange(task?.stepID);
+        // this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -3612,7 +3617,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   checkExistUserInStep(step: any, role: any, type: string): boolean {
     const check = (data) => {
       for (const element of data) {
-        if (element?.roles?.some((x) => x.objectID === role?.objectID)) {
+        if (element?.roles?.some((x) => x.objectID === role?.objectID || (role?.objectType == '1' && x.objectType == role?.objectType))) {
           return true;
         }
       }

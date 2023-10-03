@@ -282,6 +282,8 @@ export class CodxFieldsDetailTempComponent implements OnInit {
           break;
       }
       field.dataValue = result;
+      // if (field.dataType == 'TA')
+      //   field.formatData = JSON.parse(JSON.stringify(field.formatData));
       this.saveField(field);
     }
   }
