@@ -87,6 +87,8 @@ export class LoginService {
         }
         window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
       }
+
+      //Set token server file
     } else {
       if (data.error.errorCode === 'AD027')
         return this.navRouter.navigate(['/']);

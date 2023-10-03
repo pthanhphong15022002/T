@@ -148,7 +148,6 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
-
     this.detectorRef.detectChanges();
   }
 
@@ -580,6 +579,7 @@ export class WarrantiesComponent
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
+            createdBy: data?.createdBy,
             gridViewSetup: res,
           };
           this.callFc
@@ -666,8 +666,8 @@ export class WarrantiesComponent
       });
   }
 
-  updateAssignEngineerEmit(e){
-    if(e && e?.data){
+  updateAssignEngineerEmit(e) {
+    if (e && e?.data) {
       this.updateAssignEngineer(e?.data);
     }
   }

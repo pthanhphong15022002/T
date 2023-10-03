@@ -16,6 +16,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   Optional,
   TemplateRef,
@@ -62,6 +63,8 @@ import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/co
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -69,7 +72,7 @@ import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model'
   styleUrls: ['./popup-add-dynamic-process.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PopupAddDynamicProcessComponent implements OnInit {
+export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
@@ -320,6 +323,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isEditReason = false;
   isBoughtTM = false;
 
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  // private onDestroyPopupStep$: Subject<void> = new Subject<void>();
+  vllDefaultName = [];
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -365,29 +372,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
         : JSON.parse(JSON.stringify(dt?.data?.data));
 
-    this.cache.moreFunction('CoDXSystem', null).subscribe((mfSYS) => {
-      if (mfSYS) {
-        let funcMF = 'SYS01';
-        let mfAdd = mfSYS.find((f) => f.functionID == funcMF);
-        if (mfAdd) this.titleAdd = mfAdd?.customName;
+    this.cache
+      .moreFunction('CoDXSystem', null)
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((mfSYS) => {
+        if (mfSYS) {
+          let funcMF = 'SYS01';
+          let mfAdd = mfSYS.find((f) => f.functionID == funcMF);
+          if (mfAdd) this.titleAdd = mfAdd?.customName;
 
-        this.moreFunction.forEach((mf) => {
-          if (mf.id == 'edit') funcMF = 'SYS03';
-          if (mf.id == 'delete') funcMF = 'SYS02';
-          let mfc = Array.from<any>(mfSYS).find(
-            (x: any) => x.functionID == funcMF
-          );
-          if (mfc) {
-            mf.text = mfc.customName;
-          }
-        });
-      }
-    });
-    this.cache.functionList('DPT03').subscribe((fun) => {
-      if (fun) {
-        this.titleDefaultCF = fun.customName || fun.description;
-      }
-    });
+          this.moreFunction.forEach((mf) => {
+            if (mf.id == 'edit') funcMF = 'SYS03';
+            if (mf.id == 'delete') funcMF = 'SYS02';
+            let mfc = Array.from<any>(mfSYS).find(
+              (x: any) => x.functionID == funcMF
+            );
+            if (mfc) {
+              mf.text = mfc.customName;
+            }
+          });
+        }
+      });
+    this.cache
+      .functionList('DPT03')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((fun) => {
+        if (fun) {
+          this.titleDefaultCF = fun.customName || fun.description;
+        }
+      });
     this.loadDefault();
   }
 
@@ -395,6 +408,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.loading();
     this.formModelGroup = await this.getFormModel('DPS0105');
     this.getDefaultCM();
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroyFrom$.next();
+    this.destroyFrom$.complete();
   }
 
   async loading(): Promise<void> {
@@ -406,7 +428,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.formModelMF = await this.getFormModel('DPT040102');
     this.formModelStep = await this.getFormModel('DPS0103');
     this.getTitleStepViewSetup();
-    // this.initForm() // khong xai nua bo luon ;
+
     this.checkedDayOff(this.step?.excludeDayoff);
     if (this.action != 'add' && this.action != 'copy') {
       this.getStepByProcessID();
@@ -416,11 +438,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.formModelStep?.formName,
         this.formModelStep?.gridViewName
       )
+      .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         this.headerTextStepName = res['StepName']['headerText'];
       });
     this.getTypeTask();
-    // document.addEventListener("keydown", this.handleKeyDown);
+    this.cache
+      .valueList('DP002')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res && res.datas?.length > 0) {
+          this.vllDefaultName = res.datas;
+        }
+      });
   }
 
   loadDefault() {
@@ -442,6 +472,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
         this.process.autoName =
           this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+
         this.setDefaultOwner();
         break;
       case 'edit':
@@ -453,13 +484,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           (x) => x.groupID == this.process?.groupID
         );
         this.processNameBefore = this.process?.processName;
-        this.permissions = this.process.permissions;
-        if (this.permissions.length > 0) {
+        this.permissions = this.process?.permissions;
+        if (this.permissions?.length > 0) {
           let perm = this.permissions.filter((x) => x.roleType == 'P');
           this.lstParticipants = perm;
         }
         this.processTab = 3;
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         this.instanceNoSetting = this.process.instanceNoSetting;
         break;
       case 'copy':
@@ -471,7 +502,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.process.permissions = [];
         this.instanceNoSetting = this.process.instanceNoSetting;
         let valueListStr = this.listValueCopy.join(';');
-        this.getAvatar(this.process);
+        this.getAvatar(this.process.recID, this.process.processName);
         if (
           this.listValueCopy.includes('2') &&
           !this.listValueCopy.includes('3')
@@ -513,11 +544,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   GetListProcessGroups() {
-    this.dpService.getListProcessGroups().subscribe((res) => {
-      if (res && res.length > 0) {
-        this.lstGroup = res;
-      }
-    });
+    this.dpService
+      .getListProcessGroups()
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.lstGroup = res;
+        }
+      });
   }
 
   //#region setup formModels and formGroup ko dung nua
@@ -554,13 +588,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       return;
     }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
-      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        // save file
-        this.attachment?.clearData();
-        if (res) {
-          this.handlerSave();
-        }
-      });
+      (await this.imageAvatar.saveFilesObservable())
+        .pipe(takeUntil(this.destroyFrom$))
+        .subscribe((res) => {
+          // save file
+          this.attachment?.clearData();
+          if (res) {
+            this.handlerSave();
+          }
+        });
     } else {
       this.handlerSave();
     }
@@ -602,35 +638,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   setAutoName(applyFor) {
-    if (this.languages) {
-      if (this.languages == 'vn') {
-        this.process.autoName =
-          applyFor == '1'
-            ? 'Cơ hội'
-            : applyFor == '2'
-            ? 'Sự cố'
-            : applyFor == '3'
-            ? 'Yêu cầu'
-            : applyFor == '4'
-            ? 'Hợp đồng'
-            : applyFor == '5'
-            ? 'Tiềm năng'
-            : '';
-      } else {
-        this.process.autoName =
-          applyFor == '1'
-            ? 'Deal'
-            : applyFor == '2'
-            ? 'Case'
-            : applyFor == '3'
-            ? 'Request'
-            : applyFor == '4'
-            ? 'Contract'
-            : applyFor == '5'
-            ? 'Lead'
-            : '';
-      }
-    }
+    this.process.autoName = this.vllDefaultName.find(
+      (x) => x.value == applyFor
+    )?.text;
   }
 
   convertListStepDrop() {
@@ -678,6 +688,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           'AddProcessAsync',
           data
         )
+        .pipe(takeUntil(this.destroyFrom$))
         .subscribe((res) => {
           if (res) {
             this.dpService.upDataApprovalStep(
@@ -716,16 +727,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
             this.dpService
               .countInstanceByProccessId(dataCountInstance)
+              .pipe(takeUntil(this.destroyFrom$))
               .subscribe((totalInstance) => {
                 if (totalInstance) {
                   res.update.totalInstance = totalInstance;
                   this.dialog.close(res.update);
+                  this.formClear();
                 } else {
                   res.update.totalInstance = 0;
                   this.dialog.close(res.update);
+                  this.formClear();
                 }
               });
-            this.formClear();
           }
         });
     } else {
@@ -748,6 +761,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           'UpdateProcessAsync',
           data
         )
+        .pipe(takeUntil(this.destroyFrom$))
         .subscribe((res) => {
           if (res) {
             this.dpService.upDataApprovalStep(
@@ -800,18 +814,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     if (e.field === 'groupID') {
       if (!this.process.groupID) {
-        this.cache.message('SYS028').subscribe((res) => {
-          if (res) this.errorMessage = res.customName || res.defaultName;
-          this.checkGroup = false;
-        });
+        this.cache
+          .message('SYS028')
+          .pipe(takeUntil(this.destroyFrom$))
+          .subscribe((res) => {
+            if (res) this.errorMessage = res.customName || res.defaultName;
+            this.checkGroup = false;
+          });
       } else {
         this.checkGroup = this.lstGroup.some(
           (x) => x.groupID == this.process.groupID
         );
         if (!this.checkGroup) {
-          this.cache.message('DP015').subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
-          });
+          this.cache
+            .message('DP015')
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((res) => {
+              if (res) this.errorMessage = res.customName || res.defaultName;
+            });
         }
       }
     }
@@ -841,6 +861,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           if (this.listFileTask?.length > 0) {
             this.dpService
               .deleteFileTask([this.listFileTask])
+              .pipe(takeUntil(this.destroyFrom$))
               .subscribe((rec) => {});
           }
           // if (this.action == 'add' || this.action == 'copy') {
@@ -857,10 +878,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           //yeu cau doi view ngay 13/06/2023
           if (this.action == 'add' || this.action == 'copy') {
             //xoa Aprover
-            this.dpService.removeApprovalStep(this.recIDCategory).subscribe();
+            this.dpService
+              .removeApprovalStep(this.recIDCategory)
+              .pipe(takeUntil(this.destroyFrom$))
+              .subscribe();
             if (this.listStepApproverView?.length > 0)
               this.dpService
                 .removeListApprovalStep(this.listStepApproverView)
+                .pipe(takeUntil(this.destroyFrom$))
                 .subscribe();
           }
 
@@ -868,14 +893,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             this.codxService.navigate('', `shared/settings/CMS`);
           }
           this.dialog.close();
+          this.formClear();
         } else return;
       });
     } else {
       if (this.systemProcess == '1') {
         this.codxService.navigate('', `shared/settings/CMS`);
       }
-
       this.dialog.close();
+      this.formClear();
     }
   }
 
@@ -1007,9 +1033,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.process?.groupID.trim() == ''
         ) {
           this.checkGroup = false;
-          this.cache.message('DP015').subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
-          });
+          this.cache
+            .message('DP015')
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((res) => {
+              if (res) this.errorMessage = res.customName || res.defaultName;
+            });
           return;
         }
 
@@ -1106,15 +1135,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  getAvatar(process) {
+  getAvatar(objectID, proccessName) {
     let avatar = [
       '',
       this.funcID,
-      process?.recID,
+      objectID,
       'DP_Processes',
       'inline',
       1000,
-      process?.processName,
+      proccessName,
       'avt',
       false,
     ];
@@ -1662,7 +1691,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //view new
     if (!this.process?.processNo) {
       this.process.processNo = await firstValueFrom(
-        this.dpService.genAutoNumber(this.funcID, this.entityName, 'ProcessNo')
+        this.dpService
+          .genAutoNumber(this.funcID, this.entityName, 'ProcessNo')
+          .pipe(takeUntil(this.destroyFrom$))
       );
     }
     this.instanceNoSetting = this.process.processNo;
@@ -1897,6 +1928,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   loadListApproverStep() {
     this.dpService
       .getListAproverStepByCategoryID(this.process.processNo)
+      .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res) {
           this.listStepApproverView = res;
@@ -2108,68 +2140,74 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   addCustomField(stepID, processID, enabled) {
-    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
-      this.cache
-        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
-        .subscribe((res) => {
-          this.fieldCrr = new DP_Steps_Fields();
-          this.fieldCrr.stepID = stepID;
-          this.fieldCrr.processID = processID;
-          this.fieldCrr.isRequired = false;
-          this.fieldCrr.rank = 5;
+    this.cache
+      .gridView('grvDPStepsFields')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        this.cache
+          .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+          .pipe(takeUntil(this.destroyFrom$))
+          .subscribe((res) => {
+            this.fieldCrr = new DP_Steps_Fields();
+            this.fieldCrr.stepID = stepID;
+            this.fieldCrr.processID = processID;
+            this.fieldCrr.isRequired = false;
+            this.fieldCrr.rank = 5;
 
-          let option = new SidebarModel();
-          option.FormModel = this.formModelField;
-          option.Width = '550px';
-          option.zIndex = 1010;
-          let object = {
-            field: this.fieldCrr,
-            action: 'add',
-            titleAction:
-              this.titleAdd +
-              ' ' +
-              this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
-              this.titleDefaultCF.slice(1),
-            stepList: this.stepList,
-            grvSetup: res,
-            enabled: enabled,
-            refValueDataType:
-              this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
-            processNo: this.process.processNo,
-          };
+            let option = new SidebarModel();
+            option.FormModel = this.formModelField;
+            option.Width = '550px';
+            option.zIndex = 1010;
+            let object = {
+              field: this.fieldCrr,
+              action: 'add',
+              titleAction:
+                this.titleAdd +
+                ' ' +
+                this.titleDefaultCF.charAt(0).toLocaleLowerCase() +
+                this.titleDefaultCF.slice(1),
+              stepList: this.stepList,
+              grvSetup: res,
+              enabled: enabled,
+              refValueDataType:
+                this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
+              processNo: this.process.processNo,
+            };
 
-          let dialogCustomField = this.callfc.openSide(
-            PopupAddCustomFieldComponent,
-            object,
-            option
-          );
-          dialogCustomField.closed.subscribe((e) => {
-            if (e && e.event != null) {
-              //xu ly data đổ về
-              this.fieldCrr = e.event[0];
-              if (e.event[1] && !this.process.processNo) {
-                this.process.processNo = e.event[1];
-              }
-              this.fieldCrr.sorting = this.step.fields.length + 1;
+            let dialogCustomField = this.callfc.openSide(
+              PopupAddCustomFieldComponent,
+              object,
+              option
+            );
+            dialogCustomField.closed.subscribe((e) => {
+              if (e && e.event != null) {
+                //xu ly data đổ về
+                this.fieldCrr = e.event[0];
+                if (e.event[1] && !this.process.processNo) {
+                  this.process.processNo = e.event[1];
+                }
+                this.fieldCrr.sorting = this.step.fields.length + 1;
 
-              this.stepList.forEach((x) => {
-                if (x.recID == this.fieldCrr.stepID) {
-                  x.fields.push(this.fieldCrr);
-                  if (this.action == 'edit') {
-                    let check = this.listStepEdit.some((id) => id == x?.recID);
-                    if (!check) {
-                      this.listStepEdit.push(x?.recID);
+                this.stepList.forEach((x) => {
+                  if (x.recID == this.fieldCrr.stepID) {
+                    x.fields.push(this.fieldCrr);
+                    if (this.action == 'edit') {
+                      let check = this.listStepEdit.some(
+                        (id) => id == x?.recID
+                      );
+                      if (!check) {
+                        this.listStepEdit.push(x?.recID);
+                      }
                     }
                   }
-                }
-              });
-              if (!this.isChange) this.isChange = true;
-              // this.changeDetectorRef.detectChanges();
-              this.changeDetectorRef.markForCheck();
-            }
+                });
+                if (!this.isChange) this.isChange = true;
+                // this.changeDetectorRef.detectChanges();
+                this.changeDetectorRef.markForCheck();
+              }
+            });
           });
-        });
-    });
+      });
   }
 
   copyCustomField(field, textTitle, enabled) {
@@ -3603,7 +3641,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   async getFormModel(functionID) {
-    let f = await firstValueFrom(this.cache.functionList(functionID));
+    let f = await firstValueFrom(
+      this.cache.functionList(functionID).pipe(takeUntil(this.destroyFrom$))
+    );
     let model = this.dialog?.formModel;
     let formModel = JSON.parse(JSON.stringify(model));
     formModel.formName = f?.formName;
@@ -4292,21 +4332,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
   }
   getValueDayHour() {
-    this.cache.valueList('DP040').subscribe((res) => {
-      if (res.datas) {
-        for (let item of res.datas) {
-          if (item.value === 'D') {
-            this.strDay = ' ' + item.text + ' ';
-          } else if (item.value === 'H') {
-            this.strHour = ' ' + item.text + ' ';
-          } else if (item.value == '1') {
-            this.noteDay = item.text;
-          } else if (item.value === '2') {
-            this.noteHour = item.text;
+    this.cache
+      .valueList('DP040')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res.datas) {
+          for (let item of res.datas) {
+            if (item.value === 'D') {
+              this.strDay = ' ' + item.text + ' ';
+            } else if (item.value === 'H') {
+              this.strHour = ' ' + item.text + ' ';
+            } else if (item.value == '1') {
+              this.noteDay = item.text;
+            } else if (item.value === '2') {
+              this.noteHour = item.text;
+            }
           }
         }
-      }
-    });
+      });
   }
   joinTwoString(valueFrist, valueTwo) {
     valueTwo = this.LowercaseFirstPipe(valueTwo);
@@ -4387,6 +4430,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.cache.gridView(f.gridViewName).subscribe((gridview) => {
           this.cache
             .gridViewSetup(f.formName, f.gridViewName)
+            .pipe(takeUntil(this.destroyFrom$))
             .subscribe((grvSetup) => {
               let formES = new FormModel();
               formES.funcID = f?.functionID;
@@ -4548,6 +4592,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getDefaultCM() {
     this.adService
       .getLstBoughtModule()
+      .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res: Array<TN_OrderModule>) => {
         if (res) {
           let lstModule = res;
@@ -4563,7 +4608,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   formClear() {
     this.attachment?.clearData();
-    this.imageAvatar.clearData();
+    this.imageAvatar?.clearData();
+    this.onDestroy();
     // this.stepList = [];
     // this.listStepAdd = [];
     // this.listStepDelete = [];

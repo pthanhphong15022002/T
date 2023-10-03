@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CRUDService, CallFuncService, DataRequest, FormModel, SidebarModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CRUDService,
+  CallFuncService,
+  DataRequest,
+  FormModel,
+  SidebarModel,
+} from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashtransferAddComponent } from './cashtransfers-add/cashtransfers-add.component';
 import { ICashTransfer } from './interfaces/ICashTransfer.interface';
@@ -16,9 +23,18 @@ export const fmVATInvoice: FormModel = {
   providedIn: 'root',
 })
 export class CashtransfersService {
-  constructor(private callFuncService: CallFuncService) {}
+  constructor(
+    private callFuncService: CallFuncService,
+    private apiService: ApiHttpService
+  ) {}
 
-  onClickMF(e: any, data: ICashTransfer, funcName: string, formModel: FormModel, dataService: CRUDService): void {
+  onClickMF(
+    e: any,
+    data: ICashTransfer,
+    funcName: string,
+    formModel: FormModel,
+    dataService: CRUDService
+  ): void {
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data, dataService);
@@ -35,7 +51,12 @@ export class CashtransfersService {
     }
   }
 
-  edit(data: ICashTransfer, funcName: string, formModel: FormModel, dataService: CRUDService): void {
+  edit(
+    data: ICashTransfer,
+    funcName: string,
+    formModel: FormModel,
+    dataService: CRUDService
+  ): void {
     console.log('edit', { data });
 
     const copiedData = { ...data };
@@ -60,35 +81,50 @@ export class CashtransfersService {
     });
   }
 
-  copy(data: ICashTransfer, funcName: string, formModel: FormModel, dataService: CRUDService): void {
+  copy(
+    data: ICashTransfer,
+    funcName: string,
+    formModel: FormModel,
+    dataService: CRUDService
+  ): void {
     console.log('copy', { data });
 
     dataService.dataSelected = data;
-    dataService.copy().subscribe((res) => {
-      console.log(res);
+    dataService
+      .copy(() =>
+        this.apiService.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
+          data.journalNo,
+        ])
+      )
+      .subscribe((res) => {
+        console.log(res);
 
-      let options = new SidebarModel();
-      options.DataService = dataService;
-      options.FormModel = formModel;
-      options.isFull = true;
+        let options = new SidebarModel();
+        options.DataService = dataService;
+        options.FormModel = formModel;
+        options.isFull = true;
 
-      this.callFuncService.openSide(
-        CashtransferAddComponent,
-        {
-          formType: 'add',
-          formTitle: funcName,
-        },
-        options,
-        formModel.funcID
-      );
-    });
+        this.callFuncService.openSide(
+          CashtransferAddComponent,
+          {
+            formType: 'add',
+            formTitle: funcName,
+          },
+          options,
+          formModel.funcID
+        );
+      });
   }
 
   delete(data: ICashTransfer, dataService: CRUDService): void {
     dataService.delete([data]).subscribe();
   }
 
-  export(data: ICashTransfer, formModel: FormModel, dataService: CRUDService): void {
+  export(
+    data: ICashTransfer,
+    formModel: FormModel,
+    dataService: CRUDService
+  ): void {
     const gridModel = new DataRequest();
     gridModel.formName = formModel.formName;
     gridModel.entityName = formModel.entityName;

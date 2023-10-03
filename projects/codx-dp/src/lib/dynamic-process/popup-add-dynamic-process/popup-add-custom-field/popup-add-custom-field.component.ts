@@ -348,6 +348,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       .replace(/đ/g, 'd')
       .replace(/Đ/g, 'D');
     format = format.replaceAll(' ', '_');
+    while (format.includes('__')) {
+      format = format.replaceAll('__', '_');
+    }
     this.field.fieldName = format;
   }
 
@@ -780,40 +783,50 @@ export class PopupAddCustomFieldComponent implements OnInit {
   clickSettingTable() {
     if (!this.column) this.column = new ColumnTable();
     let option = new DialogModel();
-    option.FormModel = this.dialog.formModel;
-    option.zIndex = 1050;
-    let obj = {
-      data: this.column,
-      action: 'add',
-      titleAction: 'Thêm column test',
-      grvSetup: this.grvSetup,
-      processNo: this.processNo,
-      user: this.user,
-      listColumns: this.listColumns,
-    };
-    let dialogColumn = this.callfc.openForm(
-      PopupAddColumnTableComponent,
-      '',
-      500,
-      750,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogColumn.closed.subscribe((res) => {
-      if (res && res.event) {
-        if (res.event[0]) {
-          this.listColumns = res.event[0];
-          this.field.dataFormat = JSON.stringify(this.listColumns);
-        }
-        if (res.event[1] && !this.processNo) {
-          this.processNo = res.event[1];
-        }
-        this.changeRef.detectChanges();
-      }
-      //....................
-    });
+    let formModelTable = new FormModel();
+    formModelTable.formName = this.dialog.formModel.formName;
+    formModelTable.gridViewName = this.dialog.formModel.gridViewName;
+    formModelTable.entityName = this.dialog.formModel.entityName;
+
+    this.dpService
+      .getFormGroup(formModelTable.formName, formModelTable.gridViewName)
+      .then(async (fg) => {
+        formModelTable.formGroup = fg;
+        option.FormModel = formModelTable;
+
+        option.zIndex = 1050;
+        let obj = {
+          data: this.column,
+          action: 'add',
+          titleAction: 'Thêm column test',
+          grvSetup: this.grvSetup,
+          processNo: this.processNo,
+          user: this.user,
+          listColumns: this.listColumns,
+        };
+        let dialogColumn = this.callfc.openForm(
+          PopupAddColumnTableComponent,
+          '',
+          550,
+          750,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialogColumn.closed.subscribe((res) => {
+          if (res && res.event) {
+            if (res.event[0]) {
+              this.listColumns = res.event[0];
+              this.field.dataFormat = JSON.stringify(this.listColumns);
+            }
+            if (res.event[1] && !this.processNo) {
+              this.processNo = res.event[1];
+            }
+          }
+          //....................
+        });
+      });
   }
 
   getColumnTable(data) {
