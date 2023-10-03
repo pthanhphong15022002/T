@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopSettingExchangeComponent } from './pop-setting-exchange.component';
+import { CurrencyComponent } from './currency.component';
 
-describe('PopSettingExchangeComponent', () => {
-  let component: PopSettingExchangeComponent;
-  let fixture: ComponentFixture<PopSettingExchangeComponent>;
+describe('CurrencyFormComponent', () => {
+  let component: CurrencyComponent;
+  let fixture: ComponentFixture<CurrencyComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopSettingExchangeComponent ]
+      declarations: [ CurrencyComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopSettingExchangeComponent);
+    fixture = TestBed.createComponent(CurrencyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

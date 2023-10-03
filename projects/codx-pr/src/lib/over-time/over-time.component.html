@@ -13,6 +13,7 @@
   [funcID]="funcID"
   (buttonClick)="click($event)"
   (onActions)="onActionClick($event)"
+  (selectedChange)="selectedChange($event)"
 >
 </codx-views>
 
@@ -20,33 +21,121 @@
   <codx-temp-full
     [imgCss]="'me-4'"
     cardCss="card-template border-bottom p-3 when-hover-box"
+    (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-5'"
-    [imageId]=""
+    [imageId]="data.emp?.employeeID"
     [imageObjType]="'HR_Employees'"
-    [imageObjName]=""
+    [imageObjName]="data?.emp?.employeeName"
     [imageWidth]="35"
     [formModel]="view.formModel"
     [dataItem]="data"
-    [imgOn]=""
     [typeMF]="'view'"
     [titleTmp]="titleTmp"
     [titleCss]="'fs-6 mb-1 then-text-primary'"
-    [subTitle]=""
+    [subTitle]="data?.emp?.positionName"
     [subTitleCss]="'fs-7 text-gray-500'"
     [descTmp]="descTmp"
     [desc2Tmp]="desc2Tmp"
+    (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-temp-full>
 
   <ng-template #titleTmp>
-    <span>aaaa</span>
+    <span class="fw-bold fs-6 mb-1 then-text-primary">
+      {{ data.emp?.employeeName }}
+    </span>
   </ng-template>
 
   <ng-template #descTmp>
-    <span>bbbb</span>
+    <div class="d-flex align-items-center mt-1 flex-wrap">
+      <span class="icon-calendar_today icon-14 me-1"></span>
+      <span class="fs-7" [ngbTooltip]="grvSetup?.FromDate?.headerText">
+        {{ data.fromDate | fmDT }}
+      </span>
+      <span
+        *ngIf="data.toDate && data.fromDate != data.toDate"
+        class="mx-1 fs-7"
+      >
+        -
+      </span>
+      <span
+        class="fs-7"
+        *ngIf="data.toDate && data.fromDate != data.toDate"
+        [ngbTooltip]="grvSetup?.ToDate?.headerText"
+      >
+        {{ data.toDate | fmDT }}
+      </span>
+
+      <span class="icon-access_time icon-14 ms-4 me-1"></span>
+      <span class="fs-7" [ngbTooltip]="grvSetup?.FromTime?.headerText">
+        {{ getHour(data.fromTime) }}
+      </span>
+      <span
+        *ngIf="data.toTime && data.fromTime != data.toTime"
+        class="mx-1 fs-7"
+      >
+        -
+      </span>
+      <span
+        class="fs-7"
+        *ngIf="data.toTime && data.fromTime != data.toTime"
+        [ngbTooltip]="grvSetup?.ToTime?.headerText"
+      >
+        {{ getHour(data.toTime) }}
+      </span>
+    </div>
   </ng-template>
 
-  <ng-template #desc2Tmp> ccc </ng-template>
+  <ng-template #desc2Tmp>
+    <div class="">
+      <div
+        class="fs-7 my-1"
+        *ngIf="data.reason"
+        [ngbTooltip]="grvSetup?.Reason?.headerText"
+      >
+        {{ data.reason }}
+      </div>
+
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+      </ng-container>
+      <div
+        *ngIf="data?.approvedOn"
+        class="me-4"
+        [ngbTooltip]="grvSetup?.ApprovedOn?.headerText"
+      >
+        {{ data?.approvedOn | fmDT }}
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #panelRightListDetail let-data>
+  <lib-view-detail-ot #viewdetail [recID]="recID">
+    [view]="view" [formModel]="view.formModel" [grvSetup]="grvSetup"
+    (clickMFunction)="clickEvent($event)"
+  </lib-view-detail-ot>
 </ng-template>
 
 <!-- Content schedule left -->
@@ -104,7 +193,9 @@
   </div>
 </ng-template>
 
-<ng-template #contentTmp let-data> </ng-template>
+<ng-template #contentTmp let-data>
+  <span>aaaa</span>
+</ng-template>
 
 <ng-template #cardTemplate let-data>
   <div class="d-flex flex-row justify-content-start align-items-center w-100">
