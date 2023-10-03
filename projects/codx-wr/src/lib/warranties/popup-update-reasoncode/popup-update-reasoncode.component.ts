@@ -142,7 +142,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.data.scheduleStart) {
-      if (new Date(this.data.scheduleStart) < new Date()) {
+      if (new Date(this.data.scheduleStart).getDate() < new Date().getDate()) {
         this.notiService.notifyCode('WR003');
         return;
       }
