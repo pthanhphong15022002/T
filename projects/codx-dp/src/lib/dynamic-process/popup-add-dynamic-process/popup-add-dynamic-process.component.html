@@ -389,7 +389,11 @@
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
               [disabled]="
-                systemProcess == '1' || process?.category == '0' ? true : false
+                systemProcess == '1' ||
+                systemProcess == '2' ||
+                process?.category == '0'
+                  ? true
+                  : false
               "
               type="text"
               [crrValue]="process.processName"
@@ -1867,18 +1871,27 @@
               (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)"
               [ngStyle]="{ 'background-color': setColorStep(stepSuccess) }"
             >
-              <div
-                class="d-flex flex-column"
-              >
+              <div class="d-flex flex-column">
                 <div class="fw-bold d-flex align-items-center">
                   <i
                     class="me-1"
                     [ngClass]="stepSuccess?.icon"
-                    [ngStyle]="process?.stepsColorMode ? {color: iconReasonSuccess?.textColor} : { color: stepSuccess?.iconColor }"
+                    [ngStyle]="
+                      process?.stepsColorMode
+                        ? { color: iconReasonSuccess?.textColor }
+                        : { color: stepSuccess?.iconColor }
+                    "
                   ></i>
-                  <span  [ngStyle]="{ color: setColorTestStep(stepSuccess) }">{{ stepSuccess?.stepName }}</span>
+                  <span [ngStyle]="{ color: setColorTestStep(stepSuccess) }">{{
+                    stepSuccess?.stepName
+                  }}</span>
                 </div>
-                <div class="fs-7 line-clamp line-clamp-1" [ngStyle]="{ color: setColorTestStep(stepSuccess) }">{{ noteSuccess }}</div>
+                <div
+                  class="fs-7 line-clamp line-clamp-1"
+                  [ngStyle]="{ color: setColorTestStep(stepSuccess) }"
+                >
+                  {{ noteSuccess }}
+                </div>
               </div>
 
               <codx-mfunc
@@ -1898,18 +1911,27 @@
               (click)="clickViewStep($event, viewStepReasonFail, strEmpty)"
               [ngStyle]="{ 'background-color': setColorStep(stepFail) }"
             >
-              <div
-                class="d-flex flex-column"
-              >
+              <div class="d-flex flex-column">
                 <div class="fw-bold d-flex align-items-center">
                   <i
                     class="me-1"
                     [ngClass]="stepFail?.icon"
-                    [ngStyle]="process?.stepsColorMode ? {color: iconReasonFail?.textColor} : { color: stepFail?.iconColor }"
+                    [ngStyle]="
+                      process?.stepsColorMode
+                        ? { color: iconReasonFail?.textColor }
+                        : { color: stepFail?.iconColor }
+                    "
                   ></i>
-                  <span  [ngStyle]="{ color: setColorTestStep(stepFail) }">{{ stepFail?.stepName }}</span>
+                  <span [ngStyle]="{ color: setColorTestStep(stepFail) }">{{
+                    stepFail?.stepName
+                  }}</span>
                 </div>
-                <div class="fs-7 line-clamp line-clamp-1" [ngStyle]="{ color: setColorTestStep(stepFail) }">{{ noteFail }}</div>
+                <div
+                  class="fs-7 line-clamp line-clamp-1"
+                  [ngStyle]="{ color: setColorTestStep(stepFail) }"
+                >
+                  {{ noteFail }}
+                </div>
               </div>
               <codx-mfunc
                 *ngIf="formModelMF"
@@ -3058,36 +3080,42 @@
               *ngIf="perm.roleType == 'S'"
               class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
             >
+              <div class="roles-step d-flex align-items-center">
+                <div
+                  class="d-flex align-items-center position-relative"
+                  *ngIf="perm.objectType != '1'"
+                >
+                  <codx-img
+                    class="me-2"
+                    [width]="25"
+                    [objectId]="perm.objectID"
+                    [objectName]="perm.objectName"
+                    objectType="AD_Users"
+                  >
+                  </codx-img>
+                  <span class="text-dark fw-bold">{{ perm.objectName }}</span>
+                </div>
+                <div
+                  class="d-flex align-items-center"
+                  *ngIf="perm.objectType == '1'"
+                >
+                  <span
+                    class="e-avatar e-avatar-circle"
+                    style="width: 26px; height: 26px"
+                    >O</span
+                  >
+                  <span class="text-dark fw-bold ms-1">Owner</span>
+                </div>
 
-            <div class="roles-step d-flex align-items-center">
-              <div class="d-flex align-items-center position-relative" *ngIf="perm.objectType != '1'">
-                <codx-img
-                  class="me-2"
-                  [width]="25"
-                  [objectId]="perm.objectID"
-                  [objectName]="perm.objectName"
-                  objectType="AD_Users"
-                >
-                </codx-img>
-                <span class="text-dark fw-bold">{{ perm.objectName }}</span>
+                <span class="mt-1 d-none">
+                  <a
+                    (click)="removeRole(perm.objectID)"
+                    style="cursor: pointer"
+                  >
+                    <span class="icon-close icon-16 text-danger ms-2"></span>
+                  </a>
+                </span>
               </div>
-              <div class="d-flex align-items-center" *ngIf="perm.objectType == '1'" >
-                <span 
-                  class="e-avatar e-avatar-circle" 
-                  style="width: 26px; height: 26px"
-                >O</span>
-                <span class="text-dark fw-bold ms-1">Owner</span>
-              </div>
-             
-              <span class="mt-1 d-none">
-                <a
-                  (click)="removeRole(perm.objectID)"
-                  style="cursor: pointer"
-                >
-                  <span class="icon-close icon-16 text-danger ms-2"></span>
-                </a>
-              </span>
-            </div>
 
               <!-- <div *ngIf="perm.objectType != '1'" class="me-2">
                 <codx-img
@@ -3155,7 +3183,10 @@
               class="me-4 d-flex align-items-center margin-form mb-4"
             >
               <div class="roles-step d-flex align-items-center">
-                <div class="d-flex align-items-center position-relative" *ngIf="role.objectType != '1'">
+                <div
+                  class="d-flex align-items-center position-relative"
+                  *ngIf="role.objectType != '1'"
+                >
                   <codx-img
                     class="me-2"
                     [width]="25"
@@ -3166,14 +3197,18 @@
                   </codx-img>
                   <span class="text-dark fw-bold">{{ role.objectName }}</span>
                 </div>
-                <div class="d-flex align-items-center" *ngIf="role.objectType == '1'" >
-                  <span 
-                    class="e-avatar e-avatar-circle" 
+                <div
+                  class="d-flex align-items-center"
+                  *ngIf="role.objectType == '1'"
+                >
+                  <span
+                    class="e-avatar e-avatar-circle"
                     style="width: 26px; height: 26px"
-                  >O</span>
+                    >O</span
+                  >
                   <span class="text-dark fw-bold ms-1">Owner</span>
                 </div>
-               
+
                 <span class="mt-1 d-none">
                   <a
                     (click)="deleteRoleInstep(step, role, true)"

@@ -45,6 +45,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isAdmin = false;
   @Input() entityName = '';
 
+  @Input() customerName: string;
+  @Input() dealName: string;
+  @Input() contractName: string;
+  @Input() leadName: string;
+
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
 
@@ -547,6 +552,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         isActivitie: true,
         sessionID: this.sessionID, // session giao việc
         formModelAssign: this.formModelAssign, // formModel của giao việc
+        customerName: this.customerName,
+        dealName: this.dealName,
+        contractName: this.contractName,
+        leadName: this.leadName,
       };
       let option = new SidebarModel();
       option.Width = '550px';

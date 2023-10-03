@@ -538,7 +538,8 @@ export class DynamicFormComponent extends UIComponent {
           dialogProcess.closed.subscribe((e) => {
             if (e && e?.event && e?.event?.recID && action == 'add') {
               data.processID = e.event?.recID;
-              this.viewBase.dataService.update(data).subscribe();
+              let updateData = JSON.parse(JSON.stringify(data));
+              this.viewBase.dataService.update(updateData).subscribe();
               this.api
                 .execSv<any>(
                   'CM',
