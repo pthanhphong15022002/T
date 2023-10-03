@@ -86,9 +86,8 @@ export class CurrencyComponent extends UIComponent {
   }
   //#endregion
 
-  //#region Function
-
-  /**
+  //#region Event
+/**
    * *Hàm click toolbar
    * @param evt 
    */
@@ -118,6 +117,9 @@ export class CurrencyComponent extends UIComponent {
         break;
     }
   }
+  //#endregion Event
+
+  //#region Function
 
   /**
    * *Hàm thêm mới tiền tệ
@@ -132,7 +134,7 @@ export class CurrencyComponent extends UIComponent {
     if(!this.dataDefault){
       this.view.dataService.addNew().subscribe((res: any) => {
         if(res){
-          res._isAdd = true;
+          res.isAdd = true;
           this.dataDefault = {...res};
           data.dataDefault = {...this.dataDefault};
           let dialog = this.callfunc.openSide(
@@ -164,6 +166,7 @@ export class CurrencyComponent extends UIComponent {
       .edit(dataEdit)
       .subscribe((res: any) => {
         if (res) {
+          res.isEdit = true;
           this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
           let data = {
             headerText: this.headerText,
@@ -191,7 +194,7 @@ export class CurrencyComponent extends UIComponent {
       .copy()
       .subscribe((res: any) => {
         if (res) {
-          res._isCopy = true;
+          res.isCopy = true;
           this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
           let data = {
             headerText: this.headerText,
