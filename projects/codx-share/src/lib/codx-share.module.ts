@@ -220,6 +220,7 @@ import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-
 import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
+
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
