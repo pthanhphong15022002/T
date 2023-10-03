@@ -65,7 +65,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   calendarTempData = [];
   locale = 'vi';
   fields: Object;
-  calendarType: string;
+  calendarType = 'COT03';
   calendarTypes = [];
   resources = [];
 

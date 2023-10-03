@@ -1066,6 +1066,22 @@ export class CodxCmService {
       [insID, stepID]
     );
   }
+  getListStatusCode(data) {
+    return this.api.exec<any>(
+      'CM',
+      'StatusCodesBusiness',
+      'GetListStatusCodeCategoryAsync',
+      data
+    );
+  }
+  checkStatusCode(data) {
+    return this.api.exec<any>(
+      'CM',
+      'StatusCodesBusiness',
+      'IsCheckStatusCodeInUseAsync',
+      data
+    );
+  }
 
   getListUserByBUID(data) {
     return this.api.exec<any>(

@@ -36,8 +36,13 @@ export class CodxViewTaskComponent implements OnInit {
   isUpdateProgressStep = false;
   instanceStep: DP_Instances_Steps;
   isActivitie = false;
-  //#endregion
+  customerName: string;
+  dealName: string;
+  contractName: string;
+  leadName: string;
 
+  //#endregion
+  groupTask;
   title = ''; // tiêu đề
   dataView: any; // data hien thi
   owner = []; //role type O
@@ -93,6 +98,10 @@ export class CodxViewTaskComponent implements OnInit {
     this.listRefIDAssign = dt?.data?.listRefIDAssign; // a thảo truyền để lấy listRef của cong việc
     this.sessionID = dt?.data?.sessionID; // session giao việc
     this.formModelAssign = dt?.data?.formModelAssign; // formModel của giao việc
+    this.customerName = dt?.data?.customerName;
+    this.dealName = dt?.data?.dealName;
+    this.contractName = dt?.data?.contractName;
+    this.leadName = dt?.data?.leadName;
 
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
@@ -140,9 +149,10 @@ export class CodxViewTaskComponent implements OnInit {
         .subscribe(async (res) => {
           if (res) {
             this.instanceStep = res;
-            this.isOnlyView =
-              this.instanceStep?.stepStatus == '1' ? true : false;
-            // this.checkRole();
+            this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
+            if(!["P","G"].includes(this.type)){
+              this.groupTask = this.instanceStep?.taskGroups.find(group => group.refID == this.dataInput?.taskGroupID)
+            }
           }
           await this.setDataView();
           this.settingData();
@@ -151,6 +161,9 @@ export class CodxViewTaskComponent implements OnInit {
     } else {
       await this.setDataView();
       this.settingData();
+      if(!["P","G"].includes(this.type)){
+        this.groupTask = this.instanceStep?.taskGroups.find(group => group.refID == this.dataInput?.taskGroupID)
+      }
       this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
       this.isUpdateProgressGroup =
         this.instanceStep?.progressTaskGroupControl || false;
