@@ -181,6 +181,7 @@ import { PopupAddLineTableComponent } from './components/codx-input-custom-field
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
 import { CodxDateComponent } from './components/codx-date/codx-date.component';
 import { CodxCommonModule } from 'projects/codx-common/src/public-api';
+import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -353,6 +354,8 @@ const T_Component: Type<any>[] = [
   CodxView2Component,
 ];
 
+const T_Pipe: Type<any>[] = [FormatDataValuePipe];
+
 @NgModule({
   declarations: [
     T_Component,
@@ -370,8 +373,9 @@ const T_Component: Type<any>[] = [
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
     CodxDateComponent,
+    T_Pipe,
   ],
-  exports: [T_Component, CodxCommonModule],
+  exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [
     CommonModule,
     NgbModule,

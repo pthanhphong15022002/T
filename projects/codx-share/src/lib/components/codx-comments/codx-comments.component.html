@@ -2,61 +2,51 @@
     <ng-container *ngIf="new;else view">
         <div class="d-flex align-items-top">
             <div class="me-2 w-35px">
-                <codx-img [objectId]="user.userID" [objectName]="user.userName" [referType]="'avt'" objectType="AD_Users" [width]="35"></codx-img>
+                <codx-img [objectId]="user.userID" [objectName]="user.userName" [referType]="'avt'"
+                    objectType="AD_Users" [width]="35"></codx-img>
             </div>
             <div class="w-100">
                 <div class="d-flex align-items-center">
                     <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComment()">
-                        <codx-input 
-                            type="text" 
-                            placeholder="Trả lời" 
-                            [crrValue]="data.contents" 
+                        <codx-input type="text" placeholder="Trả lời" [crrValue]="data.contents"
                             (valueChange)="valueChange($event)">
                         </codx-input>
                         <div class="feed-icon btn-send">
-                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="uploadFile()">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="uploadFile()">
                                 <span class="icon-attach_file icon-18"></span>
                             </span>
-                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary " (click)="sendComment()">
+                            <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary "
+                                (click)="sendComment()">
                                 <span class="icon-send icon-18"></span>
                             </span>
                         </div>
                     </div>
                 </div>
-                <codx-attachment #codxATM 
-                    [functionID]="funcID" 
-                    [objectType]="'WP_Comments'" 
-                    [hideFolder]="'1'"
-                    [hideUploadBtn]="'1'" 
-                    [hideDes]="'1'" 
-                    [type]="'inline'" 
-                    [allowMultiFile]="'0'"
-                    [hideImageUpload]="'1'" 
-                    [hideBtnSave]="'1'" 
-                    [hideImageThumb]="'1'" 
-                    [showMessage]="'0'"
+                <codx-attachment #codxATM [functionID]="funcID" [objectType]="'WP_Comments'" [hideFolder]="'1'"
+                    [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" [allowMultiFile]="'0'"
+                    [hideImageUpload]="'1'" [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'"
                     (fileCount)="selectFile($event)">
                 </codx-attachment>
                 <ng-container *ngIf="file">
                     <div class="d-flex py-2 position-relative w-fit-content" style="width: fit-content;">
                         <div class="me-3 cursor-pointer">
                             <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
-                                <img [src]="file.source" alt="" class="w-200px h-auto rounded" >
+                                <img [src]="file.source" alt="" class="w-200px h-auto rounded">
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.VIDEO">
                                 <video controls class="w-200px h-auto rounded" [src]="file.source | safe:'resourceUrl'">
                                 </video>
                             </ng-container>
                             <ng-container *ngIf="file.referType == REFERTYPE.APPLICATION">
-                                <codx-temp-full 
-                                    imageSrc="{{file.extension | avtFile}}" 
-                                    imgCss="w-20px me-3 cursor-pointer"
-                                    title="{{file.fileName}}" [descLine]="1">
+                                <codx-temp-full imageSrc="{{file.extension | avtFile}}"
+                                    imgCss="w-20px me-3 cursor-pointer" title="{{file.fileName}}" [descLine]="1">
                                 </codx-temp-full>
                             </ng-container>
                         </div>
                         <div class="remove-file">
-                            <button type="button" href="javascript:void(0)" class="btn btn-icon btn-circle btn-sm btn-light-danger" (click)="removeFile()">
+                            <button type="button" href="javascript:void(0)"
+                                class="btn btn-icon btn-circle btn-sm btn-light-danger" (click)="removeFile()">
                                 <i class="icon-close icon-16"></i>
                             </button>
                         </div>
@@ -75,12 +65,8 @@
 <ng-template #view>
     <div class="d-flex align-items-top mt-4">
         <div class="me-3">
-            <codx-img 
-                [objectId]="data.createdBy" 
-                [objectName]="data.createdName" 
-                [referType]="'avt'" 
-                objectType="AD_Users" 
-                [width]="35">
+            <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" [referType]="'avt'"
+                objectType="AD_Users" [width]="35">
             </codx-img>
         </div>
         <div class="comment-like">
@@ -88,7 +74,8 @@
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <div class="d-flex align-items-center">
                         <a href="javascript:void(0)" class="text-dark fw-bold">{{data.createdName}}</a>
-                        <span class="ms-2 text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">{{data.createdOn | timefrom}}</span>
+                        <span class="ms-2 text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">{{data.createdOn |
+                            pTimeFrom}}</span>
                     </div>
                     <ng-container *ngIf="data.createdBy == user.userID">
                         <div class="more">
@@ -126,12 +113,8 @@
                 <ng-container *ngIf="data.totalVote > 0">
                     <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
                         <div *ngFor="let voteType of data.listVoteType">
-                            <codx-vll 
-                                name="L1480" 
-                                [value]="voteType" 
-                                [path]="'assets/themes/wp/default/img/'"
-                                [showIcon]="true" 
-                                [icoCss]="'w-15px h-15px'">
+                            <codx-vll name="L1480" [value]="voteType" [path]="'assets/themes/wp/default/img/'"
+                                [showIcon]="true" [icoCss]="'w-15px h-15px'">
                             </codx-vll>
                         </div>
                         <div>
@@ -144,28 +127,27 @@
                 <div class="d-flex my-3" (click)="clickViewFile(file)">
                     <ng-container *ngIf="file">
                         <ng-container *ngIf="file.referType == REFERTYPE.IMAGE">
-                            <img [src]="file.source" class="w-200px h-auto rounded"/>
+                            <img [src]="file.source" class="w-200px h-auto rounded" />
                         </ng-container>
                         <ng-container *ngIf="file.referType == REFERTYPE.VIDEO">
-                            <video controls [autoplay]="false" class="w-200px h-100px rounded" [src]="file.source | safe:'resourceUrl'">
+                            <video controls [autoplay]="false" class="w-200px h-100px rounded"
+                                [src]="file.source | safe:'resourceUrl'">
                             </video>
                         </ng-container>
                         <ng-container *ngIf="file.referType == REFERTYPE.APPLICATION">
-                            <codx-temp-full 
-                                [imageSrc]="file.extension | avtFile"
-                                imgCss="w-20px me-3 cursor-pointer" 
-                                [title]="file.fileName" 
-                                [descLine]="1">
+                            <codx-temp-full [imageSrc]="file.extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
+                                [title]="file.fileName" [descLine]="1">
                             </codx-temp-full>
                         </ng-container>
-                    </ng-container>  
+                    </ng-container>
                 </div>
             </ng-container>
             <div class="d-flex justify-content-between align-items-center ms-1">
                 <div class="d-flex flex-grow-1 fs-7">
                     <div class="btn-like delay-500 me-3">
                         <div *ngIf="!data.myVoteType;else dataMyVoted">
-                            <div class="d-flex align-items-center justify-content-center text-hover-primary" (click)="dbLikePost(data)">
+                            <div class="d-flex align-items-center justify-content-center text-hover-primary"
+                                (click)="dbLikePost(data)">
                                 <span class="text-gray-600">
                                     <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                                     </codx-label>
@@ -175,22 +157,20 @@
                         <div class="d-flex mod icon-like">
                             <ng-container *ngFor="let item of vllL1480">
                                 <a class="mod-icon" (click)="votePost(data, item.value)">
-                                        <codx-vll 
-                                            name="L1480" 
-                                            [value]="item.value" 
-                                            [path]="'assets/themes/wp/default/img/'"
-                                            [showIcon]="true" 
-                                            [icoCss]="'w-20px h-20px'">
-                                        </codx-vll>
-                                    </a>
+                                    <codx-vll name="L1480" [value]="item.value" [path]="'assets/themes/wp/default/img/'"
+                                        [showIcon]="true" [icoCss]="'w-20px h-20px'">
+                                    </codx-vll>
+                                </a>
                             </ng-container>
                         </div>
                         <ng-template #dataMyVoted>
-                            <div (click)="votePost(data, data.myVoteType)" class="d-flex align-items-center justify-content-center text-hover-primary">
+                            <div (click)="votePost(data, data.myVoteType)"
+                                class="d-flex align-items-center justify-content-center text-hover-primary">
                                 <!-- <span [style.color]="data.myVoteType | vll:'L1480':'textColor' | async">
                                     {{data.myVoteType | vll:'L1480':'text' | async}}
                                 </span> -->
-                                <codx-vll [name]="'L1480'" [value]="data.myVoteType" [showText]="true" [showBgColor]="true"></codx-vll>
+                                <codx-vll [name]="'L1480'" [value]="data.myVoteType" [showText]="true"
+                                    [showBgColor]="true"></codx-vll>
                             </div>
                         </ng-template>
                     </div>
@@ -198,7 +178,7 @@
                         <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
                     </span>
                 </div>
-                
+
             </div>
         </div>
     </div>

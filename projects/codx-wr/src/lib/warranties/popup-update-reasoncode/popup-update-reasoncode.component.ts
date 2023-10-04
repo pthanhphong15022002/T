@@ -17,6 +17,7 @@ import {
 import { WR_WorkOrderUpdates } from '../../_models-wr/wr-model.model';
 import { CodxWrService } from '../../codx-wr.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-update-reasoncode',
