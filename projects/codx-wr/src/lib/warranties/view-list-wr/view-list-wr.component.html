@@ -141,14 +141,14 @@
       </div>
     </div>
 
-    <div
-      class="w-200px min-w-200px pe-6 d-flex flex-column"
-      [style.height]="checkHover(data?.recID) ? '40px' : 'auto'"
-      [ngClass]="
-        checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
-      "
-    >
-      <div class="mb-1">
+    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
+      <div
+        class="mb-1"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+        "
+      >
         <codx-label
           style="white-space: nowrap"
           class="text-danger d-inline-block me-1"
@@ -161,15 +161,22 @@
           "
           [id]="data.recID"
           [ngbPopover]="data?.problem"
-          #p1="ngbPopover"
+          [style.height]="'auto'"
+          #blem="ngbPopover"
           [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, p1, data, 'problem')"
-          (mouseleave)="p1.close()"
-          placement="bottom right top"
+          (mouseenter)="PopoverDetail($event, blem, data, 'problem')"
+          (mouseleave)="blem.close()"
+          placement="right bottom  top"
           [popoverClass]="data.recID"
         ></span>
       </div>
-      <div class="mb-1 line-clamp line-clamp-2">
+      <div
+        class="mb-1"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+        "
+      >
         <codx-label
           style="white-space: nowrap"
           class="text-primary d-inline-block me-1"
@@ -177,13 +184,27 @@
           [formModel]="formModel"
         ></codx-label>
         <span
-          [ngbTooltip]="data?.currentState"
+          [id]="data.recID"
+          [ngbPopover]="data?.currentState"
+          [style.height]="'auto'"
+          #state="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
+          (mouseleave)="state.close()"
+          placement="bottom right top"
+          [popoverClass]="data.recID"
           [innerHTML]="
             data.currentState | formatvalue : formModel : 'CurrentState' | async
           "
         ></span>
       </div>
-      <div class="mb-1 line-clamp line-clamp-3">
+      <div
+        class="mb-1"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+        "
+      >
         <codx-label
           style="white-space: nowrap"
           class="text-warning d-inline-block me-1"
@@ -191,7 +212,15 @@
           [formModel]="formModel"
         ></codx-label>
         <span
-          [ngbTooltip]="data?.comment"
+          [id]="data.recID"
+          [ngbPopover]="data?.comment"
+          [style.height]="'auto'"
+          #comment="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, comment, data, 'comment')"
+          (mouseleave)="comment.close()"
+          placement="bottom right top"
+          [popoverClass]="data.recID"
           [innerHTML]="
             data.comment | formatvalue : formModel : 'Comment' | async
           "
