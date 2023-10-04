@@ -196,7 +196,7 @@
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
   <!-- trường nhập liệu -->
-  <div *ngIf="type != 'G'">
+  <div *ngIf="type != 'G' && !isActivitie">
     <codx-label
       class="fw-bold text-dark"
       fiedName=""
@@ -235,8 +235,8 @@
     <p [innerHTML]="dataView?.memo"></p>
   </div>
   <!-- Công việc -->
-  <hr *ngIf="type == 'P'" />
-  <div *ngIf="type == 'P'">
+  <hr *ngIf="type == 'P' && !isActivitie" />
+  <div *ngIf="type == 'P' && !isActivitie">
     <div>
       <codx-label
         class="fs-5"
@@ -264,8 +264,8 @@
     </div>
   </div>
   <!-- công việc liên kết -->
-  <hr *ngIf="type !== 'P'" />
-  <div *ngIf="type !== 'P'">
+  <hr *ngIf="type !== 'P'  && !isActivitie" />
+  <div *ngIf="type !== 'P'  && !isActivitie">
     <codx-label
       *ngIf="type !== 'G'"
       class="fs-6 fw-bold me-3"
@@ -303,7 +303,7 @@
   <hr />
   <div
     class="d-flex justify-content-start"
-    *ngIf="type !== 'G' && type !== 'P'"
+    *ngIf="type !== 'G' && type !== 'P' && !isActivitie"
   >
     <div class="mt-2">
       <codx-label
