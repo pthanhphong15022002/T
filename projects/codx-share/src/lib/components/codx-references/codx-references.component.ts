@@ -4,19 +4,10 @@ import {
   Component,
   Input,
   OnInit,
-  Optional,
   ViewChild,
 } from '@angular/core';
-import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
-  DialogData,
-  DialogRef,
-  FormModel,
-} from 'codx-core';
-import { AttachmentComponent } from '../attachment/attachment.component';
-import { tmpReferences } from '../../models/assign-task.model';
+import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-references',
@@ -48,7 +39,7 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
   // @Input() refType: any;
   // refIDCrr: any;
   // loaded = false;
-   dataCrrChange :any
+  dataCrrChange: any;
 
   constructor(
     private cache: CacheService,
@@ -63,7 +54,7 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
       this.loaded = true;
       this.changeDetectorRef.detectChanges();
     }
-   
+
     // if (changes['refID']) {
     //   if (changes['refID'].currentValue === this.refIDCrr) return;
     //   this.refIDCrr = changes['refID'].currentValue;

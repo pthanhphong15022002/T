@@ -25,7 +25,7 @@ import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 imports: [NgbRatingModule];
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import {
   FileInfo,
   FileUpload,
@@ -206,9 +206,10 @@ export class PropertiesComponent implements OnInit {
   }
 
   getThumbnail(data) {
-    if(data.thumbnail)
-      return environment.urlUpload + '/' + data.thumbnail;
-    return `../../../assets/themes/dm/default/img/` + this.getAvatar(data.extension);
+    if (data.thumbnail) return environment.urlUpload + '/' + data.thumbnail;
+    return (
+      `../../../assets/themes/dm/default/img/` + this.getAvatar(data.extension)
+    );
   }
 
   getAvatar(filename: string) {

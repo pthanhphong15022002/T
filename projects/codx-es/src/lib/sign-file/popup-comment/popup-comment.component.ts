@@ -14,7 +14,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-comment',
@@ -69,8 +69,8 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    switch(this.mode){
-      case '5':{
+    switch (this.mode) {
+      case '5': {
         if (this.funcControl == '3' && this.result.comment == '') {
           let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
           this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
@@ -78,7 +78,7 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
         }
         break;
       }
-      case '2':{
+      case '2': {
         if (this.funcControl == '3' && this.result.comment == '') {
           let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
           this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
@@ -86,7 +86,7 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
         }
         break;
       }
-      case '4':{
+      case '4': {
         if (this.funcControl == '3' && this.result.comment == '') {
           let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
           this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');

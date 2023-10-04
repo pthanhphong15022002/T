@@ -5,55 +5,26 @@
         <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="30">
         </codx-img>
       </div>
-      <div
-        class="position-relative cmt feed-box cmt-cmt c3 w-100"
-        (keyup.enter)="sendComments($event)"
-      >
-        <codx-input
-          [attr.noenter]="1"
-          type="text"
-          placeholder="Trả lời"
-          [crrValue]="message"
-          (valueChange)="valueChange($event)"
-        >
+      <div class="position-relative cmt feed-box cmt-cmt c3 w-100" (keyup.enter)="sendComments($event)">
+        <codx-input [attr.noenter]="1" type="text" placeholder="Trả lời" [crrValue]="message"
+          (valueChange)="valueChange($event)">
         </codx-input>
         <div class="feed-icon btn-send">
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="openPopupComment()"
-          >
+          <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" (click)="openPopupComment()">
             <i class="icon-open_in_new icon-18 text-gray-600"></i>
           </span>
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="uploadFile()"
-          >
+          <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" (click)="uploadFile()">
             <i class="icon-attach_file icon-18 text-gray-600"></i>
           </span>
-          <span
-            class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary"
-            (click)="sendComments($event)"
-          >
+          <span class="btn btn-icon btn-sm px-0 text-dark-50 text-hover-primary" (click)="sendComments($event)">
             <i class="icon-send icon-18"></i>
           </span>
         </div>
       </div>
     </div>
-    <codx-attachment
-      #codxATM
-      [functionID]="funcID"
-      [objectType]="'BG_Comments'"
-      [hideFolder]="'1'"
-      [hideUploadBtn]="'1'"
-      [hideDes]="'1'"
-      [type]="'inline'"
-      [allowMultiFile]="'0'"
-      [hideImageUpload]="'1'"
-      [hideBtnSave]="'1'"
-      [hideImageThumb]="'1'"
-      [showMessage]="'0'"
-      (fileCount)="selectedFiles($event)"
-    >
+    <codx-attachment #codxATM [functionID]="funcID" [objectType]="'BG_Comments'" [hideFolder]="'1'"
+      [hideUploadBtn]="'1'" [hideDes]="'1'" [type]="'inline'" [allowMultiFile]="'0'" [hideImageUpload]="'1'"
+      [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'" (fileCount)="selectedFiles($event)">
     </codx-attachment>
     <ng-container *ngIf="files">
       <div class="d-flex position-relative ms-10">
@@ -65,22 +36,14 @@
             <video [src]="files.source" class="w-100px h-100px"></video>
           </ng-container>
           <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
-            <codx-temp-full
-              [imageSrc]="files.extension | avtFile"
-              imgCss="w-20px me-3 cursor-pointer"
-              [title]="files.fileName"
-              [descLine]="1"
-            >
+            <codx-temp-full [imageSrc]="files.extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
+              [title]="files.fileName" [descLine]="1">
             </codx-temp-full>
           </ng-container>
         </div>
         <div class="remove-file">
-          <button
-            type="button"
-            href="javascript:void(0)"
-            class="btn btn-icon btn-sm btn-light-danger"
-            (click)="removeFile()"
-          >
+          <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger"
+            (click)="removeFile()">
             <i class="icon-close icon-18"></i>
           </button>
         </div>
@@ -92,26 +55,17 @@
   <div class="d-flex" *ngIf="data">
     <div class="d-flex w-100">
       <div class="me-3">
-        <codx-img
-          [objectId]="data.createdBy"
-          [referType]="'avt'"
-          objectType="AD_Users"
-          [imageType]="'circle'"
-          [width]="30"
-        >
+        <codx-img [objectId]="data.createdBy" [referType]="'avt'" objectType="AD_Users" [imageType]="'circle'"
+          [width]="30">
         </codx-img>
       </div>
       <div class="w-100 footer-comt">
-        <div
-          class="d-flex justify-content-between align-items-center flex-wrap"
-        >
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center">
               <span class="fw-bold">{{ data.createdName }}</span>
-              <span
-                class="text-gray-400 fw-normal flex-grow-1 fs-7 ms-2"
-                data-toggle="tooltip"
-                >{{ data.createdOn | timefrom }}
+              <span class="text-gray-400 fw-normal flex-grow-1 fs-7 ms-2" data-toggle="tooltip">{{ data.createdOn |
+                pTimeFrom }}
               </span>
             </div>
             <ng-container *ngIf="data.comment">
@@ -120,37 +74,25 @@
                   {{data.comment | maxlenght:300}}
                 </span>
                 <ng-container *ngIf="data.comment.length > 300">
-                  <span class="cursor-pointer fw-bold font-italic" (click)="openPopupComment(data.comment)">xem thêm</span>
+                  <span class="cursor-pointer fw-bold font-italic" (click)="openPopupComment(data.comment)">xem
+                    thêm</span>
                 </ng-container>
               </div>
-              
+
             </ng-container>
           </div>
           <ng-container *ngIf="allowEdit && user.userID == data.createdBy">
             <div class="more">
               <div ngbDropdown class="dropdown">
-                <a
-                  href="javascript:void(0)"
-                  class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                  ngbDropdownToggle
-                  id="dropdownMenuButton1"
-                  aria-expanded="false"
-                >
+                <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
+                  ngbDropdownToggle id="dropdownMenuButton1" aria-expanded="false">
                   <i class="fas fa-ellipsis-h"></i>
                 </a>
                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                   <li>
-                    <a
-                      ngbDropdownItem
-                      href="javascript:void(0)"
-                      (click)="deleteComment(data)"
-                    >
+                    <a ngbDropdownItem href="javascript:void(0)" (click)="deleteComment(data)">
                       <span class="icon-close text-danger icon-16 me-2"></span>
-                      <codx-label
-                        [formModel]=""
-                        name="lblDelete_comments"
-                        default="Xóa"
-                      >
+                      <codx-label [formModel]="" name="lblDelete_comments" default="Xóa">
                       </codx-label>
                     </a>
                   </li>
@@ -160,15 +102,9 @@
           </ng-container>
         </div>
         <ng-container *ngIf="allowEdit && data.totalVote > 0">
-          <div
-            class="flex align-items-center mt-2 comment-thumb"
-            (click)="showVotes(data)"
-          >
+          <div class="flex align-items-center mt-2 comment-thumb" (click)="showVotes(data)">
             <div *ngFor="let vote of data.listVoteType">
-              <img
-                src="/assets/themes/wp/default/img/{{ dVll[vote]?.icon }}"
-                style="width: 15px; height: 15x"
-              />
+              <img src="/assets/themes/wp/default/img/{{ dVll[vote]?.icon }}" style="width: 15px; height: 15x" />
             </div>
             <div>
               <span class="ms-2">{{ data.totalVote }}</span>
@@ -178,39 +114,24 @@
         <ng-container *ngIf="files">
           <div class="d-flex position-relative ms-10">
             <div class="" (click)="clickViewFile(files)">
-              <ng-container
-                *ngIf="
+              <ng-container *ngIf="
                   files.referType == REFERTYPE.IMAGE ||
                   files.referType == REFERTYPE.VIDEO
-                "
-              >
-                <codx-img
-                  [objectId]="data.recID"
-                  [objectType]="'BG_Comments'"
-                  imageType="square"
-                  [width]="100"
-                  [referType]="files.referType"
-                >
+                ">
+                <codx-img [objectId]="data.recID" [objectType]="'BG_Comments'" imageType="square" [width]="100"
+                  [referType]="files.referType">
                 </codx-img>
               </ng-container>
               <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
-                <codx-temp-full
-                  [imageSrc]="files.extension | avtFile"
-                  imgCss="w-20px me-3 cursor-pointer"
-                  [title]="files.fileName"
-                  [descLine]="1"
-                >
+                <codx-temp-full [imageSrc]="files.extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
+                  [title]="files.fileName" [descLine]="1">
                 </codx-temp-full>
               </ng-container>
             </div>
             <ng-container *ngIf="allowEdit">
               <div class="remove-file">
-                <button
-                  type="button"
-                  href="javascript:void(0)"
-                  class="btn btn-icon btn-sm btn-light-danger"
-                  (click)="removeFile()"
-                >
+                <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger"
+                  (click)="removeFile()">
                   <i class="icon-close icon-18"></i>
                 </button>
               </div>
@@ -223,13 +144,8 @@
               <span class="text-gray-600 fw-bold text-hover-underline me-3">
                 <div class="btn-like delay-500">
                   <div *ngIf="data.myVoted; else noVote">
-                    <div
-                      class="d-flex align-items-center justify-content-center text-hover-primary"
-                    >
-                      <span
-                        class="fw-bold ms-2"
-                        [style.color]="dVll[data.myVoteType]?.textColor"
-                      >
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
+                      <span class="fw-bold ms-2" [style.color]="dVll[data.myVoteType]?.textColor">
                         {{ dVll[data.myVoteType]?.text }}
                       </span>
                     </div>
@@ -237,37 +153,22 @@
                   <div class="d-flex mod icon-like">
                     <ng-container *ngFor="let item of vllIcon">
                       <a class="mod-icon" (click)="votePost(data, item.value)">
-                        <img
-                          src="/assets/themes/wp/default/img/{{ item.icon }}"
-                          alt="Kiwi standing on oval"
-                      /></a>
+                        <img src="/assets/themes/wp/default/img/{{ item.icon }}" alt="Kiwi standing on oval" /></a>
                     </ng-container>
                   </div>
                   <ng-template #noVote>
-                    <div
-                      class="d-flex align-items-center justify-content-center text-hover-primary"
-                    >
+                    <div class="d-flex align-items-center justify-content-center text-hover-primary">
                       <span class="fw-bold text-gray-600">
-                        <codx-label
-                          formName="WP_Comments"
-                          name="lblLike"
-                          default="Thích"
-                        >
+                        <codx-label formName="WP_Comments" name="lblLike" default="Thích">
                         </codx-label>
                       </span>
                     </div>
                   </ng-template>
                 </div>
               </span>
-              <span
-                class="d-flex align-items-center text-gray-600 fw-bold text-hover-underline"
-                (click)="replyTo(data)"
-              >
-                <codx-label
-                  formName="WPW_Comments"
-                  name="lblReply"
-                  default="Trả lời"
-                >
+              <span class="d-flex align-items-center text-gray-600 fw-bold text-hover-underline"
+                (click)="replyTo(data)">
+                <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời">
                 </codx-label>
               </span>
             </div>
@@ -280,39 +181,35 @@
 
 
 <ng-template #popupComment let-dialog>
-<div class="popup">
-  <div class="popup-header">
-    <div class="popup-header_title">
-      <h3>Bình luận</h3>
+  <div class="popup">
+    <div class="popup-header">
+      <div class="popup-header_title">
+        <h3>Bình luận</h3>
+      </div>
+      <div class="popup-header_close">
+        <button (click)="dialog.close()" type="button"
+          class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
+          <span class="icon-close icon-18"></span>
+        </button>
+      </div>
+
     </div>
-    <div class="popup-header_close">
-      <button (click)="dialog.close()" type="button" class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
-        <span class="icon-close icon-18"></span>
+    <div class="popup-body">
+      <codx-input type="textarea" format="ed2" copyStyle="plainText" placeholder="Nhập bình luận"
+        class="text-justify border-none h-100 overflow-auto" [crrValue]="content"
+        (valueChange)="valuePopupChange($event)">
+      </codx-input>
+    </div>
+    <div class="popup-footer" *ngIf="new;else templateView">
+      <button class="popup-footer_button btn btn-primary" (click)="sendCommentPopup(dialog)">
+        Gửi
       </button>
     </div>
-    
+    <ng-template #templateView>
+      <button *ngIf="data.createdBy == user.userID" class="popup-footer_button btn btn-primary"
+        (click)="sendCommentPopup(dialog)">
+        Chỉnh sửa
+      </button>
+    </ng-template>
   </div>
-  <div class="popup-body">
-    <codx-input
-      type="textarea"
-      format="ed2"
-      copyStyle="plainText"
-      placeholder="Nhập bình luận"
-      class="text-justify border-none h-100 overflow-auto"
-      [crrValue]="content"
-      (valueChange)="valuePopupChange($event)"
-    >
-    </codx-input>
-  </div>
-  <div class="popup-footer" *ngIf="new;else templateView">
-    <button class="popup-footer_button btn btn-primary" (click)="sendCommentPopup(dialog)">
-      Gửi
-    </button>
-  </div>
-  <ng-template #templateView>
-    <button *ngIf="data.createdBy == user.userID" class="popup-footer_button btn btn-primary" (click)="sendCommentPopup(dialog)">
-      Chỉnh sửa
-    </button>
-  </ng-template>
-</div>
 </ng-template>

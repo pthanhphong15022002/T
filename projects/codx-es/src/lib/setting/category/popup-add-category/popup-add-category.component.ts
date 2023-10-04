@@ -33,7 +33,6 @@ import {
 } from 'codx-core';
 import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { SettingAlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
 //import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
@@ -74,7 +73,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   type: string;
   parentRecID: string;
   oldRecID: string;
-  isES=false;
+  isES = false;
   //test to update signtype for all step
   isChangeSignatureType: boolean = false;
   signatureType: string;
@@ -85,8 +84,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   dataType = ''; //Anh Thao thêm để lấy data khi không có dataService --sau nay nếu sửa thì báo anh Thảo với!! Thank - Huế ngày 14/04/2023
   signFileFM: FormModel;
   curUser: any;
-  sfTemplates=[];
-  vllShare=null;//vll list Approver
+  sfTemplates = [];
+  vllShare = null; //vll list Approver
   tabInfo = [
     {
       icon: 'icon-info',
@@ -218,7 +217,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
             if (this.settingDataValue) {
-              let lstTrueFalse = ['AllowEditAreas','allowEditAreas'];
+              let lstTrueFalse = ['AllowEditAreas', 'allowEditAreas'];
               for (const key in this.settingDataValue) {
                 let fieldName = key.charAt(0).toLowerCase() + key.slice(1);
                 this.data[fieldName] = this.settingDataValue[key];
@@ -236,7 +235,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   fieldName: this.data[fieldName],
                 });
               }
-              this.cr.detectChanges();              
+              this.cr.detectChanges();
             }
           }
           this.esService
@@ -259,16 +258,17 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     );
 
     if (!this.isAdd) {
-      if(!this.form?.formGroup){
-        this.esService.getFormGroup(this.formModel.formName,this.formModel.gridViewName).then(fg=>{
-          if(fg){
-            this.form.formGroup=fg;
-            this.form?.formGroup.patchValue(this.data);
-            this.cr.detectChanges;
-          }
-        })
-      }
-      else{
+      if (!this.form?.formGroup) {
+        this.esService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.form.formGroup = fg;
+              this.form?.formGroup.patchValue(this.data);
+              this.cr.detectChanges;
+            }
+          });
+      } else {
         this.form?.formGroup.patchValue(this.data);
         this.cr.detectChanges;
       }
@@ -455,17 +455,19 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  getSFTemplate(){
-    this.esService.getSFTemplate(this.data.categoryID,this.data.category).subscribe(res=>{
-      if(res){
-        this.sfTemplates= res;
-        this.cr.detectChanges();
-      }
-    });
+  getSFTemplate() {
+    this.esService
+      .getSFTemplate(this.data.categoryID, this.data.category)
+      .subscribe((res) => {
+        if (res) {
+          this.sfTemplates = res;
+          this.cr.detectChanges();
+        }
+      });
   }
-  getNewSFModel(){
-    this.esService.getTemplateOfCategory(null).subscribe(res=>{
-      if(res){
+  getNewSFModel() {
+    this.esService.getTemplateOfCategory(null).subscribe((res) => {
+      if (res) {
         this.sfModel = res;
         this.cr.detectChanges();
       }
@@ -496,7 +498,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           isAdd: true,
           isSaveNew: '1',
           //disableAssignRule: true,
-          autoAssignRule:this.data?.autoAssignRule,
+          autoAssignRule: this.data?.autoAssignRule,
         },
         '',
         { isFull: true } as any
@@ -506,11 +508,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           this.isAddAutoNumber = true;
           this.setViewAutoNumber(res.event);
           this.data.autoNumber = this.data.categoryID ?? this.data.recID;
-          this.data.autoAssignRule = res?.event?.autoAssignRule !=null? res?.event?.autoAssignRule : this.data.autoAssignRule;
-          this.form.formGroup.patchValue({ 
+          this.data.autoAssignRule =
+            res?.event?.autoAssignRule != null
+              ? res?.event?.autoAssignRule
+              : this.data.autoAssignRule;
+          this.form.formGroup.patchValue({
             autoNumber: this.data.autoNumber,
-            autoAssignRule:this.data.autoAssignRule,
-          });          
+            autoAssignRule: this.data.autoAssignRule,
+          });
         }
       });
     } else {
@@ -527,18 +532,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           isAdd: false,
           description: this.formModel?.entityName,
           //disableAssignRule: true,
-          autoAssignRule:this.data?.autoAssignRule,
+          autoAssignRule: this.data?.autoAssignRule,
         }
       );
       popupAutoNum.closed.subscribe((res) => {
         if (res?.event) {
           this.setViewAutoNumber(res.event);
           this.data.autoNumber = this.data.categoryID;
-          this.data.autoAssignRule = res?.event?.autoAssignRule !=null? res?.event?.autoAssignRule : this.data.autoAssignRule;          
-          this.form.formGroup.patchValue({ 
+          this.data.autoAssignRule =
+            res?.event?.autoAssignRule != null
+              ? res?.event?.autoAssignRule
+              : this.data.autoAssignRule;
+          this.form.formGroup.patchValue({
             autoNumber: this.data.autoNumber,
-            autoAssignRule:this.data.autoAssignRule,
-          });            
+            autoAssignRule: this.data.autoAssignRule,
+          });
         }
       });
     }
@@ -695,22 +703,22 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.esService.updateCategory(this.data).subscribe((res) => {
         if (res) {
           this.data = res;
-          this.addSFTemplate();          
+          this.addSFTemplate();
         }
       });
     }
   }
-  addSFTemplate(){
-    let option = new SidebarModel();    
+  addSFTemplate() {
+    let option = new SidebarModel();
     option.FormModel = this.signFileFM;
     let sfDialog = new DialogModel();
     sfDialog.IsFull = true;
-    let isAdd = true ;
-    let title =  "Thêm mới";
-    let sfData = {...this.sfModel};          
-    this.getNewSFModel();//Lấy model cho lần thêm mới tiếp theo 
-    sfData.category=this.data.category;
-    sfData.categoryID=this.data.categoryID; 
+    let isAdd = true;
+    let title = 'Thêm mới';
+    let sfData = { ...this.sfModel };
+    this.getNewSFModel(); //Lấy model cho lần thêm mới tiếp theo
+    sfData.category = this.data.category;
+    sfData.categoryID = this.data.categoryID;
     sfData.title = this.data?.categoryName;
     sfData.refType = this.isES ? 'ES_SignFiles' : this.data?.category;
     sfData.owner = this.authService?.userValue?.userID;
@@ -719,9 +727,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     sfData.approveControl = '3';
     sfData.buid = this.curUser?.buid;
     sfData.createdBy = this.authService?.userValue?.userID;
-    sfData.createdOn = new Date();                
-    
-    this.cr.detectChanges();  
+    sfData.createdOn = new Date();
+
+    this.cr.detectChanges();
     let dialogSF = this.callfunc.openForm(
       PopupAddSignFileComponent,
       title,
@@ -735,44 +743,45 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         option: option,
         disableCateID: true,
         isTemplate: true,
-        refType:sfData?.refType,
+        refType: sfData?.refType,
       },
       '',
       sfDialog
     );
-    dialogSF.closed.subscribe(res=>{
-      this.getSFTemplate();            
+    dialogSF.closed.subscribe((res) => {
+      this.getSFTemplate();
     });
   }
 
   closePopup() {
     this.dialog && this.dialog.close();
   }
-  templateMF(mfType:string, data:any){    
-    if(mfType!=null && data!=null){
-      switch(mfType){
+  templateMF(mfType: string, data: any) {
+    if (mfType != null && data != null) {
+      switch (mfType) {
         case 'delete':
-          this.esService.deleteSignFile(data?.recID).subscribe(res=>{
-            if(res){
-              this.sfTemplates = this.sfTemplates.filter(x=>x.recID!=data?.recID);
+          this.esService.deleteSignFile(data?.recID).subscribe((res) => {
+            if (res) {
+              this.sfTemplates = this.sfTemplates.filter(
+                (x) => x.recID != data?.recID
+              );
               this.notify.notifyCode('SYS008');
               this.cr.detectChanges();
-            }
-            else{
+            } else {
               this.notify.notifyCode('SYS022');
               return;
             }
-          })
+          });
           break;
         case 'edit':
-          let option = new SidebarModel();    
+          let option = new SidebarModel();
           option.FormModel = this.signFileFM;
           let sfDialog = new DialogModel();
           sfDialog.IsFull = true;
           let isAdd = false;
-          let title ='Chỉnh sửa';
-          let sfData = {...data}; 
-          this.cr.detectChanges();  
+          let title = 'Chỉnh sửa';
+          let sfData = { ...data };
+          this.cr.detectChanges();
           let dialogSF = this.callfunc.openForm(
             PopupAddSignFileComponent,
             title,
@@ -786,25 +795,24 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               option: option,
               disableCateID: true,
               isTemplate: true,
-              refType:sfData?.refType,
+              refType: sfData?.refType,
             },
             '',
             sfDialog
           );
-          dialogSF.closed.subscribe(res=>{
-            this.getSFTemplate();            
+          dialogSF.closed.subscribe((res) => {
+            this.getSFTemplate();
           });
-          break; 
+          break;
       }
-    }
-    else{
+    } else {
       this.notify.notifyCode('SYS001');
       return;
     }
   }
 
   // openPopupSignFile() {
-  //   let option = new SidebarModel();    
+  //   let option = new SidebarModel();
   //   option.FormModel = this.signFileFM;
   //   let isAddNew = false;
   //   this.esService

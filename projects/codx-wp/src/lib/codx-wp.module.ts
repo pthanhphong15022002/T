@@ -14,7 +14,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';

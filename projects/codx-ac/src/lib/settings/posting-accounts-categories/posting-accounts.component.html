@@ -1,0 +1,116 @@
+<codx-views class="ac-views" #view [views]="views" [button]="button" [autoLoad]="true" [entityName]="view.entityName"
+  (buttonClick)="toolBarClick($event)">
+</codx-views>
+<ng-template #templateLeft>
+  <div class="d-flex h-100 flex-column p-5">
+    <div class="flex-column-fluid">
+      <div class="tab-content">
+        <div class="tab-pane fade active show">
+          <div
+            class="menu menu-column menu-fit menu-rounded menu-title-gray-700 menu-icon-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 my-3">
+            <div class="menu-fit">
+              <div class="menu-item menu-accordion" [ngClass]="menuActive === '1' ? 'here show' : ''">
+                <span class="menu-link" (click)="clickMenu('1')">
+                  <span class="menu-icon">
+                    <span [class]="'1' | vll : 'AC058' : 'icon' | async"></span>
+                  </span>
+                  <span class="menu-title fw-bold">{{'1' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                  <div class="menu-item" *ngFor="let item of menuInventory">
+                    <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
+                      (click)="clickMenuItem(item.value)">
+                      <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                      </span>
+                      <span class="menu-title">
+                        {{ item.text }}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="menu-item menu-accordion" [ngClass]="menuActive === '2' ? 'here show' : ''">
+                <span class="menu-link" (click)="clickMenu('2')">
+                  <span class="menu-icon">
+                    <span [class]="'2' | vll : 'AC058' : 'icon' | async"></span>
+                  </span>
+                  <span class="menu-title fw-bold">{{'2' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                  <div class="menu-item" *ngFor="let item of menuPurchase">
+                    <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
+                      (click)="clickMenuItem(item.value)">
+                      <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                      </span>
+                      <span class="menu-title">
+                        {{ item.text }}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="menu-item menu-accordion" [ngClass]="menuActive === '3' ? 'here show' : ''">
+                <span class="menu-link" (click)="clickMenu('3')">
+                  <span class="menu-icon">
+                    <span [class]="'3' | vll : 'AC058' : 'icon' | async"></span>
+                  </span>
+                  <span class="menu-title fw-bold">{{'3' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                  <div class="menu-item" *ngFor="let item of menuSell">
+                    <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
+                      (click)="clickMenuItem(item.value)">
+                      <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                      </span>
+                      <span class="menu-title">
+                        {{ item.text }}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="menu-item menu-accordion" [ngClass]="menuActive === '4' ? 'here show' : ''">
+                <span class="menu-link" (click)="clickMenu('4')">
+                  <span class="menu-icon">
+                    <span [class]="'4' | vll : 'AC058' : 'icon' | async"></span>
+                  </span>
+                  <span class="menu-title fw-bold">{{'4' | vll : 'AC058' : 'text' | async}}</span>
+                  <span class="menu-arrow"></span>
+                </span>
+                <div class="menu-sub menu-sub-accordion">
+                  <div class="menu-item" *ngFor="let item of menuProduction">
+                    <a class="menu-link without-sub" [ngClass]="{active:item.value === postType}"
+                      (click)="clickMenuItem(item.value)">
+                      <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                      </span>
+                      <span class="menu-title">
+                        {{ item.text }}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateRight>
+  <ng-container *ngIf="view.formModel">
+    <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName" [templateMore]="morefunction"
+    [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0" [dataValues]="postType" ></codx-gridview-v2>
+  </ng-container>
+</ng-template>
+<ng-template #morefunction let-data>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" type="view"
+      (clickMF)="clickMF($event, data)"></codx-mfunc>
+</ng-template>

@@ -10,10 +10,10 @@ import {
   UrlUtil,
   ApiHttpService,
 } from 'codx-core';
-import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
+import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 
 @Injectable({
   providedIn: 'root',

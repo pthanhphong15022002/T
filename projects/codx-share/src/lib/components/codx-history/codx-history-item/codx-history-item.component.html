@@ -87,34 +87,20 @@
   <div class="position-relative pb-3 send-comt">
     <div class="d-flex">
       <div class="me-3">
-        <codx-vll
-          [value]="data.actionType"
-          name="SYS022"
-          [icoCss]="'w-30px iconHistory'"
-          [showIcon]="true"
-          [path]="'assets/themes/sys/default/img/'"
-        ></codx-vll>
+        <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+          [path]="'assets/themes/sys/default/img/'"></codx-vll>
       </div>
       <div class="d-flex w-100">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [imageType]="'circle'"
-            [width]="30"
-          >
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users"
+            [imageType]="'circle'" [width]="30">
           </codx-img>
         </div>
         <div class="w-100 footer-comt">
           <div class="">
-            <div
-              *ngIf="data.description"
-              class="m-0"
-              [innerHTML]="data.description"
-            ></div>
+            <div *ngIf="data.description" class="m-0" [innerHTML]="data.description"></div>
             <div *ngIf="data.createdOn" class="m-0 text-gray-400">
-              {{ data.createdOn | timefrom }}
+              {{ data.createdOn | pTimeFrom }}
             </div>
             <div *ngIf="!isNullOrEmpty(data.comment)" class="log-comment">
               <span>
@@ -130,31 +116,17 @@
               <!-- danh sách file đính kèm -->
               <ng-container *ngFor="let item of lstFile">
                 <div class="cursor-pointer" (click)="clickViewFile(item)">
-                  <ng-container
-                    *ngIf="
+                  <ng-container *ngIf="
                       item.referType == 'image' || item.referType == 'video';
                       else tmpFileDocument
-                    "
-                  >
-                    <codx-img
-                      [objectId]="data.recID"
-                      [objectType]="'BG_Comments'"
-                      imageType="square"
-                      [width]="100"
-                      [referType]="item.referType"
-                    >
+                    ">
+                    <codx-img [objectId]="data.recID" [objectType]="'BG_Comments'" imageType="square" [width]="100"
+                      [referType]="item.referType">
                     </codx-img>
                   </ng-container>
                   <ng-template #tmpFileDocument>
-                    <codx-temp-full
-                      [imageId]="data.recID"
-                      imageObjType="BG_Comments"
-                      [imageReferType]="item.fileType"
-                      [desc]="formatBytes(item.fileSize)"
-                      [title]="item.fileName"
-                      desc2=""
-                      [descLine]="1"
-                    >
+                    <codx-temp-full [imageId]="data.recID" imageObjType="BG_Comments" [imageReferType]="item.fileType"
+                      [desc]="formatBytes(item.fileSize)" [title]="item.fileName" desc2="" [descLine]="1">
                     </codx-temp-full>
                   </ng-template>
                 </div>
@@ -170,31 +142,18 @@
 <ng-template #N>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="w-100 d-flex align-items-top">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap">
-        <div
-          *ngIf="data.description"
-          class="w-100"
-          [innerHTML]="data.description"
-        ></div>
+        <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
         <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7 mb-1">
-          {{ data.createdOn | timefrom }}
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -204,38 +163,27 @@
 <ng-template #E>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="w-100 d-flex align-items-top">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class="w-100">
           <span *ngIf="data.description" [innerHTML]="data.description"></span>
           <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
-            <ng-container
-              *ngTemplateOutlet="
+            <ng-container *ngTemplateOutlet="
                 tmpViewEmployee;
                 context: { $implicit: data.sendToObjects }
-              "
-            >
+              ">
             </ng-container>
           </span>
         </div>
         <div class="text-gray-400 flex-grow-1 fs-7 mb-1" data-toggle="tooltip">
-          {{ data.createdOn | timefrom }}
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -245,41 +193,27 @@
 <ng-template #T>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex align-items-top w-100">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex flex-column">
         <div class="d-flex">
           <span *ngIf="data.description" [innerHTML]="data.description"></span>
           <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
-            <ng-container
-              *ngTemplateOutlet="
+            <ng-container *ngTemplateOutlet="
                 tmpViewEmployee;
                 context: { $implicit: data.sendToObjects }
-              "
-            >
+              ">
             </ng-container>
           </span>
         </div>
-        <div
-          class="text-gray-400 fw-normal flex-grow-1 fs-7"
-          data-toggle="tooltip"
-        >
-          {{ data.createdOn | timefrom }}
+        <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -289,41 +223,27 @@
 <ng-template #RE>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex align-items-top w-100">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class="w-100">
           <span *ngIf="data.description" [innerHTML]="data.description"></span>
           <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
-            <ng-container
-              *ngTemplateOutlet="
+            <ng-container *ngTemplateOutlet="
                 tmpViewEmployee;
                 context: { $implicit: data.sendToObjects }
-              "
-            >
+              ">
             </ng-container>
           </span>
         </div>
-        <div
-          class="text-gray-400 fw-normal flex-grow-1 fs-7"
-          data-toggle="tooltip"
-        >
-          {{ data.createdOn | timefrom }}
+        <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -331,13 +251,8 @@
   <ng-template #tmpTUserHover let-item>
     <div class="d-flex">
       <span>
-        <codx-img
-          [objectId]="item.objectID"
-          [objectName]="item.objectName"
-          [objectType]="'AD_Users'"
-          [width]="30"
-          [imageType]="'circle'"
-        >
+        <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30"
+          [imageType]="'circle'">
         </codx-img>
       </span>
       <span class="ms-2">
@@ -350,47 +265,28 @@
 <ng-template #U>
   <div class="d-flex align-items-top pb-2">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="w-100">
       <div class="d-flex">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [width]="30"
-          ></codx-img>
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users"
+            [width]="30"></codx-img>
         </div>
         <div class="d-flex flex-column w-100">
           <div class="d-flex align-items-center justify-content-between">
-            <span
-              *ngIf="data.description"
-              [innerHTML]="data.description"
-            ></span>
+            <span *ngIf="data.description" [innerHTML]="data.description"></span>
             <ng-container *ngIf="data.datas">
               <button class="btn btn-light btn-sm btn-icon ms-5">
-                <span
-                  (click)="isCollapsed = !isCollapsed"
-                  [attr.aria-expanded]="!isCollapsed"
-                  aria-controls="collapseExample"
-                  class="icon-unfold_more icon-16"
-                >
+                <span (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                  aria-controls="collapseExample" class="icon-unfold_more icon-16">
                 </span>
               </button>
             </ng-container>
           </div>
-          <div
-            class="text-gray-400 fw-normal flex-grow-1 fs-7"
-            data-toggle="tooltip"
-          >
-            {{ data.createdOn | timefrom }}
+          <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+            {{ data.createdOn | pTimeFrom }}
           </div>
           <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
             <ng-container *ngIf="data.datas">
@@ -398,30 +294,18 @@
                 <table class="table border" style="width: 100%">
                   <thead class="border-bottom bg-light">
                     <th>
-                      <codx-label
-                        class="fw-bold text-dark"
-                        [formModel]="formModel"
-                        name="lblFieldName"
-                        [default]="'Thông tin'"
-                      >
+                      <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblFieldName"
+                        [default]="'Thông tin'">
                       </codx-label>
                     </th>
                     <th>
-                      <codx-label
-                        class="fw-bold text-dark"
-                        [formModel]="formModel"
-                        name="lblOldValue"
-                        [default]="'Giá trị cũ'"
-                      >
+                      <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblOldValue"
+                        [default]="'Giá trị cũ'">
                       </codx-label>
                     </th>
                     <th>
-                      <codx-label
-                        class="fw-bold text-dark"
-                        [formModel]="formModel"
-                        name="lblNewValue"
-                        [default]="'Giá trị mới'"
-                      >
+                      <codx-label class="fw-bold text-dark" [formModel]="formModel" name="lblNewValue"
+                        [default]="'Giá trị mới'">
                       </codx-label>
                     </th>
                   </thead>
@@ -429,53 +313,38 @@
                     <ng-container *ngFor="let item of data.datas">
                       <tr>
                         <td>
-                          <codx-label
-                            class="px-4"
-                            [formModel]="formModel"
-                            [fiedName]="item.fieldName"
-                          ></codx-label>
+                          <codx-label class="px-4" [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
                         </td>
-                        <ng-container
-                          *ngIf="
+                        <ng-container *ngIf="
                             item.fieldName === 'Permissions';
                             else primitiveValue
-                          "
-                        >
+                          ">
                           <td>
-                            <ng-container
-                              *ngTemplateOutlet="
+                            <ng-container *ngTemplateOutlet="
                                 tmpViewEmployee;
                                 context: { $implicit: item.oldValue | dJson }
-                              "
-                            >
+                              ">
                             </ng-container>
                           </td>
                           <td>
-                            <ng-container
-                              *ngTemplateOutlet="
+                            <ng-container *ngTemplateOutlet="
                                 tmpViewEmployee;
                                 context: { $implicit: item.newValue | dJson }
-                              "
-                            >
+                              ">
                             </ng-container>
                           </td>
                         </ng-container>
                         <ng-template #primitiveValue>
-                          <td
-                            id="aaaa"
-                            [innerHTML]="
+                          <td id="aaaa" [innerHTML]="
                               item.oldValue
                                 | formatvalue : formModel : item.fieldName
                                 | async
-                            "
-                          ></td>
-                          <td
-                            [innerHTML]="
+                            "></td>
+                          <td [innerHTML]="
                               item.newValue
                                 | formatvalue : formModel : item.fieldName
                                 | async
-                            "
-                          ></td>
+                            "></td>
                         </ng-template>
                       </tr>
                     </ng-container>
@@ -493,48 +362,26 @@
 <ng-template #A>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex align-items-top w-100">
       <div class="me-3">
-        <codx-img
-          [objectId]="data.createdBy"
-          [objectName]="data.createdName"
-          objectType="AD_Users"
-          [width]="30"
-        >
+        <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30">
         </codx-img>
       </div>
       <div class="d-flex flex-column">
         <div class="d-flex flex-column flex-wrap">
-          <div
-            *ngIf="data.description"
-            class="w-100"
-            [innerHTML]="data.description"
-          ></div>
-          <div
-            *ngIf="data.createdOn"
-            class="text-gray-400 fw-normal flex-grow-1 fs-7"
-          >
-            {{ data.createdOn | timefrom }}
+          <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+          <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7">
+            {{ data.createdOn | pTimeFrom }}
           </div>
         </div>
         <ng-container *ngIf="lstFile">
           <div class="row mt-2">
             <!-- danh sách file đính kèm -->
-            <codx-thumbnail
-              class="popup-attachment"
-              [files]="lstFile"
-              [formModel]="formModel"
-              [hideDelete]="'1'"
-              [hideMoreF]="'0'"
-            >
+            <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel" [hideDelete]="'1'"
+              [hideMoreF]="'0'">
             </codx-thumbnail>
           </div>
         </ng-container>
@@ -546,30 +393,18 @@
 <ng-template #S>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex align-items-top w-100">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex flex-column flex-wrap">
         <div class="w-100" [innerHTML]="data.description"></div>
-        <div
-          class="text-gray-400 fw-normal flex-grow-1 fs-7"
-          data-toggle="tooltip"
-        >
-          {{ data.createdOn | timefrom }}
+        <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -579,31 +414,18 @@
 <ng-template #D>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex align-items-top w-100">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        >
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users" [width]="30">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-wrap">
         <div class="w-100" [innerHTML]="data.description"></div>
-        <div
-          class="text-gray-400 fw-normal flex-grow-1 fs-7"
-          data-toggle="tooltip"
-        >
-          {{ data.createdOn | timefrom }}
+        <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+          {{ data.createdOn | pTimeFrom }}
         </div>
         <!-- <div>
                     <button class="btn btn-seen">
@@ -618,54 +440,28 @@
 <ng-template #C1>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex justify-content-between align-items-top w-100">
       <div class="d-flex align-items-top w-100">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [width]="30"
-          >
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-wrap w-100">
-          <div
-            *ngIf="data.description"
-            class="w-100"
-            [innerHTML]="data.description"
-          ></div>
-          <div
-            *ngIf="data.createdOn"
-            class="text-gray-700 fw-normal flex-grow-1"
-            data-toggle="tooltip"
-          >
-            {{ data.createdOn | timefrom }}
+          <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+          <div *ngIf="data.createdOn" class="text-gray-700 fw-normal flex-grow-1" data-toggle="tooltip">
+            {{ data.createdOn | pTimeFrom }}
           </div>
-          <div
-            *ngIf="!isNullOrEmpty(data.comment)"
-            class="comment pb-2 fs-7 text-gray-500"
-          >
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
           <ng-container *ngIf="lstFile">
             <div class="row mt-2">
               <!-- danh sách file đính kèm -->
-              <codx-thumbnail
-                class="popup-attachment"
-                [files]="lstFile"
-                [formModel]="formModel"
-                [hideDelete]="'1'"
-                [hideMoreF]="'0'"
-              >
+              <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel" [hideDelete]="'1'"
+                [hideMoreF]="'0'">
               </codx-thumbnail>
             </div>
           </ng-container>
@@ -678,62 +474,31 @@
 <ng-template #C2>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <img
-        *ngIf="data.image; else noImage"
-        class="w-30px iconHistory"
-        [src]="data.image"
-        alt=""
-      />
+      <img *ngIf="data.image; else noImage" class="w-30px iconHistory" [src]="data.image" alt="" />
       <ng-template #noImage>
-        <codx-vll
-          [value]="data.actionType"
-          name="SYS022"
-          [icoCss]="'w-30px iconHistory'"
-          [showIcon]="true"
-          [path]="'assets/themes/sys/default/img/'"
-        ></codx-vll>
+        <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+          [path]="'assets/themes/sys/default/img/'"></codx-vll>
       </ng-template>
     </div>
     <div class="d-flex justify-content-between align-items-top w-100">
       <div class="d-flex align-items-top w-100">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [width]="30"
-          >
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-wrap w-100">
-          <div
-            *ngIf="data.description"
-            class="w-100"
-            [innerHTML]="data.description"
-          ></div>
-          <div
-            *ngIf="data.createdOn"
-            class="text-gray-700 fw-normal flex-grow-1"
-            data-toggle="tooltip"
-          >
-            {{ data.createdOn | timefrom }}
+          <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+          <div *ngIf="data.createdOn" class="text-gray-700 fw-normal flex-grow-1" data-toggle="tooltip">
+            {{ data.createdOn | pTimeFrom }}
           </div>
-          <div
-            *ngIf="!isNullOrEmpty(data.comment)"
-            class="comment pb-2 fs-7 text-gray-500"
-          >
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
           <ng-container *ngIf="lstFile">
             <div class="row mt-2">
               <!-- danh sách file đính kèm -->
-              <codx-thumbnail
-                class="popup-attachment"
-                [files]="lstFile"
-                [formModel]="formModel"
-                [hideDelete]="'1'"
-                [hideMoreF]="'0'"
-              >
+              <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel" [hideDelete]="'1'"
+                [hideMoreF]="'0'">
               </codx-thumbnail>
             </div>
           </ng-container>
@@ -746,54 +511,28 @@
 <ng-template #C3>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex justify-content-between align-items-top w-100">
       <div class="d-flex align-items-top w-100">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [width]="30"
-          >
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-wrap w-100">
-          <div
-            *ngIf="data.description"
-            class="w-100"
-            [innerHTML]="data.description"
-          ></div>
-          <div
-            *ngIf="data.createdOn"
-            class="text-gray-700 fw-normal flex-grow-1"
-            data-toggle="tooltip"
-          >
-            {{ data.createdOn | timefrom }}
+          <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+          <div *ngIf="data.createdOn" class="text-gray-700 fw-normal flex-grow-1" data-toggle="tooltip">
+            {{ data.createdOn | pTimeFrom }}
           </div>
-          <div
-            *ngIf="!isNullOrEmpty(data.comment)"
-            class="comment pb-2 fs-7 text-gray-500"
-          >
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
           <ng-container *ngIf="lstFile">
             <div class="row mt-2">
               <!-- danh sách file đính kèm -->
-              <codx-thumbnail
-                class="popup-attachment"
-                [files]="lstFile"
-                [formModel]="formModel"
-                [hideDelete]="'1'"
-                [hideMoreF]="'0'"
-              >
+              <codx-thumbnail class="popup-attachment" [files]="lstFile" [formModel]="formModel" [hideDelete]="'1'"
+                [hideMoreF]="'0'">
               </codx-thumbnail>
             </div>
           </ng-container>
@@ -806,31 +545,18 @@
 <ng-template #V>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="w-100 d-flex align-items-top">
       <div class="me-3">
-        <codx-img
-          [objectName]="data.createdName"
-          [objectId]="data.createdBy"
-          objectType="AD_Users"
-          [width]="30"
-        ></codx-img>
+        <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users"
+          [width]="30"></codx-img>
       </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap">
-        <div
-          *ngIf="data.description"
-          class="w-100"
-          [innerHTML]="data.description"
-        ></div>
+        <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
         <div *ngIf="data.createdOn" class="text-gray-400 flex-grow-1 fs-7 mb-1">
-          {{ data.createdOn | timefrom }}
+          {{ data.createdOn | pTimeFrom }}
         </div>
       </div>
     </div>
@@ -840,42 +566,21 @@
 <ng-template #A0>
   <div class="d-flex align-items-top">
     <div class="me-3">
-      <codx-vll
-        [value]="data.actionType"
-        name="SYS022"
-        [icoCss]="'w-30px iconHistory'"
-        [showIcon]="true"
-        [path]="'assets/themes/sys/default/img/'"
-      ></codx-vll>
+      <codx-vll [value]="data.actionType" name="SYS022" [icoCss]="'w-30px iconHistory'" [showIcon]="true"
+        [path]="'assets/themes/sys/default/img/'"></codx-vll>
     </div>
     <div class="d-flex justify-content-between align-items-top w-100">
       <div class="d-flex align-items-top w-100">
         <div class="me-3">
-          <codx-img
-            [objectId]="data.createdBy"
-            [objectName]="data.createdName"
-            objectType="AD_Users"
-            [width]="30"
-          >
+          <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-wrap w-100">
-          <div
-            *ngIf="data.description"
-            class="w-100"
-            [innerHTML]="data.description"
-          ></div>
-          <div
-            *ngIf="data.createdOn"
-            class="text-gray-700 fw-normal flex-grow-1"
-            data-toggle="tooltip"
-          >
-            {{ data.createdOn | timefrom }}
+          <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+          <div *ngIf="data.createdOn" class="text-gray-700 fw-normal flex-grow-1" data-toggle="tooltip">
+            {{ data.createdOn | pTimeFrom }}
           </div>
-          <div
-            *ngIf="!isNullOrEmpty(data.comment)"
-            class="comment pb-2 fs-7 text-gray-500"
-          >
+          <div *ngIf="!isNullOrEmpty(data.comment)" class="comment pb-2 fs-7 text-gray-500">
             <span [innerHTML]="data.comment"></span>
           </div>
         </div>
@@ -886,45 +591,24 @@
 <!-- template list employeee -->
 <ng-template #tmpViewEmployee let-employees>
   <div ngbDropdown class="symbol-more" [container]="'body'">
-    <div
-      ngbDropdownToggle
-      class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
-      type="button"
-      id="dropdownMenuButton"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-      style="padding: 0 !important ; margin-left: 0 !important; border: none"
-    >
+    <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+      type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+      style="padding: 0 !important ; margin-left: 0 !important; border: none">
       <div class="d-flex align-items-center">
         <div>
-          <codx-img
-            [objectId]="employees[0].objectID"
-            [objectName]="employees[0].objectName"
-            [objectType]="'AD_Users'"
-            [width]="30"
-            [referType]="'avt'"
-            [imageType]="'circle'"
-          >
+          <codx-img [objectId]="employees[0].objectID" [objectName]="employees[0].objectName" [objectType]="'AD_Users'"
+            [width]="30" [referType]="'avt'" [imageType]="'circle'">
           </codx-img>
         </div>
-        <div
-          *ngIf="employees.length > 1"
-          class="symbol symbol-30px symbol-circle"
-        >
+        <div *ngIf="employees.length > 1" class="symbol symbol-30px symbol-circle">
           <div
-            class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary"
-          >
+            class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary">
             +{{ employees.length - 1 }}
           </div>
         </div>
       </div>
     </div>
-    <div
-      ngbDropdownMenu
-      class="dropdown-menu p-3"
-      aria-labelledby="dropdownMenuButton"
-    >
+    <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
       <div class="py-2">
         <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
         <span class="fw-bold">{{ employees.length }}</span>
@@ -934,14 +618,8 @@
         <ng-container *ngFor="let employee of employees">
           <div class="d-flex align-items-center my-2">
             <div class="me-2">
-              <codx-img
-                [objectId]="employee.objectID"
-                [objectName]="employee.objectName"
-                [objectType]="'AD_Users'"
-                [width]="30"
-                [referType]="'avt'"
-                [imageType]="'circle'"
-              >
+              <codx-img [objectId]="employee.objectID" [objectName]="employee.objectName" [objectType]="'AD_Users'"
+                [width]="30" [referType]="'avt'" [imageType]="'circle'">
               </codx-img>
             </div>
             <div>
@@ -962,21 +640,17 @@
         <h3>Bình luận</h3>
       </div>
       <div class="popup-header_close">
-        <button (click)="dialog.close()" type="button" class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
+        <button (click)="dialog.close()" type="button"
+          class="btn btn-flex text-dark-75 float-end text-hover-primary px-0" event-action="Close">
           <span class="icon-close icon-18"></span>
         </button>
       </div>
-      
+
     </div>
     <div class="popup-body">
-      <codx-input
-        type="textarea"
-        format="ed2"
-        copyStyle="plainText"
-        class="text-justify border-none h-100 overflow-auto"
-        [crrValue]="data.comment"
-      >
+      <codx-input type="textarea" format="ed2" copyStyle="plainText"
+        class="text-justify border-none h-100 overflow-auto" [crrValue]="data.comment">
       </codx-input>
     </div>
   </div>
-  </ng-template>
+</ng-template>

@@ -223,7 +223,13 @@ export class AppropvalNewsComponent extends UIComponent {
     {
       this.view.dataService
       .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data.recID))
-      .subscribe();
+      .subscribe((res) => {
+        debugger
+        let arrData = this.view.dataService.data;
+        arrData.map(x => {
+
+        })
+      });
       this.loadDataTab();
     }
   }
