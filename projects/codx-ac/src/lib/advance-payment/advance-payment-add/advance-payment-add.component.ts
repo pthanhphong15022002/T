@@ -1,12 +1,30 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Injector,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  CodxFormComponent,
+  CodxGridviewV2Component,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  UIComponent,
+  Util,
+} from 'codx-core';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { Reason } from '../../models/Reason.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-advance-payment-add',
@@ -35,7 +53,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
     entityName: 'AC_AdvancedPaymentLines',
     formName: 'AdvancedPaymentLines',
     gridViewName: 'grvAdvancedPaymentLines',
-  }
+  };
   grvSetupAdvancedPaymentLines: any;
   constructor(
     inject: Injector,
@@ -54,16 +72,20 @@ export class AdvancePaymentAddComponent extends UIComponent {
     this.formType = dialogData.data?.formType;
     this.headerText = dialogData.data?.headerText;
     this.loadAdvancedPaymentLines();
-    this.cache.gridViewSetup(this.fmAdvancedPaymentLines.formName, this.fmAdvancedPaymentLines.gridViewName)
+    this.cache
+      .gridViewSetup(
+        this.fmAdvancedPaymentLines.formName,
+        this.fmAdvancedPaymentLines.gridViewName
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res)
-          this.grvSetupAdvancedPaymentLines = res;
+        if (res) this.grvSetupAdvancedPaymentLines = res;
       });
   }
 
   onInit(): void {
-    this.showLabelAttachment = this.advancedPayment?.attachments > 0 ? true : false;
+    this.showLabelAttachment =
+      this.advancedPayment?.attachments > 0 ? true : false;
   }
 
   ngAfterViewInit() {
@@ -71,11 +93,13 @@ export class AdvancePaymentAddComponent extends UIComponent {
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.advancedPayment.voucherNo) {
-      this.form.setRequire([{
-        field: 'VoucherNo',
-        isDisable: false,
-        require: false
-      }]);
+      this.form.setRequire([
+        {
+          field: 'VoucherNo',
+          isDisable: false,
+          require: false,
+        },
+      ]);
     }
   }
 
@@ -95,7 +119,9 @@ export class AdvancePaymentAddComponent extends UIComponent {
 
   valueChange(e: any) {
     this.advancedPayment[e.field] = e.data;
-    this.form.formGroup.patchValue({ [e.field]: this.advancedPayment[e.field] });
+    this.form.formGroup.patchValue({
+      [e.field]: this.advancedPayment[e.field],
+    });
   }
 
   dropdownChange(e: any) {
@@ -107,18 +133,22 @@ export class AdvancePaymentAddComponent extends UIComponent {
         this.advancedPayment[e.field] = e.data[0];
         if (e.itemData[0].ReasonID) {
           this.advancedPayment.reasonID = e.itemData[0].ReasonID;
-          this.form.formGroup.patchValue({ reasonID: this.advancedPayment.reasonID });
+          this.form.formGroup.patchValue({
+            reasonID: this.advancedPayment.reasonID,
+          });
         }
         break;
       case 'pmtMethodID':
         this.advancedPayment[e.field] = e.data[0];
         break;
     }
-    this.form.formGroup.patchValue({ [e.field]: this.advancedPayment[e.field] });
+    this.form.formGroup.patchValue({
+      [e.field]: this.advancedPayment[e.field],
+    });
   }
 
   lineChange(e: any, i: any) {
-    this.advancedPaymentLines[i][e.field] = e.data
+    this.advancedPaymentLines[i][e.field] = e.data;
   }
 
   formatDate(date) {
@@ -128,8 +158,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
   onSave() {
     this.inputValidate();
 
-    if (this.form.validation())
-      return;
+    if (this.form.validation()) return;
 
     if (this.validate != 0) {
       this.validate = 0;
@@ -141,18 +170,19 @@ export class AdvancePaymentAddComponent extends UIComponent {
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.form
+      .save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.advancedPayment.status = '7';
-          this.form.formGroup.patchValue({ status: this.advancedPayment.status });
-        }
-        else {
+          this.form.formGroup.patchValue({
+            status: this.advancedPayment.status,
+          });
+        } else {
           if (res?.update?.data) {
             this.advancedPayment = res.update.data;
-          }
-          else if (!res?.save) {
+          } else if (!res?.save) {
             this.advancedPayment = res;
           }
           this.saveLine();
@@ -161,25 +191,29 @@ export class AdvancePaymentAddComponent extends UIComponent {
   }
 
   onSaveAndRelease() {
-    if (this.form.validation())
-      return;
+    if (this.form.validation()) return;
     if (this.advancedPayment.status == '7') {
       this.advancedPayment.status = '1';
       this.form.formGroup.patchValue({ status: this.advancedPayment.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.form
+      .save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.advancedPayment.status = '7';
-          this.form.formGroup.patchValue({ status: this.advancedPayment.status });
-        }
-        else {
+          this.form.formGroup.patchValue({
+            status: this.advancedPayment.status,
+          });
+        } else {
           this.api
-            .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
-              this.advancedPaymentLines
-            ])
+            .exec<any>(
+              'AC',
+              'AdvancedPaymentLinesBusiness',
+              'SaveListAdvancePaymentAsync',
+              [this.advancedPaymentLines]
+            )
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res) {
@@ -227,8 +261,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
                   });
               } else this.notification.notifyCode(result?.msgCodeError);
             });
-        }
-        else{
+        } else {
           this.dialogRef.close();
         }
       });
@@ -236,9 +269,12 @@ export class AdvancePaymentAddComponent extends UIComponent {
 
   saveLine() {
     this.api
-      .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'SaveListAdvancePaymentAsync', [
-        this.advancedPaymentLines
-      ])
+      .exec<any>(
+        'AC',
+        'AdvancedPaymentLinesBusiness',
+        'SaveListAdvancePaymentAsync',
+        [this.advancedPaymentLines]
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
@@ -269,7 +305,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
   deleteLine(index: any) {
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'DeleteAsync', [
-        this.advancedPaymentLines[index]
+        this.advancedPaymentLines[index],
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -283,7 +319,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
   loadAdvancedPaymentLines() {
     this.api
       .exec<any>('AC', 'AdvancedPaymentLinesBusiness', 'LoadDataAsync', [
-        this.advancedPayment.recID
+        this.advancedPayment.recID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -328,7 +364,9 @@ export class AdvancePaymentAddComponent extends UIComponent {
 
   addFiles(evt) {
     this.advancedPayment.attachments = evt.data.length;
-    this.form.formGroup.patchValue({ attachments: this.advancedPayment.attachments });
+    this.form.formGroup.patchValue({
+      attachments: this.advancedPayment.attachments,
+    });
   }
 
   popupUploadFile() {

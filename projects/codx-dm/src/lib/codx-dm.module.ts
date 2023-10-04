@@ -37,7 +37,7 @@ import { MoveComponent } from './move/move.component';
 import { VersionComponent } from './version/version.component';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { ShareComponent } from './share/share.component';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { DragDropFileFolderDirective } from './directives/drag-drop-file-folder.directive';
 import { DialogModule } from '@syncfusion/ej2-angular-popups';
@@ -163,7 +163,7 @@ const T_Component: Type<any>[] = [
     CoreModule,
     UploaderModule,
     DialogModule,
-    DashboardLayoutModule 
+    DashboardLayoutModule,
     //TooltipModule,
     // InfiniteScrollModule
   ],

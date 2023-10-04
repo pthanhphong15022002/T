@@ -18,7 +18,7 @@ import {
   Util,
   ViewModel,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { OKRComponent } from '../../okr/okr.component';
 import { OMCONST } from '../../codx-om.constant';
@@ -63,7 +63,7 @@ export class PopupCheckInComponent
     this.data = dialogData.data[2];
     this.okrFM = dialogData.data[3];
     this.checkType = dialogData.data[4];
-    
+
     this.curUser = authStore.get();
   }
   //---------------------------------------------------------------------------------//
@@ -101,23 +101,26 @@ export class PopupCheckInComponent
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
   getCurrentKR() {
-    this.codxOmService.getOKRByID(this.oldDataKR?.recID).subscribe((krModel) => {
-      if (krModel) {
-        this.dataKR = krModel;
-        if(this.checkType ==OMCONST.VLL.CHECK_IN_TYPE.RealTime){
-          this.data.status=OMCONST.VLL.CHECK_IN_STATUS.RealTime;
-          this.data.checkIn = new Date();
+    this.codxOmService
+      .getOKRByID(this.oldDataKR?.recID)
+      .subscribe((krModel) => {
+        if (krModel) {
+          this.dataKR = krModel;
+          if (this.checkType == OMCONST.VLL.CHECK_IN_TYPE.RealTime) {
+            this.data.status = OMCONST.VLL.CHECK_IN_STATUS.RealTime;
+            this.data.checkIn = new Date();
+          } else if (this.checkType == OMCONST.VLL.CHECK_IN_TYPE.Review) {
+            this.data.status = OMCONST.VLL.CHECK_IN_STATUS.Review;
+          } else {
+            this.data.status =
+              new Date(this.oldDataKR?.nextCheckIn) < new Date()
+                ? OMCONST.VLL.CHECK_IN_STATUS.LatePlan
+                : OMCONST.VLL.CHECK_IN_STATUS.OnPlan;
+          }
+          this.data.createdOn = new Date();
+          this.isAfterRender = true;
         }
-        else if(this.checkType==OMCONST.VLL.CHECK_IN_TYPE.Review){
-          this.data.status = OMCONST.VLL.CHECK_IN_STATUS.Review;
-        }
-        else{
-          this.data.status = new Date(this.oldDataKR?.nextCheckIn) < new Date()? OMCONST.VLL.CHECK_IN_STATUS.LatePlan : OMCONST.VLL.CHECK_IN_STATUS.OnPlan;
-        }
-        this.data.createdOn = new Date();
-        this.isAfterRender = true;
-      }
-    });
+      });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
@@ -147,7 +150,7 @@ export class PopupCheckInComponent
     //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
     //   return;
     // }
-    this.data.checkIn= this.dataKR.nextCheckIn;
+    this.data.checkIn = this.dataKR.nextCheckIn;
     if (
       this.data?.cummulated < this.dataKR?.actual &&
       this.dataKR.checkInMode == '1'
@@ -166,27 +169,25 @@ export class PopupCheckInComponent
     //   this.data.checkInType
     // }
     this.codxOmService
-    .checkInKR(this.dataKR.recID, this.data)
-    .subscribe((res: any) => {
-      if (res ) {        
-        this.notificationsService.notifyCode('SYS034');
-        if(res?.status==OMCONST.VLL.CHECK_IN_STATUS.Review) {
-          this.dialogRef && this.dialogRef.close(res);
+      .checkInKR(this.dataKR.recID, this.data)
+      .subscribe((res: any) => {
+        if (res) {
+          this.notificationsService.notifyCode('SYS034');
+          if (res?.status == OMCONST.VLL.CHECK_IN_STATUS.Review) {
+            this.dialogRef && this.dialogRef.close(res);
+          } else {
+            this.codxOmService
+              .calculatorProgressOfPlan([this.dataKR?.transID])
+              .subscribe((listPlan: any) => {
+                if (listPlan != null) {
+                  this.dialogRef && this.dialogRef.close(listPlan);
+                } else {
+                  this.dialogRef && this.dialogRef.close(res);
+                }
+              });
+          }
         }
-        else{
-          this.codxOmService
-          .calculatorProgressOfPlan([this.dataKR?.transID])
-          .subscribe((listPlan: any) => {
-            if (listPlan != null) {
-              
-              this.dialogRef && this.dialogRef.close(listPlan);
-            } else {
-              this.dialogRef && this.dialogRef.close(res);
-            }
-          });
-        }        
-      }
-    });
+      });
   }
 
   //---------------------------------------------------------------------------------//

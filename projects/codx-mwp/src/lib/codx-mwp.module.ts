@@ -54,7 +54,7 @@ import { EditRelationComponent } from './employeeinfomation/edit-relation/edit-r
 import { EditSkillComponent } from './employeeinfomation/edit-skill/edit-skill.component';
 import { PopAddSkillComponent } from './employeeinfomation/edit-skill/pop-add-skill/pop-add-skill.component';
 import { DetailNoteBooksComponent } from './personals/note-books/detail/detail-note-books.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 import { InformationComponent } from './personals/information/information.component';
@@ -68,7 +68,7 @@ import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PortalComponent } from './employeeinfomation/portal/portal.component';
-import { ScrollSpyDirective } from './scroll-spy.directive'
+import { ScrollSpyDirective } from './scroll-spy.directive';
 import { EmployeeDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-detail/employee-detail.component';
 
 export const routes: Routes = [
@@ -89,9 +89,8 @@ export const routes: Routes = [
       {
         path: 'employeeinfomation/:funcID',
         // component: EmployeeInfomationComponent,
-        component: PortalComponent
+        component: PortalComponent,
         // component: EmployeeDetailComponent
-
       },
       {
         path: 'personals/:funcID',
@@ -113,8 +112,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {      
-  
+      {
         path: 'bookingstationery/:funcID',
         component: MWPBookingStationeryComponent,
       },
@@ -124,8 +122,7 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {      
-  
+      {
         path: 'bookingcar/:funcID',
         component: MWPBookingCarComponent,
       },
@@ -135,14 +132,12 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {      
-  
+      {
         path: 'bookingrooms/:funcID',
         component: MWPBookingRoomComponent,
       },
     ],
   },
-  
 ];
 
 const Component: Type<any>[] = [

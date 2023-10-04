@@ -1,21 +1,34 @@
-import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FolderInfo } from '@shared/models/folder.model';
-import { FileInfo, HistoryFile, View } from '@shared/models/file.model';
-import { ApiHttpService, AuthStore, CallFuncService, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import { HistoryFile, View } from '@shared/models/file.model';
+import {
+  ApiHttpService,
+  AuthStore,
+  CallFuncService,
+  NotificationsService,
+  TenantService,
+  ViewsComponent,
+} from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
 
 @Component({
   selector: 'detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailComponent implements OnInit {
   @Input() listFolders: any;
@@ -33,10 +46,10 @@ export class DetailComponent implements OnInit {
   count: number;
   tenant: string;
   oldFolderId: string;
-  _propertyName: string = "";
-  fullName: string = "";
-  id: string = "";
-  ext: string = "";
+  _propertyName: string = '';
+  fullName: string = '';
+  id: string = '';
+  ext: string = '';
   user: any;
   item: FolderInfo;
   totalRating: number;
@@ -64,8 +77,7 @@ export class DetailComponent implements OnInit {
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
     // private confirmationDialogService: ConfirmationDialogService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
@@ -92,16 +104,16 @@ export class DetailComponent implements OnInit {
     //   this.folderService.options.srtColumns = this.dmSV.sortColumn.getValue();
     // });
 
-    // this.dmSV.isListFolder.subscribe(res => {     
+    // this.dmSV.isListFolder.subscribe(res => {
     //   //this.refresh();
     //   this.listFolders = res;
     //   this.loadedFolder = true;
     //   this.changeDetectorRef.detectChanges();
     // });
 
-    // this.dmSV.islistFiles.subscribe(res => {    
-    //  // this.refresh();    
-    //   this.listFiles = res;  
+    // this.dmSV.islistFiles.subscribe(res => {
+    //  // this.refresh();
+    //   this.listFiles = res;
     //   this.loadedFile = true;
     //   this.changeDetectorRef.detectChanges();
     // });
@@ -113,12 +125,9 @@ export class DetailComponent implements OnInit {
   }
 
   getBookmarksClass(item) {
-    if (this.showBookmark(item))
-      return "icon-bookmark text-warning icon-18";
-    else
-      return "text-warning icon-20";
+    if (this.showBookmark(item)) return 'icon-bookmark text-warning icon-18';
+    else return 'text-warning icon-20';
   }
-
 
   getSvg(icon) {
     var path = window.location.origin;
@@ -126,17 +135,14 @@ export class DetailComponent implements OnInit {
   }
 
   checkIconFolder(folder) {
-    if (folder.icon.indexOf('.') == -1)
-      return false;
-    else
-      return true;
+    if (folder.icon.indexOf('.') == -1) return false;
+    else return true;
   }
 
   getMame(data) {
     if (data.folderName != null) {
       return data.folderName;
-    }
-    else {
+    } else {
       return data.fileName;
     }
   }
@@ -150,16 +156,16 @@ export class DetailComponent implements OnInit {
 
   getType(data) {
     if (data.folderName == null) {
-      return "file";
+      return 'file';
     }
-    return "folder";
+    return 'folder';
   }
 
   getExt(data) {
     if (data.folderName == null) {
       return data.extension;
     }
-    return "";
+    return '';
   }
 
   onRightClick(event, data, type) {
@@ -175,11 +181,11 @@ export class DetailComponent implements OnInit {
 
   showBookmark(item) {
     if (item.bookmarks != null) {
-      var list = item.bookmarks.filter(x => x.objectID == this.user.userID.toString());
-      if (list.length > 0)
-        return true;
-      else
-        return false;
+      var list = item.bookmarks.filter(
+        (x) => x.objectID == this.user.userID.toString()
+      );
+      if (list.length > 0) return true;
+      else return false;
     }
     return false;
   }
@@ -190,7 +196,7 @@ export class DetailComponent implements OnInit {
   }
 
   identifyFile(index, file) {
-    return file;//file.fileName;
+    return file; //file.fileName;
   }
 
   // refresh(): void {
@@ -206,22 +212,22 @@ export class DetailComponent implements OnInit {
     alert(file.folderName);
   }
 
-
-
   getViews(data: HistoryFile[]) {
     if (data != null) {
       // var list = data.filter(x => x.rating == 0);
-      return data.filter(x => (x.type != null && x.type == 'view') || (x.note != null && x.note.indexOf("read file") > -1)).length;
-    }
-    else
-      return 0;
+      return data.filter(
+        (x) =>
+          (x.type != null && x.type == 'view') ||
+          (x.note != null && x.note.indexOf('read file') > -1)
+      ).length;
+    } else return 0;
   }
 
   getRating(data: View[]) {
     let _sum = 0;
     this.totalViews = 0;
     if (data != null) {
-      var list = data.filter(x => x.rating > 0);
+      var list = data.filter((x) => x.rating > 0);
       this.totalViews = list.length;
       //res.views.forEach(item => {
       for (var i = 0; i < list.length; i++) {
@@ -231,8 +237,7 @@ export class DetailComponent implements OnInit {
 
     if (this.totalViews != 0) {
       this.totalRating = _sum / this.totalViews;
-    }
-    else {
+    } else {
       this.totalRating = 0;
     }
     this.totalRating = parseFloat(this.totalRating.toFixed(2));
@@ -241,7 +246,7 @@ export class DetailComponent implements OnInit {
   }
 
   getSizeByte(size: any) {
-    return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   getSizeKB(size: any) {
@@ -250,68 +255,63 @@ export class DetailComponent implements OnInit {
   }
 
   getAvatar(ext: string) {
-    if (ext == null) return "file.svg";
+    if (ext == null) return 'file.svg';
     switch (ext) {
-      case ".txt":
-        return "txt.svg";
-      case ".doc":
-      case ".docx":
-        return "doc.svg";
-      case ".7z":
-      case ".rar":
-      case ".zip":
-        return "zip.svg";
-      case ".jpg":
-        return "jpg.svg";
-      case ".mp4":
-        return "mp4.svg";
-      case ".xls":
-      case ".xlsx":
-        return "xls.svg";
-      case ".pdf":
-        return "pdf.svg";
-      case ".png":
-        return "png.svg";
-      case ".js":
-        return "javascript.svg";
+      case '.txt':
+        return 'txt.svg';
+      case '.doc':
+      case '.docx':
+        return 'doc.svg';
+      case '.7z':
+      case '.rar':
+      case '.zip':
+        return 'zip.svg';
+      case '.jpg':
+        return 'jpg.svg';
+      case '.mp4':
+        return 'mp4.svg';
+      case '.xls':
+      case '.xlsx':
+        return 'xls.svg';
+      case '.pdf':
+        return 'pdf.svg';
+      case '.png':
+        return 'png.svg';
+      case '.js':
+        return 'javascript.svg';
       default:
-        return "file.svg";
+        return 'file.svg';
     }
   }
 
   getOldFolderId() {
     var id = this.dmSV.oldFolderId.getValue();
-    if (id == null)
-      return "0";
-    else
-      return id.toString();
+    if (id == null) return '0';
+    else return id.toString();
   }
 
   onDbclick(item, permissions, id, level, parentid, fullName) {
     //if (!this.checkView(permissions)) {
     if (!item.read) {
-      this.notificationsService.notifyCode("DM059");
+      this.notificationsService.notifyCode('DM059');
       return;
     }
 
-    if (this.dmSV.idMenuActive == "2")
-      return;
+    if (this.dmSV.idMenuActive == '2') return;
     //  alert(id);
     // alert(level);
     this.loadedFile = false;
     this.loadedFolder = false;
     this.dmSV.level = level;
-    if (level == "1")
-      this.dmSV.parentFolderId = "000000000000000000000000";
-    else
-      this.dmSV.parentFolderId = parentid;
+    if (level == '1') this.dmSV.parentFolderId = '000000000000000000000000';
+    else this.dmSV.parentFolderId = parentid;
     this.dmSV.isTree = false;
     this.dmSV.folderName = fullName;
     this.dmSV.currentNode = '';
     this.dmSV.folderId.next(id);
     this.dmSV.disableInput.next(false);
 
-    this.folderService.getFolder(id).subscribe(async res => {
+    this.folderService.getFolder(id).subscribe(async (res) => {
       if (res != null) {
         this.dmSV.parentFolder.next(res);
         this.dmSV.getRight(res);
@@ -326,7 +326,7 @@ export class DetailComponent implements OnInit {
 
     // this.changeDetectorRef.detectChanges();
 
-    this.folderService.getFolders(id).subscribe(async res => {
+    this.folderService.getFolders(id).subscribe(async (res) => {
       //  this.dmSV.changeData(res, null, id);
       this.dmSV.isTree = true;
       //  console.log(res);
@@ -336,22 +336,19 @@ export class DetailComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.fileService.GetFiles(id).subscribe(async res => {
+    this.fileService.GetFiles(id).subscribe(async (res) => {
       //  this.dmSV.changeData(null, res, id);
       // console.log(res);
       // this.dmSV.listFiles.next(res);
       this.loadedFile = true;
       this.changeDetectorRef.detectChanges();
     });
-
   }
 
   showDownloadCount(download) {
     console.log(download);
-    if (download === null || download === undefined)
-      return 0;
-    else
-      return download;
+    if (download === null || download === undefined) return 0;
+    else return download;
   }
 
   base64ToArrayBuffer(base64) {
@@ -366,16 +363,16 @@ export class DetailComponent implements OnInit {
   }
 
   async setDownload(id): Promise<void> {
-    this.fileService.downloadFile(id).subscribe(async res => {
+    this.fileService.downloadFile(id).subscribe(async (res) => {
       if (res && res.content != null) {
         let json = JSON.parse(res.content);
         var bytes = this.base64ToArrayBuffer(json);
         let blob = new Blob([bytes], { type: res.mimeType });
         let url = window.URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", res.fileName);
-        link.style.display = "none";
+        var link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', res.fileName);
+        link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -386,13 +383,19 @@ export class DetailComponent implements OnInit {
   fileFolderDropped($event) {
     if ($event.source.recID != $event.target.recID) {
       if ($event.source.fileName) {
-        this.dmSV.copyFileTo($event.source.recID, $event.source.fileName, $event.target.recID);
-      }
-      else {
-        this.dmSV.copyFolderTo($event.source.recID, $event.source.folderName, $event.target.recID);
+        this.dmSV.copyFileTo(
+          $event.source.recID,
+          $event.source.fileName,
+          $event.target.recID
+        );
+      } else {
+        this.dmSV.copyFolderTo(
+          $event.source.recID,
+          $event.source.folderName,
+          $event.target.recID
+        );
       }
     }
-
   }
 
   getDataString(data) {
@@ -461,13 +464,11 @@ export class DetailComponent implements OnInit {
     //   this.notificationsService.notify("Bạn không có quyền truy cập file này");
     //   return;
     // }
-
     // var obj = new objectPara();
     // obj.fileID = id;
     // obj.fileName = fileName;
     // obj.extension = ext;
     // obj.data = item;
-
     // this.fileService.getFile(id, true).subscribe(item => {
     //   if (item) {
     //     var files = this.dmSV.listFiles.getValue();
@@ -484,22 +485,25 @@ export class DetailComponent implements OnInit {
 
   print() {
     //this.view.print();
-    window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
+    window.frames[0].postMessage(
+      JSON.stringify({ MessageId: 'Action_Print' }),
+      '*'
+    );
   }
 
   async download(): Promise<void> {
     if (this.item.download) {
       var that = this;
-      this.fileService.downloadFile(this.item.recID).subscribe(async res => {
+      this.fileService.downloadFile(this.item.recID).subscribe(async (res) => {
         if (res && res.content != null) {
           let json = JSON.parse(res.content);
           var bytes = that.base64ToArrayBuffer(json);
           let blob = new Blob([bytes], { type: res.mimeType });
           let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", res.fileName);
-          link.style.display = "none";
+          var link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', res.fileName);
+          link.style.display = 'none';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

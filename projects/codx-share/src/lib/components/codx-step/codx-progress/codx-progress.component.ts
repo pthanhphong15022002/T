@@ -1,13 +1,31 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-
 
 @Component({
   selector: 'codx-progress',
   templateUrl: './codx-progress.component.html',
-  styleUrls: ['./codx-progress.component.scss']
+  styleUrls: ['./codx-progress.component.scss'],
 })
 export class UpdateProgressComponent implements OnInit, OnChanges {
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -49,8 +67,12 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.type = dt?.data?.type;
     this.step = dt?.data?.step;
     this.dataSource = dt?.data?.data;
-    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    this.isUpdateParent = dt?.data?.isUpdateParent == undefined ? this.isUpdateParent : dt?.data?.isUpdateParent;
+    this.isSave =
+      dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.isUpdateParent =
+      dt?.data?.isUpdateParent == undefined
+        ? this.isUpdateParent
+        : dt?.data?.isUpdateParent;
     this.isActivitie = dt?.data?.isActivitie;
   }
 
@@ -66,8 +88,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.disabledProgressInput = this.progressData == 100 ? true : false;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 
   checkConditionOpenPopup() {
     let check = false;
@@ -80,8 +101,12 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
         if (taskFind?.progress != 100) {
           check = true;
           taskName = taskFind?.taskName;
-        } else {// ngày kết thúc của task này phải lớn ngày kết thúc của task liên kết
-          this.actualEndMax = !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax ? taskFind?.actualEnd : this.actualEndMax;
+        } else {
+          // ngày kết thúc của task này phải lớn ngày kết thúc của task liên kết
+          this.actualEndMax =
+            !this.actualEndMax || taskFind?.actualEnd > this.actualEndMax
+              ? taskFind?.actualEnd
+              : this.actualEndMax;
         }
       });
       if (check) {
@@ -139,7 +164,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.attachment.uploadFile();
   }
 
-  fileAdded(e) { }
+  fileAdded(e) {}
 
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
@@ -153,11 +178,22 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
 
   async save() {
     if (this.progressData == 100 && !this.actualEnd) {
-      this.notiService.notifyCode('SYS009', 0, this.headerTextInsStep['ActualEnd']);
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
       return;
     }
-    if (this.actualEnd && new Date(this.actualEndMax) > new Date(this.actualEnd)) {
-      this.notiService.notifyCode('DP035',0,this.headerTextInsStep['ActualEnd']);
+    if (
+      this.actualEnd &&
+      new Date(this.actualEndMax) > new Date(this.actualEnd)
+    ) {
+      this.notiService.notifyCode(
+        'DP035',
+        0,
+        this.headerTextInsStep['ActualEnd']
+      );
       return;
     }
 
@@ -174,23 +210,23 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
 
   async handeleUpdate() {
     let isUpdate = true;
-    if(this.isActivitie){
+    if (this.isActivitie) {
       this.updateProgress(false);
-    }else{
+    } else {
       if (this.type === 'P') {
         this.updateProgress();
       } else if (this.type === 'G') {
-        if(this.isUpdateParent){
+        if (this.isUpdateParent) {
           const check = await this.beforeUpdate('DP031'); // hỏi có cập nhật step
           if (check == undefined) return;
-          isUpdate = check == "Y" ? true : false;
+          isUpdate = check == 'Y' ? true : false;
         }
         this.updateProgress(isUpdate);
       } else {
-        if(this.isUpdateParent){
-          const check = await this.beforeUpdate('DP028');// hỏi có cập nhật step và group
+        if (this.isUpdateParent) {
+          const check = await this.beforeUpdate('DP028'); // hỏi có cập nhật step và group
           if (check == undefined) return;
-          isUpdate = check == "Y" ? true : false;
+          isUpdate = check == 'Y' ? true : false;
         }
         this.updateProgress(isUpdate);
       }
@@ -207,19 +243,33 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     dataSave.type = this.type;
     dataSave.isUpdate = isUpdate;
     if (this.isSave) {
-      if(this.isActivitie){
-        this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressActivitiesAsync', dataSave).subscribe((res) => {
-          this.dialog.close(res)
-          this.notiService.notifyCode('SYS007');
-        });
-      }else{
-        this.api.exec<any>('DP', 'InstanceStepsBusiness', 'UpdateProgressAsync', dataSave).subscribe(res => {
-          this.dialog.close(res)
-          this.notiService.notifyCode('SYS007');
-        });
+      if (this.isActivitie) {
+        this.api
+          .exec<any>(
+            'DP',
+            'InstanceStepsBusiness',
+            'UpdateProgressActivitiesAsync',
+            dataSave
+          )
+          .subscribe((res) => {
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+          });
+      } else {
+        this.api
+          .exec<any>(
+            'DP',
+            'InstanceStepsBusiness',
+            'UpdateProgressAsync',
+            dataSave
+          )
+          .subscribe((res) => {
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+          });
       }
     } else {
-      let dataOutput = this.handelDataOutput(isUpdate)
+      let dataOutput = this.handelDataOutput(isUpdate);
       this.dialog.close(dataOutput);
     }
   }
@@ -230,14 +280,14 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     dataOutput.actualEnd = this.actualEnd;
     dataOutput.note = this.note;
     dataOutput.type = this.type;
-    if(this.type == 'P'){
+    if (this.type == 'P') {
       dataOutput.progressStep = this.progressData;
-        dataOutput.stepID = this.dataSource['recID'];
-    }else if(this.type == 'G'){
+      dataOutput.stepID = this.dataSource['recID'];
+    } else if (this.type == 'G') {
       dataOutput.progressGroupTask = this.progressData;
       dataOutput.groupTaskID = this.dataSource['recID'];
       dataOutput.stepID = this.step['recID'];
-    }else{
+    } else {
       dataOutput.groupTaskID = this.dataSource?.taskGroupID;
       dataOutput.taskID = this.dataSource?.recID;
       dataOutput.stepID = this.step?.recID;
@@ -253,23 +303,26 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     if (this.step) {
       let step = JSON.parse(JSON.stringify(this.step));
       if (dataOutput.groupTaskID) {
-        let listTask = step?.tasks?.filter(task => task.taskGroupID == dataOutput.groupTaskID) || [];
-        let task = listTask?.find(t => t.recID == dataOutput.taskID);
+        let listTask =
+          step?.tasks?.filter(
+            (task) => task.taskGroupID == dataOutput.groupTaskID
+          ) || [];
+        let task = listTask?.find((t) => t.recID == dataOutput.taskID);
         task.progress = dataOutput.progressTask;
         const sum = listTask.reduce((acc, task) => {
           return acc + task.progress;
         }, 0);
-        dataOutput.progressGroupTask = Number((sum / listTask.length).toFixed(2));
+        dataOutput.progressGroupTask = Number(
+          (sum / listTask.length).toFixed(2)
+        );
       }
     }
-
   }
 
   async beforeUpdate(funcID): Promise<any> {
     let check = await firstValueFrom(this.notiService.alertCode(funcID));
     return check?.event?.status;
   }
-
 }
 export class progressOutput {
   stepID: string = null;

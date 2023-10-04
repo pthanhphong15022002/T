@@ -23,9 +23,8 @@ import {
 } from '../../../../models/models';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-job',

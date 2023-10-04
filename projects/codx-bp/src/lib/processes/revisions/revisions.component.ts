@@ -14,14 +14,12 @@ import {
   Util,
   AuthStore,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { filter, from, map } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
 import { CodxBpService } from '../../codx-bp.service';
 import {
   BP_Processes,
   BP_ProcessRevisions,
 } from '../../models/BP_Processes.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-revisions',
   templateUrl: './revisions.component.html',

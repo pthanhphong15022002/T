@@ -5,7 +5,6 @@ import {
   Injector,
   OnInit,
   ViewChild,
-  ViewContainerRef,
 } from '@angular/core';
 import {
   ImageViewerComponent,
@@ -16,8 +15,6 @@ import {
   FilesService,
 } from 'codx-core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
-import { UserInnerComponent } from 'projects/codx-share/src/lib/layout/dropdown-inner/user-inner/user-inner.component';
-import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
