@@ -175,7 +175,7 @@ export class InstancesComponent
   user: any;
   isAdminRoles = false;
   listInstanceStep = [];
-  // reloadData = false;
+
   popup: DialogRef;
   reasonStepsObject: any;
   addFieldsControl = '1';
@@ -253,22 +253,24 @@ export class InstancesComponent
     @Optional() dt: DialogData
   ) {
     super(inject);
-    this.funcID = 'DPT04';
+    // this.funcID = 'DPT04';
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
-      this.processID = param['processID'];
-      //data từ service ném qua
-      this.codxDpService.dataProcess.subscribe((res) => {
-        if (res) this.haveDataService = true;
-        else this.haveDataService = false;
-        if (res && res.read) {
-          this.loadData(res);
-        }
-      });
+      if (this.funcID == 'DPT04') {
+        this.processID = param['processID'];
+        //data từ service ném qua
+        this.codxDpService.dataProcess.subscribe((res) => {
+          if (res) this.haveDataService = true;
+          else this.haveDataService = false;
+          if (res && res.read) {
+            this.loadData(res);
+          }
+        });
+      }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP0101');
+    this.layout.setUrl('dp/dynamicprocess/DP01');
     this.layout.setLogo(null);
     this.getColorReason();
     this.cache
@@ -299,20 +301,22 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      // if (f) this.pageTitle.setSubTitle(f?.customName);
-      this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-        if (res && res.length > 0) {
-          this.moreFuncInstance = res;
-          this.moreFuncStart = this.moreFuncInstance.filter(
-            (x) => x.functionID == 'DP21'
-          )[0];
-        }
+    if (this.funcID == 'DPT04')
+      this.cache.functionList(this.funcID).subscribe((f) => {
+        // if (f) this.pageTitle.setSubTitle(f?.customName);
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncInstance = res;
+            this.moreFuncStart = this.moreFuncInstance.filter(
+              (x) => x.functionID == 'DP21'
+            )[0];
+          }
+        });
       });
-    });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
+
+    this.showButtonAdd = this.funcID == 'DPT04';
   }
   ngAfterViewInit() {
     this.views = [
@@ -362,58 +366,59 @@ export class InstancesComponent
     this.button = {
       id: 'btnAdd',
     };
-    this.dataObj = {
-      processID: this.processID,
-      haveDataService: this.haveDataService ? '1' : '0',
-      showInstanceControl: this.process?.showInstanceControl
-        ? this.process?.showInstanceControl
-        : '2',
-      hiddenInstanceReason: this.getListStatusInstance(
-        this.isUseSuccess,
-        this.isUseFail
-      ),
-    };
+    if (this.funcID == 'DPT04') {
+      this.dataObj = {
+        processID: this.processID,
+        haveDataService: this.haveDataService ? '1' : '0',
+        showInstanceControl: this.process?.showInstanceControl
+          ? this.process?.showInstanceControl
+          : '2',
+        hiddenInstanceReason: this.getListStatusInstance(
+          this.isUseSuccess,
+          this.isUseFail
+        ),
+      };
 
-    if (this.haveDataService) this.getListCbxProccess(this.process?.applyFor);
-    else {
+      if (this.haveDataService) this.getListCbxProccess(this.process?.applyFor);
+      else {
+        this.codxDpService
+          .getProcessByProcessID(this.processID)
+          .subscribe((ps) => {
+            if (ps && ps.read && !ps.isDelete) {
+              this.loadData(ps, true);
+              this.getListCbxProccess(ps?.applyFor);
+            } else {
+              this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+            }
+          });
+      }
+
       this.codxDpService
-        .getProcessByProcessID(this.processID)
-        .subscribe((ps) => {
-          if (ps && ps.read && !ps.isDelete) {
-            this.loadData(ps, true);
-            this.getListCbxProccess(ps?.applyFor);
-          } else {
-            this.codxService.navigate('', `dp/dynamicprocess/DP0101`);
+        .createListInstancesStepsByProcess(this.processID)
+        .subscribe((dt) => {
+          if (dt && dt?.length > 0) {
+            this.listSteps = dt;
+            this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
           }
         });
+      //this.getPermissionProcess(this.processID);
+      this.getAdminRoleDP();
+      //kanban
+      this.request = new ResourceModel();
+      this.request.service = 'DP';
+      this.request.assemblyName = 'DP';
+      this.request.className = 'InstancesBusiness';
+      this.request.method = 'GetListInstancesAsync';
+      this.request.idField = 'recID';
+      this.request.dataObj = this.dataObj;
+
+      this.resourceKanban = new ResourceModel();
+      this.resourceKanban.service = 'DP';
+      this.resourceKanban.assemblyName = 'DP';
+      this.resourceKanban.className = 'ProcessesBusiness';
+      this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      this.resourceKanban.dataObj = this.dataObj;
     }
-
-    this.codxDpService
-      .createListInstancesStepsByProcess(this.processID)
-      .subscribe((dt) => {
-        if (dt && dt?.length > 0) {
-          this.listSteps = dt;
-          this.listStepsCbx = JSON.parse(JSON.stringify(this.listSteps));
-          // this.getSumDurationDayOfSteps(this.listStepsCbx);
-        }
-      });
-    //this.getPermissionProcess(this.processID);
-    this.getAdminRoleDP();
-    //kanban
-    this.request = new ResourceModel();
-    this.request.service = 'DP';
-    this.request.assemblyName = 'DP';
-    this.request.className = 'InstancesBusiness';
-    this.request.method = 'GetListInstancesAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj;
-
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'DP';
-    this.resourceKanban.assemblyName = 'DP';
-    this.resourceKanban.className = 'ProcessesBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
   }
 
   click(evt: ButtonModel) {

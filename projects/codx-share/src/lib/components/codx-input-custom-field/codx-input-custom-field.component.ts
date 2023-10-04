@@ -112,6 +112,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   columns = []; //array colum
   arrDataValue = [];
   modelJSON: string = '';
+  settingWidth = false;
 
   constructor(
     private cache: CacheService,
@@ -642,6 +643,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     let arr = JSON.parse(data.dataFormat);
     if (Array.isArray(arr)) {
       this.columns = arr;
+      this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.columns.forEach((x) => {
         this.modelJSON += '"' + x.fieldName + '":"' + '",';
       });
