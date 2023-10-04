@@ -589,7 +589,7 @@ export class PopupAddLeadComponent
         .subscribe((res) => {
           if (res) {
             this.dialog.close(res);
-            this.notificationsService.notifyCode('SYS006');
+            this.notificationsService.notifyCode('CM052');
           }
         });
     } else {

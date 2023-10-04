@@ -1,13 +1,13 @@
-<!-- <codx-form
+<codx-form
   #form
   [headerText]="titleAction"
   [openMore]="false"
   [dialog]="dialog"
   [formModel]="dialog.formModel"
   [footer]="footer"
-  [body]="body"
-></codx-form> -->
-<codx-layout-add
+  [body]="tabCriteria"
+></codx-form>
+<!-- <codx-layout-add
   #form
   [title]="title"
   [tabInfo]="tabInfo"
@@ -16,7 +16,7 @@
   [dialog]="dialog"
   (setTitle)="setTitle()"
   [tabContent]="[tabCriteria, tabListCustomers]"
-></codx-layout-add>
+></codx-layout-add> -->
 <ng-template #tabCriteria>
   <div class="form-group row">
     <div class="col-4 d-flex">

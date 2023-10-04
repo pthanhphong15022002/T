@@ -757,7 +757,7 @@ export class CmCustomerComponent
     if (isCheck) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
-      this.notiService.alertCode('SYS030').subscribe((x) => {
+      this.notiService.alertCode('CM052').subscribe((x) => {
         if (x.event && x.event?.status) {
           if (x?.event?.status == 'Y') {
             this.openFormConvert(data);
