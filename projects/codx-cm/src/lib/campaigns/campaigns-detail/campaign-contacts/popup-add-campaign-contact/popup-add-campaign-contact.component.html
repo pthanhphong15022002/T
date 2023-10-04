@@ -1,4 +1,4 @@
-<codx-form
+<!-- <codx-form
   #form
   [headerText]="titleAction"
   [openMore]="false"
@@ -6,8 +6,18 @@
   [formModel]="dialog.formModel"
   [footer]="footer"
   [body]="body"
-></codx-form>
-<ng-template #body>
+></codx-form> -->
+<codx-layout-add
+  #form
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  (setTitle)="setTitle()"
+  [tabContent]="[tabCriteria, tabListCustomers]"
+></codx-layout-add>
+<ng-template #tabCriteria>
   <div class="form-group row">
     <div class="col-4 d-flex">
       <div class="me-1">
@@ -46,6 +56,7 @@
         type="combobox"
         field="provinceIDs"
         [refValue]="'CMProvinces'"
+        [emptyText]="gridViewSetup?.ProvinceID?.headerText"
         [value]="provinceIDs"
         [disabled]="!isProvince"
         [isMulti]="true"
@@ -81,6 +92,7 @@
         type="combobox"
         field="districtIDs"
         [refValue]="'CMDistricts'"
+        [emptyText]="gridViewSetup?.DistrictID?.headerText"
         [value]="districtIDs"
         [disabled]="!isDistrict"
         [isMulti]="true"
@@ -228,6 +240,55 @@
     >
     </codx-label>
     <span class="fw-bold">{{ countAdd }}</span>
+  </div>
+</ng-template>
+<ng-template #tabListCustomers>
+  <div class="form-group d-flex">
+    <codx-label
+      class="label-colon text-gray-500"
+      [formModel]="form.formModel"
+      [name]="objectType == '3' ? 'lblCountAddLeads' : 'lblCountAddCustomers'"
+      [default]="
+        objectType == '3'
+          ? 'Số lượng khách hàng tiềm năng sẽ được thêm'
+          : 'Số lượng khách hàng sẽ được thêm'
+      "
+    >
+    </codx-label>
+    <span class="fw-bold">{{ countAdd }}</span>
+  </div>
+  <div class="container-list">
+    <ng-container *ngFor="let item of lstCampainsAdd">
+      <div class="d-flex flex-column">
+        <div
+          class="mb-1 fw-bold"
+          [innerHTML]="
+            objectType == '3'
+              ? item?.leadName
+              : (item?.customerName
+                | formatvalue : dialog.formModel : 'ObjectName'
+                | async)
+          "
+        ></div>
+        <div
+          class="mb-1 d-flex align-items-top text-hover-primary"
+          *ngIf="item.address"
+        >
+          <span
+            class="icon-16 icon-place me-1 text-gray-700"
+            [ngbTooltip]="popupAddress"
+          >
+          </span>
+          <span class="fs-7 text-gray-600">{{ item?.address }} </span>
+          <ng-template #popupAddress>
+            <codx-label
+              fiedName="Address"
+              [formModel]="dialog.formModel"
+            ></codx-label>
+          </ng-template>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 <ng-template #footer>
