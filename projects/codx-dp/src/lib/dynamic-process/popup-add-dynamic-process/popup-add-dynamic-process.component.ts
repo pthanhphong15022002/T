@@ -3547,8 +3547,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       };
 
       let checkStep = this.step?.roles?.some(
-        (role) => 
-          (role.objectID == roleStep.objectID && role.roleType == roleStep.roleType) || 
+        (role) =>
+          (role.objectID == roleStep.objectID && role.roleType == roleStep.roleType) ||
           (role?.objectType == '1' && role.roleType == roleStep.roleType && roleStep?.objectType == '1')
       );
       if (!checkStep) {
@@ -4398,7 +4398,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.notiService.notifyCode('DP005', 0, '"' + this.stepNameFail + '"');
       return false;
     }
-    if (this.ischeckDurationTime(this.stepList)) {
+    if (this.ischeckDurationTime(this.stepList.filter(x=> !x.isSuccessStep && !x.isFailStep))) {
       return false;
     }
     return true;
