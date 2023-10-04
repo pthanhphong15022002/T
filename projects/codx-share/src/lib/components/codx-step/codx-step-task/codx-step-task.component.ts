@@ -88,7 +88,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   @Input() sessionID = ''; // sesion giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
-  @Input() isChangeOwner = false; 
+  @Input() isChangeOwner = false;
 
   @Input() customerName: string;
   @Input() dealName: string;
@@ -193,7 +193,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.vllDataTask = DP048?.datas;
     }
     let DP032 = await firstValueFrom(this.cache.valueList('DP032'));
-    if (DP048.datas) {
+    if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
     this.getDefaultCM();
@@ -1443,11 +1443,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (this.isMoveStage) {
       return type !== 'G';
     }
-  
     if (this.isClose || this.isViewStep) {
       return false;
     }
-  
     if (this.isOnlyView && this.isStart) {
       if(!(data?.startDate && data?.endDate)){
         return false;
@@ -1463,7 +1461,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.user
         );
       }
-    }  
+    }
     return this.isTaskFirst && this.isRoleAll;
   }
 

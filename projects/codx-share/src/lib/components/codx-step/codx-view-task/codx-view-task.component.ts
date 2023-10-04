@@ -46,8 +46,7 @@ export class CodxViewTaskComponent implements OnInit {
   groupTask;
   title = ''; // tiêu đề
   dataView: any; // data hien thi
-  owner = []; //role type O
-  person = []; //role
+  owners = [];
   connection = ''; // người liên quan => step
   participant = []; //role type P
   listDataLink = []; //role type S
@@ -251,13 +250,10 @@ export class CodxViewTaskComponent implements OnInit {
         this.title = type?.text;
       }
     });
-
-    this.owner =
-      this.dataView?.roles?.filter((role) => role.objectID == this.dataView?.owner) || [];
+    let owner = this.dataView?.roles?.find((role) => role.objectID == this.dataView?.owner)
+    this.owners = [owner] || [];
     this.participant =
       this.dataView?.roles?.filter((role) =>  role.objectID != this.dataView?.owner) || [];
-    this.person =
-      this.dataView?.roles?.filter((role) => role.roleType === 'S') || [];
     this.connection =
       this.dataView?.roles
         ?.filter((role) => role.roleType === 'R')

@@ -222,6 +222,7 @@ import { PopupAddLineTableComponent } from './components/codx-input-custom-field
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
 
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
+import { CodxDateComponent } from './components/codx-date/codx-date.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -432,6 +433,7 @@ const T_Pipe: Type<any>[] = [
     CodxFilesAttachmentComponent,
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
+    CodxDateComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [
