@@ -1,0 +1,86 @@
+<codx-form [subHeader]="subheader" [body]="body" (onScroll)="onScroll($event)" [headerText]="'Yêu cầu xét duyệt'"
+    [dialog]="dialog">
+</codx-form>
+<ng-template #subheader>
+    <div class="codx-approval-filter" ngbDropdown ngbDropdownToggle #dropdown id="noti-dropdowTonggle">
+        <button type="button" class="btn btn-sm btn-light-primary" *ngIf="valueSelected">
+            <i class="icon-14" [class]="valueSelected.icon"></i>
+            <span>
+                {{valueSelected.text}}
+            </span>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="noti-dropdowTonggle" id="noti-dropdownPopup" class="dropdown-menu">
+            <div ngbDropdownMenu>
+                <ng-container *ngFor="let item of datas">
+                    <button type="button" (click)="valueChange(item)" ngbDropdownItem>
+                        <i class="me-2 text-gray-700 icon-16" [class]="item.icon">
+                        </i>
+                        <span>
+                            {{item.text}}
+                        </span>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #body>
+    <div class="container p-0 h-100">
+        <ng-container *ngIf="loaded; else templateEmpty">
+            <ng-container *ngFor="let item of lstApproval;index as index">
+                <div class="d-flex align-items-top border-top py-3 pe-2">
+                    <div class="">
+                        <codx-vll [name]="'SYS055'" [value]="item.entityName" [showIcon]="true" [showText]="false"
+                            [showBgColor]="true"
+                            [classList]="'d-flex justify-content-center align-items-center w-35px h-35px fs-5 rounded-circle me-3 '">
+                        </codx-vll>
+                    </div>
+                    <div class="w-100">
+                        <div class="d-flex justify-content-between">
+                            <div class="" [innerHTML]="item.textValue | fTextValue:item.text | async"></div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between ">
+                            <span class="text-primary ms-1">{{item.createdOn | pTimeFrom}}</span>
+                            <codx-img [width]="25" [objectId]="item.userID" [objectName]="item.userName"
+                                [objectType]="'AD_Users'">
+                            </codx-img>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="">
+                                <ng-container *ngIf="item.actionType == 'ES';else elseTemplate">
+                                    <button [disabled]="item.blocked" type="button"
+                                        class="btn btn-sm btn-outline-danger" (click)="viewSignature(item)">
+                                        <codx-label class="text-danger" [formModel]="dialog.formModel"
+                                            name="lblSignature" default="Xem trình ký"></codx-label>
+                                    </button>
+                                </ng-container>
+                                <ng-template #elseTemplate>
+                                    <button [disabled]="item.blocked" type="button"
+                                        class="btn btn-sm btn-outline-success me-3"
+                                        (click)="approvalAsync(item,'5',index)">
+                                        <codx-label [formModel]="dialog.formModel" name="lblAppro"
+                                            default="Duyệt"></codx-label>
+                                    </button>
+                                    <button [disabled]="item.blocked" type="button"
+                                        class="btn btn-sm btn-outline-danger" (click)="approvalAsync(item,'4',index)">
+                                        <codx-label class="text-danger" [formModel]="dialog.formModel" name="lblCancle"
+                                            default="Từ chối"></codx-label>
+                                    </button>
+                                </ng-template>
+                            </div>
+                            <div class="cursor-pointer" (click)="clickViewDetail(item)">
+                                <codx-label [classList]="'fst-italic text-gray-500'" [formModel]="dialog.formModel"
+                                    name="" default="Xem chi tiết"></codx-label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-template #templateEmpty>
+    <div class="d-flex align-items-center justify-content-center h-100">
+        <img class="w-250px" src="assets/themes/sys/default/img/DataEmpty.svg">
+    </div>
+</ng-template>

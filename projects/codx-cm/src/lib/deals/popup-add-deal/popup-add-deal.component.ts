@@ -581,7 +581,7 @@ export class PopupAddDealComponent
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
-    permission.allowUpdateStatus = '0';
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
     permission.createdOn = new Date();
     permission.createdBy = this.user.userID;
     return permission;
@@ -953,7 +953,7 @@ export class PopupAddDealComponent
 
   async getListPermission(permissions) {
     this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants.length > 0
+    return this.listParticipants != null && this.listParticipants?.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
   }

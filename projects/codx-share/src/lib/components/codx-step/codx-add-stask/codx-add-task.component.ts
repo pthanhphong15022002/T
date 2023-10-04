@@ -24,8 +24,8 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-add-stask',

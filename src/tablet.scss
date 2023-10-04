@@ -11,15 +11,44 @@
         }
     }
 }
-// @media (max-width:1024px){
-//     lib-layout-news codx-header{
-//         position: relative;
-//         .header-menu{
-//             position: relative;
-//             margin-top: 50px;
-//         }
-//     }
-// }
+@media (max-width:1024px) and (min-width:992px){
+  lib-layout-news codx-header{
+      position: relative;
+      .header-menu{
+        text-wrap: nowrap;
+      }
+  }
+  codx-page-title h1{
+    text-wrap: nowrap;
+    font-size: 18px!important;
+  }
+  div.page-dashboard .aside.aside-transparent {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+  .aside-minimize-icon-title .aside.aside-extended {
+    width: calc(200px + 90px);
+  }
+  .aside-enabled.aside-secondary-enabled.aside-fixed.aside-minimize-icon-title .wrapper {
+    padding-left: calc(200px + 90px);
+  }
+  .aside.aside-extended .aside-secondary .aside-workspace {
+    width: 200px;
+  }
+  .aside-secondary .menu-fit {
+    width: 180px;
+  }
+  .aside-enabled.aside-secondary-enabled.header-fixed.aside-minimize-icon-title .header {
+    left: calc(200px + 90px);
+  }
+  .aside-enabled.aside-secondary-enabled.toolbar-fixed.aside-minimize-icon-title .toolbar {
+    left: calc(200px + 90px);
+  }
+  .aside-secondary .aside-workspace.px-4 {
+    padding-left: 0px !important;
+  }
+}
 
 /*********** ipad ************/
 

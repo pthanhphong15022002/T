@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { CodxWrService } from '../../codx-wr.service';
 import { ApiHttpService, CallFuncService } from 'codx-core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'codx-view-list-wr',
@@ -71,7 +72,7 @@ export class ViewListWrComponent {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (40 < child) {
+        if (36 < child) {
           p.open();
         }
       }
@@ -84,14 +85,19 @@ export class ViewListWrComponent {
   }
 
   checkHover(id) {
-    let isCollapsed = false;
-    let element = document.getElementById(id);
-    if (element) {
-      if (element.offsetHeight > 38) {
-        isCollapsed = true;
+    var subject = new Subject<boolean>();
+    setTimeout(() => {
+      let isCollapsed = false;
+      let element = document.getElementById(id);
+      if (element) {
+        if (element.offsetHeight > 40) {
+          isCollapsed = true;
+        }
       }
-    }
-    return isCollapsed;
+      subject.next(isCollapsed);
+    }, 100);
+
+    return subject.asObservable();
   }
   //#endregion
 }

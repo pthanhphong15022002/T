@@ -22,8 +22,6 @@ import {
   RequestOption,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import moment from 'moment';
 import { StatusTaskGoal } from '../model/enum';
 import {
@@ -35,6 +33,8 @@ import {
 } from '../model/task.model';
 import { CodxTasksService } from '../codx-tasks.service';
 import { tmpReferences } from '../../../models/assign-task.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',

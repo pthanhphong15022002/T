@@ -1,55 +1,80 @@
-import { Component, OnInit, TemplateRef, ViewChild, AfterViewInit, ChangeDetectorRef, Optional, Input, EventEmitter, Output } from '@angular/core';
-import { permissionDis, updateDis , dispatch, inforSentEMail, extendDeadline } from '../../models/dispatch.model';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Optional,
+  Input,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+import {
+  permissionDis,
+  updateDis,
+  dispatch,
+  inforSentEMail,
+  extendDeadline,
+} from '../../models/dispatch.model';
 import { AgencyService } from '../../services/agency.service';
 import { DispatchService } from '../../services/dispatch.service';
-import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import {
+  FormGroup,
+  FormControl,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
+import {
+  DataRequest,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { extractContent } from '../../function/default.function';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'app-od-update',
   templateUrl: './update.component.html',
-  styleUrls: ['./update.component.scss']
+  styleUrls: ['./update.component.scss'],
 })
 export class UpdateExtendComponent implements OnInit {
-  submitted = false
-  dialog      : any
-  data : any
-  formModel: any ;
+  submitted = false;
+  dialog: any;
+  data: any;
+  formModel: any;
   preValue: any;
-  @ViewChild('attachment') attachment: AttachmentComponent
-  @Input() view : any
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @Input() view: any;
   @Output() save = new EventEmitter<any>();
   dtDisUpdate = new updateDis();
   currentDate = new Date();
-  updateForm :FormGroup;
-  fileCount: 0 
+  updateForm: FormGroup;
+  fileCount: 0;
   percentage100 = false;
   disableResult = false;
   constructor(
     private odService: DispatchService,
-    private notifySvr : NotificationsService,
+    private notifySvr: NotificationsService,
     private formBuilder: FormBuilder,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  { 
+  ) {
     this.data = dt.data['data'];
     this.dialog = dialog;
-    this.formModel = dialog?.formModel
+    this.formModel = dialog?.formModel;
   }
   ngOnInit(): void {
-    this.updateForm = this.formBuilder.group(
-      {
-        updateOn: [this.currentDate , Validators.required],
-        percentage: [this.data?.percentage  , Validators.min(1)],
-        comment: '',
-        reporting: false
-      }
-    )
-    if(this.data?.percentage == 100) this.percentage100 = true;
+    this.updateForm = this.formBuilder.group({
+      updateOn: [this.currentDate, Validators.required],
+      percentage: [this.data?.percentage, Validators.min(1)],
+      comment: '',
+      reporting: false,
+    });
+    if (this.data?.percentage == 100) this.percentage100 = true;
     this.onChanges();
     /* updateOn: new FormControl(),
     percentage : new FormControl(),
@@ -62,19 +87,17 @@ export class UpdateExtendComponent implements OnInit {
     if(this.data?.percentage == 100) this.updateForm.get("percentage100").setValue(true); */
   }
   onChanges(): void {
-    this.updateForm.get('percentage').valueChanges.subscribe(val => {
-      if(val == 100) return;
+    this.updateForm.get('percentage').valueChanges.subscribe((val) => {
+      if (val == 100) return;
       this.preValue = val;
     });
   }
-  valueChangeDate(event:any)
-  {
+  valueChangeDate(event: any) {
     this.updateForm.controls[event?.field].setValue(event?.data.fromDate);
   }
-  valueChangePercentage100(e:any)
-  {
-    this.disableResult = e?.data
-    if(e?.data) this.updateForm.controls['percentage'].setValue(100);
+  valueChangePercentage100(e: any) {
+    this.disableResult = e?.data;
+    if (e?.data) this.updateForm.controls['percentage'].setValue(100);
     else this.updateForm.controls['percentage'].setValue(this.preValue);
     /* if()
     this.updateForm.value.percentage */
@@ -82,25 +105,24 @@ export class UpdateExtendComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.updateForm.controls;
   }
-  onSave()
-  {
+  onSave() {
     this.submitted = true;
-    if(this.updateForm.invalid) return;
+    if (this.updateForm.invalid) return;
     this.updateForm.value.recID = this.data.recID;
-    this.odService.updateResultDispatch(this.updateForm.value).subscribe((item)=>{
-      if(item.status == 0) this.dialog.close(item.data);
-      this.notifySvr.notify(item.message);
-    }) 
+    this.odService
+      .updateResultDispatch(this.updateForm.value)
+      .subscribe((item) => {
+        if (item.status == 0) this.dialog.close(item.data);
+        this.notifySvr.notify(item.message);
+      });
   }
-  fileAdded(event) { 
+  fileAdded(event) {
     console.log(event);
   }
-  getfileCount(e:any)
-  {
+  getfileCount(e: any) {
     this.fileCount = e.data.length;
   }
-  openFormUploadFile()
-  {
+  openFormUploadFile() {
     this.attachment.uploadFile();
   }
 }

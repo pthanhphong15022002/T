@@ -22,11 +22,10 @@ import {
   UploadFile,
   ViewsComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
-import { Observable } from 'rxjs';
 import { CodxTMService } from '../../codx-tm.service';
 import { TM_Sprints } from '../../models/TM_Sprints.model';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-add-sprints',
@@ -81,7 +80,11 @@ export class PopupAddSprintsComponent implements OnInit {
     if (!this.master.iterationID) {
       //khong co cai nay thi ko add file dc
       this.tmSv
-        .genAutoNumber(this.dialog.formModel.funcID, dialog.formModel.entityName, 'IterationID')
+        .genAutoNumber(
+          this.dialog.formModel.funcID,
+          dialog.formModel.entityName,
+          'IterationID'
+        )
         .subscribe((res) => {
           if (res) this.master.iterationID = res;
         });

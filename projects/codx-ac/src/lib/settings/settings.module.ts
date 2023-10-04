@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { NosubAsideComponent } from '../_noSubAside/nosub-aside.component';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
@@ -28,8 +28,6 @@ import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
 import { PopupAddFixedAssetComponent } from './fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
-import { ItempostingaccountsComponent } from './item-posting-accounts/item-posting-accounts.component';
-import { PopAddItemComponent } from './item-posting-accounts/pop-add-item/pop-add-item.component';
 import { ItemsComponent } from './items/items.component';
 import { PopupAddItemColorComponent } from './items/popup-add-item-color/popup-add-item-color.component';
 import { PopupAddItemConversionComponent } from './items/popup-add-item-conversion/popup-add-item-conversion.component';
@@ -61,6 +59,8 @@ import { CurrencyAddComponent } from './currency-categories/currency-add/currenc
 import { ExchangeRateSettingAddComponent } from './currency-categories/currency-exchangerate-setting-add/currency-exchangerate-setting-add.component';
 import { ExchangerateAddComponent } from './currency-categories/currency-exchangerate-add/currency-exchangerate-add.component';
 import { TranformValueNumberPipe } from '../pipes/tranform-value-number.pipe';
+import { ItempostingaccountsComponent } from './posting-accounts-categories/posting-accounts.component';
+import { PostingAccountsAddComponent } from './posting-accounts-categories/posting-accounts-add/posting-accounts-add.component';
 
 var routes: Routes = [
   {
@@ -180,7 +180,7 @@ var routes: Routes = [
     PopAddArComponent,
     APPostingAccountsComponent,
     PopupAddAPPostingAccountComponent,
-    PopAddItemComponent,
+    PostingAccountsAddComponent,
     FAPostingAccountsComponent,
     PopupAddFAPostingAccountComponent,
     FixedAssetsComponent,
