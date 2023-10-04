@@ -62,10 +62,10 @@ export class ProgressbarComponent implements OnInit, OnChanges {
         this.onLoad();
         this.load(Math.floor(this.progress));
       },100);
-    } 
+    }
     if(changes?.status || changes?.vllData || changes?.progress){
       this.setProgressLinear();
-    }   
+    }
   }
   ngOnInit(): void {
     this.HTMLProgress = `<div style="font-size:12px;font-weight:600;color:${this.color};fill:${this.color};margin-top: 2px;"><span></span></div>`;
