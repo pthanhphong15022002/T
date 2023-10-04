@@ -216,8 +216,9 @@ export class LeadsComponent
     this.getColorReason();
     this.getValuelistStatus();
     this.getValuelistCategory();
-    this.getProcessSetting();
+   // this.getProcessSetting();
     this.getListStatusCode();
+    this.afterLoad();
   }
   getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
@@ -252,51 +253,17 @@ export class LeadsComponent
       }
     });
 }
-  async getProcessSetting() {
-    this.codxCmService
-      .getListProcessDefault([this.applyForLead])
-      .subscribe((res) => {
-        if (res) {
-          this.processId = res.recID;
-          this.dataObj = { processID: res.recID };
-          this.afterLoad();
-          // this.views = [
-          //   {
-          //     type: ViewType.listdetail,
-          //     active: false,
-          //     sameData: true,
-          //     model: {
-          //       template: this.itemTemplate,
-          //       panelRightRef: this.templateDetail,
-          //     },
-          //   },
-          //   // {
-          //   //   type: ViewType.kanban,
-          //   //   active: false,
-          //   //   sameData: false,
-          //   //   request: this.request,
-          //   //   request2: this.resourceKanban,
-          //   //   // toolbarTemplate: this.footerButton,
-          //   //   model: {
-          //   //     template: this.cardKanban,
-          //   //     template2: this.viewColumKaban,
-          //   //     setColorHeader: true,
-          //   //   },
-          //   // },
-          //   {
-          //     type: ViewType.grid,
-          //     active: false,
-          //     sameData: true,
-          //     model: {
-          //       // resources: this.columnGrids,
-          //       template2: this.templateMore,
-          //       // frozenColumns: 1,
-          //     },
-          //   },
-          // ];
-        }
-      });
-  }
+  // async getProcessSetting() {
+  //   this.codxCmService
+  //     .getListProcessDefault([this.applyForLead])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.processId = res.recID;
+  //         this.dataObj = { processID: res.recID };
+  //         this.afterLoad();
+  //       }
+  //     });
+  // }
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
