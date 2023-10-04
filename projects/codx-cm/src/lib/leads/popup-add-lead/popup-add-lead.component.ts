@@ -232,6 +232,7 @@ export class PopupAddLeadComponent
     this.tabInfo = [this.menuGeneralInfo, this.menuGeneralSystem];
     this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail];
     this.executeApiCalls();
+    this.lead.permissions = !this.lead?.permissions ? []: this.lead?.permissions;
   }
 
   async getParameterAddress() {
@@ -264,7 +265,7 @@ export class PopupAddLeadComponent
           }
         } else {
           this.owner = owner;
-          ownerName = '';
+          ownerName = $event?.component?.itemsSelected[0]?.UserName;
         }
         this.searchOwner('1', 'O', '0', this.owner, ownerName);
       } else if ($event.field === 'salespersonID') {
