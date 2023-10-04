@@ -1452,6 +1452,16 @@ export class CodxCmService {
     );
   }
 
+  getCustomerNameByrecID(id) {
+    return id ? this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'GetCustomerNameByRecIDAsync',
+      [id]
+    ) : null;
+  }
+
   //#region target and targetLines
   getTargetAndLinesAsync(bussinessID, year) {
     return this.api.exec<any>(
