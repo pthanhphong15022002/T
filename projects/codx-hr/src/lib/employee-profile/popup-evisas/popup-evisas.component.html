@@ -1,6 +1,6 @@
 <!-- <layout-list-detail
     #lstDetail
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [footer]="footer"
     [dialog]="dialog"
     [data]="visaObj"
@@ -13,25 +13,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="VisaNo"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaNo"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="VisaType"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaType"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -40,25 +40,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="EffectedDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="effectedDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="ExpiredDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="expiredDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -67,26 +67,26 @@
         <div class="col-6">
             <codx-label
                 fiedName="StayDays"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
             [showSpinButton]="false"
                 field="stayDays"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="VisaEntry"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaEntry"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -95,25 +95,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="NationalityID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="nationalityID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="IssuedDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="issuedDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -121,13 +121,13 @@
     <div class="form-group row">
         <codx-label
             fiedName="IssuedPlace"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="issuedPlace"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 
@@ -135,25 +135,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="PassportNo"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="passportNo"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="PassportNationalityID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="passportNationalityID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -165,8 +165,8 @@
         <codx-input
         [disabled]="disabledInput"
             field="note"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 </ng-template>
@@ -175,7 +175,7 @@
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" (click)="onSaveForm()">
                 <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+            <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
             </button>
         </div>
     </ng-template>
@@ -201,7 +201,7 @@
 
 <ng-template #itemTemplate let-data>
     <codx-temp-full
-        [formModel]="formModel"
+        [formModel]="form.formModel"
         [typeMF]="'hover'"
         [title]="data.visaNo"
         [icoTitleCss]="'icon-i-layout-text-sidebar-reverse icon-14 '"
@@ -221,14 +221,7 @@
     </div>
 </ng-template> -->
 
-<ng-template #footer>
-    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-        <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
-            <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-        </button>
-    </div>
-</ng-template>
+<ng-container *ngIf="visaObj">
 
 <codx-form
     #form
@@ -236,35 +229,37 @@
     [body]="body"
     [formModel]="formModel"
     [footer]="footer"
-    [group]="formGroup"
     [dialog]="dialog"
     [data]="visaObj"
-    *ngIf="isAfterRender"
->
+    >
+    <!-- [group]="form.formGroup"
+    *ngIf="isAfterRender" -->
 <ng-template #body>
+<ng-container *ngIf="form.formGroup">
+
     <div class="form-group row mt-5">
         <div class="col-6">
             <codx-label
                 fiedName="VisaNo"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaNo"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="VisaType"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaType"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -273,25 +268,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="EffectedDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="effectedDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="ExpiredDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="expiredDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -300,26 +295,26 @@
         <div class="col-6">
             <codx-label
                 fiedName="StayDays"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
             [showSpinButton]="false"
                 field="stayDays"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="VisaEntry"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="visaEntry"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -328,25 +323,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="NationalityID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="nationalityID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="IssuedDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="issuedDate"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -354,13 +349,13 @@
     <div class="form-group row">
         <codx-label
             fiedName="IssuedPlace"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="issuedPlace"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 
@@ -368,25 +363,25 @@
         <div class="col-6">
             <codx-label
                 fiedName="PassportNo"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="passportNo"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
         <div class="col-6">
             <codx-label
                 fiedName="PassportNationalityID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="passportNationalityID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </div>
@@ -394,14 +389,26 @@
     <div class="form-group row">
         <codx-label
             fiedName="Note"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="note"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
+</ng-container>
+
 </ng-template>
 </codx-form>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
+        <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+</ng-container>
