@@ -1,15 +1,19 @@
+<ng-container *ngIf="EAppointionObj">
+
 <codx-form
   #form
   [headerText]="headerText"
   [body]="body"
-  [formModel]="formModel"
+  [formModel]="form.formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [group]="formGroup"
   [data]="EAppointionObj"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
   <ng-template #body>
+<ng-container *ngIf="form.formGroup">
+
     <div *ngIf="isUseEmployee" class="form-group row mt-5">
       <div class="col-10">
         <div class="d-flex">
@@ -61,8 +65,8 @@
           [disabled]="disabledInput"
           [showInput]="false"
           field="employeeID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"
         >
         </codx-input>
@@ -72,7 +76,7 @@
       <div class="col-6">
         <codx-vll
           *ngIf="EAppointionObj.status"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [field]="'Status'"
           [value]="EAppointionObj?.status"
           [showText]="true"
@@ -85,128 +89,128 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Appoint" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Appoint" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="appoint"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="OrgUnitID" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="OrgUnitID" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           (render)="onRenderOrgUnitID($event)"
           field="orgUnitID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="onChangeOrgUnitID($event)"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="OldOrgUnitID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="true"
           (render)="onRenderOldOrgUnitID($event)"
           field="oldOrgUnitID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="JobLevel" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="JobLevel" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="jobLevel"
           (render)="onRenderJobLevel($event)"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="onChangeJobLevel($event)"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="OldJobLevel" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="OldJobLevel" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="true"
           field="oldJobLevel"
           (render)="onRenderOldJobLevel($event)"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PositionID" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PositionID" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="positionID"
           (render)="onRenderPositionID($event)"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="onChangePosition($event)"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="OldPositionID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="true"
           field="oldPositionID"
           (render)="onRenderOldPositionID($event)"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="LocationID" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="LocationID" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           (render)="onRenderLocationID($event)"
           field="locationID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="onChangeLocation($event)"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="OldLocationID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="disabledInput"
           (render)="onRenderOldLocationID($event)"
           [disabled]="true"
           field="oldLocationID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row mb-5">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
@@ -214,27 +218,27 @@
       <codx-label
         default="Quyết định"
         name="lblDecision"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </span>
 
     <div class="form-group row mt-5">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="autoNumField === 'DecisionNo' || disabledInput"
           field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="signedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -243,22 +247,22 @@
       <div class="col-6">
         <codx-label
           fiedName="EffectedDate"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="effectedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="ExpiredDate" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="expiredDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -267,13 +271,13 @@
       <codx-label
         class="fw-bold"
         fiedName="SignerID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="signerID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [showInput]="false"
         (valueChange)="valueChange($event)"
       ></codx-input>
@@ -311,7 +315,7 @@
         <codx-label
           default="File đính kèm"
           name="lblAttachments"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         >
         </codx-label>
       </div>
@@ -327,7 +331,7 @@
           hideDes="1"
           type="inline"
           allowMultiFile="1"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           (fileAdded)="addFiles($event)">
           displayThumb="full"
           showMessage="0"
@@ -336,13 +340,13 @@
       </div>
     </div>
     <!-- <div class="form-group">
-      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="SignerID" [formModel]="form.formModel"></codx-label>
       <div class="border-bottom pb-1">
         <codx-input
           [disabled]="disabledInput"
           field="signerID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
@@ -351,15 +355,16 @@
     <div class="form-group row">
       <codx-label
         fiedName="SignerPosition"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div> -->
+</ng-container>
   </ng-template>
 </codx-form>
 
@@ -373,7 +378,7 @@
       <codx-label
         fiedName="lblUploadFile"
         default="Đính kèm"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
 
@@ -386,8 +391,9 @@
       <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
   </div>
 </ng-template>
+</ng-container>

@@ -386,56 +386,97 @@
   </ng-container>
 
   <ng-container *ngIf="customField.dataType == 'TA'">
-    <table class="table table-row-bordered mt-3" *ngIf="columns?.length > 0">
-      <thead>
-        <tr class="bg-gray-100">
-          <ng-container *ngFor="let item of columns">
-            <th scope="col" class="fw-bold ps-4">
-              <span>{{ item?.title }}</span>
-            </th>
+    <div
+      class="h-100 scroll-x"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-width="auto"
+    >
+      <table
+        class="{{ settingWidth ? '' : 'table' }} table-row-bordered mt-3"
+        *ngIf="columns?.length > 0"
+      >
+        <thead>
+          <tr class="bg-gray-100">
+            <ng-container *ngFor="let item of columns">
+              <th
+                scope="col"
+                class="fw-bold ps-4"
+                [style]="
+                  item?.columnWidth > 0 && settingWidth
+                    ? 'width :' + item.columnWidth + 'px!important'
+                    : ''
+                "
+              >
+                <div>
+                  <span>{{ item?.title }}</span>
+                </div>
+                <div *ngIf="!disable">
+                  <span class="text-gray-500">{{ item?.fieldName }}</span>
+                </div>
+              </th>
+            </ng-container>
+            <th *ngIf="!disable" scope="col" class="w-100px fw-bold"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="!disable">
+            <ng-container *ngFor="let value of arrDataValue; let index = index">
+              <tr>
+                <ng-container
+                  *ngFor="let fieldFormat of formatViewTable(value)"
+                >
+                  <td
+                    class="ps-4"
+                    [style]="
+                      fieldFormat?.columnWidth > 0 && settingWidth
+                        ? 'width :' + fieldFormat?.columnWidth + 'px!important'
+                        : ''
+                    "
+                  >
+                    <codx-fields-format-value
+                      [data]="fieldFormat"
+                    ></codx-fields-format-value>
+                  </td>
+                </ng-container>
+                <td>
+                  <div class="d-flex justify-content-end align-items-center">
+                    <button
+                      class="btn btn-sm btn-icon btn-light-warning"
+                      (click)="updateLine(value, index)"
+                    >
+                      <i class="icon icon-14 icon-edit"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-icon btn-light-danger ms-2"
+                      (click)="removeLine(value, index)"
+                    >
+                      <i class="icon icon-14 icon-close"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
           </ng-container>
-          <th *ngIf="!disable" scope="col" class="w-100px fw-bold"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="!disable">
-          <ng-container *ngFor="let value of arrDataValue; let index = index">
+          <ng-container *ngIf="disable">
             <tr>
-              <ng-container *ngFor="let fieldFormat of formatViewTable(value)">
-                <td class="ps-4">
-                  <codx-fields-format-value
-                    [data]="fieldFormat"
-                  ></codx-fields-format-value>
+              <ng-container *ngFor="let item of columns">
+                <td
+                  class="ps-4"
+                  [style]="
+                    item?.columnWidth > 0 && settingWidth
+                      ? 'width :' + item.columnWidth + 'px!important'
+                      : ''
+                  "
+                >
+                  {{ item?.note }}
                 </td>
               </ng-container>
-              <td>
-                <div class="d-flex justify-content-end align-items-center">
-                  <button
-                    class="btn btn-sm btn-icon btn-light-warning"
-                    (click)="updateLine(value, index)"
-                  >
-                    <i class="icon icon-14 icon-edit"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-light-danger ms-2"
-                    (click)="removeLine(value, index)"
-                  >
-                    <i class="icon icon-14 icon-close"></i>
-                  </button>
-                </div>
-              </td>
             </tr>
           </ng-container>
-        </ng-container>
-        <ng-container *ngIf="disable">
-          <tr>
-            <ng-container *ngFor="let item of columns">
-              <td class="ps-4">{{ item?.note }}</td>
-            </ng-container>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </ng-container>
 
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">

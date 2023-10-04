@@ -24,7 +24,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import {
   DP_Instances_Steps,
   DP_Instances_Steps_Tasks,

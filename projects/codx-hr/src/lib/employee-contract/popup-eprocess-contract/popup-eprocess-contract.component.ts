@@ -21,7 +21,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxHrService } from '../../codx-hr.service';
 import { PopupSubEContractComponent } from '../../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
 import { PopupContractbenefitComponent } from './popup-contractbenefit/popup-contractbenefit.component';
@@ -37,7 +37,7 @@ export class PopupEProcessContractComponent
 {
   console = console;
   formModel: FormModel;
-  formGroup: FormGroup;
+  //formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
   actionType: string;
@@ -190,37 +190,40 @@ export class PopupEProcessContractComponent
           });
       }
     });
-    if (!this.formModel)
-      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrSevice
-            .getFormGroup(
-              this.formModel.formName,
-              this.formModel.gridViewName,
-              this.formModel
-            )
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrSevice
-        .getFormGroup(
-          this.formModel.formName,
-          this.formModel.gridViewName,
-          this.formModel
-        )
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+
+    this.initForm();
+
+    // if (!this.formModel)
+    //   this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrSevice
+    //         .getFormGroup(
+    //           this.formModel.formName,
+    //           this.formModel.gridViewName,
+    //           this.formModel
+    //         )
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrSevice
+    //     .getFormGroup(
+    //       this.formModel.formName,
+    //       this.formModel.gridViewName,
+    //       this.formModel
+    //     )
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
   }
 
   clickMF(event, data) {
@@ -352,13 +355,13 @@ export class PopupEProcessContractComponent
 
     this.formModel.currentData = this.data;
 
-    this.formGroup.patchValue(this.data);
+    this.form.formGroup.patchValue(this.data);
 
     if (this.employeeObj) {
-      this.formGroup.patchValue({
+      this.form.formGroup.patchValue({
         orgUnitID: this.employeeObj.orgUnitID,
       });
-      this.formGroup.patchValue({
+      this.form.formGroup.patchValue({
         positionID: this.employeeObj.positionID,
       });
     }
@@ -423,18 +426,18 @@ export class PopupEProcessContractComponent
             //     this.data.effectedDate = null;
             //     this.formModel.currentData = this.data;
 
-            //     this.formGroup.patchValue(this.data);
+            //     this.form.formGroup.patchValue(this.data);
 
             //     if (this.employeeObj) {
-            //       this.formGroup.patchValue({
+            //       this.form.formGroup.patchValue({
             //         orgUnitID: this.employeeObj.orgUnitID,
             //       });
-            //       this.formGroup.patchValue({
+            //       this.form.formGroup.patchValue({
             //         positionID: this.employeeObj.positionID,
             //       });
             //     }
 
-            //     this.isAfterRender = true;
+                this.isAfterRender = true;
             //     this.cr.detectChanges();
             //   });
             // }
@@ -486,8 +489,8 @@ export class PopupEProcessContractComponent
       if (this.data.signerID) {
         this.getEmployeeInfoById(this.data.signerID, 'signerID');
       }
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
+      // this.formModel.currentData = this.data;
+      // this.form.formGroup.patchValue(this.data);
       this.isAfterRender = true;
       this.cr.detectChanges();
     }
@@ -496,7 +499,7 @@ export class PopupEProcessContractComponent
   async addFiles(evt) {
     this.changedInForm = true;
     this.data.attachments = evt.data.length;
-    this.formGroup.patchValue(this.data);
+    this.form.formGroup.patchValue(this.data);
   }
 
   async onSaveForm() {
@@ -506,8 +509,8 @@ export class PopupEProcessContractComponent
     if (this.data.payForm == null) this.data.payForm = '';
     if (this.data.benefits == null) this.data.benefits = '';
 
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
 
       return;
@@ -586,7 +589,7 @@ export class PopupEProcessContractComponent
                       });
                   } else if (res[1] == 'HR009') {
                     this.data.hiredOn = this.data.effectedDate;
-                    this.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+                    this.form.formGroup.patchValue({ hiredOn: this.data.hiredOn });
 
                     this.hrSevice
                       .addEContract(this.data)
@@ -620,7 +623,7 @@ export class PopupEProcessContractComponent
       this.actionType = 'edit';
       this.data = data;
       this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
+      this.form.formGroup.patchValue(this.data);
       this.cr.detectChanges();
     }
   }
@@ -647,7 +650,7 @@ export class PopupEProcessContractComponent
   valueChange(event) {
     if (!event.data) {
       this.data.signerPosition = '';
-      this.formGroup.patchValue({
+      this.form.formGroup.patchValue({
         signerPosition: '',
       });
     }
@@ -659,14 +662,14 @@ export class PopupEProcessContractComponent
             event.component.comboBoxObject.itemData.ContractGroup;
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
-          this.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.form.formGroup.patchValue({ limitMonths: this.data.limitMonths });
           this.setExpiredDate(this.data.limitMonths);
           break;
         }
         case 'effectedDate': {
           //Fix bug when tab input field still error border
           // this.data.effectedDate = event.data;
-          // this.formGroup.patchValue({ effectedDate: this.data.effectedDate });
+          // this.form.formGroup.patchValue({ effectedDate: this.data.effectedDate });
           this.setExpiredDate(this.data.limitMonths);
           break;
         }
@@ -693,7 +696,7 @@ export class PopupEProcessContractComponent
       this.data.expiredDate = new Date(
         date.setMonth(date.getMonth() + month) - 1
       );
-      this.formGroup.patchValue({ expiredDate: this.data.expiredDate });
+      this.form.formGroup.patchValue({ expiredDate: this.data.expiredDate });
       this.cr.detectChanges();
     }
   }
@@ -716,10 +719,10 @@ export class PopupEProcessContractComponent
             });
 
           //Set employee data to field
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             orgUnitID: this.employeeObj.orgUnitID,
           });
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             positionID: this.employeeObj.positionID,
           });
         }
@@ -736,14 +739,14 @@ export class PopupEProcessContractComponent
                     if (res) {
                       this.employeeSign.positionName = res.positionName;
                       this.data.signerPosition = res.positionName;
-                      this.formGroup.patchValue({
+                      this.form.formGroup.patchValue({
                         signerPosition: this.data.signerPosition,
                       });
                     }
                   });
                 } else {
                   this.data.signerPosition = null;
-                  this.formGroup.patchValue({
+                  this.form.formGroup.patchValue({
                     signerPosition: this.data.signerPosition,
                   });
                 }

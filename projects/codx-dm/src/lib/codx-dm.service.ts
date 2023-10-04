@@ -1,5 +1,13 @@
 import { ChangeDetectorRef, Injectable, NgModule, OnInit } from '@angular/core';
-import { BehaviorSubject, finalize, map, Observable, share, Subject, windowWhen } from 'rxjs';
+import {
+  BehaviorSubject,
+  finalize,
+  map,
+  Observable,
+  share,
+  Subject,
+  windowWhen,
+} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   DataItem,
@@ -33,7 +41,7 @@ import { CopyComponent } from './copy/copy.component';
 import { EditFileComponent } from './editFile/editFile.component';
 import { RolesComponent } from './roles/roles.component';
 import { CreateFolderComponent } from './createFolder/createFolder.component';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
+import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
 import { PropertiesComponent } from './properties/properties.component';
 import { MoveComponent } from './move/move.component';
 import { VersionComponent } from './version/version.component';
@@ -61,9 +69,8 @@ export class CodxDMService {
   public titleMessage = 'Thông báo';
   public titelRenamemessage = 'Bạn có muốn lưu với tên {0} không ?';
   public FOLDER_NAME = 'DM'; //"QUẢN LÝ TÀI LIỆU CÁ NHÂN";
-  public titleEmptyTrash30 =
-    'Các mục trong thùng rác sẽ xóa vĩnh viễn trong';
-    public titleDeleteeMessage =
+  public titleEmptyTrash30 = 'Các mục trong thùng rác sẽ xóa vĩnh viễn trong';
+  public titleDeleteeMessage =
     'Bạn có muốn xóa hẳn {0} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?';
   public titleEmptyAction = 'Dọn sạch thùng rác';
   public titleNodaTa = 'Không có tài liệu';
@@ -88,7 +95,7 @@ export class CodxDMService {
   public parentFull = true;
   public parentCreate = true;
   public parentRead = true;
-  public paraSetting : any;
+  public paraSetting: any;
   public parentUpdate = true;
   public parentShare = true;
   public parentDownload = true;
@@ -135,7 +142,7 @@ export class CodxDMService {
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
-  
+
   public ChangeDataView = new BehaviorSubject<boolean>(null);
   isChangeDataView = this.ChangeDataView.asObservable();
 
@@ -243,10 +250,10 @@ export class CodxDMService {
 
   public deleteFileView = new BehaviorSubject<any>(null);
   isDeleteFileView = this.deleteFileView.asObservable();
-  
+
   public changeClickData = new BehaviorSubject<any>(null);
   isChangeClickData = this.changeClickData.asObservable();
-  
+
   public editFolder = new BehaviorSubject<any>(null);
   isEditFolder = this.editFolder.asObservable();
 
@@ -282,7 +289,6 @@ export class CodxDMService {
 
   public breadcumbChange = new BehaviorSubject<any>(null);
   isChangeBreadCumb = this.breadcumbChange.asObservable();
-
 
   // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
   // isListFolder = this.listFolder.asObservable();
@@ -330,33 +336,30 @@ export class CodxDMService {
 
   ngOnInit(): void {}
 
-  loadValuelist(vll:any): Observable<any>
-  {
-    let paras = ["VLL",vll];
-    let keyRoot = "VLL" + vll;
+  loadValuelist(vll: any): Observable<any> {
+    let paras = ['VLL', vll];
+    let keyRoot = 'VLL' + vll;
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
       if (c && c.has(key)) {
         return c.get(key);
       }
-    }
-    else {
+    } else {
       this.caches.set(keyRoot, new Map<any, any>());
     }
-    
+
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.cache.valueList(vll)
-    .pipe(
+    let observable = this.cache.valueList(vll).pipe(
       map((res) => {
         if (res) {
           let c = this.caches.get(keyRoot);
           c?.set(key, res);
           return res;
         }
-        return null
+        return null;
       }),
       share(),
       finalize(() => this.cachedObservables.delete(key))
@@ -365,30 +368,26 @@ export class CodxDMService {
     return observable;
   }
   //Load GridViewSetup
-  loadGridView(formName:any, gridViewName:any): Observable<any>
-  {
-    let paras = [formName,gridViewName];
+  loadGridView(formName: any, gridViewName: any): Observable<any> {
+    let paras = [formName, gridViewName];
     let keyRoot = formName + gridViewName;
     let key = JSON.stringify(paras).toLowerCase();
-    if (this.caches.has(keyRoot)) 
-    {
+    if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
       if (c && c.has(key)) return c.get(key);
     }
-    
 
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.cache.gridViewSetup(formName,gridViewName)
-    .pipe(
+    let observable = this.cache.gridViewSetup(formName, gridViewName).pipe(
       map((res) => {
         if (res) {
           let c = this.caches.get(keyRoot);
           c?.set(key, res);
           return res;
         }
-        return null
+        return null;
       }),
       share(),
       finalize(() => this.cachedObservables.delete(key))
@@ -397,12 +396,11 @@ export class CodxDMService {
     return observable;
   }
 
-  getRight(folder: FolderInfo , funcID:any = "") {
-
-    if(funcID && funcID != 'DMT00' && funcID != 'DMT02' && funcID != 'DMT03') {
+  getRight(folder: FolderInfo, funcID: any = '') {
+    if (funcID && funcID != 'DMT00' && funcID != 'DMT02' && funcID != 'DMT03') {
       this.disableUpload.next(true);
       this.disableInput.next(true);
-      return
+      return;
     }
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
@@ -422,10 +420,9 @@ export class CodxDMService {
     this.parentRevisionNote = folder.revisionNote;
     this.parentLocation = folder.location;
 
-  
     this.disableUpload.next(!folder.upload);
     this.disableInput.next(!folder.create);
- 
+
     // if (
     //   this.idMenuActive == 'DMT03' ||
     //   this.idMenuActive == 'DMT02' ||
@@ -516,7 +513,9 @@ export class CodxDMService {
   }
 
   getThumbnail(data) {
-    return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+    return `../../../assets/themes/dm/default/img/${this.getAvatar(
+      data.extension
+    )}`; //this.getAvatar(ext);
     // if (data.hasThumbnail == true) {
     //   let url = `${this.urlThumbnail}/${data.thumbnail}`;
     //   return url;// this.checkUrl(url, data);
@@ -630,11 +629,10 @@ export class CodxDMService {
               this.fileService
                 .deleteFileToTrash(id, this.folderId.getValue(), false)
                 .subscribe(async (res) => {
-                  if(res)
-                  {
+                  if (res) {
                     let list = this.listFiles;
                     //list = list.filter(item => item.recID != id);
-  
+
                     let index = list.findIndex(
                       (d) => d.recID.toString() === id.toString()
                     ); //find index in your array
@@ -655,16 +653,13 @@ export class CodxDMService {
                       this.updateHDD.next(i);
                       //   this.changeDetectorRef.detectChanges();
                     });
-                  }
-                  else this.notificationsService.notifyCode("SYS022");
-                 
+                  } else this.notificationsService.notifyCode('SYS022');
                 });
             } else {
               this.folderService
                 .deleteFolderToTrash(id, false)
                 .subscribe(async (res) => {
-                  if(res)
-                  {
+                  if (res) {
                     this.listFolder = this.listFolder.filter(
                       (x) => x.recID != id
                     );
@@ -731,7 +726,7 @@ export class CodxDMService {
           }
           // this.isBookmark = !this.isBookmark;
           this.listFolder = list;
-          
+
           //this.ChangeData.next(true);
           this.addFile.next(true);
           //that.changeDetectorRef.detectChanges();
@@ -743,269 +738,294 @@ export class CodxDMService {
   filterMoreFunction(e: any, data: any, modeView = false) {
     var bookmark = this.isBookmark(data);
     var type = this.getType(data, 'entity');
-      var typeDMT05 = this.getType(data, 'name');
-      var list = 'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233'; //DMT08
-      var listFolder = "DMT0512;DMT0513;DMT0515;DMT0516;DMT0519;DMT0520;DMT0521;DMT0522;DMT0517;DMT0525";
-      if (e) {
-        for (var i = 0; i < e.length; i++) {
-
-          if(this.idMenuActive == "DMT05")
-          {
-            if(typeDMT05 == "folder")
-            {
-              if (e[i].data != null && listFolder.indexOf(e[i].data.functionID) > -1) 
-              {
-                e[i].disabled = false;
-              }
-              else  e[i].disabled = true;
-            }
-            else
-            {
-              if (e[i].data != null && e[i].data.entityName == "DM_ShareFileInfo" && e[i].data.functionID != "DMT0535") e[i].disabled = false;
-              else e[i].disabled = true;
-            }
-            
-          }
-          else 
-          {
-            if (e[i].data != null && e[i].data.entityName == type) e[i].disabled = false;
+    var typeDMT05 = this.getType(data, 'name');
+    var list =
+      'DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233'; //DMT08
+    var listFolder =
+      'DMT0512;DMT0513;DMT0515;DMT0516;DMT0519;DMT0520;DMT0521;DMT0522;DMT0517;DMT0525';
+    if (e) {
+      for (var i = 0; i < e.length; i++) {
+        if (this.idMenuActive == 'DMT05') {
+          if (typeDMT05 == 'folder') {
+            if (
+              e[i].data != null &&
+              listFolder.indexOf(e[i].data.functionID) > -1
+            ) {
+              e[i].disabled = false;
+            } else e[i].disabled = true;
+          } else {
+            if (
+              e[i].data != null &&
+              e[i].data.entityName == 'DM_ShareFileInfo' &&
+              e[i].data.functionID != 'DMT0535'
+            )
+              e[i].disabled = false;
             else e[i].disabled = true;
           }
-          // DMT0204;DMT0216
-          // khong phai cho duyet
-          var listMove = 'DMT0204;DMT0216';
-  
-  
-          if (data.isSystem || (this.idMenuActive != 'DMT02' && this.idMenuActive != 'DMT03' && this.idMenuActive != 'DMT00')) 
-          {
-            if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) 
-            {
-              e[i].disabled = true;
-            }
+        } else {
+          if (e[i].data != null && e[i].data.entityName == type)
+            e[i].disabled = false;
+          else e[i].disabled = true;
+        }
+        // DMT0204;DMT0216
+        // khong phai cho duyet
+        var listMove = 'DMT0204;DMT0216';
+
+        if (
+          data.isSystem ||
+          (this.idMenuActive != 'DMT02' &&
+            this.idMenuActive != 'DMT03' &&
+            this.idMenuActive != 'DMT00')
+        ) {
+          if (
+            e[i].data != null &&
+            listMove.indexOf(e[i].data.functionID) > -1
+          ) {
+            e[i].disabled = true;
           }
-          // if (this.idMenuActive == "DMT03") {
-          //   if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) {
-          //     e[i].disabled = true;
-          //   }
+        }
+        // if (this.idMenuActive == "DMT03") {
+        //   if (e[i].data != null && listMove.indexOf(e[i].data.functionID) > -1) {
+        //     e[i].disabled = true;
+        //   }
+        // }
+        if (this.idMenuActive != 'DMT06' && this.idMenuActive != 'DMT07') {
+          if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
+            e[i].disabled = true;
+          }
+        } else {
+          //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
+          //list = "DMT0226;DMT0227;DMT0230;DMT0231";
+          //Chờ duyệt
+          if (data.approvalStatus == '3') {
+            if (data?.hasApproval) list = 'DMT0230;DMT0231';
+            else list = 'DMT0232';
+          }
+          //Chờ duyệt phát hành
+          else if (data.approvalStatus == '1') {
+            if (
+              (data.createdBy == this.user?.userID && data?.hasApproval) ||
+              data?.hasApproval
+            )
+              list = 'DMT0240;DMT0241';
+            else list = 'SYS02';
+          }
+          //Đã duyệt
+          else if (data.approvalStatus == '5') {
+            if (data?.approvalStatus == '8') list = 'DMT0226';
+            else list = 'DMT0233';
+          }
+          //Đã duyệt phát hành
+          else if (data.approvalStatus == '6') {
+            list = 'DMT0243';
+          }
+          //Từ chối duyệt phát hành
+          else if (data.approvalStatus == '7') {
+            list = 'DMT0243';
+          }
+          //Đã thu hồi quyền , từ chối
+          else if (data.approvalStatus == '8' || data.approvalStatus == '4') {
+            list = 'DMT0230';
+          } else list = 'DMT0227';
+          if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
+            e[i].disabled = false;
+
+            if (data.approvalStatus == '1') e[i].isbookmark = false;
+          } else {
+            e[i].disabled = true;
+          }
+
+          // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
+          //   e[i].disabled = true;
           // }
-          if (this.idMenuActive != 'DMT06' && this.idMenuActive != 'DMT07') {
-            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
+        }
+        // ""
+
+        if (type == 'DM_FolderInfo' || typeDMT05 == 'folder') {
+          // function in
+          if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
+            e[i].disabled = true;
+          }
+          // data?.isblur = true
+          // bookmark va unbookmark
+          if (bookmark) {
+            if (
+              e[i].data != null &&
+              (e[i].data.functionID == 'DMT0205' ||
+                e[i].data.functionID == 'DMT0517')
+            ) {
               e[i].disabled = true;
             }
           } else {
-            //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
-            //list = "DMT0226;DMT0227;DMT0230;DMT0231";
-            //Chờ duyệt 
-            if (data.approvalStatus == "3"){
-              if(data?.hasApproval) list = 'DMT0230;DMT0231';
-              else list = 'DMT0232'
-            } 
-             //Chờ duyệt phát hành
-            else if(data.approvalStatus == "1") {
-              if((data.createdBy == this.user?.userID && data?.hasApproval) || data?.hasApproval)list = 'DMT0240;DMT0241'
-              else list = 'SYS02'
+            if (
+              e[i].data != null &&
+              (e[i].data.functionID == 'DMT0223' ||
+                e[i].data.functionID == 'DMT0525')
+            ) {
+              e[i].disabled = true;
             }
-            //Đã duyệt
-            else if (data.approvalStatus == '5')  {
-              if(data?.approvalStatus == '8') list = 'DMT0226'
-              else list = 'DMT0233'
-            }
-            //Đã duyệt phát hành
-            else if (data.approvalStatus == '6')  {
-             list = 'DMT0243'
-            }
-            //Từ chối duyệt phát hành
-            else if (data.approvalStatus == '7')  {
-              list = 'DMT0243'
-              }
-            //Đã thu hồi quyền , từ chối
-            else if (data.approvalStatus == '8' || data.approvalStatus == '4')  {
-              list = 'DMT0230'
-              }
-            else list = 'DMT0227';
-            if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
+          }
+
+          // phuc hoi khong phai trong thung rac
+          if (
+            this.idMenuActive != 'DMT08' &&
+            e[i].data != null &&
+            e[i].data.functionID == 'DMT0234'
+          ) {
+            e[i].disabled = true;
+          }
+
+          // thung rac  (view, phuc hoi, xoa)
+          if (
+            this.idMenuActive == 'DMT08' &&
+            e[i].data != null &&
+            e[i].data.functionID != 'DMT0206' &&
+            e[i].data.functionID != 'DMT0234'
+          ) {
+            e[i].disabled = true;
+          }
+        } else {
+          if (modeView) {
+            list = 'DMT0212;DMT0217;DMT0225;DMT0222';
+            if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
+              e[i].disabled = true;
+            } else {
               e[i].disabled = false;
-  
-              if(data.approvalStatus == "1" ) e[i].isbookmark = false;
-            } else {
-              e[i].disabled = true;
             }
-  
-            // if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
-            //   e[i].disabled = true;
-            // }
           }
-          // ""
-  
-          if (type == 'DM_FolderInfo' || typeDMT05 == "folder") {
-            // function in
-            if (e[i].data != null && e[i].data.functionID == 'DMT0224') {
-              e[i].disabled = true;
-            }
-            // data?.isblur = true
-            // bookmark va unbookmark
-            if (bookmark) {
-              if (e[i].data != null && (e[i].data.functionID == 'DMT0205' || e[i].data.functionID == 'DMT0517')) {
-                e[i].disabled = true;
-              }
-            } else {
-              if (e[i].data != null && (e[i].data.functionID == 'DMT0223' || e[i].data.functionID == 'DMT0525')) {
-                e[i].disabled = true;
-              }
-            }
-  
-            // phuc hoi khong phai trong thung rac
+
+          // bookmark va unbookmark
+          if (bookmark) {
             if (
-              this.idMenuActive != 'DMT08' &&
               e[i].data != null &&
-              e[i].data.functionID == 'DMT0234'
-            ) {
-              e[i].disabled = true;
-            }
-  
-            // thung rac  (view, phuc hoi, xoa)
-            if (
-              this.idMenuActive == 'DMT08' &&
-              e[i].data != null &&
-              e[i].data.functionID != 'DMT0206' &&
-              e[i].data.functionID != 'DMT0234'
+              (e[i].data.functionID == 'DMT0217' ||
+                e[i].data.functionID == 'DMT0517')
             ) {
               e[i].disabled = true;
             }
           } else {
-            if (modeView) {
-              list = 'DMT0212;DMT0217;DMT0225;DMT0222';
-              if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
-                e[i].disabled = true;
-              } else {
-                e[i].disabled = false;
-              }
-            }
-  
-            // bookmark va unbookmark
-            if (bookmark) {
-              if (e[i].data != null && (e[i].data.functionID == 'DMT0217' || e[i].data.functionID == 'DMT0517')) {
-                e[i].disabled = true;
-              }
-            } else {
-              if (e[i].data != null && (e[i].data.functionID == 'DMT0225' || e[i].data.functionID == 'DMT0525')) {
-                e[i].disabled = true;
-              }
-            }
-            // thung tac
             if (
-              this.idMenuActive == 'DMT08' &&
               e[i].data != null &&
-              e[i].data.functionID != 'DMT0210' &&
-              e[i].data.functionID != 'DMT0219' &&
-              e[i].data.functionID != 'DMT0235'
-            ) {
-              e[i].disabled = true;
-            }
-  
-            // phuc hoi
-            if (
-              this.idMenuActive != 'DMT08' &&
-              e[i].data != null &&
-              e[i].data.functionID == 'DMT0235'
+              (e[i].data.functionID == 'DMT0225' ||
+                e[i].data.functionID == 'DMT0525')
             ) {
               e[i].disabled = true;
             }
           }
-        
-          // xét quyền
-          if (e[i].data) {
-            e[i].isblur = false; // duoc view
-            switch (e[i].data.functionID) {
-              // folder
-              case 'DMT0512':
-              case 'DMT0201': // share thu muc
-              case 'DMT0212': // chia se file
-                if (!data.share) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0513': //Chỉnh sửa
-              case 'DMT0515': //Thay đổi tên
-              case 'DMT0202': // chinh sua thu muc
-              case 'DMT0213': // chinh sua file
-              case 'DMT0203': // Thay đổi tên thu muc
-              case 'DMT0215': // thay doi ten file
-                if (!data.write) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0516':
-              case 'DMT0204': // di chuyen thu muc
-              case 'DMT0216': // di chuyen file
-                if (!data.moveable) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0519':
-              case 'DMT0206': //delete
-              case 'DMT0219': // xoa file
-                if (!data.delete || data.isSystem) e[i].isblur = true; // duoc view
-                break;
-              // case "DMT0207": //permission
-              //   break;
-              // case "DMT0208": //yeu cau cap quyen
-              //   break;
-              case 'DMT0522':
-              case 'DMT0209': //properties
-              case 'DMT0222': //properties file
-                //
-                if (!data.read) e[i].isblur = true; // duoc view
-                break;
-              // case "DMT0224": // in folder
-              //   break;
-              // case "DMT0226": // xet duyet
-              //   break;
-              // case "DMT0227": // tu choi
-              //   break;
-              // case "DMT0228": // huy
-              //   break;
-              // case "DMT0229": // lay lay quyen
-              //   break;
-              case 'DMT0535':
-              case 'DMT0233': // restore folder
-              case 'DMT0235': // restore file
-                if (!data.delete) e[i].isblur = true; // duoc view
-                break;
-              // file
-              case 'DMT0510':
-              case 'DMT0210': //xem file
-                if (!data.read) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0511':
-              case 'DMT0211': // download
-                if (!data.download) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0514':
-              case 'DMT0214': // Sao chép file
-                if (!data.create) e[i].isblur = true; // duoc view
-                break;
-              case 'DMT0518':
-              case 'DMT0218': // quan ly version
-                if(!data.write || !data.revision) e[i].isblur = true; // duoc view
-                if(!data.folderId && this.paraSetting.VersionControl) e[i].isblur = false;
-                break;
-  
-              // case "DMT0220": // persmission file
-              //   break;
-              // case "DMT0221": //yeu cau cap quyen file
-              //   break;
-              // case "DMT0230": // xet duyet
-              //   break;
-              // case "DMT0231": // tu choi
-              //   break;
-              // case "DMT0232": // huy
-              //   break;
-              // case "DMT0234": // lay lay quyen
-              //   break;
-  
-              default: // duoc view
+          // thung tac
+          if (
+            this.idMenuActive == 'DMT08' &&
+            e[i].data != null &&
+            e[i].data.functionID != 'DMT0210' &&
+            e[i].data.functionID != 'DMT0219' &&
+            e[i].data.functionID != 'DMT0235'
+          ) {
+            e[i].disabled = true;
+          }
+
+          // phuc hoi
+          if (
+            this.idMenuActive != 'DMT08' &&
+            e[i].data != null &&
+            e[i].data.functionID == 'DMT0235'
+          ) {
+            e[i].disabled = true;
+          }
+        }
+
+        // xét quyền
+        if (e[i].data) {
+          e[i].isblur = false; // duoc view
+          switch (e[i].data.functionID) {
+            // folder
+            case 'DMT0512':
+            case 'DMT0201': // share thu muc
+            case 'DMT0212': // chia se file
+              if (!data.share) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0513': //Chỉnh sửa
+            case 'DMT0515': //Thay đổi tên
+            case 'DMT0202': // chinh sua thu muc
+            case 'DMT0213': // chinh sua file
+            case 'DMT0203': // Thay đổi tên thu muc
+            case 'DMT0215': // thay doi ten file
+              if (!data.write) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0516':
+            case 'DMT0204': // di chuyen thu muc
+            case 'DMT0216': // di chuyen file
+              if (!data.moveable) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0519':
+            case 'DMT0206': //delete
+            case 'DMT0219': // xoa file
+              if (!data.delete || data.isSystem) e[i].isblur = true; // duoc view
+              break;
+            // case "DMT0207": //permission
+            //   break;
+            // case "DMT0208": //yeu cau cap quyen
+            //   break;
+            case 'DMT0522':
+            case 'DMT0209': //properties
+            case 'DMT0222': //properties file
+              //
+              if (!data.read) e[i].isblur = true; // duoc view
+              break;
+            // case "DMT0224": // in folder
+            //   break;
+            // case "DMT0226": // xet duyet
+            //   break;
+            // case "DMT0227": // tu choi
+            //   break;
+            // case "DMT0228": // huy
+            //   break;
+            // case "DMT0229": // lay lay quyen
+            //   break;
+            case 'DMT0535':
+            case 'DMT0233': // restore folder
+            case 'DMT0235': // restore file
+              if (!data.delete) e[i].isblur = true; // duoc view
+              break;
+            // file
+            case 'DMT0510':
+            case 'DMT0210': //xem file
+              if (!data.read) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0511':
+            case 'DMT0211': // download
+              if (!data.download) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0514':
+            case 'DMT0214': // Sao chép file
+              if (!data.create) e[i].isblur = true; // duoc view
+              break;
+            case 'DMT0518':
+            case 'DMT0218': // quan ly version
+              if (!data.write || !data.revision) e[i].isblur = true; // duoc view
+              if (!data.folderId && this.paraSetting.VersionControl)
                 e[i].isblur = false;
-                break;
-            }
+              break;
+
+            // case "DMT0220": // persmission file
+            //   break;
+            // case "DMT0221": //yeu cau cap quyen file
+            //   break;
+            // case "DMT0230": // xet duyet
+            //   break;
+            // case "DMT0231": // tu choi
+            //   break;
+            // case "DMT0232": // huy
+            //   break;
+            // case "DMT0234": // lay lay quyen
+            //   break;
+
+            default: // duoc view
+              e[i].isblur = false;
+              break;
           }
         }
       }
-   
+    }
   }
 
   checkUrl(url, data) {
@@ -1019,7 +1039,9 @@ export class CodxDMService {
       }
        */
     //return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`;//this.getAvatar(ext);
-    var ret = `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //'../../../assets/img/loader.gif';
+    var ret = `../../../assets/themes/dm/default/img/${this.getAvatar(
+      data.extension
+    )}`; //'../../../assets/img/loader.gif';
     // try {
     //   const xhr = new XMLHttpRequest();
     //   xhr.open('GET', url, false);
@@ -1049,8 +1071,11 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
-      if (data?.viewThumb && this.checkView(data?.read) == true) return environment.urlUpload + '/' + data.thumbnail;
-      return `../../../assets/themes/dm/default/img/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
+      if (data?.viewThumb && this.checkView(data?.read) == true)
+        return environment.urlUpload + '/' + data.thumbnail;
+      return `../../../assets/themes/dm/default/img/${this.getAvatar(
+        data.extension
+      )}`; //this.getAvatar(ext);
     }
   }
 
@@ -1092,9 +1117,7 @@ export class CodxDMService {
 
   showBookmark(item) {
     if (item.bookmarks != null) {
-      var list = item.bookmarks.filter(
-        (x) => x.objectID == this.user?.userID
-      );
+      var list = item.bookmarks.filter((x) => x.objectID == this.user?.userID);
       if (list.length > 0) return true;
       else return false;
     }
@@ -1160,12 +1183,12 @@ export class CodxDMService {
     recId: string,
     id: string,
     status: string,
-    isActive: boolean,
+    isActive: boolean
   ) {
     //
     if (type == 'file') {
       this.fileService
-        .UpdateRequestAsync(recId, id, status, isActive , this.idMenuActive)
+        .UpdateRequestAsync(recId, id, status, isActive, this.idMenuActive)
         .subscribe(async (res) => {
           let list = this.listFiles;
           var idTemplate = this.idMenuActive;
@@ -1217,7 +1240,8 @@ export class CodxDMService {
           let list = this.listFolder;
           var idTemplate = this.idMenuActive;
           //   if (idTemplate == "11" || idTemplate == "12" || idTemplate == "13")
-          if (idTemplate == 'DMT07' || idTemplate == '12' || idTemplate == '13') id = recId;
+          if (idTemplate == 'DMT07' || idTemplate == '12' || idTemplate == '13')
+            id = recId;
           //if (this.idMenuActive != '10' && this.idMenuActive != '13') {
           if (this.idMenuActive != '10' && this.idMenuActive != '13') {
             let index = list.findIndex(
@@ -1249,7 +1273,7 @@ export class CodxDMService {
               }
               //this.dmSV.listFolder.next(folder);
               this.listFolder = folder;
-              
+
               this.notificationsService.notify(res.message);
               //this.ChangeData.next(true);
             }
@@ -1283,29 +1307,22 @@ export class CodxDMService {
     let option = new SidebarModel();
     switch ($event.functionID) {
       // Hủy chờ xét duyệt
-      case "DMT0232":
-        {
-          this.setRequest(
-            type,
-            data.recID,
-            data.id,
-            '-2',
-            true)
-          break;
-        }
+      case 'DMT0232': {
+        this.setRequest(type, data.recID, data.id, '-2', true);
+        break;
+      }
       //Rút lại quyền sau khi đã duyệt
       case 'DMT0233':
-      case 'DMT0243':
-        {
-          this.setRequest(
-            type,
-            data.recID,
-            data.id,
-            this.idMenuActive == 'DMT06' ? '9' : '8',
-            true
-          );
-          break;
-        }
+      case 'DMT0243': {
+        this.setRequest(
+          type,
+          data.recID,
+          data.id,
+          this.idMenuActive == 'DMT06' ? '9' : '8',
+          true
+        );
+        break;
+      }
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
       case 'DMT0240':
@@ -1359,11 +1376,13 @@ export class CodxDMService {
         break;
       case 'DMT0511':
       case 'DMT0211': // download
-        this.fileService.getFile(data.recID,false).subscribe(async (file) => {
+        this.fileService.getFile(data.recID, false).subscribe(async (file) => {
           var id = file.recID;
           if (this.checkDownloadRight(file)) {
-            this.fileService.downloadFile(id).subscribe(async (item2)=>{
-              let blob = await fetch(environment.urlUpload +"/"+ file.pathDisk).then((r) => r.blob());
+            this.fileService.downloadFile(id).subscribe(async (item2) => {
+              let blob = await fetch(
+                environment.urlUpload + '/' + file.pathDisk
+              ).then((r) => r.blob());
               let url = window.URL.createObjectURL(blob);
               var link = document.createElement('a');
               link.setAttribute('href', url);
@@ -1380,9 +1399,8 @@ export class CodxDMService {
                 }
                 this.listFiles = files;
                 //this.ChangeData.next(true);
-
               }
-            })
+            });
           } else {
             this.notificationsService.notify(this.titleNoRight);
           }
@@ -1409,50 +1427,44 @@ export class CodxDMService {
       case 'SYS02':
         this.deleteFile(data, type);
         break;
-      
-        //Chỉnh sửa thư mục hoặc file
-      case 'DMT0513':
-        {
-          if(type == "folder")
-          {
-            option.DataService = this.dataService;
-            option.FormModel = this.formModel;
-            option.Width = '550px';
-            // let data = {} as any;
-            data.title = this.titleUpdateFolder;
-            data.id = data.recID;
-            data.readonly = $event.functionID == 'DMT0209' ? true : false;
-            this.callfc.openSide(CreateFolderComponent, data, option);
-          }
-          else
-          {
-            this.fileService.getFile(data.recID).subscribe((file) => {
-              if(file)
-              {
-                var option = new DialogModel();
-                option.FormModel = this.formModel;
-                var isCopyRight = false;
-                if(file.author) isCopyRight = true;
-                this.callfc.openForm(
-                  EditFileComponent,
-                  '',
-                  800,
-                  800,
-                  '',
-                  ['', file , isCopyRight,$event?.data?.customName],
-                  '',
-                  option
-                );
-            
-              }
-            });
-          }
-          break;
+
+      //Chỉnh sửa thư mục hoặc file
+      case 'DMT0513': {
+        if (type == 'folder') {
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          // let data = {} as any;
+          data.title = this.titleUpdateFolder;
+          data.id = data.recID;
+          data.readonly = $event.functionID == 'DMT0209' ? true : false;
+          this.callfc.openSide(CreateFolderComponent, data, option);
+        } else {
+          this.fileService.getFile(data.recID).subscribe((file) => {
+            if (file) {
+              var option = new DialogModel();
+              option.FormModel = this.formModel;
+              var isCopyRight = false;
+              if (file.author) isCopyRight = true;
+              this.callfc.openForm(
+                EditFileComponent,
+                '',
+                800,
+                800,
+                '',
+                ['', file, isCopyRight, $event?.data?.customName],
+                '',
+                option
+              );
+            }
+          });
         }
+        break;
+      }
 
       case 'DMT0202': // chinh sua thu muc
-      case 'DMT0209': 
-      { // properties folder
+      case 'DMT0209': {
+        // properties folder
         //debugger
         // var breadcumb = [];
         // var breadcumbLink = [];
@@ -1483,23 +1495,21 @@ export class CodxDMService {
 
       case 'DMT0213': // chinh sua file
         this.fileService.getFile(data.recID).subscribe((file) => {
-          if(file)
-          {
+          if (file) {
             var option = new DialogModel();
             option.FormModel = this.formModel;
             var isCopyRight = false;
-            if(file.author) isCopyRight = true;
+            if (file.author) isCopyRight = true;
             this.callfc.openForm(
               EditFileComponent,
               '',
               800,
               800,
               '',
-              ['', file , isCopyRight,$event?.data?.customName],
+              ['', file, isCopyRight, $event?.data?.customName],
               '',
               option
             );
-        
           }
         });
         break;
@@ -1524,7 +1534,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type ,null, $event?.data?.customName],
+                  ['1', data.recID, view, type, null, $event?.data?.customName],
                   ''
                 )
                 .closed.subscribe();
@@ -1547,7 +1557,7 @@ export class CodxDMService {
                   950,
                   650,
                   '',
-                  ['1', data.recID, view, type,null,$event?.data?.customName],
+                  ['1', data.recID, view, type, null, $event?.data?.customName],
                   ''
                 )
                 .closed.subscribe((item) => {
@@ -1848,25 +1858,21 @@ export class CodxDMService {
   emptyTrash() {
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
-    this.notificationsService
-      .alertCode("DM068", config)
-      .subscribe((x) => {
-        if (x.event.status == 'Y') {
-          this.folderService.emptyTrash('').subscribe(async (res) => {
-            if(res)
-            {
-              this.listFolder = [];
-              this.listFiles = [];
-              this.fileService.getTotalHdd().subscribe((i) => {
-                this.updateHDD.next(i);
-              });
-              this.ChangeDataView.next(true);
-              this.notificationsService.notifyCode("SYS008");
-            }
-           
-          });
-        }
-      });
+    this.notificationsService.alertCode('DM068', config).subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.folderService.emptyTrash('').subscribe(async (res) => {
+          if (res) {
+            this.listFolder = [];
+            this.listFiles = [];
+            this.fileService.getTotalHdd().subscribe((i) => {
+              this.updateHDD.next(i);
+            });
+            this.ChangeDataView.next(true);
+            this.notificationsService.notifyCode('SYS008');
+          }
+        });
+      }
+    });
   }
 
   copyFileTo(id, fullName, toselectId) {
@@ -1981,16 +1987,20 @@ export class CodxDMService {
       });
   }
 
-  getFileName(name:any)
-  {
-    if(!name) return ""
-    var arrName = name.split(".");
-    if(arrName.length >1) arrName.splice((arrName.length - 1), 1);
-    return arrName.join('.')
+  getFileName(name: any) {
+    if (!name) return '';
+    var arrName = name.split('.');
+    if (arrName.length > 1) arrName.splice(arrName.length - 1, 1);
+    return arrName.join('.');
   }
 
-  countFavorite(funcID:any,favsID:any)
-  {
-    return this.api.execSv("DM","DM","FolderBussiness","CountFavoriteAsync",[funcID,favsID])
+  countFavorite(funcID: any, favsID: any) {
+    return this.api.execSv(
+      'DM',
+      'DM',
+      'FolderBussiness',
+      'CountFavoriteAsync',
+      [funcID, favsID]
+    );
   }
 }

@@ -15,9 +15,9 @@ import {
   ViewChild,
   Injector,
 } from '@angular/core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Notes, NoteType, TempNote } from '@shared/models/notes.model';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
 
 @Component({
   selector: 'app-popup-add-update',

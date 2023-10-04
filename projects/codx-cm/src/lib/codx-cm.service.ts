@@ -35,7 +35,7 @@ export class CodxCmService {
   viewActiveType = new BehaviorSubject<any>(null);
   navigateCampaign = new BehaviorSubject<any>(null);
 
-  countLeadsBehavior = new BehaviorSubject<number>(0);
+  countLeadsBehavior = new BehaviorSubject<number>(-1);
 
   constructor(
     private api: ApiHttpService,
@@ -422,6 +422,10 @@ export class CodxCmService {
         map((r) => r[0]),
         tap()
       );
+  }
+
+  initCache() {
+    return this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync');
   }
 
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
@@ -1446,6 +1450,16 @@ export class CodxCmService {
       'GetProcessByBussinessIDAsync',
       bussinessID
     );
+  }
+
+  getCustomerNameByrecID(id) {
+    return id ? this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'GetCustomerNameByRecIDAsync',
+      [id]
+    ) : null;
   }
 
   //#region target and targetLines

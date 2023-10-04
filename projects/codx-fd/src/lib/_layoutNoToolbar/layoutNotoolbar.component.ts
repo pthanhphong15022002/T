@@ -1,6 +1,5 @@
-import { Component, OnInit, Injector } from '@angular/core';
-import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
-import { AlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/alert-drawer/alert-drawer.component';
+import { Component, Injector } from '@angular/core';
+import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-layout-notoolbar',
@@ -8,19 +7,13 @@ import { AlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers
   styleUrls: ['./layoutNotoolbar.component.css'],
 })
 export class LayoutNotoolbar extends LayoutBaseComponent {
-  
   dialog!: DialogRef;
-  constructor(inject: Injector,
-    private callfc: CallFuncService,
-    ) {
+  constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
     this.module = 'FD';
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
-  onAfterViewInit(): void { }
-
-  
+  onAfterViewInit(): void {}
 }

@@ -1,6 +1,20 @@
-import { ChangeDetectorRef, Component, Injector, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
-import { CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  Optional,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  CodxFormComponent,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  UIComponent,
+} from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentOrder } from '../../models/PaymentOrder.model';
 import { PaymentOrderLines } from '../../models/PaymentOrderLines.model';
@@ -8,6 +22,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AdvancedPayment } from '../../models/AdvancedPayment.model';
 import { AdvancedPaymentLinkComponent } from '../advanced-payment-link/advanced-payment-link.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-payment-order-add',
@@ -36,12 +51,12 @@ export class PaymentOrderAddComponent extends UIComponent {
     entityName: 'AC_PaymentOrderLines',
     formName: 'PaymentOrderLines',
     gridViewName: 'grvPaymentOrderLines',
-  }
+  };
   fmAdvancedPayment: FormModel = {
     entityName: 'AC_AdvancedPayment',
     formName: 'AdvancedPayment',
     gridViewName: 'grvAdvancedPayment',
-  }
+  };
   grvSetupPaymentOrderLines: any;
   grvSetupAdvancedPayment: any;
   constructor(
@@ -67,22 +82,29 @@ export class PaymentOrderAddComponent extends UIComponent {
       this.loadAdvancedPayment();
     }
 
-    this.cache.gridViewSetup(this.fmPaymentOrderLines.formName, this.fmPaymentOrderLines.gridViewName)
+    this.cache
+      .gridViewSetup(
+        this.fmPaymentOrderLines.formName,
+        this.fmPaymentOrderLines.gridViewName
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res)
-          this.grvSetupPaymentOrderLines = res;
+        if (res) this.grvSetupPaymentOrderLines = res;
       });
-    this.cache.gridViewSetup(this.fmAdvancedPayment.formName, this.fmAdvancedPayment.gridViewName)
+    this.cache
+      .gridViewSetup(
+        this.fmAdvancedPayment.formName,
+        this.fmAdvancedPayment.gridViewName
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res)
-          this.grvSetupAdvancedPayment = res;
+        if (res) this.grvSetupAdvancedPayment = res;
       });
   }
 
   onInit(): void {
-    this.showLabelAttachment = this.paymentOrder?.attachments > 0 ? true : false;
+    this.showLabelAttachment =
+      this.paymentOrder?.attachments > 0 ? true : false;
   }
 
   ngAfterViewInit() {
@@ -90,11 +112,13 @@ export class PaymentOrderAddComponent extends UIComponent {
 
     //Loại bỏ requied khi VoucherNo tạo khi lưu
     if (!this.paymentOrder.voucherNo) {
-      this.form.setRequire([{
-        field: 'VoucherNo',
-        isDisable: false,
-        require: false
-      }]);
+      this.form.setRequire([
+        {
+          field: 'VoucherNo',
+          isDisable: false,
+          require: false,
+        },
+      ]);
     }
   }
 
@@ -137,7 +161,7 @@ export class PaymentOrderAddComponent extends UIComponent {
   }
 
   lineChange(e: any, i: any) {
-    this.paymentOrderLines[i][e.field] = e.data
+    this.paymentOrderLines[i][e.field] = e.data;
     if (e.field == 'dr') {
       this.calTotalAmt();
     }
@@ -146,8 +170,7 @@ export class PaymentOrderAddComponent extends UIComponent {
   onSave() {
     this.inputValidate();
 
-    if (this.form.validation())
-      return;
+    if (this.form.validation()) return;
 
     if (this.validate != 0) {
       this.validate = 0;
@@ -159,18 +182,17 @@ export class PaymentOrderAddComponent extends UIComponent {
       this.form.formGroup.patchValue({ status: this.paymentOrder.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.form
+      .save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.paymentOrder.status = '7';
           this.form.formGroup.patchValue({ status: this.paymentOrder.status });
-        }
-        else {
+        } else {
           if (res?.update?.data) {
             this.paymentOrder = res.update.data;
-          }
-          else if (!res?.save) {
+          } else if (!res?.save) {
             this.paymentOrder = res;
           }
           this.saveLine();
@@ -179,25 +201,27 @@ export class PaymentOrderAddComponent extends UIComponent {
   }
 
   onSaveAndRelease() {
-    if (this.form.validation())
-      return;
+    if (this.form.validation()) return;
     if (this.paymentOrder.status == '7') {
       this.paymentOrder.status = '1';
       this.form.formGroup.patchValue({ status: this.paymentOrder.status });
     }
 
-    this.form.save(null, 0, '', '', true)
+    this.form
+      .save(null, 0, '', '', true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res?.update?.error || res?.save?.error) {
           this.paymentOrder.status = '7';
           this.form.formGroup.patchValue({ status: this.paymentOrder.status });
-        }
-        else {
+        } else {
           this.api
-            .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SaveListPaymentOrderAsync', [
-              this.paymentOrderLines
-            ])
+            .exec<any>(
+              'AC',
+              'PaymentOrderLinesBusiness',
+              'SaveListPaymentOrderAsync',
+              [this.paymentOrderLines]
+            )
             .pipe(takeUntil(this.destroy$))
             .subscribe((res) => {
               if (res) {
@@ -245,8 +269,7 @@ export class PaymentOrderAddComponent extends UIComponent {
                   });
               } else this.notification.notifyCode(result?.msgCodeError);
             });
-        }
-        else {
+        } else {
           this.dialog.close();
         }
       });
@@ -254,9 +277,12 @@ export class PaymentOrderAddComponent extends UIComponent {
 
   saveLine() {
     this.api
-      .exec<any>('AC', 'PaymentOrderLinesBusiness', 'SaveListPaymentOrderAsync', [
-        this.paymentOrderLines
-      ])
+      .exec<any>(
+        'AC',
+        'PaymentOrderLinesBusiness',
+        'SaveListPaymentOrderAsync',
+        [this.paymentOrderLines]
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
@@ -287,7 +313,7 @@ export class PaymentOrderAddComponent extends UIComponent {
   deleteLine(index: any) {
     this.api
       .exec<any>('AC', 'PaymentOrderLinesBusiness', 'DeleteAsync', [
-        this.paymentOrderLines[index]
+        this.paymentOrderLines[index],
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -301,7 +327,7 @@ export class PaymentOrderAddComponent extends UIComponent {
   loadPaymentOrderLines() {
     this.api
       .exec<any>('AC', 'PaymentOrderLinesBusiness', 'LoadDataAsync', [
-        this.paymentOrder.recID
+        this.paymentOrder.recID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -347,7 +373,9 @@ export class PaymentOrderAddComponent extends UIComponent {
 
   addFiles(evt) {
     this.paymentOrder.attachments = evt.data.length;
-    this.form.formGroup.patchValue({ attachments: this.paymentOrder.attachments });
+    this.form.formGroup.patchValue({
+      attachments: this.paymentOrder.attachments,
+    });
   }
 
   popupUploadFile() {
@@ -380,7 +408,8 @@ export class PaymentOrderAddComponent extends UIComponent {
 
   calTotalCR() {
     if (this.paymentOrder?.totalAmt > this.advancedPayment?.totalAmt) {
-      this.paymentOrder.totalCR = this.paymentOrder.totalAmt - this.advancedPayment.totalAmt;
+      this.paymentOrder.totalCR =
+        this.paymentOrder.totalAmt - this.advancedPayment.totalAmt;
       this.form.formGroup.patchValue({ totalCR: this.paymentOrder.totalCR });
       this.dt.detectChanges();
     }

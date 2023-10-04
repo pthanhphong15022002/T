@@ -37,7 +37,7 @@
       [title]="data.title"
       [desc]="data.descriptions"
       descLine="2" 
-      [date]="data.createdOn"
+      [date]="data.modifiedOn || data.createdOn"
       [status]="data.approveStatus" 
       statusVll="CO003" 
       [bookmark]="false"

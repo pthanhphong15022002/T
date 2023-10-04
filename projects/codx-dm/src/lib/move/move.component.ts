@@ -28,7 +28,7 @@ import { FolderInfo } from '@shared/models/folder.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, ItemInterval } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 
@@ -439,7 +439,10 @@ export class MoveComponent implements OnInit {
   onSelectionAddChanged($node, tree) {
     var id = $node.data.recID;
     this.selectId = id;
-    if ($node.data.items && $node.data.items.length <= 0) {
+    if (
+      !$node.data.items ||
+      ($node.data.items && $node.data.items.length == 0)
+    ) {
       this.folderService.getFolders(id).subscribe(async (res) => {
         var data = res[0].filter(
           (item) => item.read && item.recID.toString() != this.id
@@ -553,8 +556,7 @@ export class MoveComponent implements OnInit {
                 that.dmSV.listFolder = list;
                 that.changeDetectorRef.detectChanges();
               }
-            }
-            else {
+            } else {
               this.dmSV.addFolder.next(res.data); // them node con
               that.dmSV.ChangeData.next(true);
             }

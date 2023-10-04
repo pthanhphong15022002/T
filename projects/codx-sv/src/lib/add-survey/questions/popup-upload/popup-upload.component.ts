@@ -18,9 +18,9 @@ import {
   ImageViewerComponent,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../../../codx-sv.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'app-popup-upload',
@@ -172,21 +172,16 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   async selectedFile(e) {
     this.generateGuid();
     if (this.inline == false) {
-      for(var i = 0 ; i < e.data.length ; i++)
-      {
+      for (var i = 0; i < e.data.length; i++) {
         e.data[i].objectID = JSON.parse(JSON.stringify(this.guidID));
       }
-     
     } else {
       if (this.itemAnswer) {
-        for(var i = 0 ; i < e.data.length ; i++)
-        {
+        for (var i = 0; i < e.data.length; i++) {
           e.data[i].objectID = this.itemAnswer.recID;
         }
-      }
-      else {
-        for(var i = 0 ; i < e.data.length ; i++)
-        {
+      } else {
+        for (var i = 0; i < e.data.length; i++) {
           e.data[i].objectID = this.data.recID;
         }
       }
@@ -196,18 +191,17 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     if (files.length > 0) {
       files.map((dt: any) => {
         if (dt.mimeType.indexOf('image') >= 0) {
-          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.IMAGE;
+          dt['referType'] = this.referType + '_' + this.REFER_TYPE.IMAGE;
         } else if (dt.mimeType.indexOf('video/mp4') >= 0) {
-          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.VIDEO;
+          dt['referType'] = this.referType + '_' + this.REFER_TYPE.VIDEO;
         } else {
-          dt['referType'] = this.referType +"_"+ this.REFER_TYPE.APPLICATION;
+          dt['referType'] = this.referType + '_' + this.REFER_TYPE.APPLICATION;
         }
       });
     }
     this.ATM_Image.fileUploadList = files;
     (await this.ATM_Image.saveFilesObservable()).subscribe((result: any) => {
-      if(files.length == 1)
-      {
+      if (files.length == 1) {
         if (result.data) {
           if (this.modeFile == 'change') {
             this.SVServices.deleteFile(
@@ -226,12 +220,9 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
           };
           this.dialog.close([obj]);
         }
-      }
-      else if(result && result.length > 0)
-      {
+      } else if (result && result.length > 0) {
         var arr = [];
-        for(var i = 0 ; i < result.length ; i++)
-        {
+        for (var i = 0; i < result.length; i++) {
           if (result[i].data) {
             if (this.modeFile == 'change') {
               this.SVServices.deleteFile(

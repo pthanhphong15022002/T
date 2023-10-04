@@ -21,7 +21,7 @@ import {
 })
 export class PopupEPassportsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   passportObj;
   lstPassports;
@@ -29,7 +29,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   headerText;
   actionType;
   idField = 'RecID';
-  isAfterRender = false;
+  // isAfterRender = false;
   employId;
   disabledInput = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -45,6 +45,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
+    
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
@@ -57,30 +58,31 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    } else {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-    }
+    this.initForm();
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // } else {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+    // }
   }
   initForm() {
     if (this.actionType == 'add') {
@@ -98,10 +100,10 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
             this.passportObj.expiredDate = null;
 
             this.passportObj.employeeID = this.employId;
-            this.formModel.currentData = this.passportObj;
-            this.formGroup.patchValue(this.passportObj);
+            // this.formModel.currentData = this.passportObj;
+            // this.form.formGroup.patchValue(this.passportObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -114,21 +116,21 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
             this.passportObj.expiredDate = null;
           }
         }
-        this.formGroup.patchValue(this.passportObj);
-        this.formModel.currentData = this.passportObj;
+        // this.form.formGroup.patchValue(this.passportObj);
+        // this.formModel.currentData = this.passportObj;
         this.cr.detectChanges();
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
       }
     }
     // this.formModel.currentData = this.passportObj;
-    // this.formGroup.patchValue(this.passportObj);
+    // this.form.formGroup.patchValue(this.passportObj);
     // this.cr.detectChanges();
     // this.isAfterRender = true;
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
       return;
     }
@@ -158,7 +160,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
         });
     } else {
       this.hrService
-        .updateEmployeePassportInfo(this.formModel.currentData)
+        .updateEmployeePassportInfo(this.form.data)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');

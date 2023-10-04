@@ -21,7 +21,7 @@ import {
 })
 export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   disciplineObj;
   lstDiscipline;
@@ -33,7 +33,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   idField = 'RecID';
   genderGrvSetup: any;
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   disabledInput = false;
   loaded: boolean = false;
@@ -116,9 +116,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
               this.disciplineObj.disciplineDate = null;
             }
             this.disciplineObj.employeeID = this.employId;
-            this.formModel.currentData = this.disciplineObj;
-            this.formGroup.patchValue(this.disciplineObj);
-            this.isAfterRender = true;
+            // this.formModel.currentData = this.disciplineObj;
+            // this.form.formGroup.patchValue(this.disciplineObj);
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
@@ -145,9 +145,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         this.getEmployeeInfoById(this.disciplineObj.signerID, 'SignerID');
       }
 
-      this.formGroup.patchValue(this.disciplineObj);
-      this.formModel.currentData = this.disciplineObj;
-      this.isAfterRender = true;
+      // this.form.formGroup.patchValue(this.disciplineObj);
+      // this.formModel.currentData = this.disciplineObj;
+      // this.isAfterRender = true;
       this.cr.detectChanges();
     }
   }
@@ -186,24 +186,27 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         this.genderGrvSetup = res?.Gender;
       });
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+
+      this.initForm();
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
       return;
     }
@@ -247,7 +250,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.formModel.currentData = JSON.parse(JSON.stringify(this.disciplineObj));
 
     this.actionType = 'edit';
-    this.formGroup?.patchValue(this.disciplineObj);
+    this.form.formGroup?.patchValue(this.disciplineObj);
     this.cr.detectChanges();
   }
 
@@ -274,7 +277,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
                   if (res) {
                     this.employeeSign.positionName = res.positionName;
                     this.disciplineObj.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
+                    this.form.formGroup.patchValue({
                       signerPosition: this.disciplineObj.signerPosition,
                     });
                     this.cr.detectChanges();
@@ -282,7 +285,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
                 });
               } else {
                 this.disciplineObj.signerPosition = null;
-                this.formGroup.patchValue({
+                this.form.formGroup.patchValue({
                   signerPosition: this.disciplineObj.signerPosition,
                 });
               }
@@ -298,7 +301,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   valueChange(event) {
     if (!event.data) {
       this.disciplineObj.signerPosition = '';
-      this.formGroup.patchValue({
+      this.form.formGroup.patchValue({
         signerPosition: '',
       });
     }
@@ -311,7 +314,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           if (itemSelected?.DisciplineFormCategory) {
             this.disciplineObj.disciplineFormCategory =
               itemSelected?.DisciplineFormCategory;
-            this.formGroup.patchValue({
+            this.form.formGroup.patchValue({
               disciplineFormCategory: this.disciplineObj.disciplineFormCategory,
             });
           }
@@ -333,7 +336,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           //       .subscribe((res) => {
           //         if (res) {
           //           this.disciplineObj.signerPosition = res.positionName;
-          //           this.formGroup.patchValue({
+          //           this.form.formGroup.patchValue({
           //             signerPosition: this.disciplineObj.signerPosition,
           //           });
           //           this.cr.detectChanges();
@@ -341,7 +344,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
           //       });
           //   } else {
           //     this.disciplineObj.signerPosition = null;
-          //     this.formGroup.patchValue({
+          //     this.form.formGroup.patchValue({
           //       signerPosition: this.disciplineObj.signerPosition,
           //     });
           //   }

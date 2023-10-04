@@ -62,10 +62,10 @@ export class ProgressbarComponent implements OnInit, OnChanges {
         this.onLoad();
         this.load(Math.floor(this.progress));
       },100);
-    } 
+    }
     if(changes?.status || changes?.vllData || changes?.progress){
       this.setProgressLinear();
-    }   
+    }
   }
   ngOnInit(): void {
     this.HTMLProgress = `<div style="font-size:12px;font-weight:600;color:${this.color};fill:${this.color};margin-top: 2px;"><span></span></div>`;
@@ -122,7 +122,7 @@ export class ProgressbarComponent implements OnInit, OnChanges {
 
   setProgressLinear(){
     if(this.progress == 100) this.status = '3';
-    if(this.progress == 0 && this.status == '3') this.status = '2';
+    if(this.progress == 0 && this.status == '3' && !this.isStep) this.status = '2';
     let value = this.vllData?.find(vll => vll.value == this.status);
     if(!value){return;}
     if(this.isStep){

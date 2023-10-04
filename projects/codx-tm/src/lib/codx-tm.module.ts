@@ -1,4 +1,3 @@
-import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PopupAddDayoffsComponent } from './setting/calendar/popup-add-dayoffs/popup-add-dayoffs.component';
@@ -59,7 +58,7 @@ import {
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { SprintDetailsComponent } from './sprints/sprintdetails/sprintdetails.component';
 import { DashboardComponent } from './sprints/sprintdetails/dashboard/dashboard.component';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
@@ -77,6 +76,7 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-common/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 
 export const routes: Routes = [
   {

@@ -1,81 +1,37 @@
-<codx-form
-  headerText="{{ title }}"
-  subHeaderText=""
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  #form
->
+<codx-form headerText="{{ title }}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog" #form>
 </codx-form>
 <ng-template #body>
   <div class="form-group row mt-3">
     <div class="col-4">
       <div>
-        <codx-label
-          fiedName="StartDate"
-          [formModel]="form.formModel"
-          default="Ngày"
-        >
+        <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày">
         </codx-label>
       </div>
-      <codx-input
-        type="datetime"
-        class="test-datetime"
-        [crrValue]="meeting?.startDate"
-        (valueChange)="valueDateChange($event)"
-        field="startDate"
-        format="d"
-        placeholder="datetime"
-      >
+      <codx-input type="datetime" class="test-datetime" [crrValue]="meeting?.startDate"
+        (valueChange)="valueDateChange($event)" field="startDate" format="d" placeholder="datetime">
       </codx-input>
     </div>
     <div class="col-3">
       <div>
-        <codx-label
-          fiedName="StartDate"
-          [formModel]="form.formModel"
-          default="Từ giờ"
-        >
+        <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Từ giờ">
         </codx-label>
       </div>
-      <codx-input
-        type="datetime"
-        [crrValue]="startTime"
-        format="t"
-        placeholder="timefrom"
-        (valueChange)="valueStartTimeChange($event)"
-      >
+      <codx-input type="datetime" [crrValue]="startTime" format="t" placeholder="pTimeFrom"
+        (valueChange)="valueStartTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-3">
       <div>
-        <codx-label
-          fiedName="EndDate"
-          [formModel]="form.formModel"
-          default="Đến giờ"
-        >
+        <codx-label fiedName="EndDate" [formModel]="form.formModel" default="Đến giờ">
         </codx-label>
       </div>
-      <codx-input
-        type="datetime"
-        [crrValue]="endTime"
-        format="t"
-        placeholder="timefrom"
-        (valueChange)="valueEndTimeChange($event)"
-      >
+      <codx-input type="datetime" [crrValue]="endTime" format="t" placeholder="pTimeFrom"
+        (valueChange)="valueEndTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-2 mt-6">
-      <codx-input
-        #checkbox
-        type="checkbox"
-        name="checkbox"
-        label="Cả ngày"
-        labelPosition="After"
-        [formModel]="form.formModel"
-        (valueChange)="valueChangeCheckFullDay($event)"
-        [crrValue]="isFullDay"
-      >
+      <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày" labelPosition="After"
+        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
@@ -90,34 +46,18 @@
     </div>
     <!-- <ejs-combobox id='locationCBB' #locationCBB [dataSource]='listRoom' [fields]='fields'
       [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox> -->
-    <ejs-dropdownlist
-      id="locationCBB"
-      #locationCBB
-      [dataSource]="listRoom"
-      [fields]="fields"
-      [placeholder]="'Phòng họp'"
-      (valueChange)="cbxChange($event)"
-    ></ejs-dropdownlist>
+    <ejs-dropdownlist id="locationCBB" #locationCBB [dataSource]="listRoom" [fields]="fields"
+      [placeholder]="'Phòng họp'" (valueChange)="cbxChange($event)"></ejs-dropdownlist>
   </div>
   <div class="form-group">
     <codx-label default="Bình luận"></codx-label>
-    <codx-input
-      type="textarea"
-      class="resize-none"
-      (valueChange)="valueChange($event)"
-      [crrValue]="comment"
-      format="ed2"
-      rows="5"
-    >
+    <codx-input type="textarea" class="resize-none" (valueChange)="valueChange($event)" [crrValue]="comment"
+      format="ed2" rows="5">
     </codx-input>
   </div>
 </ng-template>
 <ng-template #footer>
   <button type="button" (click)="onSave()" class="btn btn-primary">
-    <codx-label
-      name="Save"
-      [formModel]="dialog.formModel"
-      default="Lưu"
-    ></codx-label>
+    <codx-label name="Save" [formModel]="dialog.formModel" default="Lưu"></codx-label>
   </button>
 </ng-template>

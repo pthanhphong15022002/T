@@ -22,11 +22,11 @@ export class PopupJobGeneralInfoComponent
   implements OnInit
 {
   idField = 'RecID';
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
   data;
-  isAfterRender = false;
+  //isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
@@ -47,28 +47,28 @@ export class PopupJobGeneralInfoComponent
   }
 
   initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-      .then((fg) => {
-        if (fg) {
-          this.formGroup = fg;
-          this.formGroup.patchValue(this.data);
-          this.formModel.currentData = this.data;
-          this.cr.detectChanges();
-          this.isAfterRender = true;
-        }
-      });
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.formGroup = fg;
+    //       this.formGroup.patchValue(this.data);
+    //       this.formModel.currentData = this.data;
+    //       this.cr.detectChanges();
+    //       // this.isAfterRender = true;
+    //     }
+    //   });
   }
 
   onInit(): void {
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.initForm();
-        }
-      });
-    } else this.initForm();
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.initForm();
+    //     }
+    //   });
+    // } else this.initForm();
   }
 
   ngAfterViewInit() {
@@ -80,8 +80,8 @@ export class PopupJobGeneralInfoComponent
   }
 
   onSaveForm() {
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if(this.form.formGroup.invalid){
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }

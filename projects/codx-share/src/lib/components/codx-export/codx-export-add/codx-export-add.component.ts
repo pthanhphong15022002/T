@@ -1,9 +1,7 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
   OnChanges,
   OnInit,
   Optional,
@@ -12,7 +10,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   Validators,
   FormBuilder,
@@ -24,23 +21,17 @@ import {
   AuthService,
   CacheService,
   CodxService,
-  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
   TenantStore,
 } from 'codx-core';
-import { type } from 'os';
-import { Observable, from, map, mergeMap, of } from 'rxjs';
-import { AttachmentComponent } from '../../attachment/attachment.component';
-import { DocumentEditorComponent, DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
+import { Observable, from, mergeMap } from 'rxjs';
+import { DocumentEditorContainerComponent } from '@syncfusion/ej2-angular-documenteditor';
 import { environment } from 'src/environments/environment';
-import {
-  ClickEventArgs,
-  MenuItemModel,
-} from '@syncfusion/ej2-angular-navigations';
+import { ClickEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { lvFileClientAPI } from '@shared/services/lv.component';
-import { SelectEventArgs } from '@syncfusion/ej2-angular-lists';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-export-add',
@@ -247,9 +238,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
               if (item && item[0]) {
                 this.notifySvr.notifyCode('RS002');
                 this.attachment2.objectId = item[1].recID;
-                this.attachment2.fileUploadList.forEach(elm=>{
-                  elm.objectType ='AD_ExcelTemplates';
-                  elm.funcID = "AD001";
+                this.attachment2.fileUploadList.forEach((elm) => {
+                  elm.objectType = 'AD_ExcelTemplates';
+                  elm.funcID = 'AD001';
                 });
                 //this.attachment2.saveFiles();
                 //Upload file
@@ -285,9 +276,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item[0] == true) {
               this.notifySvr.notifyCode('RS002');
               this.attachment2.objectId = item[1][0].recID;
-              this.attachment2.fileUploadList.forEach(elm=>{
-                elm.objectType ='AD_ExcelTemplates';
-                elm.funcID = "AD001";
+              this.attachment2.fileUploadList.forEach((elm) => {
+                elm.objectType = 'AD_ExcelTemplates';
+                elm.funcID = 'AD001';
               });
               if (this.fileCount > 0) {
                 /* this.file.deleteFileByObjectIDType(this.idCrrFile,"AD_ExcelTemplates",true).subscribe(item=>{
@@ -322,7 +313,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     } else {
       if (this.action == 'add') {
         this.exportAddForm.value.refID = this.refID;
-        this.exportAddForm.value.refType = this.refType; 
+        this.exportAddForm.value.refType = this.refType;
         this.api
           .execActionData(
             'AD_WordTemplates',
@@ -333,23 +324,22 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
             if (item && item.length > 1) {
               this.attachment1.objectId = item[1][0].recID;
               this.attachment1.objectType = 'AD_WordTemplates';
-              this.attachment1.functionID = "AD002";
-              this.attachment1.fileUploadList.forEach(elm=>{
-                elm.objectType ='AD_WordTemplates';
-                elm.funcID = "AD002";
+              this.attachment1.functionID = 'AD002';
+              this.attachment1.fileUploadList.forEach((elm) => {
+                elm.objectType = 'AD_WordTemplates';
+                elm.funcID = 'AD002';
               });
-              this.onSaveWord().subscribe(saveW =>{
-                if(saveW) {
-                  this.dialog.close([item[1][0], this.type,this.nameFile]);
+              this.onSaveWord().subscribe((saveW) => {
+                if (saveW) {
+                  this.dialog.close([item[1][0], this.type, this.nameFile]);
                   this.notifySvr.notifyCode('RS002');
-                }
-                else this.notifySvr.notifyCode('SYS023');
+                } else this.notifySvr.notifyCode('SYS023');
               });
             } else this.notifySvr.notifyCode('SYS023');
           });
       } else {
-        this.exportAddForm.value.refID = this.refID; 
-        this.exportAddForm.value.refType = this.refType; 
+        this.exportAddForm.value.refID = this.refID;
+        this.exportAddForm.value.refType = this.refType;
         this.exportAddForm.value.docFile = null;
         this.exportAddForm.value.xmlFile = null;
         this.exportAddForm.value.xmlSchemaFile = null;
@@ -369,29 +359,25 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           .subscribe((item) => {
             if (!item) return;
             if (item[0] == true) {
-              if (this.isContentChange) 
-              {
+              if (this.isContentChange) {
                 this.file
                   .deleteFileToTrash(this.idCrrFile, '', true)
                   .subscribe((res) => {
                     if (res) {
                       this.attachment1.objectId = this.data.recID;
                       this.attachment1.objectType = 'AD_WordTemplates';
-                      this.attachment1.fileUploadList.forEach(elm=>{
-                        elm.objectType ='AD_WordTemplates';
-                        elm.funcID = "AD002";
+                      this.attachment1.fileUploadList.forEach((elm) => {
+                        elm.objectType = 'AD_WordTemplates';
+                        elm.funcID = 'AD002';
                       });
-                      this.onSaveWord().subscribe(saveW =>{
-                        if(saveW) this.dialog.close([item[1][0], this.type]);
+                      this.onSaveWord().subscribe((saveW) => {
+                        if (saveW) this.dialog.close([item[1][0], this.type]);
                       });
                     }
                   });
-              }
-              else this.dialog.close([item[1][0], this.type]);
+              } else this.dialog.close([item[1][0], this.type]);
               this.notifySvr.notifyCode('RS002');
-            } 
-            else 
-            {
+            } else {
               this.notifySvr.notify('SYS021');
             }
           });
@@ -439,17 +425,24 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       this.loadContentWord(e[0].pathDisk);
     }
   }
-  onSaveWord() : Observable<any[]| any>{
+  onSaveWord(): Observable<any[] | any> {
     var saveAsBlob = this.container.documentEditor.saveAsBlob('Docx');
     var fSaveAsBlob = from(saveAsBlob);
-    return fSaveAsBlob.pipe(mergeMap((blob: Blob)=>{
-      var file = new File([blob], this.nameFile || this.formModel.entityName);
-      this.attachment1.isSaveSelected = '1';
-      this.attachment1.fileUploadList = [];
-      return this.attachment1.handleFileInputObservable([
-        { name: this.nameFile || this.formModel.entityName, rawFile: file, type: 'docx', size: file.size },
-      ]);
-    }));
+    return fSaveAsBlob.pipe(
+      mergeMap((blob: Blob) => {
+        var file = new File([blob], this.nameFile || this.formModel.entityName);
+        this.attachment1.isSaveSelected = '1';
+        this.attachment1.fileUploadList = [];
+        return this.attachment1.handleFileInputObservable([
+          {
+            name: this.nameFile || this.formModel.entityName,
+            rawFile: file,
+            type: 'docx',
+            size: file.size,
+          },
+        ]);
+      })
+    );
     //return of(null);
   }
 
@@ -557,13 +550,11 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     this.container.documentEditor.focusIn();
   }
 
-  close()
-  {
+  close() {
     this.dialog.close();
   }
 
-  downloadWord()
-  {
+  downloadWord() {
     var name = this.nameFile || this.formModel?.entityName;
     this.container.documentEditor.save(name, 'Docx');
   }

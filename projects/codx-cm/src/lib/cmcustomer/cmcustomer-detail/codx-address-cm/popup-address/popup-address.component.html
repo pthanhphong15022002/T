@@ -58,7 +58,7 @@
       <codx-input
         [formModel]="form.formModel"
         (valueChange)="valueChange($event)"
-        [crrValue]="data?.street"
+        [formGroup]="form?.formGroup"
         field="street"
       >
       </codx-input>
@@ -73,7 +73,7 @@
           <codx-input
             [formModel]="form.formModel"
             (valueChange)="valueChange($event)"
-            [crrValue]="data?.countryID"
+            [formGroup]="form?.formGroup"
             field="countryID"
           >
           </codx-input>
@@ -148,7 +148,7 @@
         <codx-input
           [formModel]="form.formModel"
           (valueChange)="valueChange($event)"
-          [crrValue]="data?.regionID"
+          [formGroup]="form?.formGroup"
           field="regionID"
         >
         </codx-input>

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ImageElement } from '@syncfusion/ej2-angular-diagrams';
 import { UIComponent, AuthStore, DialogData, DialogRef } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxEsService } from '../../codx-es.service';
 import { environment } from 'src/environments/environment';
 import { PopupConfirmSaveLabelComponent } from './popup-confirm-save-label/popup-confirm-save-label.component';
