@@ -11,12 +11,14 @@ import {
 import {
   AuthStore,
   ButtonModel,
+  CallFuncService,
   DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
   ResourceModel,
+  SidebarModel,
   UIComponent,
   Util,
   ViewModel,
@@ -34,6 +36,7 @@ import {
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
+import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -138,7 +141,8 @@ export class ViewCalendarComponent
     private authstore: AuthStore,
     private cmService: CodxCmService,
     private stepService: StepService,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private callFunc: CallFuncService,
   ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
@@ -184,7 +188,62 @@ export class ViewCalendarComponent
       });
   }
 
-  onAction(e) {}
+  onAction(e) {
+    console.log(e);
+    if(e?.type == 'doubleClick' && e?.data){
+      this.viewTask(e?.data);
+    }
+  }
+
+//#region view
+viewTask(data) {
+  if (data) {
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    //a thao laasy refID
+    let listRefIDAssign = '';
+
+    let listData = {
+      type:data?.taskType,
+      value: data,
+      step: null,
+      isRoleAll: true,
+      isUpdate: true,
+      isOnlyView: true,
+      isUpdateProgressGroup: false,
+      listRefIDAssign: listRefIDAssign,
+      instanceStep: null,
+      isActivitie: true,
+      // sessionID: this.sessionID, // session giao việc
+      // formModelAssign: this.formModelAssign, // formModel của giao việc
+      // customerName: this.customerName,
+      // dealName: this.dealName,
+      // contractName: this.contractName,
+      // leadName: this.leadName,
+    };
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1011;
+    option.FormModel = frmModel;
+    let dialog = this.callFunc.openSide(
+      CodxViewTaskComponent,
+      listData,
+      option
+    );
+    dialog.closed.subscribe(async (dataOuput) => {
+      // if (dataOuput?.event?.dataProgress) {
+      //   this.handelProgress(data, dataOuput?.event?.dataProgress);
+      // }
+      // if(dataOuput?.event?.task || dataOuput?.event?.group){
+      //   await this.getStepById();
+      // }
+    });
+  }
+}
+//#endregion
 
   getCellContent(evt: any) {
     if (this.dayoff && this.dayoff.length > 0) {
