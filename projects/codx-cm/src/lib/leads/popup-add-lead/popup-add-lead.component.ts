@@ -118,7 +118,7 @@ export class PopupAddLeadComponent
   };
   menuGeneralSystem = {
     icon: 'icon-reorder',
-    text: 'Thông tin mở rộng',
+    text: 'Thông tin hệ thống',
     name: 'GeneralSystem',
     subName: 'General system',
     subText: 'General system',
@@ -229,8 +229,8 @@ export class PopupAddLeadComponent
   onInit(): void {}
 
   ngAfterViewInit(): void {
-    this.tabInfo = [this.menuGeneralInfo];
-    this.tabContent = [this.tabGeneralInfoDetail];
+    this.tabInfo = [this.menuGeneralInfo, this.menuGeneralSystem];
+    this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail];
     this.executeApiCalls();
   }
 
@@ -266,7 +266,7 @@ export class PopupAddLeadComponent
           this.owner = owner;
           ownerName = '';
         }
-        this.searchOwner('1', 'O', '0', this.lead.owner, ownerName);
+        this.searchOwner('1', 'O', '0', this.owner, ownerName);
       } else if ($event.field === 'salespersonID') {
         this.searchOwner(
           'U',
@@ -415,12 +415,13 @@ export class PopupAddLeadComponent
     } else if ($event && view === this.viewOwnerProcess) {
       this.owner = $event;
       let ownerName = '';
+      this.owner
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.lead.owner
+          (x) => x.userID === this.owner
         )[0].userName;
       }
-      this.searchOwner('1', 'O', '0', this.lead.owner, ownerName);
+      this.searchOwner('1', 'O', '0', this.owner, ownerName);
     }
   }
   searchOwner(
@@ -460,14 +461,13 @@ export class PopupAddLeadComponent
     permission.objectType = objectType;
     permission.roleType = roleType;
     permission.memberType = '0';
-    permission.full = true;
     permission.read = true;
     permission.update = true;
     permission.upload = true;
     permission.download = true;
     permission.allowUpdateStatus =
       roleType === 'O' || roleType === 'S' ? '1' : '0';
-    permission.full = roleType === 'O';
+      permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
@@ -480,15 +480,6 @@ export class PopupAddLeadComponent
   // }
 
   addPermission(permissionDP) {
-    // var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
-    // if (result) {
-    //   let permissionsDP = result?.permissionRoles;
-    //   if (permissionsDP.length > 0 && permissionsDP) {
-    //     for (let item of permissionsDP) {
-    //       this.lead.permissions.push(this.copyPermission(item));
-    //     }
-    //   }
-    // }
     if (permissionDP?.length > 0 && permissionDP) {
       for (let item of permissionDP) {
         this.lead.permissions.push(this.copyPermission(item));
@@ -515,6 +506,8 @@ export class PopupAddLeadComponent
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
     permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
     return permission;
   }
   checkApplyProcess(check: boolean) {
@@ -577,7 +570,7 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-    this.lead.applyProcess && this.addPermission(this.lead.processID);
+    //this.lead.applyProcess && this.addPermission(this.lead.processID);
     if (this.convertCustomerToLead) {
       this.api
         .execSv<any>('CM', 'ERM.Business.CM', 'LeadsBusiness', 'AddLeadAsync', [
@@ -632,7 +625,7 @@ export class PopupAddLeadComponent
     instance.instanceNo = lead.leadID;
     instance.owner = this.owner;
     instance.processID = lead.processID;
-    instance.stepID = lead.stepID;
+    instance.stepID = this.action !== this.actionEdit ?this.listInstanceSteps[0]?.stepID : lead.stepID;
   }
   updateDataLead(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
@@ -659,10 +652,11 @@ export class PopupAddLeadComponent
       await this.saveFileContact(this.contactId);
     }
     if (this.isLoading) {
-    } else {
+    }
+    else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
-        await this.onAdd();
+
       } else {
         this.lead.applyProcess && (await this.editInstance());
         await this.onEdit();
@@ -675,6 +669,7 @@ export class PopupAddLeadComponent
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.addPermission(instance.permissions);
+        this.onAdd();
         this.isLoading && this.dialog.close(instance);
       }
     });
@@ -738,6 +733,9 @@ export class PopupAddLeadComponent
       this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
     }
+    else if(this.action !== this.actionAdd) {
+      this.getListInstanceSteps(this.lead.processID);
+    }
     this.itemTabsInputContact(this.isCategory);
   }
     async getProcessSetting() {
@@ -748,7 +746,7 @@ export class PopupAddLeadComponent
           // this.processId = res.recID;
           // this.dataObj = { processID: res.recID };
           // this.afterLoad();
-          this.getListInstanceSteps(res.recID);
+        this.getListInstanceSteps(res.recID);
           this.lead.processID = res.recID;
         }
       });
@@ -844,7 +842,7 @@ export class PopupAddLeadComponent
 
   async getListPermission(permissions) {
     this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants.length > 0
+    return this.listParticipants != null && this.listParticipants?.length > 0
       ? await this.codxCmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
   }
@@ -858,8 +856,8 @@ export class PopupAddLeadComponent
       (item) => item === this.tabCustomFieldDetail
     );
     if (check && menuInput == -1 && tabInput == -1) {
-      this.tabInfo.splice(1, 0, this.menuInputInfo);
-      this.tabContent.splice(1, 0, this.tabCustomFieldDetail);
+      this.tabInfo.splice(2, 0, this.menuInputInfo);
+      this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
     } else if (!check && menuInput != -1 && tabInput != -1) {
       this.tabInfo.splice(menuInput, 1);
       this.tabContent.splice(tabInput, 1);
@@ -873,8 +871,8 @@ export class PopupAddLeadComponent
       (item) => item === this.tabGeneralContactDetail
     );
     if (check && menuContact == -1 && tabContact == -1) {
-      this.tabInfo.splice(2, 0, this.menuGeneralContact);
-      this.tabContent.splice(2, 0, this.tabGeneralContactDetail);
+      this.tabInfo.splice(3, 0, this.menuGeneralContact);
+      this.tabContent.splice(3, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
