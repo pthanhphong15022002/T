@@ -379,6 +379,15 @@
 
 <ng-template #reference>
   <div>
+    <div class="" *ngIf="instanceName">
+      <codx-label
+        class="text-gray-600 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Nhiệm vụ"
+      ></codx-label>
+      <span>{{instanceName}}</span>
+    </div>
     <div class="" *ngIf="customerName">
       <codx-label
         class="text-gray-600 label-colon"
@@ -415,7 +424,7 @@
       ></codx-label>
       <span>{{contractName}}</span>
     </div>
-    <div class="" *ngIf="type != 'P'">
+    <div class="" *ngIf="type != 'P' && instanceStep?.stepName">
       <codx-label
         class="text-gray-600 label-colon"
         fiedName=""
@@ -424,7 +433,7 @@
       ></codx-label>
       <span>{{instanceStep?.stepName}}</span>
     </div>
-    <div class="" *ngIf="type != 'P' && type != 'G'">
+    <div class="" *ngIf="type != 'P' && type != 'G' && groupTask?.taskGroupName">
       <codx-label
         class="text-gray-600 label-colon"
         fiedName=""

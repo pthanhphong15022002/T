@@ -30,20 +30,18 @@ export class ViewListWrComponent {
     private api: ApiHttpService
   ) {}
 
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+
+  }
+
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
   }
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataList']) {
-      // if (changes['taskID'].currentValue === this.id) return;
-      // this.id = changes['taskID'].currentValue;
-      // this.loadedHisPro = false;
-      // this.getTaskDetail();
-    }
   }
 
   dbClick(data) {
