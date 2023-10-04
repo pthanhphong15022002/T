@@ -143,7 +143,11 @@ export class PopupJobComponent implements OnInit, OnDestroy {
 
     this.roles = this.stepsTasks['roles'];
     this.owner = this.roles?.filter((role) => role.roleType == 'O') || [];
-    this.participant = this.roles?.filter((role) => role.roleType != 'O') || [];
+    this.participant =
+      this.stepsTasks?.taskType &&
+      ['M', 'B'].includes(this.stepsTasks?.taskType)
+        ? this.roles?.filter((role) => role.roleType != 'O') || []
+        : [];
 
     let group = this.listGroupTask?.find(
       (x) => x.recID === this.stepsTasks?.taskGroupID

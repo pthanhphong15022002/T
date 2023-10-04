@@ -94,6 +94,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() instanceName: string;
 
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();

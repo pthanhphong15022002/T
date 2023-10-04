@@ -40,6 +40,7 @@ export class CodxViewTaskComponent implements OnInit {
   dealName: string;
   contractName: string;
   leadName: string;
+  instanceName: string;
   listField;
   //#endregion
   groupTask;
@@ -102,6 +103,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.dealName = dt?.data?.dealName;
     this.contractName = dt?.data?.contractName;
     this.leadName = dt?.data?.leadName;
+    this.instanceName = dt?.data?.instanceName;
 
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
