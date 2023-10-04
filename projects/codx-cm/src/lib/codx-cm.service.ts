@@ -424,6 +424,15 @@ export class CodxCmService {
       );
   }
 
+  initCache() {
+    return this.api.execSv<any>(
+      'BS',
+      'ERM.Business.BS',
+      'ProvincesBusiness',
+      'InitCacheLocationsAsync'
+    );
+  }
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api

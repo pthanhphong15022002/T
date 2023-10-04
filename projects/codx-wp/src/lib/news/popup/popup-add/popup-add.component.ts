@@ -104,6 +104,28 @@ export class PopupAddComponent implements OnInit {
       this.getPostInfo(this.data.recID);
       this.getFileByObjectID(this.data.recID);
     }
+    this.getValue();
+  }
+  ngAfterViewInit(): void {
+  }
+
+  //get detail post
+  getPostInfo(recID:string){
+    if(recID)
+    {
+      this.api.execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetPostByIDAsync',
+        [recID]).subscribe((res:any) => {
+          this.data = JSON.parse(JSON.stringify(res));
+          this.changedt.detectChanges();
+        });
+    }
+  }
+  // get value
+  getValue() {
     this.cache.functionList("WPT02")
     .subscribe((func:any) => {
       if(func){
@@ -121,28 +143,6 @@ export class PopupAddComponent implements OnInit {
         });
       }
     });
-    this.getMessageDefault();
-    
-  }
-  ngAfterViewInit(): void {
-  }
-
-  getPostInfo(recID:string)
-  {
-    if(recID){
-      this.api.execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'GetPostByIDAsync',
-        [recID]).subscribe((res:any) => {
-          this.data = res;
-          this.changedt.detectChanges();
-        });
-    }
-  }
-  // set data
-  getMessageDefault() {
     this.cache.message('WP017')
     .subscribe((mssg: any) => {
       if(mssg){

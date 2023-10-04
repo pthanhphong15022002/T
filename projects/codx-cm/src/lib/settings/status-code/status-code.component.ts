@@ -38,6 +38,9 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   currentView!: CatagoryComponent;
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('templateObjectStatus') templateObjectStatus: TemplateRef<any>;
+
+  @ViewChild('templateCategory') templateCategory: TemplateRef<any>;
+  
   // config BE
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -95,7 +98,7 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
     // ];
     // this.changeDetectorRef.detectChanges();
 
-    this.loadViewModel();
+   // this.loadViewModel();
   }
 
   async promiseAll() {
@@ -125,24 +128,67 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
       this.arrFieldIsVisible = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
         .map((x: any) => x.fieldName);
-      // this.getColumsGrid(this.gridViewSetup);
     }
-    if (this.arrFieldIsVisible?.length > 0) {
+    // if (this.arrFieldIsVisible?.length > 0) {
+    //   this.arrFieldIsVisible.forEach((key) => {
+    //     let field = Util.camelize(key);
+    //     let template: any;
+    //     let colums: any;
+    //     debugger;
+    //     switch (key) {
+    //       case 'ObjectStatus':
+    //         template = this.templateObjectStatus;
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   });
+    // }
+      this.columnGrids = [];
+
       this.arrFieldIsVisible.forEach((key) => {
         let field = Util.camelize(key);
         let template: any;
         let colums: any;
-        debugger;
         switch (key) {
           case 'ObjectStatus':
             template = this.templateObjectStatus;
             break;
+          case 'Category':
+              template = this.templateCategory;
+              break;
           default:
             break;
         }
+        if (template) {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+            template: template,
+            // textAlign: 'center',
+          };
+        } else {
+          colums = {
+            field: field,
+            headerText: grvSetup[key].headerText,
+            width: grvSetup[key].width,
+          };
+        }
+        this.columnGrids.push(colums);
       });
-    }
 
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: false,
+          model: {
+            resources: this.columnGrids,
+            template2: this.template,
+          },
+        },
+      ];
   }
 
   click(evt: ButtonModel) {
@@ -315,5 +361,18 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
         },
       },
     ];
+  }
+
+  getValueTypeCategory(value) {
+    if (value == '1') {
+      return 'CRM039';
+    } else if (value == '3') {
+      return 'CRM041';
+    } else if (value == '5') {
+      return 'CRM042';
+    } else if (value == '7') {
+      return 'CRM015';
+    }
+    return '';
   }
 }

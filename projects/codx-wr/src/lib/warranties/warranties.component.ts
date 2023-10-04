@@ -256,6 +256,19 @@ export class WarrantiesComponent
       case 'btnAdd':
         this.add();
         break;
+      default:
+        let f = evt.data;
+        let data = evt.model;
+        if (!data) data = this.view.dataService.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          f,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
     }
   }
 
