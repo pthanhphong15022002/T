@@ -252,7 +252,7 @@ export class CampaignContactsComponent implements OnInit {
             .openForm(
               PopupAddCampaignContactComponent,
               '',
-              600,
+              800,
               700,
               '',
               obj,

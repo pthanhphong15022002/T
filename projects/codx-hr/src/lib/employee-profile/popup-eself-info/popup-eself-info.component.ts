@@ -20,7 +20,7 @@ import { FormGroup } from '@angular/forms';
 })
 export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   idField = 'RecID';
-  formGroup: FormGroup;
+  //formGroup: FormGroup;
   fieldHeaderTexts;
   formModel: FormModel;
   dialog: DialogRef;
@@ -31,7 +31,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   oldProvinceID: any;
   oldTProvinceID: any;
   saveflag = false;
-  isAfterRender = false;
+  // isAfterRender = false;
   action: '';
   trainFieldStr: '';
   trainLevelStr: '';
@@ -63,21 +63,20 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     this.action = data?.data?.action;
     debugger
     this.funcID = data?.data?.funcID;
-    this.formModel = dialog.FormModel;
+    this.formModel = dialog?.formModel;
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
 
   initForm() {
-    this.formGroup.patchValue(this.data);
-    console.log('fgr sau khi patch', this.formGroup);
+    // this.form.formGroup.patchValue(this.data);
     
     this.oldDistrictID = this.data.districtID;
     this.oldTDistrictID = this.data.tDistrictID;
     this.oldProvinceID = this.data.provinceID;
     this.oldTProvinceID = this.data.tProvinceID;
-    this.formModel.currentData = this.data;
+    // this.formModel.currentData = this.data;
     this.cr.detectChanges();
-    this.isAfterRender = true;
+    // this.isAfterRender = true;
   }
 
   onChangeProvince(evt){
@@ -86,7 +85,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       this.oldProvinceID = newVal;
       this.data.districtID = null;
       this.data.wardID = null;
-      this.formGroup.patchValue(this.data);
+      this.form.formGroup.patchValue(this.data);
     }
   }
 
@@ -96,7 +95,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       this.oldTProvinceID = newVal;
       this.data.tDistrictID = null;
       this.data.tWardID = null;
-      this.formGroup.patchValue(this.data);
+      this.form.formGroup.patchValue(this.data);
     }
   }
 
@@ -106,7 +105,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     if(newVal != this.oldDistrictID){
       this.oldDistrictID = newVal;
       this.data.wardID = null;
-      this.formGroup.patchValue(this.data);
+      this.form.formGroup.patchValue(this.data);
     }
   }
 
@@ -116,7 +115,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     if(newVal != this.oldTDistrictID){
       this.oldTDistrictID = newVal;
       this.data.tWardID = null;
-      this.formGroup.patchValue(this.data);
+      this.form.formGroup.patchValue(this.data);
     }
   }
 
@@ -127,7 +126,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   renderTrainLevel(event){
-    this.trainLevelStr = event.itemsSelected[0].text;
+    this.trainLevelStr = event?.itemsSelected[0]?.text;
   }
 
   valChangeTrainLevel(event){
@@ -152,7 +151,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     else{
       this.data.degreeName = '';
     }
-    this.formGroup.patchValue({ degreeName: this.data.degreeName });
+    this.form.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   valChangeTrainFieldId(event){
@@ -172,7 +171,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     else{
       this.data.degreeName = '';
     }
-    this.formGroup.patchValue({ degreeName: this.data.degreeName });
+    this.form.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   setTitle(evt: any){
@@ -181,36 +180,37 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
   
   onInit(): void {
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-            console.log('formGroup ne', this.formGroup);
+    this.initForm();
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //         console.log('formGroup ne', this.form.formGroup);
                 
-              }
-            });
-        }
-      });
-    } else {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-            console.log('formGroup ne', this.formGroup);
-          }
-        });
-    }
-    this.hrService.getHeaderText(this.funcID).then((res) => {
-      this.fieldHeaderTexts = res;
-    })
+    //           }
+    //         });
+    //     }
+    //   });
+    // } else {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //         console.log('formGroup ne', this.form.formGroup);
+    //       }
+    //     });
+    // }
+    // this.hrService.getHeaderText(this.funcID).then((res) => {
+    //   this.fieldHeaderTexts = res;
+    // })
   }
 
   ngAfterViewInit() {
@@ -234,7 +234,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
       e.data = e.data.substring(0, 12);
     }
     this.data.idCardNo = e.data;
-    this.formGroup.patchValue({ idCardNo: this.data.idCardNo });
+    this.form.formGroup.patchValue({ idCardNo: this.data.idCardNo });
     this.cr.detectChanges();
   }
 
@@ -248,13 +248,13 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     } else if (trainLev) {
       this.data.degreeName = trainLev;
     }
-    this.formGroup.patchValue({ degreeName: this.data.degreeName });
+    this.form.formGroup.patchValue({ degreeName: this.data.degreeName });
   }
 
   handleOnSaveEmployeeSelfInfo(e?: any) {
     debugger
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if(this.form.formGroup.invalid){
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false)
       return;
     }

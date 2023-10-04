@@ -196,7 +196,7 @@
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
   <!-- trường nhập liệu -->
-  <div *ngIf="type != 'G'">
+  <div *ngIf="type != 'G' && !isActivitie">
     <codx-label
       class="fw-bold text-dark"
       fiedName=""
@@ -235,8 +235,8 @@
     <p [innerHTML]="dataView?.memo"></p>
   </div>
   <!-- Công việc -->
-  <hr *ngIf="type == 'P'" />
-  <div *ngIf="type == 'P'">
+  <hr *ngIf="type == 'P' && !isActivitie" />
+  <div *ngIf="type == 'P' && !isActivitie">
     <div>
       <codx-label
         class="fs-5"
@@ -264,8 +264,8 @@
     </div>
   </div>
   <!-- công việc liên kết -->
-  <hr *ngIf="type !== 'P'" />
-  <div *ngIf="type !== 'P'">
+  <hr *ngIf="type !== 'P'  && !isActivitie" />
+  <div *ngIf="type !== 'P'  && !isActivitie">
     <codx-label
       *ngIf="type !== 'G'"
       class="fs-6 fw-bold me-3"
@@ -303,7 +303,7 @@
   <hr />
   <div
     class="d-flex justify-content-start"
-    *ngIf="type !== 'G' && type !== 'P'"
+    *ngIf="type !== 'G' && type !== 'P' && !isActivitie"
   >
     <div class="mt-2">
       <codx-label
@@ -379,6 +379,15 @@
 
 <ng-template #reference>
   <div>
+    <div class="" *ngIf="instanceName">
+      <codx-label
+        class="text-gray-600 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Nhiệm vụ"
+      ></codx-label>
+      <span>{{instanceName}}</span>
+    </div>
     <div class="" *ngIf="customerName">
       <codx-label
         class="text-gray-600 label-colon"
@@ -415,7 +424,7 @@
       ></codx-label>
       <span>{{contractName}}</span>
     </div>
-    <div class="" *ngIf="type != 'P'">
+    <div class="" *ngIf="type != 'P' && instanceStep?.stepName">
       <codx-label
         class="text-gray-600 label-colon"
         fiedName=""
@@ -424,7 +433,7 @@
       ></codx-label>
       <span>{{instanceStep?.stepName}}</span>
     </div>
-    <div class="" *ngIf="type != 'P' && type != 'G'">
+    <div class="" *ngIf="type != 'P' && type != 'G' && groupTask?.taskGroupName">
       <codx-label
         class="text-gray-600 label-colon"
         fiedName=""
@@ -466,9 +475,9 @@
     </codx-label>
     <div>
       <ng-container
-        *ngIf="owner.length > 0"
+        *ngIf="owners.length > 0"
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>
@@ -479,12 +488,13 @@
       fiedName="roles"
       [formModel]="frmModel"
       default="Người phụ trách:"
+      style="min-width: 101px; font-weight: 600"
     >
     </codx-label>
     <div>
       <ng-container
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: type == 'P' ? person : owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>
@@ -496,7 +506,7 @@
       name="rolesP"
       [formModel]="frmModel"
       [default]="type == 'M' ? 'Người tham gia:' : 'Người đi cùng:'"
-      style="min-width: 160px; font-weight: 600"
+      style="min-width: 101px; font-weight: 600"
     >
     </codx-label>
     <div>
