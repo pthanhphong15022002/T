@@ -1,7 +1,7 @@
 <!-- <layout-list-detail
     #lstDetail
     [title]="headerText"
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [footer]="footer"
     [dialog]="dialog"
     [data]="data"
@@ -13,54 +13,54 @@
         <div class="form-group row">
             <codx-label
                 fiedName="CompanyName"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="companyName"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
         <div class="form-group row">
             <codx-label
                 fiedName="CompanyAddress"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
                 
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="companyAddress"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
         <div class="form-group row">
             <codx-label
                 fiedName="IndustryID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="industryID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
         <div class="form-group row">
             <codx-label
                 fiedName="Position"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="position"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
@@ -68,7 +68,7 @@
             <div class="col-6">
                 <codx-label
                     fiedName="FromDate"
-                    [formModel]="formModel"
+                    [formModel]="form.formModel"
                 ></codx-label>
                 <ejs-datepicker 
                 [start]='start' 
@@ -81,7 +81,7 @@
             <div class="col-6">
                 <codx-label
                     fiedName="ToDate"
-                    [formModel]="formModel"
+                    [formModel]="form.formModel"
                 ></codx-label>
                 <ejs-datepicker 
                 [start]='start' 
@@ -96,13 +96,13 @@
         <div class="form-group row">
             <codx-label
                 fiedName="Note"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="note"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </ng-template>
@@ -111,7 +111,7 @@
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" (click)="onSaveForm()">
                 <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+            <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
             </button>
         </div>
     </ng-template>
@@ -137,7 +137,7 @@
 
 <ng-template #itemTemplate let-data>
     <codx-temp-full
-        [formModel]="formModel"
+        [formModel]="form.formModel"
         [typeMF]="'hover'"
         [title]="data.companyName"
         [icoTitleCss]="'icon-home_work'"
@@ -174,7 +174,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     #form
     [headerText]="headerText"
     [body]="body"
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [footer]="footer"
     [dialog]="dialog"
     [data]="data"
@@ -184,21 +184,21 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         <div class="form-group row">
             <codx-label
                 fiedName="CompanyName"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="companyName"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
         <div class="form-group row">
             <codx-label
                 fiedName="CompanyAddress"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
                 
             ></codx-label>
             <codx-input
@@ -210,26 +210,26 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         <div class="form-group row">
             <codx-label
                 fiedName="IndustryID"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="industryID"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
         <div class="form-group row">
             <codx-label
                 fiedName="Position"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="position"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
 
@@ -237,7 +237,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             <div class="col-6">
                 <codx-label
                     fiedName="FromDate"
-                    [formModel]="formModel"
+                    [formModel]="form.formModel"
                 ></codx-label>
                 <ejs-datepicker 
                 [start]='start' 
@@ -249,7 +249,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             <div class="col-6">
                 <codx-label
                     fiedName="ToDate"
-                    [formModel]="formModel"
+                    [formModel]="form.formModel"
                 ></codx-label>
                 <ejs-datepicker 
                 [start]='start' 
@@ -263,35 +263,36 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         <div class="form-group row">
             <codx-label
                 fiedName="Note"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-input
             [disabled]="disabledInput"
                 field="note"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
             ></codx-input>
         </div>
     </ng-template>
 </codx-form> -->
-
+<ng-container *ngIf="data">
 <codx-form
     #form
     [headerText] = "headerText"
     [body]="body"
     [formModel]="formModel"
     [footer]="footer"
-    [group]="formGroup"
-    [dialog]="dialog"
+    [dialog]="dialog"                                                                
     [data]="data"
-    *ngIf="isAfterRender"
->
+    >
+    <!-- [group]="form.formGroup"
+    *ngIf="isAfterRender" -->
 <ng-template #body>
+<ng-container *ngIf="form.formGroup">
     <div class="form-group row">
         <div class="col-6">
             <codx-label
                 fiedName="FromDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <ejs-datepicker 
             [enabled]="!disabledInput"
@@ -305,7 +306,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         <div class="col-6">
             <codx-label
                 fiedName="ToDate"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <ejs-datepicker 
             [enabled]="!disabledInput"
@@ -321,54 +322,54 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     <div class="form-group row mt-5">
         <codx-label
             fiedName="CompanyName"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="companyName"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 
     <!-- <div class="form-group row">
         <codx-label
             fiedName="CompanyAddress"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="companyAddress"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 
     <div class="form-group row">
         <codx-label
             fiedName="IndustryID"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="industryID"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div> -->
 
     <div class="form-group row">
         <codx-label
             fiedName="Position"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="position"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
 
@@ -377,15 +378,16 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     <div class="form-group row">
         <codx-label
             fiedName="Note"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
             field="note"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
         ></codx-input>
     </div>
+</ng-container>
 </ng-template>
 </codx-form>
 
@@ -393,8 +395,10 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
         <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn && !changedInForm">
             <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
         </button>
     </div>
 </ng-template>
+</ng-container>
+
 

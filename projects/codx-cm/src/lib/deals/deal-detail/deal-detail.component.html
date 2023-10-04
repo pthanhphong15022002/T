@@ -331,6 +331,11 @@
 
 
                   <div
+                  *ngIf="
+                  dataSelected.status == '2';
+                  else statusDefault
+                "
+
                     [ngStyle]="{
                       'background-color':
                         dataSelected?.steps['backgroundColor']
@@ -354,7 +359,7 @@
                     >
                   </div>
 
-                    <!-- <ng-template #statusDefault>
+                    <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
@@ -364,7 +369,7 @@
                         class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
-                    </ng-template> -->
+                    </ng-template>
                     <ng-container
                       *ngIf="
                         dataSelected?.approveStatus &&
@@ -978,6 +983,8 @@
                   (saveAssignTask)="saveAssignTask($event)"
                   (changeProgress)="autoStart($event)"
                   [isChangeOwner]="isChangeOwner"
+                  [dealName]="dataSelected?.dealName"
+                  [customerName]="customerName"
                 ></step-task>
               </div>
             </ng-template>

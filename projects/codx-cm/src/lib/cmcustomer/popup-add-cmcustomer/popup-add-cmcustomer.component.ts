@@ -22,7 +22,7 @@ import {
   Util,
   CodxFormComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { PopupAddressComponent } from '../cmcustomer-detail/codx-address-cm/popup-address/popup-address.component';
 import { PopupListContactsComponent } from '../cmcustomer-detail/codx-list-contacts/popup-list-contacts/popup-list-contacts.component';
@@ -829,8 +829,13 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.onUpdate();
       }
     } else {
-      if (this.data?.address != null && this.data?.address?.trim() != '' && this.leverSetting > 0) {
-        setTimeout(async () => { //Bùa, Để cho anh Huy copy địa chỉ xong lưu liền để get api theo địa chỉ tỉnh, thành phố, xã
+      if (
+        this.data?.address != null &&
+        this.data?.address?.trim() != '' &&
+        this.leverSetting > 0
+      ) {
+        setTimeout(async () => {
+          //Bùa, Để cho anh Huy copy địa chỉ xong lưu liền để get api theo địa chỉ tỉnh, thành phố, xã
           if (
             !this.cmSv.checkValidateSetting(
               this.data.address,

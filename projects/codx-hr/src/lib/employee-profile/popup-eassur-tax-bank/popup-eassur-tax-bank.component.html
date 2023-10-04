@@ -5,7 +5,7 @@
       <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
   </div>
@@ -15,13 +15,13 @@
   #form
   [headerText]="headerText"
   [body]="body"
-  [group]="formGroup"
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="data"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
   <ng-template #body>
     <!-- <div class="extend-function">
       <hr />
@@ -31,7 +31,7 @@
             <codx-label
             [name]="'SocialWellfare'"
               default="Bảo hiểm xã hội"
-              [formModel]="formModel"
+              [formModel]="form.formModel"
             ></codx-label>
           </span>
         </div>
@@ -42,14 +42,14 @@
       <codx-label
       [name]="'SocialWellfare'"
         default="Bảo hiểm xã hội"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </div>
 
     <!-- <div class="row">
             <codx-label
                 default="Bảo hiểm xã hội"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             >
             </codx-label>
         </div> -->
@@ -57,26 +57,26 @@
       <div class="col-6">
         <codx-label
           fiedName="SIRegisterNo"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           field="siRegisterNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="SIRegisterOn"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           field="siRegisterOn"
           type="datetime"
           format="d"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -84,25 +84,25 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="HICardNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HICardNo" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="hiCardNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="HIDateOf5Years"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           field="hiDateOf5Years"
           type="datetime"
           format="d"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -110,35 +110,35 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="HICardFrom" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HICardFrom" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="hiCardFrom"
           type="datetime"
           format="d"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="HICardTo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HICardTo" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="hiCardTo"
           type="datetime"
           format="d"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
     </div>
 
     <div class="" form-group row>
-      <codx-label fiedName="HIHospitalID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="HIHospitalID" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="hiHospitalID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
@@ -150,7 +150,7 @@
             <codx-label
             [name]="'PersonalTax'"
               default="Mã số thuế TNCN"
-              [formModel]="formModel"
+              [formModel]="form.formModel"
             ></codx-label>
           </span>
         </div>
@@ -161,47 +161,47 @@
       <codx-label
       [name]="'PersonalTax'"
         default="Mã số thuế TNCN"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </div>
 
     <!-- <div class="row">
             <codx-label
                 default="Mã số thuế TNCN"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             >f
             </codx-label>
         </div> -->
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PITNumber" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PITNumber" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="pitNumber"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PITIssuedOn" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PITIssuedOn" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="pitIssuedOn"
           type="datetime"
           format="d"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="PITPlace" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="PITPlace" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="pitPlace"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
@@ -209,7 +209,7 @@
             <codx-label
                 default="Tài khoản cá nhân"
                 name="lblSelfAccount"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             >
             </codx-label>
         </div> -->
@@ -221,7 +221,7 @@
           <span class="text-primary text-hover-primary_darker fw-bold me-1">
             <codx-label
               default="Tài khoản cá nhân"
-              [formModel]="formModel"
+              [formModel]="form.formModel"
               name="lblSelfAccount"
             ></codx-label>
           </span>
@@ -232,47 +232,47 @@
     <div class="fs-6 fw-bold text-primary mt-6 mb-3">
       <codx-label
       default="Tài khoản cá nhân"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
       name="lblSelfAccount"
     ></codx-label>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountNo" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AccountNo" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="accountNo"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountName" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AccountName" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="accountName"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountBankID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AccountBankID" [formModel]="form.formModel"></codx-label>
       <codx-input
         field="accountBankID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <codx-label
         fiedName="AccountBankBranch"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
         field="accountBankBranch"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
   </ng-template>

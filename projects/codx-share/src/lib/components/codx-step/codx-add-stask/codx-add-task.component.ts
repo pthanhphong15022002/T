@@ -24,8 +24,8 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-add-stask',
@@ -94,6 +94,7 @@ export class CodxAddTaskComponent implements OnInit {
     O: 'Share_OrgUnits_Sgl',
   };
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
+  ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
@@ -169,10 +170,13 @@ export class CodxAddTaskComponent implements OnInit {
     }
 
     this.owner = this.roles?.filter(
-      (role) => role.objectID == this.stepsTasks?.owner
+      (role) => role.objectID == this.stepsTasks?.owner &&  role.roleType == "U"
     );
     this.participant = this.roles?.filter(
-      (role) => role.objectID !== this.stepsTasks?.owner
+      (role) => role.roleType == "P"
+    );
+    this.ownerDefaut = this.roles?.filter(
+      (role) => role.roleType == "O"
     );
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
@@ -389,7 +393,7 @@ export class CodxAddTaskComponent implements OnInit {
         objectID: element.objectID,
         objectName: element.objectName,
         objectType: element.objectType,
-        roleType: element.roleType,
+        roleType: "P",
         taskID: this.stepsTasks['recID'],
       });
     });
@@ -400,24 +404,25 @@ export class CodxAddTaskComponent implements OnInit {
   changeRolerOwner(event) {
     let role = event[0];
     if (role) {
-      if (role?.roleType == 'Users' || role?.roleType == 'Owner') {
+      if (role?.objectType == 'U' || role?.objectType == '1') {
         role['taskID'] = this.stepsTasks?.recID;
+        role['roleType'] = 'U';
         this.owner = [role];
         this.stepsTasks.owner = role?.objectID;
         this.removeRoleDuplicate();
       } else {
         let data = [];
-        switch (role?.roleType) {
-          case 'Departments':
-          case 'OrgHierarchy':
+        switch (role?.objectType) {
+          case 'D':
+          case 'O':
             data = [
               role?.objectID,
               this.instanceStep?.instanceID,
               this.ownerParent,
             ];
             break;
-          case 'Roles':
-          case 'Positions':
+          case 'R':
+          case 'P':
             data = [
               role?.objectID,
               this.instanceStep?.instanceID,
@@ -440,7 +445,7 @@ export class CodxAddTaskComponent implements OnInit {
                 role['objectID'] = res?.userID;
                 role['objectName'] = res?.userName;
                 role['objectType'] = 'U';
-                role['roleType'] = 'Users';
+                role['roleType'] = 'U';
                 role['taskID'] = this.stepsTasks?.recID;
                 this.owner = [role];
                 this.stepsTasks.owner = role?.objectID;
@@ -539,7 +544,7 @@ export class CodxAddTaskComponent implements OnInit {
   }
   //#region save
   async beforeSave(isCreateMeeting = false) {
-    this.stepsTasks['roles'] = [...this.participant, ...this.owner];
+    this.stepsTasks['roles'] = [...this.ownerDefaut,...this.participant, ...this.owner];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     if (!this.isSaveTimeTask) {

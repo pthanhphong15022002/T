@@ -40,13 +40,13 @@ export class CodxViewTaskComponent implements OnInit {
   dealName: string;
   contractName: string;
   leadName: string;
-
+  instanceName: string;
+  listField;
   //#endregion
   groupTask;
   title = ''; // tiêu đề
   dataView: any; // data hien thi
-  owner = []; //role type O
-  person = []; //role
+  owners = [];
   connection = ''; // người liên quan => step
   participant = []; //role type P
   listDataLink = []; //role type S
@@ -102,6 +102,8 @@ export class CodxViewTaskComponent implements OnInit {
     this.dealName = dt?.data?.dealName;
     this.contractName = dt?.data?.contractName;
     this.leadName = dt?.data?.leadName;
+    this.instanceName = dt?.data?.instanceName;
+    this.listField = dt?.data?.listField;
 
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
@@ -248,13 +250,10 @@ export class CodxViewTaskComponent implements OnInit {
         this.title = type?.text;
       }
     });
-
-    this.owner =
-      this.dataView?.roles?.filter((role) => role.objectID == this.dataView?.owner) || [];
+    let owner = this.dataView?.roles?.find((role) => role.objectID == this.dataView?.owner)
+    this.owners = [owner] || [];
     this.participant =
       this.dataView?.roles?.filter((role) =>  role.objectID != this.dataView?.owner) || [];
-    this.person =
-      this.dataView?.roles?.filter((role) => role.roleType === 'S') || [];
     this.connection =
       this.dataView?.roles
         ?.filter((role) => role.roleType === 'R')

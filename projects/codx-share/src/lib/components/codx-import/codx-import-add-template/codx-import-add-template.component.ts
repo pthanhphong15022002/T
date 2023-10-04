@@ -25,10 +25,10 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
 import { IETables } from '../models/import.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-import-add-template',
@@ -82,7 +82,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.formModel = dt.data?.[1];
+    this.formModel = dt.data[1];
     if (dt.data[0]) this.type = dt.data[0];
     if (dt.data?.[2]) this.recID = dt.data?.[2];
     if (dt.data?.[3]) this.dataIEConnections = dt.data?.[3];

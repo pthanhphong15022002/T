@@ -18,7 +18,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
+import { CodxViewFilesComponent } from 'projects/codx-common/src/lib/component/codx-view-files/codx-view-files.component';
 
 @Component({
   selector: 'wp-popup-add-post',
@@ -115,10 +115,13 @@ export class PopupAddPostComponent implements OnInit {
       this.data = this.dialogData.data;
       if (this.status !== 'edit') {
         this.data.recID = Util.uid();
-        this.data.contents = "";
+        this.data.contents = '';
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
-        this.data.category = this.status === "share" ? this.CATEGORY.SHARE : this.CATEGORY.POST;
-        this.data.refType = this.dialogData.refType ? this.dialogData.refType : 'WP_Comments';
+        this.data.category =
+          this.status === 'share' ? this.CATEGORY.SHARE : this.CATEGORY.POST;
+        this.data.refType = this.dialogData.refType
+          ? this.dialogData.refType
+          : 'WP_Comments';
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
       }
@@ -128,8 +131,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // get gridViewSetup
   getSetting() {
-    this.cache.functionList('WP')
-    .subscribe((func: any) => {
+    this.cache.functionList('WP').subscribe((func: any) => {
       if (func) {
         this.formModel.funcID = 'WP';
         this.formModel.formName = func.formName;
@@ -178,15 +180,12 @@ export class PopupAddPostComponent implements OnInit {
   // click show popup gắn thẻ
   clickTagsUser() {
     this.showCBB = !this.showCBB;
-    if(this.data.permissions)
-    {
-      let arr = Array.from<any>(this.data.permissions)
-      .filter(x => x.memberType == this.MEMBERTYPE.TAGS && x.objectID);
-      if(arr.length == 1)
-        this.crrPermisionTag = arr[0].objectID;
-      else
-        this.crrPermisionTag = arr.map(x=>x.objectID).join(";");
-
+    if (this.data.permissions) {
+      let arr = Array.from<any>(this.data.permissions).filter(
+        (x) => x.memberType == this.MEMBERTYPE.TAGS && x.objectID
+      );
+      if (arr.length == 1) this.crrPermisionTag = arr[0].objectID;
+      else this.crrPermisionTag = arr.map((x) => x.objectID).join(';');
     }
   }
 
@@ -243,14 +242,11 @@ export class PopupAddPostComponent implements OnInit {
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save()
-    .subscribe((res1: boolean) => {
+    this.codxViewFiles.save().subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
-          if (res2) 
-            this.notifySvr.notifyCode('WP024');
-          else 
-            this.notifySvr.notifyCode('WP013');
+          if (res2) this.notifySvr.notifyCode('WP024');
+          else this.notifySvr.notifyCode('WP013');
           this.loaded = false;
           this.dialogRef.close(res2);
         });
@@ -260,7 +256,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // edit post
   editPost() {
-    debugger
+    debugger;
     if (
       !this.data.contents &&
       this.codxViewFiles.files.length == 0 &&
@@ -308,31 +304,25 @@ export class PopupAddPostComponent implements OnInit {
     this.data.medias = this.codxViewFiles.medias;
     this.codxViewFiles.save().subscribe((res1: boolean) => {
       if (res1) {
-        this.insertPost(this.data)
-        .subscribe((res2: any) => {
-          if (res2) 
-            this.notifySvr.notifyCode('WP020');
-          else 
-            this.notifySvr.notifyCode('WP013');
+        this.insertPost(this.data).subscribe((res2: any) => {
+          if (res2) this.notifySvr.notifyCode('WP020');
+          else this.notifySvr.notifyCode('WP013');
           this.loaded = false;
           this.dialogRef.close(res2);
         });
-      } 
-      else this.loaded = false;
+      } else this.loaded = false;
     });
   }
 
   // chia sẻ người dùng
   addPerShares(event: any) {
-    debugger
+    debugger;
     let arrPermisison = Array.from<any>(event);
-    if(arrPermisison?.length > 0)
-    {
+    if (arrPermisison?.length > 0) {
       let fisrtPermission = arrPermisison[0];
       let shareControl = arrPermisison[0].objectType;
       this.data.shareControl = shareControl;
-      if (!this.data.permissions) 
-        this.data.permissions = [];
+      if (!this.data.permissions) this.data.permissions = [];
       else
         this.data.permissions = this.data.permissions.filter(
           (e: any) => e.memberType != this.MEMBERTYPE.SHARE
@@ -372,18 +362,15 @@ export class PopupAddPostComponent implements OnInit {
           });
           // WP001 chia sẻ 1 - WP002 chia sẻ nhiều người
           let mssgCode = arrPermisison.length == 1 ? 'WP001' : 'WP002';
-          this.cache.message(mssgCode)
-          .subscribe((mssg: any) => {
-            if (mssg?.customName) 
-            {
+          this.cache.message(mssgCode).subscribe((mssg: any) => {
+            if (mssg?.customName) {
               if (arrPermisison.length == 1) {
                 // chia sẻ 1 người
                 this.data.shareName = Util.stringFormat(
                   mssg.customName,
                   `<b>${fisrtPermission.text}</b>`
                 );
-              } else 
-              {
+              } else {
                 // chia sẻ nhiều người
                 let count = arrPermisison.length - 1;
                 let type = fisrtPermission.objectName;
@@ -400,10 +387,8 @@ export class PopupAddPostComponent implements OnInit {
         default:
           break;
       }
-    }
-    else
-    {
-      this.data.shareName = "";
+    } else {
+      this.data.shareName = '';
     }
     this.dt.detectChanges();
   }
@@ -411,12 +396,10 @@ export class PopupAddPostComponent implements OnInit {
   // gắn thẻ người dùng
 
   addPerTags(event: any) {
-    debugger
+    debugger;
     let arrPermission = Array.from<any>(event.dataSelected);
-    if (arrPermission?.length > 0) 
-    {
-      if (!this.data.permissions) 
-        this.data.permissions = [];
+    if (arrPermission?.length > 0) {
+      if (!this.data.permissions) this.data.permissions = [];
       else
         this.data.permissions = this.data.permissions.filter(
           (x) => x.memberType !== this.MEMBERTYPE.TAGS
@@ -433,19 +416,15 @@ export class PopupAddPostComponent implements OnInit {
       });
       // WP018 gắn thẻ 1 - WP019 gắn thẻ nhiều người
       let mssgCodeTag = arrPermission.length == 1 ? 'WP018' : 'WP019';
-      this.cache.message(mssgCodeTag)
-      .subscribe((mssg: any) => {
-        if (mssg?.customName) 
-        {
+      this.cache.message(mssgCodeTag).subscribe((mssg: any) => {
+        if (mssg?.customName) {
           if (arrPermission.length == 1) {
             // gắn thẻ 1 người
             this.data.tagName = Util.stringFormat(
               mssg.customName,
               `<b>${arrPermission[0].UserName}</b>`
             );
-          } 
-          else 
-          {
+          } else {
             // gắn thẻ nhiều người
             this.data.tagName = Util.stringFormat(
               mssg.customName,
@@ -456,13 +435,13 @@ export class PopupAddPostComponent implements OnInit {
         }
       });
       this.dt.detectChanges();
-    }
-    else
-    {
+    } else {
       this.data.tagName = null;
-      this.crrPermisionTag = "";
-      if (this.data.permissions?.length > 0) 
-        this.data.permissions = this.data.permissions.filter((x:any) => x.memberType !== this.MEMBERTYPE.TAGS);
+      this.crrPermisionTag = '';
+      if (this.data.permissions?.length > 0)
+        this.data.permissions = this.data.permissions.filter(
+          (x: any) => x.memberType !== this.MEMBERTYPE.TAGS
+        );
     }
     this.showCBB = false;
   }
@@ -476,13 +455,15 @@ export class PopupAddPostComponent implements OnInit {
         'SettingValuesBusiness',
         'GetSettingValueAsync',
         ['WPParameters']
-      ).subscribe((res: any) => {
+      )
+      .subscribe((res: any) => {
         if (res) {
           let _param = JSON.parse(res);
           //default mode coppy
-          if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
+          if (_param['CopyFormat'] === '1') this.copyFormat = 'keepFormat';
           //default mode share
-          if (_param["Publishmode"]) this.data.shareControl = _param["Publishmode"]; 
+          if (_param['Publishmode'])
+            this.data.shareControl = _param['Publishmode'];
         }
       });
   }

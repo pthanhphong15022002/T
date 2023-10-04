@@ -148,7 +148,7 @@ export class PopupAddColumnTableComponent implements OnInit {
   }
 
   async valueChange(e) {
-    if (e.field == 'multiselect') {
+    if (e.field == 'multiselect' || e.field == 'columnWidth') {
       this.column[e.field] = e.data;
       return;
     }

@@ -1891,11 +1891,10 @@ codx-listview.card .card-header {
   margin: 0;
 }
 
-.e-toolbar .e-tbar-btn,
-.e-toolbar .e-tbar-btn:hover,
-.e-toolbar .e-tbar-btn:hover span {
-  background: transparent !important;
-}
+// .e-toolbar .e-tbar-btn:hover,
+// .e-toolbar .e-tbar-btn:hover span {
+//   background: transparent !important;
+// }
  .e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
    color: var(--primary-light) !important;
  }
@@ -3353,39 +3352,6 @@ codx-toolbar-report{
      width: 0rem !important;
    }
  }
-
-
-/*********** ipad ************/
-
-@media (max-width: 991px) {
-  [data-kt-drawer-aside="on"]{
-    #kt_aside_menu{
-      padding-top: 25px;
-    }
-  }
-  body:not([data-kt-drawer-aside="on"]){
-    .drawer-overlay{
-      display: none;
-      z-index: 0;
-    }
-  }
-  .d-lg-none.ms-2.me-n3{
-    display: none!important;
-  }
-  codx-header.header{
-    .ms-n3.me-1{
-      margin-left: 5px!important;
-      margin-right: 15px!important;
-    }
-    .btn.btn-light-primary:hover{
-      background-color: var(--primary-light)!important;
-    }
-  }
-
-}
-
-//////////// end tablet
-
 codx-card-center .card.codx_cardcenter{
   overflow: hidden;
 }
@@ -3791,9 +3757,6 @@ codx-view-tree-targets .menu-sub{
    }
 }
 
-
-
-
 @media (min-width: 992px){
   [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended){
     .menu-item{
@@ -3967,3 +3930,9 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   //   margin-bottom: 50px;
   // }
 }
+
+
+//////////////
+// ipad and tablet
+/// /////////
+ @import "src/tablet.scss";

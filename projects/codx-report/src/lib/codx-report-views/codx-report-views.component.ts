@@ -59,6 +59,7 @@ export class CodxReportViewsComponent
     private auth: AuthStore
   ) {
     super(injector);
+    this.user = this.auth.get();
   }
 
   onInit(): void {
@@ -76,11 +77,6 @@ export class CodxReportViewsComponent
           }
         });
       }
-    });
-    this.user = this.auth.get();
-    this.api.execSv("rptrp", 'Codx.RptBusiness.RP', "ReportListBusiness", "GetReportsByModuleAsync", ["R", "TM"])
-    .subscribe(res => {
-      debugger
     });
   }
 

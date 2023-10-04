@@ -172,7 +172,7 @@ export class PopupAddLeadComponent
   leverSetting: number;
 
   convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
-
+  transIDCamp: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -189,7 +189,7 @@ export class PopupAddLeadComponent
     this.funcID = this.formModel?.funcID;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
-    this.lead.processID = dt?.data?.processId;
+    // this.lead.processID = dt?.data?.processId;
     this.applyFor = dt?.data?.applyFor;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.currencyIDDefault = dt?.data?.currencyIDDefault;
@@ -215,6 +215,7 @@ export class PopupAddLeadComponent
     } else {
       //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
       this.convertCustomerToLead = dt?.data?.convertCustomerToLead ?? false;
+      this.transIDCamp = dt?.data?.transIDCamp ?? null;
       if (this.convertCustomerToLead) {
         this.lead = JSON.parse(JSON.stringify(dt?.data?.dataConvert));
       } //end Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
@@ -583,7 +584,7 @@ export class PopupAddLeadComponent
           this.lead,
           this.leadId,
           this.contactId,
-          this.convertCustomerToLead,
+          this.transIDCamp,
         ])
         .subscribe((res) => {
           if (res) {
@@ -647,8 +648,7 @@ export class PopupAddLeadComponent
     if (this.owner) {
       this.lead.owner = this.owner;
     }
-    this.lead.applyProcess &&
-      this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess &&this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
 
@@ -729,6 +729,7 @@ export class PopupAddLeadComponent
       }
       this.lead.currencyID = this.currencyIDDefault;
       this.lead.applyProcess = this.applyProcess;
+      this.lead.applyProcess && this.getProcessSetting();
       this.checkApplyProcess(this.lead.applyProcess);
     }
 
@@ -736,8 +737,21 @@ export class PopupAddLeadComponent
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
-    } else await this.getListInstanceSteps(this.lead.processID);
+    }
     this.itemTabsInputContact(this.isCategory);
+  }
+    async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault(['5'])
+      .subscribe((res) => {
+        if (res) {
+          // this.processId = res.recID;
+          // this.dataObj = { processID: res.recID };
+          // this.afterLoad();
+          this.getListInstanceSteps(res.recID);
+          this.lead.processID = res.recID;
+        }
+      });
   }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];

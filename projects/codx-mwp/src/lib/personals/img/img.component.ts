@@ -20,8 +20,8 @@ import {
 } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { FileService } from '@shared/services/file.service';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
 
 @Component({
   selector: 'app-img',
@@ -57,7 +57,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private shareService: CodxShareService,
     private injector: Injector
   ) {
-    
     this.user = this.auth.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
   }
@@ -89,11 +88,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getThumb(file:any){
-    if(file.pathDisk)
-    {
-      return this.shareService.getThumbByUrl(file.pathDisk,300);
+  getThumb(file: any) {
+    if (file.pathDisk) {
+      return this.shareService.getThumbByUrl(file.pathDisk, 300);
     }
-    return "/assets/themes/wp/default/img/Image_NoData.svg";
+    return '/assets/themes/wp/default/img/Image_NoData.svg';
   }
 }

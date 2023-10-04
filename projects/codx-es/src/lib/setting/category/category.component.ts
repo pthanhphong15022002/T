@@ -21,12 +21,12 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddCategoryComponent } from './popup-add-category/popup-add-category.component';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
 //import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
 
 export class defaultRecource {}
 @Component({
@@ -39,7 +39,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('listItem') listItem: TemplateRef<any>;
   @ViewChild('gridTemplate') grid: TemplateRef<any>;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
-  @ViewChild('process') process!:TemplateRef<any>;
+  @ViewChild('process') process!: TemplateRef<any>;
   @ViewChild('editCategory') editCategory: PopupAddCategoryComponent;
   @ViewChild('icon') icon!: TemplateRef<any>;
   @ViewChild('eSign') eSign!: TemplateRef<any>;
@@ -68,7 +68,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
   dataSelected: any;
   dialog: DialogRef;
-  isES =false;
+  isES = false;
 
   constructor(
     private cacheSv: CacheService,
@@ -84,7 +84,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
-      this.isES = this.funcList?.module == "ES" ? true : false;
+      this.isES = this.funcList?.module == 'ES' ? true : false;
     });
   }
 
@@ -137,7 +137,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             },
             {
               field: 'categoryID',
-              headerText:  gv['CategoryID']?.headerText || 'CategoryID',
+              headerText: gv['CategoryID']?.headerText || 'CategoryID',
               //template: '',
               width: 100,
             },
@@ -155,26 +155,26 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             // },
             {
               field: 'icon',
-              headerText:  gv['Icon']?.headerText || 'Icon' ,
+              headerText: gv['Icon']?.headerText || 'Icon',
               template: this.icon,
               width: 80,
             },
             {
               field: 'memo',
-              headerText:  gv['Memo']?.headerText || 'Memo',
-              template : this.memo,
+              headerText: gv['Memo']?.headerText || 'Memo',
+              template: this.memo,
               width: 180,
             },
             {
               field: 'eSign',
-              headerText: gv['ESign']?.headerText ||  'ESign',
-              template : this.eSign,
+              headerText: gv['ESign']?.headerText || 'ESign',
+              template: this.eSign,
               width: 80,
             },
             {
               field: 'processID',
               headerText: 'Quy trình duyệt',
-              template : this.process,
+              template: this.process,
               width: 220,
             },
           ];
@@ -194,7 +194,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               active: true,
               model: {
                 resources: this.columnsGrid,
-                hideMoreFunc:true
+                hideMoreFunc: true,
               },
             },
           ];
@@ -250,7 +250,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   add(evt?: any) {
-    this.viewBase.dataService.addNew().subscribe((res) => {      
+    this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
       option.Width = '800px';
@@ -262,7 +262,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           data: this.viewBase.dataService.dataSelected,
           isAdd: true,
           headerText: evt.text + ' ' + this.funcList?.customName ?? '',
-          isES:this.isES,
+          isES: this.isES,
         },
         option
       );
@@ -270,9 +270,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
       popupAdd.closed.subscribe((res) => {
         if (!res?.event) this.viewBase.dataService.clear();
         else {
-          res.event.modifiedOn= new Date();
+          res.event.modifiedOn = new Date();
           this.viewBase.dataService.update(res.event).subscribe();
-
         }
       });
     });
@@ -295,7 +294,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           headerText: evt.text + ' ' + this.funcList?.customName ?? '',
           type: 'copy',
           oldRecID: evt?.data?.recID,
-          isES:this.isES,
+          isES: this.isES,
         },
         option
       );
@@ -330,7 +329,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
               data: evt?.data,
               isAdd: false,
               headerText: evt.text + ' ' + this.funcList?.customName ?? '',
-              isES:this.isES,
+              isES: this.isES,
             },
             option
           );

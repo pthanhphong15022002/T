@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -43,7 +44,7 @@ export class ViewDetailWrComponent implements OnInit {
   treeTask = [];
   expanding = false;
   overflowed: boolean = false;
-
+  id: any;
   tabControl = [
     {
       name: 'History',
@@ -85,6 +86,21 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.id = changes['dataSelected'].currentValue?.recID;
+        this.expanding = false;
+        this.overflowed = false;
+      }
+    }
+
+  }
 
   ngAfterViewChecked(): void {
     const element: HTMLElement = this.memo?.nativeElement;
