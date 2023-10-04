@@ -20,7 +20,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   disabledReturnedDate = false;
   disabledSubmittedDate = false;
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   originDocumentTypeID : any;
@@ -48,8 +48,8 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       this.disabledInput = true;
     }
     this.employId = data?.data?.employeeId;
+    this.formModel = dialog.formModel;
     this.documentObj = JSON.parse(JSON.stringify(data?.data?.documentObj));
-    console.log('data nhan vao', this.documentObj);
     if(this.documentObj){
       this.originDocumentTypeID = this.documentObj.documentTypeID;
     }
@@ -57,29 +57,30 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
     onInit(): void {
-    if (!this.formGroup)
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+    // if (!this.formGroup)
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+        this.initForm();
         this.hrService.getHeaderText(this.funcID).then((res) => {
           this.fieldHeaderTexts = res;
         })
@@ -135,20 +136,21 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
             this.documentObj = res?.data;
             this.documentObj.employeeID = this.employId;
 
-            this.formModel.currentData = this.documentObj;
-            this.formGroup.patchValue(this.documentObj);
+            // this.formModel.currentData = this.documentObj;
+            // this.formGroup.patchValue(this.documentObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-        this.formGroup.patchValue(this.documentObj);
-        this.formModel.currentData = this.documentObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
-    }
+    } 
+    // else {
+    //   if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+    //     // this.formGroup.patchValue(this.documentObj);
+    //     // this.formModel.currentData = this.documentObj;
+    //     this.cr.detectChanges();
+    //     // this.isAfterRender = true;
+    //   }
+    // }
   }
 
   async addFiles(evt){

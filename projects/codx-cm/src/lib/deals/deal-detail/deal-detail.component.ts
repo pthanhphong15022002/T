@@ -353,11 +353,9 @@ export class DealDetailComponent implements OnInit {
           let contactMain = res.filter((res) => res.isDefault)[0];
           this.contactPerson = contactMain ? contactMain : null;
           this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
-          //   this.lstContactDeal = res;
-          // if (this.action === this.actionEdit && this.isLoad) {
-          //   this.lstContactOld = JSON.parse(JSON.stringify(res));
-          //   this.isLoad = false;
-          // }
+        }
+        else {
+          this.contactPerson = null;
         }
       });
     } else {

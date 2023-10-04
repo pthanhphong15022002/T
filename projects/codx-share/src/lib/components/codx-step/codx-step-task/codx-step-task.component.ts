@@ -108,6 +108,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   user: any;
   id: string;
   taskType: any;
+  listFieldTask;
   listTask = [];
   moveStageData = [];
   idStepOld = '';
@@ -2419,8 +2420,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   getFields(listField, fieldID) {
     if (listField?.length > 0) {
-      let a = listField?.filter((field) => fieldID.includes(field?.recID));
-      return a;
+      this.listFieldTask = listField?.filter((field) => fieldID.includes(field?.recID));
+      return this.listFieldTask;
     }
     return null;
   }

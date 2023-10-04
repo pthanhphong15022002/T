@@ -1,0 +1,53 @@
+@media (max-width:1200px) {
+    div.page-dashboard .aside.aside-transparent {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+    codx-content{
+        .w-350px.min-w-350px {
+            min-width: 250px !important;
+            width: 250px !important;
+        }
+    }
+}
+// @media (max-width:1024px){
+//     lib-layout-news codx-header{
+//         position: relative;
+//         .header-menu{
+//             position: relative;
+//             margin-top: 50px;
+//         }
+//     }
+// }
+
+/*********** ipad ************/
+
+@media (max-width: 991px) {
+    [data-kt-drawer-aside="on"]{
+      #kt_aside_menu{
+        padding-top: 25px;
+      }
+    }
+    body:not([data-kt-drawer-aside="on"]){
+      .drawer-overlay{
+        display: none;
+        z-index: 0;
+      }
+    }
+    .d-lg-none.ms-2.me-n3{
+      display: none!important;
+    }
+    codx-header.header{
+      .ms-n3.me-1{
+        margin-left: 5px!important;
+        margin-right: 15px!important;
+      }
+      .btn.btn-light-primary:hover{
+        background-color: var(--primary-light)!important;
+      }
+    }
+  
+  }
+  
+  //////////// end tablet
