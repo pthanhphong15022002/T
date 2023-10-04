@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CodxDropdownSelectComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -21,10 +22,10 @@ import { CodxCmService } from 'projects/codx-cm/src/projects';
   styleUrls: ['./popup-add-campaign-contact.component.css'],
 })
 export class PopupAddCampaignContactComponent implements OnInit {
-  @ViewChild('cbxProvince') cbxProvince: any;
-  @ViewChild('cbxDistrict') cbxDistrict: any;
-  @ViewChild('cbxIndustries') cbxIndustries: any;
-  @ViewChild('cbxStatus') cbxStatus: any;
+  @ViewChild('cbxProvince') cbxProvince: CodxDropdownSelectComponent;
+  @ViewChild('cbxDistrict') cbxDistrict: CodxDropdownSelectComponent;
+  @ViewChild('cbxIndustries') cbxIndustries: CodxDropdownSelectComponent;
+  @ViewChild('cbxStatus') cbxStatus: CodxDropdownSelectComponent;
 
   dialog: any;
   data: any;
@@ -187,7 +188,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
           if (this.cbxProvince) {
             this.cbxProvince.value = [];
             this.cbxProvince.selectedItems = [];
-            this.cbxProvince.setValue([]);
+            this.cbxProvince.setValue('');
           }
           this.provinceIDs = [];
           this.bindingCountCompaign();

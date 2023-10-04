@@ -424,6 +424,10 @@ export class CodxCmService {
       );
   }
 
+  initCache() {
+    return this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync');
+  }
+
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
     this.api
@@ -1446,6 +1450,16 @@ export class CodxCmService {
       'GetProcessByBussinessIDAsync',
       bussinessID
     );
+  }
+
+  getCustomerNameByrecID(id) {
+    return id ? this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'GetCustomerNameByRecIDAsync',
+      [id]
+    ) : null;
   }
 
   //#region target and targetLines

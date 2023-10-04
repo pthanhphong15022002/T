@@ -406,11 +406,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="onSave()"
-    >
+    <button type="button" class="btn btn-primary" (click)="onSave()">
       <codx-label
         name="lblSave"
         [formModel]="dialog.formModel"
@@ -809,7 +805,7 @@
           </codx-label>
           <codx-input
             [field]="'contactID'"
-            [disabled]="disabledShowInput"
+            [disabled]="action == 'edit' || disabledShowInput"
             [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -1016,7 +1012,7 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [disabled]="disabledShowInput"
+          [disabled]="action == 'edit' || disabledShowInput"
           [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
         >

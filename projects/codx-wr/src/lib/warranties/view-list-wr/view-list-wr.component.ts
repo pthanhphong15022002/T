@@ -23,12 +23,19 @@ export class ViewListWrComponent {
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
-
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
   constructor(
     private wrSv: CodxWrService,
     private callFunc: CallFuncService,
     private api: ApiHttpService
   ) {}
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+  }
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
@@ -36,14 +43,6 @@ export class ViewListWrComponent {
 
   changeDataMF(e, data) {
     this.changeMoreMF.emit({ e: e, data: data });
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataList']) {
-      // if (changes['taskID'].currentValue === this.id) return;
-      // this.id = changes['taskID'].currentValue;
-      // this.loadedHisPro = false;
-      // this.getTaskDetail();
-    }
   }
 
   dbClick(data) {
@@ -60,4 +59,39 @@ export class ViewListWrComponent {
     }
     return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
   }
+
+  //#region popover
+  PopoverDetail(e, p: any, emp, field: string) {
+    let parent = e.currentTarget.parentElement.scrollHeight;
+    let child = e.currentTarget.offsetHeight;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp[field] != null && emp[field]?.trim() != '') {
+        if (40 < child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
+
+  closePopover() {
+    this.popupOld?.close();
+  }
+
+  checkHover(id) {
+    let isCollapsed = false;
+    let element = document.getElementById(id);
+    if (element) {
+      if (element.offsetHeight > 38) {
+        isCollapsed = true;
+      }
+    }
+    return isCollapsed;
+  }
+  //#endregion
 }
