@@ -104,6 +104,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.contractName = dt?.data?.contractName;
     this.leadName = dt?.data?.leadName;
     this.instanceName = dt?.data?.instanceName;
+    this.listField = dt?.data?.listField;
 
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
