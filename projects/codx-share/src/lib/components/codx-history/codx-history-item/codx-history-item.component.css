@@ -31,3 +31,29 @@
     cursor: pointer;
     text-decoration: underline;
 }
+
+.popup{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+.popup-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+.popup-header_title{
+    text-align: left;
+}
+.popup-header_close{
+    text-align: right;
+}
+.popup-body{
+    width: 100%;
+    height: calc(100% - 30px);
+}

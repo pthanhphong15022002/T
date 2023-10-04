@@ -21,13 +21,13 @@ import moment from 'moment';
 })
 export class PopupEbenefitComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   benefitObj;
   //listBenefits;
   //indexSelected;
   employId: string;
-  isAfterRender = false;
+  // isAfterRender = false;
   successFlag = false;
   actionType: string;
   disabledInput = false;
@@ -83,23 +83,25 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(
-            this.formModel.formName,
-            this.formModel.gridViewName,
-            this.formModel
-          )
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    this.initForm();
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(
+    //         this.formModel.formName,
+    //         this.formModel.gridViewName,
+    //         this.formModel
+    //       )
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   // ngAfterViewInit() {
@@ -143,10 +145,10 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
             this.benefitObj.effectedDate = null;
             this.benefitObj.expiredDate = null;
             this.benefitObj.employeeID = this.employId;
-            this.formModel.currentData = this.benefitObj;
-            this.formGroup.patchValue(this.benefitObj);
+            // this.formModel.currentData = this.benefitObj;
+            // this.form.formGroup.patchValue(this.benefitObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -171,9 +173,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           this.getEmployeeInfoById(this.benefitObj.signerID, 'SignerID');
         }
 
-        this.formGroup.patchValue(this.benefitObj);
-        this.formModel.currentData = this.benefitObj;
-        this.isAfterRender = true;
+        // this.form.formGroup.patchValue(this.benefitObj);
+        // this.formModel.currentData = this.benefitObj;
+        // this.isAfterRender = true;
         this.cr.detectChanges();
       }
     }
@@ -190,8 +192,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
 
   async onSaveForm() {
     this.benefitObj.employeeID = this.employId;
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -207,8 +209,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     }
 
-    this.formGroup.patchValue({ benefitID: this.benefitObj.benefitID }); // test combobox chua co
-    this.formGroup.patchValue({ employeeID: this.benefitObj.employeeID });
+    this.form.formGroup.patchValue({ benefitID: this.benefitObj.benefitID }); // test combobox chua co
+    this.form.formGroup.patchValue({ employeeID: this.benefitObj.employeeID });
     if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
       this.hrService.notifyInvalidFromTo(
         'ExpiredDate',
@@ -223,10 +225,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         if (this.useForQTNS) {
           if (p != null) {
             this.notify.notifyCode('SYS006');
-            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
-            if (p[1]) {
-              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
-            }
+            p.emp = this.employeeObj.emp ?? this.employeeObj;
             this.dialog && this.dialog.close(p);
           }
         } else {
@@ -242,14 +241,10 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
-        if (p[0] != null) {
+        if (p != null) {
           this.notify.notifyCode('SYS007');
           if (this.useForQTNS) {
-            p[0].emp = this.employeeObj.emp ?? this.employeeObj;
-
-            if (p[1]) {
-              p[1].emp = this.employeeObj.emp ?? this.employeeObj;
-            }
+            p.emp = this.employeeObj.emp ?? this.employeeObj;
             this.dialog && this.dialog.close(p);
           } else {
             this.dialog && this.dialog.close(this.benefitObj);
@@ -297,7 +292,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
                   if (res) {
                     this.employeeSign.positionName = res.positionName;
                     this.benefitObj.signerPosition = res.positionName;
-                    this.formGroup.patchValue({
+                    this.form.formGroup.patchValue({
                       signerPosition: this.benefitObj.signerPosition,
                     });
                     this.cr.detectChanges();
@@ -305,7 +300,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
                 });
               } else {
                 this.benefitObj.signerPosition = null;
-                this.formGroup.patchValue({
+                this.form.formGroup.patchValue({
                   signerPosition: this.benefitObj.signerPosition,
                 });
               }
@@ -321,7 +316,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   valueChange(event) {
     if (!event.data) {
       this.benefitObj.signerPosition = '';
-      this.formGroup.patchValue({
+      this.form.formGroup.patchValue({
         signerPosition: '',
       });
     }
@@ -339,7 +334,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
         case 'BenefitID':
           this.benefitObj.benefitType =
             event.component.comboBoxObject.itemData.BenefitType;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             benefitType: event.component.comboBoxObject.itemData.BenefitType,
           });
           break;

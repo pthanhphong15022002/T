@@ -102,6 +102,7 @@ export class PdfComponent
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
+  @Input() dynamicApprovers = [];
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -293,6 +294,7 @@ export class PdfComponent
         this.isApprover,
         this.isEditable,
         this.transRecID,
+        this.dynamicApprovers,
       ])
       .subscribe((res: any) => {
         console.table('sf', res);
@@ -1556,11 +1558,11 @@ export class PdfComponent
         break;
 
       case 'img': {
-        let img = document.createElement('img') as HTMLImageElement;
+        const img = document.createElement('img') as HTMLImageElement;
         console.log('run addArea', url);
 
-        img.setAttribute('crossOrigin', 'anonymous');
-        img.referrerPolicy = 'noreferrer';
+        // img.setAttribute('crossOrigin', 'anonymous');
+        // img.referrerPolicy = 'noreferrer';
         img.src = url;
         img.onload = () => {
           let imgFixW = 200;
@@ -1638,7 +1640,6 @@ export class PdfComponent
             this.detectorRef.detectChanges();
           }
         };
-
         break;
       }
       default:
@@ -1681,6 +1682,7 @@ export class PdfComponent
     let data = {
       data: model,
       setupShowForm: setupShowForm,
+      isPublic: this.isPublic,
     };
 
     switch (area.labelType) {
@@ -1713,7 +1715,8 @@ export class PdfComponent
         return;
       }
       if (res?.event[0]) {
-        area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
+        // environment.urlUpload + '/' +
+        area.labelValue = res.event[0].pathDisk;
         this.detectorRef.detectChanges();
         console.log('run changeSignature_StampImg');
 
@@ -1729,8 +1732,8 @@ export class PdfComponent
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       const img = document.createElement('img') as HTMLImageElement;
-      img.setAttribute('crossOrigin', 'anonymous');
-      img.referrerPolicy = 'noreferrer';
+      // img.setAttribute('crossOrigin', 'anonymous');
+      // img.referrerPolicy = 'noreferrer';
       img.src = fileReader.result.toString();
       let min = 0;
       let scale = 1;
@@ -1981,9 +1984,11 @@ export class PdfComponent
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
     let w =
-      (this.curSelectedArea.scale().x / this.xScale) *
+      this.curSelectedArea.scale().x *
       (isTxt ? this.curSelectedArea.width() : 1);
-    let h = this.curSelectedArea.scale().y / this.yScale;
+    let h =
+      this.curSelectedArea.scale().y *
+      (isTxt ? this.curSelectedArea.height() : 1);
 
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,
@@ -2056,6 +2061,7 @@ export class PdfComponent
       email: this.signerInfo?.userID, //email của approver là đối tác
       fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
+      isPublic: this.isPublic,
     };
     let data = {
       data: model,
@@ -2590,15 +2596,35 @@ export class PdfComponent
             });
         } else {
           const img = document.createElement('img') as HTMLImageElement;
-          img.setAttribute('crossOrigin', 'anonymous');
-          img.referrerPolicy = 'noreferrer';
+          // img.setAttribute('crossOrigin', 'anonymous');
+          // img.referrerPolicy = 'noreferrer';
 
           img.src = url;
           img.onload = () => {
+            let imgFixW = 200;
+            let imgFixH = 200;
+
+            //yeu cau ngay 12/09 chu ky nhay se nho hon 1/2 so voi chu ky chinh
+
+            if (labelType == 'S2') {
+              imgFixW = imgFixW / 2;
+              imgFixH = imgFixH / 2;
+            }
+            let scaleW = imgFixW / img.width;
+            let scaleH = scaleW * (img.height / img.width) * this.yScale;
+            if (img.width < imgFixW) {
+              scaleW = 1;
+            }
+            if (img.height < imgFixH) {
+              scaleH = 1;
+            }
+
+            scaleW *= this.xScale;
+
             let imgArea = new Konva.Image({
               image: img,
-              width: imgW,
-              height: 100,
+              // width: imgW,
+              // height: 100,
               x: unsignIdx[idx],
               y: this.maxTop + row * 100 + 10,
               id: recID,
@@ -2606,13 +2632,17 @@ export class PdfComponent
               draggable: transformable,
               rotation: this.rotate,
             });
-            imgArea.scale({ x: this.xScale, y: this.yScale });
+            // imgArea.scale({ x: this.xScale, y: this.yScale });
+            imgArea.scale({
+              x: scaleW,
+              y: scaleH,
+            });
 
             //save to db
             let y = imgArea.position().y;
             let x = imgArea.position().x;
-            let w = this.xScale;
-            let h = this.yScale;
+            let w = scaleW / this.xScale;
+            let h = scaleH / this.yScale;
 
             let tmpArea: tmpSignArea = {
               signer: person.authorID,

@@ -1,0 +1,9 @@
+.expired {
+  color: #f64e60;
+}
+
+::ng-deep {
+  .schedule-overview {
+    height: 100% !important;
+  }
+}

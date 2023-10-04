@@ -77,7 +77,7 @@
           {{ currentStep?.startDate | date : dateFomat }} -
           {{ currentStep?.endDate | date : dateFomat }}</span
         >
-        <span  
+        <span
           class="date text-nowrap text-gray-500"
           *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'">
             {{ currentStep?.actualEnd | date : dateFomat }}
@@ -93,7 +93,7 @@
       >
       </codx-imgs>
       <div
-        class="disabled-inline"
+        class="disabled-inline me-1"
         (click)="openPopupUpdateProgress(currentStep, 'P')"
         [ngClass]="
           checkRoleUpdateProgress(currentStep, 'P')
@@ -116,7 +116,6 @@
           placement="top bottom"
         ></codx-progressbar>
       </div>
-      
     </div>
   </div>
   <!-- drap drop công việc ngoài-->
@@ -265,7 +264,7 @@
                       <codx-fields-detail-temp
                         *ngIf="task?.fieldID"
                         [listFields]="getFields(currentStep?.fields, task?.fieldID)"
-                        [showColumnControl]="4"
+                        [showColumnControl]="1"
                         [isShowTitle]="false"
                       >
                       </codx-fields-detail-temp>
@@ -421,13 +420,12 @@
         {{ data?.value?.startDate | date : dateFomat }} -
         {{ data?.value?.endDate | date : dateFomat }}</span
       >
-      <span  
+      <span
         class="date text-nowrap text-gray-500"
         *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
           {{ data?.value?.actualEnd | date : dateFomat }}
       </span>
     </div>
-    
     <span class="d-flex align-items-center">
       <codx-imgs
         class="me-2 d-flex align-items-center"
@@ -436,22 +434,18 @@
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
-        [objectName]="getRole(data?.value)"
-      >
+        >
+        <!-- [objectName]="getRole(data?.value)" -->
       </codx-imgs>
     </span>
     <div
       class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
-      [ngClass]="
-        checkRoleUpdateProgress(data?.value, data?.type)
-          ? 'cursor-pointer'
-          : 'cursor-not-allowed'
-      "
+      [ngClass]="checkRoleUpdateProgress(data?.value, data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
     >
-      <div 
-        *ngIf="data?.value?.assigned == '1'"  
-        class="progressAssigned" 
+      <div
+        *ngIf="data?.value?.assigned == '1'"
+        class="progressAssigned"
         #p="ngbPopover"
         [ngbPopover]="'Đã giao việc'"
         (mouseenter)="p.open()"

@@ -9,6 +9,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomerGroupsComponent } from './customer-groups/customer-groups.component';
 import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-customer-groups/popup-add-customer-groups.component';
 import { ApproversComponent } from 'projects/codx-ad/src/lib/approvers/approvers.component';
+import { StatusCodeComponent } from './status-code/status-code.component';
+import { PopupAddStatusCodeComponent } from './status-code/popup-add-status-code/popup-add-status-code.component';
 
 const routes: Routes = [
   {
@@ -23,12 +25,16 @@ const routes: Routes = [
         path: 'usergroups/:funcID',
         component: ApproversComponent,
       },
+      {
+        path: 'statuscode/:funcID',
+        component: StatusCodeComponent,
+      },
     ],
   },
 ];
 
 @NgModule({
-  declarations: [CustomerGroupsComponent, PopupAddCustomerGroupsComponent],
+  declarations: [CustomerGroupsComponent, PopupAddCustomerGroupsComponent, StatusCodeComponent, PopupAddStatusCodeComponent],
   imports: [
     RouterModule.forChild(routes),
     CommonModule,

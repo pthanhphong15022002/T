@@ -106,15 +106,18 @@ export class CodxTreeCommentComponent implements OnInit, OnChanges {
   }
   // send comments 
   sendComment(event: any, data: any = null) {
-    event.showReply = false;
-    if (data) {
-      data.showReply = false;
+    if(event){
+      event.showReply = false;
+      if (data) 
+      {
+        data.showReply = false;
+      }
+      this.totalComment++;
+      this.totalCommentChange.emit(this.totalComment);
+      this.dicDatas[event['recID']] = event;
+      this.setNodeTree(event);
+      this.dt.detectChanges();
     }
-    this.totalComment++;
-    this.totalCommentChange.emit(this.totalComment);
-    this.dicDatas[event['recID']] = event;
-    this.setNodeTree(event);
-    this.dt.detectChanges();
   }
 
   setDicData(data) {

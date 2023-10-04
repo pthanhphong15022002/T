@@ -15,7 +15,6 @@ import {
   DialogRef,
 } from 'codx-core';
 import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
-
 @Component({
   selector: 'codx-history-item',
   templateUrl: './codx-history-item.component.html',
@@ -69,7 +68,7 @@ export class CodxHistoryItemComponent implements OnInit {
         )
         .subscribe((res: any[]) => {
           if (Array.isArray(res)) {
-            debugger;
+            // debugger
             this.lstFile = res;
             this.dt.detectChanges();
           }
@@ -141,5 +140,23 @@ export class CodxHistoryItemComponent implements OnInit {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  @ViewChild('popupComment') popupComment: TemplateRef<any>;
+
+  //open popup comment
+  openPopupComment() {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    this.callFuc.openForm(
+      this.popupComment,
+      '',
+      600,
+      500,
+      '',
+      null,
+      '',
+      option
+    );
   }
 }

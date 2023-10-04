@@ -152,6 +152,7 @@ export class PopupAddLeadComponent
   leadNoSetting: any;
   leadNoSystem: any;
   user: any;
+  idxCrr: any = -1;
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -166,8 +167,12 @@ export class PopupAddLeadComponent
   disabledShowInput: boolean = true;
   isExist: boolean = false;
   applyProcess: boolean = true;
-  idxCrr: any = -1;
 
+  // number
+  leverSetting: number;
+
+  convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
+  transIDCamp: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -184,7 +189,7 @@ export class PopupAddLeadComponent
     this.funcID = this.formModel?.funcID;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
-    this.lead.processID = dt?.data?.processId;
+    // this.lead.processID = dt?.data?.processId;
     this.applyFor = dt?.data?.applyFor;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.currencyIDDefault = dt?.data?.currencyIDDefault;
@@ -208,6 +213,12 @@ export class PopupAddLeadComponent
         this.planceHolderAutoNumber = this.lead.leadID;
       }
     } else {
+      //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
+      this.convertCustomerToLead = dt?.data?.convertCustomerToLead ?? false;
+      this.transIDCamp = dt?.data?.transIDCamp ?? null;
+      if (this.convertCustomerToLead) {
+        this.lead = JSON.parse(JSON.stringify(dt?.data?.dataConvert));
+      } //end Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
@@ -221,6 +232,19 @@ export class PopupAddLeadComponent
     this.tabInfo = [this.menuGeneralInfo];
     this.tabContent = [this.tabGeneralInfoDetail];
     this.executeApiCalls();
+  }
+
+  async getParameterAddress() {
+    let param = await firstValueFrom(
+      this.cache.viewSettingValues('CMParameters')
+    );
+    let lever = 0;
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      let paramDefault = JSON.parse(dataParam.dataValue);
+      lever = paramDefault['ControlInputAddress'] ?? 0;
+    }
+    this.leverSetting = lever;
   }
 
   valueChange($event) {
@@ -307,7 +331,7 @@ export class PopupAddLeadComponent
     }
   }
 
-  saveLead() {
+  async saveLead() {
     if (!this.lead?.leadName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -332,6 +356,7 @@ export class PopupAddLeadComponent
       );
       return;
     }
+
     if (this.isExist) {
       this.notificationsService.notifyCode(
         'CM003',
@@ -339,9 +364,42 @@ export class PopupAddLeadComponent
         '"' + this.gridViewSetup['LeadID'].headerText + '"'
       );
       return;
-    } else {
-      this.promiseSaveFile();
     }
+
+    if (this.lead.address && this.lead.address.trim() != '') {
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [this.lead.address, this.leverSetting]
+        )
+      );
+      if (json != null && json.trim() != '') {
+        let lstDis = JSON.parse(json);
+        this.lead.provinceID = lstDis?.ProvinceID;
+        this.lead.districtID = lstDis?.DistrictID;
+        //  this.lead.wardID = lstDis?.WardID;
+      } else {
+        this.lead.provinceID = null;
+        this.lead.districtID = null;
+        //    this.lead.wardID = null;
+      }
+    }
+
+    if (
+      !this.codxCmService.checkValidateSetting(
+        this.lead.address,
+        this.lead,
+        this.leverSetting,
+        this.gridViewSetup,
+        this.gridViewSetup?.Address?.headerText
+      )
+    ) {
+      return;
+    }
+    this.promiseSaveFile();
   }
   cbxChange($event, field) {
     if ($event && $event.data) {
@@ -349,22 +407,20 @@ export class PopupAddLeadComponent
     }
   }
   valueChangeOwner($event, view) {
-    if ($event) {
+    if ($event && view === this.viewOwnerDefault) {
       let ownerName = '';
-      if (view === this.viewOwnerDefault) {
-        this.owner = $event?.data;
-        ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      }
+      this.owner = $event?.data;
+      ownerName = $event?.component?.itemsSelected[0]?.UserName;
       this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if (view === this.viewOwnerProcess) {
+    } else if ($event && view === this.viewOwnerProcess) {
       this.owner = $event;
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0]?.userName;
+          (x) => x.userID === this.lead.owner
+        )[0].userName;
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      this.searchOwner('1', 'O', '0', this.lead.owner, ownerName);
     }
   }
   searchOwner(
@@ -423,14 +479,19 @@ export class PopupAddLeadComponent
   //   }
   // }
 
-  addPermission(processId: any) {
-    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
-    if (result) {
-      let permissionsDP = result?.permissionRoles;
-      if (permissionsDP.length > 0 && permissionsDP) {
-        for (let item of permissionsDP) {
-          this.lead.permissions.push(this.copyPermission(item));
-        }
+  addPermission(permissionDP) {
+    // var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
+    // if (result) {
+    //   let permissionsDP = result?.permissionRoles;
+    //   if (permissionsDP.length > 0 && permissionsDP) {
+    //     for (let item of permissionsDP) {
+    //       this.lead.permissions.push(this.copyPermission(item));
+    //     }
+    //   }
+    // }
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        this.lead.permissions.push(this.copyPermission(item));
       }
     }
   }
@@ -516,18 +577,34 @@ export class PopupAddLeadComponent
   }
 
   onAdd() {
-    this.addPermission(this.lead.processID);
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        if (res?.save[0]) {
-          //bua save avata
-          (this.dialog.dataService as CRUDService)
-            .update(res.save[0])
-            .subscribe();
-          this.dialog.close(res.save[0]);
-        }
-      });
+    this.lead.applyProcess && this.addPermission(this.lead.processID);
+    if (this.convertCustomerToLead) {
+      this.api
+        .execSv<any>('CM', 'ERM.Business.CM', 'LeadsBusiness', 'AddLeadAsync', [
+          this.lead,
+          this.leadId,
+          this.contactId,
+          this.transIDCamp,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+            this.notificationsService.notifyCode('SYS006');
+          }
+        });
+    } else {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe((res) => {
+          if (res?.save[0]) {
+            //bua save avata
+            (this.dialog.dataService as CRUDService)
+              .update(res.save[0])
+              .subscribe();
+            this.dialog.close(res.save[0]);
+          }
+        });
+    }
   }
   onEdit() {
     this.dialog.dataService
@@ -571,8 +648,7 @@ export class PopupAddLeadComponent
     if (this.owner) {
       this.lead.owner = this.owner;
     }
-    this.lead.applyProcess &&
-      this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess &&this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
 
@@ -598,6 +674,7 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.addPermission(instance.permissions);
         this.isLoading && this.dialog.close(instance);
       }
     });
@@ -640,6 +717,7 @@ export class PopupAddLeadComponent
   }
 
   async executeApiCalls() {
+    this.getParameterAddress();
     if (this.action === this.actionAdd) {
       let res = await firstValueFrom(
         this.codxCmService.getParam('CMParameters', '1')
@@ -651,6 +729,7 @@ export class PopupAddLeadComponent
       }
       this.lead.currencyID = this.currencyIDDefault;
       this.lead.applyProcess = this.applyProcess;
+      this.lead.applyProcess && this.getProcessSetting();
       this.checkApplyProcess(this.lead.applyProcess);
     }
 
@@ -658,8 +737,21 @@ export class PopupAddLeadComponent
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
-    } else await this.getListInstanceSteps(this.lead.processID);
+    }
     this.itemTabsInputContact(this.isCategory);
+  }
+    async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault(['5'])
+      .subscribe((res) => {
+        if (res) {
+          // this.processId = res.recID;
+          // this.dataObj = { processID: res.recID };
+          // this.afterLoad();
+          this.getListInstanceSteps(res.recID);
+          this.lead.processID = res.recID;
+        }
+      });
   }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];
@@ -682,7 +774,8 @@ export class PopupAddLeadComponent
           (x) => x.stepID == this.lead.stepID
         );
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        this.listParticipants = obj.permissions;
+        this.listParticipants = null;
+        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
@@ -863,6 +956,7 @@ export class PopupAddLeadComponent
         case 'R':
         case 'A':
         case 'L':
+        case 'TA':
           // case 'C': lead ko co
           result = event.e;
           break;

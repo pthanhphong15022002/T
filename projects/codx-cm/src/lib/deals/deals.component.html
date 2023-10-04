@@ -7,6 +7,8 @@
   [entityName]="entityName"
   [className]="className"
   [method]="method"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
@@ -534,12 +536,14 @@
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     [listSteps]="listSteps"
+    [valueListStatusCode]="valueListStatusCode"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     [checkMoreReason]="checkMoreReason(dataSelected)"
     (changeProgress)="autoStart($event)"
+    [isChangeOwner]="isChangeOwner"
   >
   </codx-deal-detail>
 </ng-template>
@@ -755,13 +759,15 @@
 </ng-template>
 
 <ng-template #bodyPopup>
-  <codx-input
-    [formModel]="view.formModel"
-    field="statusCodeID"
-    [placeholder]="gridViewSetup?.StatusCodeID?.description"
-    (valueChange)="valueChangeStatusCode($event)"
-  >
-  </codx-input>
+  <ejs-combobox
+  [dataSource]="valueListStatusCode "
+  (valueChange)="valueChangeStatusCode($event)"
+  [fields]="fieldCbxStatusCode"
+  [placeholder]="gridViewSetup?.ObjectStatus?.description"
+  [allowFiltering]="true"
+  [value]="statusDefault"
+></ejs-combobox>
+
 </ng-template>
 
 <ng-template #footerPopup>

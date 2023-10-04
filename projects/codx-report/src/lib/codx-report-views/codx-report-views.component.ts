@@ -59,13 +59,15 @@ export class CodxReportViewsComponent
     private auth: AuthStore
   ) {
     super(injector);
+    this.user = this.auth.get();
   }
 
   onInit(): void {
     this.router.params.subscribe((param: any) => {
       if (param) {
         this.funcID = param['funcID'];
-        this.cacheSv.functionList(this.funcID).subscribe((res: any) => {
+        this.cacheSv.functionList(this.funcID)
+        .subscribe((res: any) => {
           if (res) {
             this.funcItem = res;
             this.module = res.module ? res.module.toLowerCase() : '';
@@ -76,8 +78,6 @@ export class CodxReportViewsComponent
         });
       }
     });
-
-    this.user = this.auth.get();
   }
 
   ngOnChanges(changes: SimpleChanges): void {}

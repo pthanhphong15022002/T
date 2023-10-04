@@ -970,7 +970,7 @@ export class AddContractsComponent implements OnInit {
       ? await this.cmService.getListUserByOrg(this.listParticipants)
       : this.listParticipants;
   }
-  changeFields(event) {
+  valueChangeCustom(event) {
     if (event && event.e && event.data) {
       var result = event.e?.data;
       var field = event.data;
@@ -981,7 +981,9 @@ export class AddContractsComponent implements OnInit {
         case 'P':
         case 'R':
         case 'A':
+        // case 'C': ///ko có
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }

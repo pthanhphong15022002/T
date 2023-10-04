@@ -1,0 +1,64 @@
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [idField]="idField"
+  [moreFuncs]="moreFuncs"
+  [className]="className"
+  [method]="method"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [viewActiveType]="'2'"
+  (selectedChange)="selectedChange($event)"
+>
+</codx-views>
+
+<ng-template #template let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateObjectStatus let-data>
+
+<div class="" *ngIf="data?.objectStatus">
+  <codx-vll
+    [name]="getValueTypeCategory(data.category)"
+    [field]="'Status'"
+    [value]="data?.objectStatus"
+    [showText]="true"
+    [showBgColor]="true"
+    class="badge badge-light badge-sm"
+  >
+  </codx-vll>
+</div>
+</ng-template>
+
+
+<ng-template #templateCategory let-data>
+
+  <div class="" >
+    <codx-vll
+    [name]="gridViewSetup?.Category?.referedValue"
+      [field]="'Category'"
+      [value]="data?.category"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-sm"
+    >
+    </codx-vll>
+  </div>
+  </ng-template>
+

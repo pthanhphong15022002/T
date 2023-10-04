@@ -163,18 +163,18 @@ export class QuestionsComponent
       name: 'Phạm vi tuyến tính',
       icon: 'fa fa-ellipsis-h',
     },
-    // {
-    //   id: "O2",
-    //   name: "Lưới trắc nghiệm",
-    //   icon: "icon-grid_round"
-    // }
-    // ,
-    // {
-    //   id: "C2",
-    //   name: "Lưới hộp kiểm",
-    //   icon: "icon-grid_on",
-    //   group: true
-    // },
+    {
+      id: "O2",
+      name: "Lưới trắc nghiệm",
+      icon: "icon-grid_round"
+    }
+    ,
+    {
+      id: "C2",
+      name: "Lưới hộp kiểm",
+      icon: "icon-grid_on",
+      group: true
+    },
     {
       id: 'D',
       name: 'Ngày',

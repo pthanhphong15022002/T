@@ -22,12 +22,8 @@ import {
   Util,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { FormGroup } from '@angular/forms';
 import { PopupMultiselectvllComponent } from '../../employee-policyal/popup-multiselectvll/popup-multiselectvll.component';
-import {
-  EditSettingsModel,
-  detailIndentCellInfo,
-} from '@syncfusion/ej2-angular-grids';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-policybenefits',
@@ -67,11 +63,11 @@ export class PopupPolicybenefitsComponent
   lstSelectedBenefits: any = [];
 
   formModel: FormModel;
-  formGroup: FormGroup;
+  //formGroup: FormGroup;
   dialog: DialogRef;
   actionType: string;
   idField = 'PolicyID';
-  isAfterRender = false;
+  //isAfterRender = false;
   headerText: string;
   benefitPolicyObj: any;
   autoNumField: any;
@@ -152,7 +148,7 @@ export class PopupPolicybenefitsComponent
 
   fmKow: FormModel = {};
 
-  grvSetup: any;
+  // grvSetup: any;
   grvSetupPolicyDetail: any;
   grvSetupPolicyConstraint: any;
   benefitFuncID = 'HRTEM0403';
@@ -162,8 +158,8 @@ export class PopupPolicybenefitsComponent
   cbxConstraintCbxValue: any;
 
   fieldHeaderTexts;
-  originPolicyId = '';
-  originPolicyBenefitObj = '';
+  // originPolicyId = '';
+  // originPolicyBenefitObj = '';
 
   currentTab = '';
 
@@ -213,15 +209,14 @@ export class PopupPolicybenefitsComponent
     this.benefitPolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('benefit policy nhan vao', this.benefitPolicyObj);
     debugger;
-    if (this.benefitPolicyObj && this.actionType == 'edit') {
-      this.originPolicyId = this.benefitPolicyObj.policyID;
-      this.originPolicyBenefitObj = JSON.parse(
-        JSON.stringify(this.benefitPolicyObj)
-      );
-    }
+    // if(this.benefitPolicyObj && this.actionType == 'edit'){
+    //   this.originPolicyId = this.benefitPolicyObj.policyID;
+    //   this.originPolicyBenefitObj = JSON.parse(JSON.stringify(this.benefitPolicyObj));
+    // }
   }
 
   onInit(): void {
+    debugger;
     if (!this.columnGrid1) {
       this.columnGrid1 = [
         {
@@ -253,6 +248,7 @@ export class PopupPolicybenefitsComponent
         },
       ];
     }
+
     this.cache
       .gridViewSetup('PolicyConstraints', 'grvPolicyConstraints')
       .subscribe((res) => {
@@ -274,52 +270,44 @@ export class PopupPolicybenefitsComponent
       this.hrSevice.getFormModel(this.benefitFuncID).then((formModel) => {
         if (formModel) {
           console.log('benefit form model', formModel);
-
           this.benefitFormModel = formModel;
         }
       });
     }
 
-    if (!this.formModel)
-      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrSevice
-            .getFormGroup(
-              this.formModel.formName,
-              this.formModel.gridViewName,
-              this.formModel
-            )
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrSevice
-        .getFormGroup(
-          this.formModel.formName,
-          this.formModel.gridViewName,
-          this.formModel
-        )
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+    this.initForm();
+
+    // if (!this.formModel)
+    //   this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrSevice
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrSevice
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
   }
 
   addRowGrid1() {
-    debugger;
-    if (this.benefitPolicyObj.policyID || this.originPolicyId) {
+    if (this.benefitPolicyObj.policyID || this.form.form.data.policyID) {
       this.CheckIfPolicyIDExist(this.benefitPolicyObj.policyID).subscribe(
         (res) => {
           if (res[0] == true) {
-            this.originPolicyId = this.benefitPolicyObj.policyID;
+            // this.originPolicyId = this.benefitPolicyObj.policyID;
             let idx = this.gridView1.dataSource.length;
             let data = {
               recID: Util.uid(),
@@ -336,12 +324,11 @@ export class PopupPolicybenefitsComponent
   }
 
   onEditGrid1(evt) {
-    debugger;
     if (!evt.fromValue) {
       this.notify.notifyCode('HR029');
       setTimeout(() => {
         this.GetPolicyDetailByAjustBy(
-          this.originPolicyId,
+          this.form.form.preData.policyID,
           this.benefitPolicyObj.adjustBy
         ).subscribe((res) => {
           this.dataSourceGridView1 = res;
@@ -354,7 +341,7 @@ export class PopupPolicybenefitsComponent
       this.notify.notifyCode('HR030');
       setTimeout(() => {
         this.GetPolicyDetailByAjustBy(
-          this.originPolicyId,
+          this.form.form.preData.policyID,
           this.benefitPolicyObj.adjustBy
         ).subscribe((res) => {
           this.dataSourceGridView1 = res;
@@ -367,7 +354,7 @@ export class PopupPolicybenefitsComponent
       this.notify.notifyCode('HR031');
       setTimeout(() => {
         this.GetPolicyDetailByAjustBy(
-          this.originPolicyId,
+          this.form.form.preData.policyID,
           this.benefitPolicyObj.adjustBy
         ).subscribe((res) => {
           this.dataSourceGridView1 = res;
@@ -484,8 +471,25 @@ export class PopupPolicybenefitsComponent
     this.attachment.uploadFile();
   }
 
-  async addFiles(evt) {
-    this.benefitPolicyObj.attachments = evt.data.length;
+  addFiles(evt) {
+    debugger;
+    this.benefitPolicyObj.attachments = this.benefitPolicyObj.attachments + 1;
+  }
+  deleteFile(evt) {
+    if (evt) {
+      this.benefitPolicyObj.attachments -= evt.length;
+    }
+    debugger;
+    // let index = this.attachment.data.indexOf(evt[0])
+    // if(index > -1){
+    //   this.attachment.data = this.attachment.data.splice(index,1);
+    // }
+    // this.benefitPolicyObj.attachments = this.attachment.data.length
+    this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {});
+  }
+  countFile() {
+    debugger;
+    // this.benefitPolicyObj.attachments = this.attachment.fileUploadList.length
   }
   fileAdded(evt) {}
 
@@ -522,7 +526,7 @@ export class PopupPolicybenefitsComponent
         null,
         {
           headerText: 'Chọn điều kiện áp dụng',
-          vllName: this.grvSetup.ConstraintBy.referedValue,
+          vllName: this.form.form.gridviewSetup.ConstraintBy.referedValue,
           formModel: this.formModel,
           dataSelected: this.benefitPolicyObj.constraintBy,
         },
@@ -536,7 +540,6 @@ export class PopupPolicybenefitsComponent
           this.lstSelectedConstraintBy.sort((a, b) => {
             return parseInt(a) - parseInt(b);
           });
-          debugger;
           this.df.detectChanges();
         } else {
           this.benefitPolicyObj.constraintBy = '';
@@ -738,7 +741,6 @@ export class PopupPolicybenefitsComponent
   }
 
   onClickOpenSelectApplyObjDetail(detail, obj) {
-    debugger;
     this.currentRec = obj.recID;
     if (this.benefitPolicyObj.hasIncludeObjects) {
       if (detail == '5' || detail == '8') {
@@ -958,12 +960,15 @@ export class PopupPolicybenefitsComponent
     this.hrSevice.getHeaderText(this.formModel.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     });
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        this.grvSetup = res;
-        console.log('grv setup ne', this.grvSetup);
-      });
+    // this.cache
+    // .gridViewSetup(
+    //   this.formModel.formName,
+    //   this.formModel.gridViewName
+    // )
+    // .subscribe((res) => {
+    //   this.grvSetup = res;
+    //   console.log('grv setup ne', this.grvSetup);
+    // });
 
     this.cache
       .gridViewSetup('PolicyDetails', 'grvPolicyDetails')
@@ -981,7 +986,6 @@ export class PopupPolicybenefitsComponent
         )
         .subscribe((res: any) => {
           if (res) {
-            debugger;
             if (res.key) {
               this.autoNumField = res.key;
               this.loadedAutoField = true;
@@ -996,8 +1000,8 @@ export class PopupPolicybenefitsComponent
             }
             this.benefitPolicyObj = res?.data;
 
-            this.formModel.currentData = this.benefitPolicyObj;
-            this.formGroup.patchValue(this.benefitPolicyObj);
+            // this.formModel.currentData = this.benefitPolicyObj;
+            // this.formGroup.patchValue(this.benefitPolicyObj);
             this.constraintsObj = {
               policyID: '',
               gender: '',
@@ -1014,7 +1018,7 @@ export class PopupPolicybenefitsComponent
             this.formGroupPolicyConstraints?.patchValue(this.constraintsObj);
             this.fmPolicyConstraints.currentData = this.constraintsObj;
             this.df.detectChanges();
-            this.isAfterRender = true;
+            //this.isAfterRender = true;
           }
         });
     } else {
@@ -1025,13 +1029,12 @@ export class PopupPolicybenefitsComponent
           this.idField
         )
         .subscribe((res: any) => {
-          debugger;
           if (res) {
             this.autoNumField = res.key ? res.key : null;
             this.loadedAutoField = true;
-            this.formModel.currentData = this.benefitPolicyObj;
-            this.formGroup.patchValue(this.benefitPolicyObj);
-            console.log('formgroup sau khi patch val', this.formGroup);
+            // this.formModel.currentData = this.benefitPolicyObj;
+            // this.formGroup.patchValue(this.benefitPolicyObj);
+            // console.log('formgroup sau khi patch val', this.formGroup);
 
             this.df.detectChanges();
           }
@@ -1039,6 +1042,10 @@ export class PopupPolicybenefitsComponent
       if (this.actionType === 'edit' || this.actionType === 'copy') {
         if (this.benefitPolicyObj.adjustKows) {
           this.lstKow = this.benefitPolicyObj.adjustKows.split(';');
+        }
+        if (this.benefitPolicyObj.isConstraintKow == true) {
+          this.expandContraintKow = true;
+          this.constraintKowDisabled = false;
         }
 
         if (this.benefitPolicyObj.isConstraintOther) {
@@ -1050,7 +1057,23 @@ export class PopupPolicybenefitsComponent
           this.GetPolicyConstraint(this.benefitPolicyObj.policyID).subscribe(
             (res) => {
               console.log('constraint obj ne', this.constraintsObj);
-              this.constraintsObj = res;
+              if (res) {
+                this.constraintsObj = res;
+              } else {
+                this.constraintsObj = {
+                  policyID: '',
+                  gender: '',
+                  ageFrom: 0,
+                  policyType: 'Benefit',
+                  ageTo: 0,
+                  relative: '',
+                  relativeAgeFrom: 0,
+                  relativeAgeTo: 0,
+                  trainLevel: '',
+                  trainField: '',
+                  certificate: '',
+                };
+              }
               this.formGroupPolicyConstraints.patchValue(this.constraintsObj);
               this.fmPolicyConstraints.currentData = this.constraintsObj;
               this.SplitConstraint();
@@ -1062,12 +1085,13 @@ export class PopupPolicybenefitsComponent
           this.benefitPolicyObj.policyID,
           this.benefitPolicyObj.adjustBy
         ).subscribe((res) => {
-          debugger;
           this.dataSourceGridView1 = res;
+          this.loadGridview1 = true;
+          this.df.detectChanges();
         });
         if (this.benefitPolicyObj.hasIncludeBenefits == true) {
           this.lstSelectedBenefits =
-            this.benefitPolicyObj.includeBenefits.split(';');
+            this.benefitPolicyObj?.includeBenefits?.split(';');
         }
         if (this.benefitPolicyObj.isAdjustKow == true) {
         }
@@ -1117,15 +1141,15 @@ export class PopupPolicybenefitsComponent
               );
 
             this.SplitToSubList(this.lstPolicyBeneficiariesExclude);
-            this.formGroup.patchValue(this.benefitPolicyObj);
-            this.formModel.currentData = this.benefitPolicyObj;
+            // this.formGroup.patchValue(this.benefitPolicyObj);
+            // this.formModel.currentData = this.benefitPolicyObj;
           }
         );
-        this.formGroup.patchValue(this.benefitPolicyObj);
-        this.formModel.currentData = this.benefitPolicyObj;
+        // this.formGroup.patchValue(this.benefitPolicyObj);
+        // this.formModel.currentData = this.benefitPolicyObj;
 
         this.df.detectChanges();
-        this.isAfterRender = true;
+        //this.isAfterRender = true;
       }
     }
     this.loadGridview1 = true;
@@ -1246,7 +1270,7 @@ export class PopupPolicybenefitsComponent
     if (flag == false) {
       this.benefitPolicyObj.hasIncludeBenefits = false;
       this.benefitPolicyObj.includeBenefits = '';
-      this.formGroup.patchValue(this.benefitPolicyObj);
+      // this.formGroup.patchValue(this.benefitPolicyObj)
     } else if (flag == true) {
       this.onClickOpenSelectIncludeBenefits();
     }
@@ -1366,7 +1390,7 @@ export class PopupPolicybenefitsComponent
 
     if (this.benefitPolicyObj.includeBenefits) {
       this.lstSelectedBenefits =
-        this.benefitPolicyObj.includeBenefits.split(';');
+        this.benefitPolicyObj?.includeBenefits?.split(';');
     } else {
       this.lstSelectedBenefits = [];
     }
@@ -1430,14 +1454,12 @@ export class PopupPolicybenefitsComponent
         this.grvSetupPolicyConstraint.TrainField.referedValue;
       this.cbxConstraintCbxValue = this.constraintsObj.trainField;
       this.isHiddenCbxConstraint = false;
-      debugger;
     } else if (target == 'certificate') {
       //cbx
       this.cbxConstraintCbxName =
         this.grvSetupPolicyConstraint.Certificate.referedValue;
       this.cbxConstraintCbxValue = this.constraintsObj.certificate;
       this.isHiddenCbxConstraint = false;
-      debugger;
     }
   }
 
@@ -1448,7 +1470,6 @@ export class PopupPolicybenefitsComponent
       return;
     }
     if (e.id) {
-      debugger;
       if (
         this.cbxConstraintCbxName ==
         this.grvSetupPolicyConstraint.TrainField.referedValue
@@ -1465,7 +1486,6 @@ export class PopupPolicybenefitsComponent
           this.constraintsObj.certificate.split(';');
       }
     } else {
-      debugger;
       if (
         this.cbxConstraintCbxName ==
         this.grvSetupPolicyConstraint.TrainField.referedValue
@@ -1690,8 +1710,9 @@ export class PopupPolicybenefitsComponent
   }
 
   async onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    debugger;
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -1781,46 +1802,69 @@ export class PopupPolicybenefitsComponent
         }
       });
     } else if (this.actionType === 'edit') {
+      debugger;
       if (
-        this.originPolicyId != '' &&
-        this.originPolicyId != this.benefitPolicyObj.policyID
+        this.form.form.data.policyID != '' &&
+        this.form.form.preData.policyID != this.benefitPolicyObj.policyID
       ) {
-        debugger;
-        // this.DeletePolicyBenefit(this.originPolicyId).subscribe((x) => {
-        //   this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
-        //     if(res){
-        //       this.notify.notifyCode('SYS007');
-        //       this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe((res) => {
-        //         if(this.benefitPolicyObj.hasIncludeObjects == true || this.benefitPolicyObj.hasExcludeObjects == true){
-        //         for(let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++){
-        //           debugger
-        //           this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesApply[i]).subscribe((res) => {
-        //           })
-        //         }
-        //         for(let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++){
-        //           this.AddPolicyBeneficiaries(this.lstPolicyBeneficiariesExclude[i]).subscribe((res) => {
-        //           })
-        //         }
-        //       }
-        //       })
-        //       if(this.benefitPolicyObj.constraintBy){
-        //         this.DeletePolicyConstraint(this.originPolicyId).subscribe((res) => {
-        //           if(this.benefitPolicyObj.isConstraintOther && this.constraintsObj){
-        //             this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
-        //             this.AddPolicyConstraint(this.constraintsObj).subscribe((res) => {
-        //             })
-        //           }
-        //         })
-        //       }
-        //       this.benefitPolicyObj.editPrimaryKey = true;
-        //       this.benefitPolicyObj.oldData = this.originPolicyBenefitObj;
-        //       this.dialog && this.dialog.close(this.benefitPolicyObj);
-        //     }
-        //     else{
-        //       this.notify.notifyCode('SYS021');
-        //     }
-        //   })
-        // })
+        this.DeletePolicyBenefit(this.form.form.preData.policyID).subscribe(
+          (x) => {
+            this.AddPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {
+              if (res) {
+                this.notify.notifyCode('SYS007');
+                this.DeletePolicyBeneficiaries(
+                  this.form.form.preData.policyID
+                ).subscribe((res) => {
+                  if (
+                    this.benefitPolicyObj.hasIncludeObjects == true ||
+                    this.benefitPolicyObj.hasExcludeObjects == true
+                  ) {
+                    for (
+                      let i = 0;
+                      i < this.lstPolicyBeneficiariesApply.length;
+                      i++
+                    ) {
+                      this.AddPolicyBeneficiaries(
+                        this.lstPolicyBeneficiariesApply[i]
+                      ).subscribe((res) => {});
+                    }
+                    for (
+                      let i = 0;
+                      i < this.lstPolicyBeneficiariesExclude.length;
+                      i++
+                    ) {
+                      this.AddPolicyBeneficiaries(
+                        this.lstPolicyBeneficiariesExclude[i]
+                      ).subscribe((res) => {});
+                    }
+                  }
+                });
+                if (this.benefitPolicyObj.constraintBy) {
+                  this.DeletePolicyConstraint(
+                    this.form.form.preData.policyID
+                  ).subscribe((res) => {
+                    if (
+                      this.benefitPolicyObj.isConstraintOther &&
+                      this.constraintsObj
+                    ) {
+                      this.constraintsObj.policyID =
+                        this.benefitPolicyObj?.policyID;
+                      this.AddPolicyConstraint(this.constraintsObj).subscribe(
+                        (res) => {}
+                      );
+                    }
+                  });
+                }
+                this.benefitPolicyObj.editPrimaryKey = true;
+                // this.benefitPolicyObj.oldData = this.originPolicyBenefitObj;
+                this.benefitPolicyObj.oldData = this.form.form.preData;
+                this.dialog && this.dialog.close(this.benefitPolicyObj);
+              } else {
+                // this.notify.notifyCode('SYS021');
+              }
+            });
+          }
+        );
 
         // this.EditPolicyBenefitsIDChanged().subscribe((res) => {
         //   if(res){
@@ -1895,7 +1939,7 @@ export class PopupPolicybenefitsComponent
             });
             this.dialog && this.dialog.close(this.benefitPolicyObj);
           } else {
-            this.notify.notifyCode('SYS023');
+            this.notify.notifyCode('SYS021');
           }
         });
       }
@@ -2237,7 +2281,7 @@ export class PopupPolicybenefitsComponent
       'HR',
       'PolicyBenefitsBusiness',
       'UpdatePolicyBenefitPolicyIDChangedAsync',
-      [this.benefitPolicyObj, this.originPolicyId]
+      [this.benefitPolicyObj, this.form.form.preData.policyID]
     );
   }
   //#endregion

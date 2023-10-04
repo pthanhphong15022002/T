@@ -317,45 +317,47 @@
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
-                    <ng-container
-                      *ngIf="dataSelected.status == '2'; else statusDefault"
-                    >
-                      <div *ngIf="dataSelected?.statusCodeID">
-                        <codx-vll
-                          [name]="gridViewSetup?.StatusCodeID?.referedValue"
-                          [field]="'StatusCodeID'"
-                          [value]="dataSelected?.statusCodeID"
-                          [showText]="true"
-                          [showBgColor]="true"
-                          class="badge badge-light badge-sm ms-2"
-                        >
-                        </codx-vll>
-                      </div>
 
-                      <div
-                        [ngStyle]="{
-                          'background-color':
-                            dataSelected?.steps['backgroundColor']
-                        }"
-                        class="badge badge-sm d-flex align-items-center me-0"
-                      >
-                        <span
-                          [ngClass]="dataSelected?.steps['icon']"
-                          [ngStyle]="{
-                            color: dataSelected?.steps['iconColor']
-                          }"
-                          class="me-1"
-                        ></span>
-                        <span
-                          class="text-ellipsis line-clamp line-clamp-1"
-                          [ngbTooltip]="dataSelected?.currentStepName"
-                          [ngStyle]="{
-                            color: dataSelected?.steps['textColor']
-                          }"
-                          >{{ dataSelected?.currentStepName }}</span
-                        >
-                      </div>
-                    </ng-container>
+                  <div
+                  *ngIf="dataSelected?.statusCodeID"
+                  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+                >
+                  <span
+                    class="text-ellipsis line-clamp line-clamp-2"
+                    [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
+                    > {{getStatusCode(dataSelected?.statusCodeID)}}</span
+                  >
+                </div>
+
+
+                  <div
+                  *ngIf="
+                  dataSelected.status == '2';
+                  else statusDefault
+                "
+
+                    [ngStyle]="{
+                      'background-color':
+                        dataSelected?.steps['backgroundColor']
+                    }"
+                    class="badge badge-sm d-flex align-items-center me-0"
+                  >
+                    <span
+                      [ngClass]="dataSelected?.steps['icon']"
+                      [ngStyle]="{
+                        color: dataSelected?.steps['iconColor']
+                      }"
+                      class="me-1"
+                    ></span>
+                    <span
+                      class="text-ellipsis line-clamp line-clamp-2"
+                      [ngbTooltip]="dataSelected?.currentStepName"
+                      [ngStyle]="{
+                        color: dataSelected?.steps['textColor']
+                      }"
+                      >{{ dataSelected?.currentStepName }}</span
+                    >
+                  </div>
 
                     <ng-template #statusDefault>
                       <codx-vll
@@ -980,6 +982,9 @@
                   (continueStep)="continueStep($event)"
                   (saveAssignTask)="saveAssignTask($event)"
                   (changeProgress)="autoStart($event)"
+                  [isChangeOwner]="isChangeOwner"
+                  [dealName]="dataSelected?.dealName"
+                  [customerName]="customerName"
                 ></step-task>
               </div>
             </ng-template>

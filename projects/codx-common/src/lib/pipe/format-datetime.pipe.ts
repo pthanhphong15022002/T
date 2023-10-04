@@ -3,9 +3,9 @@ import { AuthStore } from 'codx-core';
 import moment from 'moment';
 import 'moment/src/locale/vi';
 @Pipe({
-  name: 'timefrom'
+  name: 'pTimeFrom',
 })
-export class FormatDatetimePipe implements PipeTransform {
+export class TimeFromPipe implements PipeTransform {
   user: any;
 
   vn = {
@@ -16,7 +16,7 @@ export class FormatDatetimePipe implements PipeTransform {
     weeks: ' tuần',
     months: ' tháng ',
     years: ' năm ',
-    yesterday: 'Hôm qua'
+    yesterday: 'Hôm qua',
   };
 
   en = {
@@ -30,39 +30,47 @@ export class FormatDatetimePipe implements PipeTransform {
     yesterday: 'Yesterday',
   };
 
-  constructor(
-    private autStore: AuthStore,
-  ) {
+  constructor(private autStore: AuthStore) {
     this.user = this.autStore.get();
   }
-  transform(value: any): string {
+  transform(value: any, format = ''): string {
     let date = new Date(value);
     let locale = this.vn;
-
-
-    if (this.user.language.toLowerCase() != "vn")
-      locale = this.en;
+    if (format) {
+      var str = moment(value).format('LLLL');
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    if (this.user.language.toLowerCase() != 'vn') locale = this.en;
 
     var seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
 
     var interval = seconds / 31536000;
 
-    if (interval > 1) {  
+    if (interval > 1) {
       return moment(date).format('DD/MM/YYYY HH:mm');
     }
     interval = seconds / 2592000;
     if (interval > 1) {
-      return Math.floor(interval) + locale.months + " " + moment(date).format('HH:mm');
+      return (
+        Math.floor(interval) +
+        locale.months +
+        ' ' +
+        moment(date).format('HH:mm')
+      );
     }
     interval = seconds / (86400 * 7);
     if (interval > 1) {
-      return Math.floor(interval) + locale.weeks + " " + moment(date).format('HH:mm');
+      return (
+        Math.floor(interval) + locale.weeks + ' ' + moment(date).format('HH:mm')
+      );
     }
     interval = seconds / 86400;
     if (interval > 1) {
       if (Math.floor(interval) < 2)
-        return locale.yesterday + " " + moment(date).format('HH:mm');
-      return Math.floor(interval) + locale.days  + " "  + moment(date).format('HH:mm');
+        return locale.yesterday + ' ' + moment(date).format('HH:mm');
+      return (
+        Math.floor(interval) + locale.days + ' ' + moment(date).format('HH:mm')
+      );
     }
     interval = seconds / 3600;
     if (interval > 1) {
@@ -75,5 +83,4 @@ export class FormatDatetimePipe implements PipeTransform {
     return locale.seconds;
     //  return moment(new Date(value)).fromNow();
   }
-
 }

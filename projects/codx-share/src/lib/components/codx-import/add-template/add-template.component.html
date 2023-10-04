@@ -1,0 +1,21 @@
+<div class="d-flex flex-column w-100 h-100">
+    <div #header class="d-flex align-items-center justify-content-between py-4 px-5 border-bottom">
+        <codx-label default="Thêm mới template" class="fs-5 fw-bold"></codx-label>
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <i class="icon-24 icon-radio_button_checked"></i>
+            <codx-label default="Chi tiết import"></codx-label>
+        </div>
+        <div (click)="close()">
+            <i class="icon-close"></i>
+        </div>
+     </div>
+    <div #body class="w-100 h-100">
+        <div class="pt-5 div-add-tmp-import-body">
+            <codx-attachment hideFolder="1" hideDes="1" [objectType]="formModel?.entityName" [functionID]="formModel?.funcID" allowExtensions=".xls,.xlsx"></codx-attachment>
+            <codx-label [formModel]="formModels" [fiedName]="'Description'" class="fw-bold"></codx-label>
+            <codx-input type="text" [Group]="importAddTmpGroup" ControlName="nameTmp"
+              [ngClass]="{ 'is-invalid': submitted && f.format.errors }">
+            </codx-input>
+        </div>
+    </div>
+</div>

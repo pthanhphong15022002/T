@@ -91,6 +91,7 @@ export class IncommingComponent
   resourceKanban?: ResourceModel;
   userPermission: any;
   checkUserPer: any;
+  defaultValue: any;
   compareDate = compareDate;
   formatBytes = formatBytes;
   extractContent = extractContent;
@@ -223,8 +224,7 @@ export class IncommingComponent
       let option = new SidebarModel();
       // option.zIndex = 499;
       option.DataService = this.view?.currentView?.dataService;
-      var list = this.funcList?.defaultValue.split(';');
-
+      var defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
         {
@@ -235,8 +235,9 @@ export class IncommingComponent
           type: 'add',
           formModel: this.view.formModel,
           service: this.view.service,
-          dispatchType: list[0],
+          dispatchType: defaultValue,
           data: res,
+          defaultValue: this.defaultValue,
         },
         option
       );
@@ -270,6 +271,7 @@ export class IncommingComponent
     if (fc.runMode == '1') {
       this.shareService.changeMFApproval(e, data.unbounds);
     } else {
+      var defaultValue = (fc?.defaultValue ?? '').split(';')[0];
       //Bookmark
       var bm = e.filter(
         (x: { functionID: string }) =>
@@ -296,7 +298,7 @@ export class IncommingComponent
         if (bm[0]) bm[0].disabled = false;
       }
 
-      if (fc?.defaultValue == '2' || fc?.defaultValue == '3') {
+      if (defaultValue == '2' || defaultValue == '3') {
         if (
           data?.status != '1' &&
           data?.status != '2' &&
@@ -422,6 +424,7 @@ export class IncommingComponent
     if (isObservable(funcList)) {
       this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
         this.funcList = fuc;
+        this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
         var gw = this.codxODService.loadGridView(
           fuc?.formName,
           fuc?.gridViewName
@@ -438,6 +441,7 @@ export class IncommingComponent
       });
     } else {
       this.funcList = funcList;
+      this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName

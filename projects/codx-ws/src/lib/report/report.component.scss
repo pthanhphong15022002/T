@@ -10,11 +10,11 @@
 {
     padding-bottom: 60px;
 }
-.ws-dashboard-toolbar-list>div:hover
+.ws-dashboard-toolbar-list>div:hover , .ws-dashboard-toolbar-lists:hover
 {
     color: var(--text-primary);
 }
-.ws-dashboard-toolbar-list>div.active
+.ws-dashboard-toolbar-list>div.active , .ws-dashboard-toolbar-lists.active
 {
     color: var(--text-primary);
 }
@@ -30,11 +30,23 @@
 {
     margin-top: 2px;
 }
-
-.ws-report-card :hover
+.h-310px
 {
-    .ws-report-bookmark
+    height: 310px;
+}
+.h-270px
+{
+    height: 270px;
+}
+.ws-report-card 
+{
+    .ws-report-bookmark:hover
     {
-        visibility: visible !important;
+        opacity: .75 !important;
     }
+}
+.ws-btn-more
+{
+    margin-right: 9px;
+    margin-bottom: 17px;
 }

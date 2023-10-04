@@ -1304,6 +1304,15 @@ export class CodxShareService {
       [recID]
     );
   }
+  getListRpListByTemplateID(recIDs: any) {
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetListByTemplateIDAsync',
+      [recIDs]
+    );
+  }
   convertFileToPDF(fileRecID: string, fileExtension: string) {
     return this.api.execSv(
       'ES',
@@ -1331,13 +1340,13 @@ export class CodxShareService {
       [companyID, roleType]
     );
   }
-  viewApprovalStep(transID) {
+  viewApprovalStep(transID, isSettingMode = true, dynamicApprovers = null) {
     return this.api.execSv<any>(
       'ES',
       'ES',
       'ApprovalStepsBusiness',
       'ViewApprovalStepAsync',
-      [transID]
+      [transID, isSettingMode, dynamicApprovers]
     );
   }
   //#region Codx Quy trình duyệt
@@ -1510,6 +1519,14 @@ export class CodxShareService {
       )
       .subscribe((res: ResponseModel) => {
         if (res) {
+          //Thông báo khi gửi duyệt thành công và category?.releaseControl == "4" (Dạng ko mở popup ký số)
+          if (
+            !res?.msgCodeError &&
+            res?.rowCount > 0 &&
+            approveProcess?.category?.releaseControl == '4'
+          ) {
+            this.notificationsService.notifyCode('SYS034');
+          }
           releaseCallback && releaseCallback(res, this.callBackComponent);
         }
       });
@@ -1621,8 +1638,8 @@ export class CodxShareService {
       let dialogTemplate = this.callfunc.openForm(
         CodxGetTemplateSignFileComponent,
         '',
-        400,
-        250,
+        400, //700,
+        250, //500,
         '',
         { sfTemplates: sfTemplates },
         ''
@@ -1654,6 +1671,63 @@ export class CodxShareService {
   }
 
   apExportFileWithTemplate(
+    approveProcess: ApproveProcess,
+    releaseCallback: (response: ResponseModel, component: any) => void,
+    template: any,
+    releaseBackground: boolean = false
+  ) {
+    approveProcess.template = template;
+    if (template?.templateID == null && template?.templateType == null) {
+      //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
+      this.notificationsService.alertCode('AP0001').subscribe((x) => {
+        if (x.event?.status == 'Y') {
+          this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
+        } else {
+          return;
+        }
+      });
+    } else if (template?.templateID != null && template?.templateID != null) {
+      let exportUpload = new ExportUpload();
+      exportUpload.templateRecID = template?.templateID;
+      exportUpload.templateType = template?.templateType;
+      exportUpload.convertToPDF = false;
+      exportUpload.title = approveProcess.title;
+      exportUpload.entityName = approveProcess.entityName;
+      exportUpload.module = approveProcess.module;
+      exportUpload.objectID = approveProcess.recID;
+      exportUpload.objectType = approveProcess.entityName;
+      exportUpload.referType = 'source';
+      exportUpload.functionID = approveProcess.funcID;
+
+      this.getRpListByTemplateID(template?.templateID).subscribe(
+        (rpList: any) => {
+          if (rpList) {
+            exportUpload.reportRecID = rpList?.recID;
+            exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+            this.apCreateExportFile(
+              approveProcess,
+              releaseCallback,
+              exportUpload
+            );
+          } else {
+            exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
+            this.apCreateExportFile(
+              approveProcess,
+              releaseCallback,
+              exportUpload
+            );
+          }
+        }
+      );
+    } else {
+      this.notificationsService.notify(
+        'Vui lòng kiểm tra lại mẫu thiết lập',
+        '2'
+      );
+      return;
+    }
+  }
+  apExportFileWithMultiTemplate(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
     template: any,
@@ -1751,6 +1825,10 @@ export class CodxShareService {
                   exportedFile?.extension
                 ).subscribe((res) => {
                   if (res) {
+                    this.apReleaseWithoutSignFile(
+                      approveProcess,
+                      releaseCallback
+                    );
                   } else {
                     this.notificationsService.notify(
                       'Xuất tài liệu PDF thất bại!',
@@ -1759,6 +1837,7 @@ export class CodxShareService {
                   }
                 });
               } else {
+                this.apReleaseWithoutSignFile(approveProcess, releaseCallback);
               }
               break;
           }
@@ -1777,7 +1856,10 @@ export class CodxShareService {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
-            let signFile = this.apCreateSignFile(approveProcess, lstFile);
+            // let signFile = this.apCreateSignFile(
+            //   approveProcess,
+            //   lstFile
+            // );
             if (lstFile?.length > 0) {
               this.apOpenViewSignFile(
                 approveProcess,

@@ -231,7 +231,6 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '850px';
     console.log('header text ne', this.view.function.description);
-    
     let dialg = this.callfc.openSide(
       PopupPolicybenefitsComponent,
       {
@@ -243,25 +242,31 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
       option
     );
     dialg.closed.subscribe((res) => {
-      if (res.event) {
-        if (actionType == this.ActionAdd) {
-          this.view.dataService.add(res.event, 0).subscribe();
-        } else if (actionType == this.ActionCopy) {
-          this.view.dataService.add(res.event, 0).subscribe();
-        } else if (actionType == this.ActionEdit) {
-          debugger
-          if(res.event && res.event?.editPrimaryKey && res.event.editPrimaryKey == true){
-            debugger
-            this.view.dataService.delete([res.event.oldData], false,null,null,null,null, null, false).subscribe(() => {
-              this.view.dataService.add(res.event, 0).subscribe();
-            });
-          }
-          else{
-            this.view.dataService.update(res.event).subscribe();
-          }
-        }
-        this.df.detectChanges();
+      if(res.event){
+        this.view.dataService.data = [];
+        this.view.dataService.load().subscribe((rrr) => {
+          // this.view.dataService.data = rrr;
+        });
       }
+      // if (res.event) {
+      //   if (actionType == this.ActionAdd) {
+      //     this.view.dataService.add(res.event, 0).subscribe();
+      //   } else if (actionType == this.ActionCopy) {
+      //     this.view.dataService.add(res.event, 0).subscribe();
+      //   } else if (actionType == this.ActionEdit) {
+      //     debugger
+      //     if(res.event && res.event?.editPrimaryKey && res.event.editPrimaryKey == true){
+      //       debugger
+      //       this.view.dataService.delete([res.event.oldData], false,null,null,null,null, null, false).subscribe(() => {
+      //         this.view.dataService.add(res.event, 0).subscribe();
+      //       });
+      //     }
+      //     else{
+      //       this.view.dataService.update(res.event).subscribe();
+      //     }
+      //   }
+      //   this.df.detectChanges();
+      // }
     })
   };
 

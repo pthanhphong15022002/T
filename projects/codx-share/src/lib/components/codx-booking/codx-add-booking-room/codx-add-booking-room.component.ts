@@ -467,7 +467,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             this.roomCapacity = res?.capacity;
 
             let tempApprover = new Approver();
-            tempApprover.roleID = res?.owner;
+            tempApprover.approver = res?.owner;
             this.resourceOwner = [tempApprover];
           }
         });
@@ -1319,7 +1319,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       if (selectResource) {
         this.roomCapacity = selectResource[0].capacity;
         let tempApprover = new Approver();
-        tempApprover.roleID = selectResource[0]?.owner;
+        tempApprover.approver = selectResource[0]?.owner;
         this.resourceOwner = [tempApprover];
         this.data.resourceID = evt;
         this.tmplstDevice = [];

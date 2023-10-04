@@ -13,7 +13,7 @@ import { VATInvoices } from '../../../models/VATInvoices.model';
 @Component({
   selector: 'lib-cashreceipts-add',
   templateUrl: './cashreceipts-add.component.html',
-  styleUrls: ['./cashreceipts-add.component.css','../../../codx-ac.component.css'],
+  styleUrls: ['./cashreceipts-add.component.css','../../../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

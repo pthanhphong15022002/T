@@ -74,15 +74,16 @@ export class CalendarsComponent {
 
   constructor(
     private router: ActivatedRoute,
-    private cmService: CodxCmService
+    private cmService: CodxCmService,
+    private cache: CodxCmService
   ) {
-    // super(inject);
+    // super(inject);&& this.funcID != param.funcID
     this.router.params.subscribe((param: any) => {
-      if (param.funcID && this.funcID != param.funcID) {
+      if (param.funcID) {
         this.cmService.viewActiveType.subscribe((res) => {
           if (res && this.viewActiveType != res) {
             this.viewActiveType = res;
-          }
+          } else this.viewActiveType = '';
           this.funcID = param.funcID;
         });
       }

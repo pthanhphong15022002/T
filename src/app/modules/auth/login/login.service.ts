@@ -87,6 +87,8 @@ export class LoginService {
         }
         window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
       }
+
+      //Set token server file
     } else {
       if (data.error.errorCode === 'AD027')
         return this.navRouter.navigate(['/']);
@@ -102,6 +104,16 @@ export class LoginService {
       'UsersBusiness',
       'GetChangePassSettingAsync',
       email
+    );
+  }
+
+  checkTOTP() {
+    return this.api.execSv<string>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'CheckTOTPAsync',
+      []
     );
   }
 }

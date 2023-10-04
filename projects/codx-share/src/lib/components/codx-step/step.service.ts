@@ -178,38 +178,26 @@ export class StepService {
     return check;
   }
 
-  checkUpdateProgress(
-    dataUpdate,
-    type,
-    step,
-    isRoleAll,
-    isOnlyView,
-    isUpdateProgressGroup,
-    isUpdateProgressStep,
-    user
-  ) {
+  checkUpdateProgress(dataUpdate,type,step,isRoleAll,isOnlyView,isUpdateProgressGroup,isUpdateProgressStep,user){
     if (isOnlyView) {
       if (type == 'P') {
         return isUpdateProgressStep && isRoleAll ? true : false;
       } else if (type == 'G') {
         let isGroup = false;
         if (!isRoleAll) {
-          isGroup = this.checRoleTask(dataUpdate, 'O', user);
+          isGroup = dataUpdate?.owner == user.userID;
         }
         return isUpdateProgressGroup && (isRoleAll || isGroup) ? true : false;
       } else {
-        // if(dataUpdate?.status == "1"){
-        //   return false;
-        // }
         let isGroup = false;
         let isTask = false;
         if (!isRoleAll) {
           let group = step?.taskGroups?.find(
             (g) => g.refID == dataUpdate?.taskGroupID
           );
-          isGroup = group ? this.checRoleTask(group, 'O', user) : false;
+          isGroup = group ? group?.owner == user.userID : false;
           if (!isGroup) {
-            isTask = this.checRoleTask(dataUpdate, 'O', user);
+            isTask = dataUpdate?.owner == user.userID;
           }
         }
         return isRoleAll || isGroup || isTask ? true : false;
@@ -218,14 +206,14 @@ export class StepService {
     return false;
   }
 
-  checRoleTask(data, type, user) {
-    let check =
-      data?.roles?.some(
-        (element) =>
-          element?.objectID == user.userID && element.roleType == type
-      ) || false;
-    return check;
-  }
+  // checOwnerTask(data, type, user) {
+  //   let check =
+  //     data?.roles?.some(
+  //       (element) =>
+  //         element?.objectID == user.userID && element.roleType == type
+  //     ) || false;
+  //   return check;
+  // }
   //setDeFault
   getDefault(funcID, entityName, id = null) {
     return this.api.execSv<any>(

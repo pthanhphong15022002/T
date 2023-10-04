@@ -663,6 +663,7 @@ export class PopupMoveStageComponent implements OnInit {
         case 'A':
         case 'C':
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }

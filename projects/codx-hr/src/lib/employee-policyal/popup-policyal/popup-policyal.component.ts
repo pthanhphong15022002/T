@@ -8,11 +8,9 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   CRUDService,
   CallFuncService,
-  CodxFormComponent,
   CodxGridviewV2Component,
   DialogData,
   DialogModel,
@@ -24,12 +22,9 @@ import {
   Util,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import {
-  EditSettingsModel,
-  detailIndentCellInfo,
-} from '@syncfusion/ej2-angular-grids';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { PopupMultiselectvllComponent } from '../popup-multiselectvll/popup-multiselectvll.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-policyal',
   templateUrl: './popup-policyal.component.html',
@@ -160,18 +155,18 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   currentCbxValue: any = [];
 
   formModel: FormModel;
-  formGroup: FormGroup;
+  //formGroup: FormGroup;
   dialog: DialogRef;
   actionType: string;
   idField = 'PolicyID';
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   alpolicyObj: any;
-  grvSetup;
+  // grvSetup
   grvSetupPolicyDetail;
 
-  originPolicyId = '';
-  originPolicyALObj = '';
+  // originPolicyId = '';
+  // originPolicyALObj = '';
 
   cbxName: any;
   isHidden = true;
@@ -233,24 +228,48 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
+    debugger;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.alpolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    if (this.alpolicyObj && this.actionType == 'edit') {
-      this.originPolicyId = this.alpolicyObj.policyID;
-      this.originPolicyALObj = JSON.parse(JSON.stringify(this.alpolicyObj));
-    }
+    // if(this.alpolicyObj && this.actionType == 'edit'){
+    //   this.originPolicyId = this.alpolicyObj.policyID;
+    //   this.originPolicyALObj = JSON.parse(JSON.stringify(this.alpolicyObj));
+    // }
   }
 
   openFormUploadFile() {
     this.attachment.uploadFile();
   }
 
-  async addFiles(evt) {
-    this.alpolicyObj.attachments = evt.data.length;
+  addFiles(evt) {
+    debugger;
+    this.alpolicyObj.attachments = this.alpolicyObj.attachments + 1;
   }
 
+  // async deleteFile(evt){
+  //   this.alpolicyObj.attachments = this.attachment.fileUploadList.length
+  //   this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {
+  //   })
+  // }
+
+  deleteFile(evt) {
+    if (evt) {
+      this.alpolicyObj.attachments -= evt.length;
+    }
+    debugger;
+    // let index = this.attachment.data.indexOf(evt[0])
+    // if(index > -1){
+    //   this.attachment.data = this.attachment.data.splice(index,1);
+    // }
+    // this.alpolicyObj.attachments = this.attachment.data.length
+    this.EditPolicyAL(this.alpolicyObj).subscribe((res) => {});
+  }
+
+  async countFile() {
+    // this.alpolicyObj.attachments = this.attachment.fileUploadList.length
+  }
   fileAdded(evt) {}
 
   GetApplyObjs() {
@@ -261,6 +280,10 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       'GetApplyObjsAsync',
       ['AL', this.alpolicyObj.policyID, 0]
     );
+  }
+
+  onAfterInitForm(evt) {
+    debugger;
   }
 
   loadEmpFullInfo(empID) {
@@ -435,37 +458,31 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       ];
     }
 
-    if (!this.formModel)
-      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrSevice
-            .getFormGroup(
-              this.formModel.formName,
-              this.formModel.gridViewName,
-              this.formModel
-            )
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrSevice
-        .getFormGroup(
-          this.formModel.formName,
-          this.formModel.gridViewName,
-          this.formModel
-        )
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+    this.initForm();
+
+    // if (!this.formModel)
+    //   this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrSevice
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrSevice
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
   }
 
   // checkExistInEmptyRec(lst, rec){
@@ -503,11 +520,14 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     this.hrSevice.getHeaderText(this.formModel.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     });
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        this.grvSetup = res;
-      });
+    // this.cache
+    // .gridViewSetup(
+    //   this.formModel.formName,
+    //   this.formModel.gridViewName
+    // )
+    // .subscribe((res) => {
+    //   this.grvSetup = res;
+    // });
 
     this.cache
       .gridViewSetup('PolicyDetails', 'grvPolicyDetails')
@@ -537,10 +557,10 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
             }
             this.alpolicyObj = res?.data;
 
-            this.formModel.currentData = this.alpolicyObj;
-            this.formGroup.patchValue(this.alpolicyObj);
+            // this.formModel.currentData = this.alpolicyObj;
+            // this.formGroup.patchValue(this.alpolicyObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -607,15 +627,15 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
                 'priority'
               );
             this.SplitToSubList(this.lstPolicyBeneficiariesExclude);
-            this.formGroup.patchValue(this.alpolicyObj);
-            this.formModel.currentData = this.alpolicyObj;
+            // this.formGroup.patchValue(this.alpolicyObj);
+            // this.formModel.currentData = this.alpolicyObj;
           }
         );
-        this.formGroup.patchValue(this.alpolicyObj);
-        this.formModel.currentData = this.alpolicyObj;
+        // this.formGroup.patchValue(this.alpolicyObj);
+        // this.formModel.currentData = this.alpolicyObj;
 
         this.cr.detectChanges();
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
       }
     }
 
@@ -903,7 +923,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       'HR',
       'PolicyALBusiness',
       'UpdatePolicyALPolicyIDChangedAsync',
-      [this.alpolicyObj, this.originPolicyId]
+      [this.alpolicyObj, this.form.form.preData.policyID]
     );
   }
 
@@ -1003,8 +1023,8 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   }
 
   async onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -1080,47 +1100,48 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
         }
       });
     } else if (this.actionType === 'edit') {
+      debugger;
       if (
-        this.originPolicyId != '' &&
-        this.originPolicyId != this.alpolicyObj.policyID
+        this.form.data.policyID != '' &&
+        this.form.form.preData.policyID != this.form.data.policyID
       ) {
-        this.DeletePolicyAL(this.originPolicyId).subscribe((x) => {
+        this.DeletePolicyAL(this.form.form.preData.policyID).subscribe((x) => {
           this.AddPolicyAL(this.alpolicyObj).subscribe((res) => {
             if (res) {
               this.notify.notifyCode('SYS007');
 
-              this.DeletePolicyBeneficiaries(this.originPolicyId).subscribe(
-                (res) => {
-                  if (
-                    this.alpolicyObj.hasIncludeObjects == true ||
-                    this.alpolicyObj.hasExcludeObjects == true
+              this.DeletePolicyBeneficiaries(
+                this.form.form.preData.policyID
+              ).subscribe((res) => {
+                if (
+                  this.alpolicyObj.hasIncludeObjects == true ||
+                  this.alpolicyObj.hasExcludeObjects == true
+                ) {
+                  for (
+                    let i = 0;
+                    i < this.lstPolicyBeneficiariesApply.length;
+                    i++
                   ) {
-                    for (
-                      let i = 0;
-                      i < this.lstPolicyBeneficiariesApply.length;
-                      i++
-                    ) {
-                      this.AddPolicyBeneficiaries(
-                        this.lstPolicyBeneficiariesApply[i]
-                      ).subscribe((res) => {});
-                    }
-                    for (
-                      let i = 0;
-                      i < this.lstPolicyBeneficiariesExclude.length;
-                      i++
-                    ) {
-                      this.AddPolicyBeneficiaries(
-                        this.lstPolicyBeneficiariesExclude[i]
-                      ).subscribe((res) => {});
-                    }
+                    this.AddPolicyBeneficiaries(
+                      this.lstPolicyBeneficiariesApply[i]
+                    ).subscribe((res) => {});
+                  }
+                  for (
+                    let i = 0;
+                    i < this.lstPolicyBeneficiariesExclude.length;
+                    i++
+                  ) {
+                    this.AddPolicyBeneficiaries(
+                      this.lstPolicyBeneficiariesExclude[i]
+                    ).subscribe((res) => {});
                   }
                 }
-              );
+              });
               this.alpolicyObj.editPrimaryKey = true;
-              this.alpolicyObj.oldData = this.originPolicyALObj;
+              this.alpolicyObj.oldData = this.form.form.preData;
               this.dialog && this.dialog.close(this.alpolicyObj);
             } else {
-              this.notify.notifyCode('SYS021');
+              // this.notify.notifyCode('SYS021');
             }
           });
         });
@@ -1179,7 +1200,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
             );
             this.dialog && this.dialog.close(this.alpolicyObj);
           } else {
-            this.notify.notifyCode('SYS023');
+            this.notify.notifyCode('SYS021');
           }
         });
       }
@@ -1200,7 +1221,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     if (this.alpolicyObj.policyID) {
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
         if (res[0] == true) {
-          this.originPolicyId = this.alpolicyObj.policyID;
+          // this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView1.dataSource.length;
           // if(idx > 1){
           //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));
@@ -1226,7 +1247,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     if (this.alpolicyObj.policyID) {
       this.CheckIfPolicyIDExist(this.alpolicyObj.policyID).subscribe((res) => {
         if (res[0] == true) {
-          this.originPolicyId = this.alpolicyObj.policyID;
+          // this.originPolicyId = this.alpolicyObj.policyID;
           let idx = this.gridView2.dataSource.length;
           // if(idx > 1){
           //   let data = JSON.parse(JSON.stringify(this.gridView1.dataSource[0]));

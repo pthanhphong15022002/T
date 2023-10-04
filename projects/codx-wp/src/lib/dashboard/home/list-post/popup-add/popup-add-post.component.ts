@@ -103,7 +103,9 @@ export class PopupAddPostComponent implements OnInit {
     this.getSetting();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    console.clear();
+  }
 
   // set data default
   setData() {
@@ -235,7 +237,6 @@ export class PopupAddPostComponent implements OnInit {
     }
     this.loaded = true;
     this.data.category = this.CATEGORY.POST;
-    this.data.approveControl = this.isApproval ? '1' : '0';
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -296,8 +297,6 @@ export class PopupAddPostComponent implements OnInit {
   sharePost() {
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
-    // this.data.approveControl = this.data.shares.isActive ? "0" : "1";
-    this.data.approveControl = this.isApproval ? '1' : '0';
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -446,7 +445,8 @@ export class PopupAddPostComponent implements OnInit {
     }
     this.showCBB = false;
   }
-  // get getSettingValue
+
+  // get SettingValue
   getSettingValue() {
     this.api
       .execSv(
@@ -464,21 +464,7 @@ export class PopupAddPostComponent implements OnInit {
           //default mode share
           if (_param['Publishmode'])
             this.data.shareControl = _param['Publishmode'];
-          //check skip approl with user setting
-          if (_param['ExcludeApproval']) {
-            let lstAppro = _param['ExcludeApproval'].split(';');
-            if (Array.isArray(lstAppro)) {
-              Array.from(lstAppro).forEach((x: string) => {
-                if (x.toLowerCase() == this.user.userID.toLowerCase()) {
-                  this.isApproval = false;
-                  return;
-                }
-              });
-              // this.isApproval = Array.from<string>(lstAppro).indexOf(this.user.userID) != -1 ? false : true;
-            }
-          }
         }
       });
   }
-  isApproval: boolean = true;
 }

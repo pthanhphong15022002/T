@@ -1,0 +1,137 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="dataDefault" class="ac-animation-slideRight" (onAfterInit)="onAfterInit($event)">
+</codx-form>
+
+<!-- Start: TmpBody -->
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row mt-3">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CurrencyID"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="currencyID" (controlBlur)="valueChange($event)"
+            [disabled]="form?.data?._keyAuto == 'CurrencyID' ? true : false || form?.data?.isEdit ? true : false">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="Symbol"></codx-label>
+          <codx-input [Group]="form.formGroup" field="symbol" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="CurrencyName"></codx-label>
+          <codx-input [Group]="form.formGroup" field="currencyName" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ISOCode"></codx-label>
+          <codx-input [Group]="form.formGroup" field="isoCode" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="TranslateName"></codx-label>
+          <codx-input [Group]="form.formGroup" field="translateName" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PrecisionName"></codx-label>
+          <codx-input [Group]="form.formGroup" field="precisionName" [formModel]="form.formModel">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="PRounding"></codx-label>
+          <codx-input field="pRounding" [formModel]="form.formModel" [Group]="form.formGroup" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label [formModel]="form.formModel" fiedName="ARounding"></codx-label>
+          <codx-input field="aRounding" [formModel]="form.formModel" [Group]="form.formGroup" [min]="0">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex">
+      <codx-input class="me-2" field="stop" [formModel]="form.formModel" [Group]="form.formGroup">
+      </codx-input>
+      <codx-label class="fw-bold" [formModel]="form.formModel" fiedName="Stop"></codx-label>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-4 mt-4">
+      <codx-label class="text-primary fw-bold fs-6" [formModel]="form.formModel" default="Tỷ giá"></codx-label>
+      <div class="d-flex">
+        <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="addNewExchangeRate()">
+          <i class="icon-addchart"></i>
+        </span>
+        <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="openFormSettingExChange()">
+          <i class="icon-settings"></i>
+        </span>
+      </div>
+    </div>
+    <div style="height: calc(100vh - 490px)!important;overflow-y: scroll;overflow-x: hidden;width: 100% !important;">
+      <div *ngFor="let item of lstExchangeRate;trackBy: trackByFn" class="row border-bottom pt-3 pb-2">
+        <div class="col-3 d-flex align-items-center">
+          <span #toDate class="text-gray-600" [innerHTML]="item.toDate | formatvalue : fmExchangeRates : 'toDate' : toDate
+          | async"></span>
+        </div>
+        <div class="col-7 d-flex align-items-center">
+          <span class="text-dark fw-bold" [innerHTML]="item.exchangeRate | tranformValueNumber : 'B' | async"></span>
+        </div>
+        <div class="col-2 d-flex align-items-center justify-content-end">
+          <span type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="editExchangeRate(item)">
+            <i class="icon-edit icon-16"></i>
+          </span>
+          <span type="button" class="btn btn-icon btn-sm btn-light-danger ms-1" (click)="deleteExchangeRate(item)">
+            <i class="icon-delete icon-16"></i>
+          </span>
+        </div>
+      </div>
+      <div style="height: calc(100vh - 650px) !important;" *ngIf="lstExchangeRate.length == 0" class="ac-empty">
+        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+          <div class="d-flex flex-column flex-center justify-content-center">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-150px" />
+            <div class="fs-6 text-dark mt-2 text-center">
+              {{ "SYS011" | mssg | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </ng-container>
+</ng-template>
+<!-- End: TmpBody -->
+
+<!-- Start: TmpFooter -->
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+      style="border: 1px solid var(--primary-dark) !important" type="button"
+      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+    </button>
+    <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+<!-- End: TmpFooter -->

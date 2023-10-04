@@ -445,7 +445,7 @@ export class CodxAddBookingCarComponent
             this.useCard = res?.useCard;
             this.carCapacity = res?.capacity;
             let tempApprover = new Approver ();
-            tempApprover.roleID=res?.owner;
+            tempApprover.approver=res?.owner;
             this.resourceOwner = [tempApprover];
           } else {
             this.carCapacity = 0;
@@ -585,7 +585,7 @@ export class CodxAddBookingCarComponent
         this.carCapacity = selectResource[0]?.capacity;
         
         let tempApprover = new Approver ();
-        tempApprover.roleID=selectResource[0]?.owner;
+        tempApprover.approver=selectResource[0]?.owner;
         this.resourceOwner = [tempApprover];
         this.useCard = selectResource[0]?.useCard;
         this.tmplstDevice = [];

@@ -133,7 +133,7 @@ export class EditFileComponent implements OnInit {
   createSubFolder = false;
   message: string;
   noeditName: boolean;
-  modeSharing: boolean;
+  modeSharing = true;
   confirmAll: boolean;
   isSystem: boolean;
   comment: string;
@@ -278,6 +278,7 @@ export class EditFileComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger;
     this.data = data.data;
     this.fileEditing = JSON.parse(JSON.stringify(this.data[1]));
     this.user = this.auth.get();
@@ -302,6 +303,14 @@ export class EditFileComponent implements OnInit {
       .subscribe((item) => {
         if (item) this.gridViewSetup = item;
       });
+
+    this.dmSV.isFileEditing.subscribe((item) => {
+      if (item) {
+        debugger;
+        this.fileEditing.permissions = item.permissions;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   onSaveEditingFile() {
@@ -512,46 +521,6 @@ export class EditFileComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
         }
       });
-    // if (this.fileEditing != null)
-    //   this.fileEditingOld = JSON.parse(JSON.stringify(this.fileEditing));
-    // if (mode == 2) {
-    //   // $('app-customdialog').css('z-index', '1000');
-    //   this.onSetPermision(type);
-    // }
-    // //  $('#dms_properties').css('z-index', '1000');
-    // this.modeRequest = "";
-    // this.modeShare = "";
-    // var index = 0;
-    // var i = 0;
-    // this.currentPemission = -1;
-    // if (this.modeSharing) { //findIndex
-    //   index = this.fileEditing.permissions.findIndex(d => d.isSharing);
-    // }
-
-    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0 && index > -1) {
-    //   // if (this.fileEditing.permissions[index].startDate != null && this.fileEditing.permissions[index].startDate != null)
-    //   //   this.startDate = this.formatDate(this.fileEditing.permissions[index].startDate.toString());
-    //   // if (this.fileEditing.permissions[index].endDate != null && this.fileEditing.permissions[index].endDate != null)
-    //   //   this.endDate = this.formatDate(this.fileEditing.permissions[0].endDate.toString());
-    // }
-
-    // // modal-xs/modal-sm/modal-md/modal-lg/modal-xl
-    // //this.openDialogFolder(this.contentRight, "lg", "right");
-    // if (this.fileEditing != null && this.fileEditing.permissions != null && this.fileEditing.permissions.length > 0) {
-    // //  this.changePermission(index);
-    // }
-    // else {
-    //   this.full = false;
-    //   this.create = false;
-    //   this.read = false;
-    //   this.update = false;
-    //   this.delete = false;
-    //   this.download = false;
-    //   this.share = false;
-    //   this.upload = false;
-    //   this.assign = false;
-    // }
-    // this.changeDetectorRef.detectChanges();
   }
 
   hideLicence() {

@@ -1,12 +1,42 @@
-<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
+<codx-form #form *ngIf="isAfterRender" [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
   <ng-template #body let-dialog>
     <div class="card-body">
       <div class="form-group">
         <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>
         <ejs-dropdownlist  id="template" #templateCBB [dataSource]="sfTemplates" [fields]="fields" 
-          (valueChange)="valueChange($event)"></ejs-dropdownlist>        
+          (valueChange)="valueChange($event)"></ejs-dropdownlist> 
       </div>
     </div>
+    <!-- <div class="card-body">
+      <div class="form-group">
+        <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>    
+        <div>
+          <div class="d-flex align-items-start justify-content-between py-2 border-bottom" *ngFor="let item of sfTemplates">
+            <div class="d-flex align-items-top w-100">        
+              <div class="d-flex flex-row w-100 align-items-center">
+                <div><codx-input type="checkbox" (valueChange)="checkChange(item?.recID, item?.isSelected)"></codx-input></div>
+                <div class="ps-5 d-flex flex-column flex-grow-1">
+                  <div class="fw-bold text-dark">{{ item?.title }}</div>
+                  <div class="d-flex flex-row justify-content-between">
+                    <div class="d-flex flex-row ">
+                      <codx-label name="lblCreatedBy" default="Người tạo:" class="text-gray-500">
+                      </codx-label>
+                      <span class="ps-2 fs-7 text-gray-500 text-italic" [innerHTML]=" item?.createdBy | formatvalue : signFileFM : 'createdBy' | async"></span>
+                    </div> 
+                    <div class="d-flex flex-row"> 
+                      <codx-label name="lblCreatedOn" default="Ngày tạo:" class="text-gray-500">
+                      </codx-label>
+                      <span class="ps-2 fs-7 text-gray-500 text-italic" [innerHTML]=" item?.createdOn | fmDT : 'dmy'"></span>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
 
   </ng-template>
   <ng-template #footer>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
 import { ApiHttpService, ButtonModel, CacheService, DataRequest, ViewModel, ViewType } from 'codx-core';
 import { Observable } from 'rxjs';
 
@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
   templateUrl: './codx-view2.component.html',
   styleUrls: ['./codx-view2.component.css']
 })
-export class CodxView2Component implements OnInit{
+export class CodxView2Component implements OnInit , AfterViewInit{
   @Input() tmpRightToolBar?: TemplateRef<any>;
-  @Input() tmpHeader?: TemplateRef<any>;
+  @Input() tmpHeader?: TemplateRef<any> = null;
   @Input() tmpItem?: TemplateRef<any>;
 
   @Input() service!: string;
@@ -34,6 +34,28 @@ export class CodxView2Component implements OnInit{
     this.request = new DataRequest();
     this.request.page = 1;
     this.request.pageSize = 20
+  }
+  ngAfterViewInit(): void {
+    const elem = document.querySelector('#view2-header')
+    new ResizeObserver(this.setHeight).observe(elem)
+  }
+
+  setHeight()
+  {
+    if(!document.getElementById("view2-header")) return;
+    
+    var h = document.getElementById("view2-header").offsetHeight;
+
+    if(h > 0)
+    {
+      h += 90;
+      let height = window.innerHeight - h;
+      document.getElementById("codx-view2-body").style.cssText = "height:" +height+"px !important";
+    }
+    else
+    {
+      document.getElementById("codx-view2-body").style.cssText = "height:auto";
+    }
   }
 
   ngOnInit(): void {

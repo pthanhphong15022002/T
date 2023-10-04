@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DialogModel,
@@ -43,6 +44,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() listInstanceStep: any[];
   @Input() entityName = '';
   @Input() owner: string;
+  @Input() isAdmin = false;
+  @Input() isChangeOwner: string;
+
+  @Input() customerName: string;
+  @Input() dealName: string;
+  @Input() contractName: string;
+  @Input() leadName: string;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -78,11 +86,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   isZoomIn = false;
   isZoomOut = false;
   isShow = false;
-  // formModel: FormModel = {
-  //   entityName: 'DP_Instances_Steps_Reasons',
-  //   formName: 'DPInstancesStepsReasons',
-  //   gridViewName: 'grvDPInstancesStepsReasons',
-  // };
   moreDefaut = {
     share: true,
     write: true,
@@ -93,6 +96,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   elementRef: any;
   renderer: any;
   taskHeight = '415px';
+  user;
 
   constructor(
     private cache: CacheService,
@@ -101,9 +105,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private authstore: AuthStore,
   ) {
     this.promiseAll();
+    this.user = this.authstore.get();
   }
 
   ngOnInit(): void {
@@ -143,6 +149,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
       this.type = this.dataSelected.viewModeDetail || 'S';
+      if(!this.isAdmin){
+        this.isAdmin = this.dataSelected?.full || this.dataSelected?.owner == this.user?.userID;
+      }
     }
   }
 

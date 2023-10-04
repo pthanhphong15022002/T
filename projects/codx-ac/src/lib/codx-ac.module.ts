@@ -97,6 +97,10 @@ import { AdvancePaymentDetailComponent } from './advance-payment/advance-payment
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
 import { IssueTransactionsUpdateParasComponent } from './vouchers/issue-transactions/issue-transactions-update-paras/issue-transactions-update-paras.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
+import { PaymentOrderComponent } from './payment-order/payment-order.component';
+import { PaymentOrderAddComponent } from './payment-order/payment-order-add/payment-order-add.component';
+import { PaymentOrderDetailComponent } from './payment-order/payment-order-detail/payment-order-detail.component';
+import { AdvancedPaymentLinkComponent } from './payment-order/advanced-payment-link/advanced-payment-link.component';
 export const routes: Routes = [
   {
     path: '',
@@ -330,7 +334,10 @@ export const routes: Routes = [
     AdvancePaymentDetailComponent,
     CashtransfersDetailComponent,
     IssueTransactionsUpdateParasComponent,
-    TranformValueNumberPipe,
+    PaymentOrderComponent,
+    PaymentOrderAddComponent,
+    PaymentOrderDetailComponent,
+    AdvancedPaymentLinkComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -353,6 +360,7 @@ export const routes: Routes = [
     CircularGaugeModule,
     TooltipModule,
     ChartAllModule,
+    TranformValueNumberPipe,
   ],
 })
 export class AcModule {}

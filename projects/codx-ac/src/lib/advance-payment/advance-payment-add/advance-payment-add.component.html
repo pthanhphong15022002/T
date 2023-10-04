@@ -29,7 +29,7 @@
           <div
             class="text-gray-600"
             style="font-size: 10px"
-            [innerHTML]="company?.phone"
+            [innerHTML]="company?.taxCode"
           ></div>
         </div>
       </div>
@@ -72,7 +72,7 @@
           class="text-gray-600"
           style="font-size: 12px !important"
         >
-          {{ formatDate(advancedPayment?.voucherDate) }}
+          {{ advancedPayment?.voucherDate | date : "dd/MM/yyyy" }}
         </span>
       </div>
     </div>
@@ -270,19 +270,21 @@
                       class="fw-bold"
                       fiedName="Note"
                       [formModel]="fmAdvancedPaymentLines"
+                      [setRequire]="false"
                     >
                     </codx-label>
                   </div>
                 </div>
               </div>
-              <div class="w-30 d-flex justify-content-start">
+              <div class="w-30 d-flex justify-content-start pe-4">
                 <div
-                  class="ps-3 w-100 min-h-table d-flex justify-content-center align-items-center"
+                  class="w-100 min-h-table d-flex justify-content-end align-items-center pe-5"
                 >
                   <codx-label
                     class="fw-bold"
                     fiedName="DR"
                     [formModel]="fmAdvancedPaymentLines"
+                    [setRequire]="false"
                   >
                   </codx-label>
                 </div>
@@ -320,7 +322,7 @@
                       type="text"
                       field="note"
                       [class]="'om-input w-100'"
-                      [cssClass]="'om-input w-100 fs-4 d-flex'"
+                      [cssClass]="'om-input w-100 fs-4'"
                       [value]="item?.note"
                       [emptyText]="grvSetupAdvancedPaymentLines?.Note.headerText"
                       (valueChange)="lineChange($event, i)"
@@ -336,7 +338,7 @@
                       type="number"
                       field="dr"
                       [class]="'om-input w-100'"
-                      [cssClass]="'om-input w-100 fs-4 d-flex'"
+                      [cssClass]="'om-input w-100 fs-4'"
                       [value]="item?.dr"
                       [emptyText]="grvSetupAdvancedPaymentLines?.DR.headerText"
                       (valueChange)="lineChange($event, i)"

@@ -65,11 +65,13 @@
         <div class="w-100">
             
             <codx-temp-full cardCss="card-template mb-4 w-100"  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
-            [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver | vll : 'ES014' : 'text' | async" [subTitle]="item?.position ? item?.position: item?.approver | vll : 'ES014' : 'text' | async" [imageObjType]="'AD_Users'"
+            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)" 
+            [subTitle]="item?.position" [imageObjType]="'AD_Users'"
             [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
             [dataItem]="item" typeMF="hover" 
             [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
+
           <template>
             <!--Type User-->
           <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType=='U' " [imageId]=" item?.approver"

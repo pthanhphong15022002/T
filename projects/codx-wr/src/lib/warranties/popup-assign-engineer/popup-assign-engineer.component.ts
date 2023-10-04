@@ -9,7 +9,7 @@ import { ApiHttpService, DialogData, DialogRef, NotificationsService } from 'cod
 export class PopupAssignEngineerComponent implements OnInit {
   dialog: any;
   engineerID = '';
-  comment = '';
+  feedbackComment = '';
   title = '';
   data: any;
   constructor(
@@ -25,7 +25,7 @@ export class PopupAssignEngineerComponent implements OnInit {
   }
   ngOnInit(): void {
     this.engineerID = this.data?.engineerID;
-    this.comment = this.data?.comment;
+    this.feedbackComment = this.data?.feedbackComment;
   }
 
   //#region
@@ -36,11 +36,11 @@ export class PopupAssignEngineerComponent implements OnInit {
         'ERM.Business.WR',
         'WorkOrdersBusiness',
         'UpdateAssignEngineerAsync',
-        [this.data?.recID, this.engineerID, this.comment]
+        [this.data?.recID, this.engineerID, this.feedbackComment]
       )
       .subscribe((res) => {
         if (res) {
-          this.dialog.close([this.engineerID, this.comment]);
+          this.dialog.close([this.engineerID, this.feedbackComment]);
           this.notiService.notifyCode('SYS007');
         }else{
           this.notiService.notifyCode('SYS021');

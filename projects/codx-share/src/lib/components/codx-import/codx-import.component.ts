@@ -134,7 +134,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         '',
         '',
       ])
-      .subscribe((item) => {});
+      .subscribe((item) => {
+        if (item == '' && this.dialog) (this.dialog as DialogRef).close();
+      });
   }
   getData() {
     this.fetch().subscribe((item) => {
@@ -170,7 +172,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.callfunc.openForm(
       CodxImportAddTemplateComponent,
       null,
-      900,
+      1200,
       800,
       '',
       ['add', this.formModel],

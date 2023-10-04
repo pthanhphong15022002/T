@@ -41,7 +41,7 @@ export class LeadDetailComponent implements OnInit {
   @Input() action: any;
   @Input() applyProcess: any;
   @Input() listCategory: any;
-
+  @Input() valueListStatusCode: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
@@ -148,7 +148,7 @@ export class LeadDetailComponent implements OnInit {
           this.hasRunOnce = true;
           //  this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
-          this.isLoadOwner = true;
+
         }
         !this.hasRunOnce && this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
@@ -195,6 +195,7 @@ export class LeadDetailComponent implements OnInit {
   // }
 
   async promiseAllLoad() {
+    this.isLoadOwner = true;
     this.seesionID = this.dataSelected.recID; //da doi lai lay bang recID
     this.loadTree(this.seesionID);
     this.isDataLoading = true;
@@ -358,5 +359,15 @@ export class LeadDetailComponent implements OnInit {
   clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
+  }
+  getStatusCode(status) {
+    if(status) {
+      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+      if(result) {
+        return result?.text;
+      }
+    }
+
+    return '';
   }
 }

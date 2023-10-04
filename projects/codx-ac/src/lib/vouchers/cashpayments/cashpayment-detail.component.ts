@@ -32,7 +32,7 @@ declare var jsBh: any;
   templateUrl: './cashpayment-detail.component.html',
   styleUrls: [
     './cashpayment-detail.component.css',
-    '../../codx-ac.component.css',
+    '../../codx-ac.component.scss',
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

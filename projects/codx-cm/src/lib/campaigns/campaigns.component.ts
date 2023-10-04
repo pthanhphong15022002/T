@@ -11,11 +11,13 @@ import {
   ButtonModel,
   CacheService,
   DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
   RequestOption,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -41,6 +43,8 @@ export class CampaignsComponent
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('templateViewCard', { static: true })
   templateViewCard: TemplateRef<any>;
+  @ViewChild('templateViewDetail') templateViewDetail: TemplateRef<any>;
+  dialogViewDetail: DialogRef;
   dataObj: any;
   //region Method
   service = 'CM';
@@ -65,6 +69,8 @@ export class CampaignsComponent
   isCollapsed: boolean = false;
   readonly btnAdd: string = 'btnAdd';
 
+  heightWin: any;
+  widthWin: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -75,6 +81,8 @@ export class CampaignsComponent
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -82,6 +90,13 @@ export class CampaignsComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
+
+    this.cmSv.countLeadsBehavior.subscribe((res) => {
+      if (res != -1) {
+        this.dataSelected.counts = res;
+        this.cmSv.countLeadsBehavior.next(-1);
+      }
+    });
 
     this.cache
       .gridViewSetup('CMCampaigns', 'grvCMCampaigns')
@@ -148,14 +163,32 @@ export class CampaignsComponent
       case 'SYS04':
         this.copy(data);
         break;
-      default:
-        this.addCampaignContact(data, '1');
-        break;
     }
   }
 
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
+  }
+
+  doubleClickDetail(data) {
+    this.dataSelected = data;
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    this.dialogViewDetail = this.callfc.openForm(
+      this.templateViewDetail,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      '',
+      '',
+      dialogModel
+    );
+    this.dialogViewDetail.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+      }
+    });
   }
   //#region CRUD
   add() {

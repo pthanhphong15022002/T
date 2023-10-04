@@ -13,18 +13,6 @@
         ></codx-dropdown-select>
       </div>
       <ng-container [ngTemplateOutlet]="toggleStep"></ng-container>
-      <!-- <div class="ms-4">
-        <codx-dropdown-select
-          cssPopup="h-250px w-300px"
-          [isMulti]="false"
-          type="valuelist"
-          [emptyText]="'Thu gọn, mở rộng'"
-          field="show"
-          [refValue]="'DP046'"
-          (valueChange)="changeValueDropdownSelect($event)"
-        ></codx-dropdown-select>
-      </div> -->
-
       <div
         class="ms-3 d-flex align-items-center"
         #popoverDetails="ngbPopover"
@@ -44,9 +32,9 @@
       <div
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
-        ngbTooltip="Thêm công việc"
+        ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
         placement="top"
-        *ngIf="dataSelected?.status == '2'"
+        *ngIf="dataSelected?.status == '2' && dataSelected?.full"
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
@@ -87,7 +75,12 @@
     [isPause]="isPause"
     [entityName]="entityName"
     [owner]="owner"
+    [isAdmin]="isAdmin"
     (saveAssign)="handelSaveAssignTask($event)"
+    [leadName]="leadName"
+    [contractName]="contractName"
+    [dealName]="dealName"
+    [customerName]="customerName"
   ></task>
 </div>
 
@@ -157,6 +150,11 @@
         (isSuccessStep)="susscessStepEnd($event, step)"
         [sessionID]="dataSelected.recID"
         [formModelAssign]="formModel"
+        [isChangeOwner]="isChangeOwner"
+        [leadName]="leadName"
+        [contractName]="contractName"
+        [dealName]="dealName"
+        [customerName]="customerName"
       ></codx-step-task>
       <div
         *ngIf="
@@ -427,3 +425,14 @@
     </div>
   </div>
 </ng-template>
+ <!-- <div class="ms-4">
+        <codx-dropdown-select
+          cssPopup="h-250px w-300px"
+          [isMulti]="false"
+          type="valuelist"
+          [emptyText]="'Thu gọn, mở rộng'"
+          field="show"
+          [refValue]="'DP046'"
+          (valueChange)="changeValueDropdownSelect($event)"
+        ></codx-dropdown-select>
+      </div> -->

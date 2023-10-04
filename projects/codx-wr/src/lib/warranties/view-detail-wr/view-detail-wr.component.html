@@ -48,23 +48,44 @@
 
       <div class="d-flex flex-row justify-content-between">
         <div
-          class="mb-1"
+          class="mb-1 me-1"
           *ngIf="
             dataSelected?.recID &&
-            dataSelected?.category == '1' &&
             dataSelected?.problem?.trim() != ''
           "
+          [ngClass]="!expanding ? 'd-flex flex-column' : ''"
         >
           <span
-            class="fw-bold text-dark"
+            #problem
+            class="fw-bold text-dark me-1 mb-1"
+            [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
             [innerHTML]="
               dataSelected?.problem
                 | formatvalue : formModel : 'Problem'
                 | async
             "
           ></span>
+          <div>
+            <codx-label
+              *ngIf="!expanding"
+              default="Xem thêm"
+              style="white-space: nowrap"
+              class="text-primary text-decoration-underline me-1 mb-1"
+              [ngClass]="!overflowed ? 'd-none' : ''"
+              role="button"
+              (click)="expanding = !expanding"
+            ></codx-label>
+            <codx-label
+              *ngIf="expanding"
+              default="Thu lại"
+              style="white-space: nowrap"
+              class="text-primary text-decoration-underline me-1 mb-1"
+              role="button"
+              (click)="expanding = !expanding"
+            ></codx-label>
+          </div>
         </div>
-        <div *ngIf="dataSelected?.category == '1'" class="mb-1">
+        <div class="mb-1">
           <codx-vll
             [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
@@ -72,6 +93,7 @@
             [showText]="true"
             [showBgColor]="true"
             class="badge badge-light badge-sm"
+            [ngbTooltip]="gridViewSetup['Status']?.headerText"
           >
           </codx-vll>
         </div>
@@ -299,6 +321,8 @@
           <div class="text-center w-100 mt-1">
             <div class="d-flex justify-content-end">
               <codx-label
+                name="lblEmployees"
+                [formModel]="formModel"
                 default="Nhân viên phụ trách"
                 class="text-dark fw-bold mb-1"
               ></codx-label>
@@ -307,11 +331,11 @@
               <div
                 style="position: relative"
                 [ngbTooltip]="tooltipOwner"
-                *ngIf="dataSelected?.owner"
+                *ngIf="dataSelected?.createdBy"
               >
                 <codx-imgs
                   [width]="30"
-                  [objectId]="dataSelected?.owner"
+                  [objectId]="dataSelected?.createdBy"
                   ojectType="AD_Users"
                   [numberImages]="1"
                   [isToolTip]="false"
@@ -374,14 +398,14 @@
                 <div class="d-flex justify-content-center fw-bold fs-6">
                   <span
                     [innerHTML]="
-                      dataSelected?.owner
-                        | formatvalue : formModel : 'owner'
+                      dataSelected?.createdBy
+                        | formatvalue : formModel : 'createdBy'
                         | async
                     "
                   ></span>
                 </div>
                 <div class="d-flex justify-content-center">
-                  {{ gridViewSetup?.Owner?.headerText }}
+                  {{ gridViewSetup?.CreatedBy?.headerText }}
                 </div>
               </ng-template>
 
@@ -640,7 +664,7 @@
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
                             >
                               <codx-label
-                                fiedName="CompletedOn"
+                                fiedName="ATA"
                                 class="nowrap label-colon"
                                 [setRequire]="false"
                                 [formModel]="formModel"
@@ -649,8 +673,8 @@
                             <div class="text-dark codx-textcontent">
                               <span
                                 [innerHTML]="
-                                  dataSelected?.completedOn
-                                    | formatvalue : formModel : 'CompletedOn'
+                                  dataSelected?.ata
+                                    | formatvalue : formModel : 'ATA'
                                     | async
                                 "
                               ></span>
@@ -709,7 +733,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -735,7 +759,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -747,7 +771,7 @@
                                 [formModel]="formModel"
                               ></codx-label>
                             </div>
-                            <div class="text-dark codx-textcontent">
+                            <div class="d-flex text-dark codx-textcontent">
                               <span
                                 [innerHTML]="
                                   dataSelected?.serviceLocator
@@ -755,7 +779,14 @@
                                     | async
                                 "
                               ></span>
-                              - Zone:
+                              <span class="ms-1 me-1">-</span>
+                              <codx-label
+                                class="me-1"
+                                fiedName="Zone"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
                               <span
                                 [innerHTML]="
                                   dataSelected?.zone
@@ -763,14 +794,23 @@
                                     | async
                                 "
                               ></span>
-                              - Partner zone: A
+                              <span class="ms-1 me-1">-</span>
+                              <codx-label
+                                class="me-1"
+                                name="lblPartnerZone"
+                                class="nowrap label-colon"
+                                default="PartnerZone"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                              <span>A</span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -796,7 +836,7 @@
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -816,13 +856,28 @@
                                     | async
                                 "
                               ></span>
+                              <span
+                                class="ms-1"
+                                *ngIf="
+                                  dataSelected.status != '7' &&
+                                  dataSelected.status != '5'
+                                "
+                              >
+                                <button
+                                  type="button"
+                                  class="btn btn-sm btn-icon btn-light-primary"
+                                  (click)="updateAssignEngineer(dataSelected)"
+                                >
+                                  <span class="icon-edit icon-16"></span>
+                                </button>
+                              </span>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div class="d-flex">
-                        <div class="col-6">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -847,30 +902,6 @@
                         </div>
                       </div>
                     </div>
-
-                    <div class="mt-3">
-                      <div class="text-dark text-primary fw-bold fs-6 mb-2">
-                        <codx-label
-                          [setRequire]="false"
-                          class="nowrap"
-                          fiedName="Comment"
-                          [formModel]="formModel"
-                        ></codx-label>
-                        <span
-                          class="icon-edit text-hover-primary icon-16 me-2"
-                          (click)="updateCommentWarranty($event, dataSelected)"
-                        ></span>
-                      </div>
-                      <span class="text-gray-600">
-                        <span
-                          [innerHTML]="
-                            dataSelected?.comment
-                              | formatvalue : formModel : 'Comment'
-                              | async
-                          "
-                        ></span>
-                      </span>
-                    </div>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -893,6 +924,7 @@
                     <wr-view-tab-parts
                       #viewParts
                       [transID]="dataSelected?.recID"
+                      [dataWorkOrder]="dataSelected"
                     ></wr-view-tab-parts>
                   </div>
                 </ng-template>
@@ -917,6 +949,28 @@
                       #viewUpdate
                       [transID]="dataSelected?.recID"
                     ></wr-view-tab-update>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-handyman text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Ghi chú"
+                      [formModel]="formModel"
+                      name="lblNote"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="mt-5">
+                    <ng-container
+                      [ngTemplateOutlet]="templateNote"
+                    ></ng-container>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -955,5 +1009,49 @@
         </div>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #templateNote>
+  <div class="text-dark text-primary fw-bold fs-6 mb-2">
+    <codx-label
+      class="mb-2"
+      [setRequire]="false"
+      class="nowrap"
+      fiedName="Problem"
+      [formModel]="formModel"
+    ></codx-label>
+    <!-- <span
+        class="icon-edit text-hover-primary icon-16 me-2"
+        (click)="updateCommentWarranty($event, dataSelected)"
+      ></span> -->
+  </div>
+  <span class="text-gray-600">
+    <span
+      [innerHTML]="
+        dataSelected?.problem | formatvalue : formModel : 'Problem' | async
+      "
+    ></span>
+  </span>
+  <div class="mt-3">
+    <div class="text-dark text-primary fw-bold fs-6 mb-2">
+      <codx-label
+        [setRequire]="false"
+        class="nowrap"
+        fiedName="Comment"
+        [formModel]="formModel"
+      ></codx-label>
+      <span
+        class="icon-edit text-hover-primary icon-16 me-2 cursor-pointer"
+        (click)="updateCommentWarranty($event, dataSelected)"
+      ></span>
+    </div>
+    <span class="text-gray-600">
+      <span
+        [innerHTML]="
+          dataSelected?.comment | formatvalue : formModel : 'Comment' | async
+        "
+      ></span>
+    </span>
   </div>
 </ng-template>

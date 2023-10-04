@@ -218,11 +218,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
             .subscribe((res) => {
               if (res) {
                 this.saveFileUpload();
-                if (res?.save?.data) {
-                  this.onRelease('', res.save.data);
-                } else if (res?.update?.data) {
-                  this.onRelease('', res.update.data);
-                }
+                this.onRelease('', this.form.data);
                 this.detectorRef.detectChanges();
               }
             });
@@ -236,34 +232,38 @@ export class AdvancePaymentAddComponent extends UIComponent {
       .getCategoryByEntityName(this.form.formModel.entityName)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
-        this.dataCategory = res;
-        this.shareService
-          .codxRelease(
-            'AC',
-            data.recID,
-            this.dataCategory.processID,
-            this.form.formModel.entityName,
-            this.form.formModel.funcID,
-            '',
-            '',
-            ''
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((result: any) => {
-            if (result?.msgCodeError == null && result?.rowCount) {
-              data.status = result?.returnStatus;
-              this.dialogRef.dataService.updateDatas.set(data['_uuid'], data);
-              this.dialogRef.dataService
-                .save(null, 0, '', '', false)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe((res: any) => {
-                  if (res && !res.update.error) {
-                    this.notification.notifyCode('AC0029', 0, text);
-                    this.dialogRef.close();
-                  }
-                });
-            } else this.notification.notifyCode(result?.msgCodeError);
-          });
+        if (res) {
+          this.dataCategory = res;
+          this.shareService
+            .codxRelease(
+              'AC',
+              data.recID,
+              this.dataCategory.processID,
+              this.form.formModel.entityName,
+              this.form.formModel.funcID,
+              '',
+              '',
+              ''
+            )
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((result: any) => {
+              if (result?.msgCodeError == null && result?.rowCount) {
+                data.status = result?.returnStatus;
+                this.dialogRef.dataService.updateDatas.set(data['_uuid'], data);
+                this.dialogRef.dataService
+                  .save(null, 0, '', '', false)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res: any) => {
+                    if (res && !res.update.error) {
+                      this.notification.notifyCode('AC0029', 0, text);
+                      this.dialogRef.close();
+                    }
+                  });
+              } else this.notification.notifyCode(result?.msgCodeError);
+            });
+        } else {
+          this.dialogRef.close();
+        }
       });
   }
 
@@ -279,7 +279,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.saveFileUpload();
-          this.dialogRef.dataService.update(this.advancedPayment).subscribe();
+          // this.dialogRef.dataService.update(this.advancedPayment).subscribe();
           this.onDestroy();
           this.dialogRef.close();
           this.detectorRef.detectChanges();

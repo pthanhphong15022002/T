@@ -1,0 +1,92 @@
+<codx-form [headerText]="'Danh sách sự kiện'" [body]="body" [dialog]="dialog">
+  <ng-template #body>
+    <div class="modal-body">
+      <table class="table bg-header">
+        <thead>
+          <tr>
+            <th class="w-40">
+              <div class="text-center fw-bold">Tên sự kiện</div>
+            </th>
+            <th class="w-20">
+              <div class="text-center fw-bold">Màu chữ</div>
+            </th>
+            <th class="w-20">
+              <div class="text-center fw-bold">Màu nền</div>
+            </th>
+            <th class="w-20">
+              <div class="text-center fw-bold">Hiển thị</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="w-100" *ngFor="let param of data.data | keyvalue">
+            <td>
+              <div
+                class="e-appointment-1 py-2 ps-3"
+                style="
+                  text-align: center;
+                  border-radius: 0px 5px 5px 0px;
+                  border-left-width: 5px;
+                  border-left-style: solid;
+                "
+                [ngStyle]="{
+                  borderLeftColor: param?.value.ShowColor,
+                  color: param?.value.ShowColor,
+                  backgroundColor: param?.value.ShowBackground
+                }"
+              >
+                <div class="d-flex align-items-center">
+                  <span class="fw-bold text-truncate">
+                    <codx-vll
+                      [showText]="true"
+                      [showBgColor]="false"
+                      name="WP006"
+                      [value]="param?.key"
+                  /></span>
+                </div>
+              </div>
+            </td>
+            <td style="vertical-align: middle;">
+              <div class="d-flex justify-content-center align-items-center">
+                <codx-colorpicker
+                  field="color"
+                  mode="Picker"
+                  [value]="param?.value.ShowColor"
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center align-items-center">
+                <codx-colorpicker
+                  field="backgroundColor"
+                  mode="Picker"
+                  [value]="param?.value.ShowBackground"
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center">
+                <codx-input
+                  type="checkbox"
+                  [field]="param?.key"
+                  [checked]="param?.value.ShowEvent === '1'"
+                  labelPosition="Before"
+                  [disabled]="false"
+                  class="test-check"
+                >
+                </codx-input>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer my-2">
+      <button type="button" class="btn btn-outline-primary">
+        Lưu thiết lập
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

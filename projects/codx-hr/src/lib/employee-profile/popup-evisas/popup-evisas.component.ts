@@ -21,7 +21,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 })
 export class PopupEVisasComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   lstVisas: any;
   visaObj;
@@ -32,7 +32,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   disabledInput = false;
   indexSelected;
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -47,12 +47,15 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    console.log('dialog nhan vao', this.dialog);
+    
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     if(this.actionType == 'view'){
       this.disabledInput = true;
     }
+    this.formModel = dialog.formModel;
     this.employId = data?.data?.employeeId;
     this.visaObj = JSON.parse(JSON.stringify(data?.data?.visaObj));
   }
@@ -75,10 +78,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
             this.visaObj.effectedDate = null;
             this.visaObj.expiredDate = null;
 
-            this.formModel.currentData = this.visaObj;
-            this.formGroup.patchValue(this.visaObj);
+            // this.formModel.currentData = this.visaObj;
+            // this.form.formGroup.patchValue(this.visaObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -91,42 +94,43 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
             this.visaObj.expiredDate = null;
           }
         }
-        this.formGroup.patchValue(this.visaObj);
-        this.formModel.currentData = this.visaObj;
+        // this.form.formGroup.patchValue(this.visaObj);
+        // this.formModel.currentData = this.visaObj;
         this.cr.detectChanges();
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
       }
     }
     // this.formModel.currentData = this.visaObj;
-    // this.formGroup.patchValue(this.visaObj);
+    // this.form.formGroup.patchValue(this.visaObj);
     // this.cr.detectChanges();
     // this.isAfterRender = true;
   }
 
   onInit(): void {
-    if (!this.formGroup)
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
+    // if (!this.form.formGroup)
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+        this.initForm();
         this.hrService.getHeaderText(this.funcID).then((res) => {
           this.fieldHeaderTexts = res;
         })
@@ -134,8 +138,8 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
 
   onSaveForm() {
     debugger
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
       return;
     }
@@ -168,7 +172,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       });
     } else {
       this.hrService
-        .updateEmployeeVisaInfo(this.formModel.currentData)
+        .updateEmployeeVisaInfo(this.form.data)
         .subscribe((p) => {
           if (p != null) {
             this.notify.notifyCode('SYS007');
@@ -180,12 +184,13 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
 
   click(data) {
     this.visaObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj));
+    // this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj));
+    this.form.data = JSON.parse(JSON.stringify(this.visaObj));
     this.indexSelected = this.lstVisas.findIndex(
       (p) => p.recID == this.visaObj.recID
     );
     this.actionType = 'edit';
-    this.formGroup?.patchValue(this.visaObj);
+    this.form.formGroup?.patchValue(this.visaObj);
     this.cr.detectChanges();
   }
 }

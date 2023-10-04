@@ -66,11 +66,11 @@ import { NumberPipe } from './pipe/Number.pipe';
 import { SearchPipe } from './pipe/search.pipe';
 import { TextValuePipe } from './pipe/textValue.pipe';
 import { TruncatePipe } from './pipe/truncate.pipe';
-import { FormatDatetimePipe } from './pipe/format-datetime.pipe';
 import { FillterReferType } from './pipe/filterReferPipe.pipe';
 import { DatetimePipe } from './pipe/datetime.pipe';
 import { MessageSystemPipe } from './pipe/mssgSystem.pipe';
 import { ScrollPipe } from './pipe/scrollPipe.pipe';
+import { FilterPipe } from './pipe/filterObject.pipe';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -116,7 +116,6 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [
   //#region Pipe
   ColorPipe,
-  FormatDatetimePipe,
   DatetimePipe,
   DisplayValue,
   FileImage,
@@ -129,6 +128,7 @@ const T_Pipe: Type<any>[] = [
   FillterReferType,
   MessageSystemPipe,
   ScrollPipe,
+  FilterPipe,
   //#endregion
 ];
 

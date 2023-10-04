@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
 import { isObservable } from 'rxjs';
 import { FormModel } from 'codx-core';
+import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
+import { BookmarkComponent } from '../bookmark/bookmark.component';
 
 @Component({
   selector: 'lib-report',
@@ -9,9 +11,14 @@ import { FormModel } from 'codx-core';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent extends WSUIComponent{
+  @ViewChild('codxView2') codxView2: CodxView2Component;
+
+  listModule:any;
   listReport:any;
   listReports: any;
+  listBookMarks = [];
   listGroupReport = [];
+  countBookMarks = 0;
   selectedToolBar = "All";
   imgDefault = "assets/themes/ws/default/img/Report_Empty.svg";
   dataModel = new FormModel();
@@ -19,8 +26,14 @@ export class ReportComponent extends WSUIComponent{
   override onInit(): void {
     this.formatListGroupReport();
     this.getModuleByUserID();
+    this.getCountBookMark();
   }
-  
+  getCountBookMark()
+  {
+    let widthBody = document.body.offsetWidth - 40;
+    this.countBookMarks = Math.ceil(widthBody / 260);
+  }
+
   formatListGroupReport()
   {
     var obj = 
@@ -38,15 +51,15 @@ export class ReportComponent extends WSUIComponent{
     {
       module.subscribe((item:any)=>{
         if(item) {
-          var listModule = item.join(";");
-          this.getDashboardOrReport("R",listModule);
+          this.listModule = item.join(";");
+          this.getDashboardOrReport("R", this.listModule);
         }
       })
     }
     else
     {
-      var listModule = module.join(";");
-      this.getDashboardOrReport("R",listModule);
+      this.listModule = module.join(";");
+      this.getDashboardOrReport("R", this.listModule);
     }
   }
 
@@ -57,15 +70,17 @@ export class ReportComponent extends WSUIComponent{
     {
       result.subscribe((item:any)=>{
         if(item) {
-          this.listReport = this.formatBookMark(item);
-          this.listReports = this.listReport ; //this.formatData(item);
+          var results = this.formatBookMark(item);
+          this.listReport = results;
+          this.listReports = JSON.parse(JSON.stringify(results)) ; //this.formatData(item);
           this.formatData(this.listReport);
         }
       })
     }
     else {
-      this.listReport = this.formatBookMark(result); 
-      this.listReports = this.listReport;
+      var results = this.formatBookMark(result);
+      this.listReport = results; 
+      this.listReports = JSON.parse(JSON.stringify(results));
       this.formatData(this.listReport);
     } //this.formatData(result);
   }
@@ -77,7 +92,10 @@ export class ReportComponent extends WSUIComponent{
       if(element.bookmarks && element.bookmarks.length > 0)
       {
         var dt = element.bookmarks.filter(x=>x.objectID == this.userInfo?.userID);
-        if(dt && dt.length > 0) element.isBookMark = true;
+        if(dt && dt.length > 0) {
+          this.listBookMarks.push(element);
+          element.isBookMark = true;
+        }
       }
     });
     
@@ -125,8 +143,8 @@ export class ReportComponent extends WSUIComponent{
   selectedChangeToolBar(data:any)
   {
     this.selectedToolBar = data?.functionID;
-    if(this.selectedToolBar == "All") this.listReport = this.listReports;
-    else this.listReport = this.listReports.filter(x=>x.moduleID == this.selectedToolBar);
+    if(this.selectedToolBar == "All") this.listReport = JSON.parse(JSON.stringify(this.listReports));
+    else this.listReport = JSON.parse(JSON.stringify(this.listReports.filter(x=>x.moduleID == this.selectedToolBar)));
   }
 
   setBookMark(recID:any)
@@ -134,14 +152,47 @@ export class ReportComponent extends WSUIComponent{
     this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportBusiness","BookmarkAsync",recID).subscribe(item=>{
       if(item)
       {
-        debugger
+        var className = "opacity-100";
+        var messCode = "OD002";
         var index = this.listReport.findIndex(x=>x.recID == recID);
+        var index2 = this.listReports.findIndex(x=>x.recID == recID);
+        if(index2 >= 0)  this.listReports[index2].isBookMark = !this.listReports[index2].isBookMark;
         if(index >= 0) {
+
           this.listReport[index].isBookMark = !this.listReport[index].isBookMark;
-          this.listReports[index].isBookMark = !this.listReports[index].isBookMark;
-          document.getElementById("ws-report-bookmark" + this.listReport[index].recID).style.visibility = this.listReports[index].isBookMark ? "visible" : "hidden";
+          
+          if(!this.listReport[index].isBookMark)
+          {
+            className = "opacity-25";
+            messCode = "OD003";
+            this.listBookMarks = this.listBookMarks.filter(x=>x.recID != this.listReport[index].recID);
+            if(this.listReports[index2].bookmarks &&  this.listReports[index2].bookmarks.length > 0)
+            this.listReports[index2].bookmarks = this.listReports[index2].bookmarks.filter(x=>x.objectID != this.userInfo.userID);
+          }
+          else  {
+            this.listBookMarks.unshift(this.listReport[index]);
+            if(!this.listReports[index2].bookmarks) this.listReports[index2].bookmarks = [];
+              this.listReports[index2].bookmarks.push({objectID:this.userInfo.userID});
+          }
+
+          //Bookmark report
+          document.getElementById("ws-report-bookmark" + this.listReport[index].recID).classList.add(className);
+          
+          //Noti
+          this.notifySvr.notifyCode(messCode,0,this.userInfo?.userName);
+
+          //Update cache
+          let paras = ["R",this.listModule];
+          let keyRoot = "WSDR" + "R" + this.listModule;
+          let key = JSON.stringify(paras).toLowerCase();
+          this.codxWsService.updateCache(keyRoot,key,this.listReports);
         }
       }
     });
+  }
+
+  selectMoreBookmark()
+  {
+    this.callFunc.openForm(BookmarkComponent,"",900,700,"",{listGroup:this.listGroupReport,listBookMarks:this.listBookMarks,type:'R'});
   }
 }

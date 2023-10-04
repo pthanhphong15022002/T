@@ -14,12 +14,6 @@ import { APPostingAccountsComponent } from './apposting-accounts/apposting-accou
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
 import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.component';
-import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.component';
-import { PopAddAccountsComponent } from './chart-of-accounts/pop-add-accounts/pop-add-accounts.component';
-import { CurrencyFormComponent } from './currency-form/currency-form.component';
-import { PopAddCurrencyComponent } from './currency-form/pop-add-currency/pop-add-currency.component';
-import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
-import { PopSettingExchangeComponent } from './currency-form/pop-setting-exchange/pop-setting-exchange.component';
 import { CustomersComponent } from './customers/customers.component';
 import { PopAddAddressComponent } from './customers/pop-add-address/pop-add-address.component';
 import { PopAddBankComponent } from './customers/pop-add-bank/pop-add-bank.component';
@@ -60,6 +54,13 @@ import { VATCodesComponent } from './vatcodes/vatcodes.component';
 import { PopAddVatcodesComponent } from './vatcodes/pop-add-vatcodes/pop-add-vatcodes.component';
 import { PopAddVatpostingComponent } from './vatcodes/pop-add-vatposting/pop-add-vatposting.component';
 import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods/fiscal-periods-add/fiscal-periods-auto-create.component';
+import { AccountsComponent } from './account-categories/accounts.component';
+import { AccountsAddComponent } from './account-categories/accounts-add/accounts-add.component';
+import { CurrencyComponent } from './currency-categories/currency.component';
+import { CurrencyAddComponent } from './currency-categories/currency-add/currency-add.component';
+import { ExchangeRateSettingAddComponent } from './currency-categories/currency-exchangerate-setting-add/currency-exchangerate-setting-add.component';
+import { ExchangerateAddComponent } from './currency-categories/currency-exchangerate-add/currency-exchangerate-add.component';
+import { TranformValueNumberPipe } from '../pipes/tranform-value-number.pipe';
 
 var routes: Routes = [
   {
@@ -68,11 +69,11 @@ var routes: Routes = [
     children: [
       {
         path: 'currencies/:funcID',
-        component: CurrencyFormComponent,
+        component: CurrencyComponent,
       },
       {
         path: 'chartofaccounts/:funcID',
-        component: ChartOfAccountsComponent,
+        component: AccountsComponent,
       },
       {
         path: 'customers/:funcID',
@@ -144,12 +145,12 @@ var routes: Routes = [
 
 @NgModule({
   declarations: [
-    CurrencyFormComponent,
-    PopAddCurrencyComponent,
-    PopSettingExchangeComponent,
-    PopAddExchangerateComponent,
-    ChartOfAccountsComponent,
-    PopAddAccountsComponent,
+    CurrencyComponent,
+    CurrencyAddComponent,
+    ExchangeRateSettingAddComponent,
+    ExchangerateAddComponent,
+    AccountsComponent,
+    AccountsAddComponent,
     CustomersComponent,
     PopAddCustomersComponent,
     PopAddBankComponent,
@@ -207,6 +208,7 @@ var routes: Routes = [
     CodxReportModule,
     FormsModule,
     NameByIdPipe,
+    TranformValueNumberPipe
   ],
   exports: [RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

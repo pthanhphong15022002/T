@@ -90,6 +90,7 @@ export class DealsComponent
 
   // type any for view detail
   @Input() dataObj?: any;
+  @Input() showButtonAdd = false;
   kanban: any;
 
   // config api get data
@@ -99,15 +100,14 @@ export class DealsComponent
   className = 'DealsBusiness';
   method = 'GetListDealsAsync';
   idField = 'recID';
-
+  predicate = '';
+  dataValue = '';
   // data structure
   listCustomer: CM_Customers[] = [];
 
   // type of string
   customerName: string = '';
   oldIdDeal: string = '';
-
-  @Input() showButtonAdd = false;
 
   columnGrids = [];
   // showButtonAdd = false;
@@ -127,6 +127,9 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
@@ -157,9 +160,10 @@ export class DealsComponent
   listHeader: any = [];
   listSteps: any[] = [];
   arrFieldIsVisible: any[];
-
+  isChangeOwner = false;
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
+  queryParams: any;
 
   constructor(
     private inject: Injector,
@@ -174,6 +178,11 @@ export class DealsComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
+    if (this.queryParams?.recID) {
+      this.predicate = 'RecID=@0';
+      this.dataValue = this.queryParams?.recID;
+    }
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -185,7 +194,7 @@ export class DealsComponent
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
-
+    this.getListStatusCode();
     this.codxCmService.getProcessDefault('1').subscribe((res) => {
       if (res) {
         this.processIDDefault = res.recID;
@@ -276,7 +285,10 @@ export class DealsComponent
     this.request.method = 'GetListDealsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = this.dataObj;
-
+    if (this.queryParams?.recID) {
+      this.request.predicate = this.predicate;
+      this.request.dataValue = this.dataValue;
+    }
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
     this.resourceKanban.assemblyName = 'DP';
@@ -440,7 +452,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data.status != '2' || data.closed;
+      eventItem.disabled = data?.alloweStatus == '1' || data.closed;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -484,18 +496,30 @@ export class DealsComponent
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
-  async getValuelistStatusCode() {
-    this.cache.valueList('CRM041').subscribe((func) => {
-      if (func) {
-        this.valueListStatusCode = func.datas
-          .filter((x) => ['2', '3', '5', '7'].includes(x.value))
-          .map((item) => ({
-            text: item.text,
-            value: item.value,
-          }));
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+          text: item.statusName,
+          value: item.statusID,
+        }));
+      } else {
+        this.valueListStatusCode = [];
       }
     });
   }
+  // async getValuelistStatusCode() {
+  //   this.cache.valueList('CRM041').subscribe((func) => {
+  //     if (func) {
+  //       this.valueListStatusCode = func.datas
+  //         .filter((x) => ['2', '3', '5', '7'].includes(x.value))
+  //         .map((item) => ({
+  //           text: item.text,
+  //           value: item.value,
+  //         }));
+  //     }
+  //   });
+  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -1163,6 +1187,7 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+    let ownerIdOld = data.owner;
     let dealValueOld = data.dealValue;
     let exchangeRateOld = data.exchangeRate;
     this.view.dataService
@@ -1206,6 +1231,7 @@ export class DealsComponent
             this.detailViewDeal.dataSelected = JSON.parse(
               JSON.stringify(this.dataSelected)
             );
+            this.isChangeOwner = ownerIdOld != e.event.owner;
             this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
@@ -1872,7 +1898,7 @@ export class DealsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = data.status;
+    this.statusDefault = data.statusCodeID;
     this.dialogQuestionForm = this.callfc.openForm(
       this.popUpQuestionStatus,
       '',
@@ -1882,11 +1908,13 @@ export class DealsComponent
   }
   valueChangeStatusCode($event) {
     if ($event) {
-      this.statusDefault = $event.data;
+      this.statusDefault = $event;
+    } else {
+      this.statusDefault = null;
     }
   }
   saveStatus() {
-    if (this.dataSelected.status === this.statusDefault) {
+    if (this.dataSelected.statusCodeID === this.statusDefault) {
       this.dialogQuestionForm.close();
       this.notificationsService.notifyCode('SYS007');
     } else {

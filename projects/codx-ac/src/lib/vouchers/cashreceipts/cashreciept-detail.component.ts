@@ -31,7 +31,7 @@ declare var jsBh: any;
   templateUrl: './cashreciept-detail.component.html',
   styleUrls: [
     './cashreciept-detail.component.css',
-    '../../codx-ac.component.css',
+    '../../codx-ac.component.scss',
   ],
 })
 export class CashrecieptDetailComponent extends UIComponent {

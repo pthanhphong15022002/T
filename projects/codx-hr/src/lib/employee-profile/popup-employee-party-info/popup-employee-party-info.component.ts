@@ -20,12 +20,12 @@ export class PopupEmployeePartyInfoComponent
   implements OnInit
 {
   idField = 'RecID';
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   formModel: FormModel;
   employId;
   dialog: DialogRef;
   data;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
@@ -38,7 +38,10 @@ export class PopupEmployeePartyInfoComponent
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.formModel = dialog?.FormModel;
+    debugger
+    this.formModel = dialog?.formModel;
+    console.log('form model nhan vao', this.formModel);
+    
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -49,42 +52,44 @@ export class PopupEmployeePartyInfoComponent
   }
 
   initForm() {
-    this.formGroup.patchValue(this.data);
-    this.formModel.currentData = this.data;
+    // this.form.formGroup.patchValue(this.data);
+    // this.formModel.currentData = this.data;
     this.cr.detectChanges();
-    this.isAfterRender = true;
+    // this.isAfterRender = true;
   }
 
   onInit(): void {
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    } else {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-    }
+    this.initForm();
+
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // } else {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+    // }
   }
 
   onSaveForm() {
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if(this.form.formGroup.invalid){
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }

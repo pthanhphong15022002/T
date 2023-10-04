@@ -74,7 +74,7 @@ import { PopupAddCalendarComponent } from './components/setting-calendar/popup-a
 import { PopupAddDayoffsComponent } from './components/setting-calendar/popup-add-dayoffs/popup-add-dayoffs.component';
 import { PopupAddEventComponent } from './components/setting-calendar/popup-add-event/popup-add-event.component';
 import { InfoLeftComponent } from 'projects/codx-mwp/src/lib/employeeinfomation/info-left/info-left.component';
-import { DialogModule } from '@syncfusion/ej2-angular-popups';
+import { DialogModule, TooltipModule } from '@syncfusion/ej2-angular-popups';
 import {
   DocumentEditorAllModule,
   DocumentEditorContainerAllModule,
@@ -176,8 +176,11 @@ import { CodxViewReleaseSignFileComponent } from './components/codx-approval-pro
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 import { NgxCaptureModule } from 'ngx-capture';
+import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
+import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
+import { CodxDateComponent } from './components/codx-date/codx-date.component';
 import { CodxCommonModule } from 'projects/codx-common/src/public-api';
-
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -224,9 +227,12 @@ const T_Component: Type<any>[] = [
   // MessengerDrawerComponent,
   // ChatInnerComponent,
   CodxReferencesComponent,
+  //import
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
+  AddTemplateComponent,
+  //
   PopupUpdateStatusComponent,
   CodxNoteComponent,
   ViewDetailComponent,
@@ -321,6 +327,7 @@ const T_Component: Type<any>[] = [
 
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
+  CodxFieldsFormatValueComponent,
   PopupCustomFieldComponent,
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
@@ -361,6 +368,8 @@ const T_Component: Type<any>[] = [
     CodxListReportsComponent,
     CodxFilesAttachmentComponent,
     CodxFilesAttachmentViewComponent,
+    PopupAddLineTableComponent,
+    CodxDateComponent,
   ],
   exports: [T_Component, CodxCommonModule],
   imports: [
@@ -395,6 +404,7 @@ const T_Component: Type<any>[] = [
     DragDropModule,
     ProgressBarAllModule,
     NgxCaptureModule,
+    TooltipModule,
   ],
 })
 export class CodxShareModule {

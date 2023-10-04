@@ -311,7 +311,9 @@ export class PopupAddCasesComponent
         case 'P':
         case 'R':
         case 'A':
+        // case 'C':case ko có
         case 'L':
+        case 'TA':
           result = event.e;
           break;
       }

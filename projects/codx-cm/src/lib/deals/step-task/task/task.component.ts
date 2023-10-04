@@ -1,38 +1,38 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
+  Input,
+  Output,
+  OnInit,
+  OnChanges,
   Component,
   EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
   SimpleChanges,
+  AfterViewInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
-  ApiHttpService,
-  CacheService,
-  CallFuncService,
-  FormModel,
-  NotificationsService,
-  SidebarModel,
   Util,
+  AuthStore,
+  FormModel,
+  CacheService,
+  SidebarModel,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
 } from 'codx-core';
 import {
   DP_Activities,
   DP_Activities_Roles,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
+import { firstValueFrom } from 'rxjs';
+import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
+import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
 import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
-import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
-import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
-import { firstValueFrom } from 'rxjs';
-
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -42,21 +42,29 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
   @Input() owner: string;
   @Input() isPause = false;
+  @Input() isAdmin = false;
   @Input() entityName = '';
+
+  @Input() customerName: string;
+  @Input() dealName: string;
+  @Input() contractName: string;
+  @Input() leadName: string;
 
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
 
   @Output() saveAssign = new EventEmitter<any>();
   activitie: DP_Activities = new DP_Activities();
-  listActivitie: DP_Activities[] = [];
+  user;
+  vllData;
   taskType;
+  titleName = '';
+  dataTooltipDay;
+  isNoData = false;
   listTaskType = [];
   grvMoreFunction: FormModel;
-  isNoData = false;
-  titleName = '';
-  vllData;
-  dataTooltipDay;
+  listActivitie: DP_Activities[] = [];
+  isLoad = false;
   moreDefaut = {
     share: true,
     write: true,
@@ -65,16 +73,22 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     delete: true,
   };
   constructor(
-    private cache: CacheService,
-    private callFunc: CallFuncService,
     private api: ApiHttpService,
-    private notiService: NotificationsService,
+    private cache: CacheService,
+    private authstore: AuthStore,
+    private stepService: StepService,
+    private callFunc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
-    private stepService: StepService
-  ) {}
+    private notiService: NotificationsService,
+  ) {
+    this.user = this.authstore.get();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.customerID) {
+      this.isLoad = true;
+      this.isNoData = false;
+      this.listActivitie = [];
       this.getActivities();
     }
   }
@@ -98,17 +112,23 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#region get data
   getActivities(): void {
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetActivitiesAsync', [
+      .exec<any>('DP', 'ActivitiesBusiness', 'GetActivitiesAsync', [
         this.customerID,
       ])
       .subscribe((res) => {
         if (res?.length > 0) {
-          this.listActivitie = res;
+          this.isPause;
+          if(this.isAdmin){
+            this.listActivitie = res;
+          }else{
+            this.listActivitie = res?.filter(activitie => activitie.owner == this.user?.userID);
+          }
           this.isNoData = false;
         } else {
           this.listActivitie = [];
           this.isNoData = true;
         }
+        this.isLoad = false;
       });
   }
 
@@ -278,7 +298,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.objectID = this.customerID;
       this.activitie.objectType = this.entityName;
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
           this.entityName,
         ])
@@ -294,15 +314,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async editTask(task) {
-    this.getTypeTask(task);
-    let taskOutput = await this.openPopupTask('edit', task);
+    let taskEdit = JSON.parse(JSON.stringify(task));
+    this.getTypeTask(taskEdit);
+    let taskOutput = await this.openPopupTask('edit', taskEdit);
     if (taskOutput?.event) {
       if (!taskOutput?.event?.objectID) {
         task['objectID'] = this.customerID;
       }
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
-          taskOutput?.event,
+        .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+          taskOutput?.event?.task,
           this.entityName,
         ])
         .subscribe((res) => {
@@ -324,7 +345,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+          .exec<any>('DP', 'ActivitiesBusiness', 'DeleteActivitiesAsync', [
             task?.recID,
             this.entityName,
           ])
@@ -348,7 +369,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     dataCopy['recID'] = Util.uid();
     dataCopy['progress'] = 0;
     dataCopy['isTaskDefault'] = false;
-    dataCopy['status'] = '1';
+    // dataCopy['status'] = '1';
     delete dataCopy?.id;
     dataCopy['modifiedOn'] = null;
     dataCopy['modifiedBy'] = null;
@@ -369,7 +390,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.activitie.roles = roles;
       this.activitie.objectID = this.customerID;
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+        .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
         ])
         .subscribe((res) => {
@@ -531,6 +552,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         isActivitie: true,
         sessionID: this.sessionID, // session giao việc
         formModelAssign: this.formModelAssign, // formModel của giao việc
+        customerName: this.customerName,
+        dealName: this.dealName,
+        contractName: this.contractName,
+        leadName: this.leadName,
       };
       let option = new SidebarModel();
       option.Width = '550px';

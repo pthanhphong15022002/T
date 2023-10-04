@@ -61,7 +61,7 @@
         </div>
         <div class="d-flex flex-wrap align-items-center text-info-date mb-1">
           <span class="d-flex align-items-center me-2">
-            <span class="text-gray-700 me-3">{{item.createdOn | timefrom}}</span>
+            <codx-date [value]="item.createdOn" option="f" className="text-gray-700 me-3 cursor-pointer"></codx-date>
             <ng-container *ngIf="item.approveControl == '1' && item.approveStatus == '3'">
               <span [title]="mssgWP038" class="icon-security text-primary icon-16 me-2"></span>
             </ng-container>

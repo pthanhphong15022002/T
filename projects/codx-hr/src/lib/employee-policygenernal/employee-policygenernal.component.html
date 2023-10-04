@@ -44,7 +44,7 @@
         </div>
     
         <div class="w-25 min-w-100px px-2">
-            <span
+            <!-- <span
         [ngbTooltip]="grvSetup?.Percentage?.headerText"
             [innerHTML]="
             data?.percentage
@@ -52,8 +52,20 @@
               | async
           "
             >
+            </span> -->
+            <span
+        [ngbTooltip]="grvSetup?.Percentage?.headerText"
+            >
+              {{data.percentage}}% <span *ngIf="data?.percentageOn && data.percentage > 0"
+              [innerHTML]="
+            data?.percentageOn
+              | formatvalue : view.formModel : 'percentageOn'
+              | async
+          "
+              >
+
+              </span>
             </span>
-            <!-- {{data.percentage}} -->
         </div>
 
         <div class="w-25 min-w-200px px-2"
@@ -80,7 +92,7 @@
 <ng-template #headerTemplate let-data>
     <div class="d-flex w-100 ps-2 pe-4">
       <div class="w-25 min-w-400px p-3 fw-bold text-dark">
-        <codx-label name="lblStaff" [default]="'Nhân viên'"></codx-label>
+        <codx-label name="lblRule" [default]="'Quy định'"></codx-label>
       </div>
       <div class="w-25 min-w-150px p-3 fw-bold text-dark">
         <codx-label name="lblContractType" [default]="'Số tiền'"></codx-label>

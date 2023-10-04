@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -31,13 +33,18 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() listRoles = [];
 
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
+  @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
+
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() updateComment = new EventEmitter<any>();
+  @Output() updateAssignEngineerEmit = new EventEmitter<any>();
 
   user: any;
   treeTask = [];
-
+  expanding = false;
+  overflowed: boolean = false;
+  id: any;
   tabControl = [
     {
       name: 'History',
@@ -72,18 +79,33 @@ export class ViewDetailWrComponent implements OnInit {
   ];
 
   constructor(
-    private callFc: CallFuncService,
-    private cache: CacheService,
-    private wrSv: CodxWrService,
-    private api: ApiHttpService,
     private authstore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.user = this.authstore.get();
   }
 
   ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.id = changes['dataSelected'].currentValue?.recID;
+        this.expanding = false;
+        this.overflowed = false;
+      }
+    }
+
+  }
+
+  ngAfterViewChecked(): void {
+    const element: HTMLElement = this.memo?.nativeElement;
+    this.overflowed = element?.scrollHeight > element?.clientHeight;
+  }
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
@@ -95,6 +117,10 @@ export class ViewDetailWrComponent implements OnInit {
 
   updateCommentWarranty(e, data) {
     this.updateComment.emit({ e: e, data: data });
+  }
+
+  updateAssignEngineer(data) {
+    this.updateAssignEngineerEmit.emit({ data: data });
   }
 
   listOrderUpdate(lstUpdate) {

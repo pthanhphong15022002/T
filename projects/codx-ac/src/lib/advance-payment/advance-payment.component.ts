@@ -163,7 +163,7 @@ export class AdvancePaymentComponent extends UIComponent{
           var dialog = this.callfc.openForm(
             AdvancePaymentAddComponent,
             '',
-            800,
+            750,
             850,
             '',
             obj,
@@ -194,7 +194,7 @@ export class AdvancePaymentComponent extends UIComponent{
         var dialog = this.callfc.openForm(
           AdvancePaymentAddComponent,
           '',
-          800,
+          750,
           850,
           '',
           obj,
@@ -228,7 +228,7 @@ export class AdvancePaymentComponent extends UIComponent{
             var dialog = this.callfc.openForm(
               AdvancePaymentAddComponent,
               '',
-              800,
+              750,
               850,
               '',
               obj,

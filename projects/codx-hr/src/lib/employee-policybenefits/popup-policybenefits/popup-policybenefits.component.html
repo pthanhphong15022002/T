@@ -1,25 +1,26 @@
+<ng-container *ngIf="benefitPolicyObj">
 <codx-layout-add
   #form
   [title]="headerText"
   [tabInfo]="tabInfo"
-  [formModel]="formModel"
+  [formModel]="dialog.formModel"
   [subHeader]=""
   (setTitle)="setTitle($event)"
   [footer]="footer"
   [dialog]="dialog"
-  [group]="formGroup"
   (tabChange)="changeTab($event)"
   [openMore]="true"
   [tabContent]="[overallInfo, policyInfo, setting, applyObj, subtractObj]"
   [data]="benefitPolicyObj"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- *ngIf="isAfterRender" -->
 </codx-layout-add>
 
 <ng-template #overallInfo>
+<ng-container *ngIf="form.formGroup">
     <div class="fs-5-sm fw-bold text-primary mb-2">
         <codx-label 
-            [formModel]="formModel" 
+            [formModel]="form.formModel" 
             [name]="'lblOverallInfo'"
             [default]="'Thông tin chung'"
         >
@@ -28,18 +29,18 @@
 
     <div class="form-group row">
         <div class="col-8">
-          <codx-label fiedName="BenefitID" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="BenefitID" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="benefitID"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
         <div class="col-4">
           <codx-label></codx-label>
           <codx-vll
             *ngIf="benefitPolicyObj.status"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
             [field]="'Status'"
             [value]="benefitPolicyObj?.status"
             [showText]="true"
@@ -53,73 +54,73 @@
 
       <div class="form-group row">
         <div class="col-8">
-          <codx-label fiedName="PolicyID" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="PolicyID" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="policyID"
             [disabled]="autoNumField == 'PolicyID'"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
         <div class="col-4">
-          <codx-label fiedName="Priority" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="Priority" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="priority"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
-        <codx-label fiedName="PolicyName" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PolicyName" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="policyName"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
 
       <div class="form-group row">
         <div class="col-4">
-          <codx-label fiedName="ActiveOn" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="ActiveOn" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="activeOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
         <div class="col-4">
-          <codx-label fiedName="ExpiredOn" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="ExpiredOn" [formModel]="form.formModel"></codx-label>
           <codx-input
             field="expiredOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
         <div class="col-4 d-flex flex-column">
-          <codx-label fiedName="Stop" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="Stop" [formModel]="form.formModel"></codx-label>
           <codx-input
             class="mt-3"
             field="stop"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
 
       <div class="form-group row">
-        <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="note"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
 
       <div class="fs-5-sm fw-bold text-primary mt-6 mb-3">
         <codx-label 
-            [formModel]="formModel" 
+            [formModel]="form.formModel" 
             [name]="'lblAmount'"
             [default]="'Mức hưởng'"
         >
@@ -128,72 +129,72 @@
 
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
-          <codx-label fiedName="Interval" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="Interval" [formModel]="form.formModel"></codx-label>
           <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteInterval'"
-            [default]="grvSetup.Interval.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.Interval.headerNote"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
         <div class="col-4">
           <codx-input
             field="interval"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
 
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
-          <codx-label fiedName="FixedAmt" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="FixedAmt" [formModel]="form.formModel"></codx-label>
           <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteFixedAmt'"
-            [default]="grvSetup.FixedAmt.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.FixedAmt.headerNote"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
         <div class="col-4">
           <codx-input
             field="fixedAmt"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
 
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
-          <codx-label fiedName="Percentage" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="Percentage" [formModel]="form.formModel"></codx-label>
           <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNotePercentage'"
-            [default]="grvSetup.Percentage.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.Percentage.headerNote"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
         <div class="col-4">
           <codx-input
             field="percentage"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
 
       <div class="form-group row d-flex justify-content-between">
         <div class="col-6 d-flex flex-column">
-          <codx-label fiedName="PercentageOn" [formModel]="formModel"></codx-label>
+          <codx-label fiedName="PercentageOn" [formModel]="form.formModel"></codx-label>
           <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNotePercentageOn'"
-            [default]="grvSetup.PercentageOn.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.PercentageOn.headerNote"
+            [formModel]="form.formModel"
           ></codx-label>
         </div>
         <div class="col-4">
           <codx-input
             field="percentageOn"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
@@ -202,12 +203,12 @@
         <div class="col-6 d-flex flex-column">
             <codx-label
                 fiedName="HasIncludeBenefits"
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <codx-label class="fs-7 text-gray-600 fw-normal"
             [name]="'headerNoteHasIncludeBenefits'"
-            [default]="grvSetup.HasIncludeBenefits.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.HasIncludeBenefits.headerNote"
+            [formModel]="form.formModel"
     ></codx-label>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end">
@@ -215,16 +216,16 @@
             <codx-input
                 class=""
                 field="hasIncludeBenefits"
-                [formModel]="formModel"
-                [Group]="formGroup"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
                 (valueChange)="ValChangeHasIncludeBenefits($event)"
             ></codx-input>
           </span>
             <!-- <codx-input
             class="mt-2"
             field="includeObjects"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeSelectObj($event)"
         ></codx-input> -->
             <button type="button"
@@ -240,7 +241,7 @@
         </div>
     </div>
 
-    <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits.length > 0">
+    <div class="d-flex flex-wrap ps-5" *ngIf="benefitPolicyObj.hasIncludeBenefits && lstSelectedBenefits && lstSelectedBenefits?.length > 0">
         <div *ngFor="let obj of lstSelectedBenefits">
             <!-- <codx-vll
             [showText]="true"
@@ -267,7 +268,7 @@
     <div class="fs-5-sm fw-bold text-primary mt-6 mb-2" *ngIf="benefitPolicyObj.attachments > 0">
         <codx-label
           name="lblAttachFile"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [default]="'File đính kèm'"
         >
         </codx-label>
@@ -281,6 +282,8 @@
           hideBtnSave="1"
           hideFolder="1"
           hideUploadBtn="1"
+          (fileDelete)="deleteFile($event)"
+          (fileCount)="countFile()"
           hideDes="1"
           hideImageUpload="0"
           hideImageThumb="0"
@@ -292,7 +295,7 @@
           (fileAdded)="addFiles($event)">
           [referType]="'source'"
           >
-          <!-- [formModel]="formModel"
+          <!-- [formModel]="form.formModel"
           [idField]="'RecID'" -->
         <!-- (fileDelete)="handleDelete($event)"
         (fileCount)="getfileCount($event)"
@@ -302,7 +305,7 @@
 
       <codx-combobox-popup
       *ngIf="!isHidden2 && benefitPolicyObj.hasIncludeBenefits"
-      [comboboxName]="grvSetup.IncludeBenefits.referedValue"
+      [comboboxName]="form.form.gridviewSetup.IncludeBenefits.referedValue"
       [multiple]="true"
       [width]="600"
       [height]="500"
@@ -310,22 +313,26 @@
       (clickSave)="onClickHideComboboxPopup2($event)"
       >
       </codx-combobox-popup>
+</ng-container>
 </ng-template>
 
 <ng-template #policyInfo>
+<ng-container *ngIf="form.formGroup">
     <div class="policy-meno">
     <codx-input
         field="memo"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
     ></codx-input>
     </div>
+</ng-container>
 </ng-template>
 
 <ng-template #setting>
+<ng-container *ngIf="form.formGroup">
   <div class="fs-5-sm fw-bold text-primary mb-3">
     <codx-label 
-        [formModel]="formModel" 
+        [formModel]="form.formModel" 
         [name]="'lblHeadAdjustBy'"
         [default]="'Điều chỉnh mức hưởng'"
     >
@@ -334,18 +341,18 @@
 
   <div class="form-group row">
     <div class="col-7 d-flex flex-column">
-      <codx-label fiedName="AdjustBy" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AdjustBy" [formModel]="form.formModel"></codx-label>
       <codx-label class="fw-normal fs-7 text-gray-600"
         [name]="'headerNoteAdjustBy'"
-        [default]="grvSetup.AdjustBy.headerNote"
-        [formModel]="formModel"
+        [default]="form.form.gridviewSetup.AdjustBy.headerNote"
+        [formModel]="form.formModel"
       ></codx-label>
     </div>
     <div class="col-5">
       <codx-input
         field="adjustBy"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="onChangeAdjustBy($event)"
       ></codx-input>
     </div>
@@ -379,7 +386,7 @@
           <codx-label
             name="lblAddBtnGrid1"
             default="Thêm"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
           >
           </codx-label>
       </button>
@@ -390,13 +397,13 @@
     <div class="col-8 d-flex flex-column">
         <codx-label
             fiedName="IsAdjustKow"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-label class="fs-7 fw-normal text-gray-600"
         [name]="'headerNoteIsAdjustKow'"
-        [default]="grvSetup.IsAdjustKow.headerNote"
+        [default]="form.form.gridviewSetup.IsAdjustKow.headerNote"
         
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </div>
     <div class="col-4 d-flex flex-row justify-content-end align-items-center">
@@ -404,8 +411,8 @@
         <codx-input
            
             field="isAdjustKow"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeIsAdjustKow($event)"
         ></codx-input></span>
         <button type="button"
@@ -435,7 +442,7 @@
 
     <codx-combobox-popup
     *ngIf="!isHidden3 && benefitPolicyObj.isAdjustKow"
-    [comboboxName]="grvSetup.AdjustKows.referedValue"
+    [comboboxName]="form.form.gridviewSetup.AdjustKows.referedValue"
     [multiple]="true"
     [width]="600"
     [height]="500"
@@ -446,25 +453,25 @@
 
     <div class="form-group row">
       <div class="col-7 d-flex flex-column">
-        <codx-label fiedName="AdjustKowBy" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="AdjustKowBy" [formModel]="form.formModel"></codx-label>
         <codx-label class="text-gray-600 fs-7 fw-normal"
           [name]="'headerNoteAdjustKowBy'"
-          [default]="grvSetup.AdjustKowBy.headerNote"
-          [formModel]="formModel"
+          [default]="form.form.gridviewSetup.AdjustKowBy.headerNote"
+          [formModel]="form.formModel"
         ></codx-label>
       </div>
       <div class="col-5">
         <codx-input
           field="adjustKowBy"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="fs-5-sm fw-bold text-primary mt-6 mb-3">
       <codx-label 
-          [formModel]="formModel" 
+          [formModel]="form.formModel" 
           [name]="'lblApplyConstraint'"
           [default]="'Điều kiện áp dụng'"
       >
@@ -473,19 +480,19 @@
 
     <div class="form-group row">
       <div class="col-7 d-flex flex-column">
-        <codx-label fiedName="IsConstraintKow" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="IsConstraintKow" [formModel]="form.formModel"></codx-label>
         <codx-label class="text-gray-600 fw-normal fs-7"
           [name]="'headerNoteIsConstraintKow'"
-          [default]="grvSetup.IsConstraintKow.headerNote"
-          [formModel]="formModel"
+          [default]="form.form.gridviewSetup.IsConstraintKow.headerNote"
+          [formModel]="form.formModel"
         ></codx-label>
       </div>
       <div class="col-5 d-flex justify-content-end align-items-center">
         <span class="mt-2 me-2">
           <codx-input
             field="isConstraintKow"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeContraintKow($event)"
           ></codx-input>
         </span>
@@ -504,20 +511,20 @@
       
       <div class="form-group row" *ngIf="expandContraintKow">
         <div class="col-8 d-flex flex-column">
-          <codx-label class="" fiedName="MinValue" [formModel]="formModel"></codx-label>
+          <codx-label class="" fiedName="MinValue" [formModel]="form.formModel"></codx-label>
           <!-- <codx-label
           class="fw-normal text-gray-600 fs-7"
             [name]="'headerNoteMinValue'"
-            [default]="grvSetup.MinValue.headerNote"
-            [formModel]="formModel"
+            [default]="form.form.gridviewSetup.MinValue.headerNote"
+            [formModel]="form.formModel"
           ></codx-label> -->
         </div>
         <div class="col-4">
           <codx-input
           [disabled]="constraintKowDisabled"
             field="minValue"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
@@ -527,13 +534,13 @@
             <codx-label
                 fiedName="MinKows"
           class=""
-                [formModel]="formModel"
+                [formModel]="form.formModel"
             ></codx-label>
             <!-- <codx-label
             [name]="'headerNoteMinKows'"
-            [default]="grvSetup.MinKows.headerNote"
+            [default]="form.form.gridviewSetup.MinKows.headerNote"
           class="fw-normal fs-7 text-gray-600"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
             ></codx-label> -->
         </div>
         <div class="col-4 d-flex flex-row justify-content-end">
@@ -566,7 +573,7 @@
 
   <codx-combobox-popup
   *ngIf="!isHiddenCbxMinKows && benefitPolicyObj.isConstraintKow"
-  [comboboxName]="grvSetup.MinKows.referedValue"
+  [comboboxName]="form.form.gridviewSetup.MinKows.referedValue"
   [multiple]="true"
   [width]="600"
   [height]="500"
@@ -577,7 +584,7 @@
 
   <div class="my-3" *ngIf="expandContraintKow">
     <codx-label
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [name]="'lblAnd'"
     [default]="'VÀ'"
     >
@@ -588,20 +595,20 @@
   <div class="border p-3 mb-5" *ngIf="expandContraintKow">
     <div class="form-group row" *ngIf="expandContraintKow">
       <div class="col-8 d-flex flex-column">
-        <codx-label class="" fiedName="MaxValue" [formModel]="formModel"></codx-label>
+        <codx-label class="" fiedName="MaxValue" [formModel]="form.formModel"></codx-label>
         <!-- <codx-label
         class="fw-normal fs-7 text-gray-600"
           [name]="'headerNoteMaxValue'"
-          [default]="grvSetup.MaxValue.headerNote"
-          [formModel]="formModel"
+          [default]="form.form.gridviewSetup.MaxValue.headerNote"
+          [formModel]="form.formModel"
         ></codx-label> -->
       </div>
       <div class="col-4">
         <codx-input
         [disabled]="constraintKowDisabled"
           field="maxValue"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -611,13 +618,13 @@
           <codx-label
               fiedName="MaxKows"
         class=""
-              [formModel]="formModel"
+              [formModel]="form.formModel"
           ></codx-label>
           <!-- <codx-label
             [name]="'MaxKows'"
-            [default]="grvSetup.MaxKows.headerNote"
+            [default]="form.form.gridviewSetup.MaxKows.headerNote"
           class="text-gray-600 fs-7 fw-normal"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
           ></codx-label> -->
       </div>
       <div class="col-4 d-flex justify-content-end align-items-center">
@@ -648,7 +655,7 @@
   
   <codx-combobox-popup
   *ngIf="!isHiddenCbxMaxKows && benefitPolicyObj.isConstraintKow"
-  [comboboxName]="grvSetup.MaxKows.referedValue"
+  [comboboxName]="form.form.gridviewSetup.MaxKows.referedValue"
   [multiple]="true"
   [width]="600"
   [height]="500"
@@ -663,21 +670,21 @@
     <div class="col-8 d-flex flex-column">
         <codx-label
             fiedName="IsConstraintOther"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-label class="text-gray-600 fw-normal fs-7"
         [name]="'headerNoteIsConstraintOther'"
-        [default]="grvSetup.IsConstraintOther.headerNote"
+        [default]="form.form.gridviewSetup.IsConstraintOther.headerNote"
         
-        [formModel]="formModel"
+        [formModel]="form.formModel"
         ></codx-label>
     </div>
     <div class="col-4 d-flex flex-row justify-content-end align-items-center">
       <span class="mt-2 me-2">
         <codx-input  
             field="isConstraintOther"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeIsConstraintOther($event)"
         ></codx-input>
       </span>
@@ -958,36 +965,38 @@
       </div>
     </div>
 </div>
-
+</ng-container>
 </ng-template>
 
 <ng-template #applyObj>
+<ng-container *ngIf="form.formGroup">
+
   <div class="form-group row">
     <div class="col-6 d-flex flex-column">
         <codx-label
             fiedName="HasIncludeObjects"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-label class="text-gray-600 fs-7 fw-normal"
         [name]="'headerNoteHasIncludeObjects'"
-        [default]="grvSetup.HasIncludeObjects.headerNote"
-        [formModel]="formModel"
+        [default]="form.form.gridviewSetup.HasIncludeObjects.headerNote"
+        [formModel]="form.formModel"
 ></codx-label>
     </div>
     <div class="col-6 d-flex flex-row justify-content-end align-items-center">
       <span class="mt-2 me-2">
         <codx-input
             field="hasIncludeObjects"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeHasInclueObj($event)"
         ></codx-input>
       </span>
         <!-- <codx-input
         class="mt-2"
         field="includeObjects"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="ValChangeSelectObj($event)"
     ></codx-input> -->
       <button type="button"
@@ -1035,7 +1044,7 @@
 <div class="form-group row w-100 mt-6" *ngIf="lstPolicyBeneficiariesApply.length > 0">
   <div class="fs-6 fw-bold text-primary" *ngIf="benefitPolicyObj.hasIncludeObjects">
     <codx-label
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [name]="'lblDetailApplyObj'"
     [default]="'Chi tiết Đối tượng áp dụng'"
 ></codx-label>
@@ -1325,7 +1334,7 @@
       <codx-label
       default="Hoặc"
       name="lblOr"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
     </div>
   </div>
@@ -1351,7 +1360,7 @@
     <codx-label
       name="lblAddNew"
       default="Thêm mới"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
   </button>
 </div>
@@ -1366,35 +1375,37 @@
     (clickSave)="onClickHideComboboxPopup($event)"
     >
     </codx-combobox-popup> -->
+</ng-container>
 </ng-template>
 
 <ng-template #subtractObj> 
+<ng-container *ngIf="form.formGroup">
   <div class="form-group row">
     <div class="col-6 d-flex flex-column">
         <codx-label
             fiedName="HasExcludeObjects"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
         ></codx-label>
         <codx-label class="fs-7 fw-normal text-gray-600"
         [name]="'headerNoteHasExcludeObjects'"
-        [default]="grvSetup.HasExcludeObjects.headerNote"
-        [formModel]="formModel"
+        [default]="form.form.gridviewSetup.HasExcludeObjects.headerNote"
+        [formModel]="form.formModel"
         ></codx-label>
     </div>
     <div class="col-6 d-flex flex-row align-items-center justify-content-end">
       <span class="mt-2 me-2">
         <codx-input
             field="hasExcludeObjects"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             (valueChange)="ValChangeHasExcludeObj($event)"
         ></codx-input>
       </span>
         <!-- <codx-input
           class="mt-2"
           field="includeObjects"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="ValChangeSelectObj($event)"
         ></codx-input> -->
         <button
@@ -1443,7 +1454,7 @@
 
   <div class="fs-5-sm fw-bold text-primary mt-6 mb-2" *ngIf="benefitPolicyObj.hasExcludeObjects">
     <codx-label
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [name]="'lblDetailApplyObj'"
     [default]="'Chi tiết Đối tượng loại trừ'"
 ></codx-label>
@@ -1745,7 +1756,7 @@
       <codx-label
       default="Hoặc"
       name="lblOr"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
     </div>
   </div>
@@ -1761,10 +1772,11 @@
     <codx-label
       name="lblAddNew"
       default="Thêm mới"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
   </button>
 </div>
+</ng-container>
 </ng-template>
 
 <ng-template #footer>
@@ -1776,7 +1788,7 @@
     <codx-label
     name="lblAddFile"
     default="Đính kèm file"
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     ></codx-label>
 </button>
 
@@ -1785,15 +1797,17 @@
     <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
     ></codx-label>
     </button>
 </div>
 </ng-template>
 
+</ng-container>
+
 <ng-template #headTmpGrid1Col1>
   <codx-label
-    [formModel]="formModel"
+    [formModel]="fmPolicyDetail"
     [name]="'lblGridCol1'"
     default="Từ (>=)"
     class="fw-bold fs-6 text-gray-800"
@@ -1803,7 +1817,7 @@
 
 <ng-template #headTmpGrid1Col2>
   <codx-label
-    [formModel]="formModel"
+    [formModel]="fmPolicyDetail"
     [name]="'lblGridCol2'"
     default="Số tiền cố định tăng thêm"
     class="fw-bold fs-6 text-gray-800"
@@ -1813,7 +1827,7 @@
 
 <ng-template #headTmpGrid1Col3>
   <codx-label
-    [formModel]="formModel"
+    [formModel]="fmPolicyDetail"
     [name]="'lblGridCol3'"
     default="Tỷ lệ (%) tăng thêm"
     class="fw-bold fs-6 text-gray-800"
@@ -1850,7 +1864,7 @@
     <!-- {{data.pct}} -->
     <codx-mfunc
     [dataItem]="data"
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event)"
     type="hover"
