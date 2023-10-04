@@ -148,7 +148,6 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
-
     this.detectorRef.detectChanges();
   }
 
@@ -285,23 +284,31 @@ export class WarrantiesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'WR0101_1': //Cập nhật trạng thái
+      case 'WR0101_1':
+      case 'WR0103_1': //Cập nhật trạng thái
         this.updateReasonCode(data);
         break;
       case 'WR0101_2': //Cập nhật kĩ thuật viên
+      case 'WR0103_2':
         this.updateAssignEngineer(data);
         break;
       case 'WR0101_3': //Hủy case - status = 5
+      case 'WR0103_3':
         this.updateStatusWarranty('5', data);
         break;
       case 'WR0101_4': //Đóng case - status = 7
+      case 'WR0103_4':
         this.updateStatusWarranty('7', data);
         break;
       case 'WR0101_5': //Mở case - status = 3
+      case 'WR0103_5':
         this.updateStatusWarranty('3', data);
         break;
       case 'WR0101_6': //Cập nhật độ ưu tiên
+      case 'WR0103_6':
         this.updatePriority(data);
+        break;
+      case 'WR0103_8': //Cập nhật trạng thái part
         break;
       default:
         var customData = {
@@ -337,6 +344,14 @@ export class WarrantiesComponent
             case 'WR0101_5':
             case 'WR0101_6':
             case 'WR0101_7':
+            case 'WR0103_1':
+            case 'WR0103_2':
+            case 'WR0103_3':
+            case 'WR0103_4':
+            case 'WR0103_5':
+            case 'WR0103_6':
+            case 'WR0103_7':
+            case 'WR0103_8':
               res.disabled = true;
               break;
             default:
@@ -352,6 +367,12 @@ export class WarrantiesComponent
               case 'WR0101_4':
               case 'WR0101_6':
               case 'WR0101_7':
+              case 'WR0103_1':
+              case 'WR0103_2':
+              case 'WR0103_4':
+              case 'WR0103_6':
+              case 'WR0103_7':
+              case 'WR0103_8':
                 res.disabled = true;
                 break;
               default:
@@ -361,6 +382,8 @@ export class WarrantiesComponent
             switch (res.functionID) {
               case 'WR0101_5':
               case 'WR0101_7':
+              case 'WR0103_7':
+              case 'WR0103_5':
                 res.disabled = true;
                 break;
             }
@@ -580,6 +603,7 @@ export class WarrantiesComponent
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
+            createdBy: data?.createdBy,
             gridViewSetup: res,
           };
           this.callFc
@@ -645,7 +669,8 @@ export class WarrantiesComponent
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
           this.dataSelected.engineerID = e?.event[0];
-          this.dataSelected.comment = e?.event[1];
+          this.dataSelected.owner = e?.event[0];
+          this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
           let index = this.lstOrderUpdate.findIndex(
             (x) =>
@@ -663,6 +688,12 @@ export class WarrantiesComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  updateAssignEngineerEmit(e) {
+    if (e && e?.data) {
+      this.updateAssignEngineer(e?.data);
+    }
   }
   //#endregion
 
@@ -798,5 +829,16 @@ export class WarrantiesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+
+  getIcon($event) {
+    if ($event == 'O') {
+      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    } else if ($event == 'I') {
+      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
+    } else if ($event == 'F') {
+      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
+    }
+    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
   }
 }

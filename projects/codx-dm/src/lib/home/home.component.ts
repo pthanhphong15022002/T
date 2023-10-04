@@ -718,14 +718,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
           this.titleCreatedBy = 'Người xóa thư mục / tệp tin';
           this.titleCreatedOn = 'Ngày xóa thư mục / tệp tin';
           var innerDiv = document.getElementById('tabel-div');
-          innerDiv.style.height = "calc(100% - 260px)";
+          if(innerDiv) innerDiv.style.height = "calc(100% - 260px)";
         }
         else
         {
           this.titleCreatedBy = 'Người tạo thư mục / tệp tin';
           this.titleCreatedOn = 'Ngày tạo thư mục / tệp tin';
           var innerDiv = document.getElementById('tabel-div');
-          innerDiv.style.height = "100%";
+          if(innerDiv) innerDiv.style.height = "100%";
         }
         //if(this.funcID == "DMT00") 
       }
@@ -756,7 +756,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   //Set chiều cao view list
   setHeight()
   {
-    this.maxHeightScroll = window.innerHeight - 250;
+    debugger
+    this.maxHeightScroll = window.innerHeight - 180;
     if(this.funcID == "DMT08") this.maxHeightScroll = window.innerHeight - 250
   }
   //Refesh lại data

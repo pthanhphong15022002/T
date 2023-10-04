@@ -5,12 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  SidebarModel,
-  UIComponent,
-  ViewModel,
-  ViewType
-} from 'codx-core';
+import { SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { BehaviorSubject, distinctUntilKeyChanged } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
 import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
@@ -54,11 +49,9 @@ export class SalesinvoicesComponent
     this.router.queryParams.subscribe((params) => {
       this.journalNo = params?.journalNo;
       this.salesInvoiceService.loadJournal(this.journalNo);
+      this.journalService.setChildLinks(this.journalNo);
+      this.emitDefault();
     });
-
-    this.emitDefault();
-
-    this.journalService.setChildLinks(this.journalNo);
   }
 
   ngAfterViewInit(): void {

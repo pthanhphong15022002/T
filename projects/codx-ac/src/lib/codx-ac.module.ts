@@ -334,7 +334,6 @@ export const routes: Routes = [
     AdvancePaymentDetailComponent,
     CashtransfersDetailComponent,
     IssueTransactionsUpdateParasComponent,
-    TranformValueNumberPipe,
     PaymentOrderComponent,
     PaymentOrderAddComponent,
     PaymentOrderDetailComponent,
@@ -361,6 +360,7 @@ export const routes: Routes = [
     CircularGaugeModule,
     TooltipModule,
     ChartAllModule,
+    TranformValueNumberPipe,
   ],
 })
 export class AcModule {}

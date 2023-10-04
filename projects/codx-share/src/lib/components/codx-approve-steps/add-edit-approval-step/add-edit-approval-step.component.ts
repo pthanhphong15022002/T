@@ -354,14 +354,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   valueChange(event) {
-    if (event?.field && event?.component && event?.data != '') {
+    if (event?.field && event?.component) {
       switch (event.field) {
         case 'allowEditAreas': {
-          this.allowEditAreas = event.data;
+          this.allowEditAreas = event?.data;
           break;
         }
         case 'stepType': {
-          this.data[event?.field] = event.data;
+          this.data[event?.field] = event?.data;
           this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
 
           if (this.vllStepType?.length > 0) {
@@ -391,17 +391,17 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         case 'overdueControl': {
           if (event.data == '3') {
             this.data.loops = 1;
-            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+            this.dialogApprovalStep?.patchValue({ loops: this.data.loops });
           } else {
             this.data.loops = 0;
-            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+            this.dialogApprovalStep?.patchValue({ loops: this.data.loops });
           }
 
           break;
         }
         default: {
-          this.data[event?.field] = event.data;
-          this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+          this.data[event?.field] = event?.data;
+          this.dialogApprovalStep.patchValue({ [event?.field]: event?.data });
         }
       }
       this.cr.detectChanges();

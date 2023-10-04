@@ -46,10 +46,7 @@ import { CodxCoService } from '../codx-co.service';
   styleUrls: ['./calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class COCalendarComponent
-  extends UIComponent
-  implements AfterViewInit
-{
+export class COCalendarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
   @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
@@ -68,7 +65,7 @@ export class COCalendarComponent
   calendarTempData = [];
   locale = 'vi';
   fields: Object;
-  calendarType: string;
+  calendarType = 'COT03';
   calendarTypes = [];
   resources = [];
 
@@ -102,6 +99,13 @@ export class COCalendarComponent
   isChangeMonth = true;
   permission = '';
   settings = {};
+
+  org = [
+    { name: 'DXN - Nhóm phát triển phần mềm' },
+    { name: 'Nhóm BA' },
+    { name: 'Nhóm DEV' },
+    { name: 'Nhóm QC' },
+  ];
 
   constructor(
     injector: Injector,
@@ -538,6 +542,14 @@ export class COCalendarComponent
           this.getDataAfterAddEvent(res);
         }
       });
+  }
+
+  changeCalendarType(type) {
+    this.calendarType = type;
+    this.getCalendarData({
+      value: this.calendarType,
+    });
+    this.detectorRef.detectChanges();
   }
 
   // getCalendarTasks(){

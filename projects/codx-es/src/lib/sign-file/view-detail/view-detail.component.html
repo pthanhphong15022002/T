@@ -67,7 +67,7 @@
         <span class="text-gray-700">{{ itemDetail?.ownerOrgUnit }}</span>
       </div>
     </div>
-    <div class="d-flex flex-wrap mt-2">
+    <div class="d-flex flex-wrap mt-2" *ngIf="!itemDetail?.isTemplate">
       <div class="d-flex align-items-center me-5 mb-1">
         <codx-label
           fiedName="CreatedOn"

@@ -283,28 +283,6 @@
                       ></span>
                       <codx-label
                         class="fw-bold text-hover-primary text-dark"
-                        default="Khách hàng tiềm năng"
-                        [formModel]="formModel"
-                        name="lblCustomerLeads"
-                      ></codx-label>
-                    </div>
-                  </ng-template>
-                  <ng-template #content>
-                    <codx-campaign-contacts
-                      [transID]="dataSelected?.recID"
-                      [objectType]="'3'"
-                      [isShow]="isShow"
-                    ></codx-campaign-contacts>
-                  </ng-template>
-                </e-tabitem>
-                <e-tabitem>
-                  <ng-template #headerText>
-                    <div class="d-flex align-items-top me-2">
-                      <span
-                        class="icon-info text-hover-primary icon-16 me-2"
-                      ></span>
-                      <codx-label
-                        class="fw-bold text-hover-primary text-dark"
                         default="Khách hàng"
                         [formModel]="formModel"
                         name="lblCustomers"
@@ -316,6 +294,32 @@
                       [transID]="dataSelected?.recID"
                       [objectType]="'1'"
                       [isShow]="isShow"
+                      [dataSelected]="dataSelected"
+                      [isDoubleClick]="isDoubleClick"
+                    ></codx-campaign-contacts>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-info text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Khách hàng tiềm năng"
+                        [formModel]="formModel"
+                        name="lblCustomerLeads"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <codx-campaign-contacts
+                      [transID]="dataSelected?.recID"
+                      [objectType]="'3'"
+                      [isShow]="isShow"
+                      [dataSelected]="dataSelected"
+                      [isDoubleClick]="isDoubleClick"
                     ></codx-campaign-contacts>
                   </ng-template>
                 </e-tabitem>

@@ -7,6 +7,7 @@
         class="w-30 min-w-225px mw-300px me-5 bg-white calendar-left scroll-y"
       >
         <ejs-calendar
+          *ngIf="calendarType == 'COT03'"
           #ejCalendar
           cssClass="width-calendar"
           class="e-customStyle w-100 mw-100"
@@ -19,24 +20,77 @@
           (created)="firstime()"
         >
         </ejs-calendar>
-        <div class="m-3">
-          <ejs-dropdownlist
-            id="cbxChooseCalendar"
-            [dataSource]="calendarTypes"
-            [fields]="fields"
-            [allowFiltering]="true"
-            [itemTemplate]="itemTemplate"
-            [value]="defaultCalendar"
-            (filtering)="onFiltering($event)"
-            (change)="getCalendarData($event)"
-          >
-            <ng-template #itemTemplate="" let-data="">
-              <div class="d-flex align-items-center p-2">
-                <img [src]="data.smallIcon" class="svg-icon" />
-                <span class="ms-2">{{ data.customName }}</span>
+        <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
+          <div ngbAccordionItem [collapsed]="false">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>
+                <div class="w-100 p-2">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <i class="icon-i-bar-chart-steps icon-20"></i>
+                      <div class="ms-2">Sơ đồ tổ chức</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <input
+                        class="form-check-input"
+                        style="width: 1rem; height: 1rem"
+                        type="radio"
+                        name="flexRadioDefault"
+                        id="flexRadioDefault1"
+                        checked
+                      />
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <ng-template>
+                  <div class="px-5 py-2" *ngFor="let data of org">
+                    <div class="ms-5">{{ data.name }}</div>
+                  </div>
+                </ng-template>
               </div>
-            </ng-template>
-          </ejs-dropdownlist>
+            </div>
+          </div>
+          <div ngbAccordionItem [disabled]="true">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>
+                <div class="w-100 p-2">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <i class="icon-supervisor_account icon-20"></i>
+                      <div class="ms-2">Nhóm chức năng</div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <input
+                        class="form-check-input"
+                        style="width: 1rem; height: 1rem"
+                        type="radio"
+                        name="flexRadioDefault"
+                        id="flexRadioDefault1"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <ng-template>Content for the second item</ng-template>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="px-3">
           <ng-container #listParam>
@@ -93,22 +147,32 @@
             <hr class="my-2" />
             <div class="d-flex justify-content-between align-items-center nav">
               <div
-                class="d-flex flex-column justify-content-between nav-item active"
+                class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarType == 'COT03' }"
+                (click)="changeCalendarType('COT03')"
               >
-                <span class="text-center">
-                  <i class="icon-account_circle icon-30"></i>
-                </span>
+                <span class="text-center"
+                  ><i class="icon-account_circle icon-30"></i
+                ></span>
                 <p class="user-select-none">Cá nhân</p>
               </div>
 
-              <div class="d-flex flex-column justify-content-between nav-item">
+              <div
+                class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarType == 'COT02' }"
+                (click)="changeCalendarType('COT02')"
+              >
                 <span class="text-center"
                   ><i class="icon-supervisor_account icon-30"></i
                 ></span>
                 <p class="user-select-none">Nhóm</p>
               </div>
 
-              <div class="d-flex flex-column justify-content-between nav-item">
+              <div
+                class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarType == 'COT01' }"
+                (click)="changeCalendarType('COT01')"
+              >
                 <span class="text-center">
                   <i class="icon-i-diagram-3 icon-30"></i>
                 </span>

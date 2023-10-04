@@ -18,6 +18,7 @@ import {
   AuthStore,
   DialogModel,
   LayoutService,
+  NotificationsService,
   PageLink,
   PageTitleService,
   UIComponent,
@@ -92,6 +93,7 @@ export class CodxReportViewDetailComponent
     private auth: AuthStore,
     private authSV: AuthService,
     private apihttp: HttpClient,
+    private notiService: NotificationsService,
     private captureService: NgxCaptureService
   ) {
     super(injector);
@@ -326,7 +328,13 @@ export class CodxReportViewDetailComponent
             'ScreenshotAsync',
             [recID, imgBase64]
           )
-          .subscribe();
+          .subscribe((res: boolean) => {
+            if (res) {
+              this.notiService.notifyCode('SYS034');
+            } else {
+              this.notiService.notifyCode('SYS021');
+            }
+          });
       });
   }
 
@@ -357,7 +365,13 @@ export class CodxReportViewDetailComponent
         'ScreenshotAsync',
         [recID, imgBase64]
       )
-      .subscribe();
+      .subscribe((res: boolean) => {
+        if (res) {
+          this.notiService.notifyCode('SYS034');
+        } else {
+          this.notiService.notifyCode('SYS021');
+        }
+      });
   }
 
   filterReportChange(e: any) {

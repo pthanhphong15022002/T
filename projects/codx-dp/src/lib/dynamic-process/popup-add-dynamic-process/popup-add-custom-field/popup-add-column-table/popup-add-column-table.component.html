@@ -1,5 +1,5 @@
 <codx-form
-  #form
+  #formTable
   [headerText]="titleAction"
   [body]="body"
   [footer]="footer"
@@ -13,14 +13,14 @@
         <div class="col-6">
           <codx-label
             fiedName="Title"
-            [formModel]="form.formModel"
+            [formModel]="formTable.formModel"
             default="Tên trường dữ liệu"
           >
           </codx-label>
           <codx-input
             field="title"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [Group]="formTable.formGroup"
+            [formModel]="formTable.formModel"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -29,26 +29,41 @@
         <div class="col-6">
           <codx-label
             fiedName="FieldName"
-            [formModel]="form.formModel"
+            [formModel]="formTable.formModel"
             default="ID trường dữ liệu"
           >
           </codx-label>
           <codx-input
-            disable="action=='edit'"
             field="fieldName"
             [type]="'text'"
             [crrValue]="column.fieldName"
             [formName]="'DPStepsFields'"
             [gridViewName]="'grvDPStepsField'"
-            (valueChange)="action == 'edit' ? '' : valueChange($event)"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
       </div>
       <div class="form-group">
         <codx-label
+          name="columnWidth"
+          [formModel]="formTable.formModel"
+          [default]="'Độ rộng cột'"
+        ></codx-label>
+        <!-- ngDefaultControl -->
+        <codx-input
+          type="number"
+          field="columnWidth"
+          [crrValue]="column.columnWidth"
+          [placeholder]=""
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
           fiedName="DataType"
-          [formModel]="form.formModel"
+          [formModel]="formTable.formModel"
           [default]="'Loại dữ liệu'"
         ></codx-label>
         <!-- ngDefaultControl -->
@@ -75,7 +90,7 @@
       >
         <codx-label
           fiedName="DataFormat"
-          [formModel]="form.formModel"
+          [formModel]="formTable.formModel"
           [default]="'Định dạng dữ liệu'"
         >
         </codx-label>
@@ -147,7 +162,7 @@
               <codx-label
                 [setRequire]="true"
                 fiedName="RefValue"
-                [formModel]="form.formModel"
+                [formModel]="formTable.formModel"
                 [default]="'Danh sách tùy chọn'"
               >
               </codx-label>
@@ -203,7 +218,7 @@
           <codx-label
             class="label-colon"
             name="demoVll"
-            [formName]="form.formModel"
+            [formName]="formTable.formModel"
             default="Xem trước"
             class="me-4"
           >
@@ -258,7 +273,7 @@
         <div class="form-group col-3">
           <codx-label
             fiedName="RankIcon"
-            [formModel]="form.formModel"
+            [formModel]="formTable.formModel"
             default="Loại icon hiển thị"
           >
           </codx-label>
@@ -277,7 +292,7 @@
         <div class="form-group col-9">
           <codx-label
             fiedName="rank"
-            [formModel]="form.formModel"
+            [formModel]="formTable.formModel"
             default="Điểm tối đa"
           >
           </codx-label>
@@ -299,7 +314,7 @@
       <div class="form-group">
         <codx-label
           name="Note"
-          [formModel]="form.formModel"
+          [formModel]="formTable.formModel"
           default="Mô tả nhập liệu"
         ></codx-label>
 
@@ -307,8 +322,8 @@
           <div style="width: 100%">
             <codx-input
               [field]="'note'"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
+              [formModel]="formTable.formModel"
+              [Group]="formTable.formGroup"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -319,7 +334,7 @@
         <codx-label
           class="text-danger me-3"
           fiedName="IsRequired"
-          [formModel]="form?.formModel"
+          [formModel]="formTable?.formModel"
           default="Bắt buộc *"
         ></codx-label>
         <codx-input
@@ -354,12 +369,38 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table table-row-bordered mt-3" *ngIf="listColumns.length">
+  <table class="table-row-bordered mt-3" *ngIf="listColumns?.length > 0">
     <thead>
       <tr class="bg-gray-100">
         <ng-container *ngFor="let item of listColumns; let index = index">
-          <th scope="col" class="fw-bold ps-4">
-            <span>{{ item?.title }}</span>
+          <th
+            [style]="
+              item?.columnWidth > 0
+                ? 'width :' + item.columnWidth + 'px!important'
+                : ''
+            "
+            scope="col"
+            class="fw-bold ps-4 has-action-menu position-relative"
+          >
+            <div>
+              <span>{{ item?.title }}</span>
+            </div>
+            <div class="action-menu-column d-flex">
+              <div class="d-flex justify-content-end align-items-center">
+                <button
+                  class="btn btn-sm btn-icon btn-light-warning"
+                  (click)="editColumn(item)"
+                >
+                  <i class="icon icon-14 icon-edit"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-icon btn-light-danger ms-2"
+                  (click)="deleteColumn(index)"
+                >
+                  <i class="icon icon-14 icon-close"></i>
+                </button>
+              </div>
+            </div>
           </th>
         </ng-container>
       </tr>
@@ -367,7 +408,16 @@
     <tbody>
       <tr>
         <ng-container *ngFor="let item of listColumns; let index = index">
-          <td class="ps-4">{{ item?.note }}</td>
+          <td
+            class="ps-4"
+            [style]="
+              item?.columnWidth > 0
+                ? 'width :' + item.columnWidth + 'px!important'
+                : ''
+            "
+          >
+            <div>{{ item?.note }}</div>
+          </td>
         </ng-container>
       </tr>
     </tbody>
