@@ -111,34 +111,34 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
    * *Hàm lưu tài khoản
    */
   onSave() {
-    this.formatData();
-    (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
-      if((res.save && !res.save.error) || (res.update && !res.update.error)){
-        this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
-        this.dialog.close(); 
-      }
-    });
+    // this.formatData();
+    // (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    // .subscribe((res: any) => {
+    //   if (!res) {
+    //     return;
+    //   }
+    //   if((res.save && !res.save.error) || (res.update && !res.update.error)){
+    //     this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
+    //     this.dialog.close(); 
+    //   }
+    // });
   }
 
   /**
    * *Hàm lưu & thêm tài khoản
    */
   onSaveAdd() {
-    this.formatData();
-    (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
-      if((res.save && !res.save.error) || (res.update && !res.update.error)){
-        this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
-        (this.form.form as CodxFormComponent).refreshData({...this.dialogData?.data?.dataDefault}); //? set lại data default cho form
-      }
-    });
+    // this.formatData();
+    // (this.form.form as CodxFormComponent).save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    // .subscribe((res: any) => {
+    //   if (!res) {
+    //     return;
+    //   }
+    //   if((res.save && !res.save.error) || (res.update && !res.update.error)){
+    //     this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
+    //     (this.form.form as CodxFormComponent).refreshData({...this.dialogData?.data?.dataDefault}); //? set lại data default cho form
+    //   }
+    // });
   }
   
   //#endregion CRUD

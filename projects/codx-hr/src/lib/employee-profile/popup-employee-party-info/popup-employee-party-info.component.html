@@ -1,3 +1,5 @@
+<ng-container *ngIf="data">
+
 <codx-form
   #form
   [headerText]="headerText"
@@ -5,13 +7,14 @@
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [group]="formGroup"
   [data]="data"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
   <ng-template #body>
+<ng-container *ngIf="form.formGroup">
     <div class="fw-bold mb-3 mt-6 text-primary">
-      <codx-label class="fs-6" default="THÔNG TIN ĐOÀN TNCS HCM" [formModel]="formModel">
+      <codx-label class="fs-6" default="THÔNG TIN ĐOÀN TNCS HCM" [formModel]="form.formModel">
       </codx-label>
     </div>
 
@@ -19,31 +22,31 @@
       <codx-input
         class="me-3"
         field="isYUnion"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       >
       </codx-input>
-      <codx-label fiedName="IsYUnion" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="IsYUnion" [formModel]="form.formModel"> </codx-label>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="YUnionDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="YUnionDate" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
             field="yUnionDate"
             format="d"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="YUnionAt" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="YUnionAt" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="yUnionAt"
           ></codx-input>
         </div>
@@ -52,21 +55,21 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="YUnionPlace" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="YUnionPlace" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="yUnionPlace"
           ></codx-input>
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="YUnionFee" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="YUnionFee" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="yUnionFee"
           ></codx-input>
         </div>
@@ -78,7 +81,7 @@
         class="text-primary fs-6"
         [name]="'lblTitleAddPartyInfo'"
         default="THÔNG TIN ĐẢNG CSVN"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       >
       </codx-label>
     </div>
@@ -87,33 +90,33 @@
       <codx-input
         class="me-3"
         field="isParty"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       >
       </codx-input>
-      <codx-label fiedName="IsParty" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="IsParty" [formModel]="form.formModel"> </codx-label>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
         <codx-label
           fiedName="PartyBackgroundNo"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyBackgroundNo"
           ></codx-input>
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyNo" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyNo"
           ></codx-input>
         </div>
@@ -122,23 +125,23 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyDate" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
             field="partyDate"
             type="datetime"
             format="d"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyAt" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyAt" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyAt"
           ></codx-input>
         </div>
@@ -149,13 +152,13 @@
       <div class="col-6">
         <codx-label
           fiedName="PartyOfficalDate"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
+            [formModel]="form.formModel"
             format="d"
-            [Group]="formGroup"
+            [Group]="form.formGroup"
             field="partyOfficalDate"
           ></codx-input>
         </div>
@@ -163,12 +166,12 @@
       <div class="col-6">
         <codx-label
           fiedName="PartyPosition"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyPosition"
           ></codx-input>
         </div>
@@ -176,21 +179,21 @@
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyLevel" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyLevel" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyLevel"
           ></codx-input>
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyPlace" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyPlace" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyPlace"
           ></codx-input>
         </div>
@@ -199,28 +202,32 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyFee" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="PartyFee" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
             field="partyFee"
           ></codx-input>
         </div>
       </div>
     </div>
+</ng-container>
+    
   </ng-template>
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+      <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!form.formModel.currentData.updateColumn">
         <i class="icon-save"></i>
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
   </ng-template>
 </codx-form>
+
+</ng-container>

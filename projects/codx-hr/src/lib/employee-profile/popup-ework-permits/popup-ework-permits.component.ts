@@ -24,11 +24,11 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   // lstWorkPermit: any;
   data: any;
   actionType: string;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   disabledInput = false;
   idField = 'RecID';
   employId: string;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string = '';
   @ViewChild('form') form: CodxFormComponent;
 
@@ -54,81 +54,122 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-      .then((item) => {
-        if (item) {
-          this.formGroup = item;
-          if (this.actionType == 'add') {
-            this.hrService
-              .getDataDefault(
-                this.formModel.funcID,
-                this.formModel.entityName,
-                this.idField
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  this.data = res?.data;
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.data = res?.data;
 
-                  this.data.employeeID = this.employId;
-                  this.data.fromDate = null;
-                  this.data.toDate = null;
+            this.data.employeeID = this.employId;
+            this.data.fromDate = null;
+            this.data.toDate = null;
 
-                  this.formModel.currentData = this.data;
-                  this.formGroup.patchValue(this.data);
-                  this.cr.detectChanges();
-                  this.isAfterRender = true;
-                }
-              });
-          } else {
-            if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-              if (this.actionType == 'copy') {
-                if (this.data.fromDate == '0001-01-01T00:00:00') {
-                  this.data.fromDate = null;
-                }
-                if (this.data.toDate == '0001-01-01T00:00:00') {
-                  this.data.toDate = null;
-                }
-              }
-
-              this.formGroup.patchValue(this.data);
-              this.formModel.currentData = this.data;
-              this.cr.detectChanges();
-              this.isAfterRender = true;
-            }
+            // this.formModel.currentData = this.data;
+            // this.form.formGroup.patchValue(this.data);
+            this.cr.detectChanges();
+            // this.isAfterRender = true;
           }
-          // this.formGroup.patchValue(this.data);
-          // this.formModel.currentData = this.data;
-          // this.cr.detectChanges();
-          // this.isAfterRender = true;
-        } 
-      });
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+        if (this.actionType == 'copy') {
+          if (this.data.fromDate == '0001-01-01T00:00:00') {
+            this.data.fromDate = null;
+          }
+          if (this.data.toDate == '0001-01-01T00:00:00') {
+            this.data.toDate = null;
+          }
+        }
+
+        // this.form.formGroup.patchValue(this.data);
+        // this.formModel.currentData = this.data;
+        this.cr.detectChanges();
+        // this.isAfterRender = true;
+      }
+    }
+
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //   .then((item) => {
+    //     if (item) {
+    //       this.form.formGroup = item;
+    //       if (this.actionType == 'add') {
+    //         this.hrService
+    //           .getDataDefault(
+    //             this.formModel.funcID,
+    //             this.formModel.entityName,
+    //             this.idField
+    //           )
+    //           .subscribe((res: any) => {
+    //             if (res) {
+    //               this.data = res?.data;
+
+    //               this.data.employeeID = this.employId;
+    //               this.data.fromDate = null;
+    //               this.data.toDate = null;
+
+    //               // this.formModel.currentData = this.data;
+    //               this.form.formGroup.patchValue(this.data);
+    //               this.cr.detectChanges();
+    //               // this.isAfterRender = true;
+    //             }
+    //           });
+    //       } else {
+    //         if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+    //           if (this.actionType == 'copy') {
+    //             if (this.data.fromDate == '0001-01-01T00:00:00') {
+    //               this.data.fromDate = null;
+    //             }
+    //             if (this.data.toDate == '0001-01-01T00:00:00') {
+    //               this.data.toDate = null;
+    //             }
+    //           }
+
+    //           this.form.formGroup.patchValue(this.data);
+    //           // this.formModel.currentData = this.data;
+    //           this.cr.detectChanges();
+    //           // this.isAfterRender = true;
+    //         }
+    //       }
+    //       // this.form.formGroup.patchValue(this.data);
+    //       // this.formModel.currentData = this.data;
+    //       // this.cr.detectChanges();
+    //       // this.isAfterRender = true;
+    //     } 
+    //   });
   }
 
   onInit(): void {
-    if (!this.formModel)
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          console.log('formModel ne', this.formModel);
+    this.initForm();
+
+    // if (!this.formModel)
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       console.log('formModel ne', this.formModel);
           
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                debugger
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    else this.initForm();
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             debugger
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // else this.initForm();
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
       return;
     }
@@ -167,7 +208,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   //     (p) => p.recID == this.data.recID
   //   );
   //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.data);
+  //   this.form.formGroup?.patchValue(this.data);
   //   this.cr.detectChanges();
   // }
 }
