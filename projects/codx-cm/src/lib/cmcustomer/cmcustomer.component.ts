@@ -209,7 +209,7 @@ export class CmCustomerComponent
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
-    this.cmSv.initCache();
+    this.cmSv.initCache().subscribe(res => {});
     this.detectorRef.detectChanges();
   }
 

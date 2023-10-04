@@ -1731,6 +1731,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         dealName: this.dealName,
         contractName: this.contractName,
         leadName: this.leadName,
+        listField: this.listFieldTask,
       };
       let option = new SidebarModel();
       option.Width = '550px';

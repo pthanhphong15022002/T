@@ -141,8 +141,14 @@
       </div>
     </div>
 
-    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
-      <div class="mb-1 line-clamp line-clamp-3">
+    <div
+      class="w-200px min-w-200px pe-6 d-flex flex-column"
+      [style.height]="checkHover(data?.recID) ? '40px' : 'auto'"
+      [ngClass]="
+        checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+      "
+    >
+      <div class="mb-1">
         <codx-label
           style="white-space: nowrap"
           class="text-danger d-inline-block me-1"
@@ -150,10 +156,17 @@
           [formModel]="formModel"
         ></codx-label>
         <span
-          [ngbTooltip]="data?.problem"
           [innerHTML]="
             data.problem | formatvalue : formModel : 'Problem' | async
           "
+          [id]="data.recID"
+          [ngbPopover]="data?.problem"
+          #p1="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, p1, data, 'problem')"
+          (mouseleave)="p1.close()"
+          placement="bottom right top"
+          [popoverClass]="data.recID"
         ></span>
       </div>
       <div class="mb-1 line-clamp line-clamp-2">

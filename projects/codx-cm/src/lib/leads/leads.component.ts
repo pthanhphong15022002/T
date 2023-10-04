@@ -192,6 +192,7 @@ export class LeadsComponent
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
     this.leverSetting = lever;
+    this.codxCmService.initCache().subscribe(res => {});
   }
 
   afterLoad() {
