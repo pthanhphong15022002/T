@@ -71,6 +71,7 @@ import { DatetimePipe } from './pipe/datetime.pipe';
 import { MessageSystemPipe } from './pipe/mssgSystem.pipe';
 import { ScrollPipe } from './pipe/scrollPipe.pipe';
 import { FilterPipe } from './pipe/filterObject.pipe';
+import { TimeFromPipe } from './pipe/format-datetime.pipe';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -129,6 +130,7 @@ const T_Pipe: Type<any>[] = [
   MessageSystemPipe,
   ScrollPipe,
   FilterPipe,
+  TimeFromPipe,
   //#endregion
 ];
 
