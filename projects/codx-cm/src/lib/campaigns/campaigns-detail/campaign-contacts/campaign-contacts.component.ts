@@ -252,7 +252,7 @@ export class CampaignContactsComponent implements OnInit {
             .openForm(
               PopupAddCampaignContactComponent,
               '',
-              800,
+              600,
               700,
               '',
               obj,
@@ -326,7 +326,7 @@ export class CampaignContactsComponent implements OnInit {
     if (isCheck) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
-      this.notiSv.alertCode('SYS030').subscribe((x) => {
+      this.notiSv.alertCode('CM052').subscribe((x) => {
         if (x.event && x.event?.status) {
           if (x?.event?.status == 'Y') {
             this.openFormConvert(data);
