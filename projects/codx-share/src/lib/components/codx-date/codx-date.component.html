@@ -1,0 +1,9 @@
+<ejs-tooltip *ngIf="value" [content]="tooltipContent" position="BottomCenter">
+    <span [ngClass]="className">{{value}}</span>
+    <ng-template #tooltipContent>
+        <span>
+            {{text}}
+        </span>              
+    </ng-template>
+</ejs-tooltip>
+

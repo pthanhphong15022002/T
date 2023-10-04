@@ -76,12 +76,10 @@ export class PopupAddComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private auth: AuthStore,
-    private router:ActivatedRoute,
     private notifSV: NotificationsService,
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private codxShareSV: CodxShareService,
-    private fileService:FileService,
     private cache: CacheService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -393,6 +391,7 @@ export class PopupAddComponent implements OnInit {
 
   //update
   clickUpdate() {
+    debugger
     if(this.checkValidate()) return;
     this.loading = true;
     if(this.fileDelete.length > 0)
