@@ -1,4 +1,37 @@
 <codx-form
+    #form
     [headerText]="'Chi tiết import'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+    [data]="data"
+    [formModel]="formModel"
 >
 </codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column">
+        <div class="d-flex row">
+            <div class="col-6 d-flex flex-column">
+                <codx-label [formModel]="form.formModel" fiedName="ProcessIndex"></codx-label>
+                <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="processIndex">
+                </codx-input>
+            </div>
+            <div class="col-6 d-flex flex-column">
+                <codx-label [formModel]="form.formModel" fiedName="ImportRule"></codx-label>
+                <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="importRule">
+                </codx-input>
+                
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <codx-label default="Bảng nhập liệu"></codx-label>
+            <codx-input type="text"></codx-input>
+        </div>
+        <div class="d-flex flex-column">
+            <codx-label default="Bảng cấp cha"></codx-label>
+            <codx-input type="text"></codx-input>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+</ng-template>
