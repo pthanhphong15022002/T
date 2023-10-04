@@ -72,7 +72,7 @@ export class ViewListWrComponent {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (40 < child) {
+        if (36 < child) {
           p.open();
         }
       }
