@@ -182,7 +182,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   openFormAddTemplate() {
     this.callfunc.openForm(
-      CodxImportAddTemplateComponent,
+      AddTemplateComponent,
       null,
       1200,
       800,

@@ -222,6 +222,8 @@ import { PopupAddLineTableComponent } from './components/codx-input-custom-field
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
 
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
+import { AddImportDetailsComponent } from './components/codx-import/add-template/add-import-details/add-import-details.component';
+import { AddIetablesComponent } from './components/codx-import/add-template/add-ietables/add-ietables.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -273,6 +275,8 @@ const T_Component: Type<any>[] = [
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
   AddTemplateComponent,
+  AddImportDetailsComponent,
+  AddIetablesComponent,
   //
   PopupUpdateStatusComponent,
   CodxNoteComponent,
