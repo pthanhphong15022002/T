@@ -23,7 +23,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddCampaignComponent } from './popup-add-campaign/popup-add-campaign.component';
-import { firstValueFrom } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
 
 @Component({
@@ -397,14 +397,19 @@ export class CampaignsComponent
 
   //#region popover
   checkIsCollapsed(id) {
-    let isCollapsed = false;
-    let element = document.getElementById(id);
-    if (element) {
-      if (element.offsetHeight > 38) {
-        isCollapsed = true;
+    var subject = new Subject<boolean>();
+    setTimeout(() => {
+      let isCollapsed = false;
+      let element = document.getElementById(id);
+      if (element) {
+        if (element.offsetHeight > 38) {
+          isCollapsed = true;
+        }
       }
-    }
-    return isCollapsed;
+      subject.next(isCollapsed);
+    }, 100);
+
+    return subject.asObservable();
   }
 
   async seeMore(data) {
@@ -455,7 +460,7 @@ export class CampaignsComponent
             p.open();
           }
         } else {
-          if (e.currentTarget.offsetHeight > 38) {
+          if (this.checkIsCollapsed(emp?.recID)) {
             p.open();
           }
         }
