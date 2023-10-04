@@ -196,7 +196,7 @@
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
   <hr />
   <!-- trường nhập liệu -->
-  <div *ngIf="type != 'G'">
+  <div *ngIf="type != 'G' && !isActivitie">
     <codx-label
       class="fw-bold text-dark"
       fiedName=""
@@ -206,13 +206,20 @@
     </codx-label>
     <div>
       <codx-fields-detail-temp
+        *ngIf="listField?.length > 0"
+        [listFields]="listField"
+        [showColumnControl]="1"
+        [isShowTitle]="false"
+      >
+      </codx-fields-detail-temp>
+      <!-- <codx-fields-detail-temp
         *ngIf="instanceStep"
         [dataStep]="instanceStep"
         [showColumnControl]="1"
         [isUpdate]="false"
         [isShowTitle]="false"
       >
-      </codx-fields-detail-temp>
+      </codx-fields-detail-temp> -->
     </div>
   </div>
   <!-- Ghi chú -->
@@ -228,15 +235,15 @@
     <p [innerHTML]="dataView?.memo"></p>
   </div>
   <!-- Công việc -->
-  <hr *ngIf="type == 'P'" />
-  <div *ngIf="type == 'P'">
+  <hr *ngIf="type == 'P' && !isActivitie" />
+  <div *ngIf="type == 'P' && !isActivitie">
     <div>
       <codx-label
         class="fs-5"
         fiedName=""
         [formModel]="frmModel"
         default="Công việc:"
-        style="font-weight: 500"
+        style="font-weight: 600"
       >
       </codx-label>
     </div>
@@ -257,8 +264,8 @@
     </div>
   </div>
   <!-- công việc liên kết -->
-  <hr *ngIf="type !== 'P'" />
-  <div *ngIf="type !== 'P'">
+  <hr *ngIf="type !== 'P'  && !isActivitie" />
+  <div *ngIf="type !== 'P'  && !isActivitie">
     <codx-label
       *ngIf="type !== 'G'"
       class="fs-6 fw-bold me-3"
@@ -296,7 +303,7 @@
   <hr />
   <div
     class="d-flex justify-content-start"
-    *ngIf="type !== 'G' && type !== 'P'"
+    *ngIf="type !== 'G' && type !== 'P' && !isActivitie"
   >
     <div class="mt-2">
       <codx-label
@@ -372,101 +379,84 @@
 
 <ng-template #reference>
   <div>
-    <div class="">
+    <div class="" *ngIf="instanceName">
       <codx-label
-        class="text-gray-500 label-colon"
+        class="text-gray-600 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Nhiệm vụ"
+      ></codx-label>
+      <span>{{instanceName}}</span>
+    </div>
+    <div class="" *ngIf="customerName">
+      <codx-label
+        class="text-gray-600 label-colon"
         fiedName=""
         [formModel]="frmModel"
         default="Khách hàng"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
+      <span>{{customerName}}</span>
     </div>
-    <div class="">
+    <div class="" *ngIf="dealName">
       <codx-label
-        class="text-gray-500 label-colon"
+        class="text-gray-600 label-colon"
         fiedName=""
         [formModel]="frmModel"
         default="Cơ hội"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
+      <span>{{dealName}}</span>
     </div>
-    <div class="">
+    <div class="" *ngIf="leadName">
       <codx-label
-        class="text-gray-500 label-colon"
+        class="text-gray-600 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Tiềm năng"
+      ></codx-label>
+      <span>{{leadName}}</span>
+    </div>
+    <div class="" *ngIf="contractName">
+      <codx-label
+        class="text-gray-600 label-colon"
+        fiedName=""
+        [formModel]="frmModel"
+        default="Hợp đồng"
+      ></codx-label>
+      <span>{{contractName}}</span>
+    </div>
+    <div class="" *ngIf="type != 'P' && instanceStep?.stepName">
+      <codx-label
+        class="text-gray-600 label-colon"
         fiedName=""
         [formModel]="frmModel"
         default="Giai đoạn"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
+      <span>{{instanceStep?.stepName}}</span>
     </div>
-    <div class="">
+    <div class="" *ngIf="type != 'P' && type != 'G' && groupTask?.taskGroupName">
       <codx-label
-        class="text-gray-500 label-colon"
+        class="text-gray-600 label-colon"
         fiedName=""
         [formModel]="frmModel"
         default="Nhóm công việc"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
+     <span>{{groupTask?.taskGroupName}}</span>
     </div>
-    <div class="">
+    <div class="" *ngIf="type == 'M'">
       <codx-label
-        class="text-gray-500"
+        class="text-gray-600"
         fiedName=""
         [formModel]="frmModel"
         default="Địa điểm:"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
     </div>
-    <div class="">
+    <div class="" *ngIf="type == 'M'">
       <codx-label
-        class="text-gray-500"
+        class="text-gray-600"
         fiedName=""
         [formModel]="frmModel"
         default="Chi phí dự kiến:"
       ></codx-label>
-      <!-- <span
-        class="me-3 text-dark fw-bold"
-        [innerHTML]="
-          contract?.delActualDate
-            | formatvalue : formModel : 'DelActualDate'
-            | async
-        "
-      ></span> -->
     </div>
   </div>
 </ng-template>
@@ -485,9 +475,9 @@
     </codx-label>
     <div>
       <ng-container
-        *ngIf="owner.length > 0"
+        *ngIf="owners.length > 0"
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>
@@ -498,12 +488,13 @@
       fiedName="roles"
       [formModel]="frmModel"
       default="Người phụ trách:"
+      style="min-width: 101px; font-weight: 600"
     >
     </codx-label>
     <div>
       <ng-container
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: type == 'P' ? person : owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>
@@ -515,7 +506,7 @@
       name="rolesP"
       [formModel]="frmModel"
       [default]="type == 'M' ? 'Người tham gia:' : 'Người đi cùng:'"
-      style="min-width: 160px; font-weight: 500"
+      style="min-width: 101px; font-weight: 600"
     >
     </codx-label>
     <div>
@@ -551,29 +542,29 @@
 <ng-template #describe>
   <div class="d-flex">
     <div class="d-flex align-items-center me-2" *ngIf="dataView?.reminders">
-      <span class="icon-notifications icon-20 text-primary-500 me-1"></span>
+      <span class="icon-notifications icon-20 text-primary-600 me-1"></span>
       <span>
         {{ dataView?.reminders }}
       </span>
     </div>
 
     <div class="d-flex align-items-center me-2">
-      <span class="icon-access_time icon-20 text-primary-500 me-1"></span>
+      <span class="icon-access_time icon-20 text-primary-600 me-1"></span>
       <span class="date" *ngIf="dataView?.startDate && dataView?.endDate">
         {{ dataView?.startDate | date : dateFomat }} -
         {{ dataView?.endDate | date : dateFomat }}
       </span>
       <span>(</span>
-      <span class="mx-1 text-primary-500">{{ dataView?.durationDay }}</span>
+      <span class="mx-1 text-primary-600">{{ dataView?.durationDay }}</span>
       <codx-label name="durationDay" default="ngày"></codx-label>
-      <span class="mx-1 text-primary-500">{{ dataView?.durationHour }}</span>
+      <span class="mx-1 text-primary-600">{{ dataView?.durationHour }}</span>
       <codx-label name="durationHour" default="giờ"></codx-label>
       <span>)</span>
     </div>
 
     <div *ngIf="type == 'C'" class="d-flex align-items-center me-2">
       <span class="icon-local_phone icon-18 me-1"></span>
-      <span class="mx-1 text-primary-500">{{ dataView?.callType }}</span>
+      <span class="mx-1 text-primary-600">{{ dataView?.callType }}</span>
     </div>
     <div
       *ngIf="type === 'M'"

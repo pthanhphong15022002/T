@@ -1,0 +1,82 @@
+@media (max-width:1200px) {
+    div.page-dashboard .aside.aside-transparent {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+    }
+    codx-content{
+        .w-350px.min-w-350px {
+            min-width: 250px !important;
+            width: 250px !important;
+        }
+    }
+}
+@media (max-width:1024px) and (min-width:992px){
+  lib-layout-news codx-header{
+      position: relative;
+      .header-menu{
+        text-wrap: nowrap;
+      }
+  }
+  codx-page-title h1{
+    text-wrap: nowrap;
+    font-size: 18px!important;
+  }
+  div.page-dashboard .aside.aside-transparent {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+  .aside-minimize-icon-title .aside.aside-extended {
+    width: calc(200px + 90px);
+  }
+  .aside-enabled.aside-secondary-enabled.aside-fixed.aside-minimize-icon-title .wrapper {
+    padding-left: calc(200px + 90px);
+  }
+  .aside.aside-extended .aside-secondary .aside-workspace {
+    width: 200px;
+  }
+  .aside-secondary .menu-fit {
+    width: 180px;
+  }
+  .aside-enabled.aside-secondary-enabled.header-fixed.aside-minimize-icon-title .header {
+    left: calc(200px + 90px);
+  }
+  .aside-enabled.aside-secondary-enabled.toolbar-fixed.aside-minimize-icon-title .toolbar {
+    left: calc(200px + 90px);
+  }
+  .aside-secondary .aside-workspace.px-4 {
+    padding-left: 0px !important;
+  }
+}
+
+/*********** ipad ************/
+
+@media (max-width: 991px) {
+    [data-kt-drawer-aside="on"]{
+      #kt_aside_menu{
+        padding-top: 25px;
+      }
+    }
+    body:not([data-kt-drawer-aside="on"]){
+      .drawer-overlay{
+        display: none;
+        z-index: 0;
+      }
+    }
+    .d-lg-none.ms-2.me-n3{
+      display: none!important;
+    }
+    codx-header.header{
+      .ms-n3.me-1{
+        margin-left: 5px!important;
+        margin-right: 15px!important;
+      }
+      .btn.btn-light-primary:hover{
+        background-color: var(--primary-light)!important;
+      }
+    }
+  
+  }
+  
+  //////////// end tablet

@@ -107,6 +107,7 @@ export class DealDetailComponent implements OnInit {
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
+  customerName;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -188,6 +189,9 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
+        this.codxCmService.getCustomerNameByrecID(this.dataSelected?.customerID).subscribe(res =>{
+          this.customerName = res;
+        });
       }
     }
   }
@@ -353,11 +357,9 @@ export class DealDetailComponent implements OnInit {
           let contactMain = res.filter((res) => res.isDefault)[0];
           this.contactPerson = contactMain ? contactMain : null;
           this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
-          //   this.lstContactDeal = res;
-          // if (this.action === this.actionEdit && this.isLoad) {
-          //   this.lstContactOld = JSON.parse(JSON.stringify(res));
-          //   this.isLoad = false;
-          // }
+        }
+        else {
+          this.contactPerson = null;
         }
       });
     } else {

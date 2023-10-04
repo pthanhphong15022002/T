@@ -219,7 +219,10 @@ import { NgxCaptureModule } from 'ngx-capture';
 import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
+import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
+
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
+import { CodxDateComponent } from './components/codx-date/codx-date.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   AttachmentComponent,
@@ -266,9 +269,12 @@ const T_Component: Type<any>[] = [
   MessengerDrawerComponent,
   ChatInnerComponent,
   CodxReferencesComponent,
+  //import
   CodxImportAddTemplateComponent,
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
+  AddTemplateComponent,
+  //
   PopupUpdateStatusComponent,
   CodxNoteComponent,
   ViewDetailComponent,
@@ -427,6 +433,7 @@ const T_Pipe: Type<any>[] = [
     CodxFilesAttachmentComponent,
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
+    CodxDateComponent,
   ],
   exports: [T_Component, T_Pipe],
   imports: [

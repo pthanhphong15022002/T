@@ -102,7 +102,10 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
             )
             .subscribe((res: OD_DispatchDashBoard[]) => {
               this.dataset = res;
-              this.isLoaded = true;
+
+              setTimeout(() => {
+                this.isLoaded = true;
+              }, 500);
             });
         }
       }

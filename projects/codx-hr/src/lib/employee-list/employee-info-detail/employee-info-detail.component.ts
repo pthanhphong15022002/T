@@ -1029,6 +1029,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
       this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
         this.eInfoFormModel = res;
+        console.log('einfoformmodel', this.eInfoFormModel);
+        
         this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName, this.eInfoFormModel).then((fg) =>{
           this.eInfoFormGroup = fg;
           this.eInfoFormGroup.patchValue(this.infoPersonal);
@@ -3392,6 +3394,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   editEmployeePartyInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
+    console.log('model truyen vaoooo', this.eInfoFormModel);
+    
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
@@ -3857,6 +3861,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   ) {
     let option = new SidebarModel();
     option.Width = '550px';
+    option.FormModel = this.eWorkPermitFormModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEWorkPermitsComponent,
       {
@@ -3910,6 +3915,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   HandleEDocumentInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
+    option.FormModel = this.edocumentFormModel
+    console.log('document formmodel', this.edocumentFormModel);
+    
     let dialogAdd = this.callfunc.openSide(
       PopupEdocumentsComponent,
       {
@@ -3936,6 +3944,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
+    option.FormModel = this.eVisaFormModel;
+    console.log('visaFormmodel ', this.eVisaFormModel);
+    
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEVisasComponent,

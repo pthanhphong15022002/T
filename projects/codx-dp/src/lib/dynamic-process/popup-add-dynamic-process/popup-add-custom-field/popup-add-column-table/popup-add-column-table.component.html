@@ -46,6 +46,22 @@
       </div>
       <div class="form-group">
         <codx-label
+          name="columnWidth"
+          [formModel]="formTable.formModel"
+          [default]="'Độ rộng cột'"
+        ></codx-label>
+        <!-- ngDefaultControl -->
+        <codx-input
+          type="number"
+          field="columnWidth"
+          [crrValue]="column.columnWidth"
+          [placeholder]=""
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
           fiedName="DataType"
           [formModel]="formTable.formModel"
           [default]="'Loại dữ liệu'"
@@ -353,11 +369,16 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table table-row-bordered mt-3" *ngIf="listColumns?.length > 0">
+  <table class="table-row-bordered mt-3" *ngIf="listColumns?.length > 0">
     <thead>
       <tr class="bg-gray-100">
         <ng-container *ngFor="let item of listColumns; let index = index">
           <th
+            [style]="
+              item?.columnWidth > 0
+                ? 'width :' + item.columnWidth + 'px!important'
+                : ''
+            "
             scope="col"
             class="fw-bold ps-4 has-action-menu position-relative"
           >
@@ -387,7 +408,14 @@
     <tbody>
       <tr>
         <ng-container *ngFor="let item of listColumns; let index = index">
-          <td class="ps-4">
+          <td
+            class="ps-4"
+            [style]="
+              item?.columnWidth > 0
+                ? 'width :' + item.columnWidth + 'px!important'
+                : ''
+            "
+          >
             <div>{{ item?.note }}</div>
           </td>
         </ng-container>

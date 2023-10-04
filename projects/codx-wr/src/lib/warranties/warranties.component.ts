@@ -95,6 +95,10 @@ export class WarrantiesComponent
   status = '';
   priority = '';
   comment = '';
+
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -110,17 +114,11 @@ export class WarrantiesComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    // let data = {};
-    // data['customerID'] = '9674cb7c-3fd9-11ee-8404-d493900707c4';
-    // data['customerName'] = 'Công ty Lạc Việt';
-    // data['category'] = '1';
-    // this.api.execSv<any>('WR','ERM.Business.WR','WorkOrdersBusiness','AddWorkOrderAsync',[data]).subscribe(res => {});
+
     this.executeApiCalls();
-    // this.loadParam();
   }
 
   onInit(): void {
-    this.afterLoad();
     this.button = {
       id: this.btnAdd,
     };
@@ -148,15 +146,14 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
+    this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync').subscribe(res => {});
+
     this.detectorRef.detectChanges();
   }
 
   searchChanged(e) {}
 
-  onLoading(e) {
-    this.getColumsGrid(this.gridViewSetup);
-    return;
-  }
+  onLoading(e) {}
 
   getColumsGrid(grvSetup) {
     this.columnGrids = [];
@@ -196,15 +193,6 @@ export class WarrantiesComponent
           template: this.itemViewList,
         },
       },
-      // {
-      //   type: ViewType.grid,
-      //   active: false,
-      //   sameData: true,
-      //   model: {
-      //     template2: this.itemViewList,
-      //     resources: this.columnGrids,
-      //   },
-      // },
       {
         type: ViewType.listdetail,
         active: true,
@@ -215,22 +203,6 @@ export class WarrantiesComponent
         },
       },
     ];
-  }
-
-  afterLoad() {
-    // this.request = new ResourceModel(); //Phúc comment lại vì cái này để chạy những view kanban schudule, tự chạy hàm riêng, request riêng.
-    // this.request.service = 'WR';
-    // this.request.assemblyName = 'ERM.Business.WR';
-    // this.request.className = 'WorkOrdersBusiness';
-    // this.request.method = 'GetListWorkOrdersAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = this.dataObj;
-    // this.resourceKanban = new ResourceModel();
-    // this.resourceKanban.service = 'DP';
-    // this.resourceKanban.assemblyName = 'DP';
-    // this.resourceKanban.className = 'ProcessesBusiness';
-    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    // this.resourceKanban.dataObj = this.dataObj;
   }
 
   executeApiCalls() {
@@ -255,6 +227,19 @@ export class WarrantiesComponent
     switch (evt.id) {
       case 'btnAdd':
         this.add();
+        break;
+      default:
+        let f = evt.data;
+        let data = evt.model;
+        if (!data) data = this.view.dataService.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          f,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
         break;
     }
   }
@@ -284,23 +269,31 @@ export class WarrantiesComponent
       case 'SYS02':
         this.delete(data);
         break;
-      case 'WR0101_1': //Cập nhật trạng thái
+      case 'WR0101_1':
+      case 'WR0103_1': //Cập nhật trạng thái
         this.updateReasonCode(data);
         break;
       case 'WR0101_2': //Cập nhật kĩ thuật viên
+      case 'WR0103_2':
         this.updateAssignEngineer(data);
         break;
       case 'WR0101_3': //Hủy case - status = 5
+      case 'WR0103_3':
         this.updateStatusWarranty('5', data);
         break;
       case 'WR0101_4': //Đóng case - status = 7
+      case 'WR0103_4':
         this.updateStatusWarranty('7', data);
         break;
       case 'WR0101_5': //Mở case - status = 3
+      case 'WR0103_5':
         this.updateStatusWarranty('3', data);
         break;
       case 'WR0101_6': //Cập nhật độ ưu tiên
+      case 'WR0103_6':
         this.updatePriority(data);
+        break;
+      case 'WR0103_8': //Cập nhật trạng thái part
         break;
       default:
         var customData = {
@@ -336,6 +329,14 @@ export class WarrantiesComponent
             case 'WR0101_5':
             case 'WR0101_6':
             case 'WR0101_7':
+            case 'WR0103_1':
+            case 'WR0103_2':
+            case 'WR0103_3':
+            case 'WR0103_4':
+            case 'WR0103_5':
+            case 'WR0103_6':
+            case 'WR0103_7':
+            case 'WR0103_8':
               res.disabled = true;
               break;
             default:
@@ -351,6 +352,12 @@ export class WarrantiesComponent
               case 'WR0101_4':
               case 'WR0101_6':
               case 'WR0101_7':
+              case 'WR0103_1':
+              case 'WR0103_2':
+              case 'WR0103_4':
+              case 'WR0103_6':
+              case 'WR0103_7':
+              case 'WR0103_8':
                 res.disabled = true;
                 break;
               default:
@@ -360,6 +367,8 @@ export class WarrantiesComponent
             switch (res.functionID) {
               case 'WR0101_5':
               case 'WR0101_7':
+              case 'WR0103_7':
+              case 'WR0103_5':
                 res.disabled = true;
                 break;
             }
@@ -579,6 +588,7 @@ export class WarrantiesComponent
             title: this.titleAction,
             transID: data?.recID,
             engineerID: data?.engineerID,
+            createdBy: data?.createdBy,
             gridViewSetup: res,
           };
           this.callFc
@@ -816,4 +826,28 @@ export class WarrantiesComponent
     }
     return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
   }
+
+  //#region popover
+  PopoverDetail(e, p: any, emp, field: string) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp[field] != null && emp[field]?.trim() != '') {
+        if (parent <= child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
+
+  closePopover() {
+    this.popupOld?.close();
+  }
+  //#endregion
 }

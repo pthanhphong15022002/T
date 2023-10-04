@@ -18,40 +18,13 @@ export class AppropvalNewsComponent extends UIComponent {
   gridViewSetUp: any = null;
   selectedID: string = '';
   function:any = null;
+  vllWP004:any[] = [];
+
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('tmpDetail') tmpDetail: AppropvalNewsDetailComponent;
-  tabAsside = [
-    {
-      name: 'await',
-      text: 'Chờ duyệt',
-      value: '3',
-      total: 0,
-      active: false,
-    },
-    {
-      name: 'approve',
-      text: 'Đã duyệt',
-      value: '5',
-      total: 0,
-      active: false,
-    },
-    {
-      name: 'cancel',
-      text: 'Từ chối',
-      value: '4',
-      total: 0,
-      active: false,
-    },
-    {
-      name: 'all',
-      text: 'Tất cả',
-      value: '',
-      total: 0,
-      active: true,
-    },
-  ];
+  tabAsside:any[] =[];
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -67,18 +40,18 @@ export class AppropvalNewsComponent extends UIComponent {
       if (param['funcID']) {
         this.cache.functionList(param['funcID'])
         .subscribe((func: any) => {
-          if (func){
+          if (func)
+          {
             this.function = func;
             this.loadDataTab();
             this.cache
               .gridViewSetup(func.formName, func.gridViewName)
               .subscribe((grd: any) => {
-                  this.gridViewSetUp = grd;
-              });
+                this.gridViewSetUp = grd;
+            });
           }
         });
       }
-      this.detectorRef.detectChanges();
     });
   }
 
@@ -95,9 +68,49 @@ export class AppropvalNewsComponent extends UIComponent {
         },
       },
     ];
+    this.getValue();
     this.detectorRef.detectChanges();
   }
 
+  // get value
+  getValue(){
+    this.cache.valueList("WP004").subscribe((vll:any) => {
+      if(vll)
+      {
+        this.vllWP004 = vll.datas;
+      }
+    });
+    this.tabAsside = [
+      {
+        name: 'await',
+        text: 'Chờ duyệt',
+        value: '3',
+        total: 0,
+        active: false,
+      },
+      {
+        name: 'approve',
+        text: 'Đã duyệt',
+        value: '5',
+        total: 0,
+        active: false,
+      },
+      {
+        name: 'cancel',
+        text: 'Từ chối',
+        value: '4',
+        total: 0,
+        active: false,
+      },
+      {
+        name: 'all',
+        text: 'Tất cả',
+        value: '',
+        total: 0,
+        active: true,
+      }
+    ];
+  }
   // get data tab list
   loadDataTab() {
     if (this.function){
@@ -210,7 +223,13 @@ export class AppropvalNewsComponent extends UIComponent {
     {
       this.view.dataService
       .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data.recID))
-      .subscribe();
+      .subscribe((res) => {
+        debugger
+        let arrData = this.view.dataService.data;
+        arrData.map(x => {
+
+        })
+      });
       this.loadDataTab();
     }
   }
@@ -254,14 +273,13 @@ export class AppropvalNewsComponent extends UIComponent {
 
   // edit post
   editPost(evt:any,data:any){
-    debugger
-    let option = new DialogModel();
+    if(evt && data)
+    var option = new DialogModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.zIndex = 100;
     // WP_News
-    if(this.function.entityName !== "WP_AprovalComments")
-    {
+    if(this.function.entityName !== "WP_AprovalComments"){
       option.IsFull = true;
       let obj = {
         action: evt.text,
@@ -280,15 +298,31 @@ export class AppropvalNewsComponent extends UIComponent {
       ).closed.subscribe((res: any) => {
         if (res?.event)
         {
-          this.view.dataService.update(res.event).subscribe();
-          this.selectedID = res.event.recID;
+          let obj = {
+            recID:res.event.recID,
+            title: "",
+            descriptions: res.event.subject,
+            category:res.event.category,
+            approveControl:res.event.approveControl,
+            approveStatus:res.event.approvalStatus,
+            createdBy:res.event.createdBy,
+            createdOn:res.event.createdOn,
+            modifiedBy:res.event.modifiedBy,
+            modifiedOn:res.event.modifiedOn,
+            delete:res.event.delete,
+            write:res.event.write,
+            share:res.event.share
+          };
+          if(this.vllWP004?.length > 0)
+            obj.title = this.vllWP004.find(x => x.value = obj.category)?.text;
+          this.selectedID = obj.recID;
+          this.view.dataService.update(obj).subscribe();
           this.detectorRef.detectChanges();
         }
       });
     } 
     // WP_Comments
-    else 
-    {
+    else {
       this.api
         .execSv(
           "WP",
@@ -296,10 +330,11 @@ export class AppropvalNewsComponent extends UIComponent {
           'CommentsBusiness',
           'GetPostByIDAsync',
           [data.recID])
-          .subscribe((res1: any) => {
-          if (res1) {
+          .subscribe((res: any) => {
+          if (res) 
+          {
             let obj = {
-              data: res1,
+              data: res,
               status: 'edit',
               headerText: evt.text,
             };
@@ -312,10 +347,26 @@ export class AppropvalNewsComponent extends UIComponent {
               obj,
               '',
               option
-            ).closed.subscribe((res2:any) => {
-              if (res2?.event){
-                this.view.dataService.update(res2.event).subscribe();
-                this.selectedID = res2.event.recID;
+            ).closed.subscribe((res:any) => {
+              if (res?.event)
+              {
+                let obj = {
+                  recID:res.event.recID,
+                  title: "",
+                  descriptions: res.event.content,
+                  category:res.event.category,
+                  approveControl:res.event.approveControl,
+                  approveStatus:res.event.approvalStatus,
+                  modifiedBy:res.event.modifiedBy,
+                  modifiedOn:res.event.modifiedOn,
+                  delete: res.event.delete,
+                  write:res.event.write,
+                  share:res.event.share
+                };
+                if(this.vllWP004?.length > 0)
+                  obj.title = this.vllWP004.find(x => x.value = obj.category)?.text;
+                this.selectedID = obj.recID;
+                this.view.dataService.update(obj).subscribe();
                 this.detectorRef.detectChanges();
               }
             });

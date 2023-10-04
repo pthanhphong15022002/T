@@ -315,10 +315,11 @@
       </div>
       <!-- Các field tổng tiền -->
       <div class="align-items-center">
-        <div class="row">
+        <div class="row d-flex justify-content-between">
           <div class="col-3">
             <codx-label
-              class="fw-bold"
+              class="fw-bold d-flex justify-content-end"
+              style="padding-right: 16px;"
               fiedName="TotalAmt"
               [formModel]="formModel"
             >
@@ -334,7 +335,8 @@
           </div>
           <div class="col-3">
             <codx-label
-              class="fw-bold"
+              class="fw-bold d-flex justify-content-end"
+              style="padding-right: 16px;"
               fiedName="TotalAmt"
               [formModel]="fmAdvancedPayment"
             >
@@ -348,7 +350,7 @@
               [disabled]="true"
             ></codx-inplace>
           </div>
-          <div class="col-3">
+          <!-- <div class="col-3">
             <codx-label
               class="fw-bold"
               fiedName="TotalDR"
@@ -363,10 +365,11 @@
               [value]="dataItem.totalDR"
               [disabled]="true"
             ></codx-inplace>
-          </div>
+          </div> -->
           <div class="col-3">
             <codx-label
-              class="fw-bold"
+              class="fw-bold d-flex justify-content-end"
+              style="padding-right: 16px;"
               fiedName="TotalCR"
               [formModel]="formModel"
             >

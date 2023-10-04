@@ -21,7 +21,7 @@
         >
         </ejs-calendar>
         <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
-          <div ngbAccordionItem>
+          <div ngbAccordionItem [collapsed]="false">
             <h2 ngbAccordionHeader>
               <button ngbAccordionButton>
                 <div class="w-100 p-2">
@@ -142,19 +142,18 @@
             </div>
           </ng-container>
         </div>
-        <div class="w-100 position-absolute left-0 bottom-0">
-          <div class="p-2">
-            <hr class="my-2" />
+        <div class="w-100 position-absolute left-0 bottom-0 bg-body">
+          <div class="p-2 border-top">
             <div class="d-flex justify-content-between align-items-center nav">
               <div
                 class="d-flex flex-column justify-content-between nav-item"
                 [ngClass]="{ active: calendarType == 'COT03' }"
                 (click)="changeCalendarType('COT03')"
               >
-                <span class="text-center">
-                  <i class="icon-account_circle icon-30"></i>
-                </span>
-                <p class="user-select-none">Cá nhân</p>
+                <span class="text-center"
+                  ><i class="icon-account_circle icon-24"></i
+                ></span>
+                <div class="user-select-none">Cá nhân</div>
               </div>
 
               <div
@@ -163,9 +162,9 @@
                 (click)="changeCalendarType('COT02')"
               >
                 <span class="text-center"
-                  ><i class="icon-supervisor_account icon-30"></i
+                  ><i class="icon-supervisor_account icon-24"></i
                 ></span>
-                <p class="user-select-none">Nhóm</p>
+                <div class="user-select-none">Nhóm</div>
               </div>
 
               <div
@@ -174,18 +173,18 @@
                 (click)="changeCalendarType('COT01')"
               >
                 <span class="text-center">
-                  <i class="icon-i-diagram-3 icon-30"></i>
+                  <i class="icon-i-diagram-3 icon-24"></i>
                 </span>
-                <p class="user-select-none">Công ty</p>
+                <div class="user-select-none">Công ty</div>
               </div>
 
               <div
                 class="d-flex flex-column justify-content-between nav-item disabled"
               >
                 <span class="text-center">
-                  <i class="icon-settings icon-30"></i>
+                  <i class="icon-settings icon-24"></i>
                 </span>
-                <p class="user-select-none">Thiết lập</p>
+                <div class="user-select-none">Thiết lập</div>
               </div>
             </div>
           </div>

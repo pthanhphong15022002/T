@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CurrencyFormComponent } from './currency-form.component';
+import { ExchangerateAddComponent } from './currency-exchangerate-add.component';
 
-describe('CurrencyFormComponent', () => {
-  let component: CurrencyFormComponent;
-  let fixture: ComponentFixture<CurrencyFormComponent>;
+describe('PopAddExchangerateComponent', () => {
+  let component: ExchangerateAddComponent;
+  let fixture: ComponentFixture<ExchangerateAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrencyFormComponent ]
+      declarations: [ ExchangerateAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CurrencyFormComponent);
+    fixture = TestBed.createComponent(ExchangerateAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

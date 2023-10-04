@@ -94,7 +94,7 @@ export class LeadsComponent
   // data structure
   listCustomer: CM_Customers[] = [];
   listCategory: any[] = [];
-
+  valueListStatusCode:any[] = [];
   // type of string
   oldIdDeal: string = '';
 
@@ -144,6 +144,8 @@ export class LeadsComponent
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
+  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+
   applyApprover = '0';
   queryParams: any;
   leverSetting = 0;
@@ -190,6 +192,7 @@ export class LeadsComponent
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
     this.leverSetting = lever;
+    this.codxCmService.initCache().subscribe(res => {});
   }
 
   afterLoad() {
@@ -214,7 +217,9 @@ export class LeadsComponent
     this.getColorReason();
     this.getValuelistStatus();
     this.getValuelistCategory();
-    this.getProcessSetting();
+   // this.getProcessSetting();
+    this.getListStatusCode();
+    this.afterLoad();
   }
   getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
@@ -235,51 +240,31 @@ export class LeadsComponent
       }
     });
   }
-  async getProcessSetting() {
-    this.codxCmService
-      .getListProcessDefault([this.applyForLead])
-      .subscribe((res) => {
-        if (res) {
-          this.processId = res.recID;
-          this.dataObj = { processID: res.recID };
-          this.afterLoad();
-          // this.views = [
-          //   {
-          //     type: ViewType.listdetail,
-          //     active: false,
-          //     sameData: true,
-          //     model: {
-          //       template: this.itemTemplate,
-          //       panelRightRef: this.templateDetail,
-          //     },
-          //   },
-          //   // {
-          //   //   type: ViewType.kanban,
-          //   //   active: false,
-          //   //   sameData: false,
-          //   //   request: this.request,
-          //   //   request2: this.resourceKanban,
-          //   //   // toolbarTemplate: this.footerButton,
-          //   //   model: {
-          //   //     template: this.cardKanban,
-          //   //     template2: this.viewColumKaban,
-          //   //     setColorHeader: true,
-          //   //   },
-          //   // },
-          //   {
-          //     type: ViewType.grid,
-          //     active: false,
-          //     sameData: true,
-          //     model: {
-          //       // resources: this.columnGrids,
-          //       template2: this.templateMore,
-          //       // frozenColumns: 1,
-          //     },
-          //   },
-          // ];
-        }
-      });
-  }
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode(['3']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+                  text: item.statusName,
+                  value: item.statusID,
+                }));
+
+      }
+      else {
+        this.valueListStatusCode = [];
+      }
+    });
+}
+  // async getProcessSetting() {
+  //   this.codxCmService
+  //     .getListProcessDefault([this.applyForLead])
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.processId = res.recID;
+  //         this.dataObj = { processID: res.recID };
+  //         this.afterLoad();
+  //       }
+  //     });
+  // }
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -504,7 +489,7 @@ export class LeadsComponent
     let isChangeStatus = (eventItem, data) => {
       // Đổi trạng thái cho tiềm năng ko có quy trình
       eventItem.disabled =
-        data?.alloweStatus == '1' ? this.checkApplyProcess(data) : true;
+        data?.alloweStatus == '1' ? data.closed : true;
     };
 
     let isUpdateProcess = (eventItem, data) => {
@@ -1567,7 +1552,7 @@ export class LeadsComponent
     return data?.applyProcess;
   }
   saveCopy() {
-    if (this.dataSelected.status === this.statusDefault) {
+    if (this.dataSelected.status === this.statusDefault || this.dataSelected.statusCode === this.statusDefault ) {
       this.dialogQuestionCopy.close();
       this.notificationsService.notifyCode('SYS007');
     } else {
@@ -1575,7 +1560,12 @@ export class LeadsComponent
       this.codxCmService.changeStatusLead(datas).subscribe((res) => {
         if (res[0]) {
           this.dialogQuestionCopy.close();
-          this.dataSelected.status = res[0].status;
+          if(this.dataSelected?.applyProcess) {
+            this.dataSelected.statusCode =  this.statusDefault
+          }
+          else {
+            this.dataSelected.status = this.statusDefault
+          }
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
           this.view.dataService.update(this.dataSelected).subscribe();
@@ -1587,7 +1577,7 @@ export class LeadsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = data.status;
+    this.statusDefault = this.dataSelected.applyProcess ? this.dataSelected?.statusCode : this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',

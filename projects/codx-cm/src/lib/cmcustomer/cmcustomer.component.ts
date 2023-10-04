@@ -27,6 +27,7 @@ import { PopupAddCmCustomerComponent } from './popup-add-cmcustomer/popup-add-cm
 import { CodxCmService } from '../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupAddLeadComponent } from '../leads/popup-add-lead/popup-add-lead.component';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -208,7 +209,7 @@ export class CmCustomerComponent
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
-
+    this.cmSv.initCache().subscribe(res => {});
     this.detectorRef.detectChanges();
   }
 
@@ -257,6 +258,19 @@ export class CmCustomerComponent
       case 'btnAdd':
         if (this.isButton) this.add();
         break;
+      default:
+        let f = evt.data;
+        let data = evt.model;
+        if (!data) data = this.view.dataService.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          f,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
     }
   }
 
@@ -282,7 +296,6 @@ export class CmCustomerComponent
         this.setIsBlackList(data, false);
         break;
       case 'CM0102_3':
-      case 'CM0105_1':
       case 'CM0102_2':
         this.deleteContactToCM(data);
         break;
@@ -297,6 +310,10 @@ export class CmCustomerComponent
         let lst = [];
         lst.push(Object.assign({}, data));
         this.updateAutoAddress(lst);
+        break;
+      case 'CM0101_2':
+      case 'CM0105_2':
+        this.convertCustomerToLeads(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -332,9 +349,10 @@ export class CmCustomerComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  changeDataMF(e, data) {
+  changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if (type == 11) res.isbookmark = false;
         if (data?.status != '99') {
           switch (res.functionID) {
             case 'CM0105_1':
@@ -721,6 +739,90 @@ export class CmCustomerComponent
           });
           this.notiService.notifyCode('Cập nhật tự động thành công');
           this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  //convert Customer To Lead
+  async convertCustomerToLeads(data) {
+    var isCheck = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CustomersBusiness',
+        'CheckConvertCustomerAsync',
+        [data.recID]
+      )
+    );
+    if (isCheck) {
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      this.notiService.alertCode('SYS030').subscribe((x) => {
+        if (x.event && x.event?.status) {
+          if (x?.event?.status == 'Y') {
+            this.openFormConvert(data);
+          }
+        }
+      });
+    } else {
+      this.openFormConvert(data);
+    }
+  }
+
+  //open form convert
+  openFormConvert(data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CustomersBusiness',
+        'GetLeadDefaultAsync',
+        [data]
+      )
+      .subscribe((ele) => {
+        if (ele) {
+          let lead = ele[0];
+          let lstCategory = ele[1];
+          let option = new SidebarModel();
+          let formModel = new FormModel();
+          formModel.funcID = 'CM0205';
+          formModel.formName = 'CMLeads';
+          formModel.entityName = 'CM_Leads';
+          formModel.gridViewName = 'grvCMLeads';
+          option.FormModel = formModel;
+          option.Width = '800px';
+          option.zIndex = 1001;
+          this.cache
+            .gridViewSetup(formModel.formName, formModel.gridViewName)
+            .subscribe((res) => {
+              if (res) {
+                let gridViewSetup = res;
+                var obj = {
+                  action: 'add',
+                  formMD: formModel,
+                  titleAction: this.titleAction,
+                  leadIdOld: '',
+                  contactIdOld: '',
+                  applyFor: '5',
+                  processId: null,
+                  gridViewSetup: gridViewSetup,
+                  applyProcess: false,
+                  listCategory: lstCategory,
+                  dataConvert: lead,
+                  convertCustomerToLead: true,
+                };
+                let dialogCustomDeal = this.callfc.openSide(
+                  PopupAddLeadComponent,
+                  obj,
+                  option
+                );
+                dialogCustomDeal.closed.subscribe((e) => {
+                  if (e && e.event != null) {
+                    this.detectorRef.detectChanges();
+                  }
+                });
+              }
+            });
         }
       });
   }

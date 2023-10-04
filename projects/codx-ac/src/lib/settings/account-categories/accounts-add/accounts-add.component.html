@@ -1,4 +1,4 @@
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+<codx-layout-add #form [title]="headerText" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
   [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish]" (setTitle)="setTitle($event)"
   [data]="dataDefault" class="ac-animation-slideRight">
 </codx-layout-add>
@@ -11,7 +11,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            [disabled]="form?.form?.data?._keyAuto == 'AccountID' ? true : false || form?.form?.data?._isEdit ? true : false"
+            [disabled]="form?.form?.data?._keyAuto == 'AccountID' ? true : false || form?.form?.data?.isEdit ? true : false"
             field="accountID" (controlBlur)="valueChange($event)">
           </codx-input>
         </div>
@@ -173,19 +173,13 @@
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
     <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
       style="border: 1px solid var(--primary-dark) !important" type="button"
-      (keydown.enter)="onSaveAdd(); $event.preventDefault()" (click)="onSaveAdd()" class="btn btn-md btn-light-primary me-2">
-      <div class="d-flex align-items-center">
-        <i class="icon-add_to_photos icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-      </div>
+      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
     </button>
     <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
       class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
-      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
-      <div class="d-flex align-items-center">
-        <i class="icon-save_alt icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-      </div>
+      (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>

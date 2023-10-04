@@ -171,6 +171,8 @@ export class PopupAddLeadComponent
   // number
   leverSetting: number;
 
+  convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
+  transIDCamp: any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -187,7 +189,7 @@ export class PopupAddLeadComponent
     this.funcID = this.formModel?.funcID;
     this.titleAction = dt?.data?.titleAction;
     this.action = dt?.data?.action;
-    this.lead.processID = dt?.data?.processId;
+    // this.lead.processID = dt?.data?.processId;
     this.applyFor = dt?.data?.applyFor;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.currencyIDDefault = dt?.data?.currencyIDDefault;
@@ -211,6 +213,12 @@ export class PopupAddLeadComponent
         this.planceHolderAutoNumber = this.lead.leadID;
       }
     } else {
+      //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
+      this.convertCustomerToLead = dt?.data?.convertCustomerToLead ?? false;
+      this.transIDCamp = dt?.data?.transIDCamp ?? null;
+      if (this.convertCustomerToLead) {
+        this.lead = JSON.parse(JSON.stringify(dt?.data?.dataConvert));
+      } //end Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
       this.leadId = this.lead.recID;
       this.contactId = this.lead.contactID;
     }
@@ -226,7 +234,7 @@ export class PopupAddLeadComponent
     this.executeApiCalls();
   }
 
-  async getParameterAddress(){
+  async getParameterAddress() {
     let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -570,17 +578,33 @@ export class PopupAddLeadComponent
 
   onAdd() {
     this.lead.applyProcess && this.addPermission(this.lead.processID);
-    this.dialog.dataService
-      .save((option: any) => this.beforeSave(option), 0)
-      .subscribe((res) => {
-        if (res?.save[0]) {
-          //bua save avata
-          (this.dialog.dataService as CRUDService)
-            .update(res.save[0])
-            .subscribe();
-          this.dialog.close(res.save[0]);
-        }
-      });
+    if (this.convertCustomerToLead) {
+      this.api
+        .execSv<any>('CM', 'ERM.Business.CM', 'LeadsBusiness', 'AddLeadAsync', [
+          this.lead,
+          this.leadId,
+          this.contactId,
+          this.transIDCamp,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close(res);
+            this.notificationsService.notifyCode('SYS006');
+          }
+        });
+    } else {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSave(option), 0)
+        .subscribe((res) => {
+          if (res?.save[0]) {
+            //bua save avata
+            (this.dialog.dataService as CRUDService)
+              .update(res.save[0])
+              .subscribe();
+            this.dialog.close(res.save[0]);
+          }
+        });
+    }
   }
   onEdit() {
     this.dialog.dataService
@@ -624,8 +648,7 @@ export class PopupAddLeadComponent
     if (this.owner) {
       this.lead.owner = this.owner;
     }
-    this.lead.applyProcess &&
-      this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess &&this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
 
@@ -706,6 +729,7 @@ export class PopupAddLeadComponent
       }
       this.lead.currencyID = this.currencyIDDefault;
       this.lead.applyProcess = this.applyProcess;
+      this.lead.applyProcess && this.getProcessSetting();
       this.checkApplyProcess(this.lead.applyProcess);
     }
 
@@ -713,8 +737,21 @@ export class PopupAddLeadComponent
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
-    } else await this.getListInstanceSteps(this.lead.processID);
+    }
     this.itemTabsInputContact(this.isCategory);
+  }
+    async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault(['5'])
+      .subscribe((res) => {
+        if (res) {
+          // this.processId = res.recID;
+          // this.dataObj = { processID: res.recID };
+          // this.afterLoad();
+          this.getListInstanceSteps(res.recID);
+          this.lead.processID = res.recID;
+        }
+      });
   }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];
