@@ -144,10 +144,19 @@
     <div class="w-200px min-w-200px pe-6 d-flex flex-column">
       <div
         class="mb-1"
-        [style.height]="'auto'"
+        [style.height]="checkHover(data?.recID) ? '40' : 'auto'"
         [ngClass]="
           checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
         "
+        [id]="data.recID"
+        [ngbPopover]="data?.problem"
+        [style.height]="'auto'"
+        #blem="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, blem, data, 'problem')"
+        (mouseleave)="blem.close()"
+        placement="right bottom  top"
+        [popoverClass]="data.recID"
       >
         <codx-label
           style="white-space: nowrap"
@@ -159,15 +168,6 @@
           [innerHTML]="
             data.problem | formatvalue : formModel : 'Problem' | async
           "
-          [id]="data.recID"
-          [ngbPopover]="data?.problem"
-          [style.height]="'auto'"
-          #blem="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, blem, data, 'problem')"
-          (mouseleave)="blem.close()"
-          placement="right bottom  top"
-          [popoverClass]="data.recID"
         ></span>
       </div>
       <div
@@ -176,6 +176,15 @@
         [ngClass]="
           checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
         "
+        [id]="data.recID"
+        [ngbPopover]="data?.currentState"
+        [style.height]="'auto'"
+        #state="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
+        (mouseleave)="state.close()"
+        placement="bottom right top"
+        [popoverClass]="data.recID"
       >
         <codx-label
           style="white-space: nowrap"
@@ -184,15 +193,6 @@
           [formModel]="formModel"
         ></codx-label>
         <span
-          [id]="data.recID"
-          [ngbPopover]="data?.currentState"
-          [style.height]="'auto'"
-          #state="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
-          (mouseleave)="state.close()"
-          placement="bottom right top"
-          [popoverClass]="data.recID"
           [innerHTML]="
             data.currentState | formatvalue : formModel : 'CurrentState' | async
           "
@@ -204,6 +204,15 @@
         [ngClass]="
           checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
         "
+        [id]="data.recID"
+        [ngbPopover]="data?.comment"
+        [style.height]="'auto'"
+        #comment="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, comment, data, 'comment')"
+        (mouseleave)="comment.close()"
+        placement="bottom right top"
+        [popoverClass]="data.recID"
       >
         <codx-label
           style="white-space: nowrap"
@@ -212,15 +221,6 @@
           [formModel]="formModel"
         ></codx-label>
         <span
-          [id]="data.recID"
-          [ngbPopover]="data?.comment"
-          [style.height]="'auto'"
-          #comment="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, comment, data, 'comment')"
-          (mouseleave)="comment.close()"
-          placement="bottom right top"
-          [popoverClass]="data.recID"
           [innerHTML]="
             data.comment | formatvalue : formModel : 'Comment' | async
           "
