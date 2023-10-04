@@ -82,7 +82,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.formModel = dt.data?.[1];
+    this.formModel = dt.data[1];
     if (dt.data[0]) this.type = dt.data[0];
     if (dt.data?.[2]) this.recID = dt.data?.[2];
     if (dt.data?.[3]) this.dataIEConnections = dt.data?.[3];

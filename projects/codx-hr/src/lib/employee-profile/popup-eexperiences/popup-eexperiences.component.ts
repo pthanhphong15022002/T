@@ -21,7 +21,7 @@ import {
 })
 export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
   successFlag = false;
@@ -37,7 +37,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   employId: string;
   actionType: string;
   disabledInput = false;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -100,29 +100,31 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
             this.data.beginDate = null;
             this.data.endDate = null;
             this.data.employeeID = this.employId;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
+            // this.formModel.currentData = this.data;
+            // this.form.formGroup.patchValue(this.data);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
+      // this.formModel.currentData = this.data;
+      // this.form.formGroup.patchValue(this.data);
       this.cr.detectChanges();
-      this.isAfterRender = true;
+      // this.isAfterRender = true;
     }
   }
 
   onInit(): void {
-    this.hrService
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
+    this.initForm();
+
+    // this.hrService
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
     // this.hrService.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
     //     this.formModel = formModel;
@@ -130,7 +132,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     //       .then((fg) => {
     //         if (fg) {
-    //           this.formGroup = fg;
+    //           this.form.formGroup = fg;
     //           this.initForm();
     //         }
     //       });
@@ -142,16 +144,16 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     if(this.data.companyName){
       if(this.data.companyName.trim().length == 0){
         this.data.companyName = null;
-        this.formGroup.patchValue(this.data);
+        this.form.formGroup.patchValue(this.data);
       }
     }
     this.data.fromDate = this.fromdateVal;
     this.data.toDate = this.todateVal;
 
-    this.formGroup.patchValue({fromDate: this.data.fromDate})
-    this.formGroup.patchValue({toDate: this.data.toDate})
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    this.form.formGroup.patchValue({fromDate: this.data.fromDate})
+    this.form.formGroup.patchValue({toDate: this.data.toDate})
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -228,7 +230,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   //   this.actionType = 'edit';
   //   this.fromdateVal = this.data.fromDate;
   //   this.todateVal = this.data.toDate;
-  //   this.formGroup?.patchValue(this.data);
+  //   this.form.formGroup?.patchValue(this.data);
   //   this.cr.detectChanges();
   // }
 
