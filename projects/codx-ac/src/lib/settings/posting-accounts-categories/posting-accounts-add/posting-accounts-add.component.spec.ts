@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddItemComponent } from './pop-add-item.component';
+import { PostingAccountsAddComponent } from './posting-accounts-add.component';
 
 describe('PopAddItemComponent', () => {
-  let component: PopAddItemComponent;
-  let fixture: ComponentFixture<PopAddItemComponent>;
+  let component: PostingAccountsAddComponent;
+  let fixture: ComponentFixture<PostingAccountsAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddItemComponent ]
+      declarations: [ PostingAccountsAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddItemComponent);
+    fixture = TestBed.createComponent(PostingAccountsAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
