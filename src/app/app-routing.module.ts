@@ -3,14 +3,14 @@ import { DynamicFormComponent } from './../../projects/codx-share/src/lib/compon
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, LayoutBaseComponent } from 'codx-core';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
-import { ViewFileDialogComponent } from 'projects/codx-share/src/lib/components/viewFileDialog/viewFileDialog.component';
 import { ReviewComponent } from 'projects/codx-sv/src/lib/add-survey/review/review.component';
 import { SosComponent } from '@pages/sos/sos.component';
 import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
+import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 
 var childAuthRoutes: Routes = [
   {

@@ -39,7 +39,7 @@ import { PopupADRComponent } from './sign-file/popup-adr/popup-adr.component';
 import { PopupSignForApprovalComponent } from './sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { ViewApprovalProcessComponent } from './setting/view-approval-process/view-approval-process.component';
 import { ListViewAllModule } from '@syncfusion/ej2-angular-lists';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { ESApprovelComponent } from './sign-file/approval/approval.component';
 import { SearchingComponent } from './searching/searching.component';
 import {
@@ -166,7 +166,7 @@ const routes: Routes = [
     PopupConfirmSaveLabelComponent,
     PopupCommentComponent,
     PopupAddSegmentComponent,
-    ApprovalStepSignComponent
+    ApprovalStepSignComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -181,7 +181,7 @@ const routes: Routes = [
     CodxShareModule,
     // PdfViewerAllModule,
     ListViewAllModule,
-    ProgressBarModule
+    ProgressBarModule,
   ],
   exports: [CodxEsComponent],
   providers: [

@@ -12,28 +12,23 @@ import {
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { catchError, finalize, map, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  ApiHttpService,
   AuthService,
   AuthStore,
   CacheRouteReuseStrategy,
-  CacheService,
-  ExtendUser,
   NotificationsService,
   RealHub,
   RealHubService,
   TenantStore,
   UIComponent,
   UrlUtil,
-  UserModel,
 } from 'codx-core';
 // import {
 //   AmazonLoginProvider,
@@ -44,14 +39,10 @@ import {
 //   SocialAuthService,
 // } from '@abacritt/angularx-social-login';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { AngularDeviceInformationService } from 'angular-device-information';
-import {
-  Device,
-  UserLoginExtend,
-} from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
+import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
+import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 
 @Component({
   selector: 'app-login',

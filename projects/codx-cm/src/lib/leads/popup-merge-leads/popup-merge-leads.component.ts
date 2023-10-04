@@ -22,7 +22,7 @@ import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { PopupRemoveAddContactComponent } from './popup-remove-add-contact/popup-remove-add-contact.component';
 import { environment } from 'src/environments/environment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-merge-leads',
