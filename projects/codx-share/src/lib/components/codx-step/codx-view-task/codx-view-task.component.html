@@ -475,9 +475,9 @@
     </codx-label>
     <div>
       <ng-container
-        *ngIf="owner.length > 0"
+        *ngIf="owners.length > 0"
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>
@@ -494,7 +494,7 @@
     <div>
       <ng-container
         [ngTemplateOutlet]="showUser"
-        [ngTemplateOutletContext]="{ users: type == 'P' ? person : owner }"
+        [ngTemplateOutletContext]="{ users: owners }"
       ></ng-container>
     </div>
   </div>

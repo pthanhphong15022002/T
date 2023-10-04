@@ -193,7 +193,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.vllDataTask = DP048?.datas;
     }
     let DP032 = await firstValueFrom(this.cache.valueList('DP032'));
-    if (DP048.datas) {
+    if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
     this.getDefaultCM();
