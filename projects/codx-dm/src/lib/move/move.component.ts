@@ -439,7 +439,10 @@ export class MoveComponent implements OnInit {
   onSelectionAddChanged($node, tree) {
     var id = $node.data.recID;
     this.selectId = id;
-    if ($node.data.items && $node.data.items.length <= 0) {
+    if (
+      !$node.data.items ||
+      ($node.data.items && $node.data.items.length == 0)
+    ) {
       this.folderService.getFolders(id).subscribe(async (res) => {
         var data = res[0].filter(
           (item) => item.read && item.recID.toString() != this.id
@@ -553,8 +556,7 @@ export class MoveComponent implements OnInit {
                 that.dmSV.listFolder = list;
                 that.changeDetectorRef.detectChanges();
               }
-            }
-            else {
+            } else {
               this.dmSV.addFolder.next(res.data); // them node con
               that.dmSV.ChangeData.next(true);
             }
