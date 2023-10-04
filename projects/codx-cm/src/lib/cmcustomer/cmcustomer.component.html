@@ -27,12 +27,11 @@
 <ng-template #templateMore let-data>
   <div class="" style="height: 30px">
     <codx-mfunc
-      [hideMF]="false"
       [dataItem]="data"
       [formModel]="view.formModel"
-      (changeDataMF)="changeDataMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data, 11)"
       (clickMF)="clickMF($event, data)"
-      [isBookMark]="true"
+      [isBookMark]="false"
       type="view"
     ></codx-mfunc>
   </div>
