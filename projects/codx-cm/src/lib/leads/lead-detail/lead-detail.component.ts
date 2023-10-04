@@ -41,7 +41,7 @@ export class LeadDetailComponent implements OnInit {
   @Input() action: any;
   @Input() applyProcess: any;
   @Input() listCategory: any;
-
+  @Input() valueListStatusCode: any;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
@@ -359,5 +359,15 @@ export class LeadDetailComponent implements OnInit {
   clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
+  }
+  getStatusCode(status) {
+    if(status) {
+      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+      if(result) {
+        return result?.text;
+      }
+    }
+
+    return '';
   }
 }

@@ -29,7 +29,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { DocumentRegistryBucketKey } from 'typescript';
 import { EmailSendTo } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';

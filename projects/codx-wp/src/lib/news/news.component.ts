@@ -1,11 +1,7 @@
 import {
-  AfterContentInit,
-  ChangeDetectorRef,
   Component,
   HostBinding,
   Injector,
-  OnDestroy,
-  OnInit,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -16,26 +12,16 @@ import {
   NgbSlideEvent,
   NgbSlideEventSource,
 } from '@ng-bootstrap/ng-bootstrap';
-import { load } from '@syncfusion/ej2-angular-charts';
-import { ListViewComponent } from '@syncfusion/ej2-angular-lists';
 import {
   ViewModel,
-  ViewsComponent,
   CodxListviewComponent,
-  ApiHttpService,
-  CodxService,
-  CallFuncService,
-  CacheService,
   ViewType,
   DialogModel,
   UIComponent,
-  NotificationsService,
-  CRUDService,
   AuthStore,
 } from 'codx-core';
 import { PopupAddComponent } from './popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from './popup/popup-search/popup-search.component';
-import { WP_News } from '../models/WP_News.model';
 import { Post } from '@shared/models/post';
 
 @Component({
@@ -61,7 +47,7 @@ export class NewsComponent extends UIComponent {
   showNavigation: boolean = false;
   page: number = 0;
   pageIndex: number = 0;
-  sysMoreFunction: any = null;
+  sysMoreFunction: any[] = null;
 
   NEWSTYPE = {
     POST: '1',
@@ -169,12 +155,10 @@ export class NewsComponent extends UIComponent {
         pageIndex,
       ])
       .subscribe((res: any[]) => {
-        debugger
         let data = res[0];
         let total = res[1];
         if (data.length > 0) 
         {
-          debugger
           this.page = Math.ceil(total / 6);
           if (this.scrolled) 
           {
@@ -250,13 +234,13 @@ export class NewsComponent extends UIComponent {
   // open popup create
   openPopupAdd(type: string) {
     let option = new DialogModel();
+    let action = "Add";
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.IsFull = true;
     option.zIndex = 100;
-    let mfc = Array.from<any>(this.sysMoreFunction).find(
-      (x: any) => x.functionID === 'SYS01'
-    );
+    if(this.sysMoreFunction != null)
+      action = this.sysMoreFunction.find((x: any) => x.functionID === 'SYS01')?.defaultName;
     let post = new Post();
     if(this.category && this.category != "home")
     {
@@ -264,11 +248,11 @@ export class NewsComponent extends UIComponent {
     }
     post.newsType = type;
     let data = {
-      action: mfc.defaultName,
+      action: action,
       isAdd: true,
       data: post,
     };
-    let popup = this.callfc.openForm(
+    this.callfc.openForm(
       PopupAddComponent,
       '',
       0,
@@ -276,9 +260,7 @@ export class NewsComponent extends UIComponent {
       '',
       data,
       '',
-      option
-    );
-    popup.closed.subscribe((res: any) => {
+      option).closed.subscribe((res: any) => {
       if (res?.event) {
         let data = res.event;
         //post

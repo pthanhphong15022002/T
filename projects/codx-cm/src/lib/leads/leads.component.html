@@ -191,6 +191,7 @@
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     [funcID]="funcID"
+    [valueListStatusCode]="valueListStatusCode"
     [listCategory]="listCategory"
     [applyProcess]="checkApplyProcess(dataSelected)"
     (changeMF)="changeMF($event)"
@@ -437,15 +438,15 @@
 </ng-template>
 
 <ng-template #bodyFormCopyName>
-  <div *ngIf="dataSelected.applyProcess && dataSelected?.statusCode; else defaultProcess">
-    <ejs-combobox
-    [dataSource]="valueListStatusCode "
-    (valueChange)="valueChangeStatus($event)"
-    [fields]="fieldCbxStatusCode"
-    [placeholder]="gridViewSetup?.Status?.description"
-    [allowFiltering]="true"
-    [value]="dataSelected?.statusCode"
-  ></ejs-combobox>
+  <div *ngIf="dataSelected.applyProcess ; else defaultProcess">
+      <ejs-combobox
+      [dataSource]="valueListStatusCode "
+      (valueChange)="valueChangeStatus($event)"
+      [fields]="fieldCbxStatusCode"
+      [placeholder]="gridViewSetup?.Status?.description"
+      [allowFiltering]="true"
+      [value]="statusDefault"
+    ></ejs-combobox>
   </div>
   <ng-template #defaultProcess>
     <ejs-combobox
@@ -454,7 +455,7 @@
     (valueChange)="valueChangeStatus($event)"
     [placeholder]="gridViewSetup?.Status?.description"
     [allowFiltering]="true"
-    [value]="dataSelected?.status"
+    [value]="statusDefault"
   ></ejs-combobox>
   </ng-template>
 

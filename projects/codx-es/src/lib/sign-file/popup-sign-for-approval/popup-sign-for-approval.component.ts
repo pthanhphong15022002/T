@@ -17,10 +17,10 @@ import {
   AuthStore,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupCommentComponent } from '../popup-comment/popup-comment.component';
 import { ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
 
 @Component({
   selector: 'lib-popup-sign-for-approval',
@@ -339,13 +339,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
     );
     if (checkControl) {
       checkControl.closed.subscribe((res) => {
-        if(res?.event){
+        if (res?.event) {
           let oComment = res?.event;
           this.dialogSignFile.patchValue({ comment: oComment.comment });
           this.dialogSignFile.patchValue({ reasonID: oComment.reasonID });
           this.approve(mode, title, subTitle, null);
-        }
-        else{
+        } else {
           return;
         }
       });
@@ -360,14 +359,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
         if (this.pdfView.isAwait) {
           this.pdfView
             .signPDF(mode, this.dialogSignFile?.value?.comment)
-            .then((resModel:ResponseModel) => {
-              if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                
+            .then((resModel: ResponseModel) => {
+              if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
                 this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
               } else {
                 this.canOpenSubPopup = false;
                 this.notify.notifyCode('SYS021');
-              }              
+              }
               this.dialog && this.dialog.close(resModel);
             });
         } else {
@@ -381,8 +380,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 // };
                 this.pdfView
                   .signPDF(mode, this.dialogSignFile.value.comment)
-                  .then((resModel:ResponseModel) => {
-                    if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                      
+                  .then((resModel: ResponseModel) => {
+                    if (
+                      resModel?.msgCodeError == null &&
+                      resModel?.rowCount > 0
+                    ) {
                       this.esService.statusChange.next(mode);
                       this.esService.setupChange.next(true);
                       this.notify.notifyCode('SYS034');
@@ -390,7 +392,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     } else {
                       this.esService.setupChange.next(true);
                       this.canOpenSubPopup = false;
-                      
+
                       this.esService
                         .updateTransAwaitingStatus(this.transRecID, true)
                         .subscribe((updateTransStatus) => {
@@ -403,12 +405,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
                     this.dialog && this.dialog.close(resModel);
                   });
                 this.canOpenSubPopup = false;
-                
               } else {
                 this.canOpenSubPopup = false;
                 let resModel = new ResponseModel();
-                resModel.rowCount=0;//ko thể cập nhật sang đang ký
-                resModel.msgCodeError='ES017';
+                resModel.rowCount = 0; //ko thể cập nhật sang đang ký
+                resModel.msgCodeError = 'ES017';
                 this.esService
                   .updateTransAwaitingStatus(this.transRecID, true)
                   .subscribe((updateTransStatus) => {
@@ -444,34 +445,33 @@ export class PopupSignForApprovalComponent extends UIComponent {
                   );
                   if (finalContract) {
                     let resModel = new ResponseModel();
-                    resModel.rowCount=1;
-                    resModel.returnStatus='5';
+                    resModel.rowCount = 1;
+                    resModel.returnStatus = '5';
                     this.notify.notifyCode('SYS034');
                     this.canOpenSubPopup = false;
                     this.dialog && this.dialog.close(resModel);
                   } else {
                     this.canOpenSubPopup = false;
                     let resModel = new ResponseModel();
-                    resModel.rowCount=0;
+                    resModel.rowCount = 0;
                     this.notify.notifyCode('SYS021');
                     this.dialog && this.dialog.close(resModel);
                   }
-                  
                 }
               });
             break;
           }
           //vnpt || ky noi bo
           default: {
-            this.pdfView.signPDF(mode, '').then((resModel:ResponseModel) => {
-              if (resModel?.msgCodeError==null && resModel?.rowCount>0) {                
+            this.pdfView.signPDF(mode, '').then((resModel: ResponseModel) => {
+              if (resModel?.msgCodeError == null && resModel?.rowCount > 0) {
                 this.notify.notifyCode('SYS034');
                 this.canOpenSubPopup = false;
               } else {
                 this.canOpenSubPopup = false;
-                
+
                 this.notify.notifyCode('SYS021');
-              }              
+              }
               this.dialog && this.dialog.close(resModel);
             });
             break;
@@ -479,7 +479,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
         }
         break;
       }
-
     }
   }
 

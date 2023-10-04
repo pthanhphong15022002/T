@@ -8,7 +8,6 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AttachmentComponent } from '../attachment/attachment.component';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -21,9 +20,9 @@ import {
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
-import { Observable, finalize, map } from 'rxjs';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-input-custom-field',

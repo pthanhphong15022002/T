@@ -39,7 +39,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
   todateVal: any;
   deadMonthVal : any;
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   employId: string;
   actionType: string;
   disabledInput = false;
@@ -53,7 +53,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
 
   familyMemberObj;
   headerText: '';
-  isAfterRender = false;
+  // isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('registerFromDatePicker') registerFromDatePicker: ElementRef;
   @ViewChild('registerToDatePicker') registerToDatePicker: ElementRef;
@@ -75,12 +75,13 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.actionType = data?.data?.actionType;
     if(this.actionType == 'view'){
       this.disabledInput = true;
-
     }
     this.familyMemberObj = JSON.parse(
       JSON.stringify(data?.data?.familyMemberObj)
     );
-    this.formModel = dialog?.FormModel;
+    this.formModel = dialog?.formModel;
+    console.log('formModel nhan vao e fam', this.formModel);
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -115,10 +116,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
               this.familyMemberObj.registerTo = null;
             }
             this.familyMemberObj.employeeID = this.employId;
-            this.formModel.currentData = this.familyMemberObj;
-            this.formGroup.patchValue(this.familyMemberObj);
+            // this.formModel.currentData = this.familyMemberObj;
+            // this.form.formGroup.patchValue(this.familyMemberObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
     } else {
@@ -135,13 +136,12 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
           this.familyMemberObj.modifiedOn = new Date();
         }
         debugger
-        this.formGroup.patchValue(this.familyMemberObj);
-        this.formModel.currentData = this.familyMemberObj;
-        this.formGroup.patchValue(this.familyMemberObj);
+        // this.form.formGroup.patchValue(this.familyMemberObj);
+        // this.formModel.currentData = this.familyMemberObj;
         this.fromdateVal = this.familyMemberObj.registerFrom;
         this.todateVal = this.familyMemberObj.registerTo;
         this.deadMonthVal = this.familyMemberObj.deadMonth;
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
         this.cr.detectChanges();
       }
     }
@@ -151,36 +151,37 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     // }
   }
   onInit(): void {
-    console.log('chay oninit');
-
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    } else{
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-      }
-      this.hrService.getHeaderText(this.funcID).then((res) => {
-        this.fieldHeaderTexts = res;
-      })
-  }
+  //   if (!this.formModel) {
+  //   //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+  //   //     if (formModel) {
+  //   //       this.formModel = formModel;
+  //   //       this.hrService
+  //   //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+  //   //         .then((fg) => {
+  //   //           if (fg) {
+  //   //             this.form.formGroup = fg;
+  //   //             this.initForm();
+  //   //           }
+  //   //         });
+  //   //     }
+  //   //   });
+  //   // } else{
+  //   //   this.hrService
+  //   //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+  //   //     .then((fg) => {
+  //   //       if (fg) {
+  //   //         this.form.formGroup = fg;
+  //   //         this.initForm();
+  //   //       }
+  //   //     });
+  //   //   }
+    
+  // }
+  this.initForm();
+  this.hrService.getHeaderText(this.funcID).then((res) => {
+    this.fieldHeaderTexts = res;
+  })
+}
 
   onSaveForm() {
     console.log('du lieu chuan bi luu', this.familyMemberObj);
@@ -191,8 +192,8 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.familyMemberObj.registerTo = this.todateVal;
     this.familyMemberObj.deadMonth = this.deadMonthVal;
 
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -279,7 +280,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
   //   this.fromdateVal = this.familyMemberObj.registerFrom;
   //   this.todateVal = this.familyMemberObj.registerTo;
   //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.familyMemberObj);
+  //   this.form.formGroup?.patchValue(this.familyMemberObj);
   //   this.cr.detectChanges();
   // }
 
@@ -307,7 +308,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.familyMemberObj.siRegisterNo =
       evt.component.itemsSelected[0].SIRegisterNo;
     console.log('this family obj', this.familyMemberObj);
-    this.formGroup.patchValue(this.familyMemberObj);
+    this.form.formGroup.patchValue(this.familyMemberObj);
     this.cr.detectChanges();
   }
 

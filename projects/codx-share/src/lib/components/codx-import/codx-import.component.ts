@@ -1,41 +1,29 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
-  HostListener,
-  Injector,
-  Input,
   OnChanges,
   OnInit,
   Optional,
-  Output,
   SimpleChanges,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import * as XLSX from 'xlsx';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   CallFuncService,
   DataRequest,
-  DataService,
   DialogData,
-  DialogModel,
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { Observable, finalize, map, of } from 'rxjs';
-import { AttachmentComponent } from '../attachment/attachment.component';
+import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
-import { AddTemplateComponent } from './add-template/add-template.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-import',
@@ -182,7 +170,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   openFormAddTemplate() {
     this.callfunc.openForm(
-      AddTemplateComponent,
+      CodxImportAddTemplateComponent,
       null,
       1200,
       800,

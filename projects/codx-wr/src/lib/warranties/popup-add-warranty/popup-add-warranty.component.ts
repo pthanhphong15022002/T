@@ -73,6 +73,9 @@ export class PopupAddWarrantyComponent implements OnInit {
       } else {
         this.data.oow = false;
       }
+      if (this.data?.seriNo == null || this.data?.seriNo?.trim() == '') {
+        this.data.seriNo = this.data?.serviceTag;
+      }
     } else {
       this.data.oow = true;
       this.api
@@ -143,7 +146,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       return;
     }
 
-    if (this.data?.seriNo == null || this.data?.seriNo?.trim() == '') {
+    if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -401,7 +404,7 @@ export class PopupAddWarrantyComponent implements OnInit {
 
   setServiceTagEmtry() {
     this.data.seriNo = null;
-    this.data.serviceTag = '';
+    this.data.serviceTag = null;
     this.data.lob = '';
     this.data.productID = '';
     this.data.productType = '';

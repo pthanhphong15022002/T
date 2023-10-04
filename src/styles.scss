@@ -1891,11 +1891,10 @@ codx-listview.card .card-header {
   margin: 0;
 }
 
-.e-toolbar .e-tbar-btn,
-.e-toolbar .e-tbar-btn:hover,
-.e-toolbar .e-tbar-btn:hover span {
-  background: transparent !important;
-}
+// .e-toolbar .e-tbar-btn:hover,
+// .e-toolbar .e-tbar-btn:hover span {
+//   background: transparent !important;
+// }
  .e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
    color: var(--primary-light) !important;
  }
@@ -3933,6 +3932,13 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
 }
 
 
+.offcanvas-wrapper{
+  codx-breadcumb {
+    .breadcumb-item.breadcumb-full{
+    overflow: auto;
+  }
+  }
+}
 //////////////
 // ipad and tablet
 /// /////////

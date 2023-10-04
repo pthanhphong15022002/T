@@ -22,10 +22,10 @@ export class PopupECalculateSalaryComponent
   implements OnInit
 {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   data;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
   constructor(
@@ -43,23 +43,23 @@ export class PopupECalculateSalaryComponent
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
   }
   onInit(): void {
-    if (this.formModel) {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((res) => {
-          if (res) {
-            this.formGroup = res;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-            this.isAfterRender = true;
-          }
-        });
-    }
+    // if (this.formModel) {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((res) => {
+    //       if (res) {
+    //         this.formGroup = res;
+    //         this.formModel.currentData = this.data;
+    //         this.formGroup.patchValue(this.data);
+    //         this.isAfterRender = true;
+    //       }
+    //     });
+    // }
   }
 
   onSaveForm() {
-    if(this.formGroup.invalid){
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if(this.form.formGroup.invalid){
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {

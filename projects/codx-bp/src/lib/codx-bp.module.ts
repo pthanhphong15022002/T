@@ -19,7 +19,7 @@ import { PopupAddProcessesComponent } from './processes/popup-add-processes/popu
 import { ProcessStepsComponent } from './processsteps/processsteps.component';
 import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
 import { RevisionsComponent } from './processes/revisions/revisions.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { PropertiesComponent } from './properties/properties.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';

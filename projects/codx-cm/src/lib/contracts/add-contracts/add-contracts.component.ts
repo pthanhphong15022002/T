@@ -34,7 +34,7 @@ import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { PopupAddPaymentComponent } from '../payment/popup-add-payment/popup-add-payment.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { PopupAddPaymentHistoryComponent } from '../payment/popup-add-payment-history/popup-add-payment-history.component';
 import { PopupViewPaymentHistoryComponent } from '../payment/popup-view-payment-history/popup-view-payment-history.component';
 import { tmpInstances } from '../../models/tmpModel';

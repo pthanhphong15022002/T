@@ -25,11 +25,11 @@ import {
 
 import { TaskGoal } from 'projects/codx-tm/src/lib/models/task.model';
 import { StatusTaskGoal } from 'projects/codx-tm/src/lib/models/enum/enum';
-import { AttachmentComponent } from '../attachment/attachment.component';
 import moment from 'moment';
 import { TM_TaskGroups } from 'projects/codx-tm/src/lib/models/TM_TaskGroups.model';
 import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
 import { tmpReferences } from '../../models/assign-task.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'app-assign-info',
   templateUrl: './assign-info.component.html',
