@@ -209,7 +209,7 @@ export class CmCustomerComponent
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
-
+    this.cmSv.initCache().subscribe(res => {});
     this.detectorRef.detectChanges();
   }
 
@@ -296,7 +296,6 @@ export class CmCustomerComponent
         this.setIsBlackList(data, false);
         break;
       case 'CM0102_3':
-      case 'CM0105_1':
       case 'CM0102_2':
         this.deleteContactToCM(data);
         break;
@@ -350,9 +349,10 @@ export class CmCustomerComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  changeDataMF(e, data) {
+  changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if (type == 11) res.isbookmark = false;
         if (data?.status != '99') {
           switch (res.functionID) {
             case 'CM0105_1':
@@ -757,7 +757,7 @@ export class CmCustomerComponent
     if (isCheck) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
-      this.notiService.alertCode('SYS030').subscribe((x) => {
+      this.notiService.alertCode('CM052').subscribe((x) => {
         if (x.event && x.event?.status) {
           if (x?.event?.status == 'Y') {
             this.openFormConvert(data);

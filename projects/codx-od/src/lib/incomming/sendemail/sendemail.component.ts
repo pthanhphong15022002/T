@@ -34,7 +34,7 @@ import {
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { extractContent, formatBytes } from '../../function/default.function';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'app-od-sendemail',
   templateUrl: './sendemail.component.html',
@@ -45,7 +45,7 @@ export class SendEmailComponent implements OnInit {
   dialog: any;
   data: any;
   gridViewSetup: any;
-  job:"";
+  job: '';
   @ViewChild('attachment') attachment: AttachmentComponent;
   formatBytes = formatBytes;
   sendEmailForm = new FormGroup({
@@ -105,13 +105,19 @@ export class SendEmailComponent implements OnInit {
         this.notifySvr.notify(item.message);
       });
   }
-  getDataUser()
-  {
-    this.api.execSv("HR", 'ERM.Business.HR', "HRBusiness" , "GetDataJoinUserAsync" ,this.user?.userID).subscribe((item:any)=>{
-      if(item)
-      {
-        this.job = item?.jobName
-      }
-    })
+  getDataUser() {
+    this.api
+      .execSv(
+        'HR',
+        'ERM.Business.HR',
+        'HRBusiness',
+        'GetDataJoinUserAsync',
+        this.user?.userID
+      )
+      .subscribe((item: any) => {
+        if (item) {
+          this.job = item?.jobName;
+        }
+      });
   }
 }

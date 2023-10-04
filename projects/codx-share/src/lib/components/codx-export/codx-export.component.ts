@@ -25,8 +25,8 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { Observable, finalize, map, of } from 'rxjs';
-import { AttachmentComponent } from '../attachment/attachment.component';
 import { CodxExportAddComponent } from './codx-export-add/codx-export-add.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-export',
@@ -165,7 +165,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadEx() {
     this.request.entityName = 'AD_ExcelTemplates';
-    this.request.dataValue =   this.refID + ";" + this.refType || this.formModel.entityName;
+    this.request.dataValue =
+      this.refID + ';' + this.refType || this.formModel.entityName;
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
@@ -173,7 +174,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
   }
   loadWord() {
     this.request.entityName = 'AD_WordTemplates';
-    this.request.dataValue = this.refID + ";" +this.refType || this.formModel.entityName;
+    this.request.dataValue =
+      this.refID + ';' + this.refType || this.formModel.entityName;
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
@@ -206,7 +208,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
         var option = new DialogModel();
         option.FormModel = this.formModel;
         option.DataService = data;
-        if(this.type == "word") option.IsFull = true;
+        if (this.type == 'word') option.IsFull = true;
         this.callfunc
           .openForm(
             CodxExportAddComponent,
@@ -219,7 +221,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
               type: this.type,
               refType: this.refType,
               refID: this.refID,
-              formModel: this.formModel
+              formModel: this.formModel,
             },
             '',
             option
@@ -386,24 +388,27 @@ export class CodxExportComponent implements OnInit, OnChanges {
     let temlateRecID = null;
     let value = this.exportGroup.value;
     let splitFormat = value?.format.split('_');
-    let templateType="";
-    let templateInfo =[];
+    let templateType = '';
+    let templateInfo = [];
     if (splitFormat.length > 1 && splitFormat[1]) temlateRecID = splitFormat[1];
     switch (splitFormat[0]) {
-      
-      case 'excelTemp':    
-        templateType='AD_ExcelTemplates';  
-        let templateEX = this.dataEx.filter(x=>x.recID==temlateRecID);
-        if(templateEX?.length>0) templateInfo=templateEX[0];
+      case 'excelTemp':
+        templateType = 'AD_ExcelTemplates';
+        let templateEX = this.dataEx.filter((x) => x.recID == temlateRecID);
+        if (templateEX?.length > 0) templateInfo = templateEX[0];
         break;
       case 'wordTemp':
-        templateType='AD_WordTemplates';  
-        let templateW = this.dataWord.filter(x=>x.recID==temlateRecID);
-        if(templateW?.length>0) templateInfo=templateW[0];
+        templateType = 'AD_WordTemplates';
+        let templateW = this.dataWord.filter((x) => x.recID == temlateRecID);
+        if (templateW?.length > 0) templateInfo = templateW[0];
         break;
     }
-    
-    this.dialog && this.dialog.close({templateType:templateType,templateInfo:templateInfo});
+
+    this.dialog &&
+      this.dialog.close({
+        templateType: templateType,
+        templateInfo: templateInfo,
+      });
   }
   downloadFile(data: any) {
     // const blob = new Blob([data], {

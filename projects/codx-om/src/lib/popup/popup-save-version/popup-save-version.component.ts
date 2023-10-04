@@ -12,7 +12,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
 @Component({
@@ -23,7 +23,7 @@ import { CodxOmService } from '../../codx-om.service';
 export class PopupSaveVersionComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
   headerText: string = 'Lưu phiên bản';
-  subHeaderText:string = 'Cho phép lưu phiên bản bộ mục tiêu'
+  subHeaderText: string = 'Cho phép lưu phiên bản bộ mục tiêu';
   dialogRef: DialogRef;
   formModel: FormModel;
   data: any;

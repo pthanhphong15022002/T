@@ -21,11 +21,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { TempNote, Notes, NoteType } from '@shared/models/notes.model';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { UpdateNotePinComponent } from '../update-note-pin/update-note-pin.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { NoteService } from '../note.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'app-add-note',
   templateUrl: './add-note.component.html',

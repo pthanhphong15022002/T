@@ -25,10 +25,10 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
 import { IETables } from '../models/import.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-import-add-template',

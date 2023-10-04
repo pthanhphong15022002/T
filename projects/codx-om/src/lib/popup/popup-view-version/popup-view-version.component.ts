@@ -13,7 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { PopupViewPlanVersionComponent } from '../popup-view-plan-version/popup-view-plan-version.component';
 
@@ -24,13 +24,13 @@ import { PopupViewPlanVersionComponent } from '../popup-view-plan-version/popup-
 })
 export class PopupViewVersionComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
-  headerText='';
+  headerText = '';
 
   dialogRef: DialogRef;
   formModel: FormModel;
   dataPlan: any;
   okrFM: any;
-  versions =[];
+  versions = [];
   isAfterRender: boolean;
   okrGrv: any;
   constructor(
@@ -48,24 +48,23 @@ export class PopupViewVersionComponent extends UIComponent {
     this.funcID = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
-
   }
 
   onInit(): void {
     this.getData();
   }
 
-  getData(){
-    this.omService.getOKRPlansByID(this.dataPlan?.recID).subscribe(res=>{
-      if(res){
-        this.dataPlan=res; 
+  getData() {
+    this.omService.getOKRPlansByID(this.dataPlan?.recID).subscribe((res) => {
+      if (res) {
+        this.dataPlan = res;
         this.versions = this.dataPlan?.versions?.reverse();
-        this.isAfterRender=true;
+        this.isAfterRender = true;
       }
-    })
+    });
   }
   onSaveForm() {}
-  showOldVersion(recID:any){
+  showOldVersion(recID: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     dModel.FormModel = this.okrFM?.krFM;
@@ -75,7 +74,7 @@ export class PopupViewVersionComponent extends UIComponent {
       null,
       null,
       null,
-      [recID,this.funcID,this.okrGrv,this.okrFM],
+      [recID, this.funcID, this.okrGrv, this.okrFM],
       '',
       dModel
     );

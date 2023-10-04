@@ -1,12 +1,27 @@
-import { ChangeDetectorRef, Component, Optional, ViewChild } from '@angular/core';
-import { DialogRef, FormModel, ApiHttpService, CallFuncService, NotificationsService, CacheService, AuthStore, DialogData, Util } from 'codx-core';
-import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
+import {
+  ChangeDetectorRef,
+  Component,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import {
+  DialogRef,
+  FormModel,
+  ApiHttpService,
+  CallFuncService,
+  NotificationsService,
+  CacheService,
+  AuthStore,
+  DialogData,
+  Util,
+} from 'codx-core';
+import { CodxViewFilesComponent } from 'projects/codx-common/src/lib/component/codx-view-files/codx-view-files.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'wp-popup-add-comment',
   templateUrl: './popup-add-comment.component.html',
-  styleUrls: ['./popup-add-comment.component.scss']
+  styleUrls: ['./popup-add-comment.component.scss'],
 })
 export class PopupAddCommentComponent {
   dialogRef: DialogRef = null;
@@ -56,9 +71,9 @@ export class PopupAddCommentComponent {
   emojiPreview: boolean = false;
   emojiPerLine: number = 7;
   emojiMaxFrequentRows: number = 4;
-  defaultImage = "../../../assets/media/svg/files/blank-image.svg"
+  defaultImage = '../../../assets/media/svg/files/blank-image.svg';
   readonly loaderImage = '../../../assets/media/img/loader.gif';
-  fileRef:any = null;
+  fileRef: any = null;
   // popup
   showCBB: boolean = false;
   width: number = 720;
@@ -74,16 +89,14 @@ export class PopupAddCommentComponent {
     private notifySvr: NotificationsService,
     private cache: CacheService,
     private authStore: AuthStore,
-    private codxShareSV : CodxShareService,
+    private codxShareSV: CodxShareService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) 
-  {
+  ) {
     (this.dialogData = dialogData?.data),
       (this.dialogRef = dialogRef),
       (this.user = authStore.get());
-      this.formModel = new FormModel();
-
+    this.formModel = new FormModel();
   }
 
   ngOnInit(): void {
@@ -91,27 +104,26 @@ export class PopupAddCommentComponent {
     this.getSetting();
   }
 
-  ngAfterViewInit() {
-  
-  }
+  ngAfterViewInit() {}
 
   // set data default
   setData() {
-    if (this.dialogData) 
-    {
+    if (this.dialogData) {
       this.headerText = this.dialogData.headerText;
       this.status = this.dialogData.status;
       this.data = this.dialogData.data;
-      if (this.status !== 'edit') 
-      {
+      if (this.status !== 'edit') {
         this.data.recID = Util.uid();
-        this.data.contents = "";
+        this.data.contents = '';
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
-        this.data.category = this.status === "share" ? this.CATEGORY.SHARE : this.CATEGORY.POST;
-        this.data.refType = this.dialogData.refType ? this.dialogData.refType : 'WP_Comments';
+        this.data.category =
+          this.status === 'share' ? this.CATEGORY.SHARE : this.CATEGORY.POST;
+        this.data.refType = this.dialogData.refType
+          ? this.dialogData.refType
+          : 'WP_Comments';
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
-        this.getFileByRefID(this.data.refID)
+        this.getFileByRefID(this.data.refID);
       }
     }
     this.getSettingValue();
@@ -119,10 +131,8 @@ export class PopupAddCommentComponent {
   }
   // get gridViewSetup
   getSetting() {
-    this.cache.functionList('WP')
-    .subscribe((func: any) => {
-      if (func) 
-      {
+    this.cache.functionList('WP').subscribe((func: any) => {
+      if (func) {
         this.formModel.funcID = 'WP';
         this.formModel.formName = func.formName;
         this.formModel.gridViewName = func.gridViewName;
@@ -226,20 +236,17 @@ export class PopupAddCommentComponent {
     }
     this.loaded = true;
     this.data.category = this.CATEGORY.POST;
-    this.data.approveControl = "1"; // bật xét duyệt
+    this.data.approveControl = '1'; // bật xét duyệt
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
     this.data.attachments = this.codxViewFiles.files.length;
     this.data.medias = this.codxViewFiles.medias;
-    this.codxViewFiles.save()
-    .subscribe((res1: boolean) => {
+    this.codxViewFiles.save().subscribe((res1: boolean) => {
       if (res1) {
         this.insertPost(this.data).subscribe((res2: any) => {
-          if (res2) 
-            this.notifySvr.notifyCode('WP024');
-          else 
-            this.notifySvr.notifyCode('WP013');
+          if (res2) this.notifySvr.notifyCode('WP024');
+          else this.notifySvr.notifyCode('WP013');
           this.loaded = false;
           this.dialogRef.close(res2);
         });
@@ -277,7 +284,7 @@ export class PopupAddCommentComponent {
             [this.data]
           )
           .subscribe((res2: any) => {
-            this.notifySvr.notifyCode(res2 ? "SYS007" : "WP021");
+            this.notifySvr.notifyCode(res2 ? 'SYS007' : 'WP021');
             this.loaded = false;
             this.dialogRef.close(this.data);
             this.dt.detectChanges();
@@ -291,7 +298,7 @@ export class PopupAddCommentComponent {
     debugger;
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
-    this.data.approveControl = this.data.shares.isActive ? "0" : "1";
+    this.data.approveControl = this.data.shares.isActive ? '0' : '1';
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -299,17 +306,13 @@ export class PopupAddCommentComponent {
     this.data.medias = this.codxViewFiles.medias;
     this.codxViewFiles.save().subscribe((res1: boolean) => {
       if (res1) {
-        this.insertPost(this.data)
-        .subscribe((res2: any) => {
-          if (res2) 
-            this.notifySvr.notifyCode('WP020');
-          else 
-            this.notifySvr.notifyCode('WP013');
+        this.insertPost(this.data).subscribe((res2: any) => {
+          if (res2) this.notifySvr.notifyCode('WP020');
+          else this.notifySvr.notifyCode('WP013');
           this.loaded = false;
           this.dialogRef.close(res2);
         });
-      } 
-      else this.loaded = false;
+      } else this.loaded = false;
     });
   }
 
@@ -451,29 +454,32 @@ export class PopupAddCommentComponent {
       .subscribe((res: any) => {
         if (res) {
           let _param = JSON.parse(res);
-          if (_param["CopyFormat"] === '1') this.copyFormat = 'keepFormat';
-          if (_param["Publishmode"]) this.data.shareControl = _param["Publishmode"]; 
+          if (_param['CopyFormat'] === '1') this.copyFormat = 'keepFormat';
+          if (_param['Publishmode'])
+            this.data.shareControl = _param['Publishmode'];
         }
       });
   }
-  
 
   // get file by refID
-  getFileByRefID(objectID:string){
+  getFileByRefID(objectID: string) {
     this.api
       .execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetFilesByIbjectIDAsync',
-      [objectID]).subscribe((res:any) => {
-        if(res)
-        {
-          let file = Array.from<any>(res).find((x:any) => x.referType == "image");
-          if(file)
-            file["source"] = this.codxShareSV.getThumbByUrl(file.url,900);
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        [objectID]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          let file = Array.from<any>(res).find(
+            (x: any) => x.referType == 'image'
+          );
+          if (file)
+            file['source'] = this.codxShareSV.getThumbByUrl(file.url, 900);
           this.fileRef = file;
         }
-      })
+      });
   }
 }

@@ -1,9 +1,4 @@
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { D, I, V } from '@angular/cdk/keycodes';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   Component,
   Input,
@@ -12,26 +7,18 @@ import {
   ViewChild,
   Injector,
   ChangeDetectorRef,
-  ViewEncapsulation,
-  OnChanges,
   SimpleChanges,
-  OnDestroy,
   EventEmitter,
   Output,
-  Optional,
   AfterViewInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
-import { DayMarkers } from '@syncfusion/ej2-gantt';
 import {
   AuthStore,
   ButtonModel,
   DataRequest,
-  DialogData,
   DialogRef,
   FormModel,
-  LayoutService,
   NotificationsService,
   RequestOption,
   ResourceModel,
@@ -41,18 +28,12 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import moment from 'moment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 
 import { CodxBpService } from '../codx-bp.service';
-import {
-  BP_Processes,
-  BP_ProcessOwners,
-  BP_ProcessSteps,
-  ColumnsModel,
-} from '../models/BP_Processes.model';
+import { BP_Processes, ColumnsModel } from '../models/BP_Processes.model';
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-processsteps',
@@ -167,7 +148,7 @@ export class ProcessStepsComponent
     private fileService: FileService
   ) {
     super(inject);
-    this.funcID = "BPT11";
+    this.funcID = 'BPT11';
     this.user = this.authStore.get();
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {

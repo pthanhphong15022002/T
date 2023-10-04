@@ -15,7 +15,7 @@ import {
 } from 'codx-core';
 import { CM_DealsCompetitors } from 'projects/codx-cm/src/lib/models/cm_model';
 import { CodxCmService } from 'projects/codx-cm/src/projects';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -125,7 +125,8 @@ export class PopupAddDealcompetitorComponent implements OnInit {
   }
 
   async addHandle() {
-    if(this.competitorID != this.data.competitorID) this.data.competitorID = this.competitorID;
+    if (this.competitorID != this.data.competitorID)
+      this.data.competitorID = this.competitorID;
     if (
       this.data?.competitorID == null ||
       this.data?.competitorID.trim() == ''

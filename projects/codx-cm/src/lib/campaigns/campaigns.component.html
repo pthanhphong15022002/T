@@ -23,7 +23,7 @@
 <!--Card-->
 <ng-template #templateViewCard let-data>
   <codx-card-img
-    cardCss="card-process border border-gray-200 rounded-2 h-300px
+    cardCss="card-process border border-gray-200 rounded-2 h-235px
       w-225px card-no-body"
     [imageObjType]="view?.formModel?.entityName"
     imgCss="w-100 h-150px"
@@ -64,7 +64,7 @@
             "
           ></div>
         </div>
-        <div
+        <!-- <div
           class="d-flex justify-content-between align-items-start w-100 h-40px"
         >
           <div
@@ -90,8 +90,8 @@
                 | async
             "
           ></div>
-        </div>
-        <div class="d-flex justify-content-end footerCard-item">
+        </div> -->
+        <div class="d-flex justify-content-start footerCard-item">
           <span class="icon-access_alarm icon-16 me-2"></span>
           <span
             class="text-gray-800"
@@ -192,19 +192,21 @@
 </ng-template>
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
-    <div class="d-flex justify-content-between align-items-start w-100 h-40px">
+    <div class="d-flex justify-content-between align-items-start w-100">
       <div
         #description
-        [id]="'elementDescription'"
+        [id]="data?.recID"
         class="fs-6 text-gray-800"
-        [style.height]="seeMore(data) ? '40px' : 'auto'"
-        [ngClass]="seeMore(data) ? 'line-clamp line-clamp-2 text-popover' : ''"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkIsCollapsed(data?.recID)
+            ? 'line-clamp line-clamp-2 text-popover'
+            : ''
+        "
         [ngbPopover]="setTextPopover(data?.description)"
         #p1="ngbPopover"
         [openDelay]="500"
-        (mouseenter)="
-          seeMore(data) ? PopoverDetail($event, p1, data, 'description') : null
-        "
+        (mouseenter)="PopoverDetail($event, p1, data, 'description')"
         (mouseleave)="p1.close()"
         placement="bottom right top"
         [popoverClass]="data?.recID"
@@ -298,13 +300,18 @@
 </ng-template>
 <!--End List detail-->
 
-<ng-template #templateViewDetail >
-  <codx-form [body]="dbClickDetail" [customToolbar]="headerToolBar" [dialog]="dialogViewDetail"> </codx-form>
+<ng-template #templateViewDetail>
+  <codx-form
+    [body]="dbClickDetail"
+    [customToolbar]="headerToolBar"
+    [dialog]="dialogViewDetail"
+  >
+  </codx-form>
   <ng-template #headerToolBar>
-    <div class="d-flex justify-content-end" style="width: 100% !important;">
+    <div class="d-flex justify-content-end" style="width: 100% !important">
       <button
         class="button-close"
-        style="border: none; outline: none; background: none;"
+        style="border: none; outline: none; background: none"
         (click)="dialogViewDetail.close()"
       >
         <i class="icon-close icon-18 text-hover-danger p-1"></i>
