@@ -194,7 +194,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field.refType = null;
       this.field.refValue = null;
       this.field.dataFormat = null;
-      this.field.multiselect = null;
+      this.field.multiselect = false;
     }
 
     if (e && e.field) this.field[e.field] = e?.data;

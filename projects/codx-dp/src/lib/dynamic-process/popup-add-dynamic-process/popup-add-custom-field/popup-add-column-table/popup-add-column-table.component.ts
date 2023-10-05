@@ -186,7 +186,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       this.column.refType = null;
       this.column.refValue = null;
       this.column.dataFormat = null;
-      this.column.multiselect = null;
+      this.column.multiselect = false;
     }
 
     if (e && e.field) {
@@ -426,8 +426,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       );
   }
 
-  async cbxChangeVll(value, elm) {
-    if (elm) this.element = elm;
+  async cbxChangeVll(value, elm: ComboBoxComponent) {
+    if (!this.datasVllCbx) this.datasVllCbx = elm;
+    // if (elm) this.element = elm;
     this.column['refValue'] = value;
     if (!value) {
       //data form
@@ -492,7 +493,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
-    this.formTable.formGroup.patchValue(this.column);
+    this.formColumn.formGroup.patchValue(this.column);
     this.changeRef.detectChanges();
   }
 
