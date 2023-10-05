@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ItemBatchs } from '../../../models/ItemBatchs.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-item-batchs',
@@ -22,6 +23,7 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   formType: any;
   validate: any = 0;
   keyField: any = '';
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
     inject: Injector,
@@ -45,6 +47,16 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
   }
 
   //End Constructor
+
+  //affterviewinit
+  ngAfterViewInit()
+  {
+    this.form.onAfterInit.subscribe((res:any)=>{
+      if(res){
+        this.setValidateForm();
+      }
+    })
+  }
 
   //Init
   
@@ -111,8 +123,9 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
+          this.form
           .save(null, 0, '', 'SYS006', true)
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res.save) {
               this.dialog.close();
@@ -121,7 +134,10 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
         });
       }
       if (this.formType == 'edit') {
-        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
+        this.form
+        .save(null, 0, '', '', true)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
           if (res && res.update.data != null) {
             this.dialog.close({
               update: true,
@@ -272,5 +288,17 @@ export class PopAddItemBatchsComponent extends UIComponent implements OnInit{
     }
   }
 
+  //#region Function
+  /**
+   * *Hàm thay đổi validate form
+   */
+  setValidateForm(){
+    let rBatchNo = true;
+    let lsRequire :any = [];
+    if(this.form.data?._keyAuto == 'BatchNo') rBatchNo = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    lsRequire.push({field : 'BatchNo',isDisable : false,require:rBatchNo});
+    this.form.setRequire(lsRequire);
+  }
+  //#endregion Function
   //End Function
 }

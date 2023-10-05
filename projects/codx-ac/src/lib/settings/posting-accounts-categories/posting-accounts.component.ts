@@ -41,6 +41,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItempostingaccountsComponent extends UIComponent {
+
   //#region Constructor
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -65,7 +66,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   constructor(private inject: Injector, private callfunc: CallFuncService) {
     super(inject);
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit() {
@@ -136,7 +137,47 @@ export class ItempostingaccountsComponent extends UIComponent {
     this.destroy$.next();
     this.destroy$.complete();
   }
-  //#endregion;
+
+  //#endregion Init
+
+  //#region Event
+
+  /**
+   * *Hàm xử lí click trên toolbar
+   * @param e 
+   */
+  toolBarClick(e) {
+    switch (e.id) {
+      case 'btnAdd':
+        this.addNew(e); //? thêm mới tài khoản hạch toán
+        break;
+    }
+  }
+
+  /**
+   * *Hàm xử lí click morefunction
+   * @param e 
+   * @param data 
+   */
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data); //? xóa tài khoản hạch toán
+        break;
+      case 'SYS03':
+        this.edit(e, data); //? chỉnh sửa tài khoản hạch toán
+        break;
+      case 'SYS04':
+        this.copy(e, data); //? sao chép tài khoản hạch toán
+        break;
+    }
+  }
+
+  /**
+   * *Hàm xử lí click các menu header (hàng tồn kho,mua hàng,...)
+   * @param e 
+   * @returns 
+   */
   clickMenu(e: any) {
     if (e === this.menuActive) return;
     switch (e) {
@@ -164,6 +205,11 @@ export class ItempostingaccountsComponent extends UIComponent {
     }, 100);
   }
 
+  /**
+   * *Hàm xử lí click các sub menu con của các header
+   * @param value 
+   * @returns 
+   */
   clickMenuItem(value: any) {
     if (this.postType == value) return;
     this.postType = value;
@@ -172,28 +218,14 @@ export class ItempostingaccountsComponent extends UIComponent {
     }, 100);
   }
 
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.addNew(e);
-        break;
-    }
-  }
-
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e, data);
-        break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-    }
-  }
+  //#endregion Event
   
+  //#region Function
+
+  /**
+   * *Hàm thêm mới thiết lập tài khoản hạch toán
+   * @param e 
+   */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
@@ -232,6 +264,12 @@ export class ItempostingaccountsComponent extends UIComponent {
     }
     
   }
+
+  /**
+   * *Hàm chỉnh sửa thiết lập tài khoản hạch toán
+   * @param e 
+   * @param dataEdit 
+   */
   edit(e, dataEdit) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
@@ -257,6 +295,12 @@ export class ItempostingaccountsComponent extends UIComponent {
         }
       });
   }
+
+  /**
+   * *Hàm sao chép thiết lập tài khoản hạch toán
+   * @param e 
+   * @param dataCopy 
+   */
   copy(e, dataCopy) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
@@ -282,10 +326,21 @@ export class ItempostingaccountsComponent extends UIComponent {
         }
       });
   }
+
+  /**
+   * *Hàm xóa thiết lập tài khoản hạch toán
+   * @param dataDelete 
+   */
   delete(dataDelete) {
     this.eleGrid.deleteRow(dataDelete);
   }
 
+  /**
+   * *Hàm lấy tên subhearder
+   * @param valueHeader 
+   * @param valueItem 
+   * @returns 
+   */
   getSubHeader(valueHeader,valueItem){
     let textheader;
     let textitem;
@@ -301,4 +356,6 @@ export class ItempostingaccountsComponent extends UIComponent {
     }
     return textheader + ' > ' + textitem
   }
+
+  //#endregion Function
 }
