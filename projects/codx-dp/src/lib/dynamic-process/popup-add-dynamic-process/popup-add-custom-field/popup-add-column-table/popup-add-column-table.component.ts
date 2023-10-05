@@ -642,6 +642,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
           this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
         } else {
           this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+          this.idxEdit = -1;
         }
       }
     }
@@ -654,7 +655,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
     if (idx == -1)
       this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-    else this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+    else {
+      this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+      this.idxEdit = -1;
+    }
 
     this.column = new ColumnTable();
     this.column.recID = Util.uid();
@@ -766,7 +770,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  editColumn(value) {
+  editColumn(value, index) {
+    this.idxEdit = index;
     this.column = JSON.parse(JSON.stringify(value));
     if (this.column.dataFormat == 'V') this.loadDataVll();
     this.formTable.formGroup.patchValue(this.column);
@@ -787,12 +792,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     let isShowMore = !this.isShowMore;
     let width = '1100';
     // tạm tắt
-    if (isShowMore) {
-      let element = document.getElementById('table');
-      if (element) {
-        width = (element.offsetWidth + 50).toString();
-      }
-    }
+    // if (isShowMore) {
+    //   let element = document.getElementById('table');
+    //   if (element) {
+    //     width = (element.offsetWidth + 50).toString();
+    //   }
+    // }
     // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
     //   return;
 
