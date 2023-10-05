@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-core';
+import { AddImportDetailsComponent } from '../add-import-details/add-import-details.component';
 
 @Component({
   selector: 'lib-add-ietables',
@@ -8,8 +9,10 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-cor
 })
 export class AddIetablesComponent implements OnInit {
   dialog:any;
-  data:any;
+  data:any = {};
   formModel:any;
+  sourceField:any;
+  selectedSheet:any;
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -18,6 +21,8 @@ export class AddIetablesComponent implements OnInit {
   ) 
   { 
     this.dialog = dialog;
+    this.sourceField = dt?.data?.sourceField;
+    this.selectedSheet = dt?.data?.selectedSheet;
   }
   ngOnInit(): void {
     this.formModel = 
@@ -25,10 +30,39 @@ export class AddIetablesComponent implements OnInit {
       formName: 'IETables',
       gridViewName: 'grvIETables'
     }
+
+    this.setValue();
+  }
+
+  setValue()
+  {
+    this.data.sourceTable = this.selectedSheet;
   }
 
   valueChange(e:any)
   {
+    this.data[e?.fileName] = e?.data
+  }
 
+  openFormAddImportDetail()
+  {
+    this.callfunc.openForm(
+      AddImportDetailsComponent,
+      null,
+      1000,
+      800,
+      '',
+      [
+        this.formModel,
+        this.data,
+        this.sourceField[0],
+      ],
+      null
+    );
+  }
+
+  onSave()
+  {
+    this.dialog.close(this.data);
   }
 }
