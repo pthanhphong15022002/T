@@ -1,6 +1,11 @@
 <div class="w-100 h-100">
-    <codx-listview #codxListView [itemTemplate]="searched ? itemTemplateSearch : itemTemplateGroup" [funcId]="funcID"
-        service="WP" [fields]="idField" assemblyName="ERM.Business.WP" className="GroupBusiness" method="GetGroupAsync"
+    <codx-listview #codxListView
+        [itemTemplate]="searched ? itemTemplateSearch : itemTemplateGroup" 
+        [funcId]="funcID"
+        service="WP" 
+        assemblyName="ERM.Business.WP" 
+        className="GroupBusiness"
+        method="GetGroupAsync"
         [selectFirst]="false">
     </codx-listview>
 </div>

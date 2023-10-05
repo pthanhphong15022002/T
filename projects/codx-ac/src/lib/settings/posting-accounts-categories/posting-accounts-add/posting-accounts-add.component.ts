@@ -18,8 +18,11 @@ import {
   NotificationsService,
   DialogData,
   RequestOption,
+  CodxInputComponent,
+  CodxGridviewV2Component,
 } from 'codx-core';
 import { IVPostingAccounts } from '../../../models/IVPostingAccounts.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-posting-accounts-add',
@@ -37,6 +40,10 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   moduleID: any;
   postType: any;
   dataDefault: any;
+  eleGrid:any;
+  funcName:any;
+  lblAdd:any;
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -46,172 +53,119 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.dialog = dialog;
-    this.headerText = dialogData.data?.headerText;
-    this.subheaderText = dialogData.data?.subheaderText;
+    this.headerText = dialogData?.data?.headerText;
+    this.subheaderText = dialogData?.data?.subheaderText;
     this.dataDefault = {...dialogData.data?.dataDefault};
-    // if (
-    //   dialogData.data?.moduleID != null &&
-    //   dialogData.data?.postType != null
-    // ) {
-    //   this.moduleID = dialogData.data?.moduleID;
-    //   this.postType = dialogData.data?.postType;
-    //   this.itemposting.moduleID = this.moduleID;
-    //   this.itemposting.postType = this.postType;
-    // }
-    
-    // this.cache
-    //   .gridViewSetup(dialog.formModel.formName, dialog.formModel.gridViewName)
-    //   .subscribe((res: []) => {
-    //     if (res) {
-    //       this.gridViewSetup = res;
-    //     }
-    //   });
+    this.funcName = dialogData?.data?.funcName;
+    this.eleGrid = dialogData.data?.eleGrid;
   }
-  //#endregion
+  //#endregion Contructor
 
   //#region Init
-  onInit(): void {}
-
-  ngAfterViewInit() {
+  onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
   }
+
+  onAfterInit(e){
+    this.setValidateForm();
+  }
+
+  ngAfterViewInit() {}
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
-  //#endregion
+
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  //#endregion Init
 
   //#region Event
   valueChange(e: any) {
-    //this.itemposting[e.field] = e.data;
+    switch (e.field.toLowerCase()){
+      case 'itemlevel':
+        this.form.setValue('itemValue','',{onlySelf: true,emitEvent: false});
+        break;
+      case 'objecttype':
+        this.form.setValue('objectLevel','',{onlySelf: true,emitEvent: false});
+        break;
+      case 'objectlevel':
+        if (e.data == '3') {
+          this.form.setValue('objectValue',' ',{onlySelf: true,emitEvent: false});
+        }
+        break;
+    }
+    this.form.setValue(e.field,e.data,{onlySelf: true,emitEvent: false});
+    this.setValidateForm();
   }
-  valueChangeCust(e: any) {
-  //   this.itemposting.objectValue = '';
-  //   if (e.field == 'objectLevel' && e.data == '3') {
-  //     this.gridViewSetup['ObjectValue'].isRequire = false;
-  //   } else {
-  //     this.gridViewSetup['ObjectValue'].isRequire = true;
-  //   }
-  //   this.itemposting[e.field] = e.data;
-  // }
-  // valueChangeItemLevel(e: any) {
-  //   this.itemposting.itemValue = '';
-  //   if (e.data == '4') {
-  //     this.gridViewSetup['ItemValue'].isRequire = false;
-  //   } else {
-  //     this.gridViewSetup['ItemValue'].isRequire = true;
-  //   }
-  //   this.itemposting[e.field] = e.data;
-  }
-  //#endregion
-
-  //#region Function
-  checkValidate() {
-    // if (this.itemposting.itemLevel == '4') {
-    //   this.gridViewSetup['ItemValue'].isRequire = false;
-    // }
-    // if (this.itemposting.objectLevel == '3') {
-    //   this.gridViewSetup['ObjectValue'].isRequire = false;
-    // }
-    // var keygrid = Object.keys(this.gridViewSetup);
-    // var keymodel = Object.keys(this.itemposting);
-    // for (let index = 0; index < keygrid.length; index++) {
-    //   if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-    //     for (let i = 0; i < keymodel.length; i++) {
-    //       if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-    //         if (
-    //           this.itemposting[keymodel[i]] == null ||
-    //           String(this.itemposting[keymodel[i]]).match(/^ *$/) !== null
-    //         ) {
-    //           this.notification.notifyCode(
-    //             'SYS009',
-    //             0,
-    //             '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-    //           );
-    //           this.validate++;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-  }
-  //#endregion
+  
+  //#endregion Event
 
   //#region Method
-  onSave() {
-    // this.checkValidate();
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-    //   if (this.formType == 'add' || this.formType == 'copy') {
-    //     this.dialog.dataService
-    //       .save((opt: RequestOption) => {
-    //         opt.methodName = 'AddAsync';
-    //         opt.className = 'PostingAccountsBusiness';
-    //         opt.assemblyName = 'AC';
-    //         opt.service = 'AC';
-    //         opt.data = [this.itemposting];
-    //         return true;
-    //       })
-    //       .subscribe((res) => {
-    //         if (res.save) {
-    //           this.dialog.close();
-    //           this.dt.detectChanges();
-    //         } else {
-    //           this.notification.notify('Thiết lập đã tồn tại', '2');
-    //           return;
-    //         }
-    //       });
-    //   }
-    //   if (this.formType == 'edit') {
-    //     this.dialog.dataService
-    //       .save((opt: RequestOption) => {
-    //         opt.methodName = 'UpdateAsync';
-    //         opt.className = 'PostingAccountsBusiness';
-    //         opt.assemblyName = 'AC';
-    //         opt.service = 'AC';
-    //         opt.data = [this.itemposting];
-    //         return true;
-    //       })
-    //       .subscribe((res) => {
-    //         if (res.save || res.update) {
-    //           this.dialog.close();
-    //           this.dt.detectChanges();
-    //         }
-    //       });
-    //   }
-    // }
+  onSave(type) {
+    this.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) {
+        return;
+      }
+      if((res.save && !res.save.error) || (res.update && !res.update.error)){
+        if (this.form.data.isAdd || this.form.data.isCopy)
+            (this.eleGrid as CodxGridviewV2Component).addRow(this.form.data,0,true,false);
+        else
+            (this.eleGrid as CodxGridviewV2Component).updateRow(parseInt(this.form.data.index),this.form.data,false);
+        if (type == 'save') {
+          this.dialog.close();
+        }else{
+          this.dialog.dataService.addNew().subscribe((res: any) => {
+            if (res) {
+              res.isAdd = true;
+              res.moduleID = this.dataDefault.moduleID;
+              res.postType = this.dataDefault.postType;
+              if(this.form.data.isEdit || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
+              this.form.refreshData({...res});
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        if (this.form.data.isAdd || this.form.data.isCopy)
+            this.notification.notifyCode('SYS006');
+        else 
+            this.notification.notifyCode('SYS007');
+      }
+    });
   }
-  onSaveAdd() {
-    // this.checkValidate();
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-    //   this.dialog.dataService
-    //     .save((opt: RequestOption) => {
-    //       opt.methodName = 'AddAsync';
-    //       opt.className = 'PostingAccountsBusiness';
-    //       opt.assemblyName = 'AC';
-    //       opt.service = 'AC';
-    //       opt.data = [this.itemposting];
-    //       return true;
-    //     })
-    //     .subscribe((res) => {
-    //       if (res.save) {
-    //         this.dialog.dataService.clear();
-    //         this.dialog.dataService.addNew().subscribe((res) => {
-    //           this.form.formGroup.patchValue(res);
-    //           this.itemposting = this.dialog.dataService.dataSelected;
-    //           this.itemposting.moduleID = this.moduleID;
-    //           this.itemposting.postType = this.postType;
-    //         });
-    //       } else {
-    //         this.notification.notify('Thiết lập đã tồn tại', '2');
-    //         return;
-    //       }
-    //     });
-    // }
+  
+  //#endregion Method
+
+  //#region Function
+
+  /**
+   * *Hàm thay đổi validate form
+   */
+  setValidateForm(){
+    let rItemValue = false;
+    let rObjectLevel = false;
+    let rObjectValue = false;
+    let lsRequire :any = [];
+    if((this.form.data.itemLevel != '' && this.form.data.itemLevel != null) && this.form.data.itemLevel != '4') rItemValue = true;
+    lsRequire.push({field : 'ItemValue',isDisable : false,require:rItemValue});
+
+    if(this.form.data.objectLevel == '' || this.form.data.objectLevel == null) rObjectLevel = true;
+    lsRequire.push({field : 'ObjectLevel',isDisable : false,require:rObjectLevel});
+
+    if(this.form.data.objectLevel && this.form.data.objectLevel != '3') rObjectValue = true; //? thiết lập require khi mã khác tất cả
+    lsRequire.push({field : 'ObjectValue',isDisable : false,require:rObjectValue});
+
+    this.form.setRequire(lsRequire);
+
+    console.log(this.form.formModel.fieldRequired);
   }
-  //#endregion
+
+  //#endregion Function
 }

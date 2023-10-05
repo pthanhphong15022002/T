@@ -1,5 +1,5 @@
 <codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="dialog.formModel"
-    [dialog]="dialog" [footer]="footer" [data]="dataDefault" class="ac-animation-slideRight">
+    [dialog]="dialog" [footer]="footer" [data]="dataDefault" class="ac-animation-slideRight" (onAfterInit)="onAfterInit($event)">
 </codx-form>
 <ng-template #subHeader>
     <div class="text-primary fw-bold fs-5">
@@ -7,21 +7,170 @@
     </div>
 </ng-template>
 <ng-template #body>
-
+    <ng-container *ngIf="form?.formGroup">.
+        <div class="mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Căn cứ"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemLevel"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="itemLevel"
+                        (valueChange)="valueChange($event)">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ItemValue"></codx-label>
+                    <codx-input
+                        *ngIf="form.data.itemLevel == null || form.data.itemLevel == '' || form.data.itemLevel == '4'"
+                        type="text" [disabled]="true">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.itemLevel == '1'" type="combobox" refValue="Items"
+                        (valueChange)="valueChange($event)" [crrValue]="form.data.itemValue" field="itemValue">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.itemLevel == '2'" type="combobox" refValue="ItemGroups"
+                        (valueChange)="valueChange($event)" [crrValue]="form.data.itemValue" field="itemValue">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.itemLevel == '3'" type="combobox" refValue="ProductLines"
+                        (valueChange)="valueChange($event)" [crrValue]="form.data.itemValue" field="itemValue">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ObjectType"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)" field="objectType">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ObjectLevel"></codx-label>
+                    <codx-input *ngIf="form.data.objectType == null || form.data.objectType == ''" type="text"
+                        [disabled]="true">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.objectType == '1' || form.data.objectType == '2'" type="valuelist"
+                        [crrValue]="form.data.objectLevel" refValue="AC054" (valueChange)="valueChange($event)"
+                        field="objectLevel">
+                    </codx-input>
+                    <codx-input *ngIf="form.data.objectType == '3' || form.data.objectType == '6'" type="valuelist"
+                        [crrValue]="form.data.objectLevel" refValue="AC055" (valueChange)="valueChange($event)"
+                        field="objectLevel">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="ObjectValue"></codx-label>
+                    <codx-input *ngIf="((form.data.objectType == null || form.data.objectType == '') || (form.data.objectLevel == null || form.data.objectLevel == '')) 
+                    || form.data.objectLevel == '3'" type="text" [disabled]="true">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '1' && form.data.objectLevel == '1')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox"
+                        refValue="Customers" field="objectValue">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '1' && form.data.objectLevel == '2')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox" refValue="CustomerGroups"
+                        field="objectValue">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '2' && form.data.objectLevel == '1')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox" refValue="VendorsAC" field="objectValue">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '2' && form.data.objectLevel == '2')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox" refValue="VendorGroups" field="objectValue">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '3' && form.data.objectLevel == '1')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox" refValue="EmployeesAC" field="objectValue">
+                    </codx-input>
+                    <codx-input *ngIf="(form.data.objectType == '6' && form.data.objectLevel == '1')"
+                        [crrValue]="form.data.objectValue" (valueChange)="valueChange($event)" type="combobox" refValue="Warehouses" field="objectValue">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="OrderPoolID"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="orderPoolID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="WarehouseID"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="warehouseID">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="BUID"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="buid">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2 mb-1 text-primary fw-bold fs-5">
+            <codx-label [formModel]="form.formModel" default="Tài khoản"></codx-label>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="accountID">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DIM3"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="diM3">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DIM1"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="diM1">
+                    </codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" fiedName="DIM2"></codx-label>
+                    <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="diM2">
+                    </codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+            <codx-input [disabled]="form?.data?._keyAuto == 'Note' ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" field="note">
+            </codx-input>
+        </div>
+    </ng-container>
 </ng-template>
 <ng-template #footer>
-    <!-- <div class="d-flex justify-content-end mt-1 me-3">
-        <div *ngIf="formType != 'edit'" class="ms-2">
-            <button type="button" class="btn btn-light-primary" (click)="onSaveAdd()">
-                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-                    [gridViewName]="formModel?.gridViewName" default="Lưu & thêm"></codx-label>
-            </button>
-        </div>
-        <div class="ms-2">
-            <button type="button" class="btn btn-primary" style="min-width: 60px;" (click)="onSave()">
-                <codx-label class="fs-6 fw-normal" fiedName="lblSave" [formName]="formModel?.formName"
-                    [gridViewName]="formModel?.gridViewName" default="Lưu"></codx-label>
-            </button>
-        </div>
-    </div> -->
+    <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+        <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+          style="border: 1px solid var(--primary-dark) !important" type="button"
+          (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+        </button>
+        <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
+          class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+          (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
+          <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+        </button>
+      </div>
 </ng-template>
