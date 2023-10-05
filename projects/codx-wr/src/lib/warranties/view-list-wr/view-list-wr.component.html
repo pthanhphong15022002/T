@@ -312,7 +312,7 @@
         >
           <codx-imgs
             [width]="30"
-            [objectId]="data?.createdBy"
+            [objectId]="data?.owner"
             ojectType="AD_Users"
             [numberImages]="1"
             [isToolTip]="false"
@@ -344,7 +344,7 @@
           <div style="position: absolute; right: 0px; bottom: 0px">
             <span
               ><img
-                src="/assets/themes/wr/default/img/{{ getIcon('I') }}"
+                src="/assets/themes/wr/default/img/{{ getIcon('TL') }}"
                 alt=""
             /></span>
           </div>
@@ -367,7 +367,7 @@
           <div style="position: absolute; right: 0px; bottom: 0px">
             <span
               ><img
-                src="/assets/themes/wr/default/img/{{ getIcon('F') }}"
+                src="/assets/themes/wr/default/img/{{ getIcon('E') }}"
                 alt=""
             /></span>
           </div>
@@ -377,12 +377,12 @@
           <div class="d-flex justify-content-center fw-bold fs-6">
             <span
               [innerHTML]="
-                data?.createdBy | formatvalue : formModel : 'createdBy' | async
+                data?.owner | formatvalue : formModel : 'owner' | async
               "
             ></span>
           </div>
           <div class="d-flex justify-content-center">
-            {{ gridViewSetup?.CreatedBy?.headerText }}
+            {{ gridViewSetup?.Owner?.headerText }}
           </div>
         </ng-template>
 

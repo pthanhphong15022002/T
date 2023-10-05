@@ -351,9 +351,9 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
                 this.dialog.dataService.addNew().subscribe((res: any) => {
                   if (res) {
                     res.isAdd = true;
+                    if(this.form.data.isEdit || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
                     this.form.refreshData({...res});
                     this.lstExchangeRate = [];
-                    if(this.form.data.isAdd || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
                     this.detectorRef.detectChanges();
                   }
                 });

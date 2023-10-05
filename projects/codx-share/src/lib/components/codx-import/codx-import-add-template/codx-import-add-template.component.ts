@@ -430,19 +430,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
             this.mappingTemplate?.MappingName;
           this.dataIETables.destinationTable =
             this.mappingTemplate?.MappingName;
-          //this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
           this.getGridViewSetup();
         }
       });
-    /*  request.comboboxName = "EntityImport";
-    this.api
-    .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
-      if(item[0])
-      {
-
-      }
-
-    }) */
+   
     this.cache.valueList('SYS010').subscribe((item) => {
       if (item) {
         this.importRule = item.datas;
