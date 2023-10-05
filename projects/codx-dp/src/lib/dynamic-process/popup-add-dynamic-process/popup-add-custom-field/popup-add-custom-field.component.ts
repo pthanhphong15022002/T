@@ -127,7 +127,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   maxNumber = 0;
 
   //column Table
-  column: ColumnTable;
+  // column: ColumnTable;
   listColumns = [];
   settingWidth = false;
   isShowMore = false;
@@ -190,11 +190,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field[e.field] = e.data;
       return;
     }
-    if (e.field == 'dataType' && e.data != this.column.dataType) {
-      this.column.refType = null;
-      this.column.refValue = null;
-      this.column.dataFormat = null;
-      this.column.multiselect = null;
+    if (e.field == 'dataType' && e.data != this.field.dataType) {
+      this.field.refType = null;
+      this.field.refValue = null;
+      this.field.dataFormat = null;
+      this.field.multiselect = null;
     }
 
     if (e && e.field) this.field[e.field] = e?.data;
