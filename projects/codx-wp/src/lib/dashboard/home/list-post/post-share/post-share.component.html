@@ -58,7 +58,6 @@
                               [icoCss]="'symbol-12px symbol-circle'"
                               [showBgColor]="true">
                             </codx-vll>
-                            <i class="icon-arrow_drop_down icon-18 text-dark"></i>
                           </div>
                         </ng-container>
                         <ng-container *ngIf="data.shareName">
@@ -73,7 +72,6 @@
                 </div>
               </div>
             </ng-container>
-            <!-- WP_News -->
             <ng-container *ngSwitchCase="'WP_News'">
               <div class="WP_News" (click)="clickViewDetail(data)">
                 <div class="WP_News-images">
@@ -108,7 +106,6 @@
                 </div>
               </div>
             </ng-container>
-            <!-- WP_News -->
             <ng-container *ngSwitchCase="'FD_Cards'">
               <div class="FD_Cards">
                 <ng-container *ngTemplateOutlet="tmplateCard; context: { $implicit: data }">
@@ -195,7 +192,6 @@
   </div>
 </ng-template>
 
-<!-- template list permissions share -->
 <ng-template #templateShares let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -224,7 +220,6 @@
     </div>
   </div>
 </ng-template>
-<!-- template list permissions tag -->
 <ng-template #templateTags let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -254,7 +249,6 @@
   </div>
 </ng-template>
 
-<!-- post deleted -->
 <ng-template #postShareDeleted>
   <div class="card card-custom card-border border border-1 mt-3">
     <div class="card-body p-5">

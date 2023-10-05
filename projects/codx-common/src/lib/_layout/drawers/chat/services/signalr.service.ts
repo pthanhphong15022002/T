@@ -50,31 +50,30 @@ export class SignalRService {
   public registerOnServerEvents() {
     this.hubConnection.on('ReceiveMessage', (res) => {
       if (res) {
-        let data = res.data;
-        switch (data.action) {
+        switch (res.event) {
           case 'onConnected':
             break;
           case 'onDisconnected':
-            this.disConnected.emit(data);
+            this.disConnected.emit(res.data);
             break;
           case 'activeNewGroup':
-            this.activeNewGroup.emit(data);
+            this.activeNewGroup.emit(res.data);
             break;
           case 'activeGroup':
-            this.activeGroup.emit(data);
+            this.activeGroup.emit(res.data);
             break;
           case 'sendMessage':
-            this.chat.emit(data);
+            this.chat.emit(res.data);
             break;
           case 'deletedMessage':
-            this.chat.emit(data);
+            this.chat.emit(res.data);
             break;
           case 'voteMessage':
-            this.voteChat.emit(data);
+            this.voteChat.emit(res.data);
             break;
           case 'sendMessageSystem':
-            this.chat.emit(data);
-            this.activeGroup.emit(data);
+            this.chat.emit(res.data);
+            this.activeGroup.emit(res.data);
             break;
         }
       }
@@ -87,10 +86,10 @@ export class SignalRService {
 
   disconnect(user: any) {
     let ele = document.getElementsByTagName('codx-chat-container');
-    if (ele?.length > 0) {
-      ele[0].remove();
+    if (ele) {
+      ele[0]?.remove();
     }
     this.logOut = true;
-    this.hubConnection.invoke('LogOutAsync', user?.userID, user?.tenant);
+    this.hubConnection.invoke('LogOutAsync', user.userID, user.tenant);
   }
 }
