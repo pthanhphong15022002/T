@@ -21,11 +21,10 @@ import {
   ApiHttpService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
 import { tmpUser } from '../../models/BP_UserPermission.model';
-import moment from 'moment';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-add-processes',
   templateUrl: './popup-add-processes.component.html',

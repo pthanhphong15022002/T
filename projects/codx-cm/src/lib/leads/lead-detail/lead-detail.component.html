@@ -234,6 +234,19 @@
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
+
+                  <div
+                  *ngIf="dataSelected?.statusCode && dataSelected.applyProcess"
+                  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+                >
+                  <span
+                    class="text-ellipsis line-clamp line-clamp-2"
+                    [ngbTooltip]="getStatusCode(dataSelected?.statusCode)"
+                    > {{getStatusCode(dataSelected?.statusCode)}} 1233</span
+                  >
+                </div>
+
+
                     <div
                       *ngIf="
                         dataSelected.status == '2' && dataSelected.applyProcess;
@@ -915,6 +928,7 @@
                     [applyFor]="'5'"
                     (continueStep)="continueStep($event)"
                     (saveAssignTask)="saveAssign($event)"
+                    [ownerInstance]="dataSelected?.owner"
                   ></step-task>
                 </div>
               </ng-template>

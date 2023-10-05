@@ -14,7 +14,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { OM_Statistical } from '../../model/okr.model';
 
@@ -24,11 +24,11 @@ import { OM_Statistical } from '../../model/okr.model';
   styleUrls: ['./popup-view-plan-version.component.scss'],
 })
 export class PopupViewPlanVersionComponent extends UIComponent {
-  headerText='Xem phiên bản';
+  headerText = 'Xem phiên bản';
 
   dialogRef: DialogRef;
   formModel: FormModel;
-  
+
   okrFM: any;
   isAfterRender: boolean;
   okrGrv: any;
@@ -36,11 +36,11 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   dataOKRPlans: any;
   planNull: boolean;
   dataOKR: any;
-  value=new OM_Statistical();
+  value = new OM_Statistical();
   loadedData = false;
   curUser: any;
   isCollapsed = false;
-  totalOB=0;
+  totalOB = 0;
   constructor(
     private injector: Injector,
     private codxOmService: CodxOmService,
@@ -62,44 +62,39 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   onInit(): void {
     this.getData();
   }
-  
-  getData(){
-    this.codxOmService
-        .getOKRPlansByID(this.planID)
-        .subscribe((item: any) => {
-          //Reset data View
-          //this.isCollapsed = false;
-          if (item) {
-            this.dataOKRPlans = item;
-            this.codxOmService
-              .getAllOKROfPlan(item?.recID)
-              .subscribe((okrs: any) => {
-                if (okrs) {
-                  this.dataOKR = okrs;
-                  if(this.dataOKR?.length>0){
-                    for (let gr of this.dataOKR){
-                      this.totalOB += gr.listOKR.length;
-                    }
-                  }
-                  
+
+  getData() {
+    this.codxOmService.getOKRPlansByID(this.planID).subscribe((item: any) => {
+      //Reset data View
+      //this.isCollapsed = false;
+      if (item) {
+        this.dataOKRPlans = item;
+        this.codxOmService
+          .getAllOKROfPlan(item?.recID)
+          .subscribe((okrs: any) => {
+            if (okrs) {
+              this.dataOKR = okrs;
+              if (this.dataOKR?.length > 0) {
+                for (let gr of this.dataOKR) {
+                  this.totalOB += gr.listOKR.length;
                 }
-                this.calculateStatistical();
-                this.isAfterRender = true;
-                this.loadedData = true;
-                this.detectorRef.detectChanges();
-              });
-          } 
-          else{      
-            this.dataOKRPlans = null;     
+              }
+            }
+            this.calculateStatistical();
             this.isAfterRender = true;
             this.loadedData = true;
             this.detectorRef.detectChanges();
-          }
-        });
+          });
+      } else {
+        this.dataOKRPlans = null;
+        this.isAfterRender = true;
+        this.loadedData = true;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
-
-  calculateStatistical(){
+  calculateStatistical() {
     if (this.dataOKR != null) {
       var tempValue = new OM_Statistical();
       let countNotStartOB = 0;
@@ -139,7 +134,7 @@ export class PopupViewPlanVersionComponent extends UIComponent {
           }
         }
       }
-      if(tempValue?.totalOB>0){
+      if (tempValue?.totalOB > 0) {
         tempValue.percentOBNotStart = (
           (countNotStartOB / tempValue?.totalOB) *
           100
@@ -152,12 +147,10 @@ export class PopupViewPlanVersionComponent extends UIComponent {
           (countDoneOB / tempValue?.totalOB) *
           100
         ).toFixed(1);
-        
-      }
-      else{      
-        tempValue.percentOBNotStart ='0';
-        tempValue.percentOBStarting ='0';
-        tempValue.percentOBDone ='0';
+      } else {
+        tempValue.percentOBNotStart = '0';
+        tempValue.percentOBStarting = '0';
+        tempValue.percentOBDone = '0';
       }
       this.value = tempValue;
       this.detectorRef.detectChanges();
@@ -171,16 +164,16 @@ export class PopupViewPlanVersionComponent extends UIComponent {
 
   collapeKR(collapsed: boolean) {
     this.dataOKR.forEach((group) => {
-      if(group?.listOKR?.length>0){
-        group?.listOKR.forEach((ob) => {          
+      if (group?.listOKR?.length > 0) {
+        group?.listOKR.forEach((ob) => {
           ob.isCollapse = collapsed;
         });
       }
     });
     this.detectorRef.detectChanges();
     this.dataOKR.forEach((group) => {
-      if(group?.listOKR?.length>0){
-        group?.listOKR.forEach((ob) => {          
+      if (group?.listOKR?.length > 0) {
+        group?.listOKR.forEach((ob) => {
           if (ob.items != null && ob.items.length > 0) {
             ob.items.forEach((kr) => {
               kr.isCollapse = collapsed;
@@ -188,7 +181,7 @@ export class PopupViewPlanVersionComponent extends UIComponent {
           }
         });
       }
-    });    
+    });
     this.isCollapsed = collapsed;
     this.detectorRef.detectChanges();
   }
@@ -198,5 +191,4 @@ export class PopupViewPlanVersionComponent extends UIComponent {
   }
 
   onSaveForm() {}
-  
 }

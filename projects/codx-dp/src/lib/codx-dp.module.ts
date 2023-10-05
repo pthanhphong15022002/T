@@ -19,7 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicProcessComponent } from './dynamic-process/dynamic-process.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-step-task.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
@@ -75,7 +75,12 @@ export const routes: Routes = [
         component: InstancesComponent,
         data: { noReuse: true },
       },
-      //dp/approvals/DPT0501
+      {
+        path: 'instances/:funcID/approvals',
+        component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      //dp/instances/DPT0502/approvals
       {
         path: 'approvals/:funcID',
         loadChildren: () =>
@@ -84,11 +89,6 @@ export const routes: Routes = [
           ),
         data: { noReuse: true },
       },
-      // {
-      //   path: 'approvals/:funcID',
-      //   data: { noReuse: true },
-      //   component: ApprovalsComponent,
-      // },
       {
         path: '**',
         redirectTo: 'error/404',

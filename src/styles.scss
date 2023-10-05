@@ -1514,10 +1514,10 @@ img.symbol-12px.symbol-circle {
 }
 
 
-.e-toolbar .e-tbar-btn:focus span,
-.e-toolbar .e-tbar-btn:hover span {
-  color: var(--text-primary) !important;
-}
+// .e-toolbar .e-tbar-btn:focus span,
+// .e-toolbar .e-tbar-btn:hover span {
+//   color: var(--text-primary) !important;
+// }
 
 /////
 ///
@@ -1891,11 +1891,10 @@ codx-listview.card .card-header {
   margin: 0;
 }
 
-.e-toolbar .e-tbar-btn,
-.e-toolbar .e-tbar-btn:hover,
-.e-toolbar .e-tbar-btn:hover span {
-  background: transparent !important;
-}
+// .e-toolbar .e-tbar-btn:hover,
+// .e-toolbar .e-tbar-btn:hover span {
+//   background: transparent !important;
+// }
  .e-toolbar .e-active-view .e-tbar-btn:hover .e-tbar-btn-text {
    color: var(--primary-light) !important;
  }
@@ -3931,7 +3930,23 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   //   margin-bottom: 50px;
   // }
 }
+.e-toolbar-item.e-template .form-control{
+  background-color: inherit;
+  border: 0;
+}
+.offcanvas-wrapper{
+  codx-breadcumb {
+    .breadcumb-item.breadcumb-full{
+    overflow: auto;
+  }
+  }
+}
 
+// chien dich
+
+.scroll-grid .e-gridcontent {
+  height: calc(100vh - 140px) !important;
+}
 
 //////////////
 // ipad and tablet

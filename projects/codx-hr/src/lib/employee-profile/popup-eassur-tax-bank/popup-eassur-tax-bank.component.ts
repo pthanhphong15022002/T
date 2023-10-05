@@ -19,10 +19,10 @@ import { FormGroup } from '@angular/forms';
 export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   fieldHeaderTexts;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   data;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
 
@@ -41,18 +41,18 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (this.formModel) {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((res) => {
-          if (res) {
-            this.formGroup = res;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
-            this.isAfterRender = true;
-          }
-        });
-    }
+    // if (this.formModel) {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((res) => {
+    //       if (res) {
+    //         this.formGroup = res;
+    //         this.formModel.currentData = this.data;
+    //         this.formGroup.patchValue(this.data);
+    //         this.isAfterRender = true;
+    //       }
+    //     });
+    // }
     this.hrService.getHeaderText(this.formModel.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     })
@@ -63,7 +63,7 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   onSaveForm() {
     console.log('du lieu chuan bi luu', this.data);
     
-    if (this.formGroup.invalid) {
+    if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;

@@ -2198,7 +2198,8 @@
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
-                        class="drap-drop"
+                        class="drap-drop cursor-pointer"
+                        (dblclick)="viewTask(task);"
                       >
                         <div class="has-action-menu">
                           <div
@@ -2230,6 +2231,7 @@
                                   [width]="25"
                                   [objectId]="task?.owner"
                                   objectType="AD_Users"
+                                  [objectName]="getRoleName(task)"
                                 ></codx-img>
                                 <span class="ms-1 fw-bold">{{
                                   getRoleName(task)

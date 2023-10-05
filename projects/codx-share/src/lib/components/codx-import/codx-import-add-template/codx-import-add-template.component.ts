@@ -25,10 +25,10 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { AttachmentComponent } from '../../attachment/attachment.component';
 import { CodxImportAddMappingComponent } from './codx-import-add-mapping/codx-import-add-mapping.component';
 import * as XLSX from 'xlsx';
 import { IETables } from '../models/import.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-import-add-template',
@@ -430,19 +430,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
             this.mappingTemplate?.MappingName;
           this.dataIETables.destinationTable =
             this.mappingTemplate?.MappingName;
-          //this.dataIEMapping.mappingName = this.mappingTemplate?.MappingName;
           this.getGridViewSetup();
         }
       });
-    /*  request.comboboxName = "EntityImport";
-    this.api
-    .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
-      if(item[0])
-      {
-
-      }
-
-    }) */
+   
     this.cache.valueList('SYS010').subscribe((item) => {
       if (item) {
         this.importRule = item.datas;

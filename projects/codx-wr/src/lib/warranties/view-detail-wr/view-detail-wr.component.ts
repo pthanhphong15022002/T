@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {
@@ -43,7 +44,7 @@ export class ViewDetailWrComponent implements OnInit {
   treeTask = [];
   expanding = false;
   overflowed: boolean = false;
-
+  id: any;
   tabControl = [
     {
       name: 'History',
@@ -76,6 +77,7 @@ export class ViewDetailWrComponent implements OnInit {
       template: null,
     },
   ];
+  isShow = false;
 
   constructor(
     private authstore: AuthStore,
@@ -85,6 +87,20 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dataSelected']) {
+      if (
+        changes['dataSelected'].currentValue != null &&
+        changes['dataSelected'].currentValue?.recID
+      ) {
+        if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.id = changes['dataSelected'].currentValue?.recID;
+        this.expanding = false;
+        this.overflowed = false;
+      }
+    }
+  }
 
   ngAfterViewChecked(): void {
     const element: HTMLElement = this.memo?.nativeElement;
@@ -104,7 +120,11 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   updateAssignEngineer(data) {
-    this.updateAssignEngineerEmit.emit({ data: data });
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'engineerID' });
+  }
+
+  updateServiceLocator(data) {
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'serviceLocator' });
   }
 
   listOrderUpdate(lstUpdate) {
@@ -113,13 +133,6 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   getIcon($event) {
-    if ($event == 'O') {
-      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
-    } else if ($event == 'I') {
-      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
-    } else if ($event == 'F') {
-      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
   }
 }

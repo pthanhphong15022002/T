@@ -1,22 +1,7 @@
-import { Observable } from 'rxjs';
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  Injector,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  CallFuncService,
-  DialogRef,
-  LayoutBaseComponent,
-  SidebarModel,
-} from 'codx-core';
-
-import { NotifyDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/notify-drawer/notify-drawer.component';
+import { Component, Injector, ViewEncapsulation } from '@angular/core';
+import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxTMService } from '../codx-tm.service';
-import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-layout',
@@ -27,7 +12,7 @@ import { E } from '@angular/cdk/keycodes';
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   funcID: string = '';
-  
+
   constructor(
     inject: Injector,
     private route: ActivatedRoute,
@@ -45,6 +30,4 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
   menuClick(e) {}
   onAfterViewInit(): void {}
-
-  
 }

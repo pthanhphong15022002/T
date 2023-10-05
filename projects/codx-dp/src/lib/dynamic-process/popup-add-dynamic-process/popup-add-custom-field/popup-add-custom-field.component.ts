@@ -129,6 +129,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //column Table
   column: ColumnTable;
   listColumns = [];
+  settingWidth = false;
+  isShowMore = false;
+  widthDefault = '550';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -150,6 +153,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
 
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
     if (this.action == 'add' || this.action == 'copy')
       this.field.recID = Util.uid();
 
@@ -818,6 +824,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           if (res && res.event) {
             if (res.event[0]) {
               this.listColumns = res.event[0];
+              this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
             if (res.event[1] && !this.processNo) {
@@ -835,8 +842,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
     let arr = JSON.parse(data.dataFormat);
-    if (Array.isArray(arr)) this.listColumns = arr;
-    else this.listColumns = [];
+    if (Array.isArray(arr)) {
+      this.listColumns = arr;
+      this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+    } else this.listColumns = [];
+    this.changeRef.detectChanges();
+  }
+
+  showMore() {
+    this.isShowMore = !this.isShowMore;
+    let width = '1000';
+    if (this.isShowMore) width = '1000'; ///test
+
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeRef.detectChanges();
   }
   //---------------------End Column Table-----------------------------//

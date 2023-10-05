@@ -1,13 +1,40 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Host,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  DataRequest,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  TenantService,
+  ViewsComponent,
+} from 'codx-core';
 import { FolderService } from '@shared/services/folder.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
-import { FileInfo, FileUpload, HistoryFile, ItemInterval, Permission, SubFolder } from '@shared/models/file.model';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
+import {
+  FileInfo,
+  FileUpload,
+  HistoryFile,
+  ItemInterval,
+  Permission,
+  SubFolder,
+} from '@shared/models/file.model';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FileService } from '@shared/services/file.service';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -18,14 +45,14 @@ import { traceChildTaskBar } from '@syncfusion/ej2-gantt/src/gantt/base/css-cons
   selector: 'addrole',
   templateUrl: './addrole.component.html',
   styleUrls: ['./addrole.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddRoleComponent implements OnInit {
   @Input() formModel: any;
-  @Input('viewBase') viewBase: ViewsComponent;    
+  @Input('viewBase') viewBase: ViewsComponent;
   @Output() eventShow = new EventEmitter<boolean>();
   dialog: any;
-  titleDialog = 'Chọn role'; 
+  titleDialog = 'Chọn role';
   titleSave = 'Lưu';
   titleFunction = 'Chức năng';
   titleDescription = 'Mô tả';
@@ -49,7 +76,7 @@ export class AddRoleComponent implements OnInit {
   commenttext: string;
   fullName: string;
   newfile: string;
-  updateversion: boolean
+  updateversion: boolean;
   type: string;
   copy: boolean;
   view: string;
@@ -65,8 +92,8 @@ export class AddRoleComponent implements OnInit {
   listNodeAdd: any;
   listFolder: FolderInfo[];
   listFiles: FileInfo[];
-  folderName = "folder";
-  fileName = [];//"file";
+  folderName = 'folder';
+  fileName = []; //"file";
   datafile: ArrayBuffer[];
   percent = '0%';
   listTag: any;
@@ -91,9 +118,9 @@ export class AddRoleComponent implements OnInit {
   confirmAll: boolean;
   isSystem: boolean;
   comment: string;
-  mytitle = 0;;
+  mytitle = 0;
   interval: ItemInterval[];
-  intervalCount = 0;  
+  intervalCount = 0;
   fileUploadList: FileUpload[];
   objectId = 'file';
   objectType = '';
@@ -104,7 +131,7 @@ export class AddRoleComponent implements OnInit {
   arrName = [];
   cate = 'cate';
   user: any;
-  isFileList = false;  
+  isFileList = false;
   fileEditing: FileUpload;
   fileEditingTemp: FileUpload;
   parentFolder: FileUpload;
@@ -116,7 +143,7 @@ export class AddRoleComponent implements OnInit {
   dataVll = [];
   currentPermision: string;
   full: boolean;
-  create: boolean
+  create: boolean;
   read: boolean;
   update: boolean;
   delete: boolean;
@@ -138,14 +165,14 @@ export class AddRoleComponent implements OnInit {
   public loading = false;
   private onScrolling = true;
   dataSelcected: any = [];
-  entityName = "";
-  predicate = "";
-  dataValue = "";
-  viewMember = "";
-  valueMember = "";
-  service = "";
+  entityName = '';
+  predicate = '';
+  dataValue = '';
+  viewMember = '';
+  valueMember = '';
+  service = '';
   objUser: any;
-  parentIdField = "";
+  parentIdField = '';
   permissonActiveId: string;
   floor: string;
   range: string;
@@ -157,7 +184,7 @@ export class AddRoleComponent implements OnInit {
   readonly = false;
   isSharing: boolean;
   isDownload: boolean;
-  requestRight = "1";
+  requestRight = '1';
   modeShare: string;
   modeRequest: string;
   isShare: boolean;
@@ -190,7 +217,7 @@ export class AddRoleComponent implements OnInit {
   //objectType="";
   indexSub: number;
   subItemLevel: string;
-  comboboxName = "";
+  comboboxName = '';
   listLanguages: any;
   showAll: boolean;
   emailTemplate: string;
@@ -204,36 +231,32 @@ export class AddRoleComponent implements OnInit {
   //treeAdd: TreeviewComponent;
   item: any = {};
   objectUpdate = {};
-  fieldUpdate = "";
+  fieldUpdate = '';
   data: any;
   @ViewChild('fileNameCtrl') fileNameCtrl;
-  constructor(  
+  constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
-    private fileService: FileService,    
-    private folderService: FolderService,    
+    private fileService: FileService,
+    private folderService: FolderService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-      this.data = data.data;
-      this.fileEditing = this.data[1];   
-      this.user = this.auth.get();
-      this.dialog = dialog;      
+  ) {
+    this.data = data.data;
+    this.fileEditing = this.data[1];
+    this.user = this.auth.get();
+    this.dialog = dialog;
   }
 
-  ngOnInit(): void {      
-  }
+  ngOnInit(): void {}
 
-  allpyShare($event) {
-
-  }
- 
+  allpyShare($event) {}
 }

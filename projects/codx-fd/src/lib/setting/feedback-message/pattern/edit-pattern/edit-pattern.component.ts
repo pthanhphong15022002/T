@@ -1,5 +1,10 @@
 import { environment } from 'src/environments/environment';
-import { ElementRef, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import {
+  ElementRef,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   Component,
   OnInit,
@@ -18,7 +23,7 @@ import {
   NotificationsService,
   RequestOption,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { Pattern } from '../model/pattern.model';
 import { PatternService } from '../pattern.service';
 
@@ -47,10 +52,10 @@ export class EditPatternComponent implements OnInit {
   user: any;
   checkFileUpload = false;
   checkGetFile = false;
-  environment= environment;
+  environment = environment;
   typeView = false;
   @ViewChildren('colordf')
-  public listItems!: QueryList<ElementRef<HTMLLIElement>>
+  public listItems!: QueryList<ElementRef<HTMLLIElement>>;
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   // @Input() cardType: string;colordf
@@ -85,12 +90,9 @@ export class EditPatternComponent implements OnInit {
     if (data.data.funcID) this.getCardType(data.data.funcID);
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   getCardType(funcID) {
     switch (funcID) {
@@ -133,7 +135,7 @@ export class EditPatternComponent implements OnInit {
       });
       this.typeView = true;
       this.listFile = files;
-      this.pattern.imageSrc = e.data[0].avatar
+      this.pattern.imageSrc = e.data[0].avatar;
       this.pattern.backgroundColor = null;
       this.checkFileUpload = !this.checkFileUpload;
     }
@@ -192,23 +194,23 @@ export class EditPatternComponent implements OnInit {
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
             this.attachment.fileUploadList = this.listFile;
-            this.patternSV.deleteFile(this.pattern.recID).subscribe(item=>{
-              this.attachment.saveFilesMulObservable().subscribe(
-                (result: any) => {
-                  if(this.formType == 'edit') res.update.imageSrc = result?.data?.pathDisk;
+            this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
+              this.attachment
+                .saveFilesMulObservable()
+                .subscribe((result: any) => {
+                  if (this.formType == 'edit')
+                    res.update.imageSrc = result?.data?.pathDisk;
                   else res.save.imageSrc = result?.data?.pathDisk;
                   var obj = { data: res, listFile: this.listFile };
                   this.dialog.close(obj);
                   this.change.detectChanges();
-                }
-              );
+                });
             });
-            
           } else {
-            if(this.formType == 'edit') res.update.imageSrc = this.pattern?.imageSrc;
+            if (this.formType == 'edit')
+              res.update.imageSrc = this.pattern?.imageSrc;
             else res.save.imageSrc = this.pattern?.imageSrc;
-            if(!this.pattern?.imageSrc && this.pattern.backgroundColor)
-            {
+            if (!this.pattern?.imageSrc && this.pattern.backgroundColor) {
               this.patternSV.deleteFile(this.pattern.recID).subscribe();
             }
             var obj = { data: res, listFile: null };
@@ -237,9 +239,8 @@ export class EditPatternComponent implements OnInit {
       var htmlE = label[0] as HTMLElement;
       if (htmlE) htmlE.classList.add('color-check');
     }
-  
   }
-  
+
   colorClick(ele, item, index) {
     this.listFile = '';
     this.removeSelectColor();
@@ -249,12 +250,11 @@ export class EditPatternComponent implements OnInit {
     this.pattern.imageSrc = null;
     this.change.detectChanges();
   }
-  removeSelectColor()
-  {
+  removeSelectColor() {
     var label = document.querySelectorAll('.color-check');
     if (label) {
       label.forEach((ele) => {
-          ele.classList.remove('color-check');
+        ele.classList.remove('color-check');
       });
     }
   }

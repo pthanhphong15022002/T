@@ -120,6 +120,26 @@
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
+              (click)="showMore()"
+            >
+              <span>
+                <i
+                  class="icon icon-14 {{
+                    isShowMore ? 'icon-last_page' : 'icon-first_page'
+                  }}"
+                ></i
+              ></span>
+              <span>
+                <i
+                  class="icon icon-14 {{
+                    !isShowMore ? 'icon-last_page' : 'icon-first_page'
+                  }}"
+                ></i
+              ></span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-light-primary me-2"
               (click)="clickSettingTable()"
             >
               <i class="icon-settings icon-16"></i>
@@ -398,23 +418,54 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table table-row-bordered mt-3" *ngIf="listColumns.length">
-    <thead>
-      <tr class="bg-gray-100">
-        <ng-container *ngFor="let item of listColumns; let index = index">
-          <th scope="col" class="fw-bold ps-4">
-            <span>{{ item?.title }}</span>
-          </th>
-        </ng-container>
-        <!-- <th scope="col" class="w-100px fw-bold"></th> -->
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <ng-container *ngFor="let item of listColumns; let index = index">
-          <td class="ps-4">{{ item?.note }}</td>
-        </ng-container>
-        <!-- <td>
+  <div
+    class="h-100 scroll-x"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-width="auto"
+  >
+    <table
+      class="{{ !settingWidth ? 'table' : '' }} table-row-bordered mt-3"
+      *ngIf="listColumns.length"
+    >
+      <thead>
+        <tr class="bg-gray-100">
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <th
+              scope="col"
+              class="fw-bold ps-4"
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px !important;'
+                  : ''
+              "
+            >
+              <div>
+                <span>{{ item?.title }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">{{ item?.fieldName }}</span>
+              </div>
+            </th>
+          </ng-container>
+          <!-- <th scope="col" class="w-100px fw-bold"></th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <td
+              class="ps-4"
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px!important'
+                  : ''
+              "
+            >
+              {{ item?.note }}
+            </td>
+          </ng-container>
+          <!-- <td>
           <div class="d-flex justify-content-end align-items-center">
             <button class="btn btn-sm btn-icon btn-light-warning">
               <i class="icon icon-14 icon-edit"></i>
@@ -424,9 +475,10 @@
             </button>
           </div>
         </td> -->
-      </tr>
-    </tbody>
-  </table>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </ng-template>
 
 <!-- //form Add VLL -->

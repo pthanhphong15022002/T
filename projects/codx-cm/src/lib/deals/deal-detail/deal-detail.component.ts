@@ -107,6 +107,7 @@ export class DealDetailComponent implements OnInit {
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
+  customerName;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
@@ -188,6 +189,9 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
+        this.codxCmService.getCustomerNameByrecID(this.dataSelected?.customerID).subscribe(res =>{
+          this.customerName = res;
+        });
       }
     }
   }

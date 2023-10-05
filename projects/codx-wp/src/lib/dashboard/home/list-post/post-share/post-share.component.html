@@ -40,14 +40,7 @@
                     </div>
                     <div class="d-flex text-info-date">
                       <div class="text-gray-600 me-2">
-                        <ejs-tooltip [content]="tooltipContent" position="BottomCenter">
-                          <span class="text-gray-700 me-3 cursor-pointer">{{data.createdOn | pTimeFrom}}</span>
-                          <ng-template #tooltipContent>
-                            <span>
-                              {{data.createdOn | pTimeFrom:"full"}}
-                            </span>              
-                          </ng-template>
-                        </ejs-tooltip>
+                        <codx-date [value]="data.createdOn" option="f" className="text-gray-700 me-3 cursor-pointer"></codx-date>
                       </div>
                       <ng-container *ngIf="data.approveControl == '1' && data.approveStatus == '3'">
                         <div [title]="mssgWP038" class="icon-security text-primary icon-16 me-2"></div>
@@ -65,7 +58,6 @@
                               [icoCss]="'symbol-12px symbol-circle'"
                               [showBgColor]="true">
                             </codx-vll>
-                            <i class="icon-arrow_drop_down icon-18 text-dark"></i>
                           </div>
                         </ng-container>
                         <ng-container *ngIf="data.shareName">
@@ -80,7 +72,6 @@
                 </div>
               </div>
             </ng-container>
-            <!-- WP_News -->
             <ng-container *ngSwitchCase="'WP_News'">
               <div class="WP_News" (click)="clickViewDetail(data)">
                 <div class="WP_News-images">
@@ -115,7 +106,6 @@
                 </div>
               </div>
             </ng-container>
-            <!-- WP_News -->
             <ng-container *ngSwitchCase="'FD_Cards'">
               <div class="FD_Cards">
                 <ng-container *ngTemplateOutlet="tmplateCard; context: { $implicit: data }">
@@ -202,7 +192,6 @@
   </div>
 </ng-template>
 
-<!-- template list permissions share -->
 <ng-template #templateShares let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -231,7 +220,6 @@
     </div>
   </div>
 </ng-template>
-<!-- template list permissions tag -->
 <ng-template #templateTags let-data>
   <div ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -261,7 +249,6 @@
   </div>
 </ng-template>
 
-<!-- post deleted -->
 <ng-template #postShareDeleted>
   <div class="card card-custom card-border border border-1 mt-3">
     <div class="card-body p-5">

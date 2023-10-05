@@ -31,8 +31,8 @@
   </ng-template>
 
   <ng-template #subTitleHeader>
-    <div class="d-flex flex-row">
-      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+    <div class="d-flex flex-wrap mt-1">
+      <div class="d-flex flex-grow-1 mb-1 me-5">
         <span class="fw-bold" *ngIf="itemDetail?.positionName; else positionPlaceholder">
           {{ itemDetail?.positionName }}
         </span>
@@ -41,7 +41,7 @@
         </ng-template>
       </div>
 
-      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <div class="d-flex flex-grow-1 mb-1 me-5">
         <i class="icon-email icon-16 me-2"></i>
         <span class="text-gray-700" *ngIf="itemDetail?.email; else emailPlaceholder">
           {{ itemDetail?.email }}
@@ -51,7 +51,7 @@
         </ng-template>
       </div>
 
-      <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <div class="d-flex flex-grow-1 mb-1 me-5">
         <i class="icon-phone_android icon-16 me-1"></i>
         <span class="text-gray-700" *ngIf="itemDetail?.phoneNumber; else phonePlaceholder">
           {{ itemDetail?.phoneNumber }}
@@ -255,7 +255,7 @@
 
   <ng-template #templateHeaderStationery>
     <div class="d-flex mb-2">
-      <div class="d-flex text-dark me-6">
+      <div class="d-flex text-dark text-nowrap">
         <codx-label name="lblBUID" default="Đơn vị/Bộ phận" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
@@ -264,15 +264,15 @@
       </div>
     </div>
 
-    <div class="d-flex mb-2">
-      <div class="d-flex text-dark me-6">
+    <div class="d-flex flex-wrap">
+      <div class="d-flex text-dark me-5 mb-1">
         <codx-label name="lblCategory" default="Loại đăng kí" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
           {{ itemDetail?.category | vll : "EP018" : "text" | async }}
         </span>
       </div>
-      <div class="d-flex text-dark me-6">
+      <div class="d-flex text-dark me-3 mb-1">
         <codx-label name="lblEmpQty" default="Số lượng nhân viên" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">

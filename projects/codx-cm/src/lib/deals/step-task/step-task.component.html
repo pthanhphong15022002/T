@@ -13,18 +13,6 @@
         ></codx-dropdown-select>
       </div>
       <ng-container [ngTemplateOutlet]="toggleStep"></ng-container>
-      <!-- <div class="ms-4">
-        <codx-dropdown-select
-          cssPopup="h-250px w-300px"
-          [isMulti]="false"
-          type="valuelist"
-          [emptyText]="'Thu gọn, mở rộng'"
-          field="show"
-          [refValue]="'DP046'"
-          (valueChange)="changeValueDropdownSelect($event)"
-        ></codx-dropdown-select>
-      </div> -->
-
       <div
         class="ms-3 d-flex align-items-center"
         #popoverDetails="ngbPopover"
@@ -86,9 +74,13 @@
     [customerID]="customerID"
     [isPause]="isPause"
     [entityName]="entityName"
-    [owner]="owner"
     [isAdmin]="isAdmin"
     (saveAssign)="handelSaveAssignTask($event)"
+    [leadName]="leadName"
+    [contractName]="contractName"
+    [dealName]="dealName"
+    [customerName]="customerName"
+    [ownerInstance]="ownerInstance"
   ></task>
 </div>
 
@@ -159,6 +151,11 @@
         [sessionID]="dataSelected.recID"
         [formModelAssign]="formModel"
         [isChangeOwner]="isChangeOwner"
+        [leadName]="leadName"
+        [contractName]="contractName"
+        [dealName]="dealName"
+        [customerName]="customerName"
+        [ownerInstance]="ownerInstance"
       ></codx-step-task>
       <div
         *ngIf="
@@ -429,3 +426,14 @@
     </div>
   </div>
 </ng-template>
+ <!-- <div class="ms-4">
+        <codx-dropdown-select
+          cssPopup="h-250px w-300px"
+          [isMulti]="false"
+          type="valuelist"
+          [emptyText]="'Thu gọn, mở rộng'"
+          field="show"
+          [refValue]="'DP046'"
+          (valueChange)="changeValueDropdownSelect($event)"
+        ></codx-dropdown-select>
+      </div> -->

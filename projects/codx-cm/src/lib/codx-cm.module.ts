@@ -69,7 +69,7 @@ import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
 import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
@@ -106,6 +106,7 @@ import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx
 import { CampaignContactsComponent } from './campaigns/campaigns-detail/campaign-contacts/campaign-contacts.component';
 import { PopupAddCampaignContactComponent } from './campaigns/campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
 import { CampaignDealsComponent } from './campaigns/campaigns-detail/campaign-deals/campaign-deals.component';
+import { PopupAddTaskCalendarComponent } from './calendars/view-calendar/popup-add-task-calendar/popup-add-task-calendar.component';
 
 export const routes: Routes = [
   {
@@ -259,7 +260,13 @@ const T_Component: Type<any>[] = [
 ];
 
 @NgModule({
-  declarations: [T_Component, CampaignContactsComponent, PopupAddCampaignContactComponent, CampaignDealsComponent],
+  declarations: [
+    T_Component,
+    CampaignContactsComponent,
+    PopupAddCampaignContactComponent,
+    CampaignDealsComponent,
+    PopupAddTaskCalendarComponent,
+  ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),

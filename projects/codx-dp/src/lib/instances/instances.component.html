@@ -415,9 +415,9 @@
     [dataSelect]="dataSelected"
     (moreFunctionEvent)="clickMoreFunc($event)"
     (changeMF)="changeMF($event)"
-    [listStepsProcess]="process.steps"
+    [listStepsProcess]="process?.steps"
     [listCbxProccess]="listProccessCbx"
-    [viewModelDetail]="this.process.viewModeDetail"
+    [viewModelDetail]="this.process?.viewModeDetail"
     [tabInstances]="tabInstances"
     [moreFunc]="moreFuncStart"
     (clickStartInstances)="clickStartInstances($event)"
@@ -428,7 +428,7 @@
     [lstStepProcess]="listSteps"
     [colorSuccesss]="colorReasonSuccess?.color"
     [colorFail]="colorReasonFail?.color"
-    [applyFor]="process.applyFor"
+    [applyFor]="process?.applyFor"
     [progressControl]="process?.instanceProgressControl"
   >
   </codx-instance-detail>

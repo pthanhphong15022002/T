@@ -23,7 +23,7 @@ import { TabModel } from '../../models/models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CodxDpService } from '../../codx-dp.service';
 import { firstValueFrom } from 'rxjs';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { FileService } from '@shared/services/file.service';
 

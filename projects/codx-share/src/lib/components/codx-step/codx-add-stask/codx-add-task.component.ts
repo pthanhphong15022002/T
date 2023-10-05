@@ -24,8 +24,8 @@ import {
 } from 'projects/codx-dp/src/lib/models/models';
 import { StepService } from '../step.service';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-add-stask',
@@ -97,7 +97,6 @@ export class CodxAddTaskComponent implements OnInit {
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
-
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -114,7 +113,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.instanceStep = dt?.data?.instanceStep;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.taskType;
-    this.ownerParent = dt?.data?.owner; // owner of Parent
+    this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
     this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
     this.stepsTasks = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
@@ -404,12 +403,30 @@ export class CodxAddTaskComponent implements OnInit {
   changeRolerOwner(event) {
     let role = event[0];
     if (role) {
-      if (role?.objectType == 'U' || role?.objectType == '1') {
+      if (role?.objectType == 'U') {
         role['taskID'] = this.stepsTasks?.recID;
         role['roleType'] = 'U';
         this.owner = [role];
         this.stepsTasks.owner = role?.objectID;
         this.removeRoleDuplicate();
+      }else if( role?.objectType == '1'){
+        this.api
+        .exec<any>(
+          'DP',
+          'InstancesBusiness',
+          'GetUserByUserID',
+          this.ownerParent
+        )
+        .subscribe((res) => {
+          console.log(res);
+          let role = new DP_Instances_Steps_Tasks_Roles();
+          role.objectID = res?.userID;
+          role.objectName = res?.userName
+          role.taskID = this.stepsTasks?.recID;
+          role.roleType = 'U';
+          this.owner = [role];
+          this.stepsTasks.owner = role?.objectID;
+        })
       } else {
         let data = [];
         switch (role?.objectType) {
