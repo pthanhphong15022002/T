@@ -42,13 +42,13 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
     formName: 'CMContractsPayments',
     gridViewName: 'grvCMContractsPayments',
     entityName: 'CM_ContractsPayments',
-    funcID: 'CM02041 ',
+    funcID: 'CM02041',
   };
   fmContractsPaymentsHistory: FormModel = {
     formName: 'CMContractsPaymentsHistory',
     gridViewName: 'grvCMContractsPaymentsHistory',
     entityName: 'CM_ContractsPayments',
-    funcID: 'CM02042  ',
+    funcID: 'CM02042',
   };
   moreDefaut = {
     share: true,
@@ -77,7 +77,8 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       },
       {
         field: 'scheduleDate',
-        headerText:this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
+        headerText:
+          this.grvPayments?.ScheduleDate?.headerText ?? 'Ngày hẹn thanh toán',
         template: this.scheduleDateTem,
         width: 150,
       },
@@ -110,8 +111,8 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       // textAlign: 'left',
       // /template: this.columnVatid,
     ];
-    if(this.listPayment && this.listPayment?.length > 0){
-      this.listPayment = this.listPayment?.sort((a,b) => (a?.rowNo - b?.rowNo));
+    if (this.listPayment && this.listPayment?.length > 0) {
+      this.listPayment = this.listPayment?.sort((a, b) => a?.rowNo - b?.rowNo);
     }
   }
 
@@ -151,12 +152,12 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
             res.disabled = true;
             break;
         }
-      })
+      });
     }
   }
 
   addPayment() {
-    if(!this.contracts?.contractAmt){
+    if (!this.contracts?.contractAmt) {
       this.notiService.notifyCode('CM023');
       return;
     }
@@ -169,32 +170,54 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
   }
 
   deletePayment(paymentDel) {
-    let payHistory = this.listPaymentHistory?.find(paymentHis => paymentHis.refLineID == paymentDel.recID);
-    if(payHistory){
+    let payHistory = this.listPaymentHistory?.find(
+      (paymentHis) => paymentHis.refLineID == paymentDel.recID
+    );
+    if (payHistory) {
       this.notiService.notifyCode('Đã có lịch sử thanh toán');
-      return
+      return;
     }
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res.event.status === 'Y') {
-        let indexPayDelete = this.listPayment.findIndex((payFind) => payFind.recID == paymentDel.recID);
+        let indexPayDelete = this.listPayment.findIndex(
+          (payFind) => payFind.recID == paymentDel.recID
+        );
         if (indexPayDelete >= 0) {
           this.listPayment.splice(indexPayDelete, 1);
-          let indexAdd = this.listPaymentAdd?.findIndex((payAdd) => payAdd.recID == paymentDel.recID);
-          if(indexAdd >=0){
-            this.listPaymentAdd?.splice(indexAdd,1);
-          }else{
+          let indexAdd = this.listPaymentAdd?.findIndex(
+            (payAdd) => payAdd.recID == paymentDel.recID
+          );
+          if (indexAdd >= 0) {
+            this.listPaymentAdd?.splice(indexAdd, 1);
+          } else {
             this.listPaymentDelete.push(paymentDel);
-          }        
-          for (let index = indexPayDelete;index < this.listPayment.length;index++) {
+          }
+          for (
+            let index = indexPayDelete;
+            index < this.listPayment.length;
+            index++
+          ) {
             this.listPayment[index].rowNo = index + 1;
-            let indexFind = this.listPaymentAdd.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
-            if(indexFind >= 0){
-              this.listPaymentAdd?.splice(indexFind,1,this.listPayment[index]);
-            }else{
-              let indexFindEdit = this.listPaymentEdit.findIndex(payAdd => payAdd.recID == this.listPayment[index]?.recID);
-              if(indexFindEdit >= 0){
-                this.listPaymentEdit?.splice(indexFindEdit,1,this.listPayment[index]);
-              }else{
+            let indexFind = this.listPaymentAdd.findIndex(
+              (payAdd) => payAdd.recID == this.listPayment[index]?.recID
+            );
+            if (indexFind >= 0) {
+              this.listPaymentAdd?.splice(
+                indexFind,
+                1,
+                this.listPayment[index]
+              );
+            } else {
+              let indexFindEdit = this.listPaymentEdit.findIndex(
+                (payAdd) => payAdd.recID == this.listPayment[index]?.recID
+              );
+              if (indexFindEdit >= 0) {
+                this.listPaymentEdit?.splice(
+                  indexFindEdit,
+                  1,
+                  this.listPayment[index]
+                );
+              } else {
                 this.listPaymentEdit?.push(this.listPayment[index]);
               }
             }
@@ -273,9 +296,9 @@ export class ViewPaymentComponent implements OnInit, OnChanges {
       '',
       option
     );
-    popupPayHistory.closed.subscribe(res => {
+    popupPayHistory.closed.subscribe((res) => {
       this.listPayment = JSON.parse(JSON.stringify(this.listPayment));
-    })
+    });
   }
 
   async openPopupPaymentHistory(action, payment, paymentHistory) {
