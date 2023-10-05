@@ -20,78 +20,78 @@
     type="button"
     [disabled]="isDisable"
     class="btn btn-primary"
-    (click)="onSave()"
+    (click)="continue()"
   >
-    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+    <codx-label [name]="'lblSave'" [default]="'Tiếp tục'"></codx-label>
   </button>
 </ng-template>
 
 <ng-template #parLeft>
   <div>
-    <div class="d-flex justify-content-between align-items-center cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center cursor-pointer" (click)="changeType('customer')">
       <span>Khách hàng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'customer'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('deal')">
       <span>Cơ hội </span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'deal'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('lead')">
       <span>Tiềm năng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'lead'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('contract')">
       <span>Hợp đồng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'contract'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer" click="">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('case')">
       <span>Chăm sóc khách hàng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'case'"
          ></ejs-radiobutton>
       </div>
     </div>
@@ -100,11 +100,11 @@
 </ng-template>
 <ng-template #parRight> 
    <div>
-      <ejs-combobox
-        [dataSource]="listCustomer"
-        [fields]="fieldsCustomer"
-        (change)="valueChangeCombobox($event,'CM_Customers')"
-        [allowCustom]="false"
-      ></ejs-combobox>
+      <codx-input
+        *ngIf="refValueType"
+        [field]="'objectID'"
+        type="combobox"
+        [refValue]="refValueType"
+      ></codx-input>
    </div>
 </ng-template>

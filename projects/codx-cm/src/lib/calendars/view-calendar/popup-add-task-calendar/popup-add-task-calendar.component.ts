@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'lib-popup-add-task-calendar',
@@ -25,7 +26,16 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   fieldsCustomer = { text: 'customerName', value: 'recID' };
   type = '';
   listCustomer;
+  refValue = {
+    case:"CMCasesOfCalendar",
+    deal:"CMDealsOfCalendar",
+    contract:"CMContractsOfCalendar",
+    customer:"CMCustomersOfCalendar",
+    lead:"CMLeadsOfCalendar",
+  }
+  refValueType = '';
   constructor(
+    private stepService: StepService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -39,8 +49,19 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   async ngAfterViewInit() {
 
   }
-  onSave() {
+  continue() {
     this.dialog.close();
+    this.stepService.addTask('add','',null,'T',null,'',true,'','left');
+  }
+
+  
+
+  changeType(type){
+    if(this.type != type){
+      this.type = '';
+      this.type = type;
+      this.refValueType = this.refValue[type];
+    }
   }
   valueChangeCombobox(event, type) {}
   valueChangeRadio(event){}

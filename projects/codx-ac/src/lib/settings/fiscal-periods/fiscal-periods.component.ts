@@ -2,14 +2,15 @@ import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChil
 import { ButtonModel, CallFuncService, DialogModel, DialogRef, FormModel, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopAddFiscalPeriodsComponent } from './pop-add-fiscal-periods/pop-add-fiscal-periods.component';
 import { FiscalPeriodsAutoCreateComponent } from './fiscal-periods-add/fiscal-periods-auto-create.component';
+import { takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-fiscal-periods',
   templateUrl: './fiscal-periods.component.html',
   styleUrls: ['./fiscal-periods.component.css']
 })
-export class FiscalPeriodsComponent extends UIComponent{
-  
+export class FiscalPeriodsComponent extends UIComponent {
+
   //Constructor
 
   views: Array<ViewModel> = [];
@@ -17,9 +18,11 @@ export class FiscalPeriodsComponent extends UIComponent{
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  funcName: any = 'danh mục kỳ tài chính';
+  funcName: any = '';
   gridViewSetup: any;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
+  private destroy$ = new Subject<void>();
+
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -33,7 +36,7 @@ export class FiscalPeriodsComponent extends UIComponent{
   //End Constructor
 
   //Init
-  
+
   onInit(): void {
   }
 
@@ -49,6 +52,12 @@ export class FiscalPeriodsComponent extends UIComponent{
         },
       },
     ];
+
+    this.cache.functionList(this.view?.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        this.funcName = res.defaultName.toLowerCase();
+      });
   }
 
   //End Init
@@ -188,8 +197,7 @@ export class FiscalPeriodsComponent extends UIComponent{
       });
   }
 
-  hideMoreFunction(e: any)
-  {
+  hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
         x.functionID == 'SYS003' ||
@@ -200,12 +208,11 @@ export class FiscalPeriodsComponent extends UIComponent{
     });
 
     this.cache.moreFunction('FiscalPeriods', 'grvFiscalPeriods')
-    .subscribe((res: any) => {
-      if(res)
-      {
-        console.log(res);
-      }
-    })
+      .subscribe((res: any) => {
+        if (res) {
+          console.log(res);
+        }
+      })
   }
   //End Function
 }
