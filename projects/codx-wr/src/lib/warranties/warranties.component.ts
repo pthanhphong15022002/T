@@ -700,7 +700,6 @@ export class WarrantiesComponent
   //#endregion
 
   //#region update serviceLocator
-
   updateServiceLocator(data) {
     this.dataSelected = data;
     this.serviceLocator = this.dataSelected?.serviceLocator;
@@ -784,6 +783,41 @@ export class WarrantiesComponent
       });
   }
 
+  //update priority
+  updatePriority(data) {
+    this.priority = data?.priority;
+    this.dialogStatus = this.callfc.openForm(this.itemPriority, '', 400, 200);
+    this.dialogStatus.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.priority = ele?.event;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  //update comment
+  updateCommentWarranty(data) {
+    this.dataSelected = data;
+    this.comment = this.dataSelected.comment;
+    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
+    this.titleAction = event.description;
+    this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
+    this.dialogStatus.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.comment = this.comment;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
   changValueStatus(e) {
     this[e?.field] = e?.data;
     if (e?.field == 'serviceLocator') {
@@ -831,39 +865,6 @@ export class WarrantiesComponent
       });
   }
   //#endregion
-
-  updatePriority(data) {
-    this.priority = data?.priority;
-    this.dialogStatus = this.callfc.openForm(this.itemPriority, '', 400, 200);
-    this.dialogStatus.closed.subscribe((ele) => {
-      if (ele && ele?.event) {
-        this.dataSelected.priority = ele?.event;
-        this.dataSelected.lastUpdatedOn = new Date();
-        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected).subscribe();
-        this.notificationsService.notifyCode('SYS007');
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  updateCommentWarranty(data) {
-    this.dataSelected = data;
-    this.comment = this.dataSelected.comment;
-    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
-    this.titleAction = event.description;
-    this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
-    this.dialogStatus.closed.subscribe((ele) => {
-      if (ele && ele?.event) {
-        this.dataSelected.comment = this.comment;
-        this.dataSelected.lastUpdatedOn = new Date();
-        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected).subscribe();
-        this.notificationsService.notifyCode('SYS007');
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
 
   getIcon($event) {
     return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
