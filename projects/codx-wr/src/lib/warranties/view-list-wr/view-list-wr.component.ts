@@ -63,8 +63,9 @@ export class ViewListWrComponent {
 
   //#region popover
   PopoverDetail(e, p: any, emp, field: string) {
-    let parent = e.currentTarget.parentElement.scrollHeight;
-    let child = e.currentTarget.offsetHeight;
+    let parent = e.currentTarget.clientHeight;
+    let child = e.currentTarget.scrollHeight;
+    const isOpen = p.isOpen();
     if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
@@ -72,11 +73,17 @@ export class ViewListWrComponent {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (36 < child) {
-          p.open();
+        if (parent < child) {
+          if (!isOpen) {
+            p.open();
+          }
         }
       }
-    } else p.close();
+    } else {
+      if (isOpen) {
+        p.close();
+      }
+    }
     this.popupOld = p;
   }
 

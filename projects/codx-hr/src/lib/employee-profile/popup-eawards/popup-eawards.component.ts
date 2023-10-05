@@ -20,7 +20,7 @@ import {
 })
 export class PopupEAwardsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   awardObj;
   employeeName: string;
@@ -33,7 +33,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   valueYear;
   disabledInput = false;
 
-  isAfterRender = false;
+  // isAfterRender = false;
   defaultAwardDate: string = '0001-01-01T00:00:00';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -102,7 +102,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         } else {
           delete this.employId;
           delete this.empObj;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             employeeID: this.awardObj.employeeID,
           });
         }
@@ -114,7 +114,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
           delete this.awardObj?.signerID;
           // delete this.awardObj.signer;
           // delete this.awardObj?.signerPosition;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             signerID: null,
             // signer: null,
             // signerPosition: null,
@@ -146,7 +146,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res) {
                   this.awardObj.signerPosition = res.positionName;
-                  this.formGroup.patchValue({
+                  this.form.formGroup.patchValue({
                     signer: this.awardObj.signer,
                     signerPosition: this.awardObj.signerPosition,
                   });
@@ -155,7 +155,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
               });
           } else {
             this.awardObj.signerPosition = null;
-            this.formGroup.patchValue({
+            this.form.formGroup.patchValue({
               signer: this.awardObj.signer,
               signerPosition: this.awardObj.signerPosition,
             });
@@ -192,9 +192,9 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
             if (this.awardObj.awardDate.toString() == this.defaultAwardDate)
               this.awardObj.awardDate = null;
             this.awardObj.employeeID = this.employId;
-            this.formModel.currentData = this.awardObj;
-            this.formGroup.patchValue(this.awardObj);
-            this.isAfterRender = true;
+            // this.formModel.currentData = this.awardObj;
+            // this.form.formGroup.patchValue(this.awardObj);
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
@@ -214,22 +214,24 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         this.awardObj.awardDate == this.defaultAwardDate
       )
         this.awardObj.awardDate = null;
-      this.formGroup.patchValue(this.awardObj);
-      this.formModel.currentData = this.awardObj;
-      this.isAfterRender = true;
+      // this.form.formGroup.patchValue(this.awardObj);
+      // this.formModel.currentData = this.awardObj;
+      // this.isAfterRender = true;
       this.cr.detectChanges();
     }
   }
 
   onInit(): void {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-      .then((fg) => {
-        if (fg) {
-          this.formGroup = fg;
-          this.initForm();
-        }
-      });
+    this.initForm();
+
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.form.formGroup = fg;
+    //       this.initForm();
+    //     }
+    //   });
 
     // this.cache
     //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -242,16 +244,16 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    this.formGroup.patchValue(this.formModel.currentData);
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    this.form.formGroup.patchValue(this.formModel.currentData);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
       return;
     }
 
     //Check valid
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       return;
     }
     if (this.actionType === 'copy') delete this.awardObj.recID;
@@ -287,8 +289,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
 
   inYearSelect(event) {
     this.awardObj.inYear = new Date(event.value).getFullYear();
-    this.formGroup.patchValue(this.awardObj);
-    console.log('cap nhat inyear', this.awardObj.inYear);
+    this.form.formGroup.patchValue(this.awardObj);
   }
 
   valueChange(event) {
@@ -300,7 +301,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
             if (award?.AwardFormCategory) {
               this.awardObj.awardFormCategory = award?.AwardFormCategory;
 
-              this.formGroup.patchValue({
+              this.form.formGroup.patchValue({
                 awardFormCategory: this.awardObj.awardFormCategory,
               });
             }
@@ -308,7 +309,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
             if (award?.AwardLevelCategory) {
               this.awardObj.awardLevelCategory = award?.AwardLevelCategory;
 
-              this.formGroup.patchValue({
+              this.form.formGroup.patchValue({
                 awardLevelCategory: this.awardObj.awardLevelCategory,
               });
             }
@@ -317,7 +318,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         }
         // case 'signerID': {
         //   this.awardObj[event.field] = event.data?.value[0];
-        //   this.formGroup.patchValue({
+        //   this.form.formGroup.patchValue({
         //     [event.field]: this.awardObj[event.field],
         //   });
 
@@ -328,14 +329,14 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         //     this.awardObj.signer = employee.EmployeeName;
         //     this.employeeName = employee.EmployeeName;
 
-        //     this.formGroup.patchValue({ signer: this.awardObj.signer });
+        //     this.form.formGroup.patchValue({ signer: this.awardObj.signer });
         //     if (employee.PositionID) {
         //       this.hrService
         //         .getPositionByID(employee.PositionID)
         //         .subscribe((res) => {
         //           if (res) {
         //             this.awardObj.signerPosition = res.positionName;
-        //             this.formGroup.patchValue({
+        //             this.form.formGroup.patchValue({
         //               signerPosition: this.awardObj.signerPosition,
         //             });
         //             this.cr.detectChanges();
@@ -343,7 +344,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
         //         });
         //     } else {
         //       this.awardObj.signerPosition = null;
-        //       this.formGroup.patchValue({
+        //       this.form.formGroup.patchValue({
         //         signerPosition: this.awardObj.signerPosition,
         //       });
         //     }

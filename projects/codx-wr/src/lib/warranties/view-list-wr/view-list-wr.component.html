@@ -144,7 +144,7 @@
     <div class="w-200px min-w-200px pe-6 d-flex flex-column">
       <div
         class="mb-1"
-        [style.height]="checkHover(data?.recID) ? '40' : 'auto'"
+        [style.height]="'auto'"
         [ngClass]="
           checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
         "
@@ -157,6 +157,7 @@
         (mouseleave)="blem.close()"
         placement="right bottom  top"
         [popoverClass]="data.recID"
+        [popoverClass]="'popover-content'"
       >
         <codx-label
           style="white-space: nowrap"
@@ -184,7 +185,7 @@
         (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
         (mouseleave)="state.close()"
         placement="bottom right top"
-        [popoverClass]="data.recID"
+        [popoverClass]="'popover-content'"
       >
         <codx-label
           style="white-space: nowrap"
@@ -212,7 +213,7 @@
         (mouseenter)="PopoverDetail($event, comment, data, 'comment')"
         (mouseleave)="comment.close()"
         placement="bottom right top"
-        [popoverClass]="data.recID"
+        [popoverClass]="'popover-content'"
       >
         <codx-label
           style="white-space: nowrap"

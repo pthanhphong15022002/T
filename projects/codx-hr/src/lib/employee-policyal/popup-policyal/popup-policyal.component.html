@@ -13,6 +13,7 @@
   [tabContent]="[overallInfo, policyInfo, setting, applyObj, subtractObj]"
   [data]="alpolicyObj"
   (onAfterInit)="onAfterInitForm($event)"
+  [autoNumberField] = 'autoNumField'
 >
 </codx-layout-add>
 
@@ -48,6 +49,7 @@
       <codx-input
         field="policyID"
         [disabled]="autoNumField == 'PolicyID'"
+
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>

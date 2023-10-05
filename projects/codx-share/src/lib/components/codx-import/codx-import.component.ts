@@ -24,6 +24,7 @@ import {
 import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { AddTemplateComponent } from './add-template/add-template.component';
 
 @Component({
   selector: 'codx-import',
@@ -170,7 +171,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   openFormAddTemplate() {
     this.callfunc.openForm(
-      CodxImportAddTemplateComponent,
+      AddTemplateComponent,
       null,
       1200,
       800,
