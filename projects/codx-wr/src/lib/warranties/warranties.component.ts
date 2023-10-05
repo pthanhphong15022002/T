@@ -53,10 +53,13 @@ export class WarrantiesComponent
   @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
   @ViewChild('itemComment') itemComment: TemplateRef<any>;
+  @ViewChild('itemService') itemService: TemplateRef<any>;
 
   dialogStatus: DialogRef;
   dialogPriority: DialogRef;
   dialogComment: DialogRef;
+  dialogServiceLocator: DialogRef;
+
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -95,10 +98,11 @@ export class WarrantiesComponent
   status = '';
   priority = '';
   comment = '';
-
+  serviceLocator: any;
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  moreFuncEdit = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -146,8 +150,15 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
-    this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync').subscribe(res => {});
-
+    this.api
+      .exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync')
+      .subscribe((res) => {});
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS03');
+        if (m) this.moreFuncEdit = m?.customName;
+      }
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -677,9 +688,46 @@ export class WarrantiesComponent
 
   updateAssignEngineerEmit(e) {
     if (e && e?.data) {
-      this.updateAssignEngineer(e?.data);
+      const more = this.moreFuncInstance.find(
+        (el) => el.functionID == 'WR0101_2'
+      );
+      if (e?.type == 'engineerID') {
+        this.titleAction = more?.description;
+        this.updateAssignEngineer(e?.data);
+      } else {
+        this.updateServiceLocator(e?.data);
+      }
     }
   }
+  //#endregion
+
+  //#region update serviceLocator
+
+  updateServiceLocator(data) {
+    this.dataSelected = data;
+    this.serviceLocator = this.dataSelected?.serviceLocator;
+    this.titleAction =
+      this.moreFuncEdit +
+      ' ' +
+      this.gridViewSetup?.ServiceLocator?.headerText?.toLowerCase();
+    this.dialogServiceLocator = this.callfc.openForm(
+      this.itemService,
+      '',
+      500,
+      350
+    );
+    this.dialogServiceLocator.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.serviceLocator = this.serviceLocator;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
   //#endregion
 
   //#region update status

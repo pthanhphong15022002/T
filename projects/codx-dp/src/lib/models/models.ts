@@ -666,4 +666,5 @@ export class ColumnTable {
   textColorSet: string = '';
   colorSet: string = '';
   iconSet: string = '';
+  settingWidth: boolean = true;
 }

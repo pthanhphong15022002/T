@@ -26,8 +26,11 @@
     class="d-flex align-items-center justify-content-between"
     (dblclick)="dbClick(data)"
   >
-    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
-      <div class="mb-1">
+    <div
+      class="w-150px min-w-150px pe-6 d-flex flex-column"
+      (mouseenter)="closePopover()"
+    >
+      <div class="mb-1" (mouseenter)="closePopover()">
         <codx-label
           style="white-space: nowrap"
           class="text-dark fw-bold"
@@ -42,7 +45,7 @@
         ></span>
       </div>
 
-      <div class="mb-1">
+      <div class="mb-1" (mouseenter)="closePopover()">
         <codx-label
           style="white-space: nowrap"
           class="text-dark fw-bold"
@@ -53,7 +56,7 @@
           [innerHTML]="data.sla | formatvalue : formModel : 'SLA' | async"
         ></span>
       </div>
-      <div class="mb-1 d-flex flex-row">
+      <div class="mb-1 d-flex flex-row" (mouseenter)="closePopover()">
         <span class="icon-home_work icon-16 me-2 text-gray-700 fs-7"
           ><ng-template>
             <codx-label fiedName="SiteID" [formModel]="formModel"></codx-label>
@@ -69,7 +72,10 @@
       </div>
     </div>
 
-    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
+    <div
+      class="w-200px min-w-200px pe-6 d-flex flex-column"
+      (mouseenter)="closePopover()"
+    >
       <div class="mb-1">
         <span
           class="text-dark fw-bold"
@@ -78,7 +84,7 @@
           "
         ></span>
       </div>
-      <div class="mb-1 d-flex flex-row">
+      <div class="mb-1 d-flex flex-row" (mouseenter)="closePopover()">
         <span
           class="text-gray-700 fs-7"
           [ngbTooltip]="data?.mobile"
@@ -87,7 +93,7 @@
           "
         ></span>
       </div>
-      <div class="mb-1 d-flex flex-row">
+      <div class="mb-1 d-flex flex-row" (mouseenter)="closePopover()">
         <ng-template>
           <codx-label fiedName="Email" [formModel]="formModel"></codx-label>
         </ng-template>
@@ -97,7 +103,7 @@
           [innerHTML]="data?.email | formatvalue : formModel : 'Email' | async"
         ></span>
       </div>
-      <div class="mb-1 d-flex flex-row">
+      <div class="mb-1 d-flex flex-row" (mouseenter)="closePopover()">
         <span
           class="text-gray-700 fs-7 line-clamp line-clamp-2"
           [ngbTooltip]="data?.address"
@@ -108,8 +114,11 @@
       </div>
     </div>
 
-    <div class="w-200px min-w-200px pe-6 d-flex flex-column">
-      <div class="mb-1">
+    <div
+      class="w-200px min-w-200px pe-6 d-flex flex-column"
+      (mouseenter)="closePopover()"
+    >
+      <div class="mb-1" (mouseenter)="closePopover()">
         <codx-label
           style="white-space: nowrap"
           class="fw-bold text-dark"
@@ -122,7 +131,7 @@
         ></span>
       </div>
 
-      <div class="mb-1">
+      <div class="mb-1" (mouseenter)="closePopover()">
         <span
           class="fw-bold text-dark"
           [innerHTML]="
@@ -131,7 +140,7 @@
         ></span>
       </div>
 
-      <div class="mb-1">
+      <div class="mb-1" (mouseenter)="closePopover()">
         <span
           class="fw-bold text-dark"
           [innerHTML]="
@@ -144,7 +153,7 @@
     <div class="w-200px min-w-200px pe-6 d-flex flex-column">
       <div
         class="mb-1"
-        [style.height]="checkHover(data?.recID) ? '40' : 'auto'"
+        [style.height]="'auto'"
         [ngClass]="
           checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
         "
@@ -154,7 +163,8 @@
         #blem="ngbPopover"
         [openDelay]="500"
         (mouseenter)="PopoverDetail($event, blem, data, 'problem')"
-        (mouseleave)="blem.close()"
+        (mouseleave)="popoverClosed(blem)"
+        (click)="isPopoverOpen = true"
         placement="right bottom  top"
         [popoverClass]="data.recID"
       >
@@ -182,9 +192,10 @@
         #state="ngbPopover"
         [openDelay]="500"
         (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
-        (mouseleave)="state.close()"
+        (mouseleave)="popoverClosed(state)"
+
         placement="bottom right top"
-        [popoverClass]="data.recID"
+        [popoverClass]="data?.recID"
       >
         <codx-label
           style="white-space: nowrap"
@@ -210,9 +221,9 @@
         #comment="ngbPopover"
         [openDelay]="500"
         (mouseenter)="PopoverDetail($event, comment, data, 'comment')"
-        (mouseleave)="comment.close()"
+        (mouseleave)="popoverClosed(comment)"
         placement="bottom right top"
-        [popoverClass]="data.recID"
+        [popoverClass]="data?.recID"
       >
         <codx-label
           style="white-space: nowrap"
@@ -228,8 +239,11 @@
       </div>
     </div>
 
-    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
-      <div class="mb-1">
+    <div
+      class="w-150px min-w-150px pe-6 d-flex flex-column"
+      (mouseenter)="closePopover()"
+    >
+      <div class="mb-1" (mouseenter)="closePopover()">
         <codx-label
           style="white-space: nowrap"
           class="fw-bold text-dark"
@@ -243,7 +257,7 @@
         ></span>
       </div>
 
-      <div class="mb-1">
+      <div class="mb-1" (mouseenter)="closePopover()">
         <codx-label
           style="white-space: nowrap"
           class="text-dark"
@@ -260,8 +274,11 @@
       </div>
     </div>
 
-    <div class="w-150px min-w-150px pe-6 d-flex flex-column">
-      <div class="d-flex align-items-center mb-1">
+    <div
+      class="w-150px min-w-150px pe-6 d-flex flex-column"
+      (mouseenter)="closePopover()"
+    >
+      <div class="d-flex align-items-center mb-1" (mouseenter)="closePopover()">
         <codx-vll
           [name]="gridViewSetup?.Status?.referedValue"
           [field]="'Status'"
@@ -273,7 +290,7 @@
         >
         </codx-vll>
       </div>
-      <div class="mb-1">
+      <div class="mb-1" (mouseenter)="closePopover()">
         <span
           [ngbTooltip]="gridViewSetup['LastUpdatedOn']?.headerText"
           [innerHTML]="
@@ -283,8 +300,12 @@
           "
         ></span>
       </div>
-      <div class="d-flex justify-content-end mb-1">
+      <div
+        class="d-flex justify-content-end mb-1"
+        (mouseenter)="closePopover()"
+      >
         <div
+          (mouseenter)="closePopover()"
           style="position: relative"
           [ngbTooltip]="tooltipOwner"
           *ngIf="data?.owner"
@@ -307,6 +328,7 @@
         </div>
 
         <div
+          (mouseenter)="closePopover()"
           style="position: relative"
           [ngbTooltip]="tooltipTeamLeader"
           *ngIf="data?.teamLeader"
@@ -329,6 +351,7 @@
         </div>
 
         <div
+          (mouseenter)="closePopover()"
           style="position: relative"
           [ngbTooltip]="tooltipEngineerID"
           *ngIf="data?.engineerID"
@@ -395,7 +418,7 @@
       </div>
     </div>
 
-    <div class="w-50px min-w-50px">
+    <div class="w-50px min-w-50px" (mouseenter)="closePopover()">
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, data)"

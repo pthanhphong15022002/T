@@ -19,8 +19,8 @@
           </codx-label>
           <codx-input
             field="title"
-            [Group]="formTable.formGroup"
             [formModel]="formTable.formModel"
+            [crrValue]="column?.title"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -369,57 +369,112 @@
 </codx-form>
 
 <ng-template #tempViewTable>
-  <table class="table-row-bordered mt-3" *ngIf="listColumns?.length > 0">
-    <thead>
-      <tr class="bg-gray-100">
-        <ng-container *ngFor="let item of listColumns; let index = index">
-          <th
-            [style]="
-              item?.columnWidth > 0
-                ? 'width :' + item.columnWidth + 'px!important'
-                : ''
-            "
-            scope="col"
-            class="fw-bold ps-4 has-action-menu position-relative"
-          >
-            <div>
-              <span>{{ item?.title }}</span>
-            </div>
-            <div class="action-menu-column d-flex">
-              <div class="d-flex justify-content-end align-items-center">
-                <button
-                  class="btn btn-sm btn-icon btn-light-warning"
-                  (click)="editColumn(item)"
-                >
-                  <i class="icon icon-14 icon-edit"></i>
-                </button>
-                <button
-                  class="btn btn-sm btn-icon btn-light-danger ms-2"
-                  (click)="deleteColumn(index)"
-                >
-                  <i class="icon icon-14 icon-close"></i>
-                </button>
+  <div class="form-group">
+    <codx-input
+      type="checkbox"
+      field="settingWidth"
+      (valueChange)="valueChange($event)"
+      [crrValue]="settingWidth"
+    ></codx-input>
+    <span>
+      <codx-label
+        class="ms-2"
+        name="lblSettingWidth"
+        [formModel]="formTable?.formModel"
+        default="Áp dụng thiết lập độ rộng cho cho bảng"
+      ></codx-label>
+    </span>
+  </div>
+  <!-- d-flex justify-content-end align-items-center -->
+  <div class="">
+    <button
+      *ngIf="isShowButton"
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary"
+      (click)="showMore()"
+    >
+      <span>
+        <i
+          class="icon icon-14 {{
+            isShowMore ? 'icon-last_page' : 'icon-first_page'
+          }}"
+        ></i
+      ></span>
+      <span>
+        <i
+          class="icon icon-14 {{
+            !isShowMore ? 'icon-last_page' : 'icon-first_page'
+          }}"
+        ></i
+      ></span>
+    </button>
+  </div>
+  <div
+    class="h-100 scroll-x containerScroll"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-width="auto"
+  >
+    <!-- table  {{ settingWidth ? 'scroll-x' : 'w-100 ' }} -->
+    <table
+      id="table"
+      class=" {{ settingWidth ? '' : 'table' }} table-row-bordered mt-3"
+      *ngIf="listColumns?.length > 0"
+    >
+      <thead>
+        <tr class="bg-gray-100">
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <th
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px!important'
+                  : ''
+              "
+              scope="col"
+              class="fw-bold ps-4 has-action-menu position-relative {{ index == indexEdit  ? 'badge-primary' :''}}"
+            >
+              <div>
+                <span>{{ item?.title }}</span>
               </div>
-            </div>
-          </th>
-        </ng-container>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <ng-container *ngFor="let item of listColumns; let index = index">
-          <td
-            class="ps-4"
-            [style]="
-              item?.columnWidth > 0
-                ? 'width :' + item.columnWidth + 'px!important'
-                : ''
-            "
-          >
-            <div>{{ item?.note }}</div>
-          </td>
-        </ng-container>
-      </tr>
-    </tbody>
-  </table>
+              <div>
+                <span class="text-gray-500">{{ item?.fieldName }}</span>
+              </div>
+              <div class="action-menu-column d-flex">
+                <div class="d-flex justify-content-end align-items-center">
+                  <button
+                    class="btn btn-sm btn-icon btn-light-warning"
+                    (click)="editColumn(item,index)"
+                  >
+                    <i class="icon icon-14 icon-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-icon btn-light-danger ms-2"
+                    (click)="deleteColumn(index)"
+                  >
+                    <i class="icon icon-14 icon-close"></i>
+                  </button>
+                </div>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <td
+              class="ps-4"
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px!important'
+                  : ''
+              "
+            >
+              <div>{{ item?.note }}</div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </ng-template>
