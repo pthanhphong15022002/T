@@ -1,11 +1,16 @@
 <codx-form #form [headerText]="headerText" [subHeader]="subHeader" [body]="body" [formModel]="dialog.formModel"
     [dialog]="dialog" [footer]="footer" [data]="dataDefault" class="ac-animation-slideRight" (onAfterInit)="onAfterInit($event)">
 </codx-form>
+
+<!-- Start: SubHeader -->
 <ng-template #subHeader>
     <div class="text-primary fw-bold fs-5">
         {{subheaderText}}
     </div>
 </ng-template>
+<!-- End: SubHeader -->
+
+<!-- Start: Body -->
 <ng-template #body>
     <ng-container *ngIf="form?.formGroup">.
         <div class="mb-1 text-primary fw-bold fs-5">
@@ -160,6 +165,9 @@
         </div>
     </ng-container>
 </ng-template>
+<!-- End: Body -->
+
+<!-- Start: Footer -->
 <ng-template #footer>
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
         <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
@@ -174,3 +182,4 @@
         </button>
       </div>
 </ng-template>
+<!-- End: Footer -->

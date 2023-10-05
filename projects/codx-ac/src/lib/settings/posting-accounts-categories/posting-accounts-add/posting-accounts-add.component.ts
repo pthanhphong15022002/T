@@ -32,6 +32,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostingAccountsAddComponent extends UIComponent implements OnInit {
+
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   headerText: any;
@@ -89,6 +90,11 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   //#endregion Init
 
   //#region Event
+
+  /**
+   * *Hàm xử lí khi change value
+   * @param e 
+   */
   valueChange(e: any) {
     switch (e.field.toLowerCase()){
       case 'itemlevel':
@@ -110,6 +116,11 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   //#endregion Event
 
   //#region Method
+
+  /**
+   * *Hàm lưu thiết lập tài khoản hạch toán
+   * @param type 
+   */
   onSave(type) {
     this.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
@@ -166,7 +177,6 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
 
     this.form.setRequire(lsRequire);
 
-    console.log(this.form.formModel.fieldRequired);
   }
 
   //#endregion Function
