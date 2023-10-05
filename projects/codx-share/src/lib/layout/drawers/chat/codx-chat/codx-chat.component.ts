@@ -16,7 +16,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
   loaded = false;
-  totalMessage:number = 0;
+  count:number = 0;
   formModel:FormModel = null;
   user:any = null;
   funcID: string = 'WPT11';
@@ -75,14 +75,13 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
         }
       });
     }
-    this.getTotalMessage();
+    this.getCountMessage();
     this.addContainerChat();
   }
 
   ngAfterViewInit(): void {
-    // active group
     this.signalRSV.activeGroup.subscribe((res:any) => {
-      this.getTotalMessage();
+      this.getCountMessage();
     });
     // this.signalRSV.disConnected.subscribe((res) => {
     //   debugger
@@ -90,15 +89,15 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     //   ele[0].remove();
     // })
   }
-  // get total message
-  getTotalMessage(){
+  // get count message
+  getCountMessage(){
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
       "ChatBusiness",
       "GetTotalMessageAsync")
       .subscribe((res:any) => {
-        this.totalMessage = res;
+        this.count = res;
       });
   }
   // open chat box
@@ -155,7 +154,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
       if(res.event.status === 'Y')
       {
         this.listChat.readAllMessage();
-        this.totalMessage = 0;
+        this.count = 0;
       }
       this.autoClose = true
     });
@@ -171,7 +170,7 @@ export class CodxChatComponent implements OnInit,AfterViewInit {
     group.isRead = true;
     if(group.messageMissed > 0){
       group.messageMissed = 0;
-      this.totalMessage -= group.messageMissed;
+      this.count -= group.messageMissed;
     }
     this.signalRSV.sendData("OpenGroupAsync",group);
     this.dt.detectChanges();

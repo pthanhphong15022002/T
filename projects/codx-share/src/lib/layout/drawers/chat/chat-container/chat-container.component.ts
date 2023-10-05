@@ -27,21 +27,22 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   }
   lstGroupActive:Array<any> = [];
   lstGroupCollapse:Array<any> = [];
-  constructor
-  (
+  constructor(
     private signalRSV:SignalRService,
     private sanitizer: DomSanitizer,
     private authSV:AuthService,
     private dt:ChangeDetectorRef
   ) 
   {
+    
   }
   
   @ViewChild("boxChats",{static:true}) boxChats:TemplateRef<any>;
   @ViewChild("boxChatItem",{static:true}) boxChatItem:TemplateRef<any>;
   @ViewChildren("codxChatBox") codxChatBoxes:QueryList<CodxChatBoxComponent>;
-  windowNg:any=global;
+
   ngOnInit(): void {
+
   }
   ngAfterViewInit(){
     // active new group
@@ -73,6 +74,7 @@ export class CodxChatContainerComponent implements OnInit,OnDestroy {
   }
   // handle box chat
   handleBoxChat(data:any){
+    debugger
     let isOpen = this.lstGroupActive.some(x => x.groupID == data.groupID);
     if(isOpen) return ;
     // check collaspe
