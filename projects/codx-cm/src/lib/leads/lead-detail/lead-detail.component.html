@@ -928,6 +928,7 @@
                     [applyFor]="'5'"
                     (continueStep)="continueStep($event)"
                     (saveAssignTask)="saveAssign($event)"
+                    [ownerInstance]="dataSelected?.owner"
                   ></step-task>
                 </div>
               </ng-template>
