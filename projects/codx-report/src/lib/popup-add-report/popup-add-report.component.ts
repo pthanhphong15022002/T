@@ -1,4 +1,3 @@
-import { T } from '@angular/cdk/keycodes';
 import {
   Component,
   ViewEncapsulation,
@@ -9,7 +8,12 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { BeforeUploadEventArgs, RemovingEventArgs, RenderingEventArgs, UploaderComponent } from '@syncfusion/ej2-angular-inputs';
+import {
+  BeforeUploadEventArgs,
+  RemovingEventArgs,
+  RenderingEventArgs,
+  UploaderComponent,
+} from '@syncfusion/ej2-angular-inputs';
 import {
   ApiHttpService,
   AuthStore,
@@ -23,42 +27,43 @@ import {
   AlertConfirmInputConfig,
   DataRequest,
 } from 'codx-core';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { PopupEditParamComponent } from '../popup-edit-param/popup-edit-param.component';
-import {L10n } from '@syncfusion/ej2-base';
+import { L10n } from '@syncfusion/ej2-base';
 
 import { environment } from 'src/environments/environment';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { ThumbnailComponent } from 'projects/codx-share/src/lib/components/thumbnail/thumbnail.component';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
+import { ThumbnailComponent } from 'projects/codx-common/src/lib/component/thumbnail/thumbnail.component';
 
 L10n.load({
   vi: {
-    "uploader": {
-      "Browse": "Duyệt ...",
-      "Clear": "Xóa tất cả",
-      "Upload": "Tải lên",
-      "dropFilesHint": "Hoặc thả tập tin ở đây",
-      "invalidMaxFileSize": "Kích thước tệp quá lớn",
-      "invalidMinFileSize": "Kích thước tệp quá nhỏ",
-      "invalidFileType": "Loại tệp không được phép",
-      "uploadFailedMessage": "Không thể tải lên tệp",
-      "uploadSuccessMessage": "Tải tài liệu thành công",
-      "removedSuccessMessage": "Xóa tệp thành công",
-      "removedFailedMessage": "Không thể xóa tệp",
-      "inProgress": "Đang tải lên",
-      "readyToUploadMessage": "Sẵn sàng để tải lên",
-      "abort": "Huỷ bỏ",
-      "remove": "Loại bỏ",
-      "cancel": "Hủy bỏ",
-      "delete": "Xóa  tệp",
-      "pauseUpload": "Tạm dừng tải lên tệp",
-      "pause": "Tạm ngừng",
-      "resume": "Sơ yếu lý lịch",
-      "retry": "Thử lại",
-      "fileUploadCancel": "Đã hủy tải lên tệp"
+    uploader: {
+      Browse: 'Duyệt ...',
+      Clear: 'Xóa tất cả',
+      Upload: 'Tải lên',
+      dropFilesHint: 'Hoặc thả tập tin ở đây',
+      invalidMaxFileSize: 'Kích thước tệp quá lớn',
+      invalidMinFileSize: 'Kích thước tệp quá nhỏ',
+      invalidFileType: 'Loại tệp không được phép',
+      uploadFailedMessage: 'Không thể tải lên tệp',
+      uploadSuccessMessage: 'Tải tài liệu thành công',
+      removedSuccessMessage: 'Xóa tệp thành công',
+      removedFailedMessage: 'Không thể xóa tệp',
+      inProgress: 'Đang tải lên',
+      readyToUploadMessage: 'Sẵn sàng để tải lên',
+      abort: 'Huỷ bỏ',
+      remove: 'Loại bỏ',
+      cancel: 'Hủy bỏ',
+      delete: 'Xóa  tệp',
+      pauseUpload: 'Tạm dừng tải lên tệp',
+      pause: 'Tạm ngừng',
+      resume: 'Sơ yếu lý lịch',
+      retry: 'Thử lại',
+      fileUploadCancel: 'Đã hủy tải lên tệp',
     },
-  }})
+  },
+});
 @Component({
   selector: 'popup-add-report',
   templateUrl: './popup-add-report.component.html',
@@ -70,8 +75,8 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   @ViewChild('tabSignature') tabSignature: TemplateRef<any>;
   @ViewChild('tabTemplate') tabTemplate: TemplateRef<any>;
   @ViewChild('uploader') uploader!: UploaderComponent;
-  @ViewChild("codxThumbnail") codxThumbnail : ThumbnailComponent;
-  files:any=[];
+  @ViewChild('codxThumbnail') codxThumbnail: ThumbnailComponent;
+  files: any = [];
   title: string = 'Thêm mới báo cáo';
   tabContent: any[] = [];
   tabTitle: any[] = [];
@@ -131,11 +136,11 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   ];
   parameters: any = [];
   signatures: any = [];
-  dataEx:any=[];
+  dataEx: any = [];
   fields: any = {};
-  module:any;
+  module: any;
   isLoaded = false;
-  rootFunction:any = null;
+  rootFunction: any = null;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -148,121 +153,126 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     // private realHub: RealHubService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) 
-  {
-    if(dt?.data?.module){
+  ) {
+    if (dt?.data?.module) {
       this.module = dt.data.module;
     }
-    if(dt?.data?.reportID){
+    if (dt?.data?.reportID) {
       this.reportID = dt.data.reportID;
     }
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
-    if (this.reportID) 
-    {
+    if (this.reportID) {
       this.getReport();
       this.getExcelTemplate();
-     }
-     else this.setDefaut();
-     
+    } else this.setDefaut();
   }
 
   ngAfterViewInit(): void {
-    this.tabContent = [this.tabInfo, this.tabParam, this.tabSignature, this.tabTemplate];
+    this.tabContent = [
+      this.tabInfo,
+      this.tabParam,
+      this.tabSignature,
+      this.tabTemplate,
+    ];
     this.tabTitle = [this.menuInfo, this.menuParam, this.menuSignature];
   }
 
-  getReport(){
+  getReport() {
     this.api
-    .execSv(
-      'rptrp',
-      'Codx.RptBusiness.RP',
-      'ReportListBusiness',
-      'GetAsync',
-      [this.reportID])
-    .subscribe((res: any) => {
-      if (res) {
-        this.data = res;
-        this.recID = this.data.recID;
-        this.parameters = this.data.parameters;
-        this.getRootFunction(this.data.moduleID, this.data.reportType);
-        if(this.data.displayMode == "3" || this.data.displayMode == "4")
-        {
-          this.data.icon = `../../../assets/themes/dm/default/img/${this.data.displayMode == "3" ? "xls.svg":"doc.svg"}`;
-          this.getFileTemplate(this.data.templateID);
+      .execSv(
+        'rptrp',
+        'Codx.RptBusiness.RP',
+        'ReportListBusiness',
+        'GetAsync',
+        [this.reportID]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.data = res;
+          this.recID = this.data.recID;
+          this.parameters = this.data.parameters;
+          this.getRootFunction(this.data.moduleID, this.data.reportType);
+          if (this.data.displayMode == '3' || this.data.displayMode == '4') {
+            this.data.icon = `../../../assets/themes/dm/default/img/${
+              this.data.displayMode == '3' ? 'xls.svg' : 'doc.svg'
+            }`;
+            this.getFileTemplate(this.data.templateID);
+          } else {
+            this.data.icon = '../../../assets/themes/dm/default/img/file.svg';
+          }
+        } else {
+          this.setDefaut();
         }
-        else
-        {
-          this.data.icon = "../../../assets/themes/dm/default/img/file.svg";
-        }
-      } 
-      else
-      {
-        this.setDefaut();
-      }
-    });
+      });
   }
 
-  setReportParams(){
-    this.notiService.alertCode("Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?")
-    .subscribe((res:any)=>{
-      if(res.event.status == 'Y')
-      {
-        this.api.execSv(
-            'rptrp',
-            'Codx.RptBusiness',
-            'LVReportHelper',
-            'GetReportParamsAsync',
-            [this.reportID])
+  setReportParams() {
+    this.notiService
+      .alertCode('Nếu chọn sẽ định dạng lại toàn bộ tham số, tiếp tục?')
+      .subscribe((res: any) => {
+        if (res.event.status == 'Y') {
+          this.api
+            .execSv(
+              'rptrp',
+              'Codx.RptBusiness',
+              'LVReportHelper',
+              'GetReportParamsAsync',
+              [this.reportID]
+            )
             .subscribe((res: any) => {
-              if (res) 
-              {
+              if (res) {
                 this.parameters = res;
                 this.data.parameters = this.parameters;
-                this.api.execSv(
-                  'rptrp',
-                  'Codx.RptBusiness.RP',
-                  'ReportListBusiness',
-                  'AddUpdateAsync',
-                  [this.data])
+                this.api
+                  .execSv(
+                    'rptrp',
+                    'Codx.RptBusiness.RP',
+                    'ReportListBusiness',
+                    'AddUpdateAsync',
+                    [this.data]
+                  )
                   .subscribe();
               }
-          });
-      }
-    })
+            });
+        }
+      });
   }
 
   setDefaut() {
     this.recID = Util.uid();
     this.data = {};
     this.data.description = null;
-    this.data.displayMode = "1";
-    this.cache.functionList(this.module)
-    .subscribe((res) => {
+    this.data.displayMode = '1';
+    this.cache.functionList(this.module).subscribe((res) => {
       if (res) {
         this.moduleName = res.module;
-        this.data.moduleID=this.moduleName;
-        this.api.execSv("rptrp",
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'CreateFunctionIDAsync',[ this.moduleName,'R'])
-        .subscribe((res:any)=>{
-          if(res){
-            this.reportID = res;
-            this.data.reportID = this.reportID;
-          }
-        })
+        this.data.moduleID = this.moduleName;
+        this.api
+          .execSv(
+            'rptrp',
+            'Codx.RptBusiness.RP',
+            'ReportListBusiness',
+            'CreateFunctionIDAsync',
+            [this.moduleName, 'R']
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.reportID = res;
+              this.data.reportID = this.reportID;
+            }
+          });
       }
     });
   }
 
-  editParam(evt: any){
-    if(evt){
+  editParam(evt: any) {
+    if (evt) {
       let option = new DialogModel();
       option.FormModel = this.dialog.formModel;
-     let dialog = this.callFuncService.openForm(
+      let dialog = this.callFuncService.openForm(
         PopupEditParamComponent,
         '',
         600,
@@ -272,33 +282,34 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         '',
         option
       );
-      dialog.closed.subscribe((res:any)=>{
-        if(res.event){
-         let dataReturned = res.event;
-         if(!dataReturned.recID){
-          dataReturned.recID = Util.uid();
-          dataReturned.createdBy = this.authStore.get().userID;
-          dataReturned.createdOn = new Date;
-          this.parameters.push(dataReturned);
-         }
-         else{
-          let idx = this.parameters.findIndex((x:any)=> x.controlName == dataReturned.controlName || x.recID == dataReturned.recID);
-          if(idx>-1){
-            this.parameters[idx] = dataReturned;
+      dialog.closed.subscribe((res: any) => {
+        if (res.event) {
+          let dataReturned = res.event;
+          if (!dataReturned.recID) {
+            dataReturned.recID = Util.uid();
+            dataReturned.createdBy = this.authStore.get().userID;
+            dataReturned.createdOn = new Date();
+            this.parameters.push(dataReturned);
+          } else {
+            let idx = this.parameters.findIndex(
+              (x: any) =>
+                x.controlName == dataReturned.controlName ||
+                x.recID == dataReturned.recID
+            );
+            if (idx > -1) {
+              this.parameters[idx] = dataReturned;
+            }
           }
-         }
-         this.data.parameters = this.parameters;
-
+          this.data.parameters = this.parameters;
         }
-      })
+      });
     }
   }
 
-  deleteParam(evt: any){
-    if(evt && evt.recID){
-      this.notiService.alertCode("Xóa tham số?").subscribe((res:any)=>{
-        if(res.event.status == 'Y')
-        {
+  deleteParam(evt: any) {
+    if (evt && evt.recID) {
+      this.notiService.alertCode('Xóa tham số?').subscribe((res: any) => {
+        if (res.event.status == 'Y') {
           // this.api.execSv(
           //   'SYS',
           //   'ERM.Business.SYS',
@@ -312,48 +323,74 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           //   }
           // });
         }
-      })
+      });
     }
   }
 
   oldParamData: any;
-  actionBegin(evt:any){
-    if(evt.requestType == "beginEdit"){
+  actionBegin(evt: any) {
+    if (evt.requestType == 'beginEdit') {
       this.oldParamData = evt.rowData;
     }
   }
 
-  getExcelTemplate(){
-    this.api.execSv("SYS","ERM.Business.AD","ExcelTemplatesBusiness","GetByRefAsync",['R',this.reportID]).subscribe((res:any)=>{
-      if(res) this.dataEx = res;
-      this.changeDetectorRef.detectChanges();
-    })
+  getExcelTemplate() {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'ExcelTemplatesBusiness',
+        'GetByRefAsync',
+        ['R', this.reportID]
+      )
+      .subscribe((res: any) => {
+        if (res) this.dataEx = res;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   setTitle(evt: any) {}
 
   buttonClick(evt: any) {}
 
-  excelTemplate(){
+  excelTemplate() {
     let op = new DialogModel();
-    let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,"",{action:'add',type:'excel',refType:'R',refID:this.reportID},"",op)
-    dialog.closed.subscribe((res:any)=>{
-      if(res.event){
+    let dialog = this.callFuncService.openForm(
+      CodxExportAddComponent,
+      '',
+      screen.width,
+      screen.height,
+      '',
+      { action: 'add', type: 'excel', refType: 'R', refID: this.reportID },
+      '',
+      op
+    );
+    dialog.closed.subscribe((res: any) => {
+      if (res.event) {
       }
-    })
+    });
   }
 
-  editTemplate(action:string,data:any){
-    if(action == 'edit'){
+  editTemplate(action: string, data: any) {
+    if (action == 'edit') {
       let op = new DialogModel();
       op.DataService = data;
-      let dialog = this.callFuncService.openForm(CodxExportAddComponent,"",screen.width,screen.height,this.dialog?.formModel?.funcID,{action:'edit',type:'excel',refType:'R',refID:this.reportID},"",op)
-      dialog.closed.subscribe((res:any)=>{
-        if(res.event){
+      let dialog = this.callFuncService.openForm(
+        CodxExportAddComponent,
+        '',
+        screen.width,
+        screen.height,
+        this.dialog?.formModel?.funcID,
+        { action: 'edit', type: 'excel', refType: 'R', refID: this.reportID },
+        '',
+        op
+      );
+      dialog.closed.subscribe((res: any) => {
+        if (res.event) {
         }
-      })
+      });
     }
-    if(action == 'delete'){
+    if (action == 'delete') {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
       //SYS003
@@ -361,10 +398,10 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
         .closed.subscribe((x) => {
           if (x.event.status == 'Y') {
-            var entity ='AD_ExcelTemplates';
+            var entity = 'AD_ExcelTemplates';
             this.api
               .execAction(entity, [data], 'DeleteAsync')
-              .subscribe((item:any) => {
+              .subscribe((item: any) => {
                 if (item == true) {
                   this.notiService.notifyCode('RS002');
                   this.dataEx = this.dataEx.filter(
@@ -381,10 +418,18 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.data[evt.field] = evt.data;
   }
 
-  getRootFunction(module:string, type:string){
-    this.api.execSv("SYS","ERM.Business.SYS","FunctionListBusiness","GetFuncByModuleIDAsync",[module,type]).subscribe((res:any)=>{
-      this.rootFunction = res;
-    })
+  getRootFunction(module: string, type: string) {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'FunctionListBusiness',
+        'GetFuncByModuleIDAsync',
+        [module, type]
+      )
+      .subscribe((res: any) => {
+        this.rootFunction = res;
+      });
   }
 
   saveForm() {
@@ -395,19 +440,28 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
         'Codx.RptBusiness.RP',
         'ReportListBusiness',
         'AddUpdateAsync',
-        [this.data])
-        .subscribe((res:any) => {
-        (this.data.reportContent) ? this.setDataset() : this.dialog.close(this.data);
+        [this.data]
+      )
+      .subscribe((res: any) => {
+        this.data.reportContent
+          ? this.setDataset()
+          : this.dialog.close(this.data);
         this.isLoaded = false;
       });
-
   }
 
-  setDataset(){
-    this.api.execSv(this.data.service,'Codx.RptBusiness','ReportBusiness','SetDatasetAsync',this.reportID)
-    .subscribe((res:boolean) => {
-      this.dialog.close(this.data);
-    });
+  setDataset() {
+    this.api
+      .execSv(
+        this.data.service,
+        'Codx.RptBusiness',
+        'ReportBusiness',
+        'SetDatasetAsync',
+        this.reportID
+      )
+      .subscribe((res: boolean) => {
+        this.dialog.close(this.data);
+      });
   }
 
   valueRadio(evt: any) {
@@ -418,153 +472,144 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  clickUpload(type:string)
-  {
-    if(type == "word/excel")
-    {
-      this.uploadTemplate()
-    }
-    else
-    {
-      (this.uploader.element as HTMLElement)?.click();  
+  clickUpload(type: string) {
+    if (type == 'word/excel') {
+      this.uploadTemplate();
+    } else {
+      (this.uploader.element as HTMLElement)?.click();
     }
   }
 
-  templateType:string = "";
-  uploadTemplate(){
+  templateType: string = '';
+  uploadTemplate() {
     var gridModel = new DataRequest();
     gridModel.funcID = this.data.reportID;
     gridModel.formName = this.data.formName;
     gridModel.entityName = this.data.entityName;
     gridModel.gridViewName = this.data.gridViewName;
-    this.callFuncService.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [
-        gridModel,
-        this.data.recID,
+    this.callFuncService
+      .openForm(
+        CodxExportComponent,
         null,
-        null,
-        this.dialog.formModel?.entityName
-      ],
-      null
-    ).closed.subscribe((res:any) => {
-      if(res?.event)
-      {
-        this.data.templateID = res.event.templateInfo.recID;
-        this.data.location = res.event.templateInfo.templateName;
-        this.data.description = res.event.templateInfo.description;
-        this.data.reportContent = "";
-        this.blockBtn = false;
-        this.templateType = res.event.templateType;
-        if(res.event.templateType == "AD_WordTemplates")
-        {
-          this.data.displayMode = "4";
-          this.data.icon = "../../../assets/themes/dm/default/img/docx.svg";
+        900,
+        700,
+        '',
+        [
+          gridModel,
+          this.data.recID,
+          null,
+          null,
+          this.dialog.formModel?.entityName,
+        ],
+        null
+      )
+      .closed.subscribe((res: any) => {
+        if (res?.event) {
+          this.data.templateID = res.event.templateInfo.recID;
+          this.data.location = res.event.templateInfo.templateName;
+          this.data.description = res.event.templateInfo.description;
+          this.data.reportContent = '';
+          this.blockBtn = false;
+          this.templateType = res.event.templateType;
+          if (res.event.templateType == 'AD_WordTemplates') {
+            this.data.displayMode = '4';
+            this.data.icon = '../../../assets/themes/dm/default/img/docx.svg';
+          } else {
+            this.data.displayMode = '3';
+            this.data.icon = '../../../assets/themes/dm/default/img/xlsx.svg';
+          }
+          this.getFileTemplate(this.data.templateID);
+          this.changeDetectorRef.detectChanges();
         }
-        else
-        {
-          this.data.displayMode = "3";
-          this.data.icon = "../../../assets/themes/dm/default/img/xlsx.svg";
-        }
-        this.getFileTemplate(this.data.templateID);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+      });
   }
 
-  pathDisk:string = "";
-  fileTemplate:any = null;
-  getFileTemplate(templateID:string)
-  {
+  pathDisk: string = '';
+  fileTemplate: any = null;
+  getFileTemplate(templateID: string) {
     this.api
       .execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetFilesByIbjectIDAsync',
-      [templateID]).subscribe((res:any) =>{
-        if(res?.length > 0)
-        {
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        [templateID]
+      )
+      .subscribe((res: any) => {
+        if (res?.length > 0) {
           this.pathDisk = `${environment.urlUpload}/${res[0].pathDisk}`;
         }
         this.fileTemplate = res;
       });
   }
 
-
-  downloadReportFile(){
-    let fileName = this.data.location ? this.data.location : this.data.reportName;
-    this.api.execSv(
-      this.data.service,
-      'Codx.RptBusiness',
-      'ReportBusiness',
-      'GetReportFileRootAsync',
-      [this.data.recID])
-      .subscribe((res:any)=>{
+  downloadReportFile() {
+    let fileName = this.data.location
+      ? this.data.location
+      : this.data.reportName;
+    this.api
+      .execSv(
+        this.data.service,
+        'Codx.RptBusiness',
+        'ReportBusiness',
+        'GetReportFileRootAsync',
+        [this.data.recID]
+      )
+      .subscribe((res: any) => {
         let linkSource = res;
-        if(linkSource.split(',').length ==1){
-          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
+        if (linkSource.split(',').length == 1) {
+          linkSource = `data:application/${
+            fileName ? fileName.split('.')[1] : 'rdl'
+          };base64,${linkSource}`;
         }
-        const downloadLink = document.createElement("a");
+        const downloadLink = document.createElement('a');
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
         downloadLink.click();
       });
   }
 
-  remove(){
-    if(this.data.displayMode == '3' || this.data.displayMode == '4')
-    {
-      this.data.templateID = "";
+  remove() {
+    if (this.data.displayMode == '3' || this.data.displayMode == '4') {
+      this.data.templateID = '';
+    } else {
+      this.data.reportContent = '';
     }
-    else
-    {
-      this.data.reportContent = "";
-    }
-    this.data.displayMode = "";
-    this.data.location = "";
+    this.data.displayMode = '';
+    this.data.location = '';
     this.blockBtn = false;
   }
 
-  download(){
-    if(this.data.displayMode == '3' || this.data.displayMode == '4')
-    {
+  download() {
+    if (this.data.displayMode == '3' || this.data.displayMode == '4') {
       this.codxThumbnail.download(this.fileTemplate);
-
-    }
-    else if(this.data.displayMode == '1' && this.data.reportContent)
-    {
-      let fileName = this.data.location ? this.data.location : this.data.reportName;
-      let linkSource = "";
-      let downloadLink = document.createElement("a");
+    } else if (this.data.displayMode == '1' && this.data.reportContent) {
+      let fileName = this.data.location
+        ? this.data.location
+        : this.data.reportName;
+      let linkSource = '';
+      let downloadLink = document.createElement('a');
       linkSource = this.data.reportContent;
-      if(linkSource != "" && linkSource?.split(',').length == 1)
-      {
-          linkSource = `data:application/${fileName ? fileName.split('.')[1]: 'rdl'};base64,${linkSource}`
+      if (linkSource != '' && linkSource?.split(',').length == 1) {
+        linkSource = `data:application/${
+          fileName ? fileName.split('.')[1] : 'rdl'
+        };base64,${linkSource}`;
       }
       downloadLink.href = linkSource;
       downloadLink.download = fileName;
       downloadLink.click();
     }
-    
   }
 
-  view()
-  {
-    if(this.fileTemplate)
-    {
+  view() {
+    if (this.fileTemplate) {
       this.codxThumbnail.openFile(this.fileTemplate);
     }
   }
 
-
-  blockBtn:boolean = true;
-  selectedReportFile(e:any){
-    if(e.filesData.length == 0) return;
+  blockBtn: boolean = true;
+  selectedReportFile(e: any) {
+    if (e.filesData.length == 0) return;
     let file = e.filesData[0].rawFile;
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -572,21 +617,20 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
     this.blockBtn = false;
     reader.onload = function () {
       let strBase64 = reader.result;
-      if((strBase64 as string)?.split(',')?.length > 1){
+      if ((strBase64 as string)?.split(',')?.length > 1) {
         strBase64 = (strBase64 as string).split(',')[1];
       }
       t.data.reportContent = strBase64;
       t.data.location = file.name;
-      t.data.displayMode = "1";
-      t.data.icon = "../../../assets/themes/dm/default/img/file.svg";
+      t.data.displayMode = '1';
+      t.data.icon = '../../../assets/themes/dm/default/img/file.svg';
       t.data.size = t.formatBytes(file.size);
     };
-
   }
 
   formatBytes(bytes, decimals = 2) {
-    if (!+bytes) return '0 Bytes'
-    let k = 1024
+    if (!+bytes) return '0 Bytes';
+    let k = 1024;
     let dm = decimals < 0 ? 0 : decimals;
     let sizes = ['Bytes', 'KB', 'MB', 'GB'];
     let i = Math.floor(Math.log(bytes) / Math.log(k));

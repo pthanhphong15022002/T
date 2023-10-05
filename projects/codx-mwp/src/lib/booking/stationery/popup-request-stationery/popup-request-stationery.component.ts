@@ -20,7 +20,7 @@ import {
   CRUDService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBookingService } from 'projects/codx-share/src/lib/components/codx-booking/codx-booking.service';
 @Component({
   selector: 'popup-request-stationery',
@@ -110,7 +110,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res;
     });
-    
+
     this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
@@ -313,9 +313,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
             this.epService
               .getCategoryByEntityName(this.formModel.entityName)
               .subscribe((category: any) => {
-                this.returnData.forEach((item) => {
-                  
-                });
+                this.returnData.forEach((item) => {});
               });
             this.dialog && this.dialog.close();
           } else {

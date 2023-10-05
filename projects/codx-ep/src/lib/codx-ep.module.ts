@@ -19,7 +19,7 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
-import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { PopupAddResourcesComponent } from './resources/popup-add-resources/popup-add-resources.component';
 import { EPHistoryCardComponent } from './resources/ep-history-card/ep-history-card.component';

@@ -13,7 +13,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { OMCONST } from '../../codx-om.constant';
 
@@ -23,13 +23,13 @@ import { OMCONST } from '../../codx-om.constant';
   styleUrls: ['./popup-view-okr-link.component.scss'],
 })
 export class PopupViewOKRLinkComponent extends UIComponent {
-  dialog:any
-  data:any;
+  dialog: any;
+  data: any;
   okrGrv: any;
   okrFM: any;
-  isAfterRender=false;
+  isAfterRender = false;
   listLink = [];
-  owner:any;
+  owner: any;
   constructor(
     private injector: Injector,
     private omService: CodxOmService,
@@ -38,31 +38,36 @@ export class PopupViewOKRLinkComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.dialog=dialogRef;
-    this.data= dialogData.data[0];
-    this.okrGrv= dialogData.data[1];
-    this.okrFM= dialogData.data[2];
+    this.dialog = dialogRef;
+    this.data = dialogData.data[0];
+    this.okrGrv = dialogData.data[1];
+    this.okrFM = dialogData.data[2];
   }
 
   onInit(): void {
-    if(this.data?.hasAssign){
-      let refType = this.data?.hasAssign.includes(OMCONST.VLL.HAS_ASSIGN) ? OMCONST.VLL.RefType_Link.Assign : this.data?.hasAssign.includes(OMCONST.VLL.HAS_DISTRIBUTE) ? OMCONST.VLL.RefType_Link.Distribute :OMCONST.VLL.RefType_Link.Link; 
-      this.omService.getOKRHavedLinks(this.data?.recID,refType).subscribe((res:any)=>{
-        if(res){
-          this.listLink = res;          
+    if (this.data?.hasAssign) {
+      let refType = this.data?.hasAssign.includes(OMCONST.VLL.HAS_ASSIGN)
+        ? OMCONST.VLL.RefType_Link.Assign
+        : this.data?.hasAssign.includes(OMCONST.VLL.HAS_DISTRIBUTE)
+        ? OMCONST.VLL.RefType_Link.Distribute
+        : OMCONST.VLL.RefType_Link.Link;
+      this.omService
+        .getOKRHavedLinks(this.data?.recID, refType)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listLink = res;
+          }
+          this.isAfterRender = true;
+          this.detectorRef.detectChanges();
+        });
+    } else {
+      this.cache.getCompany(this.data?.owner).subscribe((owner) => {
+        if (owner) {
+          this.owner = owner;
         }
         this.isAfterRender = true;
         this.detectorRef.detectChanges();
-      })
-    }
-    else{
-      this.cache.getCompany(this.data?.owner).subscribe(owner=>{
-        if(owner){
-          this.owner =owner;
-        }
-        this.isAfterRender = true;
-        this.detectorRef.detectChanges();
-      })
+      });
     }
   }
 

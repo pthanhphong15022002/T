@@ -46,7 +46,7 @@ export class PopupEmpBusinessTravelsComponent
   // dataValues;
   predicates = 'EmployeeID=@0';
 
-  isAfterRender = false;
+  // isAfterRender = false;
 
   actionType: string;
   ops = ['y'];
@@ -168,7 +168,7 @@ export class PopupEmpBusinessTravelsComponent
             this.formModel.currentData = this.data;
             this.data.periodType = '1';
             this.formGroup.patchValue(this.data);
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
@@ -179,7 +179,7 @@ export class PopupEmpBusinessTravelsComponent
 
       this.formModel.currentData = this.data;
       this.formGroup.patchValue(this.data);
-      this.isAfterRender = true;
+      // this.isAfterRender = true;
       this.cr.detectChanges();
     }
   }

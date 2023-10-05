@@ -74,13 +74,13 @@
     [customerID]="customerID"
     [isPause]="isPause"
     [entityName]="entityName"
-    [owner]="owner"
     [isAdmin]="isAdmin"
     (saveAssign)="handelSaveAssignTask($event)"
     [leadName]="leadName"
     [contractName]="contractName"
     [dealName]="dealName"
     [customerName]="customerName"
+    [ownerInstance]="ownerInstance"
   ></task>
 </div>
 
@@ -155,6 +155,7 @@
         [contractName]="contractName"
         [dealName]="dealName"
         [customerName]="customerName"
+        [ownerInstance]="ownerInstance"
       ></codx-step-task>
       <div
         *ngIf="

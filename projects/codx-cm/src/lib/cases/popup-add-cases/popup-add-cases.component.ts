@@ -21,7 +21,7 @@ import {
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Cases, CM_Deals } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 

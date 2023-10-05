@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CallFuncService,
@@ -32,7 +34,7 @@ import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
   templateUrl: './popup-add-column-table.component.html',
   styleUrls: ['./popup-add-column-table.component.css'],
 })
-export class PopupAddColumnTableComponent implements OnInit {
+export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   @ViewChild('formTable') formTable: CodxFormComponent;
   @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
@@ -111,6 +113,10 @@ export class PopupAddColumnTableComponent implements OnInit {
   listColumns = [];
   isChecked = false;
   formModelTable: FormModel;
+  settingWidth = false;
+  isShowMore = false;
+  widthDefault = '550';
+  isShowButton = true;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -126,6 +132,12 @@ export class PopupAddColumnTableComponent implements OnInit {
     this.formModelTable = this.dialog.formModel;
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
     this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
+    if (this.listColumns?.length > 0) {
+      this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+    }
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
     this.user = dt?.data?.user;
     this.action = dt?.data?.action;
 
@@ -146,13 +158,37 @@ export class PopupAddColumnTableComponent implements OnInit {
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
   }
+  ngAfterViewInit() {
+    // let element = document.getElementById('table');
+    // if (
+    //   element &&
+    //   element.offsetWidth + 50 >= Number.parseFloat(this.widthDefault)
+    // )
+    //   this.isShowButton = true;
+  }
 
   async valueChange(e) {
-    if (e.field == 'multiselect' || e.field == 'columnWidth') {
-      this.column[e.field] = e.data;
+    if (e.field == 'settingWidth') {
+      this.settingWidth = e.data;
+      this.column.settingWidth = this.settingWidth;
+      if (this.listColumns?.length > 0) {
+        this.listColumns.forEach((x) => {
+          x['settingWidth'] = this.settingWidth;
+        });
+      }
+      this.changdef.detectChanges();
       return;
     }
-    if (e && e.data && e.field) this.column[e.field] = e.data;
+
+    if (e.field == 'multiselect' || e.field == 'columnWidth') {
+      this.column[e.field] = e.data;
+      this.isChecked = false;
+      return;
+    }
+
+    if (e && e.data && e.field) {
+      this.column[e.field] = e.data;
+    }
     if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
     }
@@ -574,14 +610,43 @@ export class PopupAddColumnTableComponent implements OnInit {
       this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
       return;
     }
-    if (!this.isChecked && !this.checkValidate()) return;
-    let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
-    if (idx == -1)
-      this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-    else this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
 
+    if (!this.isChecked) {
+      if (this.checkValidate()) {
+        this.actionPopup();
+      } else {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        //dung tam
+        let titleDeleteConfirm =
+          'Cột tiếp theo thiết lập chưa thành công bạn có muốn tiếp tục lưu !';
+        let title = 'Thông báo';
+        this.notiService
+          .alert(title, titleDeleteConfirm, config)
+          .closed.subscribe((x) => {
+            if (x.event.status == 'Y') {
+              this.actionPopup(false);
+            } else return;
+          });
+      }
+    } else this.actionPopup();
+  }
+
+  actionPopup(isEditList = true) {
+    if (isEditList) {
+      if (this.column.fieldName) {
+        let idx = this.listColumns.findIndex(
+          (x) => x.recID == this.column.recID
+        );
+        if (idx == -1) {
+          this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+        } else {
+          this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+          this.idxEdit = -1;
+        }
+      }
+    }
     this.dialog.close([this.listColumns, this.processNo]);
-
     this.column = new ColumnTable(); //tắt bùa
   }
 
@@ -590,7 +655,10 @@ export class PopupAddColumnTableComponent implements OnInit {
     let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
     if (idx == -1)
       this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-    else this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+    else {
+      this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+      this.idxEdit = -1;
+    }
 
     this.column = new ColumnTable();
     this.column.recID = Util.uid();
@@ -702,7 +770,8 @@ export class PopupAddColumnTableComponent implements OnInit {
     return true;
   }
 
-  editColumn(value) {
+  editColumn(value, index) {
+    this.idxEdit = index;
     this.column = JSON.parse(JSON.stringify(value));
     if (this.column.dataFormat == 'V') this.loadDataVll();
     this.formTable.formGroup.patchValue(this.column);
@@ -717,5 +786,26 @@ export class PopupAddColumnTableComponent implements OnInit {
         this.isChecked = true;
       }
     });
+  }
+
+  showMore() {
+    let isShowMore = !this.isShowMore;
+    let width = '1100';
+    // tạm tắt
+    // if (isShowMore) {
+    //   let element = document.getElementById('table');
+    //   if (element) {
+    //     width = (element.offsetWidth + 50).toString();
+    //   }
+    // }
+    // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
+    //   return;
+
+    this.isShowMore = isShowMore;
+    if (Number.parseFloat(width) > Util.getViewPort().height - 100)
+      width = (Util.getViewPort().height - 100).toString();
+
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
+    this.changeRef.detectChanges();
   }
 }
