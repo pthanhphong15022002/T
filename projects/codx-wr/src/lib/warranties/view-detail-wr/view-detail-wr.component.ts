@@ -121,7 +121,11 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   updateAssignEngineer(data) {
-    this.updateAssignEngineerEmit.emit({ data: data });
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'engineerID' });
+  }
+
+  updateServiceLocator(data){
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'serviceLocator' });
   }
 
   listOrderUpdate(lstUpdate) {
