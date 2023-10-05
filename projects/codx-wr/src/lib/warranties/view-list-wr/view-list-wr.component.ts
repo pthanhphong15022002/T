@@ -63,8 +63,8 @@ export class ViewListWrComponent {
 
   //#region popover
   PopoverDetail(e, p: any, emp, field: string) {
-    let parent = e.currentTarget.clientHeight;
-    let child = e.currentTarget.scrollHeight;
+    let parent = e?.currentTarget?.clientHeight;
+    let child = e?.currentTarget?.scrollHeight;
     const isOpen = p.isOpen();
     if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
