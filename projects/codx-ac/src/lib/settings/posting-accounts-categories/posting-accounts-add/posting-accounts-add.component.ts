@@ -43,6 +43,7 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   eleGrid:any;
   funcName:any;
   lblAdd:any;
+  _rowIndex:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -56,6 +57,7 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
     this.headerText = dialogData?.data?.headerText;
     this.subheaderText = dialogData?.data?.subheaderText;
     this.dataDefault = {...dialogData.data?.dataDefault};
+    this._rowIndex = parseInt(dialogData.data?.dataDefault?.index);
     this.funcName = dialogData?.data?.funcName;
     this.eleGrid = dialogData.data?.eleGrid;
   }
@@ -116,9 +118,9 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
       }
       if((res.save && !res.save.error) || (res.update && !res.update.error)){
         if (this.form.data.isAdd || this.form.data.isCopy)
-            (this.eleGrid as CodxGridviewV2Component).addRow(this.form.data,0,true,false);
+            (this.eleGrid as CodxGridviewV2Component).addRow(res?.save?.data,0,true,false);
         else
-            (this.eleGrid as CodxGridviewV2Component).updateRow(parseInt(this.form.data.index),this.form.data,false);
+            (this.eleGrid as CodxGridviewV2Component).updateRow(this._rowIndex,res?.update?.data,false);
         if (type == 'save') {
           this.dialog.close();
         }else{
