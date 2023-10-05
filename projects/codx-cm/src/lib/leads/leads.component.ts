@@ -1057,7 +1057,7 @@ export class LeadsComponent
           lsts.forEach((ele) => {
             this.view.dataService.update(ele).subscribe();
           });
-          this.notificationsService.notifyCode('Cập nhật tự động thành công');
+          this.notificationsService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
       });
