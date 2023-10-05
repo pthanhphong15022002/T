@@ -1,6 +1,6 @@
 <div class="d-flex flex-column w-100 h-100">
     <div #header class="d-flex align-items-center justify-content-between py-4 px-5 border-bottom">
-        <codx-label default="Thêm mới template" class="fs-5 fw-bold"></codx-label>
+        <codx-label default="Thêm mới template" class="fs-2 fw-bold"></codx-label>
         <div class="d-flex flex-column justify-content-center align-items-center">
             <i class="icon-24 icon-radio_button_checked"></i>
             <codx-label default="Chi tiết import"></codx-label>
@@ -14,7 +14,7 @@
             <div class="d-flex flex-column my-2">
                 <codx-label [formName]="'fnAddTmpImportAttachTitle'" [fiedName]="'lblAddTmpImportAttachTitle'" default="Chọn file dùng làm mẫu import" class="fw-bold text-gray-500"></codx-label>
             </div>
-            <codx-attachment hideFolder="1" hideDes="1" [objectType]="formModel?.entityName" [functionID]="formModel?.funcID" allowExtensions=".xls,.xlsx" (fileGet)="getfileGet($event)" (filePrimitive)="getfilePrimitive($event)"></codx-attachment>
+            <codx-attachment #attachment hideFolder="1" hideDes="1" showMessage="0" [objectType]="formModel?.entityName" [functionID]="formModel?.funcID" allowExtensions=".xls,.xlsx" (fileGet)="getfileGet($event)" (filePrimitive)="getfilePrimitive($event)"></codx-attachment>
             <div class="d-flex flex-column mt-5">
                 <codx-label [formModel]="formModels" [fiedName]="'MappingName'" class="fw-bold"></codx-label>
                 <codx-input type="text" [Group]="importAddTmpGroup" ControlName="mappingName"
@@ -53,23 +53,23 @@
                             <codx-label default="Thứ tự import: " class="fw-bold me-2"></codx-label>
                             <codx-label default="Thứ tự bảng lưu dữ liệu được nhập từ file import"></codx-label> 
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mt-2">
                             <codx-label default="Bảng nhập dữ liệu: " class="fw-bold me-2"></codx-label>
                             <codx-label default="Bảng lưu dữ liệu"></codx-label> 
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mt-2">
                             <codx-label default="Bảng cấp cha: " class="fw-bold me-2"></codx-label>
                             <codx-label default="Bảng lưu dữ liệu nhóm của bảng dữ liệu chi tiết"></codx-label> 
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mt-2">
                             <codx-label default="Tên mẫu chi tiết import :" class="fw-bold me-2"></codx-label>
                             <codx-label default="Mẫu chi tiết được thiết lập các cột trong hệ thống tương ứng với file import"></codx-label> 
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mt-2">
                             <codx-label default="Quy tắc nhập liệu: " class="fw-bold me-2"></codx-label>
                             <codx-label default="Cách thức nhập dữ liệu vào chương trình (Thêm mới/Ghi đè/Báo lỗi khi trùng)"></codx-label> 
                         </div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center mt-2">
                             <codx-label default="Dữ liệu nhóm: " class="fw-bold me-2"></codx-label>
                             <codx-label default="Đánh dấu là dữ liệu nhóm khi nhập vào chương trình"></codx-label> 
                         </div>
@@ -121,7 +121,9 @@
                                     </td>
                                     <td class="w-100 p-3 d-flex align-items-center">
                                       <!-- <span class="d-block text-truncate">{{data?.mappingTemplate}}</span> -->
-                                      <codx-input field="mappingTemplate" [refValue]="columnsGrid[3]?.referedValue" [refType]="columnsGrid[3]?.referedType" [datatype]="columnsGrid[3]?.controlType" [multiple]="columnsGrid[3]?.multiSelect" style="width: 100%">
+                                        <codx-input field="mappingTemplate" [crrValue]="data?.mappingTemplate" [refValue]="columnsGrid[3]?.referedValue" [refType]="columnsGrid[3]?.referedType" [datatype]="columnsGrid[3]?.controlType" [multiple]="columnsGrid[3]?.multiSelect" style="width: 100%"
+                                        (valueChange)="valueChangeMappingTemplate($event , data)"
+                                        >
                                         </codx-input>
                                         <i class="icon-add_box cursor-pointer ms-2 text-primary" (click)="openFormAddImportDetail()"></i>
                                         <i class="icon-open_in_new cursor-pointer ms-2"></i>
@@ -147,7 +149,8 @@
                 <button class="btn btn-light-primary"  (click)="per()"><codx-label [formName]="'fmAddTmpImportPer'" fiedName="lblAddTmpImportPer" default="Quay lại"></codx-label></button>
             </div>
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary"  (click)="next()"><codx-label [formName]="'fmAddTmpImportNext'" fiedName="lblAddTmpImportNext" default="Tiếp theo"></codx-label></button>
+                <button class="btn btn-primary"  *ngIf="step==0" (click)="next()"><codx-label [formName]="'fmAddTmpImportNext'" fiedName="lblAddTmpImportNext" default="Tiếp theo"></codx-label></button>
+                <button class="btn btn-primary" *ngIf="step==1"  (click)="onSave()"><codx-label [formName]="'fmAddTmpImportSave'" fiedName="lblAddTmpImportSave" default="Lưu"></codx-label></button>
             </div>
         </div>
     </div>

@@ -40,10 +40,10 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
 })
 export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() customerID: string;
-  @Input() owner: string;
   @Input() isPause = false;
   @Input() isAdmin = false;
   @Input() entityName = '';
+  @Input() ownerInstance: string;
 
   @Input() customerName: string;
   @Input() dealName: string;
@@ -434,7 +434,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isSave: false,
       isStart: true,
-      owner: this.owner,
+      ownerInstance: this.ownerInstance,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

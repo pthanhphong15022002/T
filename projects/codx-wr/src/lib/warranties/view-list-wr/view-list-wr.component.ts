@@ -27,6 +27,8 @@ export class ViewListWrComponent {
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  fieldPopover: any;
+  isPopoverOpen = false;
   constructor(
     private wrSv: CodxWrService,
     private callFunc: CallFuncService,
@@ -51,20 +53,14 @@ export class ViewListWrComponent {
   }
 
   getIcon($event) {
-    if ($event == 'O') {
-      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
-    } else if ($event == 'I') {
-      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
-    } else if ($event == 'F') {
-      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
   }
 
   //#region popover
   PopoverDetail(e, p: any, emp, field: string) {
-    let parent = e.currentTarget.clientHeight;
-    let child = e.currentTarget.scrollHeight;
+    this.isPopoverOpen = true;
+    let parent = e?.currentTarget?.clientHeight;
+    let child = e?.currentTarget?.scrollHeight;
     const isOpen = p.isOpen();
     if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
@@ -74,17 +70,20 @@ export class ViewListWrComponent {
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
         if (parent < child) {
-          if (!isOpen) {
-            p.open();
-          }
+          p.open();
         }
       }
     } else {
-      if (isOpen) {
-        p.close();
-      }
+      p.close();
     }
     this.popupOld = p;
+    this.fieldPopover = field;
+  }
+
+  popoverClosed(p) {
+    p.close();
+
+    this.isPopoverOpen = false;
   }
 
   closePopover() {

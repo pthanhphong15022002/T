@@ -37,6 +37,7 @@ import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/co
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
+import { PopupAddTaskCalendarComponent } from './popup-add-task-calendar/popup-add-task-calendar.component';
 
 @Component({
   selector: 'lib-view-calendar',
@@ -437,16 +438,32 @@ viewTask(data) {
     return task;
   }
   //#region add task
-  beforeAddTask() {
+  // beforeAddTask() {
+  //   let option = new DialogModel();
+  //   option.zIndex = 1001;
+  //   this.popupTypeCM = this.callfc.openForm(
+  //     this.popupChoiseTypeCM,
+  //     '',
+  //     600,
+  //     470,
+  //     '',
+  //     null,
+  //     '',
+  //     option
+  //   );
+  // }
+
+   beforeAddTask() {
     let option = new DialogModel();
+    let data = {};
     option.zIndex = 1001;
     this.popupTypeCM = this.callfc.openForm(
-      this.popupChoiseTypeCM,
+      PopupAddTaskCalendarComponent,
       '',
       600,
       470,
       '',
-      null,
+      data,
       '',
       option
     );

@@ -100,7 +100,6 @@ export class ViewDetailWrComponent implements OnInit {
         this.overflowed = false;
       }
     }
-
   }
 
   ngAfterViewChecked(): void {
@@ -121,7 +120,11 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   updateAssignEngineer(data) {
-    this.updateAssignEngineerEmit.emit({ data: data });
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'engineerID' });
+  }
+
+  updateServiceLocator(data) {
+    this.updateAssignEngineerEmit.emit({ data: data, type: 'serviceLocator' });
   }
 
   listOrderUpdate(lstUpdate) {
@@ -130,13 +133,6 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   getIcon($event) {
-    if ($event == 'O') {
-      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
-    } else if ($event == 'I') {
-      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
-    } else if ($event == 'F') {
-      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
   }
 }
