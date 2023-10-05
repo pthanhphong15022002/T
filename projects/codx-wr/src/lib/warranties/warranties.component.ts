@@ -707,8 +707,15 @@ export class WarrantiesComponent
     this.dataSelected = data;
     this.serviceLocator = this.dataSelected?.serviceLocator;
     this.titleAction =
-      this.moreFuncEdit + ' ' + this.gridViewSetup?.ServiceLocator?.headerText?.toLowerCase();
-    this.dialogServiceLocator = this.callfc.openForm(this.itemService, '', 250, 300);
+      this.moreFuncEdit +
+      ' ' +
+      this.gridViewSetup?.ServiceLocator?.headerText?.toLowerCase();
+    this.dialogServiceLocator = this.callfc.openForm(
+      this.itemService,
+      '',
+      500,
+      350
+    );
     this.dialogServiceLocator.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.serviceLocator = this.serviceLocator;
