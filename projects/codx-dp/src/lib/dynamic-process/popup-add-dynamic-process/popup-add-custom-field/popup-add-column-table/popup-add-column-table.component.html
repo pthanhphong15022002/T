@@ -431,7 +431,7 @@
                   : ''
               "
               scope="col"
-              class="fw-bold ps-4 has-action-menu position-relative badge-primary"
+              class="fw-bold ps-4 has-action-menu position-relative {{ index == indexEdit  ? 'badge-primary' :''}}"
             >
               <div>
                 <span>{{ item?.title }}</span>
@@ -443,7 +443,7 @@
                 <div class="d-flex justify-content-end align-items-center">
                   <button
                     class="btn btn-sm btn-icon btn-light-warning"
-                    (click)="editColumn(item)"
+                    (click)="editColumn(item,index)"
                   >
                     <i class="icon icon-14 icon-edit"></i>
                   </button>
