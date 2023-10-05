@@ -40,6 +40,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
   @ViewChild('valueListType') valueListType: CodxInputComponent;
+  //formAddColum
+  @ViewChild('formColumn') formColumn: CodxFormComponent;
+  @ViewChild('formAddColumn') formAddColumn: TemplateRef<any>;
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -112,11 +115,13 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   maxNumber = 0;
   listColumns = [];
   isChecked = false;
-  formModelTable: FormModel;
+  formModelColumn: FormModel;
   settingWidth = false;
   isShowMore = false;
   widthDefault = '550';
   isShowButton = true;
+
+  dialogAddColumn: DialogRef;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -129,8 +134,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.formModelTable = this.dialog.formModel;
-    this.column = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.formModelColumn = this.dialog.formModel;
+    // this.column = JSON.parse(JSON.stringify(dt?.data?.data));
     this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
     if (this.listColumns?.length > 0) {
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
@@ -150,27 +155,19 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.listVllCus = dt?.data?.listVllCus ?? [];
     this.listVll = dt?.data?.listVll ?? [];
 
-    if (this.action == 'add' || this.action == 'copy')
-      this.column.recID = Util.uid();
+    // if (this.action == 'add' || this.action == 'copy')
+    //   this.column.recID = Util.uid();
   }
 
   ngOnInit(): void {
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
   }
-  ngAfterViewInit() {
-    // let element = document.getElementById('table');
-    // if (
-    //   element &&
-    //   element.offsetWidth + 50 >= Number.parseFloat(this.widthDefault)
-    // )
-    //   this.isShowButton = true;
-  }
+  ngAfterViewInit() {}
 
   async valueChange(e) {
     if (e.field == 'settingWidth') {
       this.settingWidth = e.data;
-      this.column.settingWidth = this.settingWidth;
       if (this.listColumns?.length > 0) {
         this.listColumns.forEach((x) => {
           x['settingWidth'] = this.settingWidth;
@@ -185,12 +182,20 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       this.isChecked = false;
       return;
     }
+    if (e.field == 'dataType' && e.data != this.column.dataType) {
+      this.column.refType = null;
+      this.column.refValue = null;
+      this.column.dataFormat = null;
+      this.column.multiselect = null;
+    }
 
-    if (e && e.data && e.field) {
-      this.column[e.field] = e.data;
+    if (e && e.field) {
+      this.column[e.field] = e?.data;
     }
     if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      this.changdef.detectChanges();
+      return;
     }
 
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
@@ -505,13 +510,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // deletedValue(i) {
-  //   if (i == -1) return;
-  //   this.datasVll.splice(i, 1);
-  //   // this.idxDeleted = -1;
-  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  // }
-
   handelTextValue(i) {
     this.idxEdit = i;
     this.changeRef.detectChanges();
@@ -603,52 +601,34 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       }
     }, timeOut);
   }
-  //---------------------SAVE-----------------------//
 
+  //---------------------SAVE-----------------------//
   saveData() {
     if (!this.listColumns || this.listColumns?.length == 0) {
       this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
       return;
     }
 
-    if (!this.isChecked) {
-      if (this.checkValidate()) {
-        this.actionPopup();
-      } else {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        //dung tam
-        let titleDeleteConfirm =
-          'Cột tiếp theo thiết lập chưa thành công bạn có muốn tiếp tục lưu !';
-        let title = 'Thông báo';
-        this.notiService
-          .alert(title, titleDeleteConfirm, config)
-          .closed.subscribe((x) => {
-            if (x.event.status == 'Y') {
-              this.actionPopup(false);
-            } else return;
-          });
-      }
-    } else this.actionPopup();
+    this.dialog.close([this.listColumns, this.processNo]);
   }
 
-  actionPopup(isEditList = true) {
-    if (isEditList) {
-      if (this.column.fieldName) {
-        let idx = this.listColumns.findIndex(
-          (x) => x.recID == this.column.recID
-        );
-        if (idx == -1) {
-          this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-        } else {
-          this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
-          this.idxEdit = -1;
-        }
-      }
-    }
-    this.dialog.close([this.listColumns, this.processNo]);
-    this.column = new ColumnTable(); //tắt bùa
-  }
+  // actionPopup(isEditList = true) {
+  //   if (isEditList) {
+  //     if (this.column.fieldName) {
+  //       let idx = this.listColumns.findIndex(
+  //         (x) => x.recID == this.column.recID
+  //       );
+  //       if (idx == -1) {
+  //         this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+  //       } else {
+  //         this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+  //         this.idxEdit = -1;
+  //       }
+  //     }
+  //   }
+  //   this.dialog.close([this.listColumns, this.processNo]);
+  //   this.column = new ColumnTable(); //tắt bùa
+  // }
 
   saveDataAndContinue() {
     if (!this.checkValidate()) return;
@@ -770,14 +750,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  editColumn(value, index) {
-    this.idxEdit = index;
-    this.column = JSON.parse(JSON.stringify(value));
-    if (this.column.dataFormat == 'V') this.loadDataVll();
-    this.formTable.formGroup.patchValue(this.column);
-    this.changeRef.detectChanges();
-  }
-
   deleteColumn(idx) {
     this.notiService.alertCode('SYS030').subscribe((res) => {
       if (res?.event && res?.event?.status == 'Y') {
@@ -802,10 +774,53 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     //   return;
 
     this.isShowMore = isShowMore;
-    if (Number.parseFloat(width) > Util.getViewPort().height - 100)
-      width = (Util.getViewPort().height - 100).toString();
+    if (Number.parseFloat(width) > Util.getViewPort().width - 100)
+      width = (Util.getViewPort().width - 100).toString();
 
     this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeRef.detectChanges();
   }
+
+  // ----------------------------------COLUM----------------------------------//
+  addColumn() {
+    this.column = new ColumnTable();
+    this.column.recID = Util.uid();
+    this.column.settingWidth = this.settingWidth;
+    this.dialogAddColumn = this.callfc.openForm(
+      this.formAddColumn,
+      '',
+      550,
+      750
+    );
+  }
+
+  editColumn(value, index) {
+    this.idxEdit = index;
+    this.column = JSON.parse(JSON.stringify(value));
+    if (this.column.dataFormat == 'V') this.loadDataVll();
+
+    this.dialogAddColumn = this.callfc.openForm(
+      this.formAddColumn,
+      '',
+      550,
+      750
+    );
+
+    this.changeRef.detectChanges();
+  }
+
+  saveColumn() {
+    if (!this.checkValidate) return;
+
+    let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
+    if (idx == -1) {
+      this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
+    } else {
+      this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
+      this.idxEdit = -1;
+    }
+
+    this.dialogAddColumn.close();
+  }
+  //------------------------------------END---------------------------------//
 }
