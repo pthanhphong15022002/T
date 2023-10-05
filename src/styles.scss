@@ -3932,6 +3932,13 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
 }
 
 
+.offcanvas-wrapper{
+  codx-breadcumb {
+    .breadcumb-item.breadcumb-full{
+    overflow: auto;
+  }
+  }
+}
 //////////////
 // ipad and tablet
 /// /////////

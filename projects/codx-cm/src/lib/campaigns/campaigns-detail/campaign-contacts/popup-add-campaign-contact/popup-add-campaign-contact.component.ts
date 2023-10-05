@@ -205,6 +205,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       case 'isProvince':
         if (!this.isProvince) {
           if (this.cbxProvince) {
+            this.cbxProvince.value = [];
+            this.cbxProvince.selectedItems = [];
             this.cbxProvince.setValue('');
           }
           this.provinceIDs = [];
@@ -214,6 +216,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       case 'isDistrict':
         if (!this.isDistrict) {
           if (this.cbxDistrict) {
+            this.cbxDistrict.value = [];
+            this.cbxDistrict.selectedItems = [];
             this.cbxDistrict.setValue('');
           }
           this.districtIDs = [];
@@ -223,6 +227,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       case 'isIndustries':
         if (!this.isIndustries) {
           if (this.cbxIndustries) {
+            this.cbxIndustries.value = [];
+            this.cbxIndustries.selectedItems = [];
             this.cbxIndustries.setValue('');
           }
           this.industries = [];
@@ -232,6 +238,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       case 'isStatus':
         if (!this.isStatus) {
           if (this.cbxStatus) {
+            this.cbxStatus.value = [];
+            this.cbxStatus.selectedItems = [];
             this.cbxStatus.setValue('');
           }
           this.status = [];

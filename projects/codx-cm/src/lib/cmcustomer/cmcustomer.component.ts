@@ -737,7 +737,7 @@ export class CmCustomerComponent
           lsts.forEach((ele) => {
             this.view.dataService.update(ele).subscribe();
           });
-          this.notiService.notifyCode('Cập nhật tự động thành công');
+          this.notiService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
       });
@@ -757,7 +757,7 @@ export class CmCustomerComponent
     if (isCheck) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
-      this.notiService.alertCode('SYS030').subscribe((x) => {
+      this.notiService.alertCode('CM052').subscribe((x) => {
         if (x.event && x.event?.status) {
           if (x?.event?.status == 'Y') {
             this.openFormConvert(data);

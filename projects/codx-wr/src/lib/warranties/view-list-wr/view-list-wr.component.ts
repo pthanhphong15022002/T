@@ -27,6 +27,8 @@ export class ViewListWrComponent {
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  fieldPopover: any;
+  isPopoverOpen = false;
   constructor(
     private wrSv: CodxWrService,
     private callFunc: CallFuncService,
@@ -63,8 +65,10 @@ export class ViewListWrComponent {
 
   //#region popover
   PopoverDetail(e, p: any, emp, field: string) {
-    let parent = e.currentTarget.parentElement.scrollHeight;
-    let child = e.currentTarget.offsetHeight;
+    this.isPopoverOpen = true;
+    let parent = e?.currentTarget?.clientHeight;
+    let child = e?.currentTarget?.scrollHeight;
+    const isOpen = p.isOpen();
     if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
@@ -72,12 +76,21 @@ export class ViewListWrComponent {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (40 < child) {
+        if (parent < child) {
           p.open();
         }
       }
-    } else p.close();
+    } else {
+      p.close();
+    }
     this.popupOld = p;
+    this.fieldPopover = field;
+  }
+
+  popoverClosed(p) {
+    p.close();
+
+    this.isPopoverOpen = false;
   }
 
   closePopover() {
