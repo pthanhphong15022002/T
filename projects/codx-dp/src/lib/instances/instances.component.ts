@@ -258,7 +258,7 @@ export class InstancesComponent
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
-      if (this.funcID == 'DPT04') {
+      if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
         this.codxDpService.dataProcess.subscribe((res) => {
@@ -301,7 +301,7 @@ export class InstancesComponent
         this.tabInstances = tabIns;
       }
     });
-    if (this.funcID == 'DPT04')
+    if (this.funcID != 'DPT0502')
       this.cache.functionList(this.funcID).subscribe((f) => {
         // if (f) this.pageTitle.setSubTitle(f?.customName);
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -316,7 +316,7 @@ export class InstancesComponent
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
 
-    this.showButtonAdd = this.funcID == 'DPT04';
+    this.showButtonAdd = this.funcID != 'DPT0502';
   }
   ngAfterViewInit() {
     this.views = [

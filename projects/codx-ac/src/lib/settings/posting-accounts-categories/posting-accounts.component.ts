@@ -24,6 +24,8 @@ import {
   DialogRef,
   RequestOption,
   CodxGridviewV2Component,
+  CodxInputComponent,
+  Util,
 } from 'codx-core';
 import { PostingAccountsAddComponent } from './posting-accounts-add/posting-accounts-add.component';
 import { Subject, takeUntil } from 'rxjs';
@@ -129,24 +131,29 @@ export class ItempostingaccountsComponent extends UIComponent {
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
+
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   //#endregion;
   clickMenu(e: any) {
     if (e === this.menuActive) return;
     switch (e) {
       case '1':
-        this.menuActive = 1;
+        this.menuActive = '1';
         this.postType = this.menuInventory[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '2':
-        this.menuActive = 2;
+        this.menuActive = '2';
         this.postType = this.menuPurchase[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '3':
-        this.menuActive = 3;
+        this.menuActive = '3';
         this.postType = this.menuSell[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '4':
-        this.menuActive = 4;
+        this.menuActive = '4';
         this.postType = this.menuProduction[0]?.value; //? focus đầu vào item đầu tiên
         break;
     }
@@ -193,12 +200,15 @@ export class ItempostingaccountsComponent extends UIComponent {
     let data = {
       headerText: this.headerText,
       subheaderText: this.subheaderText,
-      dataDefault:{...this.dataDefault}
+      dataDefault:{...this.dataDefault},
+      eleGrid:this.eleGrid
     };
     if(!this.dataDefault){
       this.view.dataService.addNew().subscribe((res: any) => {
         if(res){
           res.isAdd = true;
+          res.moduleID = this.menuActive;
+          res.postType = this.postType;
           this.dataDefault = {...res};
           data.dataDefault = {...this.dataDefault};
           let dialog = this.callfunc.openSide(
@@ -210,6 +220,9 @@ export class ItempostingaccountsComponent extends UIComponent {
         }       
       });
     }else{
+      data.dataDefault.recID = Util.uid();
+      data.dataDefault.moduleID = this.menuActive;
+      data.dataDefault.postType = this.postType;
       let dialog = this.callfunc.openSide(
         PostingAccountsAddComponent,
         data,
@@ -217,88 +230,60 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.view.funcID
       );
     }
-    // this.loadMenuActive(this.menuActive);
-    // this.headerText = e.text + ' ' + this.funcName;
-    // this.view.dataService.addNew().subscribe((res: any) => {
-    //   var obj = {
-    //     formType: 'add',
-    //     headerText: this.headerText,
-    //     subheaderText: this.subheaderText,
-    //     moduleID: this.menuActive,
-    //     postType: this.postType,
-    //   };
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view.dataService;
-    //   option.FormModel = this.view.formModel;
-    //   option.Width = '550px';
-    //   this.dialog = this.callfunc.openSide(
-    //     PostingAccountsAddComponent,
-    //     obj,
-    //     option,
-    //     this.view.funcID
-    //   );
-    //   this.dialog.closed.subscribe((x) => {
-    //     if (x.event == null) this.view.dataService.clear();
-    //   });
-    // });
+    
   }
-  edit(e, data) {
-    // this.loadMenuActive(parseInt(data.moduleID));
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'edit',
-    //       headerText: e.text + ' ' + this.funcName,
-    //       subheaderText: this.subheaderText,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(PostingAccountsAddComponent, obj, option);
-    //   });
+  edit(e, dataEdit) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
+    if (dataEdit) this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService
+      .edit(dataEdit)
+      .subscribe((res: any) => {
+        if (res) {
+          res.isEdit = true;
+          let data = {
+            headerText: this.headerText,
+            subheaderText: this.subheaderText,
+            dataDefault:{...res},
+            funcName:this.funcName,
+            eleGrid:this.eleGrid
+          };
+          let dialog = this.callfunc.openSide(
+            PostingAccountsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+        }
+      });
   }
-  copy(e, data) {
-    // this.loadMenuActive(parseInt(data.moduleID));
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .copy()
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'copy',
-    //       headerText: e.text + ' ' + this.funcName,
-    //       subheaderText: this.subheaderText,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(PostingAccountsAddComponent, obj, option);
-    //   });
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
+    if (dataCopy) this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        if (res) {
+          res.isCopy = true;
+          let data = {
+            headerText: this.headerText,
+            subheaderText: this.subheaderText,
+            dataDefault:{...res},
+            funcName:this.funcName,
+            eleGrid:this.eleGrid
+          };
+          let dialog = this.callfunc.openSide(
+            PostingAccountsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+        }
+      });
   }
-  delete(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .delete([data], true, (option: RequestOption) =>
-    //     this.beforeDelete(option, data)
-    //   )
-    //   .subscribe((res: any) => {});
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'IVPostingAccountsBusiness';
-    opt.assemblyName = 'AC';
-    opt.service = 'AC';
-    opt.data = data.recID;
-    return true;
+  delete(dataDelete) {
+    this.eleGrid.deleteRow(dataDelete);
   }
 
   getSubHeader(valueHeader,valueItem){

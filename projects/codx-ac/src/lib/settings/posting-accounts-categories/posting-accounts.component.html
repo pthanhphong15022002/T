@@ -107,10 +107,10 @@
 <ng-template #templateRight>
   <ng-container *ngIf="view.formModel">
     <codx-gridview-v2 #eleGrid class="tabLine" [formName]="view.formModel.formName" [templateMore]="morefunction"
-    [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0" [dataValues]="postType" ></codx-gridview-v2>
+      [gridViewName]="view.formModel.gridViewName" [entityName]="view.formModel.entityName" predicates="PostType=@0"
+      [dataValues]="postType"></codx-gridview-v2>
   </ng-container>
 </ng-template>
 <ng-template #morefunction let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" type="view"
-      (clickMF)="clickMF($event, data)"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" type="view" (clickMF)="clickMF($event, data)"></codx-mfunc>
 </ng-template>

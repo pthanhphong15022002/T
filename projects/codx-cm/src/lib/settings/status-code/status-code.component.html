@@ -14,7 +14,6 @@
   [selectedFirst]="true"
   [button]="button"
   (buttonClick)="click($event)"
-  [viewActiveType]="'2'"
   (selectedChange)="selectedChange($event)"
 >
 </codx-views>
@@ -32,26 +31,23 @@
 </ng-template>
 
 <ng-template #templateObjectStatus let-data>
-
-<div class="" *ngIf="data?.objectStatus">
-  <codx-vll
-    [name]="getValueTypeCategory(data.category)"
-    [field]="'Status'"
-    [value]="data?.objectStatus"
-    [showText]="true"
-    [showBgColor]="true"
-    class="badge badge-light badge-sm"
-  >
-  </codx-vll>
-</div>
+  <div class="" *ngIf="data?.objectStatus">
+    <codx-vll
+      [name]="getValueTypeCategory(data.category)"
+      [field]="'Status'"
+      [value]="data?.objectStatus"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-sm"
+    >
+    </codx-vll>
+  </div>
 </ng-template>
 
-
 <ng-template #templateCategory let-data>
-
-  <div class="" >
+  <div class="">
     <codx-vll
-    [name]="gridViewSetup?.Category?.referedValue"
+      [name]="gridViewSetup?.Category?.referedValue"
       [field]="'Category'"
       [value]="data?.category"
       [showText]="true"
@@ -60,5 +56,4 @@
     >
     </codx-vll>
   </div>
-  </ng-template>
-
+</ng-template>
