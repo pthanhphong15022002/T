@@ -23,6 +23,7 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupAddLeadComponent } from '../../../leads/popup-add-lead/popup-add-lead.component';
+import { PopupConvertLeadComponent } from '../../../leads/popup-convert-lead/popup-convert-lead.component';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -202,6 +203,9 @@ export class CampaignContactsComponent implements OnInit {
       case 'CM0301_2_1':
         this.convertCustomerToLeads(data);
         break;
+      case 'CM0301_2_2':
+        this.convertLead(data);
+        break;
       default:
         break;
     }
@@ -214,6 +218,20 @@ export class CampaignContactsComponent implements OnInit {
           case 'SYS03':
           case 'SYS04':
             res.disabled = true;
+            break;
+          case 'CM0301_2_1':
+            if (this.objectType == '3') res.disabled = true;
+            break;
+          case 'CM0301_2_2':
+            if (
+              this.objectType == '1' ||
+              !['13', '3', '2'].includes(data.leadStatus)
+            ) {
+              if (this.objectType == '1') res.disabled = true;
+              else {
+                res.isblur = true;
+              }
+            }
             break;
         }
       });
@@ -397,5 +415,57 @@ export class CampaignContactsComponent implements OnInit {
             });
         }
       });
+  }
+
+  //convert Lead
+  async convertLead(data) {
+
+    const lead = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'LeadsBusiness',
+        'GetOneLeadByObjectIDAsync',
+        [data?.objectID]
+      )
+    );
+    if (lead) {
+      if(lead?.closed) {
+        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được')
+        return;
+      }
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
+        let option = new SidebarModel();
+        var formMD = new FormModel();
+        formMD.entityName = 'CM_Leads';
+        formMD.formName = 'CMLeads';
+        formMD.gridViewName = 'grvCMLeads';
+        formMD.funcID = 'CM0205';
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '800px';
+        var obj = {
+          title: this.titleAction,
+          gridViewSetup: res,
+          applyFor: '5',
+          data: lead,
+        };
+        var dialog = this.callFc.openSide(
+          PopupConvertLeadComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event) {
+            var idx = this.lstCampContacts.findIndex(x => x.recID == data.recID);
+            if(idx != -1){
+              this.lstCampContacts[idx].leadStatus = '11';
+            }
+            this.lstCampContacts = JSON.parse(JSON.stringify(this.lstCampContacts));
+
+            this.detector.detectChanges();
+          }
+        });
+      });
+    }
   }
 }
