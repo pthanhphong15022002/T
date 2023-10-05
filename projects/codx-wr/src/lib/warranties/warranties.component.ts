@@ -56,10 +56,6 @@ export class WarrantiesComponent
   @ViewChild('itemService') itemService: TemplateRef<any>;
 
   dialogStatus: DialogRef;
-  dialogPriority: DialogRef;
-  dialogComment: DialogRef;
-  dialogServiceLocator: DialogRef;
-
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -99,6 +95,8 @@ export class WarrantiesComponent
   priority = '';
   comment = '';
   serviceLocator: any;
+  zone: any;
+  partnerZone: any;
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
@@ -710,15 +708,11 @@ export class WarrantiesComponent
       this.moreFuncEdit +
       ' ' +
       this.gridViewSetup?.ServiceLocator?.headerText?.toLowerCase();
-    this.dialogServiceLocator = this.callfc.openForm(
-      this.itemService,
-      '',
-      500,
-      350
-    );
-    this.dialogServiceLocator.closed.subscribe((ele) => {
+    this.dialogStatus = this.callfc.openForm(this.itemService, '', 500, 350);
+    this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.serviceLocator = this.serviceLocator;
+        this.dataSelected.zone = this.zone;
         this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
@@ -791,23 +785,35 @@ export class WarrantiesComponent
   }
 
   changValueStatus(e) {
-    this[e.field] = e?.data;
+    this[e?.field] = e?.data;
+    if (e?.field == 'serviceLocator') {
+      this.zone = e?.component?.itemsSelected[0]?.Zone;
+    }
     this.detectorRef.detectChanges();
   }
 
   onSave(type) {
     let methodName = '';
     let data = [];
-    if (type == 'status') {
-      data = [this.dataSelected?.recID, this.status, this.cancelledNote];
-      methodName = 'UpdateStatusWarrantyAsync';
-    } else if (type == 'comment') {
-      data = [this.dataSelected?.recID, this.comment];
-      methodName = 'UpdateCommentWarrantyAsync';
-    } else {
-      data = [this.dataSelected?.recID, this.priority];
-      methodName = 'UpdatePriorityWarrantyAsync';
+    switch (type) {
+      case 'status':
+        data = [this.dataSelected?.recID, this.status, this.cancelledNote];
+        methodName = 'UpdateStatusWarrantyAsync';
+        break;
+      case 'comment':
+        data = [this.dataSelected?.recID, this.comment];
+        methodName = 'UpdateCommentWarrantyAsync';
+        break;
+      case 'priority':
+        data = [this.dataSelected?.recID, this.priority];
+        methodName = 'UpdatePriorityWarrantyAsync';
+        break;
+      case 'serviceLocator':
+        data = [this.dataSelected?.recID, this.serviceLocator, this.zone];
+        methodName = 'UpdateServiceLocatorWarrantyAsync';
+        break;
     }
+
     this.api
       .execSv<any>(
         'WR',
@@ -818,13 +824,8 @@ export class WarrantiesComponent
       )
       .subscribe((res) => {
         if (res) {
-          if (type == 'status') {
-            this.dialogStatus.close(res);
-          } else if (type == 'comment') {
-            this.dialogComment.close(res);
-          } else {
-            this.dialogPriority.close(res);
-          }
+          this.dialogStatus.close(res);
+
           this.detectorRef.detectChanges();
         }
       });
@@ -833,8 +834,8 @@ export class WarrantiesComponent
 
   updatePriority(data) {
     this.priority = data?.priority;
-    this.dialogPriority = this.callfc.openForm(this.itemPriority, '', 400, 200);
-    this.dialogPriority.closed.subscribe((ele) => {
+    this.dialogStatus = this.callfc.openForm(this.itemPriority, '', 400, 200);
+    this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
         this.dataSelected.lastUpdatedOn = new Date();
@@ -851,8 +852,8 @@ export class WarrantiesComponent
     this.comment = this.dataSelected.comment;
     const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
     this.titleAction = event.description;
-    this.dialogComment = this.callfc.openForm(this.itemComment, '', 600, 400);
-    this.dialogComment.closed.subscribe((ele) => {
+    this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
+    this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.comment = this.comment;
         this.dataSelected.lastUpdatedOn = new Date();
