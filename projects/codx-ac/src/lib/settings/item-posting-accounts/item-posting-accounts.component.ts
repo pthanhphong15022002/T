@@ -110,6 +110,12 @@ export class ItempostingaccountsComponent extends UIComponent {
     this.cache.valueList('AC058').subscribe((res) => {
       if (res) {
         this.menuIcon = res.datas;
+
+        // this.menuInventoryText = this.menuIcon.find(x=>x.value == '1').text;
+        // this.menuPurchaseText = this.menuIcon.find(x=>x.value == '2').text;
+        // this.menuSellText = this.menuIcon.find(x=>x.value == '3').text;
+        // this.menuManufactureText = this.menuIcon.find(x=>x.value == '4').text;
+        // this.menuProjectText = this.menuIcon.find(x=>x.value == '5').text;
       }
     });
   }
@@ -212,6 +218,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.menuInventory.forEach((element) => {
           if (element.value == this.postTypeInventory) {
             this.subheaderText = 'Hàng tồn kho > ' + element.text;
+            // this.subheaderText = this.menuInventoryText + ' > ' + element.text;
           }
         });
         this.postType = this.postTypeInventory;
@@ -220,6 +227,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.menuPurchase.forEach((element) => {
           if (element.value == this.postTypePurchase) {
             this.subheaderText = 'Mua hàng > ' + element.text;
+            // this.subheaderText = this.menuPurchaseText + ' > ' + element.text;
           }
         });
         this.postType = this.postTypePurchase;
@@ -228,6 +236,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.menuSell.forEach((element) => {
           if (element.value == this.postTypeSell) {
             this.subheaderText = 'Bán hàng > ' + element.text;
+            // this.subheaderText = this.menuSellText + ' > ' + element.text;
           }
         });
         this.postType = this.postTypeSell;
@@ -236,6 +245,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.menuManufacture.forEach((element) => {
           if (element.value == this.postManufacture) {
             this.subheaderText = 'Sản xuất > ' + element.text;
+            // this.subheaderText = this.menuManufactureText + ' > ' + element.text;
           }
         });
         this.postType = this.postManufacture;
@@ -244,6 +254,7 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.menuProject.forEach((element) => {
           if (element.value == this.postProject) {
             this.subheaderText = 'Dự án > ' + element.text;
+            // this.subheaderText = this.menuProjectText + ' > ' + element.text;
           }
         });
         this.postType = this.postProject;

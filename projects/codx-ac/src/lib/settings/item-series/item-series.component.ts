@@ -2,14 +2,15 @@ import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChil
 import { Button } from '@syncfusion/ej2-angular-buttons';
 import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopAddItemSeriesComponent } from './pop-add-item-series/pop-add-item-series.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-item-series',
   templateUrl: './item-series.component.html',
   styleUrls: ['./item-series.component.css']
 })
-export class ItemSeriesComponent extends UIComponent{
- 
+export class ItemSeriesComponent extends UIComponent {
+
   //Constructor
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
@@ -20,8 +21,9 @@ export class ItemSeriesComponent extends UIComponent{
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  funcName: any = 'danh mục seri';
+  funcName: any = '';
   gridViewSetup: any;
+  private destroy$ = new Subject<void>()
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -33,9 +35,9 @@ export class ItemSeriesComponent extends UIComponent{
   }
 
   //End Constructor
-  
+
   //Init
-  
+
   onInit(): void {
   }
 
@@ -51,6 +53,12 @@ export class ItemSeriesComponent extends UIComponent{
         },
       },
     ];
+
+    this.cache.functionList(this.view?.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        this.funcName = res.defaultName.toLowerCase();
+      });
   }
 
   //End Init
@@ -83,7 +91,6 @@ export class ItemSeriesComponent extends UIComponent{
   //Function
 
   add(e) {
-    console.log(this.view.dataService);
     this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
@@ -158,8 +165,7 @@ export class ItemSeriesComponent extends UIComponent{
     });
   }
 
-  hideMoreFunction(e: any)
-  {
+  hideMoreFunction(e: any) {
     var bm = e.filter(
       (x: { functionID: string }) =>
         x.functionID == 'SYS003' ||

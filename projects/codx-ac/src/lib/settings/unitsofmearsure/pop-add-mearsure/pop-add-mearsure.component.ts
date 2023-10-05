@@ -117,7 +117,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       return;
     } else {
       var obj = {
-        headerText: 'Thêm mới thông tin quy đổi',
+        headerText: 'Thêm mới thông tin quy đổi',//
         umid: this.unitsofmearsure.umid,
       };
       let opt = new DialogModel();
@@ -156,7 +156,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   editobjectConversion(data: any) {
     let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     var obj = {
-      headerText: 'Thêm mới thông tin quy đổi',
+      headerText: 'Thêm mới thông tin quy đổi',//
       data: { ...data },
       type: 'edit',
     };
