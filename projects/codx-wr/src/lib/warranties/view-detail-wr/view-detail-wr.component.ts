@@ -77,6 +77,7 @@ export class ViewDetailWrComponent implements OnInit {
       template: null,
     },
   ];
+  isShow = false;
 
   constructor(
     private authstore: AuthStore,
