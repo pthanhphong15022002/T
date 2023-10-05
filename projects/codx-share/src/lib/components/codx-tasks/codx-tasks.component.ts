@@ -200,6 +200,7 @@ export class CodxTasksComponent
   HTMLProgress = `<div id="point1" style="font-size:20px;font-weight:bold;color:#ffffff;fill:#ffffff"><span>60%</span></div>`;
   listTaskGoals = [];
   selectedFirst = true;
+  queryParams: any;
 
   constructor(
     inject: Injector,
@@ -213,24 +214,12 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    this.queryParams = this.router.snapshot.queryParams;
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
-    //test send
-    // this.api
-    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailUpCommingAsync')
-    //   .subscribe();
-    // this.api
-    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertInCommingMailAsync')
-    //   .subscribe();
-    // this.api
-    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailIsOverDue1Async')
-    //   .subscribe();
-    // this.api
-    //   .exec<any>('TM', 'TaskBusiness', 'RPASendAlertMailIsOverDue2Async')
-    //   .subscribe();
   }
 
   //#region Init
@@ -271,6 +260,10 @@ export class CodxTasksComponent
     this.request.method = 'GetTasksAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.request.predicate = this.queryParams?.predicate;
+      this.request.dataValue = this.queryParams?.dataValue;
+    }
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -284,10 +277,11 @@ export class CodxTasksComponent
     this.getParam();
 
     this.dataObj = JSON.stringify(this.dataObj);
-    // this.detectorRef.detectChanges();  //after onInit dont loaded
   }
 
   afterLoad() {
+    this.queryParams = this.router.snapshot.queryParams;
+
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
@@ -351,30 +345,65 @@ export class CodxTasksComponent
     this.requestSchedule.idField = 'taskID';
     this.requestSchedule.dataObj = this.dataObj;
 
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.requestSchedule.predicate = this.queryParams?.predicate;
+      this.requestSchedule.dataValue = this.queryParams?.dataValue;
+    } else {
+      this.requestSchedule.predicate = '';
+      this.requestSchedule.dataValue = '';
+    }
+    let i = 0;
+    if (this.requestSchedule.dataValue) {
+      let arr = this.requestSchedule.dataValue.trim().split(';');
+      if (arr?.length > 0) i = arr?.length;
+    }
     //fix theo core mới schedule bỏ resoure
+
     switch (this.funcID) {
       case 'MWP0061':
       case 'TMT0201':
-        this.requestSchedule.predicate =
-          '(Category=@0 or Category=@1) and Owner=@2';
-        this.requestSchedule.dataValue = '1;2;' + this.user.userID;
+        this.requestSchedule.predicate +=
+          (i > 0 ? ' and (' : '') +
+          '(Category=@' +
+          i +
+          ' or Category=@' +
+          (i + 1) +
+          ') and Owner=@' +
+          (i + 2) +
+          (i > 0 ? ')' : '');
+        this.requestSchedule.dataValue +=
+          (i > 0 ? ';' : '') + '1;2;' + this.user.userID;
         break;
       case 'TMT0203':
       case 'MWP0062':
       case 'OMT014':
-        this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
-        this.requestSchedule.dataValue = '2;' + this.user.userID;
+        this.requestSchedule.predicate +=
+          (i > 0 ? ' and (' : '') +
+          'Category=@' +
+          i +
+          ' and CreatedBy=@' +
+          (i + 1) +
+          (i > 0 ? ')' : '');
+        this.requestSchedule.dataValue +=
+          (i > 0 ? ';' : '') + '2;' + this.user.userID;
         break;
       case 'MWP0064':
       case 'TMT0202':
       case 'TMT03011':
       case 'TMT05011':
-        this.requestSchedule.predicate = '( Category=@0 or Category=@1 )';
-        this.requestSchedule.dataValue = '1;2';
+        this.requestSchedule.predicate +=
+          (i > 0 ? ' and (' : '') +
+          '( Category=@' +
+          i +
+          ' or Category=@' +
+          (i + 1) +
+          ')' +
+          (i > 0 ? ')' : '');
+        this.requestSchedule.dataValue += (i > 0 ? ';' : '') + '1;2';
         break;
       default:
-        this.requestSchedule.predicate = '';
-        this.requestSchedule.dataValue = '';
+        // this.requestSchedule.predicate = '';
+        // this.requestSchedule.dataValue = '';
         break;
     }
     if (this.isResourceAssignSession) {
@@ -806,7 +835,7 @@ export class CodxTasksComponent
       if (this.paramModule.ReOpenDays) {
         var time =
           moment(new Date()).toDate().getTime() -
-          Number.parseFloat(this.paramModule.ReOpenDays) * (3600000*24);
+          Number.parseFloat(this.paramModule.ReOpenDays) * (3600000 * 24);
         var timeCompletedOn = moment(new Date(taskAction.completedOn))
           .toDate()
           .getTime();
