@@ -217,7 +217,7 @@ export class LeadsComponent
     this.getColorReason();
     this.getValuelistStatus();
     this.getValuelistCategory();
-   // this.getProcessSetting();
+    this.getProcessSetting();
     this.getListStatusCode();
     this.afterLoad();
   }
@@ -254,17 +254,16 @@ export class LeadsComponent
       }
     });
 }
-  // async getProcessSetting() {
-  //   this.codxCmService
-  //     .getListProcessDefault([this.applyForLead])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.processId = res.recID;
-  //         this.dataObj = { processID: res.recID };
-  //         this.afterLoad();
-  //       }
-  //     });
-  // }
+  async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault([this.applyForLead])
+      .subscribe((res) => {
+        if (res) {
+          this.processId = res.recID;
+          this.dataObj = { processID: res.recID };
+        }
+      });
+  }
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {

@@ -237,13 +237,12 @@ export class PopupAddDealComponent
       //   this.loadExchangeRate();
       // }
       if ($event.field === 'consultantID') {
-        this.searchOwner(
-          'U',
-          'C',
-          '0',
-          this.deal.consultantID,
-          $event?.component?.itemsSelected[0]?.UserName
-        );
+        if($event.data) {
+          this.searchOwner(  'U', 'C',  '0',   this.deal.consultantID, $event?.component?.itemsSelected[0]?.UserName );
+        }
+        // else if($event.data === null || $event.data === ''){
+        //   this.deleteOwner(  'U', 'C',  '0',   this.deal.consultantID,$event.field );
+        // }
       }
     }
   }
@@ -259,6 +258,24 @@ export class PopupAddDealComponent
         )[0].userName;
       }
       this.searchOwner('1', 'O', '0', this.deal.owner, ownerName);
+    }
+    // else if ($event === null || $event === '') {
+    //   this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
+    // }
+  }
+  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
+    let index = this.deal?.permissions.findIndex(
+      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+    if(index != -1) {
+      if(field === 'owner' ){
+        this.deal.owner = null;
+        this.deal.salespersonID = null;
+        this.deal.permissions =  this.deal?.permissions.splice(index, 1);
+      }
+      else if(field === 'consultantID') {
+        this.deal.consultantID = null;
+        this.deal.permissions =  this.deal?.permissions.splice(index, 1);
+      }
     }
   }
   searchOwner(
@@ -388,14 +405,14 @@ export class PopupAddDealComponent
       );
       return;
     }
-    if (!this.deal?.owner) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-      );
-      return;
-    }
+    // if (!this.deal?.owner) {
+    //   this.notificationsService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+    //   );
+    //   return;
+    // }
     if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
       this.notificationsService.notifyCode(
         'DP032',
@@ -864,8 +881,8 @@ export class PopupAddDealComponent
       instance.startDate = null;
       instance.status = '1';
     }
-    instance.title = deal.dealName;
-    instance.memo = deal.memo;
+    instance.title = deal.dealName.trim();
+    instance.memo = deal.memo.trim();;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
     instance.owner = this.owner;
