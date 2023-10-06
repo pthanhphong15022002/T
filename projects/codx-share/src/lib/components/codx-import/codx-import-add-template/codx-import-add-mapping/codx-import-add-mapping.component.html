@@ -37,32 +37,6 @@
     </div>
   </div>
   <div class="h-feildImport">
-    <!-- <table class="table d-inline-block w-100">
-      <thead>
-        <tr>
-          <th scope="col"><codx-label default="Trường nhận" class="fw-bold"></codx-label></th>
-          <th scope="col" *ngFor="let item of fieldImport"><codx-label [default]="item?.headerText" class="fw-bold"></codx-label></th>
-        </tr>
-      </thead>
-      <tbody>
-        Chưa làm được form group huhu nhớ làm nha-->
-        <!-- <tr *ngFor="let item of dataImport">
-          <td>{{item?.destinationField}}</td>
-          <ng-container *ngTemplateOutlet="tmpTable; context: { $implicit: item}"></ng-container> -->
-         
-         <!--  <td><codx-input type="text" (valueChange)="changeValueText(item,'dataType',$event)"></codx-input></td>
-          <td class="w-80px text-center"><codx-input type="checkbox"></codx-input></td>
-          <td><codx-input type="text"></codx-input></td>
-          <td  class="w-140px"><codx-input type="text"></codx-input></td>
-          <td><codx-input type="text"></codx-input></td>
-          <td><codx-input type="text"></codx-input></td>
-          <td><codx-input type="text"></codx-input></td> 
-        </tr>
-      </tbody>
-    </table> -->
-        <!--   (contextMenuOpen)="contextMenuOpen($event)" 
-      (contextMenuClick)="contextMenuClick($event)"
-    [contextMenuItems]="contextMenuItems" -->
     <ejs-grid #grid 
       [dataSource]='dataImport2' 
       height="500" width="100%" 

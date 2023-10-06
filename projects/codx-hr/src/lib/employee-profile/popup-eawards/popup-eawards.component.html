@@ -1,7 +1,7 @@
 <!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
-  [formModel]="formModel"
+  [formModel]="form.formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="awardObj"
@@ -11,29 +11,29 @@
 >
   <ng-template #body>
     <div class="form-group row">
-      <codx-label fiedName="AwardID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AwardID" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="awardID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="AwardDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="AwardDate" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="awardDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="handleSelectAwardDate($event)"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="InYear" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="InYear" [formModel]="form.formModel"></codx-label>
         <ejs-datepicker
           #picker
           start="Decade"
@@ -51,46 +51,46 @@
       <div class="col-6">
         <codx-label
           fiedName="AwardFormCategory"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="awardFormCategory"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="AwardLevelCategory"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="awardLevelCategory"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AwardPlace" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AwardPlace" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="awardPlace"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Reason" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Reason" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="reason"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
@@ -98,32 +98,32 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="signedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="d-flex flex-stack mb-4">
-        <codx-label fiedName="Signer" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Signer" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="signerID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [showInput]="false"
           [multiple]="false"
           (valueChange)="valueChange($event)"
@@ -134,31 +134,31 @@
       <codx-input
       [disabled]="disabledInput"
         field="signer"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <codx-label
         fiedName="SignerPosition"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </ng-template>
@@ -170,7 +170,7 @@
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
@@ -196,7 +196,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [typeMF]="'hover'"
     [title]="data.awardPlace"
     [icoTitleCss]="'icon-i-question-circle-fill icon-16 ms-1 pb-1'"
@@ -225,19 +225,20 @@
   </div>
   <div><i class="icon-edit_fill"></i>{{ data.awardFormCategory }}</div>
 </ng-template> -->
-
+<ng-container *ngIf="awardObj">
 <codx-form
   #form
   [headerText]="headerText"
   [body]="body"
   [formModel]="formModel"
   [footer]="footer"
-  [group]="formGroup"
   [dialog]="dialog"
   [data]="awardObj"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
   <ng-template #body>
+    <ng-container *ngIf="form.formGroup">
     <div *ngIf="fromListView" class="form-group row d-flex flex-row">
       <div class="col-10">
         <div class="d-flex">
@@ -287,8 +288,8 @@
           [disabled]="disabledInput"
           [showInput]="false"
           field="employeeID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"
         >
         </codx-input>
@@ -314,9 +315,9 @@
         </div>
       </div>
       <div class="col-6" *ngIf="actionType != 'edit'">
-        <codx-label fiedName="EmployeeID" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="EmployeeID" [formModel]="form.formModel"></codx-label>
         <codx-input
-        [disabled]="disabledInput" field="employeeID" [formModel]="formModel" [Group]="formGroup"
+        [disabled]="disabledInput" field="employeeID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)">
         </codx-input>
       </div> -->
@@ -326,7 +327,7 @@
       <div class="me-4">
         <codx-vll
           *ngIf="awardObj?.status"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [field]="'Status'"
           [value]="awardObj?.status"
           [showText]="true"
@@ -339,29 +340,29 @@
     </div>
 
     <div class="form-group row mt-5">
-      <codx-label fiedName="AwardID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AwardID" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="awardID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="AwardDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="AwardDate" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="awardDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="handleSelectAwardDate($event)"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="InYear" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="InYear" [formModel]="form.formModel"></codx-label>
         <ejs-datepicker
           #picker
           [enabled]="!disabledInput"
@@ -380,56 +381,56 @@
       <div class="col-6">
         <codx-label
           fiedName="AwardFormCategory"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="awardFormCategory"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="AwardLevelCategory"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="awardLevelCategory"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AwardPlace" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="AwardPlace" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="awardPlace"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Reason" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Reason" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="reason"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
         [disabled]="disabledInput"
         field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
@@ -437,33 +438,33 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
         <codx-input
           field="decisionNo"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [disabled]="autoNumField === 'DecisionNo' || disabledInput"
-          [Group]="formGroup"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="signedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="d-flex flex-stack">
-        <codx-label fiedName="Signer" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Signer" [formModel]="form.formModel"></codx-label>
         <codx-input
           [disabled]="disabledInput"
           field="signerID"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
           [showInput]="true"
           [multiple]="false"
           (valueChange)="handleSelectEmp($event)"
@@ -473,8 +474,8 @@
 
       <codx-input
         field="signer"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [disabled]="awardObj?.signerID ? true : false || disabledInput"
       ></codx-input>
     </div>
@@ -482,16 +483,17 @@
     <div class="form-group row">
       <codx-label
         fiedName="SignerPosition"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <!-- [disabled]="disabledInput" -->
       <codx-input
         field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [disabled]="awardObj?.signerID ? true : false || disabledInput"
       ></codx-input>
     </div>
+</ng-container>
   </ng-template>
 </codx-form>
 
@@ -500,14 +502,15 @@
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
-      [disabled]="!formModel.currentData.updateColumn"
+      [disabled]="!form.formModel.currentData.updateColumn"
     >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
   </div>
 </ng-template>
+</ng-container>

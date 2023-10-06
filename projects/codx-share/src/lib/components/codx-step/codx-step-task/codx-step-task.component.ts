@@ -81,6 +81,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isShowBtnAddTask = true;
   @Input() isSaveProgress = true; // lưu progress vào db
   @Input() askUpdateProgressStep = false; // lưu progress vào db
+  @Input() ownerInstance; // lưu progress vào db
 
   @Input() isViewStep = false; // chỉ xem
   @Input() isMoveStage = false; // chuyển giai đoạn
@@ -1195,6 +1196,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       groupTaskID, // trường hợp chọn thêm từ nhóm
       isStart: this.isStart,
       isBoughtTM: this.isBoughtTM,
+      ownerInstance: this.ownerInstance,
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

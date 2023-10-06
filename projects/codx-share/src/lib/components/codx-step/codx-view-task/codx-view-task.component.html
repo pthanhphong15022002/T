@@ -177,8 +177,8 @@
 
 <ng-template #main>
   <!-- tham chiếu -->
-  <hr />
   <div>
+    <hr />
     <div>
       <codx-label
         class="fw-bold text-dark"
@@ -194,9 +194,9 @@
   <!-- user -->
   <hr />
   <ng-container [ngTemplateOutlet]="showOwner"></ng-container>
-  <hr />
   <!-- trường nhập liệu -->
   <div *ngIf="type != 'G' && !isActivitie">
+    <hr />
     <codx-label
       class="fw-bold text-dark"
       fiedName=""
@@ -223,8 +223,8 @@
     </div>
   </div>
   <!-- Ghi chú -->
-  <hr *ngIf="type !== 'G' && type !== 'P'" />
   <div *ngIf="type !== 'P'">
+    <hr />
     <codx-label
       class="text-dark fw-bold me-3 label-colon"
       fiedName="memo"
@@ -235,8 +235,8 @@
     <p [innerHTML]="dataView?.memo"></p>
   </div>
   <!-- Công việc -->
-  <hr *ngIf="type == 'P' && !isActivitie" />
   <div *ngIf="type == 'P' && !isActivitie">
+    <hr />
     <div>
       <codx-label
         class="fs-5"
@@ -264,8 +264,8 @@
     </div>
   </div>
   <!-- công việc liên kết -->
-  <hr *ngIf="type !== 'P'  && !isActivitie" />
   <div *ngIf="type !== 'P'  && !isActivitie">
+    <hr />
     <codx-label
       *ngIf="type !== 'G'"
       class="fs-6 fw-bold me-3"
@@ -300,7 +300,7 @@
     </div>
   </div>
   <!-- Tài liệu mẫu-->
-  <hr />
+  <hr *ngIf="type !== 'G' && type !== 'P' && !isActivitie"/>
   <div
     class="d-flex justify-content-start"
     *ngIf="type !== 'G' && type !== 'P' && !isActivitie"
@@ -338,7 +338,7 @@
     </div>
   </div>
   <!-- Tài liệu đính kèm-->
-  <hr />
+  <hr *ngIf="type !== 'G' && type !== 'P'"/>
   <div
     class="d-flex justify-content-start"
     *ngIf="type !== 'G' && type !== 'P'"

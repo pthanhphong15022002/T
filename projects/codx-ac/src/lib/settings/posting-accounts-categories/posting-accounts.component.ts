@@ -24,6 +24,8 @@ import {
   DialogRef,
   RequestOption,
   CodxGridviewV2Component,
+  CodxInputComponent,
+  Util,
 } from 'codx-core';
 import { PostingAccountsAddComponent } from './posting-accounts-add/posting-accounts-add.component';
 import { Subject, takeUntil } from 'rxjs';
@@ -39,6 +41,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItempostingaccountsComponent extends UIComponent {
+
   //#region Constructor
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -63,7 +66,7 @@ export class ItempostingaccountsComponent extends UIComponent {
   constructor(private inject: Injector, private callfunc: CallFuncService) {
     super(inject);
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit() {
@@ -129,24 +132,69 @@ export class ItempostingaccountsComponent extends UIComponent {
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
-  //#endregion;
+
+  ngOnDestroy(){
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  //#endregion Init
+
+  //#region Event
+
+  /**
+   * *Hàm xử lí click trên toolbar
+   * @param e 
+   */
+  toolBarClick(e) {
+    switch (e.id) {
+      case 'btnAdd':
+        this.addNew(e); //? thêm mới tài khoản hạch toán
+        break;
+    }
+  }
+
+  /**
+   * *Hàm xử lí click morefunction
+   * @param e 
+   * @param data 
+   */
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data); //? xóa tài khoản hạch toán
+        break;
+      case 'SYS03':
+        this.edit(e, data); //? chỉnh sửa tài khoản hạch toán
+        break;
+      case 'SYS04':
+        this.copy(e, data); //? sao chép tài khoản hạch toán
+        break;
+    }
+  }
+
+  /**
+   * *Hàm xử lí click các menu header (hàng tồn kho,mua hàng,...)
+   * @param e 
+   * @returns 
+   */
   clickMenu(e: any) {
     if (e === this.menuActive) return;
     switch (e) {
       case '1':
-        this.menuActive = 1;
+        this.menuActive = '1';
         this.postType = this.menuInventory[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '2':
-        this.menuActive = 2;
+        this.menuActive = '2';
         this.postType = this.menuPurchase[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '3':
-        this.menuActive = 3;
+        this.menuActive = '3';
         this.postType = this.menuSell[0]?.value; //? focus đầu vào item đầu tiên
         break;
       case '4':
-        this.menuActive = 4;
+        this.menuActive = '4';
         this.postType = this.menuProduction[0]?.value; //? focus đầu vào item đầu tiên
         break;
     }
@@ -157,6 +205,11 @@ export class ItempostingaccountsComponent extends UIComponent {
     }, 100);
   }
 
+  /**
+   * *Hàm xử lí click các sub menu con của các header
+   * @param value 
+   * @returns 
+   */
   clickMenuItem(value: any) {
     if (this.postType == value) return;
     this.postType = value;
@@ -165,40 +218,29 @@ export class ItempostingaccountsComponent extends UIComponent {
     }, 100);
   }
 
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.addNew(e);
-        break;
-    }
-  }
-
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e, data);
-        break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-    }
-  }
+  //#endregion Event
   
+  //#region Function
+
+  /**
+   * *Hàm thêm mới thiết lập tài khoản hạch toán
+   * @param e 
+   */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
     let data = {
       headerText: this.headerText,
       subheaderText: this.subheaderText,
-      dataDefault:{...this.dataDefault}
+      dataDefault:{...this.dataDefault},
+      eleGrid:this.eleGrid
     };
     if(!this.dataDefault){
       this.view.dataService.addNew().subscribe((res: any) => {
         if(res){
           res.isAdd = true;
+          res.moduleID = this.menuActive;
+          res.postType = this.postType;
           this.dataDefault = {...res};
           data.dataDefault = {...this.dataDefault};
           let dialog = this.callfunc.openSide(
@@ -210,6 +252,9 @@ export class ItempostingaccountsComponent extends UIComponent {
         }       
       });
     }else{
+      data.dataDefault.recID = Util.uid();
+      data.dataDefault.moduleID = this.menuActive;
+      data.dataDefault.postType = this.postType;
       let dialog = this.callfunc.openSide(
         PostingAccountsAddComponent,
         data,
@@ -217,90 +262,85 @@ export class ItempostingaccountsComponent extends UIComponent {
         this.view.funcID
       );
     }
-    // this.loadMenuActive(this.menuActive);
-    // this.headerText = e.text + ' ' + this.funcName;
-    // this.view.dataService.addNew().subscribe((res: any) => {
-    //   var obj = {
-    //     formType: 'add',
-    //     headerText: this.headerText,
-    //     subheaderText: this.subheaderText,
-    //     moduleID: this.menuActive,
-    //     postType: this.postType,
-    //   };
-    //   let option = new SidebarModel();
-    //   option.DataService = this.view.dataService;
-    //   option.FormModel = this.view.formModel;
-    //   option.Width = '550px';
-    //   this.dialog = this.callfunc.openSide(
-    //     PostingAccountsAddComponent,
-    //     obj,
-    //     option,
-    //     this.view.funcID
-    //   );
-    //   this.dialog.closed.subscribe((x) => {
-    //     if (x.event == null) this.view.dataService.clear();
-    //   });
-    // });
-  }
-  edit(e, data) {
-    // this.loadMenuActive(parseInt(data.moduleID));
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'edit',
-    //       headerText: e.text + ' ' + this.funcName,
-    //       subheaderText: this.subheaderText,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(PostingAccountsAddComponent, obj, option);
-    //   });
-  }
-  copy(e, data) {
-    // this.loadMenuActive(parseInt(data.moduleID));
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .copy()
-    //   .subscribe((res: any) => {
-    //     var obj = {
-    //       formType: 'copy',
-    //       headerText: e.text + ' ' + this.funcName,
-    //       subheaderText: this.subheaderText,
-    //     };
-    //     let option = new SidebarModel();
-    //     option.DataService = this.view.dataService;
-    //     option.FormModel = this.view.formModel;
-    //     option.Width = '550px';
-    //     this.dialog = this.callfunc.openSide(PostingAccountsAddComponent, obj, option);
-    //   });
-  }
-  delete(data) {
-    // if (data) {
-    //   this.view.dataService.dataSelected = data;
-    // }
-    // this.view.dataService
-    //   .delete([data], true, (option: RequestOption) =>
-    //     this.beforeDelete(option, data)
-    //   )
-    //   .subscribe((res: any) => {});
-  }
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'IVPostingAccountsBusiness';
-    opt.assemblyName = 'AC';
-    opt.service = 'AC';
-    opt.data = data.recID;
-    return true;
+    
   }
 
+  /**
+   * *Hàm chỉnh sửa thiết lập tài khoản hạch toán
+   * @param e 
+   * @param dataEdit 
+   */
+  edit(e, dataEdit) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
+    if (dataEdit) this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService
+      .edit(dataEdit)
+      .subscribe((res: any) => {
+        if (res) {
+          res.isEdit = true;
+          let data = {
+            headerText: this.headerText,
+            subheaderText: this.subheaderText,
+            dataDefault:{...res},
+            funcName:this.funcName,
+            eleGrid:this.eleGrid
+          };
+          let dialog = this.callfunc.openSide(
+            PostingAccountsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+        }
+      });
+  }
+
+  /**
+   * *Hàm sao chép thiết lập tài khoản hạch toán
+   * @param e 
+   * @param dataCopy 
+   */
+  copy(e, dataCopy) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.subheaderText = this.getSubHeader(this.menuActive,this.postType);
+    if (dataCopy) this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        if (res) {
+          res.isCopy = true;
+          let data = {
+            headerText: this.headerText,
+            subheaderText: this.subheaderText,
+            dataDefault:{...res},
+            funcName:this.funcName,
+            eleGrid:this.eleGrid
+          };
+          let dialog = this.callfunc.openSide(
+            PostingAccountsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+        }
+      });
+  }
+
+  /**
+   * *Hàm xóa thiết lập tài khoản hạch toán
+   * @param dataDelete 
+   */
+  delete(dataDelete) {
+    this.eleGrid.deleteRow(dataDelete);
+  }
+
+  /**
+   * *Hàm lấy tên subhearder
+   * @param valueHeader 
+   * @param valueItem 
+   * @returns 
+   */
   getSubHeader(valueHeader,valueItem){
     let textheader;
     let textitem;
@@ -316,4 +356,6 @@ export class ItempostingaccountsComponent extends UIComponent {
     }
     return textheader + ' > ' + textitem
   }
+
+  //#endregion Function
 }

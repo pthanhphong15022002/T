@@ -2,14 +2,15 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { ItemSeries } from '../../../models/ItemSeries.model';
 import { CodxAcService } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-item-series',
   templateUrl: './pop-add-item-series.component.html',
   styleUrls: ['./pop-add-item-series.component.css']
 })
-export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
-  
+export class PopAddItemSeriesComponent extends UIComponent implements OnInit {
+
   //Constructor
 
   @ViewChild('form') public form: CodxFormComponent;
@@ -22,7 +23,7 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
   formType: any;
   validate: any = 0;
   keyField: any = '';
-
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -30,7 +31,7 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
-  ){
+  ) {
     super(inject);
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
@@ -47,7 +48,7 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
   //End Constructor
 
   //Init
-  
+
   onInit(): void {
   }
 
@@ -55,16 +56,20 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     this.itemSeries.manufaturedDate = this.form.formGroup?.controls.manufaturedDate.value;
     this.itemSeries.warrantyDate = this.form.formGroup?.controls.warrantyDate.value;
     this.itemSeries.salesWarranty = this.form.formGroup?.controls.salesWarranty.value;
+
+    this.form.onAfterInit.subscribe((res: any) => {
+      if (res) {
+        this.setValidateForm();
+      }
+    })
   }
 
   //End Init
 
   //Event
 
-  valueChange(e)
-  {
-    switch(e.field)
-    {
+  valueChange(e) {
+    switch (e.field) {
       case 'itemID':
         this.itemSeries.itemID = e.data;
         break;
@@ -99,7 +104,7 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
 
   //Method
 
-  onSave(){
+  onSave() {
     this.validate = 0;
     this.checkValidate();
     this.validateDate();
@@ -108,25 +113,29 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
       return;
     } else {
       if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
+        this.form
           .save(null, 0, '', 'SYS006', true)
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res.save) {
               this.dialog.close();
               this.dt.detectChanges();
             }
-        });
+          });
       }
       if (this.formType == 'edit') {
-        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
-          if (res && res.update.data != null) {
-            this.dialog.close({
-              update: true,
-              data: res.update,
-            });
-            this.dt.detectChanges();
-          }
-        });
+        this.form
+          .save(null, 0, '', '', true)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res && res.update.data != null) {
+              this.dialog.close({
+                update: true,
+                data: res.update,
+              });
+              this.dt.detectChanges();
+            }
+          });
       }
     }
   }
@@ -135,8 +144,7 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
 
   //Function
 
-  onClearItemSeries()
-  {
+  onClearItemSeries() {
     this.itemSeries = new ItemSeries();
   }
 
@@ -175,14 +183,11 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     }
   }
 
-  validateDate()
-  {
-    if(this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate)
-    {
+  validateDate() {
+    if (this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate) {
       var startDate = new Date(this.itemSeries.manufaturedDate);
       var endDate = new Date(this.itemSeries.salesWarranty);
-      if(startDate.getTime() >  endDate.getTime())
-      {
+      if (startDate.getTime() > endDate.getTime()) {
         this.notification.notifyCode(
           'AC0024',
           0,
@@ -193,15 +198,12 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     }
   }
 
-  validateSalesWarrantyDate()
-  {
-    if(this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate)
-    {
+  validateSalesWarrantyDate() {
+    if (this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate) {
       var startDate = new Date(this.itemSeries.manufaturedDate);
       var endDate = new Date(this.itemSeries.salesWarranty);
       var bestDate = new Date(this.itemSeries.warrantyDate);
-      if(startDate.getTime() >  bestDate.getTime() || bestDate.getTime() > endDate.getTime())
-      {
+      if (startDate.getTime() > bestDate.getTime() || bestDate.getTime() > endDate.getTime()) {
         this.notification.notifyCode(
           'AC0025',
           0,
@@ -213,13 +215,11 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
         return;
       }
     }
-    if(this.itemSeries.salesWarranty && !this.itemSeries.manufaturedDate)
-    {
+    if (this.itemSeries.salesWarranty && !this.itemSeries.manufaturedDate) {
       var startDate = new Date(this.itemSeries.manufaturedDate);
       var endDate = new Date(this.itemSeries.salesWarranty);
       var bestDate = new Date(this.itemSeries.warrantyDate);
-      if(bestDate.getTime() > endDate.getTime())
-      {
+      if (bestDate.getTime() > endDate.getTime()) {
         this.notification.notifyCode(
           'AC0025',
           0,
@@ -231,13 +231,11 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
         return;
       }
     }
-    if(!this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate)
-    {
+    if (!this.itemSeries.salesWarranty && this.itemSeries.manufaturedDate) {
       var startDate = new Date(this.itemSeries.manufaturedDate);
       var endDate = new Date(this.itemSeries.salesWarranty);
       var bestDate = new Date(this.itemSeries.warrantyDate);
-      if(startDate.getTime() >  bestDate.getTime())
-      {
+      if (startDate.getTime() > bestDate.getTime()) {
         this.notification.notifyCode(
           'AC0025',
           0,
@@ -251,5 +249,18 @@ export class PopAddItemSeriesComponent extends UIComponent implements OnInit{
     }
   }
 
+
+  //#region Function
+  /**
+   * *Hàm thay đổi validate form
+   */
+  setValidateForm() {
+    let rSeriNo = true;
+    let lsRequire: any = [];
+    if (this.form.data?._keyAuto == 'SeriNo') rSeriNo = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    lsRequire.push({ field: 'SeriNo', isDisable: false, require: rSeriNo });
+    this.form.setRequire(lsRequire);
+  }
+  //#endregion Function
   //End Function
 }

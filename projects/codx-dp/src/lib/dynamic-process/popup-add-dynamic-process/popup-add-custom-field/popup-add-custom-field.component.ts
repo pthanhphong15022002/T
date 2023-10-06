@@ -127,8 +127,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   maxNumber = 0;
 
   //column Table
-  column: ColumnTable;
+  // column: ColumnTable;
   listColumns = [];
+  settingWidth = false;
+  isShowMore = false;
+  widthDefault = '550';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -150,6 +153,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
 
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
     if (this.action == 'add' || this.action == 'copy')
       this.field.recID = Util.uid();
 
@@ -184,7 +190,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field[e.field] = e.data;
       return;
     }
-    if (e && e.data && e.field) this.field[e.field] = e.data;
+    if (e.field == 'dataType' && e.data != this.field.dataType) {
+      this.field.refType = null;
+      this.field.refValue = null;
+      this.field.dataFormat = null;
+      this.field.multiselect = false;
+    }
+
+    if (e && e.field) this.field[e.field] = e?.data;
+
     if (e.field == 'title' || e.field == 'fieldName')
       this.removeAccents(e.data);
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
@@ -605,12 +619,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (elm) this.element = elm;
     this.field['refValue'] = value;
     if (!value) {
-      //data form
-      // this.crrVll = new tempVllDP();
-      // this.crrVll.language = this.user.language;
-      // this.crrVll.createdBy = this.user.userID;
-      // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-      // this.crrVll.version = 'x00.01';
       await this.getDefaultVll();
       this.datasVll = [];
       //data crrVll
@@ -781,7 +789,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //----------------Column Table -----------------------//
   clickSettingTable() {
-    if (!this.column) this.column = new ColumnTable();
+    // if (!this.column) this.column = new ColumnTable();
     let option = new DialogModel();
     let formModelTable = new FormModel();
     formModelTable.formName = this.dialog.formModel.formName;
@@ -796,7 +804,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
         option.zIndex = 1050;
         let obj = {
-          data: this.column,
+          // data: this.column,
           action: 'add',
           titleAction: 'Thêm column test',
           grvSetup: this.grvSetup,
@@ -808,7 +816,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           PopupAddColumnTableComponent,
           '',
           550,
-          750,
+          400,
           '',
           obj,
           '',
@@ -818,6 +826,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           if (res && res.event) {
             if (res.event[0]) {
               this.listColumns = res.event[0];
+              this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
             if (res.event[1] && !this.processNo) {
@@ -835,8 +844,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
     let arr = JSON.parse(data.dataFormat);
-    if (Array.isArray(arr)) this.listColumns = arr;
-    else this.listColumns = [];
+    if (Array.isArray(arr)) {
+      this.listColumns = arr;
+      this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+    } else this.listColumns = [];
+    this.changeRef.detectChanges();
+  }
+
+  showMore() {
+    this.isShowMore = !this.isShowMore;
+    let width = '1000';
+    if (this.isShowMore) width = '1000'; ///test
+
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
     this.changeRef.detectChanges();
   }
   //---------------------End Column Table-----------------------------//

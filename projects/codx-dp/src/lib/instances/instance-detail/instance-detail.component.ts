@@ -313,6 +313,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    if (!this.viewModelDetail) this.viewModelDetail = 'S';
     this.rollHeight();
   }
 
@@ -435,7 +436,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   sortListSteps(ins, process) {
-    var listStep = process.steps.sort(function (x, y) {
+    var listStep = process?.steps.sort(function (x, y) {
       return x.stepNo > 0 && y.stepNo > 0
         ? x.stepNo - y.stepNo
         : x.stepNo > 0
@@ -868,8 +869,8 @@ export class InstanceDetailComponent implements OnInit {
     }
   }
 
-  loadOwnerStep(owner){
-    if(this.codxStage){
+  loadOwnerStep(owner) {
+    if (this.codxStage) {
       this.codxStage.dataStep.owner = owner;
     }
     this.changeDetec.detectChanges();
