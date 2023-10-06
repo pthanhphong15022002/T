@@ -75,6 +75,8 @@ export class CampaignContactsComponent implements OnInit {
   titleAction = '';
   lstProcesss = [];
   lstLeads = [];
+  statusSearch = [];
+
   constructor(
     private api: ApiHttpService,
     private detector: ChangeDetectorRef,
@@ -154,6 +156,7 @@ export class CampaignContactsComponent implements OnInit {
         this.formModel.funcID =
           this.objectType == '1' ? 'CM0301_2' : 'CM0301_1';
         let funcID = this.objectType == '1' ? 'CM0101' : 'CM0205';
+        this.statusSearch = [];
         this.getFunctionList(funcID);
         this.getList();
       } else {
@@ -255,6 +258,24 @@ export class CampaignContactsComponent implements OnInit {
     });
   }
 
+  //#region filter status
+  valueChange(e) {
+    console.log(e);
+    let predicates = 'TransID=@0 && ObjectType=@1';
+    let dataValues = this.transID + ';' + this.objectType + e?.data[0];
+    if (e && e?.data) {
+      if (e?.data?.length > 0) {
+        predicates = 'TransID=@0 && ObjectType=@1 && Status=@2';
+        dataValues = this.transID + ';' + this.objectType + ';' + e?.data[0];
+      }
+    }
+    this.predicates = predicates;
+    this.dataValues = dataValues;
+    this.getList();
+    this.detector.detectChanges();
+  }
+  //#endregion
+
   //#region  more
   clickMF(e, data) {
     this.titleAction = e.text;
@@ -298,12 +319,8 @@ export class CampaignContactsComponent implements OnInit {
             if (
               this.objectType == '1' ||
               !['13', '3', '2'].includes(data.leadStatus)
-            ) {
-              if (this.objectType == '1') res.disabled = true;
-              else {
-                res.isblur = true;
-              }
-            }
+            )
+              res.disabled = true;
             break;
         }
       });

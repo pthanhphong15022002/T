@@ -1,3 +1,14 @@
+<div class="d-flex justify-content-between mt-2">
+  <codx-dropdown-select
+    #cbxIndustries
+    type="valuelist"
+    field="statusSearch"
+    [refValue]="gridViewSetup?.Status?.referedValue"
+    [emptyText]="gridViewSetup?.Status?.headerText"
+    [value]="statusSearch"
+    (valueChange)="valueChange($event)"
+  ></codx-dropdown-select>
+</div>
 <ng-container *ngIf="loaded">
   <div [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
     <codx-gridview-v2
@@ -6,8 +17,6 @@
       [formModel]="formModel"
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
-      rowHeight="40"
-      [height]="'100%'"
       [hideMoreFunc]="false"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
@@ -173,7 +182,6 @@
   <codx-label
     [formModel]="formModel"
     [fiedName]="objectType == '1' ? 'customerStatus' : 'leadStatus'"
-    default="Trạng thái"
   >
   </codx-label>
 </ng-template>
