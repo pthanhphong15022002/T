@@ -53,10 +53,9 @@ export class WarrantiesComponent
   @ViewChild('updateStatus') updateStatus: TemplateRef<any>;
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
   @ViewChild('itemComment') itemComment: TemplateRef<any>;
+  @ViewChild('itemService') itemService: TemplateRef<any>;
 
   dialogStatus: DialogRef;
-  dialogPriority: DialogRef;
-  dialogComment: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -95,10 +94,13 @@ export class WarrantiesComponent
   status = '';
   priority = '';
   comment = '';
-
+  serviceLocator: any;
+  zone: any;
+  partnerZone: any;
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  moreFuncEdit = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -146,8 +148,15 @@ export class WarrantiesComponent
     this.view.dataService.methodSave = 'AddWorkOrderAsync';
     this.view.dataService.methodUpdate = 'UpdateWorkOrderAsync';
     this.view.dataService.methodDelete = 'DeleteWorkOrderAsync';
-    this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync').subscribe(res => {});
-
+    this.api
+      .exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync')
+      .subscribe((res) => {});
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS03');
+        if (m) this.moreFuncEdit = m?.customName;
+      }
+    });
     this.detectorRef.detectChanges();
   }
 
@@ -677,9 +686,41 @@ export class WarrantiesComponent
 
   updateAssignEngineerEmit(e) {
     if (e && e?.data) {
-      this.updateAssignEngineer(e?.data);
+      const more = this.moreFuncInstance.find(
+        (el) => el.functionID == 'WR0101_2'
+      );
+      if (e?.type == 'engineerID') {
+        this.titleAction = more?.description;
+        this.updateAssignEngineer(e?.data);
+      } else {
+        this.updateServiceLocator(e?.data);
+      }
     }
   }
+  //#endregion
+
+  //#region update serviceLocator
+  updateServiceLocator(data) {
+    this.dataSelected = data;
+    this.serviceLocator = this.dataSelected?.serviceLocator;
+    this.titleAction =
+      this.moreFuncEdit +
+      ' ' +
+      this.gridViewSetup?.ServiceLocator?.headerText?.toLowerCase();
+    this.dialogStatus = this.callfc.openForm(this.itemService, '', 500, 350);
+    this.dialogStatus.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataSelected.serviceLocator = this.serviceLocator;
+        this.dataSelected.zone = this.zone;
+        this.dataSelected.lastUpdatedOn = new Date();
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.notificationsService.notifyCode('SYS007');
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
   //#endregion
 
   //#region update status
@@ -742,51 +783,11 @@ export class WarrantiesComponent
       });
   }
 
-  changValueStatus(e) {
-    this[e.field] = e?.data;
-    this.detectorRef.detectChanges();
-  }
-
-  onSave(type) {
-    let methodName = '';
-    let data = [];
-    if (type == 'status') {
-      data = [this.dataSelected?.recID, this.status, this.cancelledNote];
-      methodName = 'UpdateStatusWarrantyAsync';
-    } else if (type == 'comment') {
-      data = [this.dataSelected?.recID, this.comment];
-      methodName = 'UpdateCommentWarrantyAsync';
-    } else {
-      data = [this.dataSelected?.recID, this.priority];
-      methodName = 'UpdatePriorityWarrantyAsync';
-    }
-    this.api
-      .execSv<any>(
-        'WR',
-        'ERM.Business.WR',
-        'WorkOrdersBusiness',
-        methodName,
-        data
-      )
-      .subscribe((res) => {
-        if (res) {
-          if (type == 'status') {
-            this.dialogStatus.close(res);
-          } else if (type == 'comment') {
-            this.dialogComment.close(res);
-          } else {
-            this.dialogPriority.close(res);
-          }
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-  //#endregion
-
+  //update priority
   updatePriority(data) {
     this.priority = data?.priority;
-    this.dialogPriority = this.callfc.openForm(this.itemPriority, '', 400, 200);
-    this.dialogPriority.closed.subscribe((ele) => {
+    this.dialogStatus = this.callfc.openForm(this.itemPriority, '', 400, 200);
+    this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
         this.dataSelected.lastUpdatedOn = new Date();
@@ -798,13 +799,14 @@ export class WarrantiesComponent
     });
   }
 
+  //update comment
   updateCommentWarranty(data) {
     this.dataSelected = data;
     this.comment = this.dataSelected.comment;
     const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
     this.titleAction = event.description;
-    this.dialogComment = this.callfc.openForm(this.itemComment, '', 600, 400);
-    this.dialogComment.closed.subscribe((ele) => {
+    this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
+    this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.comment = this.comment;
         this.dataSelected.lastUpdatedOn = new Date();
@@ -816,15 +818,56 @@ export class WarrantiesComponent
     });
   }
 
-  getIcon($event) {
-    if ($event == 'O') {
-      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
-    } else if ($event == 'I') {
-      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
-    } else if ($event == 'F') {
-      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
+  changValueStatus(e) {
+    this[e?.field] = e?.data;
+    if (e?.field == 'serviceLocator') {
+      this.zone = e?.component?.itemsSelected[0]?.Zone;
     }
-    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    this.detectorRef.detectChanges();
+  }
+
+  onSave(type) {
+    let methodName = '';
+    let data = [];
+    switch (type) {
+      case 'status':
+        data = [this.dataSelected?.recID, this.status, this.cancelledNote];
+        methodName = 'UpdateStatusWarrantyAsync';
+        break;
+      case 'comment':
+        data = [this.dataSelected?.recID, this.comment];
+        methodName = 'UpdateCommentWarrantyAsync';
+        break;
+      case 'priority':
+        data = [this.dataSelected?.recID, this.priority];
+        methodName = 'UpdatePriorityWarrantyAsync';
+        break;
+      case 'serviceLocator':
+        data = [this.dataSelected?.recID, this.serviceLocator, this.zone];
+        methodName = 'UpdateServiceLocatorWarrantyAsync';
+        break;
+    }
+
+    this.api
+      .execSv<any>(
+        'WR',
+        'ERM.Business.WR',
+        'WorkOrdersBusiness',
+        methodName,
+        data
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialogStatus.close(res);
+
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+  //#endregion
+
+  getIcon($event) {
+    return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
   }
 
   //#region popover

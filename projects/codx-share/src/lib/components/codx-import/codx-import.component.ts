@@ -170,7 +170,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.attachment.uploadFile();
   }
   openFormAddTemplate() {
-    this.callfunc.openForm(
+    let popup = this.callfunc.openForm(
       AddTemplateComponent,
       null,
       1200,
@@ -179,6 +179,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       ['add', this.formModel],
       null
     );
+    popup.closed.subscribe((res) => {
+      if(res?.event) this.dt_AD_IEConnections.push(res?.event);
+    });
   }
   openForm(val: any, data: any, type: any) {
     switch (val) {

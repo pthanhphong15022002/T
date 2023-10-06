@@ -583,7 +583,7 @@ export class PopupAddLeadComponent
         .subscribe((res) => {
           if (res) {
             this.dialog.close(res);
-            this.notificationsService.notifyCode('CM052');
+            this.notificationsService.notifyCode('CM051');
           }
         });
     } else {
@@ -657,10 +657,11 @@ export class PopupAddLeadComponent
     else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
+        !this.lead.applyProcess &&  this.onAdd();
 
       } else {
         this.lead.applyProcess && (await this.editInstance());
-        await this.onEdit();
+        !this.lead.applyProcess &&  this.onEdit();
       }
     }
   }
@@ -680,6 +681,7 @@ export class PopupAddLeadComponent
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
         this.isLoading && this.dialog.close(instance);
+        this.onEdit();
       }
     });
   }
