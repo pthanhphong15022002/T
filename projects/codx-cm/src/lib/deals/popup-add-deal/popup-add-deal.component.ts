@@ -881,8 +881,8 @@ export class PopupAddDealComponent
       instance.startDate = null;
       instance.status = '1';
     }
-    instance.title = deal.dealName.trim();
-    instance.memo = deal.memo.trim();;
+    instance.title = deal?.dealName?.trim();
+    instance.memo = deal?.memo?.trim();;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
     instance.owner = this.owner;
