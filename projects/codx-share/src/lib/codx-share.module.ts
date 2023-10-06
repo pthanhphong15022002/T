@@ -182,6 +182,8 @@ import { AddTemplateComponent } from './components/codx-import/add-template/add-
 import { CodxDateComponent } from './components/codx-date/codx-date.component';
 import { CodxCommonModule } from 'projects/codx-common/src/public-api';
 import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
+import { AddImportDetailsComponent } from './components/codx-import/add-template/add-import-details/add-import-details.component';
+import { AddIetablesComponent } from './components/codx-import/add-template/add-ietables/add-ietables.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -233,6 +235,8 @@ const T_Component: Type<any>[] = [
   CodxImportAddMappingTemplateComponent,
   CodxImportAddMappingComponent,
   AddTemplateComponent,
+  AddImportDetailsComponent,
+  AddIetablesComponent,
   //
   PopupUpdateStatusComponent,
   CodxNoteComponent,

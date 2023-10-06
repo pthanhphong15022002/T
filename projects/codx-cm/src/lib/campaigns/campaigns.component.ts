@@ -460,7 +460,7 @@ export class CampaignsComponent
             p.open();
           }
         } else {
-          if (this.checkIsCollapsed(emp?.recID)) {
+          if (e?.currentTarget?.scrollHeight > e?.currentTarget?.clientHeight) {
             p.open();
           }
         }

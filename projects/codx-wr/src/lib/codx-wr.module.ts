@@ -24,6 +24,7 @@ import { ViewDetailWrComponent } from './warranties/view-detail-wr/view-detail-w
 import { PopupAssignEngineerComponent } from './warranties/popup-assign-engineer/popup-assign-engineer.component';
 import { ViewTabUpdateComponent } from './warranties/view-detail-wr/view-tab-update/view-tab-update.component';
 import { ViewTabPartsComponent } from './warranties/view-detail-wr/view-tab-parts/view-tab-parts.component';
+import { ImportpartsComponent } from './importparts/importparts.component';
 
 var routes: Routes = [
   {
@@ -33,6 +34,11 @@ var routes: Routes = [
       {
         path: 'warranties/:funcID',
         component: WarrantiesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'importparts/:funcID',
+        component: ImportpartsComponent,
         data: { noReuse: true },
       },
     ],
@@ -52,6 +58,7 @@ var routes: Routes = [
     PopupAssignEngineerComponent,
     ViewTabUpdateComponent,
     ViewTabPartsComponent,
+    ImportpartsComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

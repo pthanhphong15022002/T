@@ -737,7 +737,7 @@ export class CmCustomerComponent
           lsts.forEach((ele) => {
             this.view.dataService.update(ele).subscribe();
           });
-          this.notiService.notifyCode('Cập nhật tự động thành công');
+          this.notiService.notifyCode('SYS007');
           this.detectorRef.detectChanges();
         }
       });

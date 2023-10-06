@@ -471,7 +471,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           this.process.groupID = this.lstGroup[0].groupID;
         }
         this.process.autoName =
-        this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
+          this.languages == 'vn' ? 'Nhiệm vụ' : 'Instance';
         this.process.stepsColorMode = true;
         this.setDefaultOwner();
         break;
@@ -1216,13 +1216,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null && data.text == '' && data.objectType == 'U'
-                ? data.dataSelected.EmployeeName
-                : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
-                  data.objectType == '0'
-                ? data.objectName
-                : data.text;
+            data.text == null || data.text == ''
+            ? data?.objectName
+            : data?.text;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
@@ -1245,13 +1241,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null && data.text == '' && data.objectType == 'U'
-                ? data.dataSelected.EmployeeName
-                : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
-                  data.objectType == '0'
-                ? data.objectName
-                : data.text;
+            data.text == null || data.text == ''
+            ? data?.objectName
+            : data?.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -1279,13 +1271,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null && data.text == '' && data.objectType == 'U'
-                ? data.dataSelected.EmployeeName
-                : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
-                  data.objectType == '0'
-                ? data.objectName
-                : data.text;
+              data.text == null || data.text == ''
+                ? data?.objectName
+                : data?.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'F';
@@ -1309,26 +1297,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let roles = new DP_Steps_Roles();
             roles.objectName =
-              data.text == null && data.text == '' && data.objectType == 'U'
-                ? data.dataSelected.EmployeeName
-                : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
-                  data.objectType == '0'
-                ? data.objectName
-                : data.text;
+              data.text == null || data.text == ''
+                ? data?.objectName
+                : data?.text;
             roles.objectID = data.id != null ? data.id : null;
             roles.objectType = data.objectType;
             roles.roleType = 'S';
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             let perm = new DP_Processes_Permission();
-            perm.objectName =
-              data.text == null && data.text == '' && data.objectType == 'U'
-                ? data.dataSelected.EmployeeName
-                : ((data.text == null || data.text == '') &&
-                    data.objectType == '9') ||
-                  data.objectType == '0'
-                ? data.objectName
-                : data.text;
+            perm.objectName = roles.objectName;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -1932,6 +1909,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         if (res) {
           this.listStepApproverView = res;
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -1968,6 +1946,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         let option = new DialogModel();
         option.FormModel = this.dialog.formModel;
         option.DataService = data;
+        if (this.type == 'work') option.IsFull = true;
         this.callfc
           .openForm(
             CodxExportAddComponent,
@@ -2009,6 +1988,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 }
               }
               this.changeDetectorRef.markForCheck();
+              // this.changeDetectorRef.detectChanges();
             }
           });
         break;
@@ -2035,6 +2015,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                       (x) => x.recID != item[1][0].recID
                     );
                   this.changeDetectorRef.markForCheck();
+                  // this.changeDetectorRef.detectChanges();
                 } else this.notiService.notifyCode('SYS022');
               });
           }
@@ -2050,6 +2031,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
+      this.changeDetectorRef.markForCheck();
     });
   }
   loadWord() {
@@ -2059,6 +2041,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
+      this.changeDetectorRef.markForCheck();
     });
   }
 
@@ -3548,8 +3531,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
       let checkStep = this.step?.roles?.some(
         (role) =>
-          (role.objectID == roleStep.objectID && role.roleType == roleStep.roleType) ||
-          (role?.objectType == '1' && role.roleType == roleStep.roleType && roleStep?.objectType == '1')
+          (role.objectID == roleStep.objectID &&
+            role.roleType == roleStep.roleType) ||
+          (role?.objectType == '1' &&
+            role.roleType == roleStep.roleType &&
+            roleStep?.objectType == '1')
       );
       if (!checkStep) {
         this.step?.roles?.push(roleStep);
@@ -3617,8 +3603,18 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   checkExistUserInStep(step: any, role: any, type: string): boolean {
     const check = (data) => {
       for (const element of data) {
-        let a = element?.roles?.some((x) => x.objectID === role?.objectID || (role?.objectType == '1' && x.objectType == role?.objectType));
-        if (element?.roles?.some((x) => x.objectID === role?.objectID || (role?.objectType == '1' && x.objectType == role?.objectType))) {
+        let a = element?.roles?.some(
+          (x) =>
+            x.objectID === role?.objectID ||
+            (role?.objectType == '1' && x.objectType == role?.objectType)
+        );
+        if (
+          element?.roles?.some(
+            (x) =>
+              x.objectID === role?.objectID ||
+              (role?.objectType == '1' && x.objectType == role?.objectType)
+          )
+        ) {
           return true;
         }
       }
@@ -4398,7 +4394,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.notiService.notifyCode('DP005', 0, '"' + this.stepNameFail + '"');
       return false;
     }
-    if (this.ischeckDurationTime(this.stepList.filter(x=> !x.isSuccessStep && !x.isFailStep))) {
+    if (
+      this.ischeckDurationTime(
+        this.stepList.filter((x) => !x.isSuccessStep && !x.isFailStep)
+      )
+    ) {
       return false;
     }
     return true;

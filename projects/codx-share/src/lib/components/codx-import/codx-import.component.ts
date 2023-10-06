@@ -24,6 +24,7 @@ import {
 import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { AddTemplateComponent } from './add-template/add-template.component';
 
 @Component({
   selector: 'codx-import',
@@ -169,8 +170,8 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.attachment.uploadFile();
   }
   openFormAddTemplate() {
-    this.callfunc.openForm(
-      CodxImportAddTemplateComponent,
+    let popup = this.callfunc.openForm(
+      AddTemplateComponent,
       null,
       1200,
       800,
@@ -178,6 +179,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       ['add', this.formModel],
       null
     );
+    popup.closed.subscribe((res) => {
+      if(res?.event) this.dt_AD_IEConnections.push(res?.event);
+    });
   }
   openForm(val: any, data: any, type: any) {
     switch (val) {
