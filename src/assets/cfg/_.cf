@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "apiUrl": "http://172.16.7.34:8011",
-=======
   "apiUrl": "http://localhost:8011",
->>>>>>> 1124318e2cafa1d569af3f482fc0cdcb93cac808
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.34:8011/lvfile",
