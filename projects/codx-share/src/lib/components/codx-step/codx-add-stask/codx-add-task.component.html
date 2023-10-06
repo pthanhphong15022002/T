@@ -276,26 +276,30 @@
 <!-- End Form Group -->
 
 <ng-template #footer>
-  <button style="float: left" type="button" class="btn btn-light-primary me-3" (click)="addFile($event)"
-    [disabled]="stepsTasks?.isTaskDefault">
-    <i class="icon-cloud_upload fs-5"></i><span>
-      <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
-    </span>
-  </button>
+  <div class="d-flex justify-content-between">
+    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)"
+      [disabled]="stepsTasks?.isTaskDefault">
+      <i class="icon-cloud_upload fs-5"></i><span>
+        <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
+      </span>
+    </button>
+    <div class="d-flex justify-content-end">
+      <button *ngIf="typeTask?.value != 'M' && (this.action == 'add' || this.action == 'copy') && isBoughtTM" type="button"
+        class="btn btn-primary ms-1" (click)="beforeSave(true)">
+        <codx-label name="Save" formName="Sprints" default="Lưu và giao việc"></codx-label>
+      </button>
 
-  <button *ngIf="typeTask?.value != 'M' && (this.action == 'add' || this.action == 'copy') && isBoughtTM" type="button"
-    class="btn btn-primary" (click)="beforeSave(true)">
-    <codx-label name="Save" formName="Sprints" default="Lưu và giao việc"></codx-label>
-  </button>
-
-  <button type="button" class="btn btn-primary" (click)="beforeSave(true)" *ngIf="
-      typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')
-    ">
-    <codx-label name="Save" formName="Sprints" default="Lưu và tạo cuộc họp"></codx-label>
-  </button>
-  <button type="button" class="btn btn-primary" (click)="beforeSave()">
-    <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-  </button>
+      <button type="button" class="btn btn-primary ms-1" (click)="beforeSave(true)" *ngIf="
+          typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')
+        ">
+        <codx-label name="Save" formName="Sprints" default="Lưu và tạo cuộc họp"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary ms-1" (click)="beforeSave()">
+        <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+      </button>
+    </div>  
+  </div>
+  
 </ng-template>
 
 <ng-template #addLink let-dialog="dialogPopupLink">

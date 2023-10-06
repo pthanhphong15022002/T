@@ -22,7 +22,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 })
 export class PopupEDegreesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   idField: string = 'recID';
   degreeObj;
@@ -34,7 +34,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   changedInForm = false;
 
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   dataVllSupplier: any;
   defaultIssueDate: string = '0001-01-01T00:00:00';
@@ -115,7 +115,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //     }
   //     this.degreeObj.trainToDate = event.fromDate;
   //   }
-  //   this.formGroup.patchValue(this.degreeObj);
+  //   this.form.formGroup.patchValue(this.degreeObj);
   //   if (this.degreeObj) {
   //     this.fromDateFormat = this.getFormatDate(this.degreeObj.trainFrom);
   //     this.toDateFormat = this.getFormatDate(this.degreeObj.trainTo);
@@ -136,7 +136,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.degreeObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
-    this.formGroup.patchValue(this.degreeObj);
+    this.form.formGroup.patchValue(this.degreeObj);
   }
 
   ClickCalendar(event) {
@@ -159,7 +159,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   async addFiles(evt) {
     this.changedInForm = true;
     this.degreeObj.attachments = evt.data.length;
-    this.formGroup.patchValue(this.degreeObj);
+    this.form.formGroup.patchValue(this.degreeObj);
   }
 
   openFormUploadFile() {
@@ -201,14 +201,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           });
         }
       });
-    this.hrService
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName,
-        this.formModel
-      )
-      .then((item) => {
-        this.formGroup = item;
+
         if (this.actionType == 'add') {
           this.hrService
             .getDataDefault(
@@ -227,9 +220,9 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
                 this.isNullFrom = false;
                 this.isNullTo = false;
                 this.degreeObj.employeeID = this.employId;
-                this.formModel.currentData = this.degreeObj;
-                this.formGroup.patchValue(this.degreeObj);
-                this.isAfterRender = true;
+                // this.formModel.currentData = this.degreeObj;
+                // this.form.formGroup.patchValue(this.degreeObj);
+                // this.isAfterRender = true;
                 this.cr.detectChanges();
               } else {
                 this.notify.notify('Error');
@@ -247,12 +240,64 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
           if (this.degreeObj.trainFromDate == null) this.isNullFrom = false;
           if (this.degreeObj.trainToDate == null) this.isNullTo = false;
 
-          this.formGroup.patchValue(this.degreeObj);
-          this.formModel.currentData = this.degreeObj;
-          this.isAfterRender = true;
+          // this.form.formGroup.patchValue(this.degreeObj);
+          // this.formModel.currentData = this.degreeObj;
+          // this.isAfterRender = true;
           this.cr.detectChanges();
         }
-      });
+      
+    // this.hrService
+    //   .getFormGroup(
+    //     this.formModel.formName,
+    //     this.formModel.gridViewName,
+    //     this.formModel
+    //   )
+    //   .then((item) => {
+    //     this.form.formGroup = item;
+    //     if (this.actionType == 'add') {
+    //       this.hrService
+    //         .getDataDefault(
+    //           this.formModel.funcID,
+    //           this.formModel.entityName,
+    //           this.idField
+    //         )
+    //         .subscribe((res) => {
+    //           if (res && res.data) {
+    //             this.degreeObj = res?.data;
+    //             if (
+    //               this.degreeObj.issuedDate.toString() == this.defaultIssueDate
+    //             ) {
+    //               this.degreeObj.issuedDate = null;
+    //             }
+    //             this.isNullFrom = false;
+    //             this.isNullTo = false;
+    //             this.degreeObj.employeeID = this.employId;
+    //             this.formModel.currentData = this.degreeObj;
+    //             this.form.formGroup.patchValue(this.degreeObj);
+    //             // this.isAfterRender = true;
+    //             this.cr.detectChanges();
+    //           } else {
+    //             this.notify.notify('Error');
+    //           }
+    //         });
+    //     } else {
+    //       this.isNullFrom = true;
+    //       this.isNullTo = true;
+    //       if (
+    //         this.actionType == 'copy' &&
+    //         this.degreeObj.issuedDate.toString() == this.defaultIssueDate
+    //       ) {
+    //         this.degreeObj.issuedDate = null;
+    //       }
+    //       if (this.degreeObj.trainFromDate == null) this.isNullFrom = false;
+    //       if (this.degreeObj.trainToDate == null) this.isNullTo = false;
+
+    //       this.form.formGroup.patchValue(this.degreeObj);
+    //       this.formModel.currentData = this.degreeObj;
+    //       // this.isAfterRender = true;
+    //       this.cr.detectChanges();
+    //     }
+    //   });
   }
 
   onInit(): void {
@@ -313,8 +358,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     //       return;
     //   }
     // }
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -377,7 +422,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   //     (p) => (p.recID = this.degreeObj.recID)
   //   );
   //   this.actionType = 'edit';
-  //   this.formGroup?.patchValue(this.degreeObj);
+  //   this.form.formGroup?.patchValue(this.degreeObj);
   //   this.cr.detectChanges();
   // }
 
@@ -393,7 +438,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
         );
         if (trainSupplier) {
           this.degreeObj.issuedPlace = trainSupplier[0]?.TrainSupplierName;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             issuedPlace: this.degreeObj.issuedPlace,
           });
           this.cr.detectChanges();
@@ -433,7 +478,7 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       this.trainFieldText
     ) {
       this.degreeObj.degreeName = this.levelText + ' ' + this.trainFieldText;
-      this.formGroup.patchValue({ degreeName: this.degreeObj.degreeName });
+      this.form.formGroup.patchValue({ degreeName: this.degreeObj.degreeName });
       this.cr.detectChanges();
     }
   }
