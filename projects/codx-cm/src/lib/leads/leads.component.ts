@@ -1332,6 +1332,7 @@ export class LeadsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
+            isCallInstance: true,
           };
           var obj = {
             stepName: data?.currentStepName,
