@@ -93,7 +93,7 @@ export class PdfComponent
   @Input() stepNo = -1;
   @Input() inputUrl = null;
   @Input() transRecID = null;
-  @Input() oSignFile = {};
+  @Input() oSignFile = null;
   @Input() oURL = [];
 
   @Input() oApprovalTrans;
@@ -278,7 +278,7 @@ export class PdfComponent
   oSignfile: any;
   getPASignature() {
     this.esService
-      .getDataSignature(this.signerInfo.authorID, this.signerInfo?.signType)
+      .getApproverSignature(this.signerInfo.email, this.signerInfo?.signType,null,this.signerInfo?.approver)
       .subscribe((signature) => {
         if (signature) {
           this.paSignature = signature[0];
@@ -299,10 +299,12 @@ export class PdfComponent
       ])
       .subscribe((res: any) => {
         console.table('sf', res);
+        //Gán template để hiển thị form ký số 
         if (this.oURL?.length > 0) {
           res.urls = this.oURL;
         }
-        let sf = res?.signFile;
+        let sf = this.oSignFile ?? res?.signFile ;
+        //---------------------
         if (sf) {
           sf.files.forEach((file: any, index) => {
             if (file?.eSign) {
@@ -1695,6 +1697,7 @@ export class PdfComponent
     let model = {
       userID: userID,
       signatureType: area.signatureType,
+      email: this.signerInfo?.email,
     };
     let data = {
       data: model,
@@ -2075,7 +2078,7 @@ export class PdfComponent
   addSignature(setupShowForm, area = null) {
     let model = {
       userID: this.signerInfo?.authorID,
-      email: this.signerInfo?.userID, //email của approver là đối tác
+      email: this.signerInfo?.email ?? this.signerInfo?.approver, //email của approver là đối tác
       fullName: this.signerInfo?.fullName,
       signatureType: this.signerInfo?.signType,
       isPublic: this.isPublic,
