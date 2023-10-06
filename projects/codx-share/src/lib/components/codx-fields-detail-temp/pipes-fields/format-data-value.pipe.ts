@@ -24,7 +24,7 @@ export class FormatDataValuePipe implements PipeTransform {
           gridModel.currentValue = value;
           return this.api
             .execSv<any>(
-              'DP',
+              data.service,
               'ERM.Business.Core',
               'DataBusiness',
               'LoadOneDataCbxAsync',

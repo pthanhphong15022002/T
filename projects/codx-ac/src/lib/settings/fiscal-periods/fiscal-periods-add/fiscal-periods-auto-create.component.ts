@@ -15,11 +15,13 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   listReport: Array<any> = [];
   dialog!: DialogRef;
   gridViewSetup: any;
-  headerText: string = 'Thêm mới năm tài chính';
+  headerText: string = '';
   listFiscalYear: any;
   fiscalPeriodsAutoCreate: FiscalPeriodsAutoCreate = new FiscalPeriodsAutoCreate;
   isAddNew: any;
   
+  lblAdd:any;
+
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -38,6 +40,12 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
 
   //#region Init
   onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+        this.headerText = this.lblAdd + ' năm tài chính'//
+      }
+    });
   }
 
   ngAfterViewInit() {
