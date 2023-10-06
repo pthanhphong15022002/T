@@ -178,7 +178,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
-    // this.api.execSv<any>('DP','ERM.Business.DP','InstanceStepsBusiness','SendMailNotificationAsync').subscribe(res => {});
   }
 
   async ngOnInit(): Promise<void> {
