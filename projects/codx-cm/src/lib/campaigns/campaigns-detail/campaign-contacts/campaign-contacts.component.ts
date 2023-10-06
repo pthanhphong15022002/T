@@ -24,6 +24,7 @@ import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/p
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupAddLeadComponent } from '../../../leads/popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from '../../../leads/popup-convert-lead/popup-convert-lead.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -46,6 +47,8 @@ export class CampaignContactsComponent implements OnInit {
   @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
   @ViewChild('headerStatus') headerStatus: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
+  @ViewChild('headerStatusCusLead') headerStatusCusLead: TemplateRef<any>;
+  @ViewChild('tempStatusCusLead') tempStatusCusLead: TemplateRef<any>;
   @ViewChild('headerHistory') headerHistory: TemplateRef<any>;
   @ViewChild('tempHistory') tempHistory: TemplateRef<any>;
   lstCampContacts = [];
@@ -70,6 +73,8 @@ export class CampaignContactsComponent implements OnInit {
   moreFuncAdd = '';
   url = '';
   titleAction = '';
+  lstProcesss = [];
+  lstLeads = [];
   constructor(
     private api: ApiHttpService,
     private detector: ChangeDetectorRef,
@@ -77,7 +82,8 @@ export class CampaignContactsComponent implements OnInit {
     private callFc: CallFuncService,
     private codxService: CodxService,
     private cmSv: CodxCmService,
-    private notiSv: NotificationsService
+    private notiSv: NotificationsService,
+    private codxShareService: CodxShareService
   ) {}
   async ngOnInit() {
     this.gridViewSetup = await firstValueFrom(
@@ -124,6 +130,11 @@ export class CampaignContactsComponent implements OnInit {
         width: !this.isDoubleClick ? 100 : 175,
       },
       {
+        headerTemplate: this.headerStatusCusLead,
+        template: this.tempStatusCusLead,
+        width: !this.isDoubleClick ? 150 : 300,
+      },
+      {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
         width: !this.isDoubleClick ? 150 : 250,
@@ -154,13 +165,28 @@ export class CampaignContactsComponent implements OnInit {
   getList() {
     this.loaded = false;
     this.request.predicates = this.predicates;
-    this.request.dataValues = this.transID + ';' + this.objectType;
+    this.dataValues = this.transID + ';' + this.objectType;
+    this.request.dataValues = this.dataValues;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
     this.request.funcID = this.formModel.funcID;
     this.fetch().subscribe(async (item) => {
-      this.loaded = true;
       this.lstCampContacts = item ?? [];
+      if (
+        this.objectType == '3' &&
+        this.lstCampContacts != null &&
+        this.lstCampContacts.length > 0
+      ) {
+        var lstIds = this.lstCampContacts.map((x) => x.objectID);
+        if (lstIds != null && lstIds.length > 0) {
+          const ele = await firstValueFrom(this.getListLeadBylstIDs(lstIds));
+          if (ele) {
+            this.lstLeads = ele[0] ?? [];
+            this.lstProcesss = ele[1] ?? [];
+          }
+        }
+      }
+      this.loaded = true;
       // this.grid.showRowNumber = false;
     });
   }
@@ -185,6 +211,42 @@ export class CampaignContactsComponent implements OnInit {
       );
   }
 
+  getListLeadBylstIDs(lstIDs = []) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'GetListLeadByLstIDsAsync',
+      [lstIDs]
+    );
+  }
+
+  getStepToStatus(objectID) {
+    var obj = {};
+    var idx = this.lstLeads.findIndex((x) => x.recID == objectID);
+
+    if (idx != -1) {
+      const data = this.lstLeads[idx];
+      obj['applyProcess'] = data?.applyProcess;
+      const process = this.lstProcesss.find(
+        (x) => x.processId == data?.processID
+      );
+      if (process != null) {
+        const stepCurrent = process?.tmpSteps?.find(
+          (x) => x.stepId == data?.stepID
+        );
+        if (stepCurrent != null) {
+          obj['icon'] = stepCurrent?.icon;
+          obj['iconColor'] = stepCurrent?.iconColor;
+          obj['textColor'] = stepCurrent?.textColor;
+          obj['backgroundColor'] = stepCurrent?.backgroundColor;
+          obj['currentStepName'] = stepCurrent?.stepName;
+        }
+      }
+    }
+    return obj;
+  }
+
   getFunctionList(funcID) {
     this.cache.functionList(funcID).subscribe((res) => {
       if (res) {
@@ -206,8 +268,18 @@ export class CampaignContactsComponent implements OnInit {
       case 'CM0301_2_2':
         this.convertLead(data);
         break;
-      default:
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.formModel,
+          null,
+          this
+        );
+        // this.df.detectChanges();
         break;
+      }
     }
   }
 
@@ -419,7 +491,6 @@ export class CampaignContactsComponent implements OnInit {
 
   //convert Lead
   async convertLead(data) {
-
     const lead = await firstValueFrom(
       this.api.execSv<any>(
         'CM',
@@ -430,8 +501,8 @@ export class CampaignContactsComponent implements OnInit {
       )
     );
     if (lead) {
-      if(lead?.closed) {
-        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được')
+      if (lead?.closed) {
+        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được');
         return;
       }
       this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
@@ -456,11 +527,15 @@ export class CampaignContactsComponent implements OnInit {
         );
         dialog.closed.subscribe((e) => {
           if (e && e.event) {
-            var idx = this.lstCampContacts.findIndex(x => x.recID == data.recID);
-            if(idx != -1){
+            var idx = this.lstCampContacts.findIndex(
+              (x) => x.recID == data.recID
+            );
+            if (idx != -1) {
               this.lstCampContacts[idx].leadStatus = '11';
             }
-            this.lstCampContacts = JSON.parse(JSON.stringify(this.lstCampContacts));
+            this.lstCampContacts = JSON.parse(
+              JSON.stringify(this.lstCampContacts)
+            );
 
             this.detector.detectChanges();
           }

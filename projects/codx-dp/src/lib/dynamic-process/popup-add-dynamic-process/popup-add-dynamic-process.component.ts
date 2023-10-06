@@ -1932,6 +1932,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         if (res) {
           this.listStepApproverView = res;
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -1968,6 +1969,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         let option = new DialogModel();
         option.FormModel = this.dialog.formModel;
         option.DataService = data;
+        if (this.type == 'work') option.IsFull = true;
         this.callfc
           .openForm(
             CodxExportAddComponent,
