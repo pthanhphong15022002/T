@@ -81,13 +81,13 @@ export class PopupConvertLeadComponent implements OnInit {
     formName: 'CMDeals',
     gridViewName: 'grvCMDeals',
     entityName: 'CM_Deals',
-    funcID: 'CM0201'
+    funcID: 'CM0201',
   };
   formModelCustomer: FormModel = {
     formName: 'CMCustomers',
     gridViewName: 'grvCMCustomers',
     entityName: 'CM_Customers',
-    funcID: 'CM0101'
+    funcID: 'CM0101',
   };
   listCbxProcess = [];
   listParticipants = [];
@@ -498,7 +498,6 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-
     if (this.lead.applyProcess && this.lead.status != '3') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
@@ -511,7 +510,6 @@ export class PopupConvertLeadComponent implements OnInit {
         )
       );
     }
-
     var data = [];
     data = [
       this.lead.recID,
@@ -551,6 +549,7 @@ export class PopupConvertLeadComponent implements OnInit {
               );
             }
           }
+
           await firstValueFrom(
             this.api.execSv<any>(
               'DP',
@@ -560,6 +559,7 @@ export class PopupConvertLeadComponent implements OnInit {
               [this.instance, this.listInstanceSteps, null]
             )
           );
+
           let obj = {
             lead: res,
             listStep: result[1],
