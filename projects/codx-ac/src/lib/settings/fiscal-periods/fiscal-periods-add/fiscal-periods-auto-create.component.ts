@@ -43,7 +43,7 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
     this.cache.message('AC0033').subscribe((res) => {
       if (res) {
         this.lblAdd = res?.customName;
-        this.headerText = this.lblAdd + ' năm tài chính'
+        this.headerText = this.lblAdd + ' năm tài chính'//
       }
     });
   }
