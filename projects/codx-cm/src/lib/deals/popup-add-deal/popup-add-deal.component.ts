@@ -405,14 +405,14 @@ export class PopupAddDealComponent
       );
       return;
     }
-    // if (!this.deal?.owner) {
-    //   this.notificationsService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (!this.deal?.owner) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+      );
+      return;
+    }
     if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
       this.notificationsService.notifyCode(
         'DP032',
@@ -881,8 +881,8 @@ export class PopupAddDealComponent
       instance.startDate = null;
       instance.status = '1';
     }
-    instance.title = deal.dealName.trim();
-    instance.memo = deal.memo.trim();;
+    instance.title = deal?.dealName?.trim();
+    instance.memo = deal?.memo?.trim();;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
     instance.owner = this.owner;

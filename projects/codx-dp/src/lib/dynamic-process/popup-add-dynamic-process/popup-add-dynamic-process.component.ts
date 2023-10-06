@@ -1968,6 +1968,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         let option = new DialogModel();
         option.FormModel = this.dialog.formModel;
         option.DataService = data;
+        if (this.type == 'work') option.IsFull = true;
         this.callfc
           .openForm(
             CodxExportAddComponent,
