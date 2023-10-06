@@ -240,9 +240,9 @@ export class PopupAddDealComponent
         if($event.data) {
           this.searchOwner(  'U', 'C',  '0',   this.deal.consultantID, $event?.component?.itemsSelected[0]?.UserName );
         }
-        // else if($event.data === null || $event.data === ''){
-        //   this.deleteOwner(  'U', 'C',  '0',   this.deal.consultantID,$event.field );
-        // }
+        else if($event.data === null || $event.data === ''){
+          this.deleteOwner(  'U', 'C',  '0',   this.deal.consultantID,$event.field );
+        }
       }
     }
   }
@@ -259,9 +259,9 @@ export class PopupAddDealComponent
       }
       this.searchOwner('1', 'O', '0', this.deal.owner, ownerName);
     }
-    // else if ($event === null || $event === '') {
-    //   this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
-    // }
+    else if ($event === null || $event === '') {
+      this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
+    }
   }
   deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
     let index = this.deal?.permissions.findIndex(
@@ -269,13 +269,13 @@ export class PopupAddDealComponent
     if(index != -1) {
       if(field === 'owner' ){
         this.deal.owner = null;
+        this.owner= null;
         this.deal.salespersonID = null;
-        this.deal.permissions =  this.deal?.permissions.splice(index, 1);
       }
       else if(field === 'consultantID') {
         this.deal.consultantID = null;
-        this.deal.permissions =  this.deal?.permissions.splice(index, 1);
       }
+      this.deal.permissions.splice(index, 1);
     }
   }
   searchOwner(
@@ -405,14 +405,14 @@ export class PopupAddDealComponent
       );
       return;
     }
-    if (!this.deal?.owner) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-      );
-      return;
-    }
+    // if (!this.deal?.owner) {
+    //   this.notificationsService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+    //   );
+    //   return;
+    // }
     if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
       this.notificationsService.notifyCode(
         'DP032',
