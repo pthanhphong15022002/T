@@ -268,7 +268,7 @@ export class InstancesComponent
             this.loadData(res);
           }
         });
-      }
+      } else this.layoutDP.viewNameProcess(null);
     });
     this.layout.setUrl('dp/dynamicprocess/DP01');
     this.layout.setLogo(null);
@@ -2197,7 +2197,6 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    // if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
@@ -2207,58 +2206,85 @@ export class InstancesComponent
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
               if (check) {
-                this.isLockButton = true;
-                let option = new DialogModel();
-                option.zIndex = 1001;
+                // this.isLockButton = true;
+                // let option = new DialogModel();
+                // option.zIndex = 1001;
+                // // this.dialogTemplate = this.callfc.openForm(
+                // //   this.popupTemplate,
+                // //   '',
+                // //   600,
+                // //   500,
+                // //   '',
+                // //   null,
+                // //   '',
+                // //   option
+                // // );
+                // let obj = {
+                //   data: this.dataSelected,
+                //   formModel: this.view.formModel,
+                //   isFormExport: false,
+                //   refID: this.process.recID,
+                //   refType: 'DP_Processes',
+                //   esCategory: this.esCategory,
+                //   titleAction: this.titleAction,
+                //   loaded: true,
+                //   dataEx: this.dataEx,
+                //   dataWord: this.dataWord,
+                // };
                 // this.dialogTemplate = this.callfc.openForm(
-                //   this.popupTemplate,
+                //   PopupSelectTempletComponent,
                 //   '',
                 //   600,
                 //   500,
                 //   '',
-                //   null,
+                //   obj,
                 //   '',
                 //   option
                 // );
-
-                let obj = {
-                  data: this.dataSelected,
-                  formModel: this.view.formModel,
-                  isFormExport: false,
-                  refID: this.process.recID,
-                  refType: 'DP_Processes',
-                  esCategory: this.esCategory,
-                  titleAction: this.titleAction,
-                  loaded: true,
-                  dataEx: this.dataEx,
-                  dataWord: this.dataWord,
-                };
-                this.dialogTemplate = this.callfc.openForm(
-                  PopupSelectTempletComponent,
-                  '',
-                  600,
-                  500,
-                  '',
-                  obj,
-                  '',
-                  option
-                );
-                this.dialogTemplate.closed.subscribe((e) => {
-                  if (e?.event) {
-                    this.dataSelected = e?.event;
-                    this.view.dataService.update(this.dataSelected).subscribe();
-                    if (this.kanban) this.kanban.updateCard(this.dataSelected);
-                  }
-                });
+                // this.dialogTemplate.closed.subscribe((e) => {
+                //   if (e?.event) {
+                //     this.dataSelected = e?.event;
+                //     this.view.dataService.update(this.dataSelected).subscribe();
+                //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                //   }
+                // });
+                this.release(this.dataSelected, item);
               } else this.notificationsService.notifyCode('DP036');
             });
         }
       });
   }
 
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      this.formModel.entityName,
+      this.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  //call Back
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      ///do corre share ko tra ve status
+      this.codxDpService
+        .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
+        .subscribe((ins) => {
+          this.dataSelected.approveStatus = ins.approveStatus;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
+  }
+
   //Duyệt
   documentApproval(datas: any) {
-    this.approvalTrans(this.esCategory?.processID, datas);
+    this.approvalTrans(this.esCategory, datas);
     // this.dialogTemplate.close();
     // // if (datas.bsCategory) {
     // //Có thiết lập bước duyệt
@@ -2311,7 +2337,7 @@ export class InstancesComponent
     // }
     // }
   }
-  approvalTrans(processID: any, datas: any) {
+  approvalTrans(esCategory: any, datas: any) {
     // this.api
     //   .execSv(
     //     'ES',
@@ -2367,36 +2393,37 @@ export class InstancesComponent
       //   });
     } else if (this.esCategory?.eSign == false)
       //xét duyệt
-      this.release(datas, processID);
+      this.release(datas, this.esCategory);
     // });
   }
-  //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.dataSelected.approveStatus = '3';
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.codxDpService
-            .updateApproverStatusInstance([data?.recID, '3'])
-            .subscribe();
-          this.notificationsService.notifyCode('ES007');
-        }
-      });
-  }
+
+  //Gửi duyệt cu sau nay se xoa
+  // release(data: any, processID: any) {
+  //   this.codxShareService
+  //     .codxRelease(
+  //       this.view.service,
+  //       data?.recID,
+  //       processID,
+  //       this.view.formModel.entityName,
+  //       this.view.formModel.funcID,
+  //       '',
+  //       data?.title,
+  //       ''
+  //     )
+  //     .subscribe((res2: any) => {
+  //       if (res2?.msgCodeError)
+  //         this.notificationsService.notify(res2?.msgCodeError);
+  //       else {
+  //         this.dataSelected.approveStatus = '3';
+  //         this.view.dataService.update(this.dataSelected).subscribe();
+  //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+  //         this.codxDpService
+  //           .updateApproverStatusInstance([data?.recID, '3'])
+  //           .subscribe();
+  //         this.notificationsService.notifyCode('ES007');
+  //       }
+  //     });
+  // }
 
   //Huy duyet
   cancelApprover(dt) {
