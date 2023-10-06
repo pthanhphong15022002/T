@@ -405,14 +405,14 @@ export class PopupAddDealComponent
       );
       return;
     }
-    // if (!this.deal?.owner) {
-    //   this.notificationsService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-    //   );
-    //   return;
-    // }
+    if (!this.deal?.owner) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+      );
+      return;
+    }
     if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
       this.notificationsService.notifyCode(
         'DP032',
