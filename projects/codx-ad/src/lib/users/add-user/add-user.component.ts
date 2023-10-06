@@ -52,8 +52,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   adUser: any = {};
   adRoles: AD_Roles = new AD_Roles();
   adUserRoles: AD_UserRoles = new AD_UserRoles();
-  countListViewChooseRoleApp: Number = 0;
-  countListViewChooseRoleService: Number = 0;
+  countListViewChooseRoleApp: number = 0;
+  countListViewChooseRoleService: number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
   // lstChangeModule: tmpTNMD[] = [];
