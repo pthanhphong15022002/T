@@ -1985,14 +1985,16 @@ export class PopupAddSignFileComponent implements OnInit {
 
   openTemplate() {
     var gridModel = new DataRequest();
-    gridModel.entityName = this.refType;
+    gridModel.entityName = this.templateRefType ?? this.refType ;
+    let tRefType = this.templateRefType ?? this.refType;
+    let tRefID = this.templateRefID ?? this.data?.recID;
     let exportForm = this.callfuncService.openForm(
       CodxExportComponent,
       null,
       900,
       700,
       '',
-      [gridModel, null, null, this.data.recID, this.refType],
+      [gridModel, null, null, tRefID, tRefType],
       null
     );
     exportForm.closed.subscribe((res) => {
