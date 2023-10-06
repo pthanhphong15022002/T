@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Injector, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Injector,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { DialogRef, UIComponent, DialogData } from 'codx-core';
-import { AttachmentComponent } from '../../attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-file',
@@ -17,10 +24,11 @@ export class FileComponent extends UIComponent implements OnInit {
 
   @ViewChild('attachment') attachment: AttachmentComponent;
 
-  constructor(private injector: Injector,
+  constructor(
+    private injector: Injector,
     private dt: DialogRef,
-    private dialogData: DialogData,
-    ) {
+    private dialogData: DialogData
+  ) {
     super(injector);
     this.dialog = dt;
     this.data = dialogData.data?.data;
@@ -28,13 +36,10 @@ export class FileComponent extends UIComponent implements OnInit {
   }
 
   onInit() {
-    this.dialog.beforeClose.subscribe(res => {
-      
-    })
+    this.dialog.beforeClose.subscribe((res) => {});
   }
-  
-  ngAfterViewInit() {  
-  }
+
+  ngAfterViewInit() {}
 
   popup() {
     this.attachment.uploadFile();
@@ -46,7 +51,7 @@ export class FileComponent extends UIComponent implements OnInit {
       var obj = {
         count: e.data.length,
         data: e.data,
-      }
+      };
       this.files = obj;
       this.attachment.saveFiles();
     }

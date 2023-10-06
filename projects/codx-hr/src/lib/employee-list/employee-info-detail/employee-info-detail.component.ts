@@ -1378,8 +1378,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initHeaderText() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      this.addHeaderText = res[0].customName;
-      this.editHeaderText = res[2].customName;
+      if(res){
+        if(res[0]){
+          this.addHeaderText = res[0].customName;
+        }
+        if(res[2]){
+          this.editHeaderText = res[2].customName;
+        }
+      }
     });
   }
 
@@ -4280,6 +4286,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.eContractFormModel;
+    console.log('contract form model truyen vao', this.eContractFormModel);
+    
     let isAppendix = false;
 
     if (

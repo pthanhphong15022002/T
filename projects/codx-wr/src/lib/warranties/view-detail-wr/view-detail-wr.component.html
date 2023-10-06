@@ -49,10 +49,7 @@
       <div class="d-flex flex-row justify-content-between">
         <div
           class="mb-1 me-1"
-          *ngIf="
-            dataSelected?.recID &&
-            dataSelected?.problem?.trim() != ''
-          "
+          *ngIf="dataSelected?.recID && dataSelected?.problem?.trim() != ''"
           [ngClass]="!expanding ? 'd-flex flex-column' : ''"
         >
           <span
@@ -74,6 +71,8 @@
               [ngClass]="!overflowed ? 'd-none' : ''"
               role="button"
               (click)="expanding = !expanding"
+              name="lblMore"
+              [formModel]="formModel"
             ></codx-label>
             <codx-label
               *ngIf="expanding"
@@ -81,6 +80,8 @@
               style="white-space: nowrap"
               class="text-primary text-decoration-underline me-1 mb-1"
               role="button"
+              name="lblCollapse"
+              [formModel]="formModel"
               (click)="expanding = !expanding"
             ></codx-label>
           </div>
@@ -344,7 +345,7 @@
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <span
                     ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('O') }}"
+                      src="/assets/themes/wr/default/img/{{ getIcon('C') }}"
                       alt=""
                   /></span>
                 </div>
@@ -366,7 +367,7 @@
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <span
                     ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('I') }}"
+                      src="/assets/themes/wr/default/img/{{ getIcon('TL') }}"
                       alt=""
                   /></span>
                 </div>
@@ -388,7 +389,7 @@
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <span
                     ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('F') }}"
+                      src="/assets/themes/wr/default/img/{{ getIcon('E') }}"
                       alt=""
                   /></span>
                 </div>
@@ -444,7 +445,13 @@
       </div>
     </ng-template>
     <ng-template #body let-data>
-      <div class="cm-scroll">
+      <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+        <div
+          class="btn btn-white btn-icon tab-action"
+          (click)="isShow = !isShow"
+        >
+          <span class="icon-unfold_more icon-20"></span>
+        </div>
         <div class="instance-select">
           <ejs-tab
             id="tab_adaptive"
@@ -804,6 +811,10 @@
                                 [formModel]="formModel"
                               ></codx-label>
                               <span>A</span>
+                              <span
+                                class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
+                                (click)="updateServiceLocator(dataSelected)"
+                              ></span>
                             </div>
                           </div>
                         </div>

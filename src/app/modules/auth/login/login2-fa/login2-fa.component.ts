@@ -1,4 +1,3 @@
-import { variableAudio } from './../../../../../../projects/codx-share/src/lib/components/viewFileDialog/extention';
 import { AfterViewInit, Component, Injector, Optional } from '@angular/core';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import {

@@ -5,8 +5,6 @@ import {
   OnInit,
   Optional,
   ViewChild,
-  Output,
-  EventEmitter,
 } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import {
@@ -18,14 +16,13 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { BP_Processes, TabModel } from '../models/BP_Processes.model';
-import { environment } from 'src/environments/environment';
+import { TabModel } from '../models/BP_Processes.model';
 import {
   ToolbarService,
   PrintService,
 } from '@syncfusion/ej2-angular-documenteditor';
 import { CodxBpService } from '../codx-bp.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 @Component({
   selector: 'lib-popup-view-detail-processes',
   templateUrl: './popup-view-detail-processes.component.html',

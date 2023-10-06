@@ -1,6 +1,6 @@
 <div class="d-flex flex-column w-100 h-100">
     <div #header class="d-flex align-items-center justify-content-between py-4 px-5 border-bottom">
-        <codx-label default="Thêm mới template" class="fs-5 fw-bold"></codx-label>
+        <codx-label default="Thêm mới template" class="fs-2 fw-bold"></codx-label>
         <div class="d-flex flex-column justify-content-center align-items-center">
             <i class="icon-24 icon-radio_button_checked"></i>
             <codx-label default="Chi tiết import"></codx-label>
@@ -9,13 +9,153 @@
             <i class="icon-close"></i>
         </div>
      </div>
-    <div #body class="w-100 h-100">
-        <div class="pt-5 div-add-tmp-import-body">
-            <codx-attachment hideFolder="1" hideDes="1" [objectType]="formModel?.entityName" [functionID]="formModel?.funcID" allowExtensions=".xls,.xlsx"></codx-attachment>
-            <codx-label [formModel]="formModels" [fiedName]="'Description'" class="fw-bold"></codx-label>
-            <codx-input type="text" [Group]="importAddTmpGroup" ControlName="nameTmp"
-              [ngClass]="{ 'is-invalid': submitted && f.format.errors }">
-            </codx-input>
+    <div #body class="w-100 h-100 position-relative">
+        <div class="pt-5 div-add-tmp-import-body" [ngClass]="step==0 ? 'visible' : 'invisible'">
+            <div class="d-flex flex-column my-2">
+                <codx-label [formName]="'fnAddTmpImportAttachTitle'" [fiedName]="'lblAddTmpImportAttachTitle'" default="Chọn file dùng làm mẫu import" class="fw-bold text-gray-500"></codx-label>
+            </div>
+            <codx-attachment #attachment hideFolder="1" hideDes="1" showMessage="0" [objectType]="formModel?.entityName" [functionID]="formModel?.funcID" allowExtensions=".xls,.xlsx" (fileGet)="getfileGet($event)" (filePrimitive)="getfilePrimitive($event)"></codx-attachment>
+            <div class="d-flex flex-column mt-5">
+                <codx-label [formModel]="formModels" [fiedName]="'MappingName'" class="fw-bold"></codx-label>
+                <codx-input type="text" [Group]="importAddTmpGroup" ControlName="mappingName"
+                  [ngClass]="{ 'is-invalid': submitted && f.format.errors }">
+                </codx-input>
+            </div>
+            <div class="d-flex flex-column mt-5">
+                <codx-label [formModel]="formModels" [fiedName]="'Description'" class="fw-bold"></codx-label>
+                <codx-input type="text" [Group]="importAddTmpGroup" ControlName="description"
+                [ngClass]="{ 'is-invalid': submitted && f.format.errors }">
+                </codx-input>
+            </div>
+            <div class="row mt-5">
+                <div class="col-6">
+                    <codx-label [formModel]="formModel" [fiedName]="'sheetimport'" default="Sheet import" class="fw-bold">
+                    </codx-label>
+                    <select class="form-select select-sheet" aria-label="Sheet Import"  #mySelect
+                      (change)="changeSheetImport(mySelect.value)" [(ngModel)]="selectedSheet"
+                    >
+                      <ng-container *ngIf="sheet">
+                        <option *ngFor="let item of sheet" [ngValue]="item">{{item}}</option>
+                      </ng-container>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <codx-label [formModel]="formModels" [fiedName]="'firstCell'" default="Dòng tiêu đề" class="fw-bold"></codx-label>
+                    <codx-input type="number" [Group]="importAddTmpGroup" ControlName="firstCell" [min]="1"></codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column pt-5 position-absolute w-100 top-0 px-10" [ngClass]="step==1 ? 'visible' : 'invisible'">
+            <div class="d-flex flex-column w-100">
+                <div class="d-flex align-items-center w-100 p-5 border-dotted rounded">
+                    <div class="d-flex flex-column border-right w-70 p-4">
+                        <div class="d-flex align-items-center">
+                            <codx-label default="Thứ tự import: " class="fw-bold me-2"></codx-label>
+                            <codx-label default="Thứ tự bảng lưu dữ liệu được nhập từ file import"></codx-label> 
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-label default="Bảng nhập dữ liệu: " class="fw-bold me-2"></codx-label>
+                            <codx-label default="Bảng lưu dữ liệu"></codx-label> 
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-label default="Bảng cấp cha: " class="fw-bold me-2"></codx-label>
+                            <codx-label default="Bảng lưu dữ liệu nhóm của bảng dữ liệu chi tiết"></codx-label> 
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-label default="Tên mẫu chi tiết import :" class="fw-bold me-2"></codx-label>
+                            <codx-label default="Mẫu chi tiết được thiết lập các cột trong hệ thống tương ứng với file import"></codx-label> 
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-label default="Quy tắc nhập liệu: " class="fw-bold me-2"></codx-label>
+                            <codx-label default="Cách thức nhập dữ liệu vào chương trình (Thêm mới/Ghi đè/Báo lỗi khi trùng)"></codx-label> 
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <codx-label default="Dữ liệu nhóm: " class="fw-bold me-2"></codx-label>
+                            <codx-label default="Đánh dấu là dữ liệu nhóm khi nhập vào chương trình"></codx-label> 
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column p-4">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="icon-add_box text-primary"></i>
+                            <codx-label default="Thêm mẫu chi tiết import" class="ms-2"></codx-label>                       
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="icon-open_in_new"></i>
+                            <codx-label default="Chỉnh sửa mẫu chi tiết import đang chọn" class="ms-2"></codx-label>                       
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="icon-edit text-primary"></i>
+                            <codx-label default="Chỉnh sửa mẫu chi tiết import" class="ms-2"></codx-label>                       
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="icon-close text-danger"></i>
+                            <codx-label default="Xóa chi tiết import" class="ms-2"></codx-label>                       
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between py-2">
+                        <codx-label 
+                            [formModel]="formModels" 
+                            [fiedName]="'detailImport'" 
+                            default="Chi tiết import"
+                            class="text-primary fw-bold">
+                        </codx-label>
+                        <button class="btn btn-light-primary d-flex align-items-center" (click)="openFormIETables()"><i class="icon-i-plus"></i><codx-label [formName]="'fmAddTmpImportDetail'" fiedName="lblAddTmpImportDetail" default="Thêm chi tiết"></codx-label></button>
+                    </div>
+                    <div class="py-2">
+                        <ng-container *ngIf="columnsGrid && columnsGrid.length > 0">
+                            <table class="w-100 tb-add-import">
+                                <tr class="bg-light">
+                                  <th class="p-3" *ngFor="let item of columnsGrid">{{item?.headerText}}</th>
+                                </tr>
+                                <tr class="tr-ip-add-tmp border-bottom" *ngFor="let data of listIETables">
+                                    <td class="w-15 p-3">
+                                      <span>{{data?.processIndex}}</span>
+                                    </td>
+                                    <td class="w-20 p-3">
+                                      <span>{{data?.destinationTable}}</span>
+                                    </td>
+                                    <td class="w-15 p-3">
+                                      <span>{{data?.parentEntity}}</span>
+                                    </td>
+                                    <td class="w-100 p-3 d-flex align-items-center">
+                                      <!-- <span class="d-block text-truncate">{{data?.mappingTemplate}}</span> -->
+                                        <codx-input field="mappingTemplate" [crrValue]="data?.mappingTemplate" [refValue]="columnsGrid[3]?.referedValue" [refType]="columnsGrid[3]?.referedType" [datatype]="columnsGrid[3]?.controlType" [multiple]="columnsGrid[3]?.multiSelect" style="width: 100%"
+                                        (valueChange)="valueChangeMappingTemplate($event , data)"
+                                        >
+                                        </codx-input>
+                                        <i class="icon-add_box cursor-pointer ms-2 text-primary" (click)="openFormAddImportDetail()"></i>
+                                        <i class="icon-open_in_new cursor-pointer ms-2"></i>
+                                    </td>
+                                    <td class="w-15 p-3">
+                                      <span>{{getTextImportRule(data?.importRule)}}</span>
+                                    </td>
+                                    <td class="w-10 p-3">
+                                      <codx-input type="switch" [checked]="data?.isSummary" [disabled]="true" class="mt-2"></codx-input>
+                                    </td>
+                                  </tr>
+                              </table>
+                        </ng-container>
+                        <!-- <codx-gridview #gridView [columnsGrid]="columnsGrid" [rowTmp]="rowTmp"></codx-gridview> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div #footer>
+        <div class="d-flex justify-content-between px-10 py-4">
+            <div class="d-flex justify-content-start" [ngClass]="step==1 ? 'visible' : 'invisible'">
+                <button class="btn btn-light-primary"  (click)="per()"><codx-label [formName]="'fmAddTmpImportPer'" fiedName="lblAddTmpImportPer" default="Quay lại"></codx-label></button>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary"  *ngIf="step==0" (click)="next()"><codx-label [formName]="'fmAddTmpImportNext'" fiedName="lblAddTmpImportNext" default="Tiếp theo"></codx-label></button>
+                <button class="btn btn-primary" *ngIf="step==1"  (click)="onSave()"><codx-label [formName]="'fmAddTmpImportSave'" fiedName="lblAddTmpImportSave" default="Lưu"></codx-label></button>
+            </div>
         </div>
     </div>
 </div>
+
+<ng-template #rowTmp let-data>
+    
+  </ng-template>

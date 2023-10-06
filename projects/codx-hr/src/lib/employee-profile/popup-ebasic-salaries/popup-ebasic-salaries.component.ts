@@ -15,7 +15,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-ebasic-salaries',
@@ -108,7 +108,11 @@ export class PopupEBasicSalariesComponent
 
   onInit(): void {
     this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+      .getFormGroup(
+        this.formModel.formName,
+        this.formModel.gridViewName,
+        this.formModel
+      )
       .then((fg) => {
         if (fg) {
           this.formGroup = fg;
@@ -273,7 +277,7 @@ export class PopupEBasicSalariesComponent
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(false)
+      this.form.validation(false);
       return;
     }
 

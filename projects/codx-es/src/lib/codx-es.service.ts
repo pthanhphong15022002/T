@@ -6,8 +6,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { rejects } from 'assert';
 import {
   ApiHttpService,
   AuthStore,
@@ -19,13 +17,11 @@ import {
   UserModel,
   Util,
 } from 'codx-core';
-import { AnyARecord } from 'dns';
-import { resolve } from 'path';
-import { highLightTextArea } from 'projects/codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
 import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
+import { highLightTextArea } from 'projects/codx-common/src/lib/component/pdf/model/tmpSignArea.model';
 
 //export const UrlUpload: string = 'http://172.16.1.210:8011';
 export class GridModels {
@@ -797,7 +793,11 @@ export class CodxEsService {
       [transID]
     );
   }
-  deleteFileByObjectID(objectID:string, objectType:string, delForever:boolean) {
+  deleteFileByObjectID(
+    objectID: string,
+    objectType: string,
+    delForever: boolean
+  ) {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
@@ -806,19 +806,24 @@ export class CodxEsService {
       [objectID, objectType, delForever]
     );
   }
-  copyFileByObjectID(oldRecID:string, newRecID:string,objectType:string,referType:string='',copyFileInfo:tmpCopyFileInfo = null): Observable<any> {
+  copyFileByObjectID(
+    oldRecID: string,
+    newRecID: string,
+    objectType: string,
+    referType: string = '',
+    copyFileInfo: tmpCopyFileInfo = null
+  ): Observable<any> {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
       'CopyFileByObjectIDAsync',
-      [oldRecID, newRecID,objectType , referType,copyFileInfo]
+      [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
-  
 
   //Get AD template
-  getExcelTemplate(recID:string) {
+  getExcelTemplate(recID: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
@@ -827,7 +832,7 @@ export class CodxEsService {
       [recID]
     );
   }
-  getWordTemplate(recID:string) {
+  getWordTemplate(recID: string) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.AD',
@@ -978,22 +983,22 @@ export class CodxEsService {
       [categoryID, null, true, null]
     );
   }
-  getDetailSignFile(recID,request=null): Observable<any> {
+  getDetailSignFile(recID, request = null): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetDetailAsync',
-      [recID,request]
+      [recID, request]
     );
   }
-  getViewDetailSignFile(recID,funcID): Observable<any> {
+  getViewDetailSignFile(recID, funcID): Observable<any> {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'SignFilesBusiness',
       'GetViewDetailAsync',
-      [recID,funcID]
+      [recID, funcID]
     );
   }
 

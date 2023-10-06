@@ -29,7 +29,7 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
@@ -147,10 +147,10 @@ export class CodxAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate = data?.data?.isTemplate ? true : false;
-    this.refType = data?.data?.refType ?? 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
-    this.refID = data?.data?.refID;// Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
+    this.refType = data?.data?.refType ?? 'ES_SignFiles'; // Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
+    this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.typeCategory =
-      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType;//Dùng để lấy Category của Module
+      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType; //Dùng để lấy Category của Module
     if (this.modeView == '2') {
       this.disableCateID = true;
     }
@@ -379,7 +379,10 @@ export class CodxAddSignFileComponent implements OnInit {
 
                     //get autoNumber by category
                     this.esService
-                    .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
+                      .getCategoryByCateIDType(
+                        this.data?.categoryID,
+                        this.typeCategory
+                      )
                       .subscribe((res) => {
                         if (res) {
                           this.eSign = res.eSign;
@@ -592,13 +595,18 @@ export class CodxAddSignFileComponent implements OnInit {
                           this.curCategory?.autoNumberControl == '1'
                         ) {
                           this.data.refNo = autoNum;
-                          this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+                          this.dialogSignFile.patchValue({
+                            refNo: this.data.refNo,
+                          });
                           this.cr.detectChanges();
                         }
                       });
                   }
                   //Nếu category có dùng đánh số tự động riêng và sinh số tự động khi lưu thì ko tạo trước số tự động
-                  else if (this.curCategory?.autoNumberControl == '1' && this.curCategory?.autoAssignRule == '2') {
+                  else if (
+                    this.curCategory?.autoNumberControl == '1' &&
+                    this.curCategory?.autoAssignRule == '2'
+                  ) {
                     this.data.refNo = null;
                   }
                   //Nếu ko thì lấy số tự động của trình kí
@@ -681,14 +689,19 @@ export class CodxAddSignFileComponent implements OnInit {
                       autoNum != null &&
                       this.curCategory?.autoNumberControl == '1'
                     ) {
-                      this.data.refNo = autoNum;                      
-                      this.dialogSignFile.patchValue({ refNo: this.data.refNo });
+                      this.data.refNo = autoNum;
+                      this.dialogSignFile.patchValue({
+                        refNo: this.data.refNo,
+                      });
                       this.cr.detectChanges();
                     }
                   });
-              }              
+              }
               //Nếu category có dùng đánh số tự động riêng và sinh số tự động khi lưu thì ko tạo trước số tự động
-              else if (this.curCategory?.autoNumberControl == '1' && this.curCategory?.autoAssignRule == '2') {
+              else if (
+                this.curCategory?.autoNumberControl == '1' &&
+                this.curCategory?.autoAssignRule == '2'
+              ) {
                 this.data.refNo = null;
               }
               //Nếu ko thì lấy số tự động của trình kí

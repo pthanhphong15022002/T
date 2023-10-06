@@ -1,4 +1,3 @@
-import { fieldChoose } from './../viewFileDialog/alertRule.model';
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,

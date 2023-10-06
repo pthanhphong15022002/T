@@ -1,15 +1,12 @@
 import {
-  async,
   BehaviorSubject,
   finalize,
   isObservable,
   map,
   Observable,
-  of,
   share,
 } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
   ApiHttpService,
   AuthService,
@@ -24,7 +21,6 @@ import {
   TenantStore,
   Util,
 } from 'codx-core';
-import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 import {
   FormBuilder,
   FormControl,
@@ -33,11 +29,9 @@ import {
 } from '@angular/forms';
 import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 import { environment } from 'src/environments/environment';
-import { AssignTaskModel } from './models/assign-task.model';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
-import { SignalRService } from './layout/drawers/chat/services/signalr.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import {
   ApproveProcess,
@@ -60,6 +54,7 @@ import { CodxFilesAttachmentViewComponent } from './components/codx-files-attach
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { T } from '@angular/cdk/keycodes';
+import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 
 @Injectable({
   providedIn: 'root',

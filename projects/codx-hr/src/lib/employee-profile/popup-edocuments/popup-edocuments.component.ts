@@ -1,15 +1,29 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CodxFormComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import {
+  CodxFormComponent,
+  DialogData,
+  DialogRef,
+  FormModel,
+  NotificationsService,
+  UIComponent,
+} from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { createSolutionBuilderHost } from 'typescript';
 
 @Component({
   selector: 'lib-popup-edocuments',
   templateUrl: './popup-edocuments.component.html',
-  styleUrls: ['./popup-edocuments.component.css']
+  styleUrls: ['./popup-edocuments.component.css'],
 })
 export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
@@ -23,7 +37,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   // isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  originDocumentTypeID : any;
+  originDocumentTypeID: any;
   headerText: any;
   changedInForm = false;
   actionType: any;
@@ -44,19 +58,18 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.employId = data?.data?.employeeId;
     this.formModel = dialog.formModel;
     this.documentObj = JSON.parse(JSON.stringify(data?.data?.documentObj));
-    if(this.documentObj){
+    if (this.documentObj) {
       this.originDocumentTypeID = this.documentObj.documentTypeID;
     }
-    
   }
 
-    onInit(): void {
+  onInit(): void {
     // if (!this.formGroup)
     //   this.hrService.getFormModel(this.funcID).then((formModel) => {
     //     if (formModel) {
@@ -80,31 +93,28 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     //         this.initForm();
     //       }
     //     });
-        this.initForm();
-        this.hrService.getHeaderText(this.funcID).then((res) => {
-          this.fieldHeaderTexts = res;
-        })
+    this.initForm();
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    });
   }
 
-
-  onChangeSwitch(evt, fieldName){
+  onChangeSwitch(evt, fieldName) {
     let res = evt.data;
-    if(res == true){
-      if(fieldName == 'isSubmitted'){
+    if (res == true) {
+      if (fieldName == 'isSubmitted') {
         this.documentObj.submittedDate = new Date();
         this.disabledSubmittedDate = false;
-      }
-      else if(fieldName == 'isReturned'){
+      } else if (fieldName == 'isReturned') {
         this.documentObj.returnedDate = new Date();
         this.disabledReturnedDate = false;
       }
       this.formGroup.patchValue(this.documentObj);
-    }else{
-      if(fieldName == 'isSubmitted'){
+    } else {
+      if (fieldName == 'isSubmitted') {
         this.documentObj.submittedDate = null;
         this.disabledSubmittedDate = true;
-      }
-      else if(fieldName == 'isReturned'){
+      } else if (fieldName == 'isReturned') {
         this.documentObj.returnedDate = null;
         this.disabledReturnedDate = true;
       }
@@ -112,15 +122,15 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     }
   }
 
-  onChangeDocumentType(event){
+  onChangeDocumentType(event) {
     this.GetDocumentByDocumentTypeID(event.data).subscribe((res) => {
-      if(res){
-        this.documentObj.submitWhen = res.submitWhen
-        this.documentObj.isRequired = res.isRequired
-        this.documentObj.hasReturn = res.hasReturn
-        this.formGroup.patchValue(this.documentObj)
+      if (res) {
+        this.documentObj.submitWhen = res.submitWhen;
+        this.documentObj.isRequired = res.isRequired;
+        this.documentObj.hasReturn = res.hasReturn;
+        this.formGroup.patchValue(this.documentObj);
       }
-    })
+    });
   }
 
   initForm() {
@@ -142,7 +152,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
             // this.isAfterRender = true;
           }
         });
-    } 
+    }
     // else {
     //   if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
     //     // this.formGroup.patchValue(this.documentObj);
@@ -153,7 +163,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     // }
   }
 
-  async addFiles(evt){
+  async addFiles(evt) {
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
     this.formGroup.patchValue(this.documentObj);
@@ -166,23 +176,20 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   async onSaveForm() {
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(false)
+      this.form.validation(false);
       return;
     }
-    debugger
+    debugger;
 
-
-    if(
+    if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
-      ) {
-      this.attachment.objectId=this.documentObj?.recID;
-      (await (this.attachment.saveFilesObservable())).subscribe(
-      (item2:any)=>{
-            debugger
-          });
-      }
-      
+    ) {
+      this.attachment.objectId = this.documentObj?.recID;
+      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
+        debugger;
+      });
+    }
 
     if (this.actionType === 'add' || this.actionType === 'copy') {
       // this.hrService.AddEmployeeVisaInfo(this.documentObj).subscribe((p) => {
@@ -193,31 +200,30 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       //   } else this.notify.notifyCode('SYS023');
       // });
     } else {
-      if(this.originDocumentTypeID != this.documentObj.documentTypeID){
-        this.UpdateEDocumentIdEdited(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-          } 
-          // else this.notify.notifyCode('SYS021');
-        });
-      }
-      else{
-        this.UpdateEDocument(this.formModel.currentData)
-          .subscribe((p) => {
+      if (this.originDocumentTypeID != this.documentObj.documentTypeID) {
+        this.UpdateEDocumentIdEdited(this.formModel.currentData).subscribe(
+          (p) => {
             if (p != null) {
               this.notify.notifyCode('SYS007');
               this.dialog && this.dialog.close(p);
-            } 
+            }
             // else this.notify.notifyCode('SYS021');
-          });
+          }
+        );
+      } else {
+        this.UpdateEDocument(this.formModel.currentData).subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS007');
+            this.dialog && this.dialog.close(p);
+          }
+          // else this.notify.notifyCode('SYS021');
+        });
       }
     }
   }
 
   //#region APIs
-  GetDocumentByDocumentTypeID(data){
+  GetDocumentByDocumentTypeID(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -227,7 +233,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     );
   }
 
-  AddEDocument(){
+  AddEDocument() {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -237,7 +243,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     );
   }
 
-  UpdateEDocument(data){
+  UpdateEDocument(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -247,7 +253,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     );
   }
 
-  UpdateEDocumentIdEdited(data){
+  UpdateEDocumentIdEdited(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -257,7 +263,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     );
   }
 
-  DeleteEDocument(recId){
+  DeleteEDocument(recId) {
     return this.api.execSv<any>(
       'HR',
       'HR',

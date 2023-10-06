@@ -1,26 +1,20 @@
-import { extend } from '@syncfusion/ej2-base';
-import { HttpClient } from '@angular/common/http';
 import {
   Component,
   Injector,
-  OnInit,
   Optional,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   UIComponent,
   DialogData,
   DialogRef,
-  FormModel,
   NotificationsService,
   AuthStore,
 } from 'codx-core';
-import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
+import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
-import { ApproveProcess, ResponseModel } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-view-release-sign-file',
@@ -32,18 +26,18 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   @ViewChild('popupOTPPin', { static: false }) popupOTPPin: TemplateRef<any>;
   dialogRef: DialogRef;
   signFile: any;
-  user: import("codx-core").UserModel;
+  user: import('codx-core').UserModel;
   approveProcess: ApproveProcess;
   files: any;
-  isAfterRender=false;
-  listURL=[];
+  isAfterRender = false;
+  listURL = [];
   constructor(
     private inject: Injector,
     private notify: NotificationsService,
     private authStore: AuthStore,
     private codxShareService: CodxShareService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef,
+    @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.dialogRef = dialog;
@@ -78,26 +72,25 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
     this.dialogRef && this.dialogRef.close();
   }
   ngAfterViewInit() {}
-  release(){
+  release() {
     this.codxShareService
-    .codxRelease(
-      this.approveProcess?.module,
-      this.approveProcess?.recID,
-      this.approveProcess?.category?.recID,
-      this.approveProcess?.entityName,
-      this.approveProcess?.funcID,
-      null,
-      this.approveProcess?.htmlView,
-      null
-    )
-    .subscribe((res) => {
-      if (res?.msgCodeError == null && res?.rowCount > 0) {
-        this.dialogRef && this.dialogRef.close(res);
-        
-      } else {
-        this.notify.notifyCode(res?.msgCodeError);
-        return;
-      }
-    });
+      .codxRelease(
+        this.approveProcess?.module,
+        this.approveProcess?.recID,
+        this.approveProcess?.category?.recID,
+        this.approveProcess?.entityName,
+        this.approveProcess?.funcID,
+        null,
+        this.approveProcess?.htmlView,
+        null
+      )
+      .subscribe((res) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          this.dialogRef && this.dialogRef.close(res);
+        } else {
+          this.notify.notifyCode(res?.msgCodeError);
+          return;
+        }
+      });
   }
 }

@@ -1,21 +1,41 @@
 import { NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Host, Input, OnInit, Optional, Output, ViewChild } from '@angular/core';
-import { Subject } from "rxjs";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Host,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertConfirmInputConfig, ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, TenantService, ViewsComponent } from 'codx-core';
+import {
+  AlertConfirmInputConfig,
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  TenantService,
+  ViewsComponent,
+} from 'codx-core';
 import { FolderInfo } from '@shared/models/folder.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-share/src/lib/components/viewFileDialog/systemDialog.service';
+import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import { FileInfo, ItemInterval } from '@shared/models/file.model';
 
 @Component({
   selector: 'copy',
   templateUrl: './copy.component.html',
   styleUrls: ['./copy.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CopyComponent implements OnInit {
   @Input() listFolders: any;
@@ -23,19 +43,19 @@ export class CopyComponent implements OnInit {
   @Input() formModel: any;
   @Input() type: any;
   //listFolders: FolderInfo[];
- // listFiles: FileInfo[];
+  // listFiles: FileInfo[];
   html: string;
   count: number;
   tenant: string;
   oldFolderId: string;
-  _propertyName: string = "";
-  fullName: string = "";
-  id: string = "";
-  ext: string = "";
+  _propertyName: string = '';
+  fullName: string = '';
+  id: string = '';
+  ext: string = '';
   user: any;
   item: FolderInfo;
   totalRating: number;
-  totalViews: number;  
+  totalViews: number;
   //type1: string;
   //data: any;
   //Mustache = require('mustache');
@@ -43,72 +63,67 @@ export class CopyComponent implements OnInit {
   loaded: boolean;
   loadedFile: boolean;
   loadedFolder: boolean;
-  setting: any;  
+  setting: any;
   title = 'Thông báo';
   titleFullName = 'Nhập lại tên mới';
-  titleSave = "Lưu";
-  titleMessage = "Tên bắt buộc.";
-  titleRequired = "Tên bắt buộc.";
+  titleSave = 'Lưu';
+  titleMessage = 'Tên bắt buộc.';
+  titleRequired = 'Tên bắt buộc.';
   titleDialog = 'Sao chép';
   dialog: any;
-  data: FileInfo;  
+  data: FileInfo;
   objectType: string;
   copy = false;
   interval: ItemInterval[];
   btnDisabled = false;
-//   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
-  @ViewChild('view') view!: ViewsComponent; 
-  
+  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+  @ViewChild('view') view!: ViewsComponent;
+
   @Output() eventShow = new EventEmitter<boolean>();
-  constructor(  
+  constructor(
     private folderService: FolderService,
     private fileService: FileService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
-   // private confirmationDialogService: ConfirmationDialogService,
+    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
-      this.dialog = dialog;
-      this.titleDialog = data.data.title;
-      this.objectType = data.data[0];
-      this.data = data.data[1];
-      this.id = this.data.recID;
-      this.titleDialog = data.data[2];
-      this.copy = data.data[3];
-      if (this.data != null) {
-        if (this.objectType == "file") {
-          this.fullName = this.dmSV.getFileName(this.data.fileName)
-          if (this.copy)
-            this.fileService.getFileDuplicate(this.data.fileName ,this.data.folderId).subscribe(item => {
-              if(item)
-              {
-                this.fullName = this.dmSV.getFileName(item)
+  ) {
+    this.dialog = dialog;
+    this.titleDialog = data.data.title;
+    this.objectType = data.data[0];
+    this.data = data.data[1];
+    this.id = this.data.recID;
+    this.titleDialog = data.data[2];
+    this.copy = data.data[3];
+    if (this.data != null) {
+      if (this.objectType == 'file') {
+        this.fullName = this.dmSV.getFileName(this.data.fileName);
+        if (this.copy)
+          this.fileService
+            .getFileDuplicate(this.data.fileName, this.data.folderId)
+            .subscribe((item) => {
+              if (item) {
+                this.fullName = this.dmSV.getFileName(item);
               }
               this.changeDetectorRef.detectChanges();
             });
-         
-        }  
-        else 
-          this.fullName = this.data.folderName;
-      }
-      
-      if(!this.copy)
-      {
-        this.btnDisabled = true;
-      }
-   // this.dmSV.confirmationDialogService = confirmationDialogService;
+      } else this.fullName = this.data.folderName;
+    }
+
+    if (!this.copy) {
+      this.btnDisabled = true;
+    }
+    // this.dmSV.confirmationDialogService = confirmationDialogService;
     //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.user = this.auth.get();
   }
-
-  
 
   displayThumbnail(data) {
     this.dmSV.setThumbnailWait.next(data);
@@ -117,219 +132,233 @@ export class CopyComponent implements OnInit {
   SaveData() {
     this.btnDisabled = true;
     var that = this;
-    if (this.fullName === "") {
+    if (this.fullName === '') {
       this.changeDetectorRef.detectChanges();
-      return;      
+      return;
     }
     if (this.objectType == 'file') {
       // doi ten file
       var fullName = that.fullName + that.data.extension;
       if (this.copy) {
-        this.fileService.copyFile(that.id, fullName, "").subscribe(async res => {
-          if (res.status == 0) {
-            var files = that.dmSV.listFiles;
-            if (files == null) files = [];
-            //var ret = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`
-            res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`;//"../../../assets/img/loader.gif";
-            files.push(Object.assign({}, res.data));
-            this.dmSV.listFiles = files;
-            that.dmSV.addFile.next(true);
-            that.displayThumbnail(res.data);
-            this.dialog.close();
-            that.notificationsService.notify(res.message);
-            this.btnDisabled = false;
-          }
-          else {       
-            this.titleMessage = res.message;
-            this.errorshow = true;
-            this.btnDisabled = false;
-          }
-
-          if (res.status == 6) 
-          {         
-            var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-              if(x.event.status == "Y") {
-                that.fileService.copyFile(that.id, that.fullName, "", 0, 1).subscribe(async item => {
-                  if (item.status == 0) {
-                    var files = that.dmSV.listFiles;
-                    if (files == null) files = [];
-                    let index = files.findIndex(d => d.recID.toString() === item.data.recID);
-                    if (index != -1) {
-                      item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(item.data.extension)}`;//"../../../assets/img/loader.gif";
-                      files[index] = item.data;
-                      that.displayThumbnail(item.data);
-                      that.dmSV.listFiles = files;                      
-                      that.dmSV.ChangeData.next(true);
-                    }
-
-                    this.changeDetectorRef.detectChanges();  
-                    this.dialog.close();                  
-                  }
-                  this.btnDisabled = false;
-                  that.notificationsService.notify(item.message);
-                });
-              }
-            });         
-          }
-        });
-      }
-      else {
-        // rename
-        this.fileService.renameFile(that.id, fullName).subscribe(async res => {
-          if (res.status == 0) {
-            
-            var files = that.dmSV.listFiles;
-            let index = files.findIndex(d => d.recID.toString() === this.id);
-            if (index != -1) {
-              files[index].fileName = this.fullName;
-            
-            }
-            this.dmSV.listFiles = files;
-            this.dmSV.ChangeOneFolder.next(files[index]);
-            this.changeDetectorRef.detectChanges();
-            this.dialog.close();     
-            this.btnDisabled = false;
-         //   that.notificationsService.notify(res.message);    
-          }
-          else {          
-            this.titleMessage = res.message;
-            this.errorshow = true;
-            this.btnDisabled = false;
-          }
-
-          if (res.status == 6) {     
-            var config = new AlertConfirmInputConfig();
-            config.type = "YesNo";
-            this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-              that.fileService.renameFile(that.id, res.data.fileName).subscribe(async item => {
-                if (item.status == 0) {
-                  var files = that.dmSV.listFiles;
-                  
-                  let index = files.findIndex(d => d.recID.toString() === this.id);
-                  if (index != -1) {
-                    files[index].fileName = item.data.fileName;
-                  }
-                  that.dmSV.listFiles = files;                
-                  that.changeDetectorRef.detectChanges();
-                  this.dialog.close();
-                }
-                that.notificationsService.notify(item.message);
-                this.btnDisabled = false;
-              });
-            });
-          }
-          else {
-            this.notificationsService.notify(res.message);
-            this.dialog.close();         
-            this.btnDisabled = false;
-          }
-        });
-      }
-    }
-    else {
-      this.folderService.renameFolder(that.id, that.fullName).subscribe(async res => {
-        if (res.status == 0) {
-          that.dmSV.nodeChange.next(res.data);
-          var folders = that.dmSV.listFolder;
-          //folders.forEach(item => )
-          let index = folders.findIndex(d => d.recID.toString() === that.id);
-          if (index >=0) {
-            folders[index].folderName = that.fullName;
-            
-          }
-          var obj = 
-          {
-            id : that.id,
-            name : that.fullName
-          }
-          that.dmSV.listFolder = folders;
-          that.dmSV.breadcumbChange.next(obj);
-          that.dmSV.ChangeData.next(true);
-          //that.changeDetectorRef.detectChanges();
-          this.dialog.close();
-         // that.notificationsService.notify(res.message);
-         // this.modalService.dismissAll();
-        }
-        else {
-       //   $('#fullName').addClass('form-control is-invalid');
-      //    $('#fullName').focus();
-          this.titleMessage = res.message;
-          this.errorshow = true;
-        }
-
-        // thu muc da tồn tại 
-        if (res.status == 2) {
-          that.fullName = res.data.folderName;
-          var config = new AlertConfirmInputConfig();
-          config.type = "YesNo";
-          this.notificationsService.alert(this.title, res.message, config).closed.subscribe(x => { 
-            if(x.event.status == "Y") {
+        this.fileService
+          .copyFile(that.id, fullName, '')
+          .subscribe(async (res) => {
+            if (res.status == 0) {
+              var files = that.dmSV.listFiles;
+              if (files == null) files = [];
+              //var ret = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(res.data.extension)}`
+              res.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
+                res.data.extension
+              )}`; //"../../../assets/img/loader.gif";
+              files.push(Object.assign({}, res.data));
+              this.dmSV.listFiles = files;
+              that.dmSV.addFile.next(true);
+              that.displayThumbnail(res.data);
               this.dialog.close();
-              this.folderService.renameFolder(that.id, res.data.folderName).subscribe(async item => {
-                if (item.status == 0) {
-                  // id = item.data.recID; 
-                  that.dmSV.isTree = false;
-                  that.dmSV.currentNode = '';
-                  that.dmSV.folderId.next(item.data.parentId);
-                  var folders = this.dmSV.listFolder;
-                  let index = folders.findIndex(d => d.recID.toString() === that.id);
-                  if (index > -1) {
-                    folders[index] = item.data;
-                    that.dmSV.nodeChange.next(folders[index]);
-                    that.dmSV.ChangeOneFolder.next(folders[index]);
+              that.notificationsService.notify(res.message);
+              this.btnDisabled = false;
+            } else {
+              this.titleMessage = res.message;
+              this.errorshow = true;
+              this.btnDisabled = false;
+            }
+
+            if (res.status == 6) {
+              var config = new AlertConfirmInputConfig();
+              config.type = 'YesNo';
+              this.notificationsService
+                .alert(this.title, res.message, config)
+                .closed.subscribe((x) => {
+                  if (x.event.status == 'Y') {
+                    that.fileService
+                      .copyFile(that.id, that.fullName, '', 0, 1)
+                      .subscribe(async (item) => {
+                        if (item.status == 0) {
+                          var files = that.dmSV.listFiles;
+                          if (files == null) files = [];
+                          let index = files.findIndex(
+                            (d) => d.recID.toString() === item.data.recID
+                          );
+                          if (index != -1) {
+                            item.data.thumbnail = `../../../assets/themes/dm/default/img/${this.dmSV.getAvatar(
+                              item.data.extension
+                            )}`; //"../../../assets/img/loader.gif";
+                            files[index] = item.data;
+                            that.displayThumbnail(item.data);
+                            that.dmSV.listFiles = files;
+                            that.dmSV.ChangeData.next(true);
+                          }
+
+                          this.changeDetectorRef.detectChanges();
+                          this.dialog.close();
+                        }
+                        this.btnDisabled = false;
+                        that.notificationsService.notify(item.message);
+                      });
                   }
-                  that.dmSV.listFolder = folders;                    
-                //  that.modalService.dismissAll();                      
-                  that.changeDetectorRef.detectChanges();
-                }
-                else {
-                  that.titleMessage = item.message;
-                  that.errorshow = true;
-                  that.notificationsService.notify(item.message);
+                });
+            }
+          });
+      } else {
+        // rename
+        this.fileService
+          .renameFile(that.id, fullName)
+          .subscribe(async (res) => {
+            if (res.status == 0) {
+              var files = that.dmSV.listFiles;
+              let index = files.findIndex(
+                (d) => d.recID.toString() === this.id
+              );
+              if (index != -1) {
+                files[index].fileName = this.fullName;
+              }
+              this.dmSV.listFiles = files;
+              this.dmSV.ChangeOneFolder.next(files[index]);
+              this.changeDetectorRef.detectChanges();
+              this.dialog.close();
+              this.btnDisabled = false;
+              //   that.notificationsService.notify(res.message);
+            } else {
+              this.titleMessage = res.message;
+              this.errorshow = true;
+              this.btnDisabled = false;
+            }
+
+            if (res.status == 6) {
+              var config = new AlertConfirmInputConfig();
+              config.type = 'YesNo';
+              this.notificationsService
+                .alert(this.title, res.message, config)
+                .closed.subscribe((x) => {
+                  that.fileService
+                    .renameFile(that.id, res.data.fileName)
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        var files = that.dmSV.listFiles;
+
+                        let index = files.findIndex(
+                          (d) => d.recID.toString() === this.id
+                        );
+                        if (index != -1) {
+                          files[index].fileName = item.data.fileName;
+                        }
+                        that.dmSV.listFiles = files;
+                        that.changeDetectorRef.detectChanges();
+                        this.dialog.close();
+                      }
+                      that.notificationsService.notify(item.message);
+                      this.btnDisabled = false;
+                    });
+                });
+            } else {
+              this.notificationsService.notify(res.message);
+              this.dialog.close();
+              this.btnDisabled = false;
+            }
+          });
+      }
+    } else {
+      this.folderService
+        .renameFolder(that.id, that.fullName)
+        .subscribe(async (res) => {
+          if (res.status == 0) {
+            that.dmSV.nodeChange.next(res.data);
+            var folders = that.dmSV.listFolder;
+            //folders.forEach(item => )
+            let index = folders.findIndex(
+              (d) => d.recID.toString() === that.id
+            );
+            if (index >= 0) {
+              folders[index].folderName = that.fullName;
+            }
+            var obj = {
+              id: that.id,
+              name: that.fullName,
+            };
+            that.dmSV.listFolder = folders;
+            that.dmSV.breadcumbChange.next(obj);
+            that.dmSV.ChangeData.next(true);
+            //that.changeDetectorRef.detectChanges();
+            this.dialog.close();
+            // that.notificationsService.notify(res.message);
+            // this.modalService.dismissAll();
+          } else {
+            //   $('#fullName').addClass('form-control is-invalid');
+            //    $('#fullName').focus();
+            this.titleMessage = res.message;
+            this.errorshow = true;
+          }
+
+          // thu muc da tồn tại
+          if (res.status == 2) {
+            that.fullName = res.data.folderName;
+            var config = new AlertConfirmInputConfig();
+            config.type = 'YesNo';
+            this.notificationsService
+              .alert(this.title, res.message, config)
+              .closed.subscribe((x) => {
+                if (x.event.status == 'Y') {
+                  this.dialog.close();
+                  this.folderService
+                    .renameFolder(that.id, res.data.folderName)
+                    .subscribe(async (item) => {
+                      if (item.status == 0) {
+                        // id = item.data.recID;
+                        that.dmSV.isTree = false;
+                        that.dmSV.currentNode = '';
+                        that.dmSV.folderId.next(item.data.parentId);
+                        var folders = this.dmSV.listFolder;
+                        let index = folders.findIndex(
+                          (d) => d.recID.toString() === that.id
+                        );
+                        if (index > -1) {
+                          folders[index] = item.data;
+                          that.dmSV.nodeChange.next(folders[index]);
+                          that.dmSV.ChangeOneFolder.next(folders[index]);
+                        }
+                        that.dmSV.listFolder = folders;
+                        //  that.modalService.dismissAll();
+                        that.changeDetectorRef.detectChanges();
+                      } else {
+                        that.titleMessage = item.message;
+                        that.errorshow = true;
+                        that.notificationsService.notify(item.message);
+                      }
+                    });
                 }
               });
-            }
-         
-          });
-        }
-        else {
-          this.notificationsService.notify(res.message);
-          this.dialog.close();
-        //  this.modalService.dismissAll();
-        }
-      });
+          } else {
+            this.notificationsService.notify(res.message);
+            this.dialog.close();
+            //  this.modalService.dismissAll();
+          }
+        });
     }
   }
 
-  checkFolderName() {     
-    if (this.fullName === "")
-      return "1";  
-    else
-      return "0";
+  checkFolderName() {
+    if (this.fullName === '') return '1';
+    else return '0';
   }
 
-  validate(item) {  
+  validate(item) {
     this.errorshow = false;
-    switch (item) {  
-      case "fullName":
-        if (this.checkFolderName() != "0") {        
-          return "w-100 border border-danger is-invalid";       
+    switch (item) {
+      case 'fullName':
+        if (this.checkFolderName() != '0') {
+          return 'w-100 border border-danger is-invalid';
+        } else {
+          return 'w-100';
         }
-        else {
-          return "w-100";      
-        }
-    }  
-    return "";    
+    }
+    return '';
   }
 
   changeValue($event, type) {
-    switch(type) {
-      case "fullName":
-      {
-        this.fullName = $event.data;  
-        if(!this.copy) this.btnDisabled = false;
+    switch (type) {
+      case 'fullName': {
+        this.fullName = $event.data;
+        if (!this.copy) this.btnDisabled = false;
         break;
       }
     }

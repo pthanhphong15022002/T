@@ -17,7 +17,7 @@ import { CRUDService } from 'codx-core';
   styleUrls: ['./campaigns-detail.component.scss'],
 })
 export class CampaignsDetailComponent implements OnInit {
-  @ViewChild('elementNote')
+  @ViewChild('elementNote', { read: ElementRef })
   elementNote: ElementRef<HTMLElement>;
 
   @Input() dataSelected: any;
@@ -27,14 +27,13 @@ export class CampaignsDetailComponent implements OnInit {
   @Input() isDoubleClick: boolean = false;
   @Output() clickMoreFunc = new EventEmitter<any>();
 
-
   id: any;
   loaded: boolean;
 
   isCollapsed: boolean = false;
   isCollapsable: boolean = false;
   isShow = false;
-
+  overflowed = false;
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -67,6 +66,8 @@ export class CampaignsDetailComponent implements OnInit {
         this.loaded = false;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.isCollapsed = false;
+        this.isCollapsable = false;
 
         this.loaded = true;
         setTimeout(() => {
@@ -77,13 +78,12 @@ export class CampaignsDetailComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    const element: HTMLElement = this.elementNote?.nativeElement;
+    this.overflowed = element?.scrollHeight > element?.clientHeight;
     this.detectorRef.detectChanges();
   }
 
   seeMore(id) {
-    this.isCollapsed = false;
-    this.isCollapsable = false;
-
     let element = document.getElementById('elementNote');
     if (element) {
       let height = element.offsetHeight
@@ -107,7 +107,6 @@ export class CampaignsDetailComponent implements OnInit {
 
   clickMF(e, data) {
     this.clickMoreFunc.emit({ e: e, data: data });
-
   }
 
   //#region event element HTML

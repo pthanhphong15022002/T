@@ -13,13 +13,11 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
-  Util,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { WR_WorkOrderUpdates } from '../../_models-wr/wr-model.model';
-import moment from 'moment';
-import { firstValueFrom } from 'rxjs';
 import { CodxWrService } from '../../codx-wr.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-update-reasoncode',

@@ -18,7 +18,6 @@ import {
   DialogModel,
 } from 'codx-core';
 import moment from 'moment';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import {
   CO_Meetings,
   CO_Permissions,
@@ -29,6 +28,7 @@ import {
 import { CO_MeetingTemplates } from '../models/CO_MeetingTemplates.model';
 import { CodxTMService } from 'projects/codx-tm/src/lib/codx-tm.service';
 import { TemplateComponent } from '../template/template.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'lib-popup-add-meeting',

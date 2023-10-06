@@ -62,7 +62,7 @@
     <div class="col-3">
       <div>
         <codx-label
-          fiedName="StartDate"
+          name="StartTime"
           [formModel]="form.formModel"
           default="Từ giờ"
         >
@@ -72,7 +72,7 @@
         type="datetime"
         [crrValue]="startTime"
         format="t"
-        placeholder="timefrom"
+        placeholder="pTimeFrom"
         (valueChange)="valueStartTimeChange($event)"
       >
       </codx-input>
@@ -80,7 +80,7 @@
     <div class="col-3">
       <div>
         <codx-label
-          fiedName="EndDate"
+          name="endTime"
           [formModel]="form.formModel"
           default="Đến giờ"
         >
@@ -90,7 +90,7 @@
         type="datetime"
         [crrValue]="endTime"
         format="t"
-        placeholder="timefrom"
+        placeholder="pTimeFrom"
         (valueChange)="valueEndTimeChange($event)"
       >
       </codx-input>

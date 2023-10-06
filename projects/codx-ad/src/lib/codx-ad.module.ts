@@ -39,7 +39,7 @@ import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
 import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';

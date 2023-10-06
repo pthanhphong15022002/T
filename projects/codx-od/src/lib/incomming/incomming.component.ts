@@ -6,7 +6,6 @@ import {
   OnChanges,
   SimpleChanges,
   Injector,
-  Input,
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
@@ -15,10 +14,8 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
-  CodxService,
   CodxTreeviewComponent,
   DataRequest,
-  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
@@ -26,7 +23,6 @@ import {
   SidebarModel,
   UIComponent,
   ViewModel,
-  ViewsComponent,
   ViewType,
 } from 'codx-core';
 import {
@@ -34,7 +30,6 @@ import {
   convertHtmlAgency,
   extractContent,
   formatBytes,
-  formatDtDis,
   getIdUser,
   getListImg,
 } from '../function/default.function';
@@ -44,14 +39,13 @@ import { DispatchService } from '../services/dispatch.service';
 import { FileService } from '@shared/services/file.service';
 import { IncommingAddComponent } from './incomming-add/incomming-add.component';
 import { ViewDetailComponent } from './view-detail/view-detail.component';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { CodxOdService } from '../codx-od.service';
 import { isObservable } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
 import { ApprovalStepComponent } from './approval-step/approval-step.component';
+import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
 
 @Component({
   selector: 'app-incomming',
@@ -75,7 +69,6 @@ export class IncommingComponent
   @ViewChild('viewdetail') viewdetail!: ViewDetailComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
 
-
   public lstDtDis: any;
   public lstUserID: any = '';
   public disEdit: any;
@@ -91,14 +84,14 @@ export class IncommingComponent
   public switchTemplate = 'new';
   public objectIDFile: any;
   public objectType = 'OD_Dispatches';
-  recID:any;
+  recID: any;
   dialog!: DialogRef;
   button?: ButtonModel;
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   userPermission: any;
   checkUserPer: any;
-  defaultValue:any;
+  defaultValue: any;
   compareDate = compareDate;
   formatBytes = formatBytes;
   extractContent = extractContent;
@@ -125,7 +118,7 @@ export class IncommingComponent
   dataItem: any;
   funcList: any;
   userID: any;
-  textLabelAdd:any ;
+  textLabelAdd: any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -153,10 +146,9 @@ export class IncommingComponent
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
     this.authStore = inject.get(AuthStore);
-    
+
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
-    
   }
   ngOnChanges(changes: SimpleChanges): void {}
 
@@ -174,9 +166,8 @@ export class IncommingComponent
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
     this.userID = this.authStore.get().userID;
-   
   }
- 
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -213,47 +204,45 @@ export class IncommingComponent
   }
 
   click(evt: ButtonModel) {
-    if(!this.textLabelAdd) this.textLabelAdd = evt.text;
+    if (!this.textLabelAdd) this.textLabelAdd = evt.text;
     switch (evt.id) {
       case 'btnAdd':
         this.show();
         break;
     }
   }
-  dbClick(data:any)
-  {
-    var func = 
-    {
-      data:{customName: 'Xem chi tiết'},
-      functionID : 'read'
+  dbClick(data: any) {
+    var func = {
+      data: { customName: 'Xem chi tiết' },
+      functionID: 'read',
     };
-    this.openFormFuncID(func, data)
+    this.openFormFuncID(func, data);
   }
-  
+
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       // option.zIndex = 499;
       option.DataService = this.view?.currentView?.dataService;
-      var defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
+      var defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,
         {
           gridViewSetup: this.gridViewSetup,
-          headerText: this.textLabelAdd + " " + (this.funcList?.customName).toLowerCase(),
+          headerText:
+            this.textLabelAdd + ' ' + (this.funcList?.customName).toLowerCase(),
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
           service: this.view.service,
           dispatchType: defaultValue,
           data: res,
-          defaultValue: this.defaultValue
+          defaultValue: this.defaultValue,
         },
         option
       );
       this.dialog.closed.subscribe((x) => {
         if (x.event) {
-          
           delete x.event._uuid;
           this.view.dataService.add(x.event, 0).subscribe((item) => {
             this.view.dataService.onAction.next({
@@ -266,100 +255,109 @@ export class IncommingComponent
       });
     });
   }
-  
+
   changeDataMF(e: any, data: any) {
-    var funcList = this.codxODService.loadFunctionList(this.view.formModel.funcID);
-    if(isObservable(funcList))
-    {
-      funcList.subscribe(fc=>{
-        this.changeDataMFBefore(e,data,fc);
-      })
-    }
-    else this.changeDataMFBefore(e,data,funcList);
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
   }
 
-  changeDataMFBefore(e: any, data: any , fc:any)
-  {
-    if(fc.runMode == "1")
-    {
-      this.shareService.changeMFApproval(e,data.unbounds);
-    }
-    else
-    {
-      var defaultValue = (fc?.defaultValue ?? "").split(";")[0];
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.shareService.changeMFApproval(e, data.unbounds);
+    } else {
+      var defaultValue = (fc?.defaultValue ?? '').split(';')[0];
       //Bookmark
       var bm = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009" || x.functionID == "ODT5109"  || x.functionID == "ODT5210"
+          x.functionID == 'ODT110' ||
+          x.functionID == 'ODT209' ||
+          x.functionID == 'ODT3009' ||
+          x.functionID == 'ODT5109' ||
+          x.functionID == 'ODT5210'
       );
       //Unbookmark
       var unbm = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010" || x.functionID == "ODT5110" || x.functionID == "ODT5211" 
+          x.functionID == 'ODT111' ||
+          x.functionID == 'ODT210' ||
+          x.functionID == 'ODT3010' ||
+          x.functionID == 'ODT5110' ||
+          x.functionID == 'ODT5211'
       );
       if (data?.isBookmark) {
-        if(bm[0]) bm[0].disabled = true;
-        if(unbm[0]) unbm[0].disabled = false;
-      } else  {
-        if(unbm[0]) unbm[0].disabled = true;
-        if(bm[0]) bm[0].disabled = false;
+        if (bm[0]) bm[0].disabled = true;
+        if (unbm[0]) unbm[0].disabled = false;
+      } else {
+        if (unbm[0]) unbm[0].disabled = true;
+        if (bm[0]) bm[0].disabled = false;
       }
 
-      if(defaultValue == '2' || defaultValue == '3')
-      {
-        if(data?.status != '1' && data?.status != '2' && data?.approveStatus != '2')
-        {
+      if (defaultValue == '2' || defaultValue == '3') {
+        if (
+          data?.status != '1' &&
+          data?.status != '2' &&
+          data?.approveStatus != '2'
+        ) {
           var approvel = e.filter(
-            (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
+            (x: { functionID: string }) =>
+              x.functionID == 'ODT201' || x.functionID == 'ODT5101'
           );
-          if(approvel[0]) approvel[0].disabled = true;
+          if (approvel[0]) approvel[0].disabled = true;
         }
 
         //Hủy yêu cầu duyệt
         var approvel = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT212' ||
+            x.functionID == 'ODT3012' ||
+            x.functionID == 'ODT5112'
         );
-        for(var i = 0 ; i< approvel.length ; i++)
-        {
+        for (var i = 0; i < approvel.length; i++) {
           approvel[i].disabled = true;
         }
 
-        if(data?.approveStatus == '3' && data?.createdBy == this.userID)
-        {
+        if (data?.approveStatus == '3' && data?.createdBy == this.userID) {
           var approvel = e.filter(
-            (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012" || x.functionID == 'ODT5112'
+            (x: { functionID: string }) =>
+              x.functionID == 'ODT212' ||
+              x.functionID == 'ODT3012' ||
+              x.functionID == 'ODT5112'
           );
-          for(var i = 0 ; i< approvel.length ; i++)
-          {
+          for (var i = 0; i < approvel.length; i++) {
             approvel[i].disabled = false;
           }
         }
 
         //Hiện thị chức năng gửi duyệt khi xét duyệt
-        if(data?.approveStatus == '1' && data?.status == '3' )
-        {
-            //Chức năng Gửi duyệt
-            var approvel = e.filter(
-              (x: { functionID: string }) => x.functionID == 'ODT201' || x.functionID == 'ODT5101' 
-            );
-            if (approvel[0]) approvel[0].disabled = false;
+        if (data?.approveStatus == '1' && data?.status == '3') {
+          //Chức năng Gửi duyệt
+          var approvel = e.filter(
+            (x: { functionID: string }) =>
+              x.functionID == 'ODT201' || x.functionID == 'ODT5101'
+          );
+          if (approvel[0]) approvel[0].disabled = false;
         }
       }
 
-      //Từ chối , Bị đóng 
-      if(data?.status == "9" || data?.approveStatus == "4")
-      {
+      //Từ chối , Bị đóng
+      if (data?.status == '9' || data?.approveStatus == '4') {
         var approvel = e.filter(
-          (x: { functionID: string }) => 
-            x.functionID == 'ODT112' || 
-            x.functionID == 'ODT211' || 
-            x.functionID == 'ODT103' || 
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT112' ||
+            x.functionID == 'ODT211' ||
+            x.functionID == 'ODT103' ||
             x.functionID == 'ODT202' ||
-            x.functionID == 'SYS03'  ||
+            x.functionID == 'SYS03' ||
             x.functionID == 'ODT103' ||
             x.functionID == 'ODT202'
         );
-        if(approvel && approvel.length > 0)
+        if (approvel && approvel.length > 0)
           for (var i = 0; i < approvel.length; i++) {
             approvel[i].disabled = true;
           }
@@ -390,13 +388,15 @@ export class IncommingComponent
         });
       }
       var approvelCL = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT114' || x.functionID == "ODT5214"
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT114' || x.functionID == 'ODT5214'
       );
       if (approvelCL[0]) approvelCL[0].disabled = true;
       //Trả lại
       if (data?.status == '4') {
         var approvel = e.filter(
-          (x: { functionID: string }) => x.functionID == 'ODT113' || x.functionID == "ODT5213"
+          (x: { functionID: string }) =>
+            x.functionID == 'ODT113' || x.functionID == 'ODT5213'
         );
         if (approvel[0]) approvel[0].disabled = true;
         if (approvelCL[0]) approvelCL[0].disabled = false;
@@ -421,129 +421,112 @@ export class IncommingComponent
 
   getGridViewSetup(funcID: any) {
     var funcList = this.codxODService.loadFunctionList(funcID);
-    if(isObservable(funcList))
-    {
+    if (isObservable(funcList)) {
       this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
         this.funcList = fuc;
-        this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
-        var gw =  this.codxODService.loadGridView(fuc?.formName, fuc?.gridViewName)
-        if(isObservable(gw))
-        {
+        this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
+        var gw = this.codxODService.loadGridView(
+          fuc?.formName,
+          fuc?.gridViewName
+        );
+        if (isObservable(gw)) {
           gw.subscribe((grd) => {
             this.gridViewSetup = grd;
-            this.loadDataFormGridView()
+            this.loadDataFormGridView();
           });
-        }
-        else
-        {
+        } else {
           this.gridViewSetup = gw;
-          this.loadDataFormGridView()
+          this.loadDataFormGridView();
         }
-       
       });
-    }
-    else
-    {
+    } else {
       this.funcList = funcList;
-      this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
-      var gw =  this.codxODService.loadGridView(this.funcList?.formName, this.funcList?.gridViewName)
-      if(isObservable(gw))
-      {
+      this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
+      var gw = this.codxODService.loadGridView(
+        this.funcList?.formName,
+        this.funcList?.gridViewName
+      );
+      if (isObservable(gw)) {
         gw.subscribe((grd) => {
           this.gridViewSetup = grd;
-          this.loadDataFormGridView()
+          this.loadDataFormGridView();
         });
-      }
-      else
-      {
+      } else {
         this.gridViewSetup = gw;
-        this.loadDataFormGridView()
+        this.loadDataFormGridView();
       }
     }
 
     var vllRelType = this.codxODService.loadValuelist('OD008');
-    if(isObservable(vllRelType))
-    {
+    if (isObservable(vllRelType)) {
       vllRelType.subscribe((item) => {
         this.dvlRelType = item;
       });
-    }
-    else this.dvlRelType = vllRelType;
+    } else this.dvlRelType = vllRelType;
 
     var vllStatusRel = this.codxODService.loadValuelist('OD009');
-    if(isObservable(vllStatusRel))
-    {
+    if (isObservable(vllStatusRel)) {
       vllStatusRel.subscribe((item) => {
         this.dvlStatusRel = item;
       });
-    }
-    else this.dvlStatusRel = vllRelType;
-   
+    } else this.dvlStatusRel = vllRelType;
+
     var vllReCall = this.codxODService.loadValuelist('OD010');
-    if(isObservable(vllReCall))
-    {
+    if (isObservable(vllReCall)) {
       vllReCall.subscribe((item) => {
         this.dvlReCall = item;
       });
-    }
-    else this.dvlReCall = vllRelType;
+    } else this.dvlReCall = vllRelType;
 
-    var vllStatusTM  = this.codxODService.loadValuelist('L0614');
-    if(isObservable(vllStatusTM))
-    {
+    var vllStatusTM = this.codxODService.loadValuelist('L0614');
+    if (isObservable(vllStatusTM)) {
       vllStatusTM.subscribe((item) => {
         this.dvlStatusTM = item;
       });
-    }
-    else this.dvlStatusTM = vllRelType;
+    } else this.dvlStatusTM = vllRelType;
     //formName: string, gridName: string
   }
 
-  loadDataFormGridView()
-  {
-    if (this.gridViewSetup['Security']['referedValue'])
-    {
-      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Security']['referedValue']);
-      if(isObservable(vll))
-      {
+  loadDataFormGridView() {
+    if (this.gridViewSetup['Security']['referedValue']) {
+      var vll = this.codxODService.loadValuelist(
+        this.gridViewSetup['Security']['referedValue']
+      );
+      if (isObservable(vll)) {
         vll.subscribe((item) => {
           this.dvlSecurity = item;
         });
-      }
-      else this.dvlSecurity = vll;
+      } else this.dvlSecurity = vll;
     }
-    if (this.gridViewSetup['Urgency']['referedValue'])
-    {
-      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Urgency']['referedValue']);
-      if(isObservable(vll))
-      {
+    if (this.gridViewSetup['Urgency']['referedValue']) {
+      var vll = this.codxODService.loadValuelist(
+        this.gridViewSetup['Urgency']['referedValue']
+      );
+      if (isObservable(vll)) {
         vll.subscribe((item) => {
           this.dvlUrgency = item;
         });
-      }
-      else this.dvlUrgency = vll;
+      } else this.dvlUrgency = vll;
     }
-    if (this.gridViewSetup['Status']['referedValue'])
-    {
-      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Status']['referedValue']);
-      if(isObservable(vll))
-      {
+    if (this.gridViewSetup['Status']['referedValue']) {
+      var vll = this.codxODService.loadValuelist(
+        this.gridViewSetup['Status']['referedValue']
+      );
+      if (isObservable(vll)) {
         vll.subscribe((item) => {
           this.dvlStatus = item;
         });
-      }
-      else this.dvlStatus = vll;
+      } else this.dvlStatus = vll;
     }
-    if (this.gridViewSetup['Category']['referedValue'])
-    {
-      var vll = this.codxODService.loadValuelist(this.gridViewSetup['Category']['referedValue']);
-      if(isObservable(vll))
-      {
+    if (this.gridViewSetup['Category']['referedValue']) {
+      var vll = this.codxODService.loadValuelist(
+        this.gridViewSetup['Category']['referedValue']
+      );
+      if (isObservable(vll)) {
         vll.subscribe((item) => {
           this.dvlCategory = item;
         });
-      }
-      else this.dvlCategory = vll;
+      } else this.dvlCategory = vll;
     }
   }
   //Mở form
@@ -563,7 +546,7 @@ export class IncommingComponent
   }
 
   //Hàm lấy thông tin chi tiết của công văn
-  getDtDis(id: any,data:any = null) {
+  getDtDis(id: any, data: any = null) {
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
@@ -582,27 +565,23 @@ export class IncommingComponent
       predicates = ['Status=@0'];
       dataValues = [status];
     }
-    this.view.dataService
-      .setPredicates(predicates, dataValues,item => {
-        this.lstDtDis = item[0];
-      });
+    this.view.dataService.setPredicates(predicates, dataValues, (item) => {
+      this.lstDtDis = item[0];
+    });
     this.activeDiv = status;
   }
 
   valueChange(dt: any) {
     var recID = null;
 
-    if (dt?.data) 
-    {
+    if (dt?.data) {
       recID = dt.data.recID;
       this.dataItem = dt?.data;
-    } 
-    else if (dt?.recID) 
-    {
+    } else if (dt?.recID) {
       recID = dt.recID;
       this.dataItem = dt;
     }
-    if(this.lstDtDis?.recID != recID) this.getDtDis(recID,this.dataItem);
+    if (this.lstDtDis?.recID != recID) this.getDtDis(recID, this.dataItem);
   }
   fileAdded(event: any) {
     this.fileAdd = event.data;
@@ -635,7 +614,7 @@ export class IncommingComponent
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
     //this.button.disabled = false;
-    if(funcID == 'ODT81') this.button.disabled = true;
+    if (funcID == 'ODT81') this.button.disabled = true;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;
   }
@@ -645,17 +624,16 @@ export class IncommingComponent
     }
     return '';
   }
-  browsingProcess(recID:any,approveStatus:any)
-  {
+  browsingProcess(recID: any, approveStatus: any) {
     this.dialog = this.callfunc.openForm(
       ApprovalStepComponent,
-      "",
+      '',
       500,
       700,
       this.view?.formModel?.funcID,
       {
         transID: recID,
-        approveStatus: approveStatus
+        approveStatus: approveStatus,
       }
     );
   }

@@ -1,105 +1,47 @@
-<codx-views
-  #view
-  entityName="AD_Users"
-  service="SYS"
-  assemblyName="ERM.Business.AD"
-  className="UsersBusiness"
-  method="GetListUserAsync"
-  [views]="views"
-  idField="userID"
-  [selectedFirst]="true"
-  [button]="button"
-  (buttonClick)="pleaseUse($event)"
-  (viewChanged)="changeView($event)"
-  (selectedChange)="selectedChange($event)"
-  (doubleClick)="viewInfo('view', $event)"
->
+<codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
+  method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
+  (buttonClick)="pleaseUse($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)"
+  (doubleClick)="viewInfo('view', $event)">
 </codx-views>
 
 <ng-template #itemTemplate let-data>
   <div class="pt-3 px-5 rounded-2">
     <div class="d-flex justify-content-between align-items-center flex-wrap">
       <div class="justify-content-start min-w-450px mb-3">
-        <codx-temp-full
-          cardCss="card-template"
-          [imageId]="data?.userID"
-          imageObjType="AD_Users"
-          [titleTmp]="titleTmp"
-          [desc]="convertHtmlAgency(data.buName)"
-          [formModel]="view.formModel"
-          [dataItem]="data"
-          [footer]="footer"
-          [imgOn]="data?.modifiedOn"
-          #tempFull
-          [hideMF]="true"
-          [imageObjName]="data?.userName"
-        >
+        <codx-temp-full cardCss="card-template" [imageId]="data?.userID" imageObjType="AD_Users" [titleTmp]="titleTmp"
+          [desc]="convertHtmlAgency(data.buName)" [formModel]="view.formModel" [dataItem]="data" [footer]="footer"
+          [imgOn]="data?.modifiedOn" #tempFull [hideMF]="true" [imageObjName]="data?.userName">
         </codx-temp-full>
       </div>
       <div class="d-flex justify-content-end mb-3">
         <div class="d-flex flex-wrap align-items-center">
           <div class="flex">
-            <div
-              class=""
-              *ngIf="data.chooseRoles && data.chooseRoles.length <= 5"
-            >
-              <ng-container
-                class="container"
-                *ngFor="let item of data.chooseRoles; index as num"
-              >
+            <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length <= 5">
+              <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
                 <a>
-                  <img
-                    [ngbPopover]="item.customName"
-                    triggers="mouseenter:mouseleave"
-                    placement="bottom"
-                    [autoClose]="'outside'"
-                    class="w-30px me-2"
-                    container="body"
-                    src="/{{ item.smallIcon }}"
-                  />
+                  <img [ngbPopover]="item.customName" triggers="mouseenter:mouseleave" placement="bottom"
+                    [autoClose]="'outside'" class="w-30px me-2" container="body" src="/{{ item.smallIcon }}" />
                 </a>
               </ng-container>
             </div>
-            <div
-              class=""
-              *ngIf="data.chooseRoles && data.chooseRoles.length > 5"
-            >
-              <ng-container
-                class="container"
-                *ngFor="let item of data.chooseRoles; index as num"
-              >
-                <a
-                  *ngIf="
+            <div class="" *ngIf="data.chooseRoles && data.chooseRoles.length > 5">
+              <ng-container class="container" *ngFor="let item of data.chooseRoles; index as num">
+                <a *ngIf="
                     num < 5 || (num == 5 && data?.chooseRoles?.length == 6)
-                  "
-                >
-                  <img
-                    [ngbPopover]="item.customName"
-                    triggers="mouseenter:mouseleave"
-                    placement="bottom"
-                    [autoClose]="'outside'"
-                    class="w-30px"
-                    container="body"
-                    src="../../../{{ item.smallIcon }}"
-                  />
+                  ">
+                  <img [ngbPopover]="item.customName" triggers="mouseenter:mouseleave" placement="bottom"
+                    [autoClose]="'outside'" class="w-30px" container="body" src="../../../{{ item.smallIcon }}" />
                 </a>
               </ng-container>
               <ng-container *ngIf="data?.chooseRoles?.length > 6">
-                <span
-                  [ngbPopover]="manyModule"
-                  [autoClose]="'outside'"
-                  class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px"
-                >
+                <span [ngbPopover]="manyModule" [autoClose]="'outside'"
+                  class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px">
                   +{{ data.chooseRoles && data.chooseRoles.length - 5 }}
                 </span>
                 <ng-template #manyModule>
                   <div *ngFor="let item of data.chooseRoles">
                     <div class="d-flex align-items-center mb-4">
-                      <img
-                        class="w-30px me-3"
-                        src="../../../{{ item.smallIcon }}"
-                        alt=""
-                      />
+                      <img class="w-30px me-3" src="../../../{{ item.smallIcon }}" alt="" />
                       <div class="d-flex flex-column w-100">
                         <div class="fw-bold text-dark">
                           {{ item.customName }}
@@ -115,12 +57,7 @@
             </div>
           </div>
           <div class="d-flex flex-column text-right ms-6">
-            <codx-vll
-              [name]="'AD002'"
-              [value]="data.status"
-              [showText]="true"
-              [showBgColor]="true"
-            >
+            <codx-vll [name]="'AD002'" [value]="data.status" [showText]="true" [showBgColor]="true">
             </codx-vll>
           </div>
 
@@ -137,7 +74,7 @@
                 {{ data?.status | vll : "AD002" : "text" | async }}
               </span>
               <div class="text-gray-500 fs-7">
-                {{ data.activeOn | timefrom }}
+                {{ data.activeOn | pTimeFrom }}
               </div>
             </div>
             <ng-template #stopTrue>
@@ -171,13 +108,8 @@
           </div> -->
         </div>
         <div class="w-10px min-w-10px">
-          <codx-mfunc
-            [formModel]="view.formModel"
-            (clickMF)="clickMF($event, data)"
-            [dataItem]="data"
-            (changeDataMF)="changeDataMF($event, data)"
-            type="hover"
-          >
+          <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+            (changeDataMF)="changeDataMF($event, data)" type="hover">
           </codx-mfunc>
         </div>
       </div>
@@ -191,29 +123,17 @@
     <div class="text-dark fw-bold fs-6 line-clamp line-clamp-1 me-2">
       {{ data.userName }}
     </div>
-    <div
-      class="badge border badge-white d-flex align-items-center me-2"
-      *ngIf="data.employeeID"
-    >
+    <div class="badge border badge-white d-flex align-items-center me-2" *ngIf="data.employeeID">
       <span class="icon-account_box icon-14 me-1"></span>
       {{ data.employeeID }}
     </div>
 
-    <div
-      class="badge badge-light-primary d-flex align-items-center me-2"
-      *ngIf="data.groupName"
-    >
-      <span class="icon-group icon-14 me-1"></span
-      ><span>{{ data.groupName }}</span>
+    <div class="badge badge-light-primary d-flex align-items-center me-2" *ngIf="data.groupName">
+      <span class="icon-group icon-14 me-1"></span><span>{{ data.groupName }}</span>
     </div>
     <div *ngIf="data?.administrator">
-      <codx-vll
-        [name]="'AD013'"
-        [value]="1"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light-primary d-flex align-items-center me-2"
-      >
+      <codx-vll [name]="'AD013'" [value]="1" [showText]="true" [showBgColor]="true"
+        class="badge badge-light-primary d-flex align-items-center me-2">
       </codx-vll>
     </div>
   </div>

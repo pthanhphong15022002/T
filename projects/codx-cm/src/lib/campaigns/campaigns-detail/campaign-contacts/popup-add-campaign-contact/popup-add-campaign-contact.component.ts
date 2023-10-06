@@ -19,7 +19,7 @@ import { CodxCmService } from 'projects/codx-cm/src/projects';
 @Component({
   selector: 'lib-popup-add-campaign-contact',
   templateUrl: './popup-add-campaign-contact.component.html',
-  styleUrls: ['./popup-add-campaign-contact.component.css'],
+  styleUrls: ['./popup-add-campaign-contact.component.scss'],
 })
 export class PopupAddCampaignContactComponent implements OnInit {
   @ViewChild('cbxProvince') cbxProvince: CodxDropdownSelectComponent;
@@ -48,6 +48,20 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   countChange = 0; //Để check lần change
   gridViewSetup: any;
+  title = '';
+
+  tabInfo: any[] = [
+    {
+      icon: 'icon-info',
+      text: 'Tiêu chí thêm',
+      name: 'Description',
+    },
+    {
+      icon: 'icon-rule',
+      text: 'Danh sách khách hàng tiềm năng',
+      name: 'ListCustomers',
+    },
+  ];
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -79,6 +93,11 @@ export class PopupAddCampaignContactComponent implements OnInit {
           }
         });
     }
+  }
+
+  setTitle() {
+    this.title = this.titleAction;
+    this.detector.detectChanges();
   }
 
   //#region save
@@ -196,18 +215,33 @@ export class PopupAddCampaignContactComponent implements OnInit {
         break;
       case 'isDistrict':
         if (!this.isDistrict) {
+          if (this.cbxDistrict) {
+            this.cbxDistrict.value = [];
+            this.cbxDistrict.selectedItems = [];
+            this.cbxDistrict.setValue('');
+          }
           this.districtIDs = [];
           this.bindingCountCompaign();
         }
         break;
       case 'isIndustries':
         if (!this.isIndustries) {
+          if (this.cbxIndustries) {
+            this.cbxIndustries.value = [];
+            this.cbxIndustries.selectedItems = [];
+            this.cbxIndustries.setValue('');
+          }
           this.industries = [];
           this.bindingCountCompaign();
         }
         break;
       case 'isStatus':
         if (!this.isStatus) {
+          if (this.cbxStatus) {
+            this.cbxStatus.value = [];
+            this.cbxStatus.selectedItems = [];
+            this.cbxStatus.setValue('');
+          }
           this.status = [];
           this.bindingCountCompaign();
         }

@@ -51,7 +51,10 @@
                           style="margin-top:-15px;width:30px"
                         >
                         </codx-input>
-                        <span>{{item.description}}</span>
+                        <div class="d-flex flex-column">
+                          <span>{{item?.mappingName}}</span>
+                          <span class="text-gray-500">{{item?.description}}</span>
+                        </div>
                       </div>
                       <div>
                         <button

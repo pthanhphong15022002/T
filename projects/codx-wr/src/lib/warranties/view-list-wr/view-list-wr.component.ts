@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { CodxWrService } from '../../codx-wr.service';
 import { ApiHttpService, CallFuncService } from 'codx-core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'codx-view-list-wr',
@@ -26,6 +27,8 @@ export class ViewListWrComponent {
   popoverDetail: any;
   popupOld: any;
   popoverList: any;
+  fieldPopover: any;
+  isPopoverOpen = false;
   constructor(
     private wrSv: CodxWrService,
     private callFunc: CallFuncService,
@@ -50,20 +53,15 @@ export class ViewListWrComponent {
   }
 
   getIcon($event) {
-    if ($event == 'O') {
-      return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
-    } else if ($event == 'I') {
-      return this.listRoles.filter((x) => x.value == 'I')[0]?.icon ?? null;
-    } else if ($event == 'F') {
-      return this.listRoles.filter((x) => x.value == 'F')[0]?.icon ?? null;
-    }
-    return this.listRoles.filter((x) => x.value == 'O')[0]?.icon ?? null;
+    return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
   }
 
   //#region popover
   PopoverDetail(e, p: any, emp, field: string) {
-    let parent = e.currentTarget.parentElement.scrollHeight;
-    let child = e.currentTarget.offsetHeight;
+    this.isPopoverOpen = true;
+    let parent = e?.currentTarget?.clientHeight;
+    let child = e?.currentTarget?.scrollHeight;
+    const isOpen = p.isOpen();
     if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
@@ -71,12 +69,21 @@ export class ViewListWrComponent {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp[field] != null && emp[field]?.trim() != '') {
-        if (40 < child) {
+        if (parent < child) {
           p.open();
         }
       }
-    } else p.close();
+    } else {
+      p.close();
+    }
     this.popupOld = p;
+    this.fieldPopover = field;
+  }
+
+  popoverClosed(p) {
+    p.close();
+
+    this.isPopoverOpen = false;
   }
 
   closePopover() {
@@ -84,14 +91,19 @@ export class ViewListWrComponent {
   }
 
   checkHover(id) {
-    let isCollapsed = false;
-    let element = document.getElementById(id);
-    if (element) {
-      if (element.offsetHeight > 38) {
-        isCollapsed = true;
+    var subject = new Subject<boolean>();
+    setTimeout(() => {
+      let isCollapsed = false;
+      let element = document.getElementById(id);
+      if (element) {
+        if (element.offsetHeight > 40) {
+          isCollapsed = true;
+        }
       }
-    }
-    return isCollapsed;
+      subject.next(isCollapsed);
+    }, 100);
+
+    return subject.asObservable();
   }
   //#endregion
 }

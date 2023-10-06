@@ -1,5 +1,3 @@
-import { detach } from '@syncfusion/ej2-base';
-import { I } from '@angular/cdk/keycodes';
 import {
   ChangeDetectorRef,
   Component,
@@ -11,7 +9,6 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FileService } from '@shared/services/file.service';
-import { Thickness } from '@syncfusion/ej2-charts';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -31,16 +28,19 @@ import {
   ViewsComponent,
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ES_SignFile, File } from '../../codx-es.model';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../../setting/approval-step/approval-step.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { tmpCopyFileInfo } from 'projects/codx-share/src/lib/models/fileInfo.model';
-import { ApproveProcess, Approver } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import {
+  ApproveProcess,
+  Approver,
+} from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
+import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -66,7 +66,7 @@ export class PopupAddSignFileComponent implements OnInit {
     funcID: 'EST011',
     gridViewName: 'grvSignFiles',
   };
-  showPdf=true;
+  showPdf = true;
   fileIndex = 0;
   currentTab = 0; // buoc hiện tại: 0, 1, 2, 3
   processTab = 0; // tổng bước đã đi qua
@@ -129,7 +129,7 @@ export class PopupAddSignFileComponent implements OnInit {
   showAttachment = true;
   approverProcess: ApproveProcess;
   categoryID: any;
-  sfTemplates =[];
+  sfTemplates = [];
   dynamicApprovers = [];
   fields: Object = { text: 'title', value: 'recID' };
   cbbDriver:any;
@@ -179,23 +179,23 @@ export class PopupAddSignFileComponent implements OnInit {
     this.editApprovers = data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
-    if(this.approverProcess){
-      if(this.approverProcess.approvers?.length>0){
+    if (this.approverProcess) {
+      if (this.approverProcess.approvers?.length > 0) {
         this.dynamicApprovers.push(this.approverProcess.approvers);
       }
-      if(this.approverProcess?.data?.employeeID){
+      if (this.approverProcess?.data?.employeeID) {
         let appr = new Approver();
-        appr.roleType = "E";
+        appr.roleType = 'E';
         appr.approver = this.approverProcess?.data?.employeeID;
         this.dynamicApprovers.push(appr);
-      }    
-      if(this.approverProcess?.data?.owner){
+      }
+      if (this.approverProcess?.data?.owner) {
         let appr = new Approver();
-        appr.roleType = "OWN";
+        appr.roleType = 'OWN';
         appr.approver = this.approverProcess?.data?.owner;
         this.dynamicApprovers.push(appr);
       }
-    }   
+    }
 
     if (this.modeView == '2') {
       this.disableCateID = true;
@@ -235,7 +235,6 @@ export class PopupAddSignFileComponent implements OnInit {
       this.isTemplate = true;
       this.showStepSetting = false;
     }
-
   }
 
   ngOnInit(): void {
@@ -244,7 +243,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.listCategory = res;
       }
     });
-    if(this.data?.categoryID==null) this.data.categoryID=this.categoryID;
+    if (this.data?.categoryID == null) this.data.categoryID = this.categoryID;
     this.esService
       .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
       .subscribe((cate) => {
@@ -295,30 +294,30 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.refDate = this.oSignFile?.refDate;
               this.data.refNo = this.oSignFile?.refNo;
               this.data.priority = this.oSignFile?.priority;
-              this.data.approveControl = this.oSignFile?.approveControl ?? this.data.approveControl ;
-              this.data.processID = this.oSignFile?.processID ?? this.data.processID ;
+              this.data.approveControl =
+                this.oSignFile?.approveControl ?? this.data.approveControl;
+              this.data.processID =
+                this.oSignFile?.processID ?? this.data.processID;
 
               this.isSaved = true;
               this.isAddNew = false;
-              if(this.data.approveControl=="3"){
+              if (this.data.approveControl == '3') {
                 this.esService
-                .getCategoryByCateIDType(
-                  this.data?.categoryID,
-                  this.typeCategory
-                )
-                .subscribe((cate) => {
-                  if (cate) {
-                    this.data.processID = cate.processID;
-                    this.processTab = 3;
-                    this.initForm();
-                  }
-                });
-              }
-              else{                
+                  .getCategoryByCateIDType(
+                    this.data?.categoryID,
+                    this.typeCategory
+                  )
+                  .subscribe((cate) => {
+                    if (cate) {
+                      this.data.processID = cate.processID;
+                      this.processTab = 3;
+                      this.initForm();
+                    }
+                  });
+              } else {
                 this.processTab = 3;
                 this.initForm();
               }
-              
             } else {
               this.esService
                 .getDataDefault(
@@ -338,26 +337,26 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.data.refNo = this.oSignFile.refNo;
                     this.data.priority = this.oSignFile.priority;
                     this.data.refType = this.oSignFile.refType;
-                    this.data.approveControl = this.oSignFile?.approveControl ?? this.data.approveControl ;
-                    this.data.processID = this.oSignFile?.processID ?? this.data.processID ;
-                    if(this.data.approveControl=="3"){
+                    this.data.approveControl =
+                      this.oSignFile?.approveControl ??
+                      this.data.approveControl;
+                    this.data.processID =
+                      this.oSignFile?.processID ?? this.data.processID;
+                    if (this.data.approveControl == '3') {
                       this.esService
-                      .getCategoryByCateIDType(
-                        this.data?.categoryID,
-                        this.typeCategory
-                      )
-                      .subscribe((cate) => {
-                        if (cate) {
-                          this.data.processID = cate.processID;
-                          this.initForm();
-                        }
-                      });
-                    }
-                    else{
-                      
+                        .getCategoryByCateIDType(
+                          this.data?.categoryID,
+                          this.typeCategory
+                        )
+                        .subscribe((cate) => {
+                          if (cate) {
+                            this.data.processID = cate.processID;
+                            this.initForm();
+                          }
+                        });
+                    } else {
                       this.initForm();
                     }
-                    
                   }
                 });
             }
@@ -377,7 +376,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    
     ScrollComponent.reinitialization();
   }
 
@@ -523,12 +521,17 @@ export class PopupAddSignFileComponent implements OnInit {
                 }
                 //this.updateNodeStatus(0, 1);
               }
-              if(this.data.approveControl == '2' && this.approverProcess?.template?.recID!=null){
-                this.esService.getDetailSignFile(this.approverProcess?.template?.recID).subscribe(template=>{
-                  if(template && template?.files?.length>0){
-                    this.applyTemplate(null,template);
-                  }
-                })
+              if (
+                this.data.approveControl == '2' &&
+                this.approverProcess?.template?.recID != null
+              ) {
+                this.esService
+                  .getDetailSignFile(this.approverProcess?.template?.recID)
+                  .subscribe((template) => {
+                    if (template && template?.files?.length > 0) {
+                      this.applyTemplate(null, template);
+                    }
+                  });
               }
             } else {
               let sfRecID = this.data?.recID;
@@ -575,49 +578,57 @@ export class PopupAddSignFileComponent implements OnInit {
         });
     });
   }
-  getSFTemplate(){
-    this.esService.getSFTemplate(this.data?.categoryID,this.data?.category).subscribe(res=>{
-      if(res){
-        this.sfTemplates= res;
-        this.cr.detectChanges();
-      }
-    });
+  getSFTemplate() {
+    this.esService
+      .getSFTemplate(this.data?.categoryID, this.data?.category)
+      .subscribe((res) => {
+        if (res) {
+          this.sfTemplates = res;
+          this.cr.detectChanges();
+        }
+      });
   }
 
-  applyTemplate(recID = null,selectedTemplate =null){
-    if(this.sfTemplates?.length>0 || selectedTemplate!=null){   
-      if(selectedTemplate==null){
-        if(recID==null){
+  applyTemplate(recID = null, selectedTemplate = null) {
+    if (this.sfTemplates?.length > 0 || selectedTemplate != null) {
+      if (selectedTemplate == null) {
+        if (recID == null) {
           selectedTemplate = this.sfTemplates[0];
-        }
-        else{
-          let temp = this.sfTemplates.filter(x=>x.recID==recID);
-          if(temp?.length>0){
+        } else {
+          let temp = this.sfTemplates.filter((x) => x.recID == recID);
+          if (temp?.length > 0) {
             selectedTemplate = temp[0];
           }
         }
-      }      
-      if(selectedTemplate!=null && selectedTemplate?.files?.length > 0 && this.data?.files?.length > 0){
-        for(let i=0;i<this.data?.files?.length;i++){
-          if(selectedTemplate.files[i]!=null && selectedTemplate.files[i]?.areas?.length>0){
-            let templateArea = selectedTemplate.files[i]?.areas
-            for(let indx=0;indx<templateArea?.length;indx++){
+      }
+      if (
+        selectedTemplate != null &&
+        selectedTemplate?.files?.length > 0 &&
+        this.data?.files?.length > 0
+      ) {
+        for (let i = 0; i < this.data?.files?.length; i++) {
+          if (
+            selectedTemplate.files[i] != null &&
+            selectedTemplate.files[i]?.areas?.length > 0
+          ) {
+            let templateArea = selectedTemplate.files[i]?.areas;
+            for (let indx = 0; indx < templateArea?.length; indx++) {
               delete templateArea[indx].id;
               delete templateArea[indx].recID;
               delete templateArea[indx].modifiedBy;
               delete templateArea[indx].modifiedOn;
               templateArea[indx].createdOn = new Date();
               templateArea[indx].createdBy = this.user.userID;
-            };
-            this.data.files[i].areas = selectedTemplate.files[i]?.areas
+            }
+            this.data.files[i].areas = selectedTemplate.files[i]?.areas;
           }
         }
-      } 
-      if(recID!=null){
+      }
+      if (recID != null) {
         this.onSaveSignFile();
-        this.showPdf=false;
-        this.cr.detectChanges();        
-        this.showPdf=true;
+        this.showPdf = false;
+        this.cr.detectChanges();
+        this.showPdf = true;
         this.cr.detectChanges();
       }
     }
@@ -760,10 +771,10 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.color = category?.Color;
                   this.data.processID = category?.RecID;
                   this.data.categoryName = category?.CategoryName;
-                  this.data.category =category?.category;
+                  this.data.category = category?.category;
                   this.eSign = category?.ESign;
                   this.signatureType = category?.SignatureType;
-                  
+
                   this.afterCategoryChange();
                   this.cr.detectChanges();
 
@@ -851,7 +862,7 @@ export class PopupAddSignFileComponent implements OnInit {
               this.data.color = category?.Color;
               this.data.processID = category?.RecID;
               this.data.categoryName = category?.CategoryName;
-              this.data.category =category?.category;
+              this.data.category = category?.category;
               this.eSign = category?.ESign;
               this.signatureType = category?.SignatureType;
 
@@ -963,7 +974,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
-    if(!this.data.category){
+    if (!this.data.category) {
       this.data.category = this.refType;
     }
     if (!this.isSaved && this.isAddNew) {
@@ -1048,7 +1059,7 @@ export class PopupAddSignFileComponent implements OnInit {
             }
             if (this.currentTab == 0 && !this.showStepSetting) {
               this.updateNodeStatus(this.oldNode, this.newNode);
-              this.currentTab=2;
+              this.currentTab = 2;
               this.processTab = 3;
               this.cr.detectChanges();
             }
@@ -1240,26 +1251,23 @@ export class PopupAddSignFileComponent implements OnInit {
     let oldNode = currentTab;
     let newNode = oldNode + 1;
     switch (currentTab) {
-      case 0:        
+      case 0:
         this.getSFTemplate();
         if (
           this.attachment?.fileUploadList?.length > 0 ||
           this.data?.files?.length > 0
         ) {
-          
-            if (!this.showStepSetting) {
-              this.oldNode = oldNode + 1;
-              this.newNode = newNode + 1;
-              this.onSaveSignFile();
-              this.nextClick = true;
-            }
-            else{
-              this.updateNodeStatus(oldNode, newNode);
-              this.currentTab == 0 && this.currentTab++;
-              this.processTab == 0 && this.processTab++;
+          if (!this.showStepSetting) {
+            this.oldNode = oldNode + 1;
+            this.newNode = newNode + 1;
+            this.onSaveSignFile();
+            this.nextClick = true;
+          } else {
+            this.updateNodeStatus(oldNode, newNode);
+            this.currentTab == 0 && this.currentTab++;
+            this.processTab == 0 && this.processTab++;
+          }
 
-            }
-          
           //}
         } else {
           this.notify.notifyCode('ES006');
@@ -1277,7 +1285,7 @@ export class PopupAddSignFileComponent implements OnInit {
       //   break;
 
       case 1:
-        if(this.data.approveControl =='3'){
+        if (this.data.approveControl == '3') {
           this.applyTemplate();
         }
         this.oldNode = oldNode;
@@ -1411,7 +1419,6 @@ export class PopupAddSignFileComponent implements OnInit {
       
       this.codxShareService.deleteByObjectsWithAutoCreate(this.data.recID, "",true,'3').subscribe();   
       this.dialog && this.dialog.close();
-
     } else if (this.processTab > 0 && this.isAddNew == true) {
       if (this.data?.files.length == 0) {
         if (this.isSaved && this.isEdit) {
@@ -1470,13 +1477,19 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       this.codxShareService
         .codxRelease(
-          this.approverProcess?.module !=null ? this.approverProcess?.module:'ES',
+          this.approverProcess?.module != null
+            ? this.approverProcess?.module
+            : 'ES',
           this.data?.recID,
           this.data.approveControl == '1'
             ? this.data?.recID
             : this.data?.processID,
-          this.approverProcess?.entityName !=null ? this.approverProcess?.entityName:this.formModelCustom.entityName,
-          this.approverProcess?.funcID !=null ? this.approverProcess?.funcID:this.formModelCustom.funcID ,
+          this.approverProcess?.entityName != null
+            ? this.approverProcess?.entityName
+            : this.formModelCustom.entityName,
+          this.approverProcess?.funcID != null
+            ? this.approverProcess?.funcID
+            : this.formModelCustom.funcID,
           '',
           this.data?.title,
           this.data?.refType
@@ -1527,7 +1540,7 @@ export class PopupAddSignFileComponent implements OnInit {
         file.eSign = this.eSign;
       });
     }
-    this.data.category= this.curCategory?.category;
+    this.data.category = this.curCategory?.category;
     this.cr.detectChanges();
   }
 
@@ -1686,7 +1699,10 @@ export class PopupAddSignFileComponent implements OnInit {
         tempTemplateType = null;
         break;
     }
-    if (this.data.files?.length > 0 && this.data?.templateType == tempTemplateType ) {
+    if (
+      this.data.files?.length > 0 &&
+      this.data?.templateType == tempTemplateType
+    ) {
       return;
     } else if (
       this.data.files?.length > 0 &&
@@ -1967,22 +1983,20 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  openTemplate(){
+  openTemplate() {
     var gridModel = new DataRequest();
-    gridModel.entityName=this.refType;
-    let exportForm=this.callfuncService.openForm(
+    gridModel.entityName = this.refType;
+    let exportForm = this.callfuncService.openForm(
       CodxExportComponent,
       null,
       900,
       700,
       '',
-      [
-        gridModel,null,null,this.data.recID,this.refType
-      ],
+      [gridModel, null, null, this.data.recID, this.refType],
       null
     );
-    exportForm.closed.subscribe(res=>{
-      if(res?.event){
+    exportForm.closed.subscribe((res) => {
+      if (res?.event) {
         this.esService
           .deleteFileByObjectID(this.data.recID, 'ES_SignFiles', true)
           .subscribe((deleted) => {

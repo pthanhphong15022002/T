@@ -1,0 +1,81 @@
+<codx-form
+  #form
+  [headerText]="'Mẫu chi tiết import'"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="data"
+  [formModel]="formModels"
+></codx-form>
+<ng-template popup adde #body>
+  <div class="py-2">
+    <div class="py-2">
+      <codx-label  default="Tên mapping" class="fw-bold"></codx-label>
+      <codx-input type="text" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+  </div>
+  <div class="h-feildImport">
+    <ejs-grid #grid 
+      [dataSource]='dataImport2' 
+      height="550" width="100%" 
+      [editSettings]='editSettings' 
+      (load)='load($event)'
+      [selectionSettings]='selectionOptions'
+      (actionComplete)="onActionComplete($event)"
+      > 
+      <e-columns>
+        <e-column *ngFor="let item of fieldImport ; let i = index" 
+        [field]='item?.text' 
+        width="200"  
+        [isPrimaryKey]='i==0?true:false'
+        [headerText]="getHeaderText(item?.text)"
+        [editType]="getEditType(item?.controlType)" 
+        [type]="getType(item?.controlType)" 
+        [edit]="getEdit(item?.type,item?.text)" 
+        [valueAccessor]='valueAccess' 
+        [displayAsCheckBox]="true"
+        [validationRules]="item?.require ?customerIDRules:null"
+        [textAlign]="getTextAligin(item?.controlType)"
+        >
+        </e-column>
+        <!--   -->
+    </e-columns>   
+  </ejs-grid> 
+  </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <!-- <button type="button" class="btn btn-outline-primary me-2" (click)="onSaveTemplate()">
+        <codx-label [formModel]="formModel" [fiedName]="'saveTemplate'" [default]="'Lưu làm template'"></codx-label>
+      </button> -->
+      <button class="btn btn-primary" (click)="onSave()">
+        <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Lưu'"></codx-label>
+      </button>
+    </div>
+</ng-template>
+<ng-template #tmpTable let-item>
+  <ng-container *ngFor="let item2 of fieldImport">
+    <td >
+      <ng-container [ngSwitch]="item2?.controlType">
+        <ng-container *ngSwitchCase="'TextBox'">
+          <codx-input type="text" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'CheckBox'">
+          <codx-input type="checkbox" (valueChange)="changeValueText(item,item2?.fieldName,$event)"></codx-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'ComboBox'">
+          <ng-container *ngIf="item2?.referedType == 2; else elseCBB">
+            <codx-input type="valuelist"  [refValue]="item2?.referedValue" ></codx-input>
+          </ng-container>
+          <ng-template #elseCBB>
+            <codx-input type="combobox"  [refValue]="item2?.referedValue" ></codx-input>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngSwitchCase="'MaskBox'">
+        </ng-container>
+      </ng-container>
+    </td>
+  </ng-container>
+</ng-template>
+
+

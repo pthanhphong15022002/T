@@ -157,7 +157,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   openPopupContact() {
-    this.moreFuncName = 'Thêm';
+    this.moreFuncName = 'Thêm';///
     this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20501');
@@ -203,7 +203,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     });
   }
   editobject(data: any) {
-    this.moreFuncName = 'Chỉnh sửa';
+    this.moreFuncName = 'Chỉnh sửa';///
     let index = this.objectContact.findIndex(
       (x) => x.contactName == data.contactName && x.phone == data.phone
     );
