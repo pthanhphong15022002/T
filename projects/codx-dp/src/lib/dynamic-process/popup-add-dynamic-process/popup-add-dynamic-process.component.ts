@@ -1932,6 +1932,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         if (res) {
           this.listStepApproverView = res;
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
