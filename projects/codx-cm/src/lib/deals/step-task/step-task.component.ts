@@ -43,7 +43,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
   @Input() entityName = '';
-  @Input() owner: string;
   @Input() isAdmin = false;
   @Input() isChangeOwner: string;
 
@@ -51,6 +50,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() ownerInstance: string;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -121,6 +121,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         );
       }
     });
+    this.api.execSv<any>('DP','ERM.Business.DP','InstanceStepsBusiness','SendMailNotificationAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {

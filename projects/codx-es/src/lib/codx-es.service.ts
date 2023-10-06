@@ -582,6 +582,15 @@ export class CodxEsService {
       [userID, signatureType]
     );
   }
+  getApproverSignature(email: string, signatureType: string, supplier :string, userID :string ): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ES',
+      'SignaturesBusiness',
+      'GetApproverSignatureAsync',
+      [email, signatureType ,supplier, userID]
+    );
+  }
 
   addNewSignature(data: any) {
     return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddNewAsync', [
