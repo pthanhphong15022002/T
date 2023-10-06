@@ -83,22 +83,49 @@ export class CodxViewApprovalStepComponent
             this.shareService.viewApprovalStep(this.transID,this.isSettingMode).subscribe((res)=>{
               if (res && res?.length == 2) {
                 this.process = res[0] ?? [];
-                if(res[1]?.length>0){
+                // if(res[1]?.length>0){
+                //   let apInfos = res[1];
+                //   this.process.forEach(st=>{
+                //     if(st?.approvers){
+                //       st?.approvers.forEach(ap=>{
+                //         let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+                //         if(curAp?.length>0){
+                //           ap.userID = curAp[0]?.userID;
+                //           ap.userName = curAp[0]?.userName;
+                //           ap.employeeID = curAp[0]?.employeeID;
+                //           ap.position = ap?.position ?? curAp[0]?.positionName;
+                //         }
+                //       })
+                //     }
+                //   });
+                // }      
+                if (res[1]?.length > 0) {
                   let apInfos = res[1];
-                  this.process.forEach(st=>{
-                    if(st?.approvers){
-                      st?.approvers.forEach(ap=>{
-                        let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
-                        if(curAp?.length>0){
+                  for (let st of this.process) {
+                    if (st?.approvers) {
+                      for (let ap of st?.approvers) {
+                        let curAp = [];
+                        if (ap?.roleType != 'E' && ap?.roleType != 'RO') {
+                          curAp = apInfos.filter(
+                            (x) =>
+                              x?.approver == ap?.approver &&
+                              x?.roleType == ap?.roleType
+                          );
+                        } else {
+                          curAp = apInfos.filter(
+                            (x) => x?.roleType == ap?.roleType
+                          );
+                        }
+                        if (curAp?.length > 0) {
                           ap.userID = curAp[0]?.userID;
                           ap.userName = curAp[0]?.userName;
                           ap.employeeID = curAp[0]?.employeeID;
                           ap.position = ap?.position ?? curAp[0]?.positionName;
                         }
-                      })
+                      }
                     }
-                  });
-                }            
+                  }
+                }      
                 this.cr.detectChanges();            
               }
             });
@@ -116,8 +143,6 @@ export class CodxViewApprovalStepComponent
             if (res) {
               this.process = res?.activedTran[0];
               this.canceledProcess = res?.canceledTran;
-              console.log(this.process)
-              console.log('canceled',this.canceledProcess)
               this.cr.detectChanges();
             }
           });

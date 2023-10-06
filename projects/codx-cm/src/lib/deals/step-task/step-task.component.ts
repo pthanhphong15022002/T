@@ -121,6 +121,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         );
       }
     });
+    this.api.execSv<any>('DP','ERM.Business.DP','InstanceStepsBusiness','SendMailNotificationAsync').subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
