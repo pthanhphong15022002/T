@@ -94,7 +94,7 @@ export class LeadsComponent
   // data structure
   listCustomer: CM_Customers[] = [];
   listCategory: any[] = [];
-  valueListStatusCode:any[] = [];
+  valueListStatusCode: any[] = [];
   // type of string
   oldIdDeal: string = '';
 
@@ -192,7 +192,7 @@ export class LeadsComponent
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
     this.leverSetting = lever;
-    this.codxCmService.initCache().subscribe(res => {});
+    this.codxCmService.initCache().subscribe((res) => {});
   }
 
   afterLoad() {
@@ -217,7 +217,7 @@ export class LeadsComponent
     this.getColorReason();
     this.getValuelistStatus();
     this.getValuelistCategory();
-   // this.getProcessSetting();
+    this.getProcessSetting();
     this.getListStatusCode();
     this.afterLoad();
   }
@@ -244,27 +244,24 @@ export class LeadsComponent
     this.codxCmService.getListStatusCode(['3']).subscribe((res) => {
       if (res) {
         this.valueListStatusCode = res.map((item) => ({
-                  text: item.statusName,
-                  value: item.statusID,
-                }));
-
-      }
-      else {
+          text: item.statusName,
+          value: item.statusID,
+        }));
+      } else {
         this.valueListStatusCode = [];
       }
     });
 }
-  // async getProcessSetting() {
-  //   this.codxCmService
-  //     .getListProcessDefault([this.applyForLead])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.processId = res.recID;
-  //         this.dataObj = { processID: res.recID };
-  //         this.afterLoad();
-  //       }
-  //     });
-  // }
+  async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault([this.applyForLead])
+      .subscribe((res) => {
+        if (res) {
+          this.processId = res.recID;
+          this.dataObj = { processID: res.recID };
+        }
+      });
+  }
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -488,8 +485,7 @@ export class LeadsComponent
     };
     let isChangeStatus = (eventItem, data) => {
       // Đổi trạng thái cho tiềm năng ko có quy trình
-      eventItem.disabled =
-        data?.alloweStatus == '1' ? data.closed : true;
+      eventItem.disabled = data?.alloweStatus == '1' ? data.closed : true;
     };
 
     let isUpdateProcess = (eventItem, data) => {
@@ -917,51 +913,37 @@ export class LeadsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res) => {
-        this.cache.functionList(this.funcID).subscribe((fun) => {
-          this.cache
-            .gridViewSetup(fun?.formName, fun?.gridViewName)
-            .subscribe((res) => {
-              let option = new SidebarModel();
-              option.DataService = this.view.dataService;
-              var formMD = new FormModel();
-              formMD.entityName = fun.entityName;
-              formMD.formName = fun.formName;
-              formMD.gridViewName = fun.gridViewName;
-              formMD.funcID = this.funcID;
-              option.FormModel = JSON.parse(JSON.stringify(formMD));
-              option.Width = '800px';
-              var obj = {
-                action: 'edit',
-                title: this.titleAction,
-                gridViewSetup: res,
-                applyFor: this.applyForLead,
-              };
-              var dialog = this.callfc.openSide(
-                PopupConvertLeadComponent,
-                obj,
-                option
-              );
-              dialog.closed.subscribe((e) => {
-                if (!e?.event) this.view.dataService.clear();
-                if (e && e.event) {
-                  this.dataSelected.salespersonID = e.event.salespersonID;
-                  this.dataSelected.consultantID = e.event.consultantID;
-                  this.dataSelected.status = '11';
-                  this.view.dataService.update(this.dataSelected).subscribe();
-                  this.dataSelected = JSON.parse(
-                    JSON.stringify(this.dataSelected)
-                  );
-                  this.dataSelected.applyProcess &&
-                    this.detailViewLead.reloadListStep(e.event.listStep);
-                  this.detectorRef.detectChanges();
-                }
-              });
-            });
-        });
+    this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
+      let option = new SidebarModel();
+      var formMD = new FormModel();
+      formMD.entityName = 'CM_Leads';
+      formMD.formName = 'CMLeads';
+      formMD.gridViewName = 'grvCMLeads';
+      formMD.funcID = this.funcID;
+      option.FormModel = JSON.parse(JSON.stringify(formMD));
+      option.Width = '800px';
+      var obj = {
+        action: 'edit',
+        title: this.titleAction,
+        gridViewSetup: res,
+        applyFor: this.applyForLead,
+        data: data,
+      };
+      var dialog = this.callfc.openSide(PopupConvertLeadComponent, obj, option);
+      dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e && e.event) {
+          this.dataSelected.salespersonID = e.event.salespersonID;
+          this.dataSelected.consultantID = e.event.consultantID;
+          this.dataSelected.status = '11';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.dataSelected.applyProcess &&
+            this.detailViewLead.reloadListStep(e.event.listStep);
+          this.detectorRef.detectChanges();
+        }
       });
+    });
   }
   //#endregion
 
@@ -1552,7 +1534,10 @@ export class LeadsComponent
     return data?.applyProcess;
   }
   saveCopy() {
-    if (this.dataSelected.status === this.statusDefault || this.dataSelected.statusCode === this.statusDefault ) {
+    if (
+      this.dataSelected.status === this.statusDefault ||
+      this.dataSelected.statusCode === this.statusDefault
+    ) {
       this.dialogQuestionCopy.close();
       this.notificationsService.notifyCode('SYS007');
     } else {
@@ -1560,11 +1545,10 @@ export class LeadsComponent
       this.codxCmService.changeStatusLead(datas).subscribe((res) => {
         if (res[0]) {
           this.dialogQuestionCopy.close();
-          if(this.dataSelected?.applyProcess) {
-            this.dataSelected.statusCode =  this.statusDefault
-          }
-          else {
-            this.dataSelected.status = this.statusDefault
+          if (this.dataSelected?.applyProcess) {
+            this.dataSelected.statusCode = this.statusDefault;
+          } else {
+            this.dataSelected.status = this.statusDefault;
           }
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
@@ -1577,7 +1561,9 @@ export class LeadsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = this.dataSelected.applyProcess ? this.dataSelected?.statusCode : this.dataSelected?.status;
+    this.statusDefault = this.dataSelected.applyProcess
+      ? this.dataSelected?.statusCode
+      : this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',

@@ -637,7 +637,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         .match(phonenumberFormat);
       if (checkRegex == null) {
         this.notification.notify(
-          this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ',
+          this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ',//
           '2'
         );
         this.validate++;
