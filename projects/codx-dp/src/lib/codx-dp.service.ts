@@ -858,5 +858,9 @@ export class CodxDpService {
       data
     );
   }
+
+  getOneObject(recID, className) {
+    return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
+  }
   //#endregion
 }
