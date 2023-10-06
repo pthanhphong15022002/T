@@ -1,20 +1,20 @@
 <codx-form #form *ngIf="isAfterRender" [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef">
   <ng-template #body let-dialog>
-    <div class="card-body">
+    <!-- <div class="card-body">
       <div class="form-group">
         <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>
         <ejs-dropdownlist  id="template" #templateCBB [dataSource]="sfTemplates" [fields]="fields" 
           (valueChange)="valueChange($event)"></ejs-dropdownlist> 
       </div>
-    </div>
-    <!-- <div class="card-body">
+    </div> -->
+    <div class="card-body">
       <div class="form-group">
-        <codx-label fiedName="" [formModel]="" default="Quy trình mẫu"></codx-label>    
+        <codx-label fiedName="" [formModel]="" default="Chọn quy trình mẫu"></codx-label>    
         <div>
           <div class="d-flex align-items-start justify-content-between py-2 border-bottom" *ngFor="let item of sfTemplates">
             <div class="d-flex align-items-top w-100">        
               <div class="d-flex flex-row w-100 align-items-center">
-                <div><codx-input type="checkbox" (valueChange)="checkChange(item?.recID, item?.isSelected)"></codx-input></div>
+                <div><codx-input type="checkbox" [crrValue]="true" (valueChange)="checkChange(item?.recID)"></codx-input></div>
                 <div class="ps-5 d-flex flex-column flex-grow-1">
                   <div class="fw-bold text-dark">{{ item?.title }}</div>
                   <div class="d-flex flex-row justify-content-between">
@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
 
   </ng-template>
   <ng-template #footer>
