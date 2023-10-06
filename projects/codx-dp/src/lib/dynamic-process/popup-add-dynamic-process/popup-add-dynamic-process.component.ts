@@ -1216,9 +1216,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-            data.text == null || data.text == ''
-            ? data?.objectName
-            : data?.text;
+              data.text == null || data.text == ''
+                ? data?.objectName
+                : data?.text;
             perm.objectID = data.id != null || data.id != '' ? data.id : null;
             perm.objectType = data.objectType;
             perm.full = true;
@@ -1241,9 +1241,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-            data.text == null || data.text == ''
-            ? data?.objectName
-            : data?.text;
+              data.text == null || data.text == ''
+                ? data?.objectName
+                : data?.text;
             perm.objectID = data.id != null ? data.id : null;
             perm.objectType = data.objectType;
             perm.roleType = 'P';
@@ -4454,6 +4454,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
+                  templateRefID: this.process.recID,
+                  templateRefType: 'DP_Processes',
                 },
                 option
               );
