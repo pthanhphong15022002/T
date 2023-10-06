@@ -2008,8 +2008,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   }
                 }
               }
-              // this.changeDetectorRef.markForCheck();
-              this.changeDetectorRef.detectChanges();
+              this.changeDetectorRef.markForCheck();
+              // this.changeDetectorRef.detectChanges();
             }
           });
         break;
@@ -2035,8 +2035,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                     this.dataWord = this.dataWord.filter(
                       (x) => x.recID != item[1][0].recID
                     );
-                  // this.changeDetectorRef.markForCheck();
-                  this.changeDetectorRef.detectChanges();
+                  this.changeDetectorRef.markForCheck();
+                  // this.changeDetectorRef.detectChanges();
                 } else this.notiService.notifyCode('SYS022');
               });
           }
@@ -2052,7 +2052,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.className = 'ExcelTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataEx = item;
-      this.changeDetectorRef.detectChanges();
+      this.changeDetectorRef.markForCheck();
     });
   }
   loadWord() {
@@ -2062,7 +2062,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.className = 'WordTemplatesBusiness';
     this.fetch().subscribe((item) => {
       this.dataWord = item;
-      this.changeDetectorRef.detectChanges();
+      this.changeDetectorRef.markForCheck();
     });
   }
 
