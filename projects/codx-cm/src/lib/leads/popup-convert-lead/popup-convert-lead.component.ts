@@ -550,12 +550,14 @@ export class PopupConvertLeadComponent implements OnInit {
             }
           }
 
-          this.api.execSv<any>(
-            'DP',
-            'ERM.Business.DP',
-            'InstancesBusiness',
-            'AddInstanceAsync',
-            [this.instance, this.listInstanceSteps, null]
+          await firstValueFrom(
+            this.api.execSv<any>(
+              'DP',
+              'ERM.Business.DP',
+              'InstancesBusiness',
+              'AddInstanceAsync',
+              [this.instance, this.listInstanceSteps, null]
+            )
           );
 
           let obj = {
