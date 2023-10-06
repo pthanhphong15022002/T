@@ -1,9 +1,9 @@
-<ng-container *ngIf="alpolicyObj">
+<ng-container *ngIf="alpolicyObj && loadedAutoField == true">
 <codx-layout-add
   #form
   [title]="headerText"
   [tabInfo]="tabInfo"
-  [formModel]="dialog.formModel"
+  [formModel]="formModel"
   [subHeader]=""
   (setTitle)="setTitle($event)"
   [footer]="footer"

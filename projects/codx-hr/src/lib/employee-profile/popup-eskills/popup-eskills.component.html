@@ -1,7 +1,7 @@
 <!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
-  [formModel]="formModel"
+  [formModel]="form.formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="skillObj"
@@ -11,35 +11,35 @@
 >
   <ng-template #body>
     <div class="form-group row">
-      <codx-label fiedName="SkillID" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="SkillID" [formModel]="form.formModel"> </codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="skillID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="SkillGradeID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="SkillGradeID" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="skillGradeID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <codx-label
         fiedName="TrainSupplierID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="trainSupplierID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
@@ -47,76 +47,76 @@
       <div class="col-6">
         <codx-label
           fiedName="TrainCourseID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainCourseID"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainForm"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainFrom"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainTo"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="totalScore"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="ranking"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="note"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
   </ng-template>
@@ -127,7 +127,7 @@
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
@@ -154,7 +154,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [typeMF]="'hover'"
     [title]="data.skillID"
     [icoTitleCss]="'icon-i-arrow-down-left-circle-fill'"
@@ -187,19 +187,7 @@
   </div>
 </ng-template> -->
 
-<ng-template #footer>
-  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn && !changedInForm">
-      <i class="icon-save"></i>
-      <codx-label
-        default="Lưu"
-        name="lblSave"
-        [formModel]="formModel"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
-
+<ng-container *ngIf="skillObj">
 <codx-form
   #form
   [headerText]="headerText"
@@ -207,41 +195,41 @@
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [group]="formGroup"
   [data]="skillObj"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
   <ng-template #body>
     <div class="form-group row mt-5">
-      <codx-label fiedName="SkillID" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="SkillID" [formModel]="form.formModel"> </codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="skillID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="SkillGradeID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="SkillGradeID" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="skillGradeID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
     <div class="form-group row">
       <codx-label
         fiedName="TrainSupplierID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="trainSupplierID"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
 
@@ -249,30 +237,31 @@
       <div class="col-6">
         <codx-label
           fiedName="TrainCourseID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainCourseID"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainForm"
-          [Group]="formGroup"
-          [formModel]="formModel"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
         <codx-dropdown-calendar
+        #calendar
         [disabled]="disabledInput"
           cssPopup="h-350px w-550px"
           [value]="Date(skillObj.trainFromDate)"
@@ -288,7 +277,7 @@
         </codx-dropdown-calendar>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
         <codx-dropdown-calendar
         [disabled]="disabledInput"
           cssPopup="h-350px w-550px"
@@ -308,34 +297,48 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="totalScore"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="ranking"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="note"
-        [Group]="formGroup"
-        [formModel]="formModel"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
       ></codx-input>
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn && !changedInForm">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+</ng-container>
