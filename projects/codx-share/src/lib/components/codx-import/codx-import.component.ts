@@ -25,6 +25,7 @@ import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { AddTemplateComponent } from './add-template/add-template.component';
+import { AddImportDetailsComponent } from './add-template/add-import-details/add-import-details.component';
 
 @Component({
   selector: 'codx-import',
@@ -132,7 +133,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         this.fileName,
         this.importGroup.value.dataImport,
         this.formModel?.entityName,
-        '',
+        this.formModel?.funcID,
         '',
       ])
       .subscribe((item) => {
@@ -185,15 +186,14 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   }
   openForm(val: any, data: any, type: any) {
     switch (val) {
-      case 'add':
       case 'edit': {
         this.callfunc.openForm(
-          CodxImportAddTemplateComponent,
+          AddTemplateComponent,
           null,
-          900,
+          1200,
           800,
           '',
-          ['edit', this.formModel, data.recID, data],
+          ['edit', this.formModel, data],
           null
         );
         break;
