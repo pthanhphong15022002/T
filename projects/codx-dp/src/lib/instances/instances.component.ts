@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
@@ -236,6 +237,8 @@ export class InstancesComponent
   // For CM
   categoryCustomer: any = '';
   instanceCM: any;
+  crrFunc: any;
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -254,10 +257,12 @@ export class InstancesComponent
   ) {
     super(inject);
     // this.funcID = 'DPT04';
-    this.dialog = dialog;
+    // this.dialog = dialog;
+
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
-      this.funcID = param['funcID'];
+      if (!this.funcID) this.funcID = param['funcID'];
+      this.showButtonAdd = this.funcID != 'DPT0502';
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
@@ -268,10 +273,12 @@ export class InstancesComponent
             this.loadData(res);
           }
         });
+      } else {
+        this.layoutDP.viewNameProcess(null);
+        // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
       }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP01');
-    this.layout.setLogo(null);
+
     this.getColorReason();
     this.cache
       .gridViewSetup('DPInstances', 'grvDPInstances')
@@ -315,9 +322,8 @@ export class InstancesComponent
       });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
-
-    this.showButtonAdd = this.funcID != 'DPT0502';
   }
+
   ngAfterViewInit() {
     this.views = [
       {
@@ -1265,20 +1271,49 @@ export class InstancesComponent
   }
 
   changeView(e) {
-    switch (e?.view.type) {
-      case 2:
-        // this.showButtonAdd = true;
-        this.viewsCurrent = 'd-';
-        break;
-      case 6:
-        // this.showButtonAdd = true;
-        if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
-        else this.kanban = (this.view.currentView as any).kanban;
-        this.viewsCurrent = 'k-';
-        break;
-      case 9:
-        this.showButtonAdd = false;
-        break;
+    this.router.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    });
+
+    if (!this.crrFunc || this.crrFunc == this.funcID) {
+      if (!this.crrFunc) this.crrFunc = this.funcID;
+      switch (e?.view.type) {
+        case 2:
+          // this.showButtonAdd = true;
+          this.viewsCurrent = 'd-';
+          break;
+        case 6:
+          // this.showButtonAdd = true;
+          if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+          else this.kanban = (this.view.currentView as any).kanban;
+          this.viewsCurrent = 'k-';
+          break;
+        case 9:
+          this.showButtonAdd = false;
+          break;
+      }
+    } else {
+      let viewModel: any;
+      this.views.forEach((v, index) => {
+        if (v.type == 2) {
+          v.active = true;
+          viewModel = v;
+        } else {
+          v.active = false;
+          if (this.funcID == 'DPT0502') v.hide = true;
+          else v.hide = false;
+        }
+      });
+      this.crrFunc = this.funcID;
+      if (this.funcID == 'DPT0502') {
+        this.layoutDP.viewNameProcess(null);
+
+        if (viewModel) {
+          this.view.viewActiveType = viewModel.type;
+          this.view.viewChange(viewModel);
+        }
+        this.view.load();
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2197,7 +2232,6 @@ export class InstancesComponent
   }
 
   showFormSubmit() {
-    // if (!this.dataSelected.approveStatus) return;
     this.codxDpService
       .getESCategoryByCategoryID(this.process.processNo)
       .subscribe((item: any) => {
@@ -2207,58 +2241,85 @@ export class InstancesComponent
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
               if (check) {
-                this.isLockButton = true;
-                let option = new DialogModel();
-                option.zIndex = 1001;
+                // this.isLockButton = true;
+                // let option = new DialogModel();
+                // option.zIndex = 1001;
+                // // this.dialogTemplate = this.callfc.openForm(
+                // //   this.popupTemplate,
+                // //   '',
+                // //   600,
+                // //   500,
+                // //   '',
+                // //   null,
+                // //   '',
+                // //   option
+                // // );
+                // let obj = {
+                //   data: this.dataSelected,
+                //   formModel: this.view.formModel,
+                //   isFormExport: false,
+                //   refID: this.process.recID,
+                //   refType: 'DP_Processes',
+                //   esCategory: this.esCategory,
+                //   titleAction: this.titleAction,
+                //   loaded: true,
+                //   dataEx: this.dataEx,
+                //   dataWord: this.dataWord,
+                // };
                 // this.dialogTemplate = this.callfc.openForm(
-                //   this.popupTemplate,
+                //   PopupSelectTempletComponent,
                 //   '',
                 //   600,
                 //   500,
                 //   '',
-                //   null,
+                //   obj,
                 //   '',
                 //   option
                 // );
-
-                let obj = {
-                  data: this.dataSelected,
-                  formModel: this.view.formModel,
-                  isFormExport: false,
-                  refID: this.process.recID,
-                  refType: 'DP_Processes',
-                  esCategory: this.esCategory,
-                  titleAction: this.titleAction,
-                  loaded: true,
-                  dataEx: this.dataEx,
-                  dataWord: this.dataWord,
-                };
-                this.dialogTemplate = this.callfc.openForm(
-                  PopupSelectTempletComponent,
-                  '',
-                  600,
-                  500,
-                  '',
-                  obj,
-                  '',
-                  option
-                );
-                this.dialogTemplate.closed.subscribe((e) => {
-                  if (e?.event) {
-                    this.dataSelected = e?.event;
-                    this.view.dataService.update(this.dataSelected).subscribe();
-                    if (this.kanban) this.kanban.updateCard(this.dataSelected);
-                  }
-                });
+                // this.dialogTemplate.closed.subscribe((e) => {
+                //   if (e?.event) {
+                //     this.dataSelected = e?.event;
+                //     this.view.dataService.update(this.dataSelected).subscribe();
+                //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                //   }
+                // });
+                this.release(this.dataSelected, item);
               } else this.notificationsService.notifyCode('DP036');
             });
         }
       });
   }
 
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      this.formModel.entityName,
+      this.formModel.funcID,
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  //call Back
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      ///do corre share ko tra ve status
+      this.codxDpService
+        .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
+        .subscribe((ins) => {
+          this.dataSelected.approveStatus = ins.approveStatus;
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+          this.notificationsService.notifyCode('ES007');
+        });
+    }
+  }
+
   //Duyệt
   documentApproval(datas: any) {
-    this.approvalTrans(this.esCategory?.processID, datas);
+    this.approvalTrans(this.esCategory, datas);
     // this.dialogTemplate.close();
     // // if (datas.bsCategory) {
     // //Có thiết lập bước duyệt
@@ -2311,7 +2372,7 @@ export class InstancesComponent
     // }
     // }
   }
-  approvalTrans(processID: any, datas: any) {
+  approvalTrans(esCategory: any, datas: any) {
     // this.api
     //   .execSv(
     //     'ES',
@@ -2367,36 +2428,37 @@ export class InstancesComponent
       //   });
     } else if (this.esCategory?.eSign == false)
       //xét duyệt
-      this.release(datas, processID);
+      this.release(datas, this.esCategory);
     // });
   }
-  //Gửi duyệt
-  release(data: any, processID: any) {
-    this.codxShareService
-      .codxRelease(
-        this.view.service,
-        data?.recID,
-        processID,
-        this.view.formModel.entityName,
-        this.view.formModel.funcID,
-        '',
-        data?.title,
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError)
-          this.notificationsService.notify(res2?.msgCodeError);
-        else {
-          this.dataSelected.approveStatus = '3';
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.codxDpService
-            .updateApproverStatusInstance([data?.recID, '3'])
-            .subscribe();
-          this.notificationsService.notifyCode('ES007');
-        }
-      });
-  }
+
+  //Gửi duyệt cu sau nay se xoa
+  // release(data: any, processID: any) {
+  //   this.codxShareService
+  //     .codxRelease(
+  //       this.view.service,
+  //       data?.recID,
+  //       processID,
+  //       this.view.formModel.entityName,
+  //       this.view.formModel.funcID,
+  //       '',
+  //       data?.title,
+  //       ''
+  //     )
+  //     .subscribe((res2: any) => {
+  //       if (res2?.msgCodeError)
+  //         this.notificationsService.notify(res2?.msgCodeError);
+  //       else {
+  //         this.dataSelected.approveStatus = '3';
+  //         this.view.dataService.update(this.dataSelected).subscribe();
+  //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+  //         this.codxDpService
+  //           .updateApproverStatusInstance([data?.recID, '3'])
+  //           .subscribe();
+  //         this.notificationsService.notifyCode('ES007');
+  //       }
+  //     });
+  // }
 
   //Huy duyet
   cancelApprover(dt) {

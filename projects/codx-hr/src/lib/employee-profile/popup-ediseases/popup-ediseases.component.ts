@@ -28,7 +28,7 @@ import {
 })
 export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   ediseasesObj;
   lstEdiseases;
@@ -37,7 +37,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   disabledInput = false;
   actionType: string;
   employeeId: string;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   defaultFromDate: string = '0001-01-01T00:00:00';
   @ViewChild('form') form: LayoutAddComponent;
@@ -73,7 +73,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     // }
     this.dialog = dialog;
     console.log('dialog nhan vao', this.dialog);
-    
+    this.formModel = dialog.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employeeId = data?.data?.employeeId;
@@ -88,19 +88,21 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    this.initForm();
+
+    // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrSevice
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   setTitle(evt: any){
@@ -124,26 +126,27 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
               this.ediseasesObj.fromDate = null;
             }
             this.ediseasesObj.employeeID = this.employeeId;
-            this.formModel.currentData = this.ediseasesObj;
-            this.formGroup.patchValue(this.ediseasesObj);
+            // this.formModel.currentData = this.ediseasesObj;
+            // this.form.formGroup.patchValue(this.ediseasesObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
-    } else {
-      if (this.actionType === 'copy' && this.ediseasesObj.fromDate.toString() == this.defaultFromDate) {
-        this.ediseasesObj.fromDate = null;
-      }
-      this.formGroup.patchValue(this.ediseasesObj);
-      this.formModel.currentData = this.ediseasesObj;
-      this.cr.detectChanges();
-      this.isAfterRender = true;
-    }
+    } 
+    // else {
+    //   if (this.actionType === 'copy' && this.ediseasesObj.fromDate.toString() == this.defaultFromDate) {
+    //     this.ediseasesObj.fromDate = null;
+    //   }
+    //   this.form.formGroup.patchValue(this.ediseasesObj);
+    //   this.formModel.currentData = this.ediseasesObj;
+    //   this.cr.detectChanges();
+    //   // this.isAfterRender = true;
+    // }
   }
 
   onSaveForm() {
-    if(this.formGroup.invalid){
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if(this.form.formGroup.invalid){
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -200,7 +203,7 @@ export class PopupEDiseasesComponent extends UIComponent implements OnInit {
     this.formModel.currentData = JSON.parse(JSON.stringify(this.ediseasesObj)) 
     this.indexSelected = this.lstEdiseases.findIndex(p => p.recID == this.ediseasesObj.recID);
     this.actionType ='edit'
-    this.formGroup?.patchValue(this.ediseasesObj);
+    this.form.formGroup?.patchValue(this.ediseasesObj);
     this.cr.detectChanges();
   }
 }

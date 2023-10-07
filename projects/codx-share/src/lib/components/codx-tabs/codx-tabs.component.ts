@@ -52,7 +52,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() transID: string;
   @Input() approveStatus: string;
 
-  @Input() referType: string = ''; //de mac định the nay moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  @Input() referType: string = 'attach'; //de mac định the nay moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
 
   private all: TabModel[] = [
     {
@@ -126,13 +126,23 @@ export class CodxTabsComponent implements OnInit {
     if (this.objectID && !this.loadingCount) {
       this.loadingCount = true;
       this.api
+        .execSv('DM', 'DM', 'FileBussiness', 'CountAttachmentAsync', [
+          this.objectID,
+          this.referType,
+          this.entityName,
+        ])
+        .subscribe((res) => {
+          if (res) this.oCountFooter['attachment'] = res;
+          this.loadingCount = false;
+        });
+      this.api
         .execSv('BG', 'BG', 'TrackLogsBusiness', 'CountFooterAsync', [
           this.objectID,
           this.referType,
           this.transID,
         ])
         .subscribe((res) => {
-          if (res) this.oCountFooter = res;
+          if (res) this.oCountFooter['comment'] = res;
           this.loadingCount = false;
         });
     }

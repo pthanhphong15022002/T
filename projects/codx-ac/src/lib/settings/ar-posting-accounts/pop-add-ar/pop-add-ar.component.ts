@@ -157,7 +157,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
               this.dialog.close();
               this.dt.detectChanges();
             } else {
-              this.notification.notify('Thiết lập đã tồn tại', '2');
+              this.notification.notify('Thiết lập đã tồn tại', '2');//
               return;
             }
           });
@@ -209,7 +209,7 @@ export class PopAddArComponent extends UIComponent implements OnInit {
               this.arposting.postType = this.postType;
             });
           } else {
-            this.notification.notify('Thiết lập đã tồn tại', '2');
+            this.notification.notify('Thiết lập đã tồn tại', '2');//
             return;
           }
         });

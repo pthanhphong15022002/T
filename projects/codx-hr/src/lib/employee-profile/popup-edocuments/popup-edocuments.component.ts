@@ -27,7 +27,7 @@ import { createSolutionBuilderHost } from 'typescript';
 })
 export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   idField = 'RecID';
   disabledInput = false;
@@ -70,7 +70,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    // if (!this.formGroup)
+    // if (!this.form.formGroup)
     //   this.hrService.getFormModel(this.funcID).then((formModel) => {
     //     if (formModel) {
     //       this.formModel = formModel;
@@ -78,7 +78,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
     //         .then((fg) => {
     //           if (fg) {
-    //             this.formGroup = fg;
+    //             this.form.formGroup = fg;
     //             this.initForm();
     //           }
     //         });
@@ -89,7 +89,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
     //     .then((fg) => {
     //       if (fg) {
-    //         this.formGroup = fg;
+    //         this.form.formGroup = fg;
     //         this.initForm();
     //       }
     //     });
@@ -109,7 +109,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         this.documentObj.returnedDate = new Date();
         this.disabledReturnedDate = false;
       }
-      this.formGroup.patchValue(this.documentObj);
+      this.form.formGroup.patchValue(this.documentObj);
     } else {
       if (fieldName == 'isSubmitted') {
         this.documentObj.submittedDate = null;
@@ -118,7 +118,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         this.documentObj.returnedDate = null;
         this.disabledReturnedDate = true;
       }
-      this.formGroup.patchValue(this.documentObj);
+      this.form.formGroup.patchValue(this.documentObj);
     }
   }
 
@@ -128,7 +128,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         this.documentObj.submitWhen = res.submitWhen;
         this.documentObj.isRequired = res.isRequired;
         this.documentObj.hasReturn = res.hasReturn;
-        this.formGroup.patchValue(this.documentObj);
+        this.form.formGroup.patchValue(this.documentObj);
       }
     });
   }
@@ -147,7 +147,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
             this.documentObj.employeeID = this.employId;
 
             // this.formModel.currentData = this.documentObj;
-            // this.formGroup.patchValue(this.documentObj);
+            // this.form.formGroup.patchValue(this.documentObj);
             this.cr.detectChanges();
             // this.isAfterRender = true;
           }
@@ -155,7 +155,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     }
     // else {
     //   if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-    //     // this.formGroup.patchValue(this.documentObj);
+    //     // this.form.formGroup.patchValue(this.documentObj);
     //     // this.formModel.currentData = this.documentObj;
     //     this.cr.detectChanges();
     //     // this.isAfterRender = true;
@@ -166,7 +166,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   async addFiles(evt) {
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
-    this.formGroup.patchValue(this.documentObj);
+    this.form.formGroup.patchValue(this.documentObj);
   }
 
   popupUploadFile() {
@@ -174,8 +174,8 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }

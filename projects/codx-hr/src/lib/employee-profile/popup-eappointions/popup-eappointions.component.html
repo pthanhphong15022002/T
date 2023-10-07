@@ -4,7 +4,7 @@
   #form
   [headerText]="headerText"
   [body]="body"
-  [formModel]="form.formModel"
+  [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="EAppointionObj"
@@ -385,7 +385,7 @@
     <button
       class="btn btn-primary"
       (click)="onSaveForm()"
-      [disabled]="!formModel.currentData.updateColumn && !changedInForm"
+      [disabled]="!form.formModel.currentData.updateColumn && !changedInForm"
     >
       <i class="icon-save"></i>
       <codx-label

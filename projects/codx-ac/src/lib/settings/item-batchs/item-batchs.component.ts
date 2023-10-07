@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopAddItemBatchsComponent } from './pop-add-item-batchs/pop-add-item-batchs.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-item-batchs',
@@ -16,8 +17,11 @@ export class ItemBatchsComponent extends UIComponent{
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;
-  funcName: any = 'danh mục lô';
+  funcName: any = '';
   gridViewSetup: any;
+
+  private destroy$ = new Subject<void>();
+
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(
     private inject: Injector,
@@ -48,6 +52,12 @@ export class ItemBatchsComponent extends UIComponent{
         },
       },
     ];
+
+    this.cache.functionList(this.view?.funcID)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      this.funcName = res.defaultName.toLowerCase();
+    });
   }
 
   //End Init
@@ -80,7 +90,6 @@ export class ItemBatchsComponent extends UIComponent{
   //Function
 
   add(e) {
-    console.log(this.view.dataService);
     this.headerText = e.text + ' ' + this.funcName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {

@@ -58,6 +58,7 @@ import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/c
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PopupAddVllCustomComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-column-table/popup-add-column-table.component';
+import { ViewInstancesComponent } from './view-instances/view-instances.component';
 
 export const routes: Routes = [
   {
@@ -72,12 +73,12 @@ export const routes: Routes = [
       {
         path: 'instances/:funcID/:processID',
         //component: CodxInstancesComponent,
-        component: InstancesComponent,
+        component: ViewInstancesComponent,
         data: { noReuse: true },
       },
       {
         path: 'instances/:funcID/approvals',
-        component: InstancesComponent,
+        component: ViewInstancesComponent,
         data: { noReuse: true },
       },
       //dp/instances/DPT0502/approvals
@@ -146,6 +147,7 @@ const T_Component: Type<any>[] = [
   InstanceDashboardComponent,
   PopupAddVllCustomComponent,
   PopupAddColumnTableComponent,
+  ViewInstancesComponent,
 ];
 
 @NgModule({

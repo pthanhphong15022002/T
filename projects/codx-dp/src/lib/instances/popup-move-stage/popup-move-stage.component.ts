@@ -428,14 +428,14 @@ export class PopupMoveStageComponent implements OnInit {
         );
         return;
       }
-      if (!this.owner) {
-        this.notiService.notifyCode(
-          'SYS009',
-          0,
-          '"' + this.gridViewInstanceStep['Owner']?.headerText + '"'
-        );
-        return;
-      }
+      // if (!this.owner) {
+      //   this.notiService.notifyCode(
+      //     'SYS009',
+      //     0,
+      //     '"' + this.gridViewInstanceStep['Owner']?.headerText + '"'
+      //   );
+      //   return;
+      // }
       let ischeck = true;
       let ischeckFormat = true;
       let title = '';

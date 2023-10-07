@@ -143,8 +143,8 @@ export class AccountsAddComponent extends UIComponent implements OnInit {
               else
                 res.postDetail = false;
               res.isAdd = true;
+              if((this.form.form as CodxFormComponent).data.isEdit || (this.form.form as CodxFormComponent).data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
               (this.form.form as CodxFormComponent).refreshData({...res}); //? set lại data default cho form
-              if((this.form.form as CodxFormComponent).data.isAdd || (this.form.form as CodxFormComponent).data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
               this.detectorRef.detectChanges();
             }
           });

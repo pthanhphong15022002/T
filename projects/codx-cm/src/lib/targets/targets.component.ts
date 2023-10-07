@@ -157,7 +157,7 @@ export class TargetsComponent
   popoverList: any;
   viewCurrent = '1';
   viewDataValue = '1';
-  viewMode = 9;
+  viewMode = 16;
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -185,13 +185,12 @@ export class TargetsComponent
     private cmSv: CodxCmService,
     private auth: AuthService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore,
-
+    private authStore: AuthStore
   ) {
     super(inject);
     // if (!this.funcID)
     //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.funcID = "CM0601";
+    this.funcID = 'CM0601';
     this.language = this.auth.userValue?.language?.toLowerCase();
     this.userID = this.authStore?.get()?.userID;
     this.heightWin = Util.getViewPort().height - 100;
@@ -355,7 +354,6 @@ export class TargetsComponent
   async ngAfterViewInit() {
     if (this.viewDashboard) {
       this.formModel = await this.cmSv.getFormModel('CM0601');
-
     } else {
       this.formModel = this.view.formModel;
 
@@ -540,7 +538,7 @@ export class TargetsComponent
   changeCalendar(data: any) {
     if (!data?.fromDate) {
       this.date = new Date();
-      this.calendarDrop.value = this.date;
+      if (this.calendarDrop) this.calendarDrop.value = this.date;
     }
     var year = data?.fromDate
       ? parseInt(data?.fromDate?.getFullYear())
@@ -840,9 +838,7 @@ export class TargetsComponent
                 this.lstDataTree.push(Object.assign({}, data));
                 this.countTarget++;
               }
-              this.lstDataTree = JSON.parse(
-                JSON.stringify(this.lstDataTree)
-              );
+              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
               let lst = [];
               this.lstDataTree.forEach((res) => {
                 res?.items?.forEach((element) => {
@@ -878,9 +874,7 @@ export class TargetsComponent
             type: 'delete',
             data: data,
           });
-          var index = this.lstDataTree.findIndex(
-            (x) => x.recID == data.recID
-          );
+          var index = this.lstDataTree.findIndex((x) => x.recID == data.recID);
           if (index != -1) {
             this.lstDataTree.splice(index, 1);
             this.countTarget--;
