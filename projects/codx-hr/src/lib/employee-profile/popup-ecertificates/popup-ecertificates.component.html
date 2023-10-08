@@ -1,3 +1,5 @@
+<ng-container *ngIf="certificateObj">
+
 <codx-layout-add
   #form
   [title]="headerText"
@@ -7,25 +9,27 @@
   [footer]="footer"
   [dialog]="dialog"
   (setTitle)="setTitle($event)"
-  [group]="formGroup"
   [openMore]="true"
   [tabContent]="[cerOveralInf, cerMoreInf]"
   [data]="certificateObj"
-  *ngIf="isAfterRender"
->
+  >
+  <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
 </codx-layout-add>
 
 <ng-template #cerOveralInf>
+<ng-container *ngIf="form.formGroup">
+
   <div class="form-group row mx-0">
     <codx-label
       fiedName="CertificateType"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
     <codx-input
     [disabled]="disabledInput"
       field="certificateType"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChange($event, certificateID)"
     ></codx-input>
   </div>
@@ -33,14 +37,14 @@
   <div class="form-group row mx-0">
       <codx-label
       fiedName="CertificateID"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
     <codx-input
     [disabled]="disabledInput"
       #certificateID
       field="certificateID"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChange($event)"
     ></codx-input>
   </div>
@@ -49,13 +53,13 @@
     <div class="col-6">
       <codx-label
         fiedName="CertificateGradeID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="certificateGradeID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -63,36 +67,36 @@
     <div class="col-6">
       <codx-label
         fiedName="ForeignLanguage"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="foreignLanguage"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
 
   <div class="form-group row mx-0">
     <div class="col-6">
-      <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="LimitMonths" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="limitMonths"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [showSpinButton]="false"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="IsExpire" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="IsExpire" [formModel]="form.formModel"></codx-label>
       <div>
         <codx-input
         [disabled]="disabledInput"
           field="isExpire"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -102,55 +106,55 @@
     <div class="col-6">
       <codx-label
         fiedName="EffectedDate"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="effectedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="ExpiredDate" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="expiredDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
 
   <div class="form-group row mx-0 mt-5">
     <div class="col-6">
-      <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="totalScore"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [showSpinButton]="false"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="ranking"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
 
   <div class="form-group row mx-0">
-    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
     <codx-input
     [disabled]="disabledInput"
       field="note"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input>
   </div>
 
@@ -159,7 +163,7 @@
   >
     <codx-label
       name="lblAttachFile"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
       [default]="'File đính kèm'"
     >
     </codx-label>
@@ -186,13 +190,15 @@
       >
     </codx-attachment>
   </div>
+</ng-container>
 </ng-template>
 
 <ng-template #cerMoreInf>
+  <ng-container *ngIf="form.formGroup">
   <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
     <codx-label
       name="lblTraining"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
       default="Thông tin đào tạo"
     >
     </codx-label>
@@ -201,13 +207,13 @@
   <div class="form-group row mx-0">
     <codx-label
       fiedName="TrainSupplierID"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
     <codx-input
     [disabled]="disabledInput"
       field="trainSupplierID"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input>
   </div>
 
@@ -215,34 +221,34 @@
     <div class="col-6">
       <codx-label
         fiedName="TrainCourseID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="trainCourseID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="trainForm"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
 
   <div class="form-group row mx-0">
     <div class="col-6">
-      <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
       <!-- <codx-input
         [disabled]="disabledInput"
       field="trainFrom"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input> -->
     <!--123123123-->
       <codx-dropdown-calendar
@@ -261,7 +267,7 @@
       </codx-dropdown-calendar>
     </div>
     <div class="col-6">
-      <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
 
       <codx-dropdown-calendar
       [emptyText]="headerTextCalendar[1]"
@@ -283,7 +289,7 @@
   <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
     <codx-label
       name="lblCertInfo"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
       default="Thông tin chứng chỉ"
     >
     </codx-label>
@@ -291,21 +297,21 @@
 
   <div class="form-group row mx-0">
     <div class="col-6">
-      <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="decisionNo"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="IssuedDate" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="issuedDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
@@ -314,29 +320,29 @@
     <div class="col-6">
       <codx-label
         fiedName="CertificateNo"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="certificateNo"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="BookNo" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="BookNo" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="bookNo"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
 
   <div class="form-group row mx-0">
     <div class="d-flex flex-stack">
-      <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="IssuedPlace" [formModel]="form.formModel"></codx-label>
 
       <span class="text-end align-items-end mb-1" *ngIf="actionType !='view'">
         <a
@@ -347,7 +353,7 @@
           <codx-label
             name="lblSetIssuedPlace"
             default="(=Nơi đào tạo)"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
           ></codx-label>
         </a>
       </span>
@@ -355,18 +361,18 @@
     <codx-input
     [disabled]="disabledInput"
       field="issuedPlace"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input>
   </div>
 
   <div class="form-group row mx-0">
-    <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
+    <codx-label fiedName="IssuedBy" [formModel]="form.formModel"></codx-label>
     <codx-input
     [disabled]="disabledInput"
       field="issuedBy"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input>
   </div>
 
@@ -374,7 +380,7 @@
     <div class="fs-6 fw-bold text-primary mt-6 mb-3 ps-3">
       <codx-label
         name="lblForeignSkillPoint"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
         default="Điểm kỹ năng ngoại ngữ"
       >
       </codx-label>
@@ -384,26 +390,26 @@
       <div class="col-6">
         <codx-label
           fiedName="ScoreListening"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreListening"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="ScoreSpeaking"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreSpeaking"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
@@ -413,32 +419,32 @@
       <div class="col-6">
         <codx-label
           fiedName="ScoreReading"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreReading"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="ScoreWriting"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreWriting"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
     </div>
   </div>
-
+</ng-container>
 </ng-template>
 
 <ng-template #footer>
@@ -450,28 +456,29 @@
     <codx-label
       name="lblAddFile"
       default="Đính kèm file"
-      [formModel]="formModel"
+      [formModel]="form.formModel"
     ></codx-label>
   </button>
 
     <button class="btn btn-primary" (click)="onSaveForm()" 
-    [disabled]="!formModel.currentData.updateColumn && !changedInForm"
+    [disabled]="!form.formModel.currentData.updateColumn && !changedInForm"
     >
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
   </div>
 </ng-template>
+</ng-container>
 
 <!-- <codx-form
   #form
   [headerText]="headerText"
   [body]="body"
-  [formModel]="formModel"
+  [formModel]="form.formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="certificateObj"
@@ -481,13 +488,13 @@
     <div class="form-group row mx-0">
       <codx-label
         fiedName="CertificateType"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="certificateType"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChange($event, certificateID)"
       ></codx-input>
     </div>
@@ -496,27 +503,27 @@
       <div class="col-6">
         <codx-label
           fiedName="CertificateID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           #certificateID
           field="certificateID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="CertificateGradeID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="certificateGradeID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
@@ -525,13 +532,13 @@
     <div class="form-group row mx-0">
       <codx-label
         fiedName="TrainSupplierID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="trainSupplierID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
@@ -539,29 +546,29 @@
       <div class="col-6">
         <codx-label
           fiedName="TrainCourseID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainCourseID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainForm" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="trainForm"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row mx-0">
       <div class="col-6">
-        <codx-label fiedName="TrainFrom" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
         <codx-dropdown-calendar
           [emptyText]="headerTextCalendar[0]"
           [firstChange]="isNullFrom"
@@ -576,7 +583,7 @@
         </codx-dropdown-calendar>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainTo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
 
         <codx-dropdown-calendar
         [emptyText]="headerTextCalendar[1]"
@@ -595,29 +602,29 @@
 
     <div class="form-group row mx-0 mt-5">
       <div class="col-6">
-        <codx-label fiedName="TotalScore" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="totalScore"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Ranking" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="ranking"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="fs-5 fw-bold text-uppercase text-primary mt-6 mb-3">
       <codx-label
         name="lblTitleLanguage"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
         default="Ngoại ngữ"
       >
       </codx-label>
@@ -627,26 +634,26 @@
       <div class="col-6">
         <codx-label
           fiedName="ScoreListening"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreListening"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="ScoreSpeaking"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreSpeaking"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
@@ -656,26 +663,26 @@
       <div class="col-6">
         <codx-label
           fiedName="ScoreReading"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreReading"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="ScoreWriting"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="scoreWriting"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
@@ -683,21 +690,21 @@
 
     <div class="form-group row mx-0">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="IssuedDate" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="issuedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
@@ -706,29 +713,29 @@
       <div class="col-6">
         <codx-label
           fiedName="CertificateNo"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="certificateNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="BookNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="BookNo" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="bookNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row mx-0">
       <div class="d-flex flex-stack">
-        <codx-label fiedName="IssuedPlace" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="IssuedPlace" [formModel]="form.formModel"></codx-label>
 
         <span class="text-end align-items-end mb-1">
           <a
@@ -739,7 +746,7 @@
             <codx-label
               name="lblSetIssuedPlace"
               default="(=Nơi đào tạo)"
-              [formModel]="formModel"
+              [formModel]="form.formModel"
             ></codx-label>
           </a>
         </span>
@@ -747,40 +754,40 @@
       <codx-input
       [disabled]="disabledInput"
         field="issuedPlace"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row mx-0">
-      <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="IssuedBy" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="issuedBy"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group row mx-0">
       <div class="col-6">
-        <codx-label fiedName="LimitMonths" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="LimitMonths" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="limitMonths"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="IsExpire" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="IsExpire" [formModel]="form.formModel"></codx-label>
         <div>
           <codx-input
           [disabled]="disabledInput"
             field="isExpire"
-            [formModel]="formModel"
-            [Group]="formGroup"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
           ></codx-input>
         </div>
       </div>
@@ -790,33 +797,33 @@
       <div class="col-6">
         <codx-label
           fiedName="EffectedDate"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="effectedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="ExpiredDate" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="expiredDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
 
     <div class="form-group row mx-0">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </ng-template>

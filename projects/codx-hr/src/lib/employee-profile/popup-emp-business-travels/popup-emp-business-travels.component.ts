@@ -165,9 +165,9 @@ export class PopupEmpBusinessTravelsComponent
             this.data.country = null;
             this.data.endDate = null;
             this.data.employeeID = this.employeeId;
-            this.formModel.currentData = this.data;
+            // this.formModel.currentData = this.data;
             this.data.periodType = '1';
-            this.formGroup.patchValue(this.data);
+            // this.formGroup.patchValue(this.data);
             // this.isAfterRender = true;
             this.cr.detectChanges();
           }
@@ -177,8 +177,8 @@ export class PopupEmpBusinessTravelsComponent
         this.getEmployeeInfoById(this.data.signerID, true);
       }
 
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
+      // this.formModel.currentData = this.data;
+      // this.formGroup.patchValue(this.data);
       // this.isAfterRender = true;
       this.cr.detectChanges();
     }

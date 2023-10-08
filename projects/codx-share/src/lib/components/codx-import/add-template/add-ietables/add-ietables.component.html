@@ -5,7 +5,7 @@
     [body]="body"
     [footer]="footer"
     [data]="data"
-    [formModel]="formModel"
+    [formModel]="formModels"
 >
 </codx-form>
 <ng-template #body>
@@ -39,8 +39,8 @@
                 <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="mappingTemplate">
                 </codx-input>
             </div>
-            <i class="icon-add cursor-pointer ms-2 text-primary icon-20 mt-9" (click)="openFormAddImportDetail()"></i>
-            <i class="icon-open_in_new cursor-pointer ms-2 icon-20 mt-9"></i>
+            <i class="icon-add_box cursor-pointer ms-2 text-primary icon-20 mt-9" (click)="openFormAddImportDetail(null)"></i>
+            <i class="icon-open_in_new cursor-pointer ms-2 icon-20 mt-9"  (click)="openFormAddImportDetail(data,'edit')"></i>
         </div>
     </div>
 </ng-template>

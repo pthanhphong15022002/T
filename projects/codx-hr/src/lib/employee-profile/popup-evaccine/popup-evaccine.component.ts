@@ -26,7 +26,7 @@ import { CodxHrService } from '../../codx-hr.service';
 })
 export class PopupEVaccineComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
   //listData: any; //
@@ -37,7 +37,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
 
   successFlag = false;
   oldVaccineTypeID: string; // xử lí binding data main view
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -52,6 +52,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.dialog = dialog;
+    console.log('dialog nhan vao', this.dialog);
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
@@ -86,14 +87,16 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-      .then((formGroup) => {
-        if (formGroup) {
-          this.formGroup = formGroup;
-          this.initForm();
-        }
-      });
+    this.initForm();
+
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //   .then((formGroup) => {
+    //     if (formGroup) {
+    //       this.form.formGroup = formGroup;
+    //       this.initForm();
+    //     }
+    //   });
 
     // this.hrService.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
@@ -102,7 +105,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     //       .then((formGroup) => {
     //         if (formGroup) {
-    //           this.formGroup = formGroup;
+    //           this.form.formGroup = formGroup;
     //           this.initForm();
     //         }
     //       });
@@ -122,27 +125,28 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
           if (res && res.data) {
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
-            this.formModel.currentData = this.data;
-            this.formGroup.patchValue(this.data);
+            // this.formModel.currentData = this.data;
+            // this.form.formGroup.patchValue(this.data);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           } else {
             this.notify.notify('Error');
           }
         });
-    } else {
+    }
+     else {
       this.oldVaccineTypeID = this.data.vaccineTypeID;
 
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
+      // this.formModel.currentData = this.data;
+      // this.form.formGroup.patchValue(this.data);
       this.cr.detectChanges();
-      this.isAfterRender = true;
+      // this.isAfterRender = true;
     }
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -225,7 +229,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   //     this.oldVaccineTypeID = this.data.oldVaccineTypeID
 
   //     this.formModel.currentData = this.data;
-  //     this.formGroup.patchValue(this.data);
+  //     this.form.formGroup.patchValue(this.data);
   //     this.cr.detectChanges();
   //   }
   // }
