@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CallFuncService,
   DataRequest,
@@ -184,7 +185,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       if(res?.event) this.dt_AD_IEConnections.push(res?.event);
     });
   }
-  openForm(val: any, data: any, type: any) {
+  openForm(val: any, data: any, type: any , index:any = null) {
     switch (val) {
       case 'edit': {
         this.callfunc.openForm(
@@ -199,6 +200,27 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       case 'delete': {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notifySvr
+          .alertCode("SYS003", config)
+          .subscribe((x) => {
+            if (x.event.status == 'Y') {
+              if(data?.recID)
+              {
+                this.api
+                .execSv<any>("SYS",'AD', 'IEConnectionsBusiness', 'DeleteItemAsync', data?.recID)
+                .subscribe((item) => {
+                  if(item)
+                  {
+                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(x=>x.recID != data?.recID);
+                    this.notifySvr.notifyCode("SYS008")
+                  }
+                  else this.notifySvr.notifyCode("SYS022")
+                })
+              }
+            }
+        });
         break;
       }
     }

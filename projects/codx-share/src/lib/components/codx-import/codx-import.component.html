@@ -39,7 +39,7 @@
                 </div>
                 <div class="py-2" [style.height]="hScroll">
                   <ng-container *ngIf="dt_AD_IEConnections">
-                    <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections">
+                    <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections , let i = index">
                       <div class="d-flex align-items-center justify-content-start">
                         <codx-input
                           type="radio"
@@ -69,7 +69,7 @@
                         </button>
                         <ng-template #tool >
                           <ng-container *ngFor="let x of moreFunction" >
-                            <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel')">
+                            <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel',i)">
                               <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
                               <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
                             </div>

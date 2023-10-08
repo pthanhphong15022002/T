@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertConfirmInputConfig, ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import * as XLSX from 'xlsx';
 import { IETables } from '../models/import.model';
 import { AddImportDetailsComponent } from './add-import-details/add-import-details.component';
@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AddTemplateComponent implements OnInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
+  user:any;
   type:any;
   dialog:any;
   formModel:any;
@@ -40,15 +41,17 @@ export class AddTemplateComponent implements OnInit{
     private formBuilder: FormBuilder,
     private cache: CacheService,
     private notifySvr: NotificationsService,
+    private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
   { 
+    this.user = this.auth.get();
     this.dialog = dialog;
     this.type = dt.data[0];
     this.formModel = dt.data[1];
     if(dt?.data[2]) this.dataIEConnection = dt.data[2];
-    if(this.type == "edit") this.headerText = "Chỉnh sửa template"
+    if(this.type == "edit") this.headerText = "Chỉnh sửa template";
   }
   ngOnInit(): void {
     this.formModels = {
@@ -401,6 +404,7 @@ export class AddTemplateComponent implements OnInit{
     this.dataIEConnection.firstCell = this.importAddTmpGroup.value.firstCell;
     this.dataIEConnection.formName = this.formModel.formName;
     this.dataIEConnection.gridViewName = this.formModel.gridViewName;
+    this.dataIEConnection.createdBy = this.user.userID;
     this.api
     .execSv<any>(
       'SYS',
