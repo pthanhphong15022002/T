@@ -10,7 +10,73 @@
 {
     border: dotted 1px gray;
 }
-.tb-add-import
+.sl-add-tmp-ip
 {
-    
+    height: 35px;
+    padding: 0 10px;
 }
+.stepper-wrapper {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -10%;
+  }
+  .stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    width: 200px;
+  
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  
+ 
+  
+  .stepper-item::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px dotted #ccc;
+    width: 100%;
+    top: 12px;
+    left: 57%;
+    z-index: 3;
+    width: 175px;
+  }
+  
+  .stepper-item .step-counter {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ccc;
+    margin-bottom: 6px;
+  }
+  
+
+  .stepper-item.active {
+    i
+    {
+        color: var(--primary-active);
+    }
+  }
+  
+  .stepper-item.completed .step-counter {
+    background-color: var(--primary-active);
+  }
+  
+ 
+  
+  .stepper-item:first-child::before {
+    content: none;
+  }
+  .stepper-item:last-child::after {
+    content: none;
+  }

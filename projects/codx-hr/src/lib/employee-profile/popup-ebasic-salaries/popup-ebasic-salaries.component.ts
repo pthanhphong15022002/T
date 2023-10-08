@@ -27,7 +27,7 @@ export class PopupEBasicSalariesComponent
   implements OnInit
 {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   EBasicSalaryObj: any | null;
   // lstEBSalary
@@ -36,7 +36,7 @@ export class PopupEBasicSalariesComponent
   actionType: string;
   disabledInput = false;
   employeeId: string | null;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: ' ';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -50,6 +50,8 @@ export class PopupEBasicSalariesComponent
   loaded: boolean = false;
   moment = moment;
   employeeSign;
+  loadedAutoNum = false;
+
   dateNow = moment().format('YYYY-MM-DD');
   // genderGrvSetup: any;
   //end
@@ -75,7 +77,7 @@ export class PopupEBasicSalariesComponent
     if (data?.data?.salaryObj) {
       this.EBasicSalaryObj = JSON.parse(JSON.stringify(data?.data?.salaryObj));
     } else {
-      this.EBasicSalaryObj = null;
+      this.EBasicSalaryObj = undefined;
     }
     if (this.EBasicSalaryObj?.employeeID && this.fromListView) {
       this.employeeId = this.EBasicSalaryObj?.employeeID;
@@ -107,18 +109,19 @@ export class PopupEBasicSalariesComponent
   }
 
   onInit(): void {
-    this.hrService
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName,
-        this.formModel
-      )
-      .then((fg) => {
-        if (fg) {
-          this.formGroup = fg;
-          this.initForm();
-        }
-      });
+    this.initForm();
+
+    // this.hrService
+    //   .getFormGroup(
+    //     this.formModel.formName,
+    //     this.formModel.gridViewName,
+    //     this.formModel
+    //   )
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.form.formGroup = fg;
+    //     }
+    //   });
     //get emp from beginning
     // this.cache
     //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
@@ -140,7 +143,7 @@ export class PopupEBasicSalariesComponent
         } else {
           delete this.employeeId;
           delete this.employeeObj;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             employeeID: this.EBasicSalaryObj.employeeID,
           });
         }
@@ -149,7 +152,7 @@ export class PopupEBasicSalariesComponent
         if (evt?.data && evt?.data.length > 0) {
           this.getEmployeeInfoById(evt?.data, evt?.field);
         } else {
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             signerID: null,
             signerPosition: null,
           });
@@ -185,7 +188,7 @@ export class PopupEBasicSalariesComponent
                 if (res) {
                   this.employeeSign.positionName = res.positionName;
                   this.EBasicSalaryObj.signerPosition = res.positionName;
-                  this.formGroup.patchValue({
+                  this.form.formGroup.patchValue({
                     signerPosition: this.EBasicSalaryObj.signerPosition,
                   });
                   this.cr.detectChanges();
@@ -193,7 +196,7 @@ export class PopupEBasicSalariesComponent
               });
           } else {
             this.EBasicSalaryObj.signerPosition = null;
-            this.formGroup.patchValue({
+            this.form.formGroup.patchValue({
               signerPosition: this.EBasicSalaryObj.signerPosition,
             });
           }
@@ -226,14 +229,15 @@ export class PopupEBasicSalariesComponent
             if (res.key) {
               this.autoNumField = res.key;
             }
-
+            
             this.EBasicSalaryObj = res?.data;
+            this.loadedAutoNum = true;
 
             this.EBasicSalaryObj.effectedDate = null;
             this.EBasicSalaryObj.employeeID = this.employeeId;
-            this.formModel.currentData = this.EBasicSalaryObj;
-            this.formGroup.patchValue(this.EBasicSalaryObj);
-            this.isAfterRender = true;
+            // this.formModel.currentData = this.EBasicSalaryObj;
+            // this.form.formGroup.patchValue(this.EBasicSalaryObj);
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
@@ -253,6 +257,7 @@ export class PopupEBasicSalariesComponent
             if (res) {
               this.autoNumField = res.key ? res.key : null;
             }
+            this.loadedAutoNum = true;
           });
         if (this.actionType == 'copy') {
           if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
@@ -262,21 +267,21 @@ export class PopupEBasicSalariesComponent
         if (this.EBasicSalaryObj.signerID) {
           this.getEmployeeInfoById(this.EBasicSalaryObj.signerID, 'signerID');
         }
-        this.formGroup.patchValue(this.EBasicSalaryObj);
-        this.formModel.currentData = this.EBasicSalaryObj;
-        this.isAfterRender = true;
+        // this.form.formGroup.patchValue(this.EBasicSalaryObj);
+        // this.formModel.currentData = this.EBasicSalaryObj;
+        // this.isAfterRender = true;
         this.cr.detectChanges();
       }
     }
-    // this.formGroup.patchValue(this.EBasicSalaryObj);
+    // this.form.formGroup.patchValue(this.EBasicSalaryObj);
     // this.formModel.currentData = this.EBasicSalaryObj;
     // this.isAfterRender = true;
     // this.cr.detectChanges();
   }
 
   async onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -318,6 +323,7 @@ export class PopupEBasicSalariesComponent
           }
         });
     } else {
+      debugger
       this.hrService
         .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
         .subscribe((p) => {
