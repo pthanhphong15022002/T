@@ -25,6 +25,7 @@ import { CodxCmService } from '../codx-cm.service';
 import { PopupAddCampaignComponent } from './popup-add-campaign/popup-add-campaign.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './campaigns-detail/campaign-contacts/popup-add-campaign-contact/popup-add-campaign-contact.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'codx-campaigns',
@@ -76,7 +77,8 @@ export class CampaignsComponent
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private cmSv: CodxCmService
+    private cmSv: CodxCmService,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     if (!this.funcID)
@@ -163,6 +165,18 @@ export class CampaignsComponent
       case 'SYS04':
         this.copy(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        // this.df.detectChanges();
+        break;
+      }
     }
   }
 

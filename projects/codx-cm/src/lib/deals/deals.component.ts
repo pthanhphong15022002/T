@@ -452,7 +452,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' || data.closed;
+      eventItem.disabled = data?.alloweStatus != '1' || data.closed || !data.Full;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(

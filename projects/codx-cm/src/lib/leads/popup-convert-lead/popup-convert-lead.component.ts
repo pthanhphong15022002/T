@@ -227,6 +227,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.channelID = this.lead?.channelID;
     this.deal.businessLineID = this.lead?.businessLineID;
     this.deal.consultantID = this.lead?.consultantID;
+    this.deal.campaignID = this.lead?.campaignID;
     // this.deal.salespersonID = this.lead?.salespersonID;
     // this.deal.owner = this.lead?.salespersonID;
     this.deal.note = this.lead?.note;
@@ -498,7 +499,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-    if (this.lead.applyProcess && this.lead.status != '3') {
+    if (this.lead.applyProcess && this.lead.status != '3' && this.lead.status != '13') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
