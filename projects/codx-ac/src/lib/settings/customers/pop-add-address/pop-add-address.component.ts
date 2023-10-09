@@ -42,6 +42,9 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   objectContactAddress: Array<Contact> = [];
   objectContactAddressAfter: Array<Contact> = [];
   objectContactAddressDelete: Array<Contact> = [];
+  lblAdd: any;
+  lblEdit: any;
+  lblContacts: any;
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
@@ -72,7 +75,27 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0034').subscribe((res) => {
+      if (res) {
+        this.lblEdit = res?.customName;
+      }
+    });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        if (m) {
+          this.lblContacts = m.defaultName.toLowerCase();
+        }
+      }
+    })
+  }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
@@ -87,7 +110,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
   //#region Function
   openPopupContact() {
     var obj = {
-      headerText: 'Thêm người liên hệ',
+      headerText: this.lblAdd + ' ' + this.lblContacts,
       datacontact: this.objectContactAddress,
       recIdAddress: this.address.recID,
     };
@@ -127,7 +150,7 @@ export class PopAddAddressComponent extends UIComponent implements OnInit {
       (x) => x.contactID == data.contactID
     );
     var ob = {
-      headerText: 'Chỉnh sửa liên hệ',
+      headerText: this.lblEdit + ' ' + this.lblContacts,
       type: 'editContact',
       data: { ...data },
     };
