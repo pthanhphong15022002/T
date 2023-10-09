@@ -121,6 +121,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   isShowMore = false;
   widthDefault = '550';
   isShowButton = true;
+  countName = 'STT'; //test tính resource langue sau
 
   dialogAddColumn: DialogRef;
 

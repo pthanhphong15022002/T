@@ -112,6 +112,11 @@
     >
       <thead>
         <tr class="bg-gray-100">
+          <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+            <div>
+              <span>{{ countName }}</span>
+            </div>
+          </th>
           <ng-container *ngFor="let item of listColumns; let index = index">
             <th
               [style]="
@@ -152,6 +157,9 @@
       </thead>
       <tbody>
         <tr>
+          <td class="ps-4" *ngIf="settingCount">
+            <div>{{ countName }}</div>
+          </td>
           <ng-container *ngFor="let item of listColumns; let index = index">
             <td
               class="ps-4"

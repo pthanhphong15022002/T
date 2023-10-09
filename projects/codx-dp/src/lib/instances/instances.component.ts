@@ -238,6 +238,7 @@ export class InstancesComponent
   categoryCustomer: any = '';
   instanceCM: any;
   crrFunc: any;
+  runMode: any; //view detail
 
   constructor(
     inject: Injector,
@@ -262,6 +263,9 @@ export class InstancesComponent
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
+      this.cache.functionList(param.funcID).subscribe((fun) => {
+        if (fun) this.runMode = fun?.runMode;
+      });
       this.showButtonAdd = this.funcID != 'DPT0502';
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
@@ -1036,7 +1040,7 @@ export class InstancesComponent
       default: {
         //Biến động tự custom
         var customData = {
-          refID: this.process.recID,
+          refID: data.processID,
           refType: 'DP_Processes',
           dataSource: data.datas,
         };
@@ -2237,52 +2241,18 @@ export class InstancesComponent
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
+          //gui step
+          // this.codxDpService
+          //   .getDataReleased(this.dataSelected)
+          //   .subscribe((dt) => {
+          //     if (dt) this.release(dt, this.esCategory);
+          //   });
+
+          //gui instance
           this.codxDpService
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
               if (check) {
-                // this.isLockButton = true;
-                // let option = new DialogModel();
-                // option.zIndex = 1001;
-                // // this.dialogTemplate = this.callfc.openForm(
-                // //   this.popupTemplate,
-                // //   '',
-                // //   600,
-                // //   500,
-                // //   '',
-                // //   null,
-                // //   '',
-                // //   option
-                // // );
-                // let obj = {
-                //   data: this.dataSelected,
-                //   formModel: this.view.formModel,
-                //   isFormExport: false,
-                //   refID: this.process.recID,
-                //   refType: 'DP_Processes',
-                //   esCategory: this.esCategory,
-                //   titleAction: this.titleAction,
-                //   loaded: true,
-                //   dataEx: this.dataEx,
-                //   dataWord: this.dataWord,
-                // };
-                // this.dialogTemplate = this.callfc.openForm(
-                //   PopupSelectTempletComponent,
-                //   '',
-                //   600,
-                //   500,
-                //   '',
-                //   obj,
-                //   '',
-                //   option
-                // );
-                // this.dialogTemplate.closed.subscribe((e) => {
-                //   if (e?.event) {
-                //     this.dataSelected = e?.event;
-                //     this.view.dataService.update(this.dataSelected).subscribe();
-                //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-                //   }
-                // });
                 this.release(this.dataSelected, item);
               } else this.notificationsService.notifyCode('DP036');
             });
@@ -2305,6 +2275,7 @@ export class InstancesComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
+      debugger;
       ///do corre share ko tra ve status
       this.codxDpService
         .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
