@@ -8,11 +8,14 @@ import { AddImportDetailsComponent } from '../add-import-details/add-import-deta
   styleUrls: ['./add-ietables.component.css']
 })
 export class AddIetablesComponent implements OnInit {
+  type:any;
   dialog:any;
   data:any = {};
   formModel:any;
+  formModels:any;
   sourceField:any;
   selectedSheet:any;
+  
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -21,16 +24,18 @@ export class AddIetablesComponent implements OnInit {
   ) 
   { 
     this.dialog = dialog;
+    this.type = dt?.data?.type;
     this.sourceField = dt?.data?.sourceField;
     this.selectedSheet = dt?.data?.selectedSheet;
-  }
-  ngOnInit(): void {
-    this.formModel = 
+    this.formModel = dt?.data?.formModel;
+    if(this.type == "edit") this.data =  dt?.data?.data;
+    this.formModels = 
     {
       formName: 'IETables',
       gridViewName: 'grvIETables'
     }
-
+  }
+  ngOnInit(): void {
     this.setValue();
   }
 
@@ -44,8 +49,9 @@ export class AddIetablesComponent implements OnInit {
     this.data[e?.fileName] = e?.data
   }
 
-  openFormAddImportDetail()
+  openFormAddImportDetail(data:any , type = 'new')
   {
+    if(type == 'edit' && !data?.mappingTemplate) return;
     this.callfunc.openForm(
       AddImportDetailsComponent,
       null,
@@ -56,6 +62,8 @@ export class AddIetablesComponent implements OnInit {
         this.formModel,
         this.data,
         this.sourceField[0],
+        data?.mappingTemplate,
+        type
       ],
       null
     );

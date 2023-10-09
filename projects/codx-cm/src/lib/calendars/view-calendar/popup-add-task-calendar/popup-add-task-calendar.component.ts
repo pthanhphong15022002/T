@@ -19,6 +19,8 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   currentLeft = 0;
   currentRight = 0;
 
+  taskType;
+
   isLoading = true;
   lstOrg = [];
   isDisable = false;
@@ -40,6 +42,7 @@ export class PopupAddTaskCalendarComponent implements OnInit {
     @Optional() dt?: DialogData
   ) {
     this.dialog = dialog;
+    this.taskType =  dt?.data?.taskType;
   }
 
   ngOnInit(): void {
@@ -51,10 +54,8 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   }
   continue() {
     this.dialog.close();
-    this.stepService.addTask('add','',null,'T',null,'',true,'','left');
+    this.stepService.addTask('add','',null,this.taskType,null,'',true,'','right');
   }
-
-  
 
   changeType(type){
     if(this.type != type){
