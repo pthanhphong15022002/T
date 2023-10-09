@@ -117,6 +117,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   isChecked = false;
   formModelColumn: FormModel;
   settingWidth = false;
+  settingCount = false;
   isShowMore = false;
   widthDefault = '550';
   isShowButton = true;
@@ -166,11 +167,13 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {}
 
   async valueChange(e) {
-    if (e.field == 'settingWidth') {
-      this.settingWidth = e.data;
+    if (e.field == 'settingWidth' || e.field == 'settingCount') {
+      let value = e.data;
+      if (e.field == 'settingWidth') this.settingWidth = value;
+      else this.settingCount = value;
       if (this.listColumns?.length > 0) {
         this.listColumns.forEach((x) => {
-          x['settingWidth'] = this.settingWidth;
+          x[e.field] = value;
         });
       }
       this.changdef.detectChanges();

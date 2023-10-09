@@ -194,6 +194,9 @@ export class ViewCalendarComponent
     if(e?.type == 'doubleClick' && e?.data){
       this.viewTask(e?.data);
     }
+    if(e?.type == 'fav' && e?.data){
+      this.beforeAddTask(e?.data);
+    }
   }
 
 //#region view
@@ -379,7 +382,7 @@ viewTask(data) {
     this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
-        this.beforeAddTask();
+        // this.beforeAddTask();
         break;
     }
   }
@@ -453,9 +456,11 @@ viewTask(data) {
   //   );
   // }
 
-   beforeAddTask() {
+   beforeAddTask(taskType) {
     let option = new DialogModel();
-    let data = {};
+    let data = {
+      taskType,
+    };
     option.zIndex = 1001;
     this.popupTypeCM = this.callfc.openForm(
       PopupAddTaskCalendarComponent,

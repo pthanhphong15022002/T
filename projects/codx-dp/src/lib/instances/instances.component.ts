@@ -2295,8 +2295,8 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      this.formModel.entityName,
-      this.formModel.funcID,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
       data?.title,
       this.releaseCallback.bind(this)
     );
