@@ -303,6 +303,7 @@ export class PopupAddEmployeeComponent implements OnInit {
                     this.form.formGroup.patchValue({ districtID: result?.DistrictID || null });
                     // (this.form.form as CodxFormComponent).setValue('districtID', result?.DistrictID,{onlySelf: true,emitEvent: false});
                   }
+                  debugger
                   if (result?.WardID != this.data['wardID']) {
                     this.data['wardID'] = result?.WardID || null;
                     this.form.formGroup.patchValue({ wardID: result?.WardID || null });
