@@ -1,4 +1,4 @@
-<ng-container *ngIf="EBasicSalaryObj">
+<ng-container *ngIf="EBasicSalaryObj && loadedAutoNum == true">
 <codx-form
   #form
   [headerText]="headerText"
@@ -385,9 +385,10 @@
   <span>
     <codx-label
       name="lblIsCurrent"
-      [formModel]="view.formModel"
+      [formModel]="form.formModel"
       default="Đang hiệu lực"
-    ></codx-label>
+      ></codx-label>
+      <!-- [formModel]="view.formModel" -->
   </span>
 </ng-template>
 
@@ -395,9 +396,10 @@
   <span>
     <codx-label
       name="lblOverDue"
-      [formModel]="view.formModel"
+      [formModel]="form.formModel"
       default="Quá hạn"
-    ></codx-label>
+      ></codx-label>
+      <!-- [formModel]="view.formModel" -->
   </span>
 </ng-template>
 
@@ -405,9 +407,10 @@
   <span>
     <codx-label
       name="lblIsNotCurrent"
-      [formModel]="view.formModel"
+      [formModel]="form.formModel"
       default="Chưa hiệu lực"
-    ></codx-label>
+      ></codx-label>
+      <!-- [formModel]="view.formModel" -->
   </span>
 </ng-template>
 </ng-container>

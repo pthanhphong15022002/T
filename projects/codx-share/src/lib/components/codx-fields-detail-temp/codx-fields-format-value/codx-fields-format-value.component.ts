@@ -24,6 +24,8 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   };
   columns: any[];
   arrDataValue: any[];
+  settingWidth = false;
+
   constructor(
     private cache: CacheService,
     private changeRef: ChangeDetectorRef
@@ -63,6 +65,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     let arr = JSON.parse(data.dataFormat);
     if (Array.isArray(arr)) {
       this.columns = arr;
+      this.settingWidth = this.columns[0]?.settingWidth ?? false;
       // this.columns.forEach((x) => {
       //   this.modelJSON += '"' + x.fieldName + '":"' + '",';
       // });

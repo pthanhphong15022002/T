@@ -27,7 +27,7 @@ import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 })
 export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   lstPregnantType;
   dayoffObj: any;
@@ -40,7 +40,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   isNotNormalPregnant = false;
   actionType: string;
   employId: string;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: string;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
@@ -83,7 +83,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.dayoffObj.kowID = '';
       }
     } else {
-      this.dayoffObj = {};
+      this.dayoffObj = undefined;
     }
 
     this.fromListView = data?.data?.fromListView;
@@ -115,18 +115,20 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrSevice
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName,
-        this.formModel
-      )
-      .then((fg) => {
-        if (fg) {
-          this.formGroup = fg;
-          this.initForm();
-        }
-      });
+    this.initForm();
+
+    // this.hrSevice
+    //   .getFormGroup(
+    //     this.formModel.formName,
+    //     this.formModel.gridViewName,
+    //     this.formModel
+    //   )
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.form.formGroup = fg;
+    //       this.initForm();
+    //     }
+    //   });
 
     if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
     this.getGroupKowTypeView();
@@ -174,27 +176,29 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            debugger
             this.dayoffObj = res?.data;
             this.dayoffObj.beginDate = null; //yêu cầu require, không default
             this.dayoffObj.endDate = null;
             this.dayoffObj.employeeID = this.employId;
             this.dayoffObj.periodType = '1';
-            this.dayoffObj.totalSubDays = 0;
-            this.formModel.currentData = this.dayoffObj;
-            this.formGroup.patchValue(this.dayoffObj);
-            this.isAfterRender = true;
+            // this.dayoffObj.totalSubDays = 0;
+            // this.formModel.currentData = this.dayoffObj;
+            // this.form.formGroup.patchValue(this.dayoffObj);
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else {
+    } 
+    else {
       if (
         this.actionType === 'edit' ||
         this.actionType === 'copy' ||
         this.actionType === 'view'
       ) {
-        this.formGroup.patchValue(this.dayoffObj);
-        this.formModel.currentData = this.dayoffObj;
-        this.isAfterRender = true;
+        // this.form.formGroup.patchValue(this.dayoffObj);
+        // this.formModel.currentData = this.dayoffObj;
+        // this.isAfterRender = true;
         this.cr.detectChanges();
       }
     }
@@ -205,8 +209,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
       return;
     }
@@ -262,7 +266,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
   calTotalDayoff(evt) {
     this.dayoffObj.totalDaysOff = evt.data - this.dayoffObj.totalSubDays;
-    this.formGroup.patchValue({ totalDaysOff: this.dayoffObj.totalDaysOff });
+    this.form.formGroup.patchValue({ totalDaysOff: this.dayoffObj.totalDaysOff });
   }
 
   HandlePregnantTypeChange(e, pregnantType) {
@@ -302,11 +306,11 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       (periodType == '2' || periodType == '3')
     ) {
       this.dayoffObj.endDate = this.dayoffObj.beginDate;
-      this.formGroup.patchValue({ endDate: this.dayoffObj.beginDate });
+      this.form.formGroup.patchValue({ endDate: this.dayoffObj.beginDate });
       this.dayoffObj.totalDays = 0.5;
     }
 
-    this.formGroup.patchValue({
+    this.form.formGroup.patchValue({
       totalDays:
         this.dayoffObj.endDate < this.dayoffObj.beginDate
           ? ''
@@ -319,7 +323,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     if (evt.field === 'beginDate') {
       this.dayoffObj.beginDate = evt.data;
       this.dayoffObj.endDate = evt.data;
-      this.formGroup.patchValue({ endDate: evt.data });
+      this.form.formGroup.patchValue({ endDate: evt.data });
     }
     if (evt.field === 'endDate') {
       this.dayoffObj.endDate = evt.data;
@@ -376,7 +380,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
               .subscribe((res) => {
                 if (res) {
                   this.dayoffObj.signerPosition = res.positionName;
-                  this.formGroup.patchValue({
+                  this.form.formGroup.patchValue({
                     //signer: this.dayoffObj.signer,
                     signerPosition: this.dayoffObj.signerPosition,
                   });
@@ -385,7 +389,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
               });
           } else {
             this.dayoffObj.signerPosition = null;
-            this.formGroup.patchValue({
+            this.form.formGroup.patchValue({
               //signer: this.dayoffObj.signer,
               signerPosition: this.dayoffObj.signerPosition,
             });
@@ -404,7 +408,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         } else {
           delete this.employId;
           delete this.empObj;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             employeeID: this.dayoffObj.employeeID,
           });
         }
@@ -416,7 +420,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           delete this.dayoffObj?.signerID;
           // delete this.awardObj.signer;
           // delete this.awardObj?.signerPosition;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             signerID: null,
             // signer: null,
             // signerPosition: null,

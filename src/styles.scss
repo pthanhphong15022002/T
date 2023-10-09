@@ -1514,10 +1514,10 @@ img.symbol-12px.symbol-circle {
 }
 
 
-.e-toolbar .e-tbar-btn:focus span,
-.e-toolbar .e-tbar-btn:hover span {
-  color: var(--text-primary) !important;
-}
+// .e-toolbar .e-tbar-btn:focus span,
+// .e-toolbar .e-tbar-btn:hover span {
+//   color: var(--text-primary) !important;
+// }
 
 /////
 ///
@@ -3594,6 +3594,12 @@ codx-view-list-tree{
       padding: 8px;
     }
   }
+  &.tab-off{
+    .py-5.tab-content {
+      padding-top: 0px !important;
+      border: 1px aqua solid;
+    }
+  }
   position: relative;
 
   .codx-detail-main{
@@ -3611,6 +3617,9 @@ codx-view-list-tree{
     z-index: 99;
     &.expand{
       height: 400px;
+    }
+    &.collape{
+      overflow: hidden;
     }
   }
   .codx-detail-toolbar{
@@ -3874,10 +3883,6 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   border-color:transparent;
 }
 
-.e-dlg-content .tab-action{
-  display: none;
-}
-
 .login-signin .fv-plugins-icon-container .e-float-input{
 	background-color: transparent!important;
   .form-control:focus{
@@ -3930,7 +3935,26 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   //   margin-bottom: 50px;
   // }
 }
+.e-dlg-container .cm-scroll.cm-full{
+  inset: 30px 15px 0;
+}
+.e-toolbar-item.e-template .form-control{
+  background-color: inherit;
+  border: 0;
+}
+.offcanvas-wrapper{
+  codx-breadcumb {
+    .breadcumb-item.breadcumb-full{
+    overflow: auto;
+  }
+  }
+}
 
+// chien dich
+
+.scroll-grid .e-gridcontent {
+  height: calc(100vh - 140px) !important;
+}
 
 //////////////
 // ipad and tablet

@@ -1378,8 +1378,14 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   initHeaderText() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      this.addHeaderText = res[0].customName;
-      this.editHeaderText = res[2].customName;
+      if(res){
+        if(res[0]){
+          this.addHeaderText = res[0].customName;
+        }
+        if(res[2]){
+          this.editHeaderText = res[2].customName;
+        }
+      }
     });
   }
 
@@ -4191,8 +4197,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   HandleEmployeeESkillsInfo(actionHeaderText, actionType: string, data: any) {
-    console.log('data nhan vao tu ben ngoai', data);
-    
     let option = new SidebarModel();
     option.DataService = this.skillGrid?.dataService;
     option.FormModel = this.eSkillFormmodel;
@@ -4280,6 +4284,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.eContractFormModel;
+    console.log('contract form model truyen vao', this.eContractFormModel);
+    
     let isAppendix = false;
 
     if (
@@ -4367,7 +4373,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '850px';
-    option.FormModel = this.view.formModel;
+    option.FormModel = this.eDiseasesFormModel;
     option.DataService = this.eDiseasesGrid?.dataService;
     let dialogAdd = this.callfc.openSide(
       PopupEDiseasesComponent, 
@@ -4416,7 +4422,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.Width = '550px';
-    option.FormModel = this.eVaccinesGrid.formModel;
+    // option.FormModel = this.eVaccinesGrid.formModel;
+    option.FormModel = this.eVaccineFormModel;
     let dialogAdd = this.callfunc.openSide(
       PopupEVaccineComponent,
       {

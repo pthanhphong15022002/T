@@ -89,6 +89,7 @@ export class PopupAddInstanceComponent implements OnInit {
   positionName = '';
   owner = '';
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
+  fields: Object = { text: 'userName', value: 'userID' };
   actionAdd: string = 'add';
   oldEndDate: Date;
   endDate: Date;
@@ -123,6 +124,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.processID = dt?.data?.processID;
     this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.lstParticipants = dt?.data?.lstParticipants?.filter(x => x?.userID != null && x?.userID != '');
 
     if (this.action != 'add') {
       this.promiseAll();
@@ -131,10 +133,8 @@ export class PopupAddInstanceComponent implements OnInit {
     this.user = this.authStore.get();
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
-      this.lstParticipants = dt?.data?.lstParticipants;
       this.owner = this.instance?.owner;
     } else {
-      this.lstParticipants = dt?.data?.lstParticipants;
       this.instance.endDate = this.endDate;
       let check = false;
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
@@ -424,10 +424,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   eventUser(e) {
-    if (e != null) {
-      this.owner = e?.id; // thêm check null cái
-      this.instance.owner = this.owner;
-    }
+    this.owner = e; // thêm check null cái
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {

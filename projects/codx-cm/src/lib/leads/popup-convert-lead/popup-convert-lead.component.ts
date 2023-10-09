@@ -77,8 +77,18 @@ export class PopupConvertLeadComponent implements OnInit {
     name: 'Contacts',
   };
   tabContents = [];
-  formModelDeals: any;
-  formModelCustomer: any;
+  formModelDeals: FormModel = {
+    formName: 'CMDeals',
+    gridViewName: 'grvCMDeals',
+    entityName: 'CM_Deals',
+    funcID: 'CM0201',
+  };
+  formModelCustomer: FormModel = {
+    formName: 'CMCustomers',
+    gridViewName: 'grvCMCustomers',
+    entityName: 'CM_Customers',
+    funcID: 'CM0101',
+  };
   listCbxProcess = [];
   listParticipants = [];
   listInstanceSteps = [];
@@ -130,7 +140,7 @@ export class PopupConvertLeadComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.lead = dt?.data?.data;
     this.titleAction = dt?.data?.title;
     this.applyFor = dt?.data?.applyFor;
     this.recIDAvt = this.lead?.recID;
@@ -146,7 +156,6 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.formModelDeals = await this.cmSv.getFormModel('CM0201');
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
     );
@@ -489,7 +498,6 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-
     if (this.lead.applyProcess && this.lead.status != '3') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
@@ -502,7 +510,6 @@ export class PopupConvertLeadComponent implements OnInit {
         )
       );
     }
-
     var data = [];
     data = [
       this.lead.recID,
@@ -542,6 +549,7 @@ export class PopupConvertLeadComponent implements OnInit {
               );
             }
           }
+
           await firstValueFrom(
             this.api.execSv<any>(
               'DP',
@@ -551,6 +559,7 @@ export class PopupConvertLeadComponent implements OnInit {
               [this.instance, this.listInstanceSteps, null]
             )
           );
+
           let obj = {
             lead: res,
             listStep: result[1],
@@ -798,7 +807,7 @@ export class PopupConvertLeadComponent implements OnInit {
     } else if (e.field === 'no' && e.component.checked === true) {
       this.isCheckTab();
       this.lstContactDeal = [];
-      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+      // this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
       this.gridViewSetupCustomer = await firstValueFrom(
         this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
       );

@@ -23,7 +23,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   encapsulation: ViewEncapsulation.None,
 })
 export class PopupETraincourseComponent extends UIComponent implements OnInit {
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   formModel: FormModel;
   // formGroup2: FormGroup;
   // formModel2: FormModel;
@@ -31,7 +31,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   headerText: string = '';
   idField: string = 'recID';
   employId;
-  IsAfterRender = false;
+  // IsAfterRender = false;
   data;
   dataForm2;
   actionType: string;
@@ -49,7 +49,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   isNullTo: boolean = true;
   changedInForm = false;
 
-  isAfterRender = false;
+  // isAfterRender = false;
   @ViewChild('form') form: LayoutAddComponent;
   // @ViewChild('listView') listView: CodxListviewComponent;
 
@@ -87,6 +87,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.disabledInput = true;
     }
     this.formModel = dialog?.formModel;
+    
     this.funcID = dataDialog?.data?.funcID;
     this.employId = dataDialog?.data?.employeeId;
     this.trainCourseObj = JSON.parse(
@@ -97,73 +98,126 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   initForm() {
-    if (this.formModel) {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.cache
-              .gridViewSetup(
-                this.formModel.formName,
-                this.formModel.gridViewName
-              )
-              .subscribe((grvSetup) => {
-                if (grvSetup) {
-                  console.log(grvSetup);
-                  let dataRequest = new DataRequest();
-                  dataRequest.comboboxName =
-                    grvSetup.TrainSupplierID.referedValue;
-                  dataRequest.pageLoading = false;
+      this.cache
+        .gridViewSetup(
+          this.formModel.formName,
+          this.formModel.gridViewName
+        )
+        .subscribe((grvSetup) => {
+          if (grvSetup) {
+            console.log(grvSetup);
+            let dataRequest = new DataRequest();
+            dataRequest.comboboxName =
+              grvSetup.TrainSupplierID.referedValue;
+            dataRequest.pageLoading = false;
 
-                  this.hrService
-                    .loadDataCbx('HR', dataRequest)
-                    .subscribe((data) => {
-                      if (data) {
-                        this.dataVllSupplier = JSON.parse(data[0]);
-                      }
-                      console.log(this.dataVllSupplier);
-                    });
+            this.hrService
+              .loadDataCbx('HR', dataRequest)
+              .subscribe((data) => {
+                if (data) {
+                  this.dataVllSupplier = JSON.parse(data[0]);
                 }
+                console.log(this.dataVllSupplier);
               });
-            if (this.actionType == 'add') {
-              this.hrService
-                .getDataDefault(
-                  this.formModel.funcID,
-                  this.formModel.entityName,
-                  this.idField
-                )
-                .subscribe((res) => {
-                  if (res) {
-                    console.log('dataaaaaa12313123213', res.data);
-                    // this.data = res?.data;
-                    this.trainCourseObj = res?.data;
-                    this.trainCourseObj.employeeID = this.employId;
-                    this.formModel.currentData = this.trainCourseObj;
-                    this.formGroup.patchValue(this.trainCourseObj);
-                    this.cr.detectChanges();
-                    this.isAfterRender = true;
-                    this.isNullFrom = false;
-                    this.isNullTo = false;
-                  }
-                });
-            } else {
-              this.isNullFrom = true;
-              this.isNullTo = true;
-
-              if (this.trainCourseObj.trainFromDate == null)
-                this.isNullFrom = false;
-              if (this.trainCourseObj.trainToDate == null)
-                this.isNullTo = false;
-              this.formModel.currentData = this.trainCourseObj;
-              this.formGroup.patchValue(this.trainCourseObj);
-              this.cr.detectChanges();
-              this.isAfterRender = true;
-            }
           }
         });
-    }
-  }
+      if (this.actionType == 'add') {
+        this.hrService
+          .getDataDefault(
+            this.formModel.funcID,
+            this.formModel.entityName,
+            this.idField
+          )
+          .subscribe((res) => {
+            if (res) {
+              this.trainCourseObj = res?.data;
+              this.trainCourseObj.employeeID = this.employId;
+              // this.formModel.currentData = this.trainCourseObj;
+              // this.form.formGroup.patchValue(this.trainCourseObj);
+              this.cr.detectChanges();
+              // this.isAfterRender = true;
+              this.isNullFrom = false;
+              this.isNullTo = false;
+            }
+          });
+      } else {
+        this.isNullFrom = true;
+        this.isNullTo = true;
+
+        if (this.trainCourseObj.trainFromDate == null)
+          this.isNullFrom = false;
+        if (this.trainCourseObj.trainToDate == null)
+          this.isNullTo = false;
+        // this.formModel.currentData = this.trainCourseObj;
+        // this.form.formGroup.patchValue(this.trainCourseObj);
+        this.cr.detectChanges();
+        // this.isAfterRender = true;
+
+    // if (this.formModel) {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.cache
+    //           .gridViewSetup(
+    //             this.formModel.formName,
+    //             this.formModel.gridViewName
+    //           )
+    //           .subscribe((grvSetup) => {
+    //             if (grvSetup) {
+    //               console.log(grvSetup);
+    //               let dataRequest = new DataRequest();
+    //               dataRequest.comboboxName =
+    //                 grvSetup.TrainSupplierID.referedValue;
+    //               dataRequest.pageLoading = false;
+
+    //               this.hrService
+    //                 .loadDataCbx('HR', dataRequest)
+    //                 .subscribe((data) => {
+    //                   if (data) {
+    //                     this.dataVllSupplier = JSON.parse(data[0]);
+    //                   }
+    //                   console.log(this.dataVllSupplier);
+    //                 });
+    //             }
+    //           });
+    //         if (this.actionType == 'add') {
+    //           this.hrService
+    //             .getDataDefault(
+    //               this.formModel.funcID,
+    //               this.formModel.entityName,
+    //               this.idField
+    //             )
+    //             .subscribe((res) => {
+    //               if (res) {
+    //                 this.trainCourseObj = res?.data;
+    //                 this.trainCourseObj.employeeID = this.employId;
+    //                 this.formModel.currentData = this.trainCourseObj;
+    //                 this.form.formGroup.patchValue(this.trainCourseObj);
+    //                 this.cr.detectChanges();
+    //                 // this.isAfterRender = true;
+    //                 this.isNullFrom = false;
+    //                 this.isNullTo = false;
+    //               }
+    //             });
+    //         } else {
+    //           this.isNullFrom = true;
+    //           this.isNullTo = true;
+
+    //           if (this.trainCourseObj.trainFromDate == null)
+    //             this.isNullFrom = false;
+    //           if (this.trainCourseObj.trainToDate == null)
+    //             this.isNullTo = false;
+    //           this.formModel.currentData = this.trainCourseObj;
+    //           this.form.formGroup.patchValue(this.trainCourseObj);
+    //           this.cr.detectChanges();
+    //           // this.isAfterRender = true;
+    //         }
+    //       }
+    //     });
+    // }
+  }}
 
   setTitle(evt: any){
     this.headerText += " " +  evt;
@@ -187,14 +241,16 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.fromDateFormat = 'd';
       this.toDateFormat = 'd';
     }
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        this.formModel = formModel;
-        this.initForm();
-      });
-    } else {
-      this.initForm();
-    }
+    this.initForm();
+
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     this.formModel = formModel;
+    //     this.initForm();
+    //   });
+    // } else {
+    //   this.initForm();
+    // }
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     })
@@ -211,13 +267,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   save() {
-    this.formGroup.patchValue({
+    this.form.formGroup.patchValue({
       trainFromDate: new Date(),
       trainToDate: new Date(),
     });
 
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form?.form?.validation(false)
       return;
     }
@@ -284,7 +340,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
   click(data) {
     this.data = JSON.parse(JSON.stringify(data));
-    this.formGroup.patchValue(this.data);
+    this.form.formGroup.patchValue(this.data);
     this.formModel.currentData = this.data;
     this.actionType = 'edit';
     this.cr.detectChanges();
@@ -299,7 +355,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.hrService.AddECertificateInfo(this.data).subscribe((res) => {
         if (res) {
           this.data.isUpdateCertificate = true;
-          this.formGroup.patchValue({ isUpdateCertificate: true });
+          this.form.formGroup.patchValue({ isUpdateCertificate: true });
           this.hrService
             .updateEmployeeTrainCourseInfo(this.data, this.funcID)
             .subscribe((res) => {});
@@ -321,7 +377,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         );
         if (trainSupplier) {
           this.data.issuedPlace = trainSupplier[0]?.TrainSupplierName;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             issuedPlace: this.data.issuedPlace,
           });
           this.cr.detectChanges();
@@ -347,7 +403,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.trainCourseObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
-    this.formGroup.patchValue(this.trainCourseObj);
+    this.form.formGroup.patchValue(this.trainCourseObj);
   }
 
   handleControlType(evt){
@@ -390,7 +446,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   //     }
   //     this.trainCourseObj.trainToDate = event.fromDate;
   //   }
-  //   this.formGroup.patchValue(this.trainCourseObj);
+  //   this.form.formGroup.patchValue(this.trainCourseObj);
   //   if (this.trainCourseObj) {
   //     this.fromDateFormat = this.getFormatDate(this.trainCourseObj.trainFrom);
   //     this.toDateFormat = this.getFormatDate(this.trainCourseObj.trainTo);

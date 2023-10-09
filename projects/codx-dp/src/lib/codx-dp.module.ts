@@ -75,7 +75,12 @@ export const routes: Routes = [
         component: InstancesComponent,
         data: { noReuse: true },
       },
-      //dp/approvals/DPT0501
+      {
+        path: 'instances/:funcID/approvals',
+        component: InstancesComponent,
+        data: { noReuse: true },
+      },
+      //dp/instances/DPT0502/approvals
       {
         path: 'approvals/:funcID',
         loadChildren: () =>
@@ -84,11 +89,6 @@ export const routes: Routes = [
           ),
         data: { noReuse: true },
       },
-      // {
-      //   path: 'approvals/:funcID',
-      //   data: { noReuse: true },
-      //   component: ApprovalsComponent,
-      // },
       {
         path: '**',
         redirectTo: 'error/404',

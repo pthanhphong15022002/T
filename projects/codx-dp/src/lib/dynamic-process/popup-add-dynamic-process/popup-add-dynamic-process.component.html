@@ -2198,7 +2198,8 @@
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
-                        class="drap-drop"
+                        class="drap-drop cursor-pointer"
+                        (dblclick)="viewTask(task);"
                       >
                         <div class="has-action-menu">
                           <div
