@@ -4477,6 +4477,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
+                  templateRefID: this.process.recID,
+                  templateRefType: 'DP_Processes',
                 },
                 option
               );

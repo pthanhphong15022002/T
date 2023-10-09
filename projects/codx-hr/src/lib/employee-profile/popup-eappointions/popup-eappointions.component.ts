@@ -114,6 +114,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       this.newLocationID = this.EAppointionObj.locationID;
     }
     this.formModel = dialog.formModel;
+    console.log('form Model nhan vao', this.formModel);
   }
 
   initForm() {
@@ -140,15 +141,15 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
             this.EAppointionObj = res.data;
             this.EAppointionObj.effectedDate = null;
             if (this.employeeObj) {
-              this.EAppointionObj.employeeID = this.employeeObj.employeeID;
-              this.EAppointionObj.orgUnitID = this.employeeObj.positionID;
-              this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
-              this.EAppointionObj.jobLevel = this.employeeObj.jobLevel;
-              this.EAppointionObj.locationID = this.employeeObj.locationID;
-              this.EAppointionObj.positionID = this.employeeObj.positionID;
+              this.EAppointionObj.employeeID = this.employeeObj?.employeeID;
+              this.EAppointionObj.orgUnitID = this.employeeObj?.positionID;
+              this.EAppointionObj.orgUnitID = this.employeeObj?.orgUnitID;
+              this.EAppointionObj.jobLevel = this.employeeObj?.jobLevel;
+              this.EAppointionObj.locationID = this.employeeObj?.locationID;
+              this.EAppointionObj.positionID = this.employeeObj?.positionID;
             }
-            this.formModel.currentData = this.EAppointionObj;
-            this.form.formGroup.patchValue(this.EAppointionObj);
+            // this.formModel.currentData = this.EAppointionObj;
+            // this.form.formGroup.patchValue(this.EAppointionObj);
             // this.isAfterRender = true;
             this.cr.detectChanges();
           }
@@ -172,8 +173,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       if (this.EAppointionObj.signerID) {
         this.getEmployeeInfoById(this.EAppointionObj.signerID, 'SignerID');
       }
-      this.form.formGroup.patchValue(this.EAppointionObj);
-      this.formModel.currentData = this.EAppointionObj;
+      // this.form.formGroup.patchValue(this.EAppointionObj);
+      // this.formModel.currentData = this.EAppointionObj;
       // this.isAfterRender = true;
       this.cr.detectChanges();
     }
@@ -252,18 +253,20 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.eAppointionHeaderTexts = res;
     });
-    this.hrService
-      .getFormGroup(
-        this.formModel.formName,
-        this.formModel.gridViewName,
-        this.formModel
-      )
-      .then((fg) => {
-        if (fg) {
-          this.form.formGroup = fg;
-          this.initForm();
-        }
-      });
+    this.initForm();
+
+    // this.hrService
+    //   .getFormGroup(
+    //     this.formModel.formName,
+    //     this.formModel.gridViewName,
+    //     this.formModel
+    //   )
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.form.formGroup = fg;
+    //       this.initForm();
+    //     }
+    //   });
     //Load data field gender from database
     this.cache
       .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')

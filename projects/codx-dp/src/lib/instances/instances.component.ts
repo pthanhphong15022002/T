@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
@@ -236,6 +237,8 @@ export class InstancesComponent
   // For CM
   categoryCustomer: any = '';
   instanceCM: any;
+  crrFunc: any;
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -254,10 +257,12 @@ export class InstancesComponent
   ) {
     super(inject);
     // this.funcID = 'DPT04';
-    this.dialog = dialog;
+    // this.dialog = dialog;
+
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
-      this.funcID = param['funcID'];
+      if (!this.funcID) this.funcID = param['funcID'];
+      this.showButtonAdd = this.funcID != 'DPT0502';
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
@@ -268,10 +273,12 @@ export class InstancesComponent
             this.loadData(res);
           }
         });
-      } else this.layoutDP.viewNameProcess(null);
+      } else {
+        this.layoutDP.viewNameProcess(null);
+        // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
+      }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP01');
-    this.layout.setLogo(null);
+
     this.getColorReason();
     this.cache
       .gridViewSetup('DPInstances', 'grvDPInstances')
@@ -315,9 +322,8 @@ export class InstancesComponent
       });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
-
-    this.showButtonAdd = this.funcID != 'DPT0502';
   }
+
   ngAfterViewInit() {
     this.views = [
       {
@@ -1265,20 +1271,49 @@ export class InstancesComponent
   }
 
   changeView(e) {
-    switch (e?.view.type) {
-      case 2:
-        // this.showButtonAdd = true;
-        this.viewsCurrent = 'd-';
-        break;
-      case 6:
-        // this.showButtonAdd = true;
-        if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
-        else this.kanban = (this.view.currentView as any).kanban;
-        this.viewsCurrent = 'k-';
-        break;
-      case 9:
-        this.showButtonAdd = false;
-        break;
+    this.router.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    });
+
+    if (!this.crrFunc || this.crrFunc == this.funcID) {
+      if (!this.crrFunc) this.crrFunc = this.funcID;
+      switch (e?.view.type) {
+        case 2:
+          // this.showButtonAdd = true;
+          this.viewsCurrent = 'd-';
+          break;
+        case 6:
+          // this.showButtonAdd = true;
+          if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+          else this.kanban = (this.view.currentView as any).kanban;
+          this.viewsCurrent = 'k-';
+          break;
+        case 9:
+          this.showButtonAdd = false;
+          break;
+      }
+    } else {
+      let viewModel: any;
+      this.views.forEach((v, index) => {
+        if (v.type == 2) {
+          v.active = true;
+          viewModel = v;
+        } else {
+          v.active = false;
+          if (this.funcID == 'DPT0502') v.hide = true;
+          else v.hide = false;
+        }
+      });
+      this.crrFunc = this.funcID;
+      if (this.funcID == 'DPT0502') {
+        this.layoutDP.viewNameProcess(null);
+
+        if (viewModel) {
+          this.view.viewActiveType = viewModel.type;
+          this.view.viewChange(viewModel);
+        }
+        this.view.load();
+      }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2260,8 +2295,8 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      this.formModel.entityName,
-      this.formModel.funcID,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
       data?.title,
       this.releaseCallback.bind(this)
     );
