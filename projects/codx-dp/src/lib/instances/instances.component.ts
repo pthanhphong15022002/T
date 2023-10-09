@@ -365,6 +365,21 @@ export class InstancesComponent
         },
       },
     ];
+    //bua tạm thoi de review
+    this.cache.viewSettings(this.funcID).subscribe((res) => {
+      let setingViewMode = res;
+      this.views.forEach((v, index) => {
+        let idx = setingViewMode.findIndex((x) => x.view == v.type);
+        if (idx != -1) {
+          v.active = setingViewMode[idx].isDefault;
+          v.hide = false;
+        } else {
+          v.hide = true;
+          v.active = false;
+        }
+      });
+    });
+
     this.setColorKanban();
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
@@ -1298,26 +1313,54 @@ export class InstancesComponent
       }
     } else {
       let viewModel: any;
-      this.views.forEach((v, index) => {
-        if (v.type == 2) {
-          v.active = true;
-          viewModel = v;
-        } else {
-          v.active = false;
-          if (this.funcID == 'DPT0502') v.hide = true;
-          else v.hide = false;
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        let setingViewMode = res;
+        this.views.forEach((v, index) => {
+          let idx = setingViewMode.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.active = setingViewMode[idx].isDefault;
+            if (v.active) viewModel = v;
+            v.hide = false;
+          } else {
+            v.hide = true;
+            v.active = false;
+          }
+        });
+        this.crrFunc = this.funcID;
+        if (this.funcID == 'DPT0502') {
+          this.layoutDP.viewNameProcess(null);
+
+          if (viewModel) {
+            this.view.viewActiveType = viewModel.type;
+          } else {
+            this.view.viewActiveType = 2;
+            viewModel = this.views.find((x) => x.type == 2);
+            viewModel.active = true;
+          }
+          this.view.viewChange(viewModel);
+          this.view.load();
         }
       });
-      this.crrFunc = this.funcID;
-      if (this.funcID == 'DPT0502') {
-        this.layoutDP.viewNameProcess(null);
+      // this.views.forEach((v, index) => {
+      //   if (v.type == 2) {
+      //     v.active = true;
+      //     viewModel = v;
+      //   } else {
+      //     v.active = false;
+      //     if (this.funcID == 'DPT0502') v.hide = true;
+      //     else v.hide = false;
+      //   }
+      // });
+      // this.crrFunc = this.funcID;
+      // if (this.funcID == 'DPT0502') {
+      //   this.layoutDP.viewNameProcess(null);
 
-        if (viewModel) {
-          this.view.viewActiveType = viewModel.type;
-          this.view.viewChange(viewModel);
-        }
-        this.view.load();
-      }
+      //   if (viewModel) {
+      //     this.view.viewActiveType = viewModel.type;
+      //     this.view.viewChange(viewModel);
+      //   }
+      //   this.view.load();
+      // }
     }
     this.changeDetectorRef.detectChanges();
   }
