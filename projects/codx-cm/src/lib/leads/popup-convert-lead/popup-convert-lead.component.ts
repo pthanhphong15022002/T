@@ -499,7 +499,7 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-    if (this.lead.applyProcess && this.lead.status != '3') {
+    if (this.lead.applyProcess && this.lead.status != '3' && this.lead.status != '13') {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
