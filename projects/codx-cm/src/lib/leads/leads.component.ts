@@ -217,7 +217,7 @@ export class LeadsComponent
     this.getColorReason();
     this.getValuelistStatus();
     this.getValuelistCategory();
-    // this.getProcessSetting();
+    this.getProcessSetting();
     this.getListStatusCode();
     this.afterLoad();
   }
@@ -251,18 +251,17 @@ export class LeadsComponent
         this.valueListStatusCode = [];
       }
     });
+}
+  async getProcessSetting() {
+    this.codxCmService
+      .getListProcessDefault([this.applyForLead])
+      .subscribe((res) => {
+        if (res) {
+          this.processId = res.recID;
+          this.dataObj = { processID: res.recID };
+        }
+      });
   }
-  // async getProcessSetting() {
-  //   this.codxCmService
-  //     .getListProcessDefault([this.applyForLead])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.processId = res.recID;
-  //         this.dataObj = { processID: res.recID };
-  //         this.afterLoad();
-  //       }
-  //     });
-  // }
   getColorReason() {
     this.cache.valueList('DP036').subscribe((res) => {
       if (res.datas) {
@@ -1333,6 +1332,7 @@ export class LeadsComponent
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
+            isCallInstance: true,
           };
           var obj = {
             stepName: data?.currentStepName,

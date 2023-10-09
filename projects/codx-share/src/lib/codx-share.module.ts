@@ -184,6 +184,7 @@ import { CodxCommonModule } from 'projects/codx-common/src/public-api';
 import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 import { AddImportDetailsComponent } from './components/codx-import/add-template/add-import-details/add-import-details.component';
 import { AddIetablesComponent } from './components/codx-import/add-template/add-ietables/add-ietables.component';
+import { FreezeService, GridModule } from '@syncfusion/ej2-angular-grids';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -384,6 +385,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CommonModule,
     NgbModule,
     FormsModule,
+    GridModule,
     SharedModule,
     CodxCoreModule,
     CodxCommonModule,

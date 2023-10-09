@@ -209,11 +209,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.cache.getCompany(this.user?.userID).subscribe(userOrg=>{
-      if(userOrg){
-        this.userOrg=userOrg;
+    this.cache.getCompany(this.user?.userID).subscribe((userOrg) => {
+      if (userOrg) {
+        this.userOrg = userOrg;
       }
-    })
+    });
     if (this.isAdd) {
       this.codxService
         .getDataValueOfSetting('ESParameters', null, '1')
@@ -586,179 +586,17 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   applyShare(event) {
-    
     if (event) {
       event.forEach((element) => {
-        // if (
-        //   element?.objectType &&
-        //   element?.objectType?.length == 1 &&
-        //   element?.objectType != 'S' &&
-        //   element?.objectType != 'A' &&
-        //   element?.objectType != 'P' &&
-        //   element?.objectType != 'E'
-        // ) {
-        //   let lstID = element?.id.split(';');
-        //   let lstUserName = element?.text.split(';');
-        //   let dataSelected = element?.dataSelected;
-
-        //   for (let i = 0; i < lstID?.length; i++) {
-        //     let index = this.lstApprover.findIndex(
-        //       (p) => p.approver == lstID[i]
-        //     );
-        //     if (lstID[i].toString() != '' && index == -1) {
-        //       let appr = new Approvers();
-        //       appr.roleType = element.objectType;
-        //       appr.name = lstUserName[i];
-        //       appr.approver = lstID[i];
-        //       this.codxService.getDetailApprover(appr).subscribe((oRes) => {
-        //         if (oRes?.length > 0) {
-        //           appr.position = oRes[0].position;
-        //           appr.phone = oRes[0].phone;
-        //           appr.email = oRes[0].email;
-        //           this.lstApprover.push(appr);
-        //         }
-        //       });
-        //     }
-        //   }
-        // } else {
-        //   let i = this.lstApprover.findIndex(
-        //     (p) => p.approver == element?.objectType
-        //   );
-        //   if (element?.objectType == 'PA') {
-        //     //loại đối tác mở popup
-        //     let appr = new Approvers();
-        //     appr.write = true;
-        //     appr.roleType = element.objectType;
-        //     //appr.approver = element.objectType;
-        //     appr.icon = element?.icon;
-
-        //     let popupApprover = this.callfc.openForm(
-        //       PopupAddApproverComponent,
-        //       '',
-        //       550,
-        //       screen.height,
-        //       '',
-        //       {
-        //         approverData: appr,
-        //         lstApprover: this.lstApprover,
-        //         isAddNew: true,
-        //       }
-        //     );
-
-        //     popupApprover.closed.subscribe((res) => {
-        //       if (res.event) {
-        //         this.lstApprover.push(res.event);
-        //       }
-        //     });
-        //   } else if (element?.objectType == 'P') {
-        //     if (element?.id != null) {
-        //       this.codxService
-        //         .getUserIDByPositionsID(element?.id)
-        //         .subscribe((lstUserInfo) => {
-        //           if (lstUserInfo) {
-        //             if (lstUserInfo != null && lstUserInfo.length >= 2) {
-        //               this.notifySvr.alertCode('ES033').subscribe((x) => {
-        //                 if (x.event?.status == 'Y') {
-        //                   let appr = new Approvers();
-        //                   appr.roleType = element?.objectType;
-        //                   appr.name = element?.text;
-        //                   appr.approver = element?.id;
-        //                   appr.userID = lstUserInfo[0]?.userID;
-        //                   appr.userName = lstUserInfo[0]?.userName;
-        //                   appr.icon =
-        //                     element?.icon != null ? element?.icon : null;
-        //                   this.lstApprover.push(appr);
-        //                 } else {
-        //                   return;
-        //                 }
-        //               });
-        //             } else {
-        //               let appr = new Approvers();
-        //               appr.roleType = element?.objectType;
-        //               appr.name = element?.text;
-        //               appr.approver = element?.id;
-        //               appr.icon = element?.icon != null ? element?.icon : null;
-        //               appr.userID = lstUserInfo[0]?.userID;
-        //               appr.userName = lstUserInfo[0]?.userName;
-        //               this.lstApprover.push(appr);
-        //             }
-        //           }
-        //         });
-        //     }
-        //   } else if (i == -1) {
-        //     let appr = new Approvers();
-        //     appr.roleType = element?.objectType;
-        //     appr.name = element?.objectName;
-        //     appr.approver = element?.objectType;
-        //     appr.icon = element?.icon != null ? element?.icon : null;
-        //     this.lstApprover.push(appr);
-        //   }
-        // }
-
-        let appr = new Approvers();
-        appr.approver = element?.id;
+        let appr = new Approvers();        
         appr.name = element?.text;
         appr.roleType = element?.objectType;
         appr.icon = element?.icon;
         switch (element?.objectType) {
-          case ShareType.User: //	Người dùng
-            appr.position = element?.dataSelected?.PositionName;
-            appr.userID = element?.dataSelected?.UserID;
-            appr.userName = element?.dataSelected?.UserName;
-            this.lstApprover.push(appr);
-            break;
-            //----------------------------------------------------------------------------------//
-            case ShareType.AC: //	Thư ký Giám đốc công ty
-            case ShareType.DC: //	Phó Giám đốc công ty
-            case ShareType.CEO: //	Giám đốc công ty
-            this.lstApprover.push(appr);
-            this.codxService.getCompanyApprover(this.userOrg?.companyID,element?.objectType).subscribe(companyAppr=>{
-              if(companyAppr){
-                appr.position = companyAppr?.position;
-                appr.userID = companyAppr?.UserID;
-                appr.userName = companyAppr?.UserName;
-              }
-            });
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.Position: //	Chức danh công việc
-            if (element?.id != null) {
-              this.codxService
-                .getUserIDByPositionsID(element?.id)
-                .subscribe((lstUserInfo) => {
-                  if (lstUserInfo) {
-                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
-                      this.notifySvr.alertCode('ES033').subscribe((x) => {
-                        if (x.event?.status == 'Y') {
-                          appr.roleType = element?.objectType;
-                          appr.name = element?.text;
-                          appr.position = element?.dataSelected?.PositionName;
-                          appr.userID = lstUserInfo[0]?.userID;
-                          appr.userName = lstUserInfo[0]?.userName;
-                          this.lstApprover.push(appr);
-                        } else {
-                          return;
-                        }
-                      });
-                    } else {
-                      appr.roleType = element?.objectType;
-                      appr.name = element?.text;
-                      appr.position = element?.dataSelected?.PositionName;
-                      appr.userID = lstUserInfo[0]?.userID;
-                      appr.userName = lstUserInfo[0]?.userName;
-                      this.lstApprover.push(appr);
-                    }
-                  }
-                });
-            }
-            break;
           //----------------------------------------------------------------------------------//
           case ShareType.ResourceOwner: //	Chủ sở hữu nguồn lực
           case ShareType.Owner: //	Người sở hữu
-          case ShareType.Employee: //	Nhân viên
-          appr.approver=element?.objectType;
-            this.lstApprover.push(appr);
-          break;
+          case ShareType.Employee: //	Nhân viên          
           case ShareType.Created: //	Người tạo
           case ShareType.TeamLead: //	Trưởng nhóm
           case ShareType.AM: //	Thư ký phòng
@@ -771,10 +609,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           case ShareType.IR: //	Báo cáo gián tiếp
             appr.approver = element?.objectType;
             this.lstApprover.push(appr);
-            
             break;
           //----------------------------------------------------------------------------------//
-
           case ShareType.Partner: //	Đối tác
             appr.write = true;
             appr.roleType = element.objectType;
@@ -796,8 +632,68 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               }
             });
             break;
+          
           //----------------------------------------------------------------------------------//
+          case ShareType.AC: //	Thư ký Giám đốc công ty
+          case ShareType.DC: //	Phó Giám đốc công ty
+          case ShareType.CEO: //	Giám đốc công ty
+            this.lstApprover.push(appr);
+            this.codxService
+              .getCompanyApprover(this.userOrg?.companyID, element?.objectType)
+              .subscribe((companyAppr) => {
+                if (companyAppr) {
+                  appr.position = companyAppr?.position;
+                  appr.userID = companyAppr?.UserID;
+                  appr.userName = companyAppr?.UserName;
+                  appr.orgUnitName =companyAppr?.orgUnitName;
+                }
+              });
+            break;
+            //----------------------------------------------------------------------------------//
+            case ShareType.User: //	Người dùng
+              appr.approver = element?.id;
+              appr.position = element?.dataSelected?.PositionName;
+              appr.userID = element?.dataSelected?.UserID;
+              appr.userName = element?.dataSelected?.UserName;
+              appr.orgUnitName =element?.dataSelected?.orgUnitName;
+              this.lstApprover.push(appr);
+              break;
+          //----------------------------------------------------------------------------------//
+          case ShareType.Position: //	Chức danh công việc
+            if (element?.id != null) {
+              this.codxService
+                .getUserIDByPositionsID(element?.id)
+                .subscribe((lstUserInfo) => {
+                  if (lstUserInfo) {
+                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
+                      this.notifySvr.alertCode('ES033').subscribe((x) => {
+                        if (x.event?.status == 'Y') {
+                          appr.approver = element?.id;
+                          appr.roleType = element?.objectType;
+                          appr.name = element?.text;
+                          appr.position = element?.dataSelected?.PositionName;
+                          appr.userID = lstUserInfo[0]?.userID;
+                          appr.userName = lstUserInfo[0]?.userName;
+                          appr.orgUnitName =lstUserInfo[0]?.OrgUnitName;
+                          this.lstApprover.push(appr);
+                        } else {
+                          return;
+                        }
+                      });
+                    } else {
+                      appr.roleType = element?.objectType;
+                      appr.name = element?.text;
+                      appr.position = element?.dataSelected?.PositionName;
+                      appr.userID = lstUserInfo[0]?.userID;
+                      appr.userName = lstUserInfo[0]?.userName;
+                      this.lstApprover.push(appr);
+                    }
+                  }
+                });
+            }
+            break;
 
+          //----------------------------------------------------------------------------------//
         }
       });
     }

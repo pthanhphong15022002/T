@@ -109,8 +109,10 @@ export class PopupSignatureComponent extends UIComponent {
           .then((res) => {
             if (res) this.cbxName = res;
           });
+          let emailPA = this.isPublic ? this.data?.email :null;
+          let idUser = !this.isPublic ? this.data?.userID :null;
         this.esService
-          .getDataSignature(this.data?.userID, this.data?.signatureType)
+          .getApproverSignature(emailPA, this.data?.signatureType,null,idUser)
           .subscribe((res) => {
             if (res) {
               this.data = res[0];

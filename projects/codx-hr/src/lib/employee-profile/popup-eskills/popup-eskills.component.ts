@@ -4,6 +4,7 @@ import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 
 import {
+  CodxCalendarComponent,
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
@@ -22,14 +23,14 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 })
 export class PopupESkillsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   skillObj;
   lstSkills;
   actionType;
   idField = 'RecID';
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   ops = ['d','m', 'y'];
   result;
@@ -47,6 +48,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   isNullTo: boolean = true;
 
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('calendar') calendar: CodxCalendarComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
@@ -60,6 +62,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
+    this.formModel = dialog.formModel;
     this.actionType = data?.data?.actionType;
     if(this.actionType == 'view'){
       this.disabledInput = true;
@@ -67,7 +70,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
-    console.log('skill obj nhan vao', this.skillObj);
     
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
@@ -87,9 +89,9 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
 
             this.skillObj = res?.data;
             this.skillObj.employeeID = this.employId;
-            this.formModel.currentData = this.skillObj;
-            this.formGroup.patchValue(this.skillObj);
-            this.isAfterRender = true;
+            // this.formModel.currentData = this.skillObj;
+            // this.form.formGroup.patchValue(this.skillObj);
+            // this.isAfterRender = true;
             this.isNullFrom = false;
             this.isNullTo = false;
             this.cr.detectChanges();
@@ -99,9 +101,9 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.isNullFrom = true;
       this.isNullTo = true;
       if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-        this.formGroup.patchValue(this.skillObj);
-        this.formModel.currentData = this.skillObj;
-        this.isAfterRender = true;
+        // this.form.formGroup.patchValue(this.skillObj);
+        // this.formModel.currentData = this.skillObj;
+        // this.isAfterRender = true;
         this.cr.detectChanges();
         if(this.skillObj.trainFromDate == null)
           this.isNullFrom = false;
@@ -124,44 +126,45 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.fromDateFormat = 'd';
       this.toDateFormat = 'd';
     }
-    if (!this.formModel) {
-      this.hrService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrService
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    } else {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-    }
+    this.initForm();
+
+    // if (!this.formModel) {
+    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrService
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // } else {
+    //   this.hrService
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+    // }
   }
 
   onSaveForm() {
-    this.formGroup.patchValue({
+    this.form.formGroup.patchValue({
       trainFromDate: new Date(),
       trainToDate: new Date(),
     });
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
 
       return;
     }
-    console.log('data chuan bi luu', this.skillObj);
 
     if(this.skillObj.trainTo && this.skillObj.trainFrom){
       if (Number(this.skillObj.trainTo) < Number(this.skillObj.trainFrom)) {
@@ -234,7 +237,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   //     }
   //     this.skillObj.trainToDate = event.fromDate;
   //   }
-  //   this.formGroup.patchValue(this.skillObj);
+  //   this.form.formGroup.patchValue(this.skillObj);
   //   if (this.skillObj) {
   //     this.fromDateFormat = this.getFormatDate(this.skillObj.trainFrom);
   //     this.toDateFormat = this.getFormatDate(this.skillObj.trainTo);
@@ -258,7 +261,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
-    debugger
     if (changeType === 'FromDate') {
       this.skillObj.trainFrom = event.type;
       this.skillObj.trainFromDate = event.fromDate;
@@ -268,7 +270,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.skillObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
-    this.formGroup.patchValue(this.skillObj);
+    debugger
+    if(this.form && this.form.formGroup){
+      this.form.formGroup.patchValue(this.skillObj);
+    }
   }
   // getFormatDate(trainFrom: string) {
   //   let resultDate = '';
