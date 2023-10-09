@@ -199,7 +199,11 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
 
     this.benefitObj.attachments =
-      this.attachment.data.length + this.attachment.fileUploadList.length;
+      this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+    if(!this.benefitObj.attachments){
+      this.benefitObj.attachments = 0;
+    }
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
@@ -229,10 +233,11 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
             this.dialog && this.dialog.close(p);
           }
         } else {
+          debugger
           if (p != null) {
             if (p.length > 1) {
               this.benefitObj.recID = p[1].recID;
-            } else this.benefitObj.recID = p[0].recID;
+            } else this.benefitObj.recID = p.recID;
             this.notify.notifyCode('SYS006');
             this.successFlag = true;
             this.dialog && this.dialog.close(this.benefitObj);
