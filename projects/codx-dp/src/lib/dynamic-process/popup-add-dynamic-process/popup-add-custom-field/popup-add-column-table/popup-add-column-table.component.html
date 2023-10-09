@@ -49,6 +49,23 @@
       ></codx-label>
     </span>
   </div>
+
+  <div class="form-group">
+    <codx-input
+      type="checkbox"
+      field="settingCount"
+      (valueChange)="valueChange($event)"
+      [crrValue]="settingCount"
+    ></codx-input>
+    <span>
+      <codx-label
+        class="ms-2"
+        name="lblSettingCount"
+        [formModel]="formTable?.formModel"
+        default="Đánh số thứ tự cho bảng"
+      ></codx-label>
+    </span>
+  </div>
   <!-- d-flex justify-content-end align-items-center -->
   <div class="">
     <button
