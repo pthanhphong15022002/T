@@ -552,7 +552,12 @@ export class PopupEProcessContractComponent
     this.data.positionID = this.employeeObj?.positionID;
 
     this.data.attachments =
-      this.attachment.data.length + this.attachment.fileUploadList.length;
+      this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+      if(!this.data.attachments){
+        this.data.attachments = 0;
+      }
+
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
