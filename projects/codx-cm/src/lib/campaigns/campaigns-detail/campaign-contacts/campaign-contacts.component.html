@@ -10,14 +10,16 @@
       (valueChange)="valueChange($event)"
     ></codx-dropdown-select>
   </div>
-  <div [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+  <div class="h-100" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
     <codx-gridview-v2
       #grid
-      service="WR"
+      service="CM"
+      rowHeight="35"
       [formModel]="formModel"
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
       [hideMoreFunc]="false"
+      [height]="'100%'"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>
