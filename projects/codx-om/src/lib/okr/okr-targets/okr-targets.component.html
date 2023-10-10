@@ -65,7 +65,7 @@
 
     <!--Content Statistical-->
     <div class="d-flex align-items-start justify-content-between " [ngClass]="isHiddenChart ? 'd-none' : 'd-flex'">
-      <div class="col-4 px-3 py-3 h-100 om-statistical">
+      <div class="col-4 px-2 py-3 h-100 om-statistical">
         <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
           <codx-label class="fs-3 fw-bold" name="lblTotal" default="Tổng hợp"></codx-label>
           <div class="flex-grow-1 d-flex flex-row  align-items-center ">
@@ -102,29 +102,29 @@
         </div>
       </div>
 
-      <div class="col-4 px-3 py-3 h-100 om-statistical">
+      <div class="col-4 px-2 py-3 h-100 om-statistical">
         <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
           <codx-label class="fs-3 fw-bold" name="lblObject" default="Mục tiêu"></codx-label>
           <div class="flex-grow-1 d-flex flex-column">
             <div class="flex-row d-flex ">
-              <div class="d-flex flex-column pt-4 col-6 ps-3">
-                <span class="fs-2 fw-bold">{{value?.totalOB}}</span>
-                <codx-label class="fs-6 fw-bold" name="lblTotalObject" default="Tổng số mục tiêu"></codx-label>
+              <div class="d-flex flex-column pt-4 col-6">
+                <span class="fs-3">{{value?.totalOB}}</span>
+                <codx-label class="text-gray-700" name="lblTotalObject" default="Tổng số mục tiêu"></codx-label>
               </div>
-              <div class="d-flex flex-column pt-4 col-6 ps-3">
-                <span class="fs-2 fw-bold">{{value?.totalHighOB}}</span>
-                <codx-label class="fs-6 fw-bold " name="lblImportantObject"
+              <div class="d-flex flex-column pt-4 col-6">
+                <span class="fs-3">{{value?.totalHighOB}}</span>
+                <codx-label class="text-gray-700" name="lblImportantObject"
                   default="Mục tiêu quan trọng"></codx-label>
               </div>
             </div>
             <div class="flex-row d-flex ">
-              <div class="d-flex flex-column pt-4 col-6 ps-3">
-                <span class="fs-2 fw-bold">{{value?.obDone}}</span>
-                <codx-label class="fs-6 fw-bold" name="lblObjectFinished" default="Đã hoàn tất"></codx-label>
+              <div class="d-flex flex-column pt-4 col-6">
+                <span class="fs-3">{{value?.obDone}}</span>
+                <codx-label class="text-gray-700" name="lblObjectFinished" default="Đã hoàn tất"></codx-label>
               </div>
-              <div class="d-flex flex-column pt-4 col-6 ps-3">
-                <span class="fs-2 fw-bold">{{value?.highOBDone}}</span>
-                <codx-label class="fs-6 fw-bold" name="lblImportantObjectFinished"
+              <div class="d-flex flex-column pt-4 col-6">
+                <span class="fs-3">{{value?.highOBDone}}</span>
+                <codx-label class="text-gray-700" name="lblImportantObjectFinished"
                   default="Mục tiêu quan trọng hoàn tất"></codx-label>
               </div>
             </div>
@@ -132,41 +132,41 @@
         </div>
       </div>
 
-      <div class="col-4 px-3 py-3 h-100 om-statistical">
+      <div class="col-4 px-2 py-3 h-100 om-statistical">
         <div class="px-4 py-4 w-100 h-100 border rounded-1 d-flex flex-column">
           <codx-label class="fs-3 fw-bold" name="lblKeyResult" default="Tiến độ kết quả thực hiện"></codx-label>
           <div class="flex-grow-1 d-flex flex-column">
             <div class="flex-row d-flex ">
-              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+              <div class=" flex-row d-flex pt-4 col-6 align-items-center">
                 <span [inlineSVG]="'./assets/themes/om/default/img/OM_DB_Overdue.svg'"></span>
-                <div class=" ps-2 d-flex flex-column ">
-                  <codx-label class="fs-6 fw-bold" name="lblLateCheckIn" default="Trễ hạn cập nhật"></codx-label>
-                  <span class="fs-2 fw-bold">{{value?.krLateCheckIn}}</span>
+                <div class=" ps-3 d-flex flex-column ">
+                  <codx-label class="text-gray-700" name="lblLateCheckIn" default="Trễ hạn cập nhật"></codx-label>
+                  <span class="fs-3">{{value?.krLateCheckIn}}</span>
                 </div>
               </div>
-              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+              <div class=" flex-row d-flex pt-4 col-6 align-items-center">
                 <span [inlineSVG]="'./assets/themes/om/default/img/OM_BD_Delay.svg'"></span>
-                <div class=" ps-2 d-flex flex-column ">
-                  <codx-label class="fs-6 fw-bold" name="lblLateTarget" default="Trễ tiến độ"></codx-label>
-                  <span class="fs-2 fw-bold">{{value?.krLateProgress}}</span>
+                <div class=" ps-3 d-flex flex-column ">
+                  <codx-label class="text-gray-700" name="lblLateTarget" default="Trễ tiến độ"></codx-label>
+                  <span class="fs-3">{{value?.krLateProgress}}</span>
                 </div>
               </div>
             </div>
             <div class="flex-row d-flex">
 
-              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+              <div class=" flex-row d-flex pt-4 col-6 align-items-center">
                 <span [inlineSVG]="'./assets/themes/om/default/img/OM_DB_OnSchedule.svg'"></span>
-                <div class=" ps-2 d-flex flex-column ">
-                  <codx-label class="fs-6 fw-bold" name="lblInProgress" default="Đúng tiến độ"></codx-label>
-                  <span class="fs-2 fw-bold">{{value?.krInProgress}}</span>
+                <div class=" ps-3 d-flex flex-column ">
+                  <codx-label class="text-gray-700" name="lblInProgress" default="Đúng tiến độ"></codx-label>
+                  <span class="fs-3">{{value?.krInProgress}}</span>
                 </div>
               </div>
 
-              <div class=" flex-row d-flex pt-4 col-6 ps-3 align-items-center">
+              <div class=" flex-row d-flex pt-4 col-6 align-items-center">
                 <span [inlineSVG]="'./assets/themes/om/default/img/OM_DB_OverSchedule.svg'"></span>
-                <div class=" ps-2 d-flex flex-column ">
-                  <codx-label class="fs-6 fw-bold" name="lblOverProgress" default="Vượt tiến độ"></codx-label>
-                  <span class="fs-2 fw-bold">{{value?.krOverProgress}}</span>
+                <div class=" ps-3 d-flex flex-column ">
+                  <codx-label class="text-gray-700" name="lblOverProgress" default="Vượt tiến độ"></codx-label>
+                  <span class="fs-3">{{value?.krOverProgress}}</span>
                 </div>
               </div>
 
@@ -419,7 +419,7 @@
 
       </div>
       <div class="col-6 d-flex ps-3 align-items-center justify-content-between">
-        <div class="col-6 d-flex flex-row align-items-center kr-process" [ngbTooltip]="'Tiến độ'">
+        <div class="col-4 d-flex flex-row align-items-center kr-process" [ngbTooltip]="'Tiến độ'">
           <div class="h-5px col-9 position-relative bg-gray-200 rounded-4">
             <div class="rounded-4 h-5px" [ngClass]=" item?.actual >= item?.current ? 'bg-success' : 'bg-danger' "
               role="progressbar" [style.width]="item?.progress + '%'" aria-valuenow="50" aria-valuemin="0"
@@ -440,10 +440,10 @@
           </span>
 
         </div>
-        <div class=" d-flex flex-row col-6 align-items-center justify-content-end">
+        <div class=" d-flex flex-row col-8 align-items-center justify-content-end">
           <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Lịch sử cập nhật"
             (click)="showCheckInHistory($event,item)">
-            <span class="icon-i-clock-history text-hover-primary icon-20 text-gray-400"></span>
+            <span class="icon-i-clock-history text-hover-primary icon-18 text-gray-600"></span>
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
               *ngIf="item?.checkIns != null && item?.checkIns.length > 0"
@@ -454,7 +454,7 @@
 
           <div class="d-flex align-items-center position-relative me-4" ngbTooltip="Công việc"
             (click)="showTasks($event, item)">
-            <span class="icon-i-clipboard-check text-hover-primary icon-20 text-gray-400"></span>
+            <span class="icon-i-clipboard-check text-hover-primary icon-16 text-gray-600"></span>
             <span
               class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
               *ngIf="item?.okrTasks != null && item?.okrTasks.length > 0"
