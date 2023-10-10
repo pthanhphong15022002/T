@@ -1,23 +1,25 @@
-<div class="d-flex justify-content-between mt-2">
-  <codx-dropdown-select
-    #cbxIndustries
-    type="valuelist"
-    field="statusSearch"
-    [refValue]="gridViewSetup?.Status?.referedValue"
-    [emptyText]="gridViewSetup?.Status?.headerText"
-    [value]="statusSearch"
-    (valueChange)="valueChange($event)"
-  ></codx-dropdown-select>
-</div>
 <ng-container *ngIf="loaded">
-  <div [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+  <div class="d-flex justify-content-between mt-2">
+    <codx-dropdown-select
+      #cbxIndustries
+      type="valuelist"
+      field="statusSearch"
+      [refValue]="gridViewSetup?.Status?.referedValue"
+      [emptyText]="gridViewSetup?.Status?.headerText"
+      [value]="statusSearch"
+      (valueChange)="valueChange($event)"
+    ></codx-dropdown-select>
+  </div>
+  <div class="h-100" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
     <codx-gridview-v2
       #grid
-      service="WR"
+      service="CM"
+      rowHeight="35"
       [formModel]="formModel"
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
       [hideMoreFunc]="false"
+      [height]="isShow ? '' : '100%'"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>

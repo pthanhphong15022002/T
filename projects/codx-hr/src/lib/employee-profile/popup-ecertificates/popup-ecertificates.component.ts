@@ -239,6 +239,13 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       }
     }
 
+    this.certificateObj.attachments =
+    this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+    if(!this.certificateObj.attachments){
+      this.certificateObj.attachments = 0;
+    }
+
     if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0

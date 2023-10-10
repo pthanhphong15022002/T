@@ -136,7 +136,7 @@ export class ViewCalendarComponent
   methodLoadData = 'GetListContractsAsync';
   requestData = new DataRequest();
   listTaskType = [];
-
+  isAdmin = false;
   constructor(
     private inject: Injector,
     private authstore: AuthStore,
@@ -166,6 +166,9 @@ export class ViewCalendarComponent
         this.listTaskType = res.datas;
       }
     });
+    this.api.exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', []).subscribe((res) => {
+      this.isAdmin = res ? true : false;
+    })
   }
   ngAfterViewInit(): void {
     this.afterLoad();
@@ -382,7 +385,7 @@ viewTask(data) {
     this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
-        // this.beforeAddTask();
+        // this.beforeAddTask1();
         break;
     }
   }
@@ -440,259 +443,64 @@ viewTask(data) {
     }
     return task;
   }
-  //#region add task
-  // beforeAddTask() {
-  //   let option = new DialogModel();
-  //   option.zIndex = 1001;
-  //   this.popupTypeCM = this.callfc.openForm(
-  //     this.popupChoiseTypeCM,
-  //     '',
-  //     600,
-  //     470,
-  //     '',
-  //     null,
-  //     '',
-  //     option
-  //   );
-  // }
 
-   beforeAddTask(taskType) {
+   async beforeAddTask(taskType) {
     let option = new DialogModel();
     let data = {
       taskType,
+      isAdmin: this.isAdmin,
     };
     option.zIndex = 1001;
     this.popupTypeCM = this.callfc.openForm(
       PopupAddTaskCalendarComponent,
       '',
-      600,
-      470,
+      650,
+      500,
       '',
       data,
       '',
       option
     );
-  }
-
-  closeBeforeAddTask() {
-    this.popupTypeCM.close();
-    // this.isStepTask = false;
-    // this.isActivitie = false;
-    this.fieldTypeCm = '';
-    this.disableButton = true;
-  }
-
-  valueChangeCombobox(event, type) {
-    switch (type) {
-      case 'type':
-        this.fieldTypeCm = event?.value;
-        this.disableButton = true;
-        this.insStep = null;
-        this.listStep = [];
-        let typeCM = this.typeCMs?.find(
-          (type) => type.entityName == this.fieldTypeCm
-        );
-        this.getDatas(typeCM?.entityName, typeCM?.funcID, null, null);
-        break;
-      case 'CM_Customers':
-        if (event?.value) {
-          this.objectID = event?.value;
-          this.disableButton = false;
-          this.isStepTask = false;
-          this.isActivitie = true;
-        } else {
-          this.disableButton = true;
+    let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
+    if(dataOuput?.event){
+      let taskType = dataOuput?.event?.taskType;
+      let dataTypeCM = dataOuput?.event?.dataCheck
+      let listInsStep = [];
+      if(dataTypeCM && taskType){
+        this.isStepTask = dataTypeCM?.applyProcess;
+        this.isActivitie = !this.isStepTask;
+        if(this.isStepTask){
+          this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetInscestepCalendarAsync', [dataTypeCM?.refID, dataTypeCM?.full]).subscribe((res) => {
+            if(res){
+              if(res?.length > 0){
+                this.handleTask(taskType,"add",null,res);
+              }
+            }
+          })
+        }else{
+          this.entityName = dataTypeCM?.entityName;
+          this.objectID = dataTypeCM?.recID;
+          this.handleTask(taskType,"add",null);
         }
-        break;
-      case 'CM_Leads':
-        this.checkLeads(event?.itemData);
-        break;
-      case 'CM_Deals':
-        this.checkDeal(event?.value);
-        break;
-      case 'CM_Contracts':
-        this.checkContracts(event?.itemData);
-        break;
-      case 'CM_Cases':
-        this.checkCases(event?.itemData);
-        break;
-      case 'step':
-        this.insStep = event?.itemData;
-        this.disableButton = this.insStep ? false : true;
-        break;
-    }
-  }
-
-  checkLeads(lead) {
-    console.log(lead);
-    if (!lead?.applyProcess) {
-      this.objectID = lead?.recID;
-      this.isStepTask = false;
-      this.insStep = null;
-      this.listStep = [];
-      this.disableButton = false;
-      this.isStepTask = false;
-      this.isActivitie = true;
-    } else {
-      this.disableButton = true;
-      var data = [lead?.refID, lead?.processID, lead?.status, '5'];
-      this.cmService.getStepInstance(data).subscribe((res) => {
-        if (res) {
-          this.listStep = res?.filter(
-            (step) => !step?.isFailStep && !step?.isFailStep
-          );
-          this.isStepTask = true;
-          this.isActivitie = false;
-        }
-      });
-    }
-  }
-
-  checkContracts(contract) {
-    console.log(contract);
-    if (!contract?.applyProcess) {
-      this.objectID = contract?.recID;
-      this.disableButton = false;
-      this.isStepTask = false;
-      this.insStep = null;
-      this.listStep = [];
-      this.isStepTask = false;
-      this.isActivitie = true;
-    } else {
-      this.disableButton = true;
-      var data = [contract?.refID, contract?.processID, contract?.status, '4'];
-      this.cmService.getStepInstance(data).subscribe((res) => {
-        if (res) {
-          this.listStep = res?.filter(
-            (step) => !step?.isFailStep && !step?.isFailStep
-          );
-          this.isStepTask = true;
-          this.isActivitie = false;
-        }
-      });
-    }
-  }
-
-  checkCases(cases) {
-    if (!cases?.applyProcess) {
-      this.objectID = cases?.recID;
-      this.disableButton = false;
-      this.isStepTask = false;
-      this.insStep = null;
-      this.listStep = [];
-      this.isStepTask = false;
-      this.isActivitie = true;
-    } else {
-      this.disableButton = true;
-      var data = [
-        cases?.refID,
-        cases?.processID,
-        cases?.status,
-        cases.caseType == '1' ? '2' : '3',
-      ];
-      this.cmService.getStepInstance(data).subscribe((res) => {
-        if (res) {
-          this.listStep = res?.filter(
-            (step) => !step?.isFailStep && !step?.isFailStep
-          );
-          this.isStepTask = true;
-          this.isActivitie = false;
-        }
-      });
-    }
-  }
-
-  checkDeal(dealID) {
-    console.log(dealID);
-    let deal = this.listDeal.find((dealFind) => dealFind.recID == dealID);
-    if (deal) {
-      var data = [deal?.refID, deal?.processID, deal?.status, '1'];
-      this.cmService.getStepInstance(data).subscribe((res) => {
-        if (res) {
-          this.listStep = res?.filter(
-            (step) => !step?.isFailStep && !step?.isFailStep
-          );
-          this.isStepTask = true;
-          this.isActivitie = false;
-        }
-      });
-    }
-  }
-
-  getDatas(entityName, funcID, predicates, dataValues) {
-    this.requestData.entityName = entityName;
-    this.requestData.funcID = funcID;
-    this.requestData.predicates = predicates;
-    this.requestData.dataValues = dataValues;
-    this.requestData.pageLoading = false;
-
-    this.fetch().subscribe((res) => {
-      switch (entityName) {
-        case 'CM_Cases':
-          this.listCase = res;
-          break;
-        case 'CM_Deals':
-          this.listDeal = res;
-          break;
-        case 'CM_Leads':
-          this.listLead = res;
-          break;
-        case 'CM_Contracts':
-          this.listContract = res;
-          break;
-        case 'CM_Customers':
-          this.listCustomer = res;
-          this.isStepTask = false;
-          this.isActivitie = true;
-          break;
       }
-      console.log(res);
-    });
-  }
-
-  fetch(): Observable<any[]> {
-    return this.api
-      .execSv<Array<any>>(
-        this.service,
-        'Core',
-        'DataBusiness',
-        'LoadDataAsync',
-        this.requestData
-      )
-      .pipe(
-        finalize(() => {}),
-        map((response: any) => {
-          return response[0];
-        })
-      );
-  }
-
-  continue() {
-    this.closeBeforeAddTask();
-    this.chooseTypeTask();
-  }
-
-  async chooseTypeTask() {
-    this.taskType = await this.stepService.chooseTypeTask(false);
-    if (this.taskType) {
-      await this.handleTask(this.taskType, 'add');
     }
   }
 
-  async handleTask(dataType, type, taskData = null) {
+  async handleTask(dataType, action, taskData = null, listInsStep = null) {
     let taskOutput = await this.stepService.addTask(
-      type,
+      action,
       '',
       taskData,
       dataType,
       this.insStep,
+      listInsStep,
       null,
       false,
       null,
       'right'
     );
     let task = taskOutput;
-    if (task && type == 'add') {
+    if (task && action == 'add') {
       this.isActivitie && this.addActivitie(task);
       this.isStepTask && this.addStepTask(task);
     }
@@ -706,7 +514,7 @@ viewTask(data) {
     task['objectID'] = this.objectID;
     task['objectType'] = this.entityName;
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+      .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
         task,
         this.entityName,
       ])
@@ -776,7 +584,7 @@ viewTask(data) {
         }
         if (this.isActivitie) {
           this.api
-            .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
+            .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
               taskEdit,
             ])
             .subscribe((res) => {
@@ -832,7 +640,7 @@ viewTask(data) {
                 this.notiService.notifyCode('SYS007');
               })
             }else if(this.isActivitie){
-              this.api.exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+              this.api.exec<any>('DP', 'ActivitiesBusiness', 'DeleteActivitiesAsync', [
                 task?.recID,task?.objectType
               ])
               .subscribe((res) => {

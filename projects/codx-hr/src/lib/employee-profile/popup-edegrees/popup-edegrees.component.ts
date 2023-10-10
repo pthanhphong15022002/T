@@ -364,6 +364,13 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
       return;
     }
 
+    this.degreeObj.attachments =
+    this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+    if(!this.degreeObj.attachments){
+      this.degreeObj.attachments = 0;
+    }
+
     if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0

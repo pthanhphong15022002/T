@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { AuthService } from 'codx-core';
-import { SignalRService } from 'projects/codx-share/src/lib/layout/drawers/chat/services/signalr.service';
-import { ɵglobal as global } from '@angular/core';
-import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
+import { CodxChatBoxComponent } from 'projects/codx-common/src/lib/_layout/drawers/chat/chat-box/chat-box.component';
+import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
+
 declare var window: any;
 
 @Component({

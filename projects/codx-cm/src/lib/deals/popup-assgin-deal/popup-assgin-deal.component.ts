@@ -323,6 +323,15 @@ export class PopupAssginDealComponent
   }
 
   saveOwner() {
+    debugger;
+    if(this.applyFor == '0') {
+      let datas = [this.recID, this.owner];
+      this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
+        if (res) {
+          this.dialogRef.close(res);
+        }
+      });
+    }
     let datas = [this.recID, this.owner, this.startControl, this.buid];
     if (this.applyFor == '1') {
       this.data.owner = this.owner;

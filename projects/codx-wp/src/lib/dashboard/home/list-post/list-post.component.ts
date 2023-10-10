@@ -61,6 +61,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   @Input() funcID: string = '';
   @Input() objectID: string = '';
+  @Input() service: string = '';
+  @Input() assemblyName: string = '';
+  @Input() className: string = '';
   @Input() method: string = '';
   @Input() predicate: any;
   @Input() dataValue: any;
@@ -116,9 +119,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     // set dataService
-    this.dataService.service = "WP";
-    this.dataService.assemblyName = "ERM.Business.WP";
-    this.dataService.className = "CommentsBusiness";
+    this.dataService.service = this.service || "WP";
+    this.dataService.assemblyName = this.assemblyName || "ERM.Business.WP";
+    this.dataService.className = this.className || "CommentsBusiness";
     this.dataService.method = this.method || "GetListPostAsync";
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;

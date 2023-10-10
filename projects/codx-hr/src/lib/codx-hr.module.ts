@@ -465,6 +465,7 @@ const T_Component: Type<any>[] = [
     DiagramAllModule,
     NgbModule,
     BasicPrimitivesModule,
+    HttpClientModule
   ],
   exports: [RouterModule],
   declarations: T_Component,

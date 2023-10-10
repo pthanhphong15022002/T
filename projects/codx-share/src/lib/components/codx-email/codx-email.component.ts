@@ -338,6 +338,64 @@ export class CodxEmailComponent implements OnInit {
   //   this.cr.detectChanges();
   // }
 
+  toChange(evt: any, sendType: string) {
+    let value = evt?.currentTarget?.value;
+    let r = this.validateEmail(value);
+    if (!r) return;
+    let o: any = {};
+    o['sendType'] = sendType;
+    o['objectType'] = 'Email';
+    o['objectID'] = value;
+    if (sendType == '2') {
+      if (
+        !this.lstTo.find(
+          (x) =>
+            x.objectID.toLowerCase() == value.toLowerCase() &&
+            x.objectType == 'Email'
+        )
+      )
+        this.lstTo.push(o);
+    } else if (sendType == '3') {
+      if (
+        !this.lstCc.find((x) => x.objectID == value && x.objectType == 'Email')
+      )
+        this.lstCc.push(o);
+    } else if (sendType == '4') {
+      if (
+        !this.lstBcc.find(
+          (x) => x.objectID.toLo == value.to && x.objectType == 'Email'
+        )
+      )
+        this.lstBcc.push(o);
+    }
+    evt.currentTarget.value = '';
+  }
+
+  onKeydown(evt: KeyboardEvent, sendType: string) {
+    const key = evt.code;
+    let value = (evt.currentTarget as any).value;
+    if (value) return;
+    if (key === 'Backspace') {
+      if (sendType == '2') {
+        if (this.lstTo.length > 0) this.lstTo = this.lstTo.slice(0, -1);
+      } else if (sendType == '3') {
+        if (this.lstCc.length > 0) this.lstCc = this.lstCc.slice(0, -1);
+      } else if (sendType == '4') {
+        if (this.lstBcc.length > 0) this.lstBcc = this.lstBcc.slice(0, -1);
+      }
+    }
+  }
+
+  validateEmail(inputText: string): boolean {
+    if (!inputText) return false;
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (inputText.match(mailformat)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   loadListFieldByGridViewName(gridViewName, formName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grvSetup) => {
       if (grvSetup) {
