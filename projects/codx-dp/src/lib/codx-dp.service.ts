@@ -678,21 +678,21 @@ export class CodxDpService {
   }
 
   //check trinfh ki
-  checkApprovalStep(data) {
+  checkApprovalStep(recID) {
     return this.api.exec<any>(
       'ES',
       'ApprovalStepsBusiness',
       'CheckApprovalStepByTranIDAsync',
-      data
+      recID
     );
   }
 
-  getDataReleased(recID) {
+  getDataReleased(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'GetDataReleasedAsync',
-      recID
+      data
     );
   }
 
