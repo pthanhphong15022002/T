@@ -988,14 +988,13 @@ export class PopupPolicybenefitsComponent
           if (res) {
             if (res.key) {
               this.autoNumField = res.key;
-              this.loadedAutoField = true;
               this.df.detectChanges();
             }
+            this.loadedAutoField = true;
             res.data.status = '1';
 
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
-              this.loadedAutoField = true;
               this.df.detectChanges();
             }
             this.benefitPolicyObj = res?.data;

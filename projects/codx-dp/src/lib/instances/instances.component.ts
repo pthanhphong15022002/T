@@ -239,6 +239,7 @@ export class InstancesComponent
   categoryCustomer: any = '';
   instanceCM: any;
   crrFunc: any;
+  runMode: any; //view detail
 
   constructor(
     inject: Injector,
@@ -263,6 +264,9 @@ export class InstancesComponent
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
       if (!this.funcID) this.funcID = param['funcID'];
+      this.cache.functionList(param.funcID).subscribe((fun) => {
+        if (fun) this.runMode = fun?.runMode;
+      });
       this.showButtonAdd = this.funcID != 'DPT0502';
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
@@ -362,6 +366,21 @@ export class InstancesComponent
         },
       },
     ];
+    //bua tạm thoi de review
+    this.cache.viewSettings(this.funcID).subscribe((res) => {
+      let setingViewMode = res;
+      this.views.forEach((v, index) => {
+        let idx = setingViewMode.findIndex((x) => x.view == v.type);
+        if (idx != -1) {
+          v.active = setingViewMode[idx].isDefault;
+          v.hide = false;
+        } else {
+          v.hide = true;
+          v.active = false;
+        }
+      });
+    });
+
     this.setColorKanban();
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
@@ -1037,7 +1056,7 @@ export class InstancesComponent
       default: {
         //Biến động tự custom
         var customData = {
-          refID: this.process.recID,
+          refID: data.processID,
           refType: 'DP_Processes',
           dataSource: data.datas,
         };
@@ -1340,26 +1359,54 @@ export class InstancesComponent
       }
     } else {
       let viewModel: any;
-      this.views.forEach((v, index) => {
-        if (v.type == 2) {
-          v.active = true;
-          viewModel = v;
-        } else {
-          v.active = false;
-          if (this.funcID == 'DPT0502') v.hide = true;
-          else v.hide = false;
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        let setingViewMode = res;
+        this.views.forEach((v, index) => {
+          let idx = setingViewMode.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.active = setingViewMode[idx].isDefault;
+            if (v.active) viewModel = v;
+            v.hide = false;
+          } else {
+            v.hide = true;
+            v.active = false;
+          }
+        });
+        this.crrFunc = this.funcID;
+        if (this.funcID == 'DPT0502') {
+          this.layoutDP.viewNameProcess(null);
+
+          if (viewModel) {
+            this.view.viewActiveType = viewModel.type;
+          } else {
+            this.view.viewActiveType = 2;
+            viewModel = this.views.find((x) => x.type == 2);
+            viewModel.active = true;
+          }
+          this.view.viewChange(viewModel);
+          this.view.load();
         }
       });
-      this.crrFunc = this.funcID;
-      if (this.funcID == 'DPT0502') {
-        this.layoutDP.viewNameProcess(null);
+      // this.views.forEach((v, index) => {
+      //   if (v.type == 2) {
+      //     v.active = true;
+      //     viewModel = v;
+      //   } else {
+      //     v.active = false;
+      //     if (this.funcID == 'DPT0502') v.hide = true;
+      //     else v.hide = false;
+      //   }
+      // });
+      // this.crrFunc = this.funcID;
+      // if (this.funcID == 'DPT0502') {
+      //   this.layoutDP.viewNameProcess(null);
 
-        if (viewModel) {
-          this.view.viewActiveType = viewModel.type;
-          this.view.viewChange(viewModel);
-        }
-        this.view.load();
-      }
+      //   if (viewModel) {
+      //     this.view.viewActiveType = viewModel.type;
+      //     this.view.viewChange(viewModel);
+      //   }
+      //   this.view.load();
+      // }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2283,52 +2330,18 @@ export class InstancesComponent
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
+          //gui step
+          // this.codxDpService
+          //   .getDataReleased(this.dataSelected)
+          //   .subscribe((dt) => {
+          //     if (dt) this.release(dt, this.esCategory);
+          //   });
+
+          //gui instance
           this.codxDpService
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
               if (check) {
-                // this.isLockButton = true;
-                // let option = new DialogModel();
-                // option.zIndex = 1001;
-                // // this.dialogTemplate = this.callfc.openForm(
-                // //   this.popupTemplate,
-                // //   '',
-                // //   600,
-                // //   500,
-                // //   '',
-                // //   null,
-                // //   '',
-                // //   option
-                // // );
-                // let obj = {
-                //   data: this.dataSelected,
-                //   formModel: this.view.formModel,
-                //   isFormExport: false,
-                //   refID: this.process.recID,
-                //   refType: 'DP_Processes',
-                //   esCategory: this.esCategory,
-                //   titleAction: this.titleAction,
-                //   loaded: true,
-                //   dataEx: this.dataEx,
-                //   dataWord: this.dataWord,
-                // };
-                // this.dialogTemplate = this.callfc.openForm(
-                //   PopupSelectTempletComponent,
-                //   '',
-                //   600,
-                //   500,
-                //   '',
-                //   obj,
-                //   '',
-                //   option
-                // );
-                // this.dialogTemplate.closed.subscribe((e) => {
-                //   if (e?.event) {
-                //     this.dataSelected = e?.event;
-                //     this.view.dataService.update(this.dataSelected).subscribe();
-                //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-                //   }
-                // });
                 this.release(this.dataSelected, item);
               } else this.notificationsService.notifyCode('DP036');
             });
@@ -2351,6 +2364,7 @@ export class InstancesComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
+      debugger;
       ///do corre share ko tra ve status
       this.codxDpService
         .getOneObject(this.dataSelected.recID, 'InstancesBusiness')

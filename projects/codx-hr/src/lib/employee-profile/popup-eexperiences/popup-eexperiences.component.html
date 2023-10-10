@@ -300,6 +300,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [depth]='depth' 
             [value]="fromdateVal"
             [format]='format'
+            (click)="ClickCalendar($event)"
             (valueChange)="UpdateFromDate($event)"
             ></ejs-datepicker>
         </div>
@@ -313,6 +314,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
             [start]='start' 
             [depth]='depth' 
             [value]="todateVal"
+            (click)="ClickCalendar($event)"
             [format]='format'
             (valueChange)="UpdateToDate($event)"
             ></ejs-datepicker>

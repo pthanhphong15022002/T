@@ -224,15 +224,14 @@ export class PopupAddCampaignContactComponent implements OnInit {
     if (e && parseFloat(e?.data) >= 0 && this[type] != e?.data) {
       this.lstAnnualRevenue = [];
       this[type] = parseFloat(e?.data);
-      if (this.annualRevenue2 >= this.annualRevenue1) {
-        if (this.lstAnnualRevenue != null && this.lstAnnualRevenue.length > 0) {
-          this.lstAnnualRevenue[0] = this.annualRevenue1;
-          this.lstAnnualRevenue[1] = this.annualRevenue2;
-        } else {
-          this.lstAnnualRevenue.push(this.annualRevenue1);
-          this.lstAnnualRevenue.push(this.annualRevenue2);
-        }
+      if (this.lstAnnualRevenue != null && this.lstAnnualRevenue.length > 0) {
+        this.lstAnnualRevenue[0] = this.annualRevenue1;
+        this.lstAnnualRevenue[1] = this.annualRevenue2;
+      } else {
+        this.lstAnnualRevenue.push(this.annualRevenue1);
+        this.lstAnnualRevenue.push(this.annualRevenue2);
       }
+
       this.bindingCountCompaign();
     }
     this.detector.detectChanges();
@@ -377,7 +376,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
           this.custGroupIDs,
           this.lstAnnualRevenue,
           this.headCounts,
-          this.channelIDs
+          this.channelIDs,
         ]
       )
       .subscribe((res) => {

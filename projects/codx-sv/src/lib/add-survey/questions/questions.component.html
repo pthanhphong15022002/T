@@ -458,9 +458,7 @@
         [disabled]="itemAnswer.other ? true : false"
         [crrValue]="itemAnswer.answer"
         field="answer"
-        (valueChange)="
-          valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)
-        "
+        (valueChange)="valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)"
       >
       </codx-input>
     </div>
@@ -840,13 +838,13 @@
                 <span class="icon-reorder"></span>
               </div>
               <span>{{ itemAnswerR.seqNo + 1 }}.</span>
+              
               <input
-                class="e-input me-2"
+                class="e-input me-2 ip-matrix"
                 type="text"
                 placeholder="Thêm hàng"
                 [value]="itemAnswerR.answer"
-                (focus)="focusIn($event.target)"
-                (blur)="focusOut($event.target)"
+                (change)="valueChangeAnswerMatrix(itemSession.seqNo, itemQuestion, itemAnswerR , $event.target.value)"
                 [(ngModel)]="itemAnswerR.answer"
               />
               <span
@@ -864,8 +862,8 @@
           </div>
         </div>
         <div class="d-flex align-items-center pd-t-5p ps-6">
-          <span>{{ amountOfRow }}.</span>
-          <codx-label default="Thêm hàng" (click)="addAnswerR(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500"></codx-label>
+          <span class="fs-5-sm">{{ amountOfRow }}.</span>
+          <codx-label default="Thêm hàng" (click)="addAnswerR(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500 fs-5-sm cursor-pointer"></codx-label>
         </div>
       </div>
       <div class="col">
@@ -907,12 +905,11 @@
                 *ngIf="itemQuestion.answerType == 'C2'"
               ></span>
               <input
-                class="e-input me-2"
+                class="e-input me-2 ip-matrix"
                 type="text"
                 [value]="itemAnswerC.answer"
                 placeholder="Thêm cột"
-                (focus)="focusIn($event.target)"
-                (blur)="focusOut($event.target)"
+                (change)="valueChangeAnswerMatrix(itemSession.seqNo, itemQuestion, itemAnswerC , $event.target.value)"
               />
               <span
                 class="icon-close icon-22 pd-s-e-10"
@@ -937,7 +934,7 @@
             class="icon-check_box_outline_blank"
             *ngIf="itemQuestion.answerType == 'C2'"
           ></span>
-          <codx-label default="Thêm cột" (click)="addAnswerC(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500"></codx-label>
+          <codx-label default="Thêm cột" (click)="addAnswerC(itemSession.seqNo, itemQuestion.seqNo)" ngClass="ms-2 text-gray-500 fs-5-sm cursor-pointer"></codx-label>
         </div>
       </div>
     </div>

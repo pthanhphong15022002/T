@@ -169,12 +169,12 @@ export class QuestionsComponent
       icon: "icon-grid_round"
     }
     ,
-    {
-      id: "C2",
-      name: "Lưới hộp kiểm",
-      icon: "icon-grid_on",
-      group: true
-    },
+    // {
+    //   id: "C2",
+    //   name: "Lưới hộp kiểm",
+    //   icon: "icon-grid_on",
+    //   group: true
+    // },
     {
       id: 'D',
       name: 'Ngày',
@@ -195,6 +195,7 @@ export class QuestionsComponent
   indexSessionA = 0;
   indexQuestionA = 0;
   idSession = '';
+  amountOfRow = 2;
   public r = range(1, 10);
   @Input() changeModeQ: any;
   @Input() formModel: any;
@@ -437,7 +438,12 @@ export class QuestionsComponent
                   this.valueRTo = split[3];
                 }
               }
-            } else if (dtS[i].children[a].answers) {
+            }
+            else if(dtS[i].children[a].answerType == "O2")
+            {
+              this.amountOfRow = dtS[i].children[a].answers.filter((x) => !x.isColumn).length + 1
+            } 
+            else if (dtS[i].children[a].answers) {
               var check = dtS[i].children[a].answers.filter((x) => x.other);
               if (check && check.length > 0) dtS[i].children[a].other = true;
             }
@@ -1479,7 +1485,7 @@ export class QuestionsComponent
 
   uploadVideo(dataQuestion) {}
 
-  amountOfRow = 2;
+ 
   clickQuestionMF(seqNoSession, itemQuestion, answerType) {
     this.generateGuid();
     var recID = JSON.parse(JSON.stringify(this.GUID));
@@ -1638,6 +1644,7 @@ export class QuestionsComponent
   }
 
   deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {
+    debugger
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -1650,6 +1657,7 @@ export class QuestionsComponent
       dataAnswerR.forEach((x, index) => {
         x.seqNo = index;
       });
+      this.amountOfRow -= 1; 
     } else {
       dataAnswerC = dataAnswerC.filter((x) => x.recID != itemAnswer.recID);
       dataAnswerC.forEach((x, index) => {
@@ -1664,6 +1672,12 @@ export class QuestionsComponent
         this.questions[seqNoSession].children[seqNoQuestion].answers
       );
     }
+
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(
+      this.questions[seqNoSession].children[seqNoQuestion],
+      false
+    );
   }
 
   changeRating(
@@ -1911,6 +1925,7 @@ export class QuestionsComponent
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
+    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
@@ -1925,6 +1940,17 @@ export class QuestionsComponent
         false
       );
     }
+  }
+
+  valueChangeAnswerMatrix(seqNoSession, itemQuestion, itemAnswer, data)
+  {
+    var index =  this.questions[seqNoSession].children[itemQuestion.seqNo].answers.findIndex(x=>x.seqNo == itemAnswer.seqNo && x.isColumn == itemAnswer.isColumn);
+    this.questions[seqNoSession].children[itemQuestion.seqNo].answers[index]['answer'] = data;
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveDataAnswer(
+      [this.questions[seqNoSession].children[itemQuestion.seqNo]],
+      false
+    );
   }
 
   convertAnswer(answer: any, type = null) {

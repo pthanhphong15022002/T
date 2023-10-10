@@ -18,7 +18,7 @@
 
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center p-4 border-bottom w-100 c-detail">
-    <div class="w-30">
+    <div class="w-40 pe-6">
       <div class="d-flex align-items-start">
         <div class="d-flex flex-column">
           <codx-img
@@ -146,7 +146,7 @@
       </div>
     </div>
 
-    <div class="w-30">
+    <div class="w-20">
       <ng-container *ngIf="flagChangeMF">
         <ng-container *ngIf="runModeCheck; else elseVll">
           <codx-vll
@@ -207,7 +207,7 @@
 
 <ng-template #headerTemplate let-data>
   <div class="d-flex w-100 p-4">
-    <div class="w-30 text-dark fw-bold">
+    <div class="w-40 text-dark fw-bold">
       <codx-label
         fiedName="lblEmployeeID"
         [formModel]="view.formModel"
@@ -221,7 +221,7 @@
         [default]="grvSetup?.Appoint?.description"
       ></codx-label>
     </div>
-    <div class="w-30 text-dark fw-bold">
+    <div class="w-20 text-dark fw-bold">
       <codx-label
         fiedName="lblApproveStatus"
         [formModel]="view.formModel"

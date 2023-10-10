@@ -1329,8 +1329,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             tmpRole = this.checkRolesStep(this.step.roles, roles);
             let perm = new DP_Processes_Permission();
             perm.objectName = roles.objectName;
-            perm.objectID = data.id != null ? data.id : null;
-            perm.objectType = data.objectType;
+            perm.objectID = roles.objectID;
+            perm.objectType = roles.objectType;
             perm.roleType = 'P';
             perm.full = false;
             perm.read = true;
