@@ -18,7 +18,10 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import axios from 'axios';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { log } from 'console';
 
 @Component({
   selector: 'hr-popup-add-employee',
@@ -59,7 +62,7 @@ export class PopupAddEmployeeComponent implements OnInit {
       icon: 'icon-folder_special',
       text: 'Pháp lý',
       name: 'lblLegalInfo',
-    },
+    }
   ];
   trainFieldID: string = '';
   trainLevel: string = '';
@@ -78,6 +81,7 @@ export class PopupAddEmployeeComponent implements OnInit {
     private cache: CacheService,
     private fileSV: FilesService,
     private routerActive: ActivatedRoute,
+    private http: HttpClient,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -618,4 +622,7 @@ export class PopupAddEmployeeComponent implements OnInit {
   //       });
   //   }
   // }
+
+  // Test
+  
 }
