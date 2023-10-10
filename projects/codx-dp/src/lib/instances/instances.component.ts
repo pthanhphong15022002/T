@@ -2285,20 +2285,20 @@ export class InstancesComponent
         if (item) {
           this.esCategory = item;
           //gui step
-          // this.codxDpService
-          //   .getDataReleased(this.dataSelected)
-          //   .subscribe((dt) => {
-          //     if (dt) this.release(dt, this.esCategory);
-          //   });
-
-          //gui instance
           this.codxDpService
-            .checkApprovalStep(item.recID)
-            .subscribe((check) => {
-              if (check) {
-                this.release(this.dataSelected, item);
-              } else this.notificationsService.notifyCode('DP036');
+            .getDataReleased([this.dataSelected.recID, item.recID]) //data + tranID của esCategory
+            .subscribe((dt) => {
+              if (dt) this.release(dt, this.esCategory);
             });
+
+          // //gui instance
+          // this.codxDpService
+          //   .checkApprovalStep(item.recID)
+          //   .subscribe((check) => {
+          //     if (check) {
+          //       this.release(this.dataSelected, item);
+          //     } else this.notificationsService.notifyCode('DP036');
+          //   });
         }
       });
   }
@@ -2308,10 +2308,14 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      this.view.formModel.entityName,
+      // this.view.formModel.entityName,
+      'DP_Instances_Steps',
       this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback.bind(this)
+      data?.stepName,
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      'DP_Instances_Steps'
     );
   }
   //call Back
@@ -2320,14 +2324,21 @@ export class InstancesComponent
     else {
       debugger;
       ///do corre share ko tra ve status
+      this.dataSelected.approveStatus = '3';
+      this.view.dataService.update(this.dataSelected).subscribe();
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
       this.codxDpService
-        .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-        .subscribe((ins) => {
-          this.dataSelected.approveStatus = ins.approveStatus;
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.notificationsService.notifyCode('ES007');
-        });
+        .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
+        .subscribe();
+
+      // this.codxDpService
+      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
+      //   .subscribe((ins) => {
+      //     this.dataSelected.approveStatus = ins.approveStatus;
+      //     this.view.dataService.update(this.dataSelected).subscribe();
+      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      //     // this.notificationsService.notifyCode('ES007');
+      //   });
     }
   }
 

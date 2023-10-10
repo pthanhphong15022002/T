@@ -678,12 +678,12 @@ export class CodxDpService {
   }
 
   //check trinfh ki
-  checkApprovalStep(recID) {
+  checkApprovalStep(data) {
     return this.api.exec<any>(
       'ES',
       'ApprovalStepsBusiness',
       'CheckApprovalStepByTranIDAsync',
-      recID
+      data
     );
   }
 
