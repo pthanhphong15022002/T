@@ -21,6 +21,118 @@
     </div>
   </div>
 </ng-template>
+<ng-template #tabInfo00>
+
+  <div class="form-group">
+    <codx-label fiedName="StepName" [formModel]="formModel"> </codx-label>
+    <codx-input type="text" ControlName="stepName" [formModel]="formModel" [Group]="dialogApprovalStep"></codx-input>
+  </div>
+
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group">
+        <codx-label fiedName="Leadtime" [formModel]="formModel"> </codx-label>
+        <codx-input class="text-right" type="number" field="leadtime" [min]="0" placeholder="0" [formModel]="formModel"
+          [Group]="dialogApprovalStep" [showSpinButton]="false">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <codx-label fiedName="ApproveMode" [formModel]="formModel">
+        </codx-label>
+        <codx-input field="approveMode" ControlName="approveMode" [formModel]="formModel" [Group]="dialogApprovalStep">
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="flex-row d-flex justify-content-between align-items-center">
+    <codx-label class="text-primary fw-bold fs-4" name="lblApprover" default="Người thực hiện"
+      [formModel]="formModel">
+    </codx-label>
+    <button class="d-flex btn btn-outline-primary" (click)="addAppr()"> <span
+        class="icon-person_add icon-20"></span></button>
+  </div>
+</ng-template>
+
+<ng-template #addApproverTmp let-dialog>
+  <div class="d-flex flex-column align-items-between h-100">
+    <div class="modal-header p-5">
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="fs-4 fw-bold mb-1" id="modal-basic-title">
+            <codx-label default="Người thực hiện" name="lblApprover"></codx-label>
+          </div>
+          <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close"
+            (click)="dialog.close()">
+            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body pt-0 overflow-auto flex-grow-1">
+      <div class="mb-1 px-5">
+        <div class="form-group d-flex justify-content-between align-items-center">
+          <codx-label name="lblApprover" default="Chọn người thực hiện" [formModel]="formModel">
+          </codx-label>
+          <codx-input type='share' [multiple]="false" (valueChange)="applyApprover($event)" [refValue]="vllShare" [showInput]="false">
+          </codx-input>
+        </div>
+        <div class="row" *ngIf="newAppr?.roleType">
+          <codx-temp-full cardCss="card-template mb-4 w-100"
+            [imageId]="newAppr?.roleType =='U' ? newAppr?.approver : newAppr?.userID"
+            [title]="newAppr?.name ? newAppr?.name : newAppr?.userName ? newAppr?.userName : newAppr?.approver ? (newAppr?.approver| vll : 'ES014' : 'text' | async) : (newAppr?.roleType | vll : 'ES014' : 'text' | async)"
+            [subTitle]="newAppr?.orgUnitName"
+            [desc]="newAppr?.position ? newAppr?.position: newAppr?.roleType | vll : 'ES014' : 'text' | async" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
+            [formModel]="formModel" [dataItem]="newAppr" typeMF="hover" (clickMF)="clickMFApprover($event)"
+            [imageSrc]="newAppr?.roleType !='U' && !newAppr?.userID? './assets/themes/sys/default/img/' + (newAppr?.icon ? newAppr?.icon : 'share_default.svg') : null"
+            [imgCss]="newAppr?.roleType !='U' && !newAppr?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
+          </codx-temp-full>
+
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label fiedName="StepType" [formModel]="formModel"> </codx-label>
+              <codx-input field="stepType" type="valuelist" [crrValue]="newAppr?.stepType"
+                [refValue]="eSign == true ? 'ES002' : 'ES026'" (valueChange)="valueApprChange($event)">
+              </codx-input>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <codx-label fiedName="SignatureType" [formModel]="formModel">
+              </codx-label>
+              <codx-input field="signatureType" type="valuelist" [crrValue]="newAppr?.signatureType" refValue="ES001"
+                (valueChange)="valueApprChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <codx-input type="checkbox" field="allowEditAreas" [label]="lblAllowEditAreas" [checked]="true"
+            (valueChange)="valueApprChange($event)">
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-input type="checkbox" field="confirmControl" [label]="lblConfirmControl" [checked]="false"
+            (valueChange)="valueApprChange($event)">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer p-5">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary fw-bold" (click)="saveApprover()" [disabled]="!newAppr?.roleType">
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</ng-template>
 <ng-template #tabInfo0>
   <div class="row">
     <div class="col-5">
@@ -63,45 +175,15 @@
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <div *ngFor="let item of lstApprover; let index = index" cdkDrag>
         <div class="w-100">
-            
-            <codx-temp-full cardCss="card-template mb-4 w-100"  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
-            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)" 
-            [subTitle]="item?.position" [imageObjType]="'AD_Users'"
-            [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
-            [dataItem]="item" typeMF="hover" 
-            [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
+
+          <codx-temp-full cardCss="card-template mb-4 w-100"
+            [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
+            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
+            [subTitle]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
+            [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item" typeMF="hover"
+            [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
+            [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
-
-          <template>
-            <!--Type User-->
-          <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType=='U' " [imageId]=" item?.approver"
-          [title]="item?.name" [subTitle]="item?.position ?? positionDefault" [imageObjType]="'AD_Users'"
-          [imageWidth]="35" [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)"
-          [dataItem]="item" typeMF="hover">
-        </codx-temp-full>
-        <!--Type P-->
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType=='P' " [imageId]=" item?.userID"
-          [title]="item?.name" [subTitle]="item?.userName " [imageObjType]="'AD_Users'" [imageWidth]="35"
-          [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
-          typeMF="hover">
-        </codx-temp-full>
-
-        <!--Type còn lại-->
-        <codx-temp-full cardCss="card-template mb-4" *ngIf="item?.roleType!='U' && item?.roleType!='P'" [imageSrc]="
-        './assets/themes/sys/default/img/' +
-        (item?.icon ? item?.icon : 'share_default.svg')
-      "  imgCss="w-30px p-3 me-3 user-mini-icon" [imageWidth]="30"
-          [subTitle]="item?.approver | vll : 'ES014' : 'text' | async" [title]="
-        item?.name ?? (item?.approver | vll : 'ES014' : 'text' | async)
-      " [subTitle]="
-        item?.position ??
-        (item?.approver | vll : 'ES014' : 'text' | async) ??
-        positionDefault
-      " [titleLine]="3" [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item"
-          typeMF="hover">
-        </codx-temp-full>
-          </template>
-          
         </div>
       </div>
     </div>

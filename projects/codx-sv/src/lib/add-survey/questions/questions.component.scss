@@ -724,3 +724,9 @@
   position: absolute;
   right: 0;
 }
+.ip-matrix:focus
+{
+  border-bottom: solid 2px !important;
+  border-bottom-color: var(--primary-active) !important;
+  border-radius: 0 !important;
+}
