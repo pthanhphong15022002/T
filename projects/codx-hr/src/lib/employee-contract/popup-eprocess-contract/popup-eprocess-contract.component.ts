@@ -353,17 +353,20 @@ export class PopupEProcessContractComponent
     //Set contractNo => update field ContractNo undefined ??
     this.tmpContractNo = this.data.contractNo;
 
-    this.formModel.currentData = this.data;
+    // this.formModel.currentData = this.data;
 
-    this.form.formGroup.patchValue(this.data);
+    // this.form.formGroup.patchValue(this.data);
 
     if (this.employeeObj) {
-      this.form.formGroup.patchValue({
-        orgUnitID: this.employeeObj.orgUnitID,
-      });
-      this.form.formGroup.patchValue({
-        positionID: this.employeeObj.positionID,
-      });
+      this.data.orgUnitID = this.employeeObj.orgUnitID,
+      this.data.positionID = this.employeeObj.positionID;
+
+      // this.form.formGroup.patchValue({
+      //   orgUnitID: this.employeeObj.orgUnitID,
+      // });
+      // this.form.formGroup.patchValue({
+      //   positionID: this.employeeObj.positionID,
+      // });
     }
 
     this.isAfterRender = true;
@@ -634,9 +637,12 @@ export class PopupEProcessContractComponent
   }
 
   renderChange(event) {
-    let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
-    if (tmp) {
-      this.itemContractGroup = tmp;
+    if(event.dataTemp){
+      debugger
+      let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
+      if (tmp) {
+        this.itemContractGroup = tmp;
+      }
     }
   }
 
