@@ -26,6 +26,9 @@ export class PopupAddCampaignContactComponent implements OnInit {
   @ViewChild('cbxDistrict') cbxDistrict: CodxDropdownSelectComponent;
   @ViewChild('cbxIndustries') cbxIndustries: CodxDropdownSelectComponent;
   @ViewChild('cbxStatus') cbxStatus: CodxDropdownSelectComponent;
+  @ViewChild('cbxCustGroupID') cbxCustGroupID: CodxDropdownSelectComponent;
+  @ViewChild('cbxHeadCounts') cbxHeadCounts: CodxDropdownSelectComponent;
+  @ViewChild('cbxChannelID') cbxChannelID: CodxDropdownSelectComponent;
 
   dialog: any;
   data: any;
@@ -38,9 +41,17 @@ export class PopupAddCampaignContactComponent implements OnInit {
   districtIDs = [];
   industries = [];
   status = [];
+  custGroupIDs = [];
+  headCounts = [];
+  lstAnnualRevenue = [];
+  channelIDs = [];
   isProvince: boolean = false;
   isDistrict: boolean = false;
   isIndustries: boolean = false;
+  isCustGroupID: boolean = false;
+  isAnnualRevenue: boolean = false;
+  isHeadcounts: boolean = false;
+  isChannelIDs: boolean = false;
   isStatus: boolean = false;
   countLeadCus = 0; //Số lượng được tìm thấy
   countHadLeadCus = 0; // Số lượng đã có trong chiến dịch
@@ -49,6 +60,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
   countChange = 0; //Để check lần change
   gridViewSetup: any;
   title = '';
+  annualRevenue1: number = 0;
+  annualRevenue2: number = 0;
 
   tabInfo: any[] = [
     {
@@ -156,6 +169,9 @@ export class PopupAddCampaignContactComponent implements OnInit {
       tmp['industries'] = item?.industries;
       tmp['provinceID'] = item?.provinceID;
       tmp['districtID'] = item?.districtID;
+      tmp['headcounts'] = item?.headcounts;
+      tmp['annualRevenue'] = item?.annualRevenue ?? 0;
+      tmp['channelID'] = item?.channelID;
       if (this.objectType == '3') {
         tmp['leadStatus'] = item?.status;
         tmp['contactName'] = item?.contactName;
@@ -164,6 +180,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
         tmp['email'] = item?.email;
       } else {
         tmp['customerStatus'] = item?.status;
+        tmp['custGroupID'] = item?.custGroupID;
         if (lstContactsCus != null && lstContactsCus.length > 0) {
           var contactTmp = lstContactsCus.find(
             (x) => x.objectID == item?.recID
@@ -194,9 +211,37 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.detector.detectChanges();
   }
 
+  valueChangeCB(e) {
+    if (e) {
+      if (this[e?.field] != e?.data) {
+        this[e?.field] = e?.data;
+        this.setBinding(e?.field);
+      }
+    }
+  }
+
+  valueChangeAnnual(e, type) {
+    if (e && parseFloat(e?.data) >= 0 && this[type] != e?.data) {
+      this.lstAnnualRevenue = [];
+      this[type] = parseFloat(e?.data);
+      if (this.lstAnnualRevenue != null && this.lstAnnualRevenue.length > 0) {
+        this.lstAnnualRevenue[0] = this.annualRevenue1;
+        this.lstAnnualRevenue[1] = this.annualRevenue2;
+      } else {
+        this.lstAnnualRevenue.push(this.annualRevenue1);
+        this.lstAnnualRevenue.push(this.annualRevenue2);
+      }
+
+      this.bindingCountCompaign();
+    }
+    this.detector.detectChanges();
+  }
+
   valueChangeClick(isChecked, field) {
-    this[field] = !isChecked;
-    this.setBinding(field);
+    if (this[field] != !isChecked) {
+      this[field] = !isChecked;
+      this.setBinding(field);
+    }
     this.detector.detectChanges();
   }
 
@@ -232,6 +277,63 @@ export class PopupAddCampaignContactComponent implements OnInit {
             this.cbxIndustries.setValue('');
           }
           this.industries = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isCustGroupID':
+        if (!this.isCustGroupID) {
+          if (this.cbxCustGroupID) {
+            this.cbxCustGroupID.value = [];
+            this.cbxCustGroupID.selectedItems = [];
+            this.cbxCustGroupID.setValue('');
+          }
+          this.custGroupIDs = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isAnnualRevenue':
+        this.lstAnnualRevenue = [];
+        if (!this.isAnnualRevenue) {
+          this.annualRevenue1 = 0;
+          this.annualRevenue2 = 0;
+          this.lstAnnualRevenue = [];
+          this.bindingCountCompaign();
+        } else {
+          if (this.annualRevenue1 <= this.annualRevenue2) {
+            if (
+              this.lstAnnualRevenue != null &&
+              this.lstAnnualRevenue.length > 0
+            ) {
+              this.lstAnnualRevenue[0] = this.annualRevenue1;
+              this.lstAnnualRevenue[1] = this.annualRevenue2;
+            } else {
+              this.lstAnnualRevenue.push(this.annualRevenue1);
+              this.lstAnnualRevenue.push(this.annualRevenue2);
+            }
+            this.bindingCountCompaign();
+          }
+        }
+
+        break;
+      case 'isChannelIDs':
+        if (!this.isChannelIDs) {
+          if (this.cbxChannelID) {
+            this.cbxChannelID.value = [];
+            this.cbxChannelID.selectedItems = [];
+            this.cbxChannelID.setValue('');
+          }
+          this.channelIDs = [];
+          this.bindingCountCompaign();
+        }
+        break;
+      case 'isHeadcounts':
+        if (!this.isHeadcounts) {
+          if (this.cbxHeadCounts) {
+            this.cbxHeadCounts.value = [];
+            this.cbxHeadCounts.selectedItems = [];
+            this.cbxHeadCounts.setValue('');
+          }
+          this.headCounts = [];
           this.bindingCountCompaign();
         }
         break;
@@ -271,6 +373,10 @@ export class PopupAddCampaignContactComponent implements OnInit {
           this.districtIDs,
           this.industries,
           this.status,
+          this.custGroupIDs,
+          this.lstAnnualRevenue,
+          this.headCounts,
+          this.channelIDs,
         ]
       )
       .subscribe((res) => {

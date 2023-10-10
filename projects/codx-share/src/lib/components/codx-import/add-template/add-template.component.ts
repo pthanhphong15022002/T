@@ -1,18 +1,21 @@
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DialogData, DialogRef, Util } from 'codx-core';
+import { AlertConfirmInputConfig, ApiHttpService, AuthStore, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import * as XLSX from 'xlsx';
 import { IETables } from '../models/import.model';
 import { AddImportDetailsComponent } from './add-import-details/add-import-details.component';
 import { AddIetablesComponent } from './add-ietables/add-ietables.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'lib-add-template',
   templateUrl: './add-template.component.html',
   styleUrls: ['./add-template.component.scss']
 })
 export class AddTemplateComponent implements OnInit{
-  // @ViewChild('gridView') gridView: CodxGridviewComponent;
-  
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  user:any;
+  type:any;
   dialog:any;
   formModel:any;
   formModels:any;
@@ -23,24 +26,32 @@ export class AddTemplateComponent implements OnInit{
   sheet: any;
   grd: any;
   step = 0;
-
+  indexEdit:any;
   columnsGrid:any;
   importRule: any;
   mappingTemplate:any;
-  dataIEConnections:any = {};
+  grdIEConnection:any;
+  dataIEConnection: any = {};
   dataIETables: any = {};
   listIETables = [];
+  headerText = "Thêm mới template"
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private cache: CacheService,
+    private notifySvr: NotificationsService,
+    private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
   { 
+    this.user = this.auth.get();
     this.dialog = dialog;
+    this.type = dt.data[0];
     this.formModel = dt.data[1];
+    if(dt?.data[2]) this.dataIEConnection = dt.data[2];
+    if(this.type == "edit") this.headerText = "Chỉnh sửa template";
   }
   ngOnInit(): void {
     this.formModels = {
@@ -57,56 +68,32 @@ export class AddTemplateComponent implements OnInit{
     });
 
     this.getData();
-    this.getCache();
   }
 
   getData() {
-    // var request = new DataRequest();
-    // request.comboboxName = 'MappingTemplate';
-    // request.page = 1;
-    // request.pageSize = 5;
-    // this.api
-    //   .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request)
-    //   .subscribe((item) => {
-    //     if (item[0]) {
-    //       var data = JSON.parse(item[0]);
-    //       //Nhớ sửa lại lấy cái đầu tiên
-    //       this.mappingTemplate = data[0];
-    //       this.importAddTmpGroup.controls['mappingName'].setValue(
-    //         this.mappingTemplate?.MappingName
-    //       );
-    //       this.dataIEConnections.mappingName =
-    //         this.mappingTemplate?.MappingName;
-    //       this.dataIETables.destinationTable =
-    //         this.mappingTemplate?.TableName;
-    //       this.getGridViewSetup();
-    //     }
-    //   });
-   
     this.cache.entity(this.formModel?.entityName).subscribe(item=>{
       if(item) this.dataIETables.destinationTable = item?.physicalName;
-      this.getGridViewSetup();
+     
     })
     this.cache.valueList('SYS010').subscribe((item) => {
       if (item) {
         this.importRule = item.datas;
       }
+      this.getGridViewSetup();
     });
   }
-  getCache()
-  {
-    this.cache.valueList('SYS010').subscribe((item) => {
-      if (item) {
-        this.importRule = item.datas;
-      }
-    });
-  }
+ 
 
   getGridViewSetup() {
     this.cache.gridViewSetup('IETables', 'grvIETables').subscribe((item) => {
       if (item) {
         this.grd = item;
         this.defaultData();
+      }
+    });
+    this.cache.gridViewSetup(this.formModels.formName, this.formModels.gridViewName).subscribe((item) => {
+      if (item) {
+        this.grdIEConnection = item;
       }
     });
   }
@@ -142,41 +129,53 @@ export class AddTemplateComponent implements OnInit{
       },
     ];
 
-    //Tạo mới IEConnections
-    var recIDIEConnections = Util.uid();
-    var mappingTemplate = Util.uid();
-    //Tạo mới IEConnetions
-    var newIEConnections = {
-      recID: Util.uid(),
-      processIndex: 0,
-      destinationTable: this.mappingTemplate?.TableName,
-      parentEntity: '',
-      mappingTemplate: '',
-      importRule: this.importRule[0]?.value,
-      isSummary: false,
-      formName: 'PurchaseInvoices',
-      gridViewName: 'grvPurchaseInvoices',
-    };
-    this.dataIEConnections = { ...newIEConnections, ...this.dataIEConnections };
-    //Tạo mới IETables
-    var newIETable = new IETables();
-    newIETable.recID = Util.uid(),
-    newIETable.sessionID = this.dataIEConnections.recID,
-    newIETable.sourceTable = '',
-    newIETable.destinationTable = this.mappingTemplate?.TableName,
-    newIETable.mappingTemplate = '',
-    newIETable.firstRowHeader = true;
-    newIETable.firstCell = '1',
-    newIETable.importRule = this.importRule[0]?.value,
-    newIETable.processIndex = 1,
-    newIETable.isSummary = false,
-    this.dataIETables = { ...newIETable, ...this.dataIETables };
-    this.listIETables.push(this.dataIETables);
+    //Thêm mới
+    if(this.type == "add")
+    {
+      this.dataIEConnection.recID = Util.uid();
+      //Tạo mới IETables
+      var newIETable = new IETables();
+      newIETable.recID = Util.uid(),
+      newIETable.sessionID = this.dataIEConnection.recID,
+      newIETable.sourceTable = '',
+      newIETable.destinationTable = this.mappingTemplate?.TableName,
+      newIETable.mappingTemplate = '',
+      newIETable.firstRowHeader = true;
+      newIETable.firstCell = '1',
+      newIETable.importRule = this.importRule[0]?.value,
+      newIETable.processIndex = 1,
+      newIETable.isSummary = false,
+      this.dataIETables = { ...newIETable, ...this.dataIETables };
+      this.listIETables.push(this.dataIETables);
+    }
+    //Edit
+    else if(this.type == "edit")
+    {
+      this.setValueIEConnection();
+      this.getDataIETables();
+    }
   }
+  
   get f(): { [key: string]: AbstractControl } {
     return this.importAddTmpGroup.controls;
   }
   
+  setValueIEConnection()
+  {
+    this.importAddTmpGroup.controls['mappingName'].setValue(this.dataIEConnection?.mappingName);
+    this.importAddTmpGroup.controls['description'].setValue(this.dataIEConnection?.description);
+    this.importAddTmpGroup.controls['firstCell'].setValue(this.dataIEConnection?.firstCell);
+  }
+  getDataIETables()
+  {
+    this.api
+    .execSv<any>("SYS",'AD', 'IETablesBusiness', 'GetListAsync', this.dataIEConnection.recID)
+    .subscribe((item) => {
+      if(item && item.length > 0)
+        this.listIETables = item;
+    })
+  }
+
   //Chọn lại sheet import
   changeSheetImport(e: any) {
     this.importAddTmpGroup.controls['sheetImport'].setValue(e);
@@ -184,6 +183,7 @@ export class AddTemplateComponent implements OnInit{
 
   getfilePrimitive(e: any) {
     var dt = e[0]?.rawFile;
+    this.dataIEConnection.fileName = dt?.name;
     if (dt) {
       const reader: FileReader = new FileReader();
       reader.readAsBinaryString(dt);
@@ -195,6 +195,7 @@ export class AddTemplateComponent implements OnInit{
         this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
         this.selectedSheet = this.sheet[0];
         this.dataIETables.sourceTable = this.sheet[0];
+        this.attachment.data = [];
       };
     }
   }
@@ -205,7 +206,7 @@ export class AddTemplateComponent implements OnInit{
       .exec<any>('DM', 'FileBussiness', 'GetFileBase64Async', recID)
       .subscribe((item) => {
         if (item) {
-          fetch(item)
+          fetch(environment.urlUpload + "/" +item)
             .then((res) => res.blob()) // Gets the response and returns it as a blob
             .then((blob) => {
               let metadata = {
@@ -220,6 +221,8 @@ export class AddTemplateComponent implements OnInit{
                   type: 'binary',
                 });
                 this.sheet = this.wb.SheetNames;
+                this.importAddTmpGroup.controls['sheetImport'].setValue(this.sheet[0]);
+                this.selectedSheet = this.sheet[0];
                 // this.selectedSheet =
                 //   this.gridView.dataService.data[0].sourceTable;
               };
@@ -234,8 +237,9 @@ export class AddTemplateComponent implements OnInit{
     return '';
   }
 
-  openFormAddImportDetail()
+  openFormAddImportDetail(data:any , type = 'new')
   {
+    if(type == 'edit' && !data?.mappingTemplate) return;
     let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
       header: this.importAddTmpGroup.value.firstCell,
     });
@@ -243,13 +247,15 @@ export class AddTemplateComponent implements OnInit{
     this.callfunc.openForm(
       AddImportDetailsComponent,
       null,
-      1000,
+      1200,
       800,
       '',
       [
         this.formModel,
         this.dataIETables,
         sourceField[0],
+        data?.mappingTemplate,
+        type
       ],
       null
     );
@@ -257,18 +263,44 @@ export class AddTemplateComponent implements OnInit{
 
   openFormIETables()
   {
-    this.callfunc.openForm(
+    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
+      header: this.importAddTmpGroup.value.firstCell,
+    });
+    let popup = this.callfunc.openForm(
       AddIetablesComponent,
       null,
       600,
-      700,
+      500,
       '',
-      null
+      {
+        type: "add",
+        sourceField:sourceField,
+        selectedSheet:this.selectedSheet,
+        formModel:this.formModel
+      }
     );
+
+    popup.closed.subscribe((res) => {
+      if(res?.event) this.listIETables.push(res?.event);
+    });
   }
   next()
   {
+    if(!this.checkRequierd()) return;
     this.step += 1;
+  }
+
+  checkRequierd()
+  {
+    var arr = [];
+    if(!this.dataIEConnection?.fileName) arr.push("File");
+    if(!this.importAddTmpGroup.value.mappingName) arr.push(this.grdIEConnection['MappingName']?.headerText);
+    if(arr.length > 0) 
+    {
+      this.notifySvr.notifyCode('SYS009', 0, arr.join(' , '));
+      return false;
+    }
+    return true;
   }
 
   per()
@@ -280,5 +312,175 @@ export class AddTemplateComponent implements OnInit{
   close()
   {
     this.dialog.close();
+  }
+
+  editIETables(data:any,index:any)
+  {
+    this.indexEdit = index;
+    let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
+      header: this.importAddTmpGroup.value.firstCell,
+    });
+    let popup = this.callfunc.openForm(
+      AddIetablesComponent,
+      null,
+      600,
+      500,
+      '',
+      {
+        type: "edit",
+        sourceField: sourceField,
+        selectedSheet:this.selectedSheet,
+        formModel:this.formModel,
+        data: data
+      }
+    );
+    popup.closed.subscribe(res=>{
+      if(res?.event)this.listIETables[this.indexEdit] = res?.event
+    })
+  }
+
+  deleteIETables(data:any,index:any)
+  {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    this.notifySvr
+      .alertCode("SYS003", config)
+      .subscribe((x) => {
+        if (x.event.status == 'Y') {
+          if(data?.recID)
+          {
+            this.api
+            .execSv<any>("SYS",'AD', 'IETablesBusiness', 'DeleteItemAsync', data?.recID)
+            .subscribe((item) => {
+              if(item && item.length > 0)
+                this.listIETables = item;
+            })
+          }
+          this.listIETables = this.listIETables.splice(index, 1);
+        }
+    });
+  }
+
+  onSave()
+  {
+    if(this.attachment.fileUploadList.length > 0)
+    {
+      this.attachment.objectId = this.dataIEConnection.recID;
+      this.attachment.fileUploadList.forEach(elm=>{
+        elm.objectType ='AD_ExcelTemplates';
+        elm.funcID = "AD003";
+        elm.referType = this.formModel.entityName;
+      });
+      this.attachment.saveFilesObservable().then((saveFile) => {
+        if (saveFile) {
+          saveFile.subscribe((saved: any) => {
+            if (saved) {
+            
+            } else {
+              this.notifySvr.notify('SYS023');
+            }
+          });
+        }
+      });
+    }
+   
+    if(this.type == "add")
+    {
+      this.saveIEConnection();
+      this.saveIETables();
+    }
+    else if(this.type == "edit")
+    {
+      this.updateIEConnection();
+      this.updateIETables();
+    }
+  }
+
+  saveIEConnection()
+  {
+    this.dataIEConnection.mappingName = this.importAddTmpGroup.value.mappingName;
+    this.dataIEConnection.description = this.importAddTmpGroup.value.description;
+    //this.dataIEConnection.sheetImport = this.importAddTmpGroup.value.sheetImport;
+    this.dataIEConnection.firstCell = this.importAddTmpGroup.value.firstCell;
+    this.dataIEConnection.formName = this.formModel.formName;
+    this.dataIEConnection.gridViewName = this.formModel.gridViewName;
+    this.dataIEConnection.createdBy = this.user.userID;
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'IEConnectionsBusiness',
+      'AddItemAsync',
+      this.dataIEConnection
+    )
+    .subscribe(item=>{
+      if(item) {
+        this.notifySvr.notifyCode("SYS006");
+        this.dialog.close(this.dataIEConnection);
+      }
+    })
+  }
+
+  saveIETables()
+  {
+    this.listIETables.forEach(elm=>{
+      elm.sessionID = this.dataIEConnection.recID;
+    });
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'IETablesBusiness',
+      'AddItemAsync',
+      JSON.stringify(this.listIETables)
+    ).subscribe()
+    {
+
+    }
+  }
+
+  //Update IEConnetion
+  updateIEConnection()
+  {
+    this.dataIEConnection.mappingName = this.importAddTmpGroup.value.mappingName;
+    this.dataIEConnection.description = this.importAddTmpGroup.value.description;
+    //this.dataIEConnection.sheetImport = this.importAddTmpGroup.value.sheetImport;
+    this.dataIEConnection.firstCell = this.importAddTmpGroup.value.firstCell;
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'IEConnectionsBusiness',
+      'UpdateItemAsync',
+      this.dataIEConnection
+    )
+    .subscribe(item=>{
+      if(item) {
+        this.notifySvr.notifyCode("SYS006");
+        this.dialog.close(this.dataIEConnection);
+      }
+    })
+  }
+
+  //Update IETables
+  updateIETables()
+  {
+    this.listIETables.forEach(elm=>{
+      elm.sessionID = this.dataIEConnection.recID;
+    });
+    this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'IETablesBusiness',
+      'UpdateItemsAsync',
+      JSON.stringify(this.listIETables)
+    ).subscribe()
+  }
+
+  valueChangeMappingTemplate(e:any , data:any)
+  {
+    var index = this.listIETables.findIndex(x=>x.recID == data.recID);
+    if(index >= 0) this.listIETables[index].mappingTemplate = e?.data;
   }
 }

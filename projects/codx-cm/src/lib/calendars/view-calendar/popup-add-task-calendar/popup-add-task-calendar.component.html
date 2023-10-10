@@ -6,11 +6,11 @@
 >
 </codx-form>
 <ng-template #body>
-  <div class="row h-100">
-    <div class="col-6" style="border-right: 1px solid rgb(196, 196, 196)">
+  <div class="row h-100" style="overflow: hidden;">
+    <div class="col-6" style="border-right: 1px solid rgb(196, 196, 196);">
       <ng-container [ngTemplateOutlet]="parLeft"> </ng-container>
     </div>
-    <div class="col-6">
+    <div class="col-6 pe-1" style="overflow-y: auto; overflow-x: hidden; max-height: 392px">
       <ng-container [ngTemplateOutlet]="parRight"></ng-container>
     </div>
   </div>
@@ -20,78 +20,79 @@
     type="button"
     [disabled]="isDisable"
     class="btn btn-primary"
-    (click)="onSave()"
+    (click)="continue()"
+    [disabled]="!dataCheck"
   >
-    <codx-label [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+    <codx-label [name]="'lblSave'" [default]="'Tiếp tục'"></codx-label>
   </button>
 </ng-template>
 
 <ng-template #parLeft>
   <div>
-    <div class="d-flex justify-content-between align-items-center cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center cursor-pointer" (click)="changeType('CM_Customers')">
       <span>Khách hàng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'CM_Customers'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('CM_Deals')">
       <span>Cơ hội </span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'CM_Deals'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('CM_Leads')">
       <span>Tiềm năng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'CM_Leads'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('CM_Contracts')">
       <span>Hợp đồng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'CM_Contracts'"
          ></ejs-radiobutton>
       </div>
     </div>
     <hr class="p-0 m-0" />
   </div>
   <div>
-    <div class="d-flex justify-content-between align-items-center  cursor-pointer" click="">
+    <div class="d-flex justify-content-between align-items-center  cursor-pointer" (click)="changeType('CM_Cases')">
       <span>Chăm sóc khách hàng</span>
       <div class="pe-5 pb-5">
          <ejs-radiobutton
             name="status"
             value="1"
             (change)="valueChangeRadio($event)"
-            [checked]="type == ''"
+            [checked]="type == 'CM_Cases'"
          ></ejs-radiobutton>
       </div>
     </div>
@@ -99,12 +100,23 @@
   </div>
 </ng-template>
 <ng-template #parRight> 
-   <div>
-      <ejs-combobox
-        [dataSource]="listCustomer"
-        [fields]="fieldsCustomer"
-        (change)="valueChangeCombobox($event,'CM_Customers')"
-        [allowCustom]="false"
-      ></ejs-combobox>
+   <div *ngFor="let item of dataCombobox" class="item-combobox w-100" (click)="chooseCM(item)">
+    <div class="d-flex align-items-center justify-content-between position-relative cursor-pointer py-1">
+      <span class="line-clamp line-clamp-1" style="width: 92%;">{{item?.name}}</span>
+      <div class="mb-3 position-absolute" style="right: 18px; bottom: 1px;">
+        <ejs-radiobutton
+          name="cmType"
+          value="1"
+          (change)="valueChangeRadio($event)"
+          [checked]="item?.recID == dataCheck?.recID"
+        ></ejs-radiobutton>
+      </div>
+    </div>
+      <!-- <codx-input
+        *ngIf="refValueType"
+        [field]="'objectID'"
+        type="combobox"
+        [refValue]="refValueType"
+      ></codx-input> -->
    </div>
 </ng-template>

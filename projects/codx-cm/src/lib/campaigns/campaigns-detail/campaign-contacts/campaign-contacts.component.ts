@@ -18,11 +18,14 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { PopupAddLeadComponent } from '../../../leads/popup-add-lead/popup-add-lead.component';
+import { PopupConvertLeadComponent } from '../../../leads/popup-convert-lead/popup-convert-lead.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -45,6 +48,8 @@ export class CampaignContactsComponent implements OnInit {
   @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
   @ViewChild('headerStatus') headerStatus: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
+  @ViewChild('headerStatusCusLead') headerStatusCusLead: TemplateRef<any>;
+  @ViewChild('tempStatusCusLead') tempStatusCusLead: TemplateRef<any>;
   @ViewChild('headerHistory') headerHistory: TemplateRef<any>;
   @ViewChild('tempHistory') tempHistory: TemplateRef<any>;
   lstCampContacts = [];
@@ -69,6 +74,10 @@ export class CampaignContactsComponent implements OnInit {
   moreFuncAdd = '';
   url = '';
   titleAction = '';
+  lstProcesss = [];
+  lstLeads = [];
+  statusSearch = [];
+
   constructor(
     private api: ApiHttpService,
     private detector: ChangeDetectorRef,
@@ -76,15 +85,27 @@ export class CampaignContactsComponent implements OnInit {
     private callFc: CallFuncService,
     private codxService: CodxService,
     private cmSv: CodxCmService,
-    private notiSv: NotificationsService
-  ) {}
+    private notiSv: NotificationsService,
+    private codxShareService: CodxShareService
+  ) {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          // let arrField = Object.values(this.gridViewSetup).filter(
+          //   (x: any) => x.isVisible
+          // );
+          // if (Array.isArray(arrField)) {
+          //   let arrFieldIsVisible = arrField
+          //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+          //     .map((x: any) => x.fieldName);
+          //   this.getColumnGrid(this.gridViewSetup, arrFieldIsVisible);
+          // }
+        }
+      });
+  }
   async ngOnInit() {
-    this.gridViewSetup = await firstValueFrom(
-      this.cache.gridViewSetup(
-        this.formModel?.formName,
-        this.formModel?.gridViewName
-      )
-    );
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -123,6 +144,11 @@ export class CampaignContactsComponent implements OnInit {
         width: !this.isDoubleClick ? 100 : 175,
       },
       {
+        headerTemplate: this.headerStatusCusLead,
+        template: this.tempStatusCusLead,
+        width: !this.isDoubleClick ? 150 : 300,
+      },
+      {
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
         width: !this.isDoubleClick ? 150 : 250,
@@ -142,24 +168,41 @@ export class CampaignContactsComponent implements OnInit {
         this.formModel.funcID =
           this.objectType == '1' ? 'CM0301_2' : 'CM0301_1';
         let funcID = this.objectType == '1' ? 'CM0101' : 'CM0205';
+        this.statusSearch = [];
         this.getFunctionList(funcID);
-        this.getList();
+        this.dataValues = this.transID + ';' + this.objectType;
+
+        this.getList(this.predicates, this.dataValues);
       } else {
         if (!this.loaded) this.loaded = true;
       }
     }
   }
 
-  getList() {
+  getList(predicates = '', dataValues = '') {
     this.loaded = false;
-    this.request.predicates = this.predicates;
-    this.request.dataValues = this.transID + ';' + this.objectType;
+    this.request.predicates = predicates;
+    this.request.dataValues = dataValues;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
     this.request.funcID = this.formModel.funcID;
     this.fetch().subscribe(async (item) => {
-      this.loaded = true;
       this.lstCampContacts = item ?? [];
+      if (
+        this.objectType == '3' &&
+        this.lstCampContacts != null &&
+        this.lstCampContacts.length > 0
+      ) {
+        var lstIds = this.lstCampContacts.map((x) => x.objectID);
+        if (lstIds != null && lstIds.length > 0) {
+          const ele = await firstValueFrom(this.getListLeadBylstIDs(lstIds));
+          if (ele) {
+            this.lstLeads = ele[0] ?? [];
+            this.lstProcesss = ele[1] ?? [];
+          }
+        }
+      }
+      this.loaded = true;
       // this.grid.showRowNumber = false;
     });
   }
@@ -184,6 +227,96 @@ export class CampaignContactsComponent implements OnInit {
       );
   }
 
+  getColumnGrid(grid, arrFieldIsVisible) {
+    this.columnsGrid = [];
+
+    arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'ObjectName':
+          template = this.tempCustomerName;
+          break;
+        case 'Industries':
+          template = this.tempIndustries;
+          break;
+        case 'ContactName':
+          template = this.tempContact;
+          break;
+        case 'Owner':
+          template = this.tempOwner;
+          break;
+        case 'Status':
+          template = this.tempStatus;
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+          template: template,
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+        };
+      }
+
+      this.columnsGrid.push(colums);
+    });
+    let columTemp = [
+      {
+        headerTemplate: this.headerStatusCusLead,
+        template: this.tempStatusCusLead,
+        width: !this.isDoubleClick ? 150 : 300,
+      },
+      {
+        headerTemplate: this.headerHistory,
+        template: this.tempHistory,
+        width: !this.isDoubleClick ? 150 : 250,
+      },
+    ];
+    this.columnsGrid = [...this.columnsGrid, ...columTemp];
+  }
+
+  getListLeadBylstIDs(lstIDs = []) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'GetListLeadByLstIDsAsync',
+      [lstIDs]
+    );
+  }
+
+  getStepToStatus(objectID) {
+    var obj = {};
+    var idx = this.lstLeads.findIndex((x) => x.recID == objectID);
+
+    if (idx != -1) {
+      const data = this.lstLeads[idx];
+      obj['applyProcess'] = data?.applyProcess;
+      const process = this.lstProcesss.find(
+        (x) => x.processId == data?.processID
+      );
+      if (process != null) {
+        const stepCurrent = process?.tmpSteps?.find(
+          (x) => x.stepId == data?.stepID
+        );
+        if (stepCurrent != null) {
+          obj['icon'] = stepCurrent?.icon;
+          obj['iconColor'] = stepCurrent?.iconColor;
+          obj['textColor'] = stepCurrent?.textColor;
+          obj['backgroundColor'] = stepCurrent?.backgroundColor;
+          obj['currentStepName'] = stepCurrent?.stepName;
+        }
+      }
+    }
+    return obj;
+  }
+
   getFunctionList(funcID) {
     this.cache.functionList(funcID).subscribe((res) => {
       if (res) {
@@ -191,6 +324,24 @@ export class CampaignContactsComponent implements OnInit {
       }
     });
   }
+
+  //#region filter status
+  valueChange(e) {
+    console.log(e);
+    let predicates = 'TransID=@0 && ObjectType=@1';
+    let dataValues = this.transID + ';' + this.objectType;
+    if (e && e?.data) {
+      if (e?.data?.length > 0) {
+        predicates += ' && Status=@2';
+        dataValues += ';' + e?.data[0];
+      }
+    }
+    this.predicates = predicates;
+    this.dataValues = dataValues;
+    this.getList(this.predicates, this.dataValues);
+    this.detector.detectChanges();
+  }
+  //#endregion
 
   //#region  more
   clickMF(e, data) {
@@ -202,8 +353,21 @@ export class CampaignContactsComponent implements OnInit {
       case 'CM0301_2_1':
         this.convertCustomerToLeads(data);
         break;
-      default:
+      case 'CM0301_2_2':
+        this.convertLead(data);
         break;
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.formModel,
+          null,
+          this
+        );
+        // this.df.detectChanges();
+        break;
+      }
     }
   }
 
@@ -214,6 +378,16 @@ export class CampaignContactsComponent implements OnInit {
           case 'SYS03':
           case 'SYS04':
             res.disabled = true;
+            break;
+          case 'CM0301_2_1':
+            if (this.objectType == '3') res.disabled = true;
+            break;
+          case 'CM0301_2_2':
+            if (
+              this.objectType == '1' ||
+              !['13', '3', '2'].includes(data.leadStatus)
+            )
+              res.disabled = true;
             break;
         }
       });
@@ -397,5 +571,61 @@ export class CampaignContactsComponent implements OnInit {
             });
         }
       });
+  }
+
+  //convert Lead
+  async convertLead(data) {
+    const lead = await firstValueFrom(
+      this.api.execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'LeadsBusiness',
+        'GetOneLeadByObjectIDAsync',
+        [data?.objectID]
+      )
+    );
+    if (lead) {
+      if (lead?.closed) {
+        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được');
+        return;
+      }
+      lead.campaignID = this.transID;
+      this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
+        let option = new SidebarModel();
+        var formMD = new FormModel();
+        formMD.entityName = 'CM_Leads';
+        formMD.formName = 'CMLeads';
+        formMD.gridViewName = 'grvCMLeads';
+        formMD.funcID = 'CM0205';
+        option.FormModel = JSON.parse(JSON.stringify(formMD));
+        option.Width = '800px';
+        var obj = {
+          title: this.titleAction,
+          gridViewSetup: res,
+          applyFor: '5',
+          data: lead,
+        };
+        var dialog = this.callFc.openSide(
+          PopupConvertLeadComponent,
+          obj,
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (e && e.event) {
+            var idx = this.lstCampContacts.findIndex(
+              (x) => x.recID == data.recID
+            );
+            if (idx != -1) {
+              this.lstCampContacts[idx].leadStatus = '11';
+            }
+            this.lstCampContacts = JSON.parse(
+              JSON.stringify(this.lstCampContacts)
+            );
+
+            this.detector.detectChanges();
+          }
+        });
+      });
+    }
   }
 }

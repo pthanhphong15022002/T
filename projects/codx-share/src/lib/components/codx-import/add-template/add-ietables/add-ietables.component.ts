@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-core';
+import { AddImportDetailsComponent } from '../add-import-details/add-import-details.component';
 
 @Component({
   selector: 'lib-add-ietables',
@@ -7,9 +8,14 @@ import { ApiHttpService, CallFuncService, DialogData, DialogRef } from 'codx-cor
   styleUrls: ['./add-ietables.component.css']
 })
 export class AddIetablesComponent implements OnInit {
+  type:any;
   dialog:any;
-  data:any;
+  data:any = {};
   formModel:any;
+  formModels:any;
+  sourceField:any;
+  selectedSheet:any;
+  
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -18,17 +24,53 @@ export class AddIetablesComponent implements OnInit {
   ) 
   { 
     this.dialog = dialog;
-  }
-  ngOnInit(): void {
-    this.formModel = 
+    this.type = dt?.data?.type;
+    this.sourceField = dt?.data?.sourceField;
+    this.selectedSheet = dt?.data?.selectedSheet;
+    this.formModel = dt?.data?.formModel;
+    if(this.type == "edit") this.data =  dt?.data?.data;
+    this.formModels = 
     {
       formName: 'IETables',
       gridViewName: 'grvIETables'
     }
   }
+  ngOnInit(): void {
+    this.setValue();
+  }
+
+  setValue()
+  {
+    this.data.sourceTable = this.selectedSheet;
+  }
 
   valueChange(e:any)
   {
+    this.data[e?.fileName] = e?.data
+  }
 
+  openFormAddImportDetail(data:any , type = 'new')
+  {
+    if(type == 'edit' && !data?.mappingTemplate) return;
+    this.callfunc.openForm(
+      AddImportDetailsComponent,
+      null,
+      1000,
+      800,
+      '',
+      [
+        this.formModel,
+        this.data,
+        this.sourceField[0],
+        data?.mappingTemplate,
+        type
+      ],
+      null
+    );
+  }
+
+  onSave()
+  {
+    this.dialog.close(this.data);
   }
 }

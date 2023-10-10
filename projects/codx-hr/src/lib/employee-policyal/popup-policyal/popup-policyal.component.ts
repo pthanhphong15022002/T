@@ -212,7 +212,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   ];
 
   @ViewChild('form') form: LayoutAddComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  // @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
@@ -351,6 +351,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   }
 
   deleteApplyExcludeObjMain(data, from, lstBeneficiaries) {
+    debugger
     switch (data) {
       case '1':
         lstBeneficiaries = lstBeneficiaries.map((item) => ({
@@ -545,17 +546,18 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             debugger;
-            if (res.key) {
-              this.autoNumField = res.key ? res.key : null;
-              this.loadedAutoField = true;
-              this.df.detectChanges();
-            }
             res.data.status = '1';
 
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
             }
             this.alpolicyObj = res?.data;
+            if (res.key) {
+              this.autoNumField = res.key ? res.key : null;
+              this.df.detectChanges();
+            }
+            this.loadedAutoField = true;
+            
 
             // this.formModel.currentData = this.alpolicyObj;
             // this.formGroup.patchValue(this.alpolicyObj);
@@ -574,9 +576,9 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             if (res) {
               this.autoNumField = res.key ? res.key : null;
-              this.loadedAutoField = true;
               this.df.detectChanges();
             }
+            this.loadedAutoField = true;
           });
         this.GetApplyObjs().subscribe((res) => {
           this.lstPolicyBeneficiariesApply = res;
@@ -1062,6 +1064,8 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       this.notify.notifyCode('HR033');
       return;
     }
+
+    
 
     if (
       this.attachment.fileUploadList &&

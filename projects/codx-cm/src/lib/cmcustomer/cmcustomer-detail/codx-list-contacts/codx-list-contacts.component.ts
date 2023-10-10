@@ -167,10 +167,11 @@ export class CodxListContactsComponent implements OnInit {
         this.listContacts = this.cmSv.bringDefaultContactToFront(item);
         if (this.listContacts != null && this.listContacts.length > 0) {
           this.changeContacts(this.listContacts[0]);
-          if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+          // if (this.isConvertLeadToCus) this.insertFieldCheckbox();
         }
         this.lstContactEmit.emit(this.listContacts);
         this.loaded = true;
+        this.changeDetectorRef.detectChanges();
       });
     } else {
       this.loadListContact(this.listContacts);

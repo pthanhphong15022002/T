@@ -32,6 +32,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostingAccountsAddComponent extends UIComponent implements OnInit {
+
   //#region Contructor
   @ViewChild('form') form: CodxFormComponent;
   headerText: any;
@@ -43,6 +44,7 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   eleGrid:any;
   funcName:any;
   lblAdd:any;
+  _rowIndex:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -56,6 +58,7 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
     this.headerText = dialogData?.data?.headerText;
     this.subheaderText = dialogData?.data?.subheaderText;
     this.dataDefault = {...dialogData.data?.dataDefault};
+    this._rowIndex = parseInt(dialogData.data?.dataDefault?.index);
     this.funcName = dialogData?.data?.funcName;
     this.eleGrid = dialogData.data?.eleGrid;
   }
@@ -87,6 +90,11 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   //#endregion Init
 
   //#region Event
+
+  /**
+   * *Hàm xử lí khi change value
+   * @param e 
+   */
   valueChange(e: any) {
     switch (e.field.toLowerCase()){
       case 'itemlevel':
@@ -108,6 +116,11 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
   //#endregion Event
 
   //#region Method
+
+  /**
+   * *Hàm lưu thiết lập tài khoản hạch toán
+   * @param type 
+   */
   onSave(type) {
     this.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
@@ -116,9 +129,9 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
       }
       if((res.save && !res.save.error) || (res.update && !res.update.error)){
         if (this.form.data.isAdd || this.form.data.isCopy)
-            (this.eleGrid as CodxGridviewV2Component).addRow(this.form.data,0,true,false);
+            (this.eleGrid as CodxGridviewV2Component).addRow(res?.save?.data,0,true,false);
         else
-            (this.eleGrid as CodxGridviewV2Component).updateRow(parseInt(this.form.data.index),this.form.data,false);
+            (this.eleGrid as CodxGridviewV2Component).updateRow(this._rowIndex,res?.update?.data,false);
         if (type == 'save') {
           this.dialog.close();
         }else{
@@ -164,7 +177,6 @@ export class PostingAccountsAddComponent extends UIComponent implements OnInit {
 
     this.form.setRequire(lsRequire);
 
-    console.log(this.form.formModel.fieldRequired);
   }
 
   //#endregion Function

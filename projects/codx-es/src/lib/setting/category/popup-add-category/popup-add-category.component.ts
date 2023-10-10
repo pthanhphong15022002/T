@@ -104,6 +104,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     },
   ];
   sfModel: any;
+  templateRefType: any;
+  templateRefID: any;
   constructor(
     private esService: CodxEsService,
     private cache: CacheService,
@@ -130,7 +132,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.type = data?.data?.type;
     this.oldRecID = data?.data?.oldRecID;
     this.disableCategoryID = data?.data?.disableCategoryID ?? '0';
-    this.vllShare = data?.data?.vllShare ?? null;
+    this.vllShare = data?.data?.vllShare ?? null;    
+    this.templateRefID = data?.data?.templateRefID;
+    this.templateRefType = data?.data?.templateRefType;
   }
 
   ngAfterViewInit(): void {
@@ -743,7 +747,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         option: option,
         disableCateID: true,
         isTemplate: true,
-        refType: sfData?.refType,
+        refType:sfData?.refType,
+        templateRefID : this.templateRefID,
+        templateRefType : this.templateRefType,
       },
       '',
       sfDialog
@@ -795,7 +801,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               option: option,
               disableCateID: true,
               isTemplate: true,
-              refType: sfData?.refType,
+              refType:sfData?.refType,
+              templateRefID : this.templateRefID,
+              templateRefType : this.templateRefType,
             },
             '',
             sfDialog

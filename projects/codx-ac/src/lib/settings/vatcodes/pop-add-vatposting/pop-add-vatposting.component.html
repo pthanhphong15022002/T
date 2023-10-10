@@ -178,14 +178,25 @@
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" fiedName="OffsetAcctID">
                     </codx-label>
-                    <codx-input
+                    <ng-container *ngIf="!vatPosting.postOffset || !['3'].includes(vatPosting.postOffset)">
+                        <codx-input
                         [Group]="form.formGroup"
                         field="offsetAcctID"
                         [formModel]="form.formModel"
                         (valueChange)="valueChange($event)"
                         [disabled]="isDisableOffsetAcctID"
-                    >
-                    </codx-input>
+                        >
+                        </codx-input>
+                    </ng-container>
+                    <ng-container *ngIf="vatPosting.postOffset === '3'">
+                        <codx-input
+                        [Group]="form.formGroup"
+                        field="objectID"
+                        [formModel]="form.formModel"
+                        (valueChange)="valueChange($event)"
+                        >
+                        </codx-input>
+                    </ng-container>
                 </div>
             </div>
         </div>

@@ -36,7 +36,8 @@ import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
-import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
+import { PopupAddColumnTableComponent } from './popup-setting-table/popup-add-column-table/popup-add-column-table.component';
+import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -127,7 +128,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   maxNumber = 0;
 
   //column Table
-  column: ColumnTable;
+  // column: ColumnTable;
   listColumns = [];
   settingWidth = false;
   isShowMore = false;
@@ -190,7 +191,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field[e.field] = e.data;
       return;
     }
-    if (e && e.data && e.field) this.field[e.field] = e.data;
+    if (e.field == 'dataType' && e.data != this.field.dataType) {
+      this.field.refType = null;
+      this.field.refValue = null;
+      this.field.dataFormat = null;
+      this.field.multiselect = false;
+    }
+
+    if (e && e.field) this.field[e.field] = e?.data;
+
     if (e.field == 'title' || e.field == 'fieldName')
       this.removeAccents(e.data);
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
@@ -611,12 +620,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (elm) this.element = elm;
     this.field['refValue'] = value;
     if (!value) {
-      //data form
-      // this.crrVll = new tempVllDP();
-      // this.crrVll.language = this.user.language;
-      // this.crrVll.createdBy = this.user.userID;
-      // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-      // this.crrVll.version = 'x00.01';
       await this.getDefaultVll();
       this.datasVll = [];
       //data crrVll
@@ -787,7 +790,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //----------------Column Table -----------------------//
   clickSettingTable() {
-    if (!this.column) this.column = new ColumnTable();
+    // if (!this.column) this.column = new ColumnTable();
     let option = new DialogModel();
     let formModelTable = new FormModel();
     formModelTable.formName = this.dialog.formModel.formName;
@@ -802,19 +805,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
         option.zIndex = 1050;
         let obj = {
-          data: this.column,
+          // data: this.column,
           action: 'add',
-          titleAction: 'Thêm column test',
+          titleAction: 'Setting colum', //test
           grvSetup: this.grvSetup,
           processNo: this.processNo,
           user: this.user,
           listColumns: this.listColumns,
         };
         let dialogColumn = this.callfc.openForm(
-          PopupAddColumnTableComponent,
+          PopupSettingTableComponent,
           '',
           550,
-          750,
+          400,
           '',
           obj,
           '',

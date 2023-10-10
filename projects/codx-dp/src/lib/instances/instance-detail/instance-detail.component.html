@@ -1,3 +1,4 @@
+<!-- <ng-container *ngIf="runMode != '1'; else tempES"> -->
 <ng-container *ngIf="loaded">
   <ng-container *ngIf="dataSelect?.recID; else noData">
     <codx-detail-tmp
@@ -7,7 +8,7 @@
       [body]="body"
       [dataItem]="dataSelect"
       [hideMF]="hideMF"
-      [footer]="!hideFooter ? tabs : null"
+      [footer]="tabs"
       (changeDataMF)="changeDataMF($event, dataSelect)"
       (clickMF)="clickMF($event, dataSelect)"
     >
@@ -128,36 +129,6 @@
                   "
                 ></div>
               </div>
-              <!-- <div class="mb-6">
-                  <div class="d-flex align-items-center mb-1">
-                    <span class="me-2 text-gray-600">Tổ chức/Khách hàng:</span>
-                    <span class="text-primary fw-bold fs-6">Tập đoàn PHÚC TÚ</span>
-                  </div>
-                  <div class="d-flex mb-3">
-                    <span class="me-2 text-gray-600">Liên hệ:</span>
-                    <ng-container>
-                      <div class="d-flex align-items-top">
-                        <span class="me-3">
-                          <codx-img [objectId]="'ADMIN'" objectType="AD_Users" [width]="35">
-                          </codx-img>
-                        </span>
-                        <div class="d-flex flex-column">
-                          <span class="text-primary fw-bold fs-6 mb-1">Trần Đoàn Tuyết Khanh</span>
-                          <div class="d-flex align-items-center fs-7">
-                            <div class="d-flex align-items-center me-6">
-                              <span class="icon-phone_iphone me-2 text-gray-600"></span>
-                              <span class="text-primary me-12">012344556</span>
-                            </div>
-                            <div class="d-flex align-items-center me-6">
-                              <span class="icon-email text-gray-600"></span>
-                              <span class="text-primary">lacviet@lacviet.com</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </ng-container>
-                  </div>
-                </div> -->
             </div>
           </div>
           <div class="ms-5 d-flex justify-content-between">
@@ -222,172 +193,190 @@
           </div>
         </div>
 
-        <!-- <ng-container *ngIf="isViewApprover"> -->
-        <!-- <h5>File gửi trình ký chưa xử lý</h5> -->
-        <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-        <!-- <codx-thumbnail
-            [files]="data?.files"
+        <ng-container *ngIf="runMode == '1'">
+          <h5>File gửi trình ký chưa xử lý</h5>
+          <codx-attachment
+            [displayThumb]="'simple'"
+            [objectId]="dataSelect.stepID"
+            hideImageUpload="0"
+            showMessage="0"
+            hideBtnSave="1"
+            hideFolder="1"
+            hideUploadBtn="1"
+            [hideDes]="'1'"
+            [hideDelete]="'1'"
+            [hideMoreF]="'0'"
+            (viewFile)="handleViewFile($event)"
+          ></codx-attachment>
+          <!-- <codx-thumbnail
+            [files]="dataSelect?.files"
             displayThumb="simple"
             [hideDelete]="'1'"
             [hideMoreF]="'0'"
             (viewFile)="handleViewFile($event)"
-            [permissions]="data?.relations"
+            [permissions]="dataSelect?.relations"
           >
           </codx-thumbnail> -->
-        <!-- </ng-container> -->
+        </ng-container>
       </ng-template>
       <ng-template #body>
-        <div class="d-flex tab-header">
-          <ul class="nav nav-tabs w-100">
-            <ng-container *ngFor="let item of tabInstances; let i = index">
-              <li class="nav-item">
-                <a
-                  (click)="clickMenu(item.viewModelDetail)"
-                  [class]="
-                    'tab-item text-dark fw-bold d-flex align-item-center' +
-                    ' ' +
-                    (item.viewModelDetail == viewModelDetail
-                      ? 'tab-active'
-                      : '')
-                  "
-                >
-                  <i
+        <ng-container *ngIf="runMode != '1'; else tempBodyRunMode1">
+          <div class="d-flex tab-header">
+            <ul class="nav nav-tabs w-100">
+              <ng-container *ngFor="let item of tabInstances; let i = index">
+                <li class="nav-item">
+                  <a
+                    (click)="clickMenu(item.viewModelDetail)"
                     [class]="
-                      'me-2 ' +
-                      item.icon +
+                      'tab-item text-dark fw-bold d-flex align-item-center' +
                       ' ' +
                       (item.viewModelDetail == viewModelDetail
-                        ? 'text-primary'
+                        ? 'tab-active'
                         : '')
                     "
-                  ></i
-                  ><span>
-                    <codx-label
-                      [name]="'lbl' + item.viewModelDetail"
-                      [formName]="'SYS'"
-                      [default]="item.textDefault"
-                    >
-                    </codx-label>
-                  </span>
-                </a>
-              </li>
-            </ng-container>
-          </ul>
-        </div>
-        <div
-          id="viewModeDetail"
-          class="pt-1 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
-        >
-          <div>
-            <!-- <ng-container
+                  >
+                    <i
+                      [class]="
+                        'me-2 ' +
+                        item.icon +
+                        ' ' +
+                        (item.viewModelDetail == viewModelDetail
+                          ? 'text-primary'
+                          : '')
+                      "
+                    ></i
+                    ><span>
+                      <codx-label
+                        [name]="'lbl' + item.viewModelDetail"
+                        [formName]="'SYS'"
+                        [default]="item.textDefault"
+                      >
+                      </codx-label>
+                    </span>
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+          <div
+            id="viewModeDetail"
+            class="pt-1 {{ viewModelDetail == 'G' ? '' : 'view-step-box' }}"
+          >
+            <div>
+              <!-- <ng-container
               *ngIf="viewModelDetail == 'G'"
               [ngTemplateOutlet]="
                 dataSelect.status == 1 ? emptyTemplate : tempGanchart
               "
             >
             </ng-container> -->
-            <ng-container
-              *ngIf="viewModelDetail == 'G'"
-              [ngTemplateOutlet]="tempGanchart"
-            >
-            </ng-container>
-            <div
-              class="view-model"
-              style="overflow: hidden"
-              *ngIf="viewModelDetail == 'S'"
-            >
-              <codx-carousel-stage
-                [dataSource]="listSteps"
-                [fieldName]="'stepName'"
-                [maxSize]="maxSize"
-                [status]="instanceStatus"
-                (eventClicked)="clickStage($event)"
+              <ng-container
+                *ngIf="viewModelDetail == 'G'"
+                [ngTemplateOutlet]="tempGanchart"
               >
-              </codx-carousel-stage>
-              <ng-container *ngIf="tmpDataSteps">
-                <codx-stages-detail
-                  #codxStage
-                  [dataStep]="tmpDataSteps"
-                  [showColumnControl]="showColumnControl(tmpDataSteps.stepID)"
-                  [formModel]="formModel"
-                  [currentStep]="currentNameStep"
-                  [instance]="dataSelect"
-                  [titleDefault]="titleDefault"
-                  [listStep]="listSteps"
-                  [lstIDInvo]="lstInv"
-                  [listUserIdRole]="ownerInstance"
-                  [listStepReason]="getReasonByStepId(dataSelect.status)"
-                  [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
-                  [proccesNameMove]="proccesNameMove"
-                  (saveAssign)="saveAssign($event)"
-                  (outDataStep)="saveDataStep($event)"
-                  [viewsCurrent]="viewsCurrent"
-                  [frmModelInstancesTask]="frmModelInstancesTask"
-                  [lstStepProcess]="lstStepProcess"
-                  [isOnlyView]="isOnlyView"
-                  (isChangeProgress)="handleProgressInstance($event)"
-                ></codx-stages-detail>
-                <!-- [stepID]="dataSelect.stepID"
-              [permissionCloseInstances]="dataSelect?.permissionCloseInstances"
-              [isDelete]="dataSelect.delete"
-              [isEdit]="dataSelect.edit"
-              [isUpdate]="
-                dataSelect.write &&
-                !dataSelect.closed &&
-                (dataSelect.status == '1' || dataSelect.status == '2') &&
-                tmpDataSteps.stepStatus < '2'
-              "
-              [isCreate]="dataSelect.create"
-              [isClosed]="dataSelect.closed" -->
               </ng-container>
-            </div>
-            <ng-container *ngIf="viewModelDetail == 'F'">
-              <div class="px-2">
-                <ng-container *ngFor="let item of listSteps">
-                  <!-- <codx-field-detail
-                *ngIf="item?.fields?.length > 0"
-                [dataStep]="item"
-                [showColumnControl]="showColumnControl(item.stepID)"
-                [isUpdate]="
-                  dataSelect.write &&
-                  !dataSelect.closed &&
-                  (dataSelect.status == '1' || dataSelect.status == '2') &&
-                  item.stepStatus < '2'
-                "
-                [currentElmID]="currentElmID"
-                (inputElmIDCF)="inputElmIDCustomField($event)"
-                [isSaving]="isSaving"
-                (actionSaveCF)="actionSaveCustomField($event)"
-                [titleHeaderFormCF]="titleDefault"
-                [viewsCurrent]="viewsCurrent"
-                (saveDataStep)="saveDataStep($event)"
+              <div
+                class="view-model"
+                style="overflow: hidden"
+                *ngIf="viewModelDetail == 'S'"
               >
-              </codx-field-detail> -->
-                  <codx-fields-detail-temp
-                    *ngIf="item?.fields?.length > 0"
-                    [dataStep]="item"
-                    [typeView]="'0'"
-                    [showColumnControl]="showColumnControl(item.stepID)"
-                    [isUpdate]="
-                      dataSelect.write &&
-                      !dataSelect.closed &&
-                      (dataSelect.status == '1' || dataSelect.status == '2') &&
-                      dataSelect?.approveStatus != '3'
-                    "
-                    [currentElmID]="currentElmID"
-                    (inputElmIDCF)="inputElmIDCustomField($event)"
-                    [isSaving]="isSaving"
-                    (actionSaveCF)="actionSaveCustomField($event)"
-                    [titleHeaderFormCF]="titleDefault"
+                <codx-carousel-stage
+                  [dataSource]="listSteps"
+                  [fieldName]="'stepName'"
+                  [maxSize]="maxSize"
+                  [status]="instanceStatus"
+                  (eventClicked)="clickStage($event)"
+                >
+                </codx-carousel-stage>
+                <ng-container *ngIf="tmpDataSteps">
+                  <codx-stages-detail
+                    #codxStage
+                    [dataStep]="tmpDataSteps"
+                    [showColumnControl]="showColumnControl(tmpDataSteps.stepID)"
+                    [formModel]="formModel"
+                    [currentStep]="currentNameStep"
+                    [instance]="dataSelect"
+                    [titleDefault]="titleDefault"
+                    [listStep]="listSteps"
+                    [lstIDInvo]="lstInv"
+                    [listUserIdRole]="ownerInstance"
+                    [listStepReason]="getReasonByStepId(dataSelect.status)"
+                    [stepNameEnd]="getStepNameIsComlepte(dataSelect)"
+                    [proccesNameMove]="proccesNameMove"
+                    (saveAssign)="saveAssign($event)"
+                    (outDataStep)="saveDataStep($event)"
                     [viewsCurrent]="viewsCurrent"
-                    (saveDataStep)="saveDataStep($event)"
-                  >
-                  </codx-fields-detail-temp>
+                    [frmModelInstancesTask]="frmModelInstancesTask"
+                    [lstStepProcess]="lstStepProcess"
+                    [isOnlyView]="isOnlyView"
+                    (isChangeProgress)="handleProgressInstance($event)"
+                  ></codx-stages-detail>
                 </ng-container>
               </div>
-            </ng-container>
+              <ng-container *ngIf="viewModelDetail == 'F'">
+                <div class="px-2">
+                  <ng-container *ngFor="let item of listSteps">
+                    <codx-fields-detail-temp
+                      *ngIf="item?.fields?.length > 0"
+                      [dataStep]="item"
+                      [typeView]="'0'"
+                      [showColumnControl]="showColumnControl(item.stepID)"
+                      [isUpdate]="
+                        dataSelect.write &&
+                        !dataSelect.closed &&
+                        (dataSelect.status == '1' ||
+                          dataSelect.status == '2') &&
+                        dataSelect?.approveStatus != '3'
+                      "
+                      [currentElmID]="currentElmID"
+                      (inputElmIDCF)="inputElmIDCustomField($event)"
+                      [isSaving]="isSaving"
+                      (actionSaveCF)="actionSaveCustomField($event)"
+                      [titleHeaderFormCF]="titleDefault"
+                      [viewsCurrent]="viewsCurrent"
+                      (saveDataStep)="saveDataStep($event)"
+                    >
+                    </codx-fields-detail-temp>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-template #tempBodyRunMode1>
+          <div class="tab-horizone h-od-tab h-100">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+              <ng-container>
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>
+                    <div class="d-flex align-item-center">
+                      <i
+                        class="icon-people_alt me-2"
+                        [ngClass]="{ 'text-primary': active === 1 }"
+                      ></i
+                      ><span>
+                        <codx-label
+                          name="StepsApprover"
+                          default="Quy trình duyệt"
+                        ></codx-label>
+                      </span>
+                    </div>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-container>
+                      <codx-view-approval-step
+                        [transID]="dataSelect.recID"
+                        [approveStatus]="approveStatus"
+                      >
+                      </codx-view-approval-step>
+                    </ng-container>
+                  </ng-template>
+                </li>
+              </ng-container>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="pt-5"></div>
+          </div>
+        </ng-template>
       </ng-template>
 
       <ng-template #tabs>
@@ -405,7 +394,7 @@
     </codx-detail-tmp>
   </ng-container>
 </ng-container>
-
+<!-- </ng-container> -->
 <ng-template #noData>
   <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
     <div class="container w-100 h-100">
@@ -491,28 +480,15 @@
   </div> -->
 </ng-template>
 
-<!-- <ng-template #emptyTemplate>
-  <div class="container h-100">
-    <div class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-250px"
-        />
-        <div class="fw-bold mt-1 text-center">
-          {{ "SYS011" | mssg | async }}
-        </div>
-
-        <div class="mt-5">
-          <button class="btn btn-light-primary" (click)="startInstances()">
-            <span [class]="moreFunc?.largeIcon" [style.color]="moreFunc?.color">
-              <span>
-                {{ moreFunc?.custormName || moreFunc?.description }}</span
-              ></span
-            >
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- <ng-template #tempES>
+  <lib-view-detail
+    #viewdetail
+    [recID]="dataSelect?.recID"
+    [data]="dataSelect"
+    [funcID]="view.formModel.funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    [showApproveStatus]="true"
+    (uploaded)="getDetailSignFile($event)"
+  ></lib-view-detail>
 </ng-template> -->

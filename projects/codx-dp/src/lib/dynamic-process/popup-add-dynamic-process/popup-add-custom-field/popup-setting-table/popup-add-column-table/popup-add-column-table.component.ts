@@ -26,7 +26,7 @@ import {
 import { ColumnTable, tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
-import { PopupAddVllCustomComponent } from '../popup-add-vll-custom/popup-add-vll-custom.component';
+import { PopupAddVllCustomComponent } from '../../popup-add-vll-custom/popup-add-vll-custom.component';
 import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
 
 @Component({
@@ -35,11 +35,11 @@ import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
   styleUrls: ['./popup-add-column-table.component.css'],
 })
 export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
-  @ViewChild('formTable') formTable: CodxFormComponent;
   @ViewChild('tempViewTable') tempViewTable: TemplateRef<any>;
   @ViewChild('datasVllCbx') datasVllCbx: ComboBoxComponent; //list cbx
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
   @ViewChild('valueListType') valueListType: CodxInputComponent;
+  @ViewChild('form') form: CodxFormComponent;
 
   column: ColumnTable;
   dialog: DialogRef;
@@ -48,7 +48,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   processNo: any;
   titleAction = 'Column ne';
   grvSetup: any;
-  loaded: any = false;
+  loaded: any = false; //data loaf VLL
   value: number = 5;
   min: number = 0;
   max: number = 10;
@@ -112,11 +112,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   maxNumber = 0;
   listColumns = [];
   isChecked = false;
-  formModelTable: FormModel;
-  settingWidth = false;
-  isShowMore = false;
-  widthDefault = '550';
-  isShowButton = true;
+  formModelColumn: FormModel;
+
+  dialogAddColumn: DialogRef;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -125,84 +123,52 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private dpService: CodxDpService,
+    private authstore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.formModelTable = this.dialog.formModel;
+    this.formModelColumn = this.dialog.formModel;
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
-    this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
-    if (this.listColumns?.length > 0) {
-      this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
-    }
-    this.widthDefault = this.dialog.dialog.width
-      ? this.dialog.dialog.width.toString()
-      : '550';
-    this.user = dt?.data?.user;
+    this.user = this.authstore.get();
     this.action = dt?.data?.action;
-
     this.titleAction = dt?.data?.titleAction;
     this.grvSetup = dt?.data?.grvSetup;
-    this.loaded = dt?.data?.loaded; ///da load data Vll
-    //vll
     this.processNo = dt?.data?.processNo; //de sinh vll
-    this.maxNumber = dt?.data?.maxNumber ?? 0;
-    this.listVllCus = dt?.data?.listVllCus ?? [];
-    this.listVll = dt?.data?.listVll ?? [];
-
-    if (this.action == 'add' || this.action == 'copy')
-      this.column.recID = Util.uid();
   }
 
   ngOnInit(): void {
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
   }
-  ngAfterViewInit() {
-    // let element = document.getElementById('table');
-    // if (
-    //   element &&
-    //   element.offsetWidth + 50 >= Number.parseFloat(this.widthDefault)
-    // )
-    //   this.isShowButton = true;
-  }
+  ngAfterViewInit() {}
 
   async valueChange(e) {
-    if (e.field == 'settingWidth') {
-      this.settingWidth = e.data;
-      this.column.settingWidth = this.settingWidth;
-      if (this.listColumns?.length > 0) {
-        this.listColumns.forEach((x) => {
-          x['settingWidth'] = this.settingWidth;
-        });
-      }
-      this.changdef.detectChanges();
-      return;
-    }
-
     if (e.field == 'multiselect' || e.field == 'columnWidth') {
       this.column[e.field] = e.data;
       this.isChecked = false;
       return;
     }
+    if (e.field == 'dataType' && e.data != this.column.dataType) {
+      this.column.refType = null;
+      this.column.refValue = null;
+      this.column.dataFormat = null;
+      this.column.multiselect = false;
+    }
 
-    if (e && e.data && e.field) {
-      this.column[e.field] = e.data;
+    if (e && e.field) {
+      this.column[e.field] = e?.data;
     }
     if (e.field == 'title' || e.field == 'fieldName') {
       this.removeAccents(e.data);
+      this.changdef.detectChanges();
+      return;
     }
 
     if (e.field == 'dataFormat' && (e.data == 'V' || e.data == 'C')) {
       if (e.data == 'V') this.loadDataVll();
       this.column.refType = e.data == 'C' ? '3' : '2';
       if (this.action != 'edit' && !this.column.refValue) {
-        // this.crrVll = new tempVllDP();
-        // this.crrVll.language = this.user.language;
-        // this.crrVll.createdBy = this.user.userID;
-        // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-        // this.crrVll.version = 'x00.01';
-        // await this.getDefaultVll();
       } else {
         this.crrVll = this.listVllCus.find(
           (x) => x.listName == this.column.refValue
@@ -421,16 +387,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       );
   }
 
-  async cbxChangeVll(value, elm) {
-    if (elm) this.element = elm;
+  async cbxChangeVll(value) {
     this.column['refValue'] = value;
     if (!value) {
-      //data form
-      // this.crrVll = new tempVllDP();
-      // this.crrVll.language = this.user.language;
-      // this.crrVll.createdBy = this.user.userID;
-      // this.crrVll.listType = '1'; //luu kieu nao de khanh tinh sau 2
-      // this.crrVll.version = 'x00.01';
       await this.getDefaultVll();
       this.datasVll = [];
       //data crrVll
@@ -487,7 +446,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       }
     }
     if (this.datasVllCbx) this.datasVllCbx.refresh();
-    this.formTable.formGroup.patchValue(this.column);
+    this.form.formGroup.patchValue(this.column);
     this.changeRef.detectChanges();
   }
 
@@ -504,13 +463,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
-  // deletedValue(i) {
-  //   if (i == -1) return;
-  //   this.datasVll.splice(i, 1);
-  //   // this.idxDeleted = -1;
-  //   if (this.viewComboxForm) this.viewComboxForm.refresh();
-  // }
 
   handelTextValue(i) {
     this.idxEdit = i;
@@ -602,71 +554,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         this.getDefaultVll(timeOut);
       }
     }, timeOut);
-  }
-  //---------------------SAVE-----------------------//
-
-  saveData() {
-    if (!this.listColumns || this.listColumns?.length == 0) {
-      this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
-      return;
-    }
-
-    if (!this.isChecked) {
-      if (this.checkValidate()) {
-        this.actionPopup();
-      } else {
-        var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        //dung tam
-        let titleDeleteConfirm =
-          'Cột tiếp theo thiết lập chưa thành công bạn có muốn tiếp tục lưu !';
-        let title = 'Thông báo';
-        this.notiService
-          .alert(title, titleDeleteConfirm, config)
-          .closed.subscribe((x) => {
-            if (x.event.status == 'Y') {
-              this.actionPopup(false);
-            } else return;
-          });
-      }
-    } else this.actionPopup();
-  }
-
-  actionPopup(isEditList = true) {
-    if (isEditList) {
-      if (this.column.fieldName) {
-        let idx = this.listColumns.findIndex(
-          (x) => x.recID == this.column.recID
-        );
-        if (idx == -1) {
-          this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-        } else {
-          this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
-          this.idxEdit = -1;
-        }
-      }
-    }
-    this.dialog.close([this.listColumns, this.processNo]);
-    this.column = new ColumnTable(); //tắt bùa
-  }
-
-  saveDataAndContinue() {
-    if (!this.checkValidate()) return;
-    let idx = this.listColumns.findIndex((x) => x.recID == this.column.recID);
-    if (idx == -1)
-      this.listColumns.push(JSON.parse(JSON.stringify(this.column)));
-    else {
-      this.listColumns[idx] = JSON.parse(JSON.stringify(this.column));
-      this.idxEdit = -1;
-    }
-
-    this.column = new ColumnTable();
-    this.column.recID = Util.uid();
-    this.column.fieldName = '';
-    this.column.dataType = null;
-    this.formTable.formGroup.patchValue(this.column);
-    this.changeRef.detectChanges();
-    this.isChecked = true;
   }
 
   checkValidate() {
@@ -770,42 +657,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     return true;
   }
 
-  editColumn(value, index) {
-    this.idxEdit = index;
-    this.column = JSON.parse(JSON.stringify(value));
-    if (this.column.dataFormat == 'V') this.loadDataVll();
-    this.formTable.formGroup.patchValue(this.column);
-    this.changeRef.detectChanges();
-  }
-
-  deleteColumn(idx) {
-    this.notiService.alertCode('SYS030').subscribe((res) => {
-      if (res?.event && res?.event?.status == 'Y') {
-        this.listColumns.splice(idx, 1);
-        this.changeRef.detectChanges();
-        this.isChecked = true;
-      }
-    });
-  }
-
-  showMore() {
-    let isShowMore = !this.isShowMore;
-    let width = '1100';
-    // tạm tắt
-    // if (isShowMore) {
-    //   let element = document.getElementById('table');
-    //   if (element) {
-    //     width = (element.offsetWidth + 50).toString();
-    //   }
-    // }
-    // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
-    //   return;
-
-    this.isShowMore = isShowMore;
-    if (Number.parseFloat(width) > Util.getViewPort().height - 100)
-      width = (Util.getViewPort().height - 100).toString();
-
-    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
-    this.changeRef.detectChanges();
+  saveColumn() {
+    if (!this.checkValidate) return;
+    this.dialog.close([this.column, this.processNo]);
   }
 }
