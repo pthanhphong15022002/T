@@ -203,7 +203,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
           res?.customName.slice(1);
       }
     });
-    this.setValidateForm();
+    this.form.form.onAfterInit.subscribe((res) => {
+      this.setValidateForm();
+    });
   }
 
   setValidateForm() {
@@ -358,139 +360,59 @@ export class AddUserComponent extends UIComponent implements OnInit {
     isOverrideRoles: boolean,
     item?: any
   ) {
-    // if (!this.checkBtnAdd) {
-    // let formGroup = this.form.formGroup.controls;
-    // if (!this.adUser.buid) formGroup.buid.setValue(null);
-    // if (
-    //   formGroup.userID.valid &&
-    //   formGroup.userName.value &&
-    //   formGroup.buid.value &&
-    //   formGroup.email.value
-    // ) {
-    //   this.dialog.dataService
-    //     .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
-    //     .subscribe((res) => {
-    //       if (!res?.error) {
-    //         if (!this.isSaved) {
-    //           this.getHTMLFirstPost(this.adUser);
-    //           this.adService.createFirstPost(this.tmpPost).subscribe();
+    if (this.form.formGroup.valid) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (!res?.error) {
+            if (!this.isSaved) {
+              this.getHTMLFirstPost(this.adUser);
+              this.adService.createFirstPost(this.tmpPost).subscribe();
 
-    //           if (res.save) {
-    //             this.dataAfterSave = res.save;
-    //             this.adUser.userID = res.save.userID;
-    //             this.adUser.status = res.save.status;
-    //           } else if (res.update) {
-    //             this.dataAfterSave = res.update;
-    //             this.adUser.userID = res.update.userID;
-    //             this.adUser.status = res.update.status;
-    //           }
-    //         }
-    //         this.isSaved = true;
+              if (res.save) {
+                this.dataAfterSave = res.save;
+                this.adUser.userID = res.save.userID;
+                this.adUser.status = res.save.status;
+              } else if (res.update) {
+                this.dataAfterSave = res.update;
+                this.adUser.userID = res.update.userID;
+                this.adUser.status = res.update.status;
+              }
+            }
+            this.isSaved = true;
 
-    //         switch (mode) {
-    //           case 'closePopup': {
-    //             if (this.avatarChange) {
-    //               this.imageUpload
-    //                 .updateFileDirectReload(this.adUser.userID)
-    //                 .subscribe((result) => {
-    //                   if (result) {
-    //                     this.loadData.emit();
-    //                     this.dialog.close(this.adUser);
-    //                   }
-    //                 });
-    //             } else this.dialog.close(this.adUser);
-    //             break;
-    //           }
-    //           case 'addToGroup': {
-    //             this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
-    //             break;
-    //           }
-    //           case 'addUserRoles': {
-    //             this.openPopupRoles(item);
-    //             break;
-    //           }
-    //           // case 'changeAvatar': {
-    //           //   this.changeAvatar();
-    //           //   break;
-    //           // }
-    //           default: {
-    //             break;
-    //           }
-    //         }
-
-    //         // if (closeAddPopup) {
-    //         //   this.dialog.close(this.adUser);
-    //         // } else {
-    //         //   this.adUser.userID = res.save.userID;
-    //         //add to group
-    //         // if (addToGroup) {
-    //         //   this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
-    //         // }
-    //         //add role
-    //         // else {
-    //         //   this.openPopupRoles(item);
-    //         // }
-    //         //   }
-    //         //   this.detectorRef.detectChanges();
-    //       }
-
-    //       this.isSaving = false;
-    //     });
-    // } else {
-    //   this.isSaving = false;
-    //   this.adService.notifyInvalid(this.form.formGroup, this.formModel);
-    // }
-    (this.form.form as CodxFormComponent)
-      .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (!res?.error) {
-          if (!this.isSaved) {
-            this.getHTMLFirstPost(this.adUser);
-            this.adService.createFirstPost(this.tmpPost).subscribe();
-
-            if (res.save) {
-              this.dataAfterSave = res.save;
-              this.adUser.userID = res.save.userID;
-              this.adUser.status = res.save.status;
-            } else if (res.update) {
-              this.dataAfterSave = res.update;
-              this.adUser.userID = res.update.userID;
-              this.adUser.status = res.update.status;
+            switch (mode) {
+              case 'closePopup': {
+                if (this.avatarChange) {
+                  this.imageUpload
+                    .updateFileDirectReload(this.adUser.userID)
+                    .subscribe((result) => {
+                      if (result) {
+                        this.loadData.emit();
+                        this.dialog.close(this.adUser);
+                      }
+                    });
+                } else this.dialog.close(this.adUser);
+                break;
+              }
+              case 'addToGroup': {
+                this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
+                break;
+              }
+              case 'addUserRoles': {
+                this.openPopupRoles(item);
+                break;
+              }
+              default: {
+                break;
+              }
             }
           }
-          this.isSaved = true;
 
-          switch (mode) {
-            case 'closePopup': {
-              if (this.avatarChange) {
-                this.imageUpload
-                  .updateFileDirectReload(this.adUser.userID)
-                  .subscribe((result) => {
-                    if (result) {
-                      this.loadData.emit();
-                      this.dialog.close(this.adUser);
-                    }
-                  });
-              } else this.dialog.close(this.adUser);
-              break;
-            }
-            case 'addToGroup': {
-              this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
-              break;
-            }
-            case 'addUserRoles': {
-              this.openPopupRoles(item);
-              break;
-            }
-            default: {
-              break;
-            }
-          }
-        }
-
-        this.isSaving = false;
-      });
+          this.isSaving = false;
+        });
+    }
   }
 
   src = '';

@@ -687,12 +687,12 @@ export class CodxDpService {
     );
   }
 
-  getDataReleased(recID) {
+  getDataReleased(data) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'GetDataReleasedAsync',
-      recID
+      data
     );
   }
 

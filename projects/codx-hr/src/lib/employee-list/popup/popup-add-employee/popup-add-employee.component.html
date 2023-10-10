@@ -19,6 +19,7 @@
             (reloadChanged)="action === 'edit' || action === 'add' ? changeAvatar($event) : null">
           </codx-img>
         </div>
+        
         <div>
           <codx-label [formModel]="form.formModel" fiedName="EmployeeID">
           </codx-label>
@@ -513,7 +514,6 @@
     </div>
   </ng-container>
 </ng-template>
-
 <!-- footer -->
 <ng-template #footer>
   <div class="d-flex justify-content-end">

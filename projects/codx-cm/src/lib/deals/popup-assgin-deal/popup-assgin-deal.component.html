@@ -87,7 +87,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <e-tabitem  *ngIf="applyFor != '0'">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>
@@ -144,7 +144,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <e-tabitem  *ngIf="applyFor != '0'">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>

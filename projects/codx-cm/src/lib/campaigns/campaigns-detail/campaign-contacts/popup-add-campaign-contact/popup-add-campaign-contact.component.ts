@@ -75,6 +75,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       name: 'ListCustomers',
     },
   ];
+  titleName = '';
+  isSave = false;
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -88,6 +90,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.transID = dt?.data?.transID;
     this.objectType = dt?.data?.objectType;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.titleName = dt?.data?.titleName;
   }
   ngOnInit(): void {
     if (this.lstCampainsHadAdd == null || this.lstCampainsHadAdd.length == 0) {
@@ -115,26 +118,21 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   //#region save
   async onSave() {
-    if (this.lstCampainsAdd != null && this.lstCampainsAdd.length > 0) {
-      let lstSaves = await this.convertToCampContacts(this.lstCampainsAdd);
-      this.api
-        .execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CampaignsBusiness',
-          'AddCampaignContactsAsync',
-          [lstSaves]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.dialog.close(res);
-            this.notiSv.notifyCode('SYS006');
-          }
-        });
-    } else {
-      this.notiSv.notifyCode('Hiện tại không có dữ liệu cần thêm');
-      return;
-    }
+    this.isSave = true;
+    let lstSaves = await this.convertToCampContacts(this.lstCampainsAdd);
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CampaignsBusiness',
+        'AddCampaignContactsAsync',
+        [lstSaves]
+      )
+      .subscribe((res) => {
+        this.notiSv.notifyCode('CM054', null, this.countAdd, this.titleName);
+        this.dialog.close(res);
+        this.isSave = false;
+      });
   }
 
   async convertToCampContacts(list = []) {
@@ -224,15 +222,14 @@ export class PopupAddCampaignContactComponent implements OnInit {
     if (e && parseFloat(e?.data) >= 0 && this[type] != e?.data) {
       this.lstAnnualRevenue = [];
       this[type] = parseFloat(e?.data);
-      if (this.annualRevenue2 >= this.annualRevenue1) {
-        if (this.lstAnnualRevenue != null && this.lstAnnualRevenue.length > 0) {
-          this.lstAnnualRevenue[0] = this.annualRevenue1;
-          this.lstAnnualRevenue[1] = this.annualRevenue2;
-        } else {
-          this.lstAnnualRevenue.push(this.annualRevenue1);
-          this.lstAnnualRevenue.push(this.annualRevenue2);
-        }
+      if (this.lstAnnualRevenue != null && this.lstAnnualRevenue.length > 0) {
+        this.lstAnnualRevenue[0] = this.annualRevenue1;
+        this.lstAnnualRevenue[1] = this.annualRevenue2;
+      } else {
+        this.lstAnnualRevenue.push(this.annualRevenue1);
+        this.lstAnnualRevenue.push(this.annualRevenue2);
       }
+
       this.bindingCountCompaign();
     }
     this.detector.detectChanges();
@@ -377,7 +374,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
           this.custGroupIDs,
           this.lstAnnualRevenue,
           this.headCounts,
-          this.channelIDs
+          this.channelIDs,
         ]
       )
       .subscribe((res) => {

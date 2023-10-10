@@ -366,7 +366,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         let epSetting_4 = listSetting.filter(
           (x) => x.category == '4' && x.tranType == null
         );
-        if (epSetting_4 != null) {
+        if (epSetting_4?.length>0) {
           let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
           let roomSetting_4 = listEPSetting.filter(
             (x) => x.FieldName == EPCONST.ES_CategoryID.Room

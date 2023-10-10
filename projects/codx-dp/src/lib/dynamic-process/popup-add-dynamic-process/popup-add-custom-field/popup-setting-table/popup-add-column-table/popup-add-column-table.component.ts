@@ -287,12 +287,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   saveVll() {
     if (!this.crrVll.note || this.crrVll.note.trim() == '') {
-      this.notiService.notifyCode('Nội dung vll không được để trống !');
+      this.notiService.notifyCode('CM049');
       return;
     }
 
     if (!this.datasVll || this.datasVll?.length == 0) {
-      this.notiService.notifyCode('Danh sách lựa chọn không được để trống !');
+      this.notiService.notifyCode('CM050');
       return;
     }
 

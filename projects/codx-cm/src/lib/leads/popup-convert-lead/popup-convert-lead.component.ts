@@ -129,6 +129,7 @@ export class PopupConvertLeadComponent implements OnInit {
   //
   applyFor: string;
   leverSetting: number;
+  transIDCamp: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -151,6 +152,8 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.processID = null;
     this.deal.currencyID = this.lead?.currencyID;
     this.deal.exchangeRate = this.lead?.exchangeRate;
+    this.transIDCamp = dt?.data?.transIDCamp ?? null;
+
     this.promiseAll();
     // this.customer.category = this.lead.category;
   }
@@ -521,6 +524,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lead.applyProcess && this.lead.status != '3'
         ? result[0]?.stepID
         : '',
+      this.transIDCamp
     ];
 
     await this.api
