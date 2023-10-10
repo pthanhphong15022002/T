@@ -67,6 +67,7 @@ export class CatagoryComponent implements OnInit {
   oldDataValue: any = {};
   //labels
   labels = [];
+  lineType = '1';
   isOpenSub: boolean = false;
 
   constructor(
@@ -87,13 +88,18 @@ export class CatagoryComponent implements OnInit {
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
-
+      this.lineType = data.data?.lineType;
       //this.loadSettingValue();
     }
   }
 
   ngOnInit(): void {
     if (this.dialog) {
+      if (this.setting) {
+        this.groupSetting = this.setting.filter((x) => {
+          return x.lineType === this.lineType;
+        });
+      }
       this.dialog.closed.subscribe((res) => {
         this.dialog = null;
       });
@@ -109,28 +115,26 @@ export class CatagoryComponent implements OnInit {
       // });
       if (this.setting) {
         this.groupSetting = this.setting.filter((x) => {
-          return (
-            x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
-          );
+          return x.lineType === this.lineType;
         });
-        if (this.groupSetting.length > 0) {
-          var lstNoGroup = this.setting.filter((x) => {
-            return (
-              ((x.controlType &&
-                x.controlType.toLowerCase() !== 'groupcontrol') ||
-                !x.controlType) &&
-              !x.refLineID
-            );
-          });
-          if (lstNoGroup.length > 0) {
-            var objGroupTMP: any = {
-              recID: '',
-              refLineID: '',
-              controlType: 'GroupControl',
-            };
-            this.groupSetting.splice(0, 0, objGroupTMP);
-          }
-        }
+        // if (this.groupSetting.length > 0) {
+        //   var lstNoGroup = this.setting.filter((x) => {
+        //     return (
+        //       ((x.controlType &&
+        //         x.controlType.toLowerCase() !== 'groupcontrol') ||
+        //         !x.controlType) &&
+        //       !x.refLineID
+        //     );
+        //   });
+        //   if (lstNoGroup.length > 0) {
+        //     var objGroupTMP: any = {
+        //       recID: '',
+        //       refLineID: '',
+        //       controlType: 'GroupControl',
+        //     };
+        //     this.groupSetting.splice(0, 0, objGroupTMP);
+        //   }
+        // }
       }
       if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
@@ -183,14 +187,16 @@ export class CatagoryComponent implements OnInit {
       cssClass = '',
       dialogModel = new DialogModel();
     if (!reference) {
+      let lineType = +this.lineType + 1 + '';
       var itemChild = this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === '2'
+        (x) => x.refLineID === recID && x.lineType === lineType
       );
       data['settingFull'] = itemChild;
       data['valuelist'] = this.valuelist;
       //data['settingValue'] = this.settingValue;
       data['category'] = this.category;
       data['function'] = this.function;
+      data['lineType'] = lineType;
       width = 500;
       height = 100 * itemChild.length;
 
@@ -413,36 +419,40 @@ export class CatagoryComponent implements OnInit {
   }
 
   openSub(evt: any, recID: string, dataValue: any) {
+    this.lineType = +this.lineType + 1 + '';
     this.isOpenSub = true;
     this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
     this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
     this.settingFull =
       this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === '2'
+        (x) => x.refLineID === recID && x.lineType === this.lineType
       ) || [];
     this.setting =
       this.settingFull.filter((res) => res.isVisible == true) || [];
     this.dataValue = dataValue;
     this.groupSetting = this.setting.filter((x) => {
-      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+      return x.lineType === this.lineType;
     });
-    if (this.groupSetting.length > 0) {
-      var lstNoGroup = this.setting.filter((x) => {
-        return (
-          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-            !x.controlType) &&
-          !x.refLineID
-        );
-      });
-      if (lstNoGroup.length > 0) {
-        var objGroupTMP: any = {
-          recID: '',
-          refLineID: '',
-          controlType: 'GroupControl',
-        };
-        this.groupSetting.splice(0, 0, objGroupTMP);
-      }
-    }
+    // .filter((x) => {
+    //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    // });
+    // if (this.groupSetting.length > 0) {
+    //   var lstNoGroup = this.setting.filter((x) => {
+    //     return (
+    //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+    //         !x.controlType) &&
+    //       !x.refLineID
+    //     );
+    //   });
+    //   if (lstNoGroup.length > 0) {
+    //     var objGroupTMP: any = {
+    //       recID: '',
+    //       refLineID: '',
+    //       controlType: 'GroupControl',
+    //     };
+    //     this.groupSetting.splice(0, 0, objGroupTMP);
+    //   }
+    // }
     if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
     else if (this.category === '5') this.getAlertRule();
     else if (this.category === '6') this.getSchedules();
@@ -451,6 +461,7 @@ export class CatagoryComponent implements OnInit {
 
   backSub(evt: any) {
     this.isOpenSub = false;
+    this.lineType = +this.lineType - 1 + '';
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -458,25 +469,28 @@ export class CatagoryComponent implements OnInit {
     this.setting =
       this.settingFull.filter((res) => res.isVisible == true) || [];
     this.groupSetting = this.setting.filter((x) => {
-      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+      return x.lineType === this.lineType;
     });
-    if (this.groupSetting.length > 0) {
-      var lstNoGroup = this.setting.filter((x) => {
-        return (
-          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-            !x.controlType) &&
-          !x.refLineID
-        );
-      });
-      if (lstNoGroup.length > 0) {
-        var objGroupTMP: any = {
-          recID: '',
-          refLineID: '',
-          controlType: 'GroupControl',
-        };
-        this.groupSetting.splice(0, 0, objGroupTMP);
-      }
-    }
+    // .filter((x) => {
+    //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+    // });
+    // if (this.groupSetting.length > 0) {
+    //   var lstNoGroup = this.setting.filter((x) => {
+    //     return (
+    //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+    //         !x.controlType) &&
+    //       !x.refLineID
+    //     );
+    //   });
+    //   if (lstNoGroup.length > 0) {
+    //     var objGroupTMP: any = {
+    //       recID: '',
+    //       refLineID: '',
+    //       controlType: 'GroupControl',
+    //     };
+    //     this.groupSetting.splice(0, 0, objGroupTMP);
+    //   }
+    // }
     this.oldSettingFull = [];
     this.oldDataValue = {};
     if (this.category === '2' || this.category === '7') this.getIDAutoNumber();

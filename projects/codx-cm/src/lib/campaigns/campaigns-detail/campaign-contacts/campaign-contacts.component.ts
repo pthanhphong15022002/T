@@ -411,41 +411,44 @@ export class CampaignContactsComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.formModel;
-    this.cache
-      .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
-      .subscribe((res) => {
-        if (res) {
-          let obj = {
-            title: this.moreFuncAdd,
-            transID: this.transID,
-            objectType: this.objectType,
-            gridViewSetup: res,
-            lstCampContacts: this.lstCampContacts,
-          };
-          this.callFc
-            .openForm(
-              PopupAddCampaignContactComponent,
-              '',
-              600,
-              700,
-              '',
-              obj,
-              '',
-              dialogModel
-            )
-            .closed.subscribe((e) => {
-              if (e && e?.event) {
-                this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
-                if (this.objectType == '3') {
-                  this.cmSv.countLeadsBehavior.next(
-                    this.lstCampContacts.length
-                  );
+    this.cache.functionList(this.formModel?.funcID).subscribe((func) => {
+      this.cache
+        .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
+        .subscribe((res) => {
+          if (res) {
+            let obj = {
+              title: this.moreFuncAdd + ' ' + func?.defaultName?.toLowerCase(),
+              transID: this.transID,
+              objectType: this.objectType,
+              gridViewSetup: res,
+              lstCampContacts: this.lstCampContacts,
+              titleName: func?.defaultName ?? func?.customName,
+            };
+            this.callFc
+              .openForm(
+                PopupAddCampaignContactComponent,
+                '',
+                600,
+                700,
+                '',
+                obj,
+                '',
+                dialogModel
+              )
+              .closed.subscribe((e) => {
+                if (e && e?.event) {
+                  this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
+                  if (this.objectType == '3') {
+                    this.cmSv.countLeadsBehavior.next(
+                      this.lstCampContacts.length
+                    );
+                  }
+                  this.detector.detectChanges();
                 }
-                this.detector.detectChanges();
-              }
-            });
-        }
-      });
+              });
+          }
+        });
+    });
   }
 
   delete(data) {
@@ -586,7 +589,7 @@ export class CampaignContactsComponent implements OnInit {
     );
     if (lead) {
       if (lead?.closed) {
-        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được');
+        this.notiSv.notifyCode('CM053');
         return;
       }
       lead.campaignID = this.transID;
@@ -604,6 +607,7 @@ export class CampaignContactsComponent implements OnInit {
           gridViewSetup: res,
           applyFor: '5',
           data: lead,
+          transIDCamp: this.transID,
         };
         var dialog = this.callFc.openSide(
           PopupConvertLeadComponent,
