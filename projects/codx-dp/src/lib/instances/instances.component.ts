@@ -1167,10 +1167,12 @@ export class InstancesComponent
       formMD.funcID = fun.functionID;
       formMD.entityName = fun.entityName;
       formMD.formName = fun.formName;
-      formMD.gridViewName =fun.gridViewName;
+      formMD.gridViewName = fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      let startControl = this.process.steps.filter( (x) => x.recID === data.stepID )[0]?.startControl;
+      let startControl = this.process.steps.filter(
+        (x) => x.recID === data.stepID
+      )[0]?.startControl;
       var obj = {
         recID: data?.recID,
         //refID: data?.recID,
@@ -1199,16 +1201,14 @@ export class InstancesComponent
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
           debugger;
-            this.dataSelected.owner = e.event;
-            this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-           // this.detailViewInstance.loadOwnerStep(e.event.owner);
-            this.view.dataService.update(this.dataSelected).subscribe();
-            this.detectorRef.detectChanges();
+          this.dataSelected.owner = e.event;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          // this.detailViewInstance.loadOwnerStep(e.event.owner);
+          this.view.dataService.update(this.dataSelected).subscribe();
+          this.detectorRef.detectChanges();
         }
       });
     });
-
-
   }
 
   showInput(data) {}
@@ -2156,17 +2156,6 @@ export class InstancesComponent
     let option = new DialogModel();
     option.zIndex = 1001;
 
-    // this.dialogTemplate = this.callfc.openForm(
-    //   this.popupTemplate,
-    //   '',
-    //   600,
-    //   500,
-    //   '',
-    //   null,
-    //   '',
-    //   option
-    // );
-
     let obj = {
       data: this.dataSelected,
       formModel: this.view.formModel,
@@ -2369,7 +2358,6 @@ export class InstancesComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      debugger;
       ///do corre share ko tra ve status
       this.dataSelected.approveStatus = '3';
       this.view.dataService.update(this.dataSelected).subscribe();
@@ -2377,7 +2365,28 @@ export class InstancesComponent
       this.codxDpService
         .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
         .subscribe();
+    }
+  }
 
+  releaseInstances(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
+      data?.stepName,
+      this.releaseCallbackInstances.bind(this)
+    );
+  }
+  //call Back
+  releaseCallbackInstances(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    else {
+      this.dataSelected.approveStatus = '3';
+      this.view.dataService.update(this.dataSelected).subscribe();
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      ///do corre share ko tra ve status
       // this.codxDpService
       //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
       //   .subscribe((ins) => {
@@ -2389,150 +2398,7 @@ export class InstancesComponent
     }
   }
 
-  //Duyệt
-  documentApproval(datas: any) {
-    this.approvalTrans(this.esCategory, datas);
-    // this.dialogTemplate.close();
-    // // if (datas.bsCategory) {
-    // //Có thiết lập bước duyệt
-    // // if (datas.bsCategory.approval) {
-    // this.api
-    //   .execSv(
-    //     'ES',
-    //     'ES',
-    //     'CategoriesBusiness',
-    //     'GetByCategoryIDAsync',
-    //     this.process.processNo
-    //   )
-    //   .subscribe((item: any) => {
-    //     if (item) {
-
-    //       this.codxDpService
-    //         .checkApprovalStep(item.recID)
-    //         .subscribe((check) => {
-    //           if (check) this.approvalTrans(item?.processID, datas);
-    //           else {
-    //             this.notificationsService.notifyCode('DP036');
-    //           }
-    //         });
-    //     } else {
-    //     }
-    // });
-    // }
-    //Chưa thiết lập bước duyệt
-    // else {
-    //   var config = new AlertConfirmInputConfig();
-    //   config.type = 'YesNo';
-    //   this.notificationsService.alertCode('OD024', config).subscribe((item) => {
-    //     if (item.event.status == 'Y') {
-    //       //Lấy processID mặc định theo entity
-    //       this.api
-    //         .execSv(
-    //           'ES',
-    //           'ES',
-    //           'CategoriesBusiness',
-    //           'GetDefaulProcessIDAsync',
-    //           this.formModel.entityName
-    //         )
-    //         .subscribe((item: any) => {
-    //           if (item) {
-    //             this.approvalTrans(item?.processID, datas);
-    //           }
-    //         });
-    //     }
-    //   });
-    // }
-    // }
-  }
-  approvalTrans(esCategory: any, datas: any) {
-    // this.api
-    //   .execSv(
-    //     'ES',
-    //     'ES',
-    //     'ApprovalTransBusiness',
-    //     'GetCategoryByProcessIDAsync',
-    //     processID
-    //   )
-    //   .subscribe((res2: any) => {
-    // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    //trình ký
-    if (this.esCategory?.eSign == true) {
-      //   let signFile = new ES_SignFile();
-      //   signFile.recID = datas.recID;
-      //   signFile.title = datas.title;
-      //   signFile.categoryID = res2?.categoryID;
-      //   signFile.refId = datas.recID;
-      //   // signFile.refDate = datas.refDate;
-      //   signFile.refNo = datas.refNo;
-      //   signFile.priority = '1';
-      //   signFile.refType = this.formModel?.entityName; // OD_Dispatches';
-      //   signFile.files = [];
-      //   // if (this.data?.files) {
-      //   //   for (var i = 0; i < this.data?.files.length; i++) {
-      //   //     var file = new File();
-      //   //     file.fileID = this.data?.files[i].recID;
-      //   //     file.fileName = this.data?.files[i].fileName;
-      //   //     file.eSign = true;
-      //   //     signFile.files.push(file);
-      //   //   }
-      //   // }
-      //   let dialogApprove = this.callfc.openForm(
-      //     PopupAddSignFileComponent,
-      //     'Chỉnh sửa',
-      //     700,
-      //     650,
-      //     '',
-      //     {
-      //       oSignFile: signFile,
-      //       ///files: this.data?.files,  //file  cân xét duyet
-      //       cbxCategory: 'ODCategories', //this.gridViewSetup['CategoryID']?.referedValue,
-      //       disableCateID: true,
-      //       //formModel: this.view?.currentView?.formModel,
-      //     },
-      //     '',
-      //     dialogModel
-      //   );
-      //   dialogApprove.closed.subscribe((res) => {
-      //     if (res.event && res.event?.approved == true) {
-      //       //update lại data
-      //     }
-      //   });
-    } else if (this.esCategory?.eSign == false)
-      //xét duyệt
-      this.release(datas, this.esCategory);
-    // });
-  }
-
-  //Gửi duyệt cu sau nay se xoa
-  // release(data: any, processID: any) {
-  //   this.codxShareService
-  //     .codxRelease(
-  //       this.view.service,
-  //       data?.recID,
-  //       processID,
-  //       this.view.formModel.entityName,
-  //       this.view.formModel.funcID,
-  //       '',
-  //       data?.title,
-  //       ''
-  //     )
-  //     .subscribe((res2: any) => {
-  //       if (res2?.msgCodeError)
-  //         this.notificationsService.notify(res2?.msgCodeError);
-  //       else {
-  //         this.dataSelected.approveStatus = '3';
-  //         this.view.dataService.update(this.dataSelected).subscribe();
-  //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-  //         this.codxDpService
-  //           .updateApproverStatusInstance([data?.recID, '3'])
-  //           .subscribe();
-  //         this.notificationsService.notifyCode('ES007');
-  //       }
-  //     });
-  // }
-
-  //Huy duyet
+  //Huy duyet instance
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
