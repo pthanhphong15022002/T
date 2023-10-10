@@ -25,6 +25,7 @@
           type="checkbox"
           [field]="'isProvince'"
           [crrValue]="isProvince"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -54,7 +55,7 @@
         [refValue]="gridViewSetup?.ProvinceID?.referedValue"
         [emptyText]="gridViewSetup?.ProvinceID?.headerText"
         [value]="provinceIDs"
-        [disabled]="!isProvince"
+        [disabled]="!isProvince || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -67,6 +68,7 @@
           type="checkbox"
           [field]="'isDistrict'"
           [crrValue]="isDistrict"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -86,7 +88,7 @@
         [refValue]="gridViewSetup?.DistrictID?.referedValue"
         [emptyText]="gridViewSetup?.DistrictID?.headerText"
         [value]="districtIDs"
-        [disabled]="!isDistrict"
+        [disabled]="!isDistrict || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -108,6 +110,7 @@
           type="checkbox"
           [field]="'isIndustries'"
           [crrValue]="isIndustries"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -127,7 +130,7 @@
         [refValue]="gridViewSetup?.Industries?.referedValue"
         [emptyText]="gridViewSetup?.Industries?.headerText"
         [value]="industries"
-        [disabled]="!isIndustries"
+        [disabled]="!isIndustries || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -140,6 +143,7 @@
           type="checkbox"
           [field]="'isCustGroupID'"
           [crrValue]="isCustGroupID"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -159,7 +163,7 @@
         [refValue]="gridViewSetup?.CustGroupID?.referedValue"
         [emptyText]="gridViewSetup?.CustGroupID?.headerText"
         [value]="custGroupIDs"
-        [disabled]="!isCustGroupID"
+        [disabled]="!isCustGroupID || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -172,6 +176,7 @@
           type="checkbox"
           [field]="'isAnnualRevenue'"
           [crrValue]="isAnnualRevenue"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -196,7 +201,7 @@
           <codx-input
             [field]="'annualRevenue'"
             [formModel]="form.formModel"
-            [disabled]="!isAnnualRevenue"
+            [disabled]="!isAnnualRevenue || isSave"
             [crrValue]="annualRevenue1"
             (valueChange)="valueChangeAnnual($event, 'annualRevenue1')"
           ></codx-input>
@@ -218,7 +223,7 @@
             class=""
             [field]="'annualRevenue'"
             [formModel]="form.formModel"
-            [disabled]="!isAnnualRevenue"
+            [disabled]="!isAnnualRevenue || isSave"
             [crrValue]="annualRevenue2"
             (valueChange)="valueChangeAnnual($event, 'annualRevenue2')"
           ></codx-input>
@@ -233,6 +238,7 @@
           type="checkbox"
           [field]="'isHeadcounts'"
           [crrValue]="isHeadcounts"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -252,7 +258,7 @@
         [refValue]="gridViewSetup?.Headcounts?.referedValue"
         [emptyText]="gridViewSetup?.Headcounts?.headerText"
         [value]="headCounts"
-        [disabled]="!isHeadcounts"
+        [disabled]="!isHeadcounts || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -265,6 +271,7 @@
           type="checkbox"
           [field]="'isChannelIDs'"
           [crrValue]="isChannelIDs"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -284,7 +291,7 @@
         [refValue]="gridViewSetup?.ChannelID?.referedValue"
         [emptyText]="gridViewSetup?.ChannelID?.headerText"
         [value]="channelIDs"
-        [disabled]="!isHeadcounts"
+        [disabled]="!isHeadcounts || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -297,6 +304,7 @@
           type="checkbox"
           [field]="'isStatus'"
           [crrValue]="isStatus"
+          [disabled]="isSave"
           (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
@@ -319,7 +327,7 @@
         [refValue]="objectType == '3' ? 'CRM041' : 'CRM039'"
         [emptyText]="gridViewSetup?.Status?.headerText"
         [value]="status"
-        [disabled]="!isStatus"
+        [disabled]="!isStatus || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -428,7 +436,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button type="button" class="btn btn-primary" [disabled]="isSave" (click)="onSave()">
       <codx-label
         name="lblSave"
         [formModel]="dialog.formModel"
