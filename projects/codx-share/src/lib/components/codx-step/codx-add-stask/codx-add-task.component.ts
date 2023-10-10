@@ -49,6 +49,7 @@ export class CodxAddTaskComponent implements OnInit {
   endDateParent: Date;
   startDateParent: Date;
   instanceStep: DP_Instances_Steps;
+  listInsStep: DP_Instances_Steps[];
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
 
@@ -97,6 +98,8 @@ export class CodxAddTaskComponent implements OnInit {
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
+  disableStep = false;
+  isActivitie = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -120,6 +123,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.groupTaskID = dt?.data?.groupTaskID;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
+    this.listInsStep = dt?.data?.listInsStep;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     // this.isStart = dt?.data?.isStart;
@@ -147,6 +151,14 @@ export class CodxAddTaskComponent implements OnInit {
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
+
+    if((!this.listInsStep ||this.listInsStep?.length <= 0) && this.instanceStep){
+      this.listInsStep = [this.instanceStep];
+    }else{
+      this.disableStep = true;
+    }
+
+    this.isActivitie = !this.instanceStep && !this.listInsStep ? true : false;
 
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(
@@ -774,5 +786,21 @@ export class CodxAddTaskComponent implements OnInit {
         // this.changDetec.detectChanges();
       }
     });
+  }
+
+  changeStep(event){
+    let data = event?.value;
+    if(data){
+      this.stepsTasks.stepID = data;
+      let stepFind = this.listInsStep?.find(x => x.recID == data);
+      if(stepFind){
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = stepFind?.taskGroups;
+      }else{
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = [];
+      }
+    }
+   
   }
 }

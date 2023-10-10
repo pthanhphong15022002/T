@@ -136,7 +136,7 @@ export class ViewCalendarComponent
   methodLoadData = 'GetListContractsAsync';
   requestData = new DataRequest();
   listTaskType = [];
-
+  isAdmin = false;
   constructor(
     private inject: Injector,
     private authstore: AuthStore,
@@ -166,6 +166,9 @@ export class ViewCalendarComponent
         this.listTaskType = res.datas;
       }
     });
+    this.api.exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', []).subscribe((res) => {
+      this.isAdmin = res ? true : false;
+    })
   }
   ngAfterViewInit(): void {
     this.afterLoad();
@@ -440,10 +443,12 @@ viewTask(data) {
     }
     return task;
   }
+
    async beforeAddTask(taskType) {
     let option = new DialogModel();
     let data = {
       taskType,
+      isAdmin: this.isAdmin,
     };
     option.zIndex = 1001;
     this.popupTypeCM = this.callfc.openForm(
@@ -460,21 +465,35 @@ viewTask(data) {
     if(dataOuput?.event){
       let taskType = dataOuput?.event?.taskType;
       let dataTypeCM = dataOuput?.event?.dataCheck
+      let listInsStep = [];
       if(dataTypeCM && taskType){
         this.isStepTask = dataTypeCM?.applyProcess;
         this.isActivitie = !this.isStepTask;
-        this.handleTask(taskType,"add",);
+        if(this.isStepTask){
+          this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetInscestepCalendarAsync', [dataTypeCM?.refID, dataTypeCM?.full]).subscribe((res) => {
+            if(res){
+              if(res?.length > 0){
+                this.handleTask(taskType,"add",null,res);
+              }
+            }
+          })
+        }else{
+          this.entityName = dataTypeCM?.entityName;
+          this.objectID = dataTypeCM?.recID;
+          this.handleTask(taskType,"add",null);
+        }
       }
     }
   }
 
-  async handleTask(dataType, action, taskData = null) {
+  async handleTask(dataType, action, taskData = null, listInsStep = null) {
     let taskOutput = await this.stepService.addTask(
       action,
       '',
       taskData,
       dataType,
       this.insStep,
+      listInsStep,
       null,
       false,
       null,
@@ -495,7 +514,7 @@ viewTask(data) {
     task['objectID'] = this.objectID;
     task['objectType'] = this.entityName;
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'AddActivitiesAsync', [
+      .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
         task,
         this.entityName,
       ])
@@ -565,7 +584,7 @@ viewTask(data) {
         }
         if (this.isActivitie) {
           this.api
-            .exec<any>('DP', 'InstanceStepsBusiness', 'EditActivitiesAsync', [
+            .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
               taskEdit,
             ])
             .subscribe((res) => {
@@ -621,7 +640,7 @@ viewTask(data) {
                 this.notiService.notifyCode('SYS007');
               })
             }else if(this.isActivitie){
-              this.api.exec<any>('DP', 'InstanceStepsBusiness', 'DeleteActivitiesAsync', [
+              this.api.exec<any>('DP', 'ActivitiesBusiness', 'DeleteActivitiesAsync', [
                 task?.recID,task?.objectType
               ])
               .subscribe((res) => {
