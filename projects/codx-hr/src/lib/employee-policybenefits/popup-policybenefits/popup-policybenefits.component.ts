@@ -1791,7 +1791,8 @@ export class PopupPolicybenefitsComponent
             this.benefitPolicyObj.isConstraintOther &&
             this.benefitPolicyObj.constraintBy
           ) {
-            this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+            // this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+            this.constraintsObj.policyID = this.form.data.policyID;
             this.AddPolicyConstraint(this.constraintsObj).subscribe(
               (res) => {}
             );
@@ -1903,7 +1904,8 @@ export class PopupPolicybenefitsComponent
               this.benefitPolicyObj.policyID
             ).subscribe((res) => {
               if (this.benefitPolicyObj.constraintBy) {
-                this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                // this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                this.constraintsObj.policyID = this.form.data?.policyID;
                 this.AddPolicyConstraint(this.constraintsObj).subscribe(
                   (res) => {}
                 );

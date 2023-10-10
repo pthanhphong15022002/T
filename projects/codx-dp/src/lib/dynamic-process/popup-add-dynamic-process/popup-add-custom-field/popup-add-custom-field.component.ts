@@ -36,7 +36,8 @@ import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
-import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
+import { PopupAddColumnTableComponent } from './popup-setting-table/popup-add-column-table/popup-add-column-table.component';
+import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -130,6 +131,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // column: ColumnTable;
   listColumns = [];
   settingWidth = false;
+  settingCount = false;
   isShowMore = false;
   widthDefault = '550';
 
@@ -806,14 +808,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
         let obj = {
           // data: this.column,
           action: 'add',
-          titleAction: 'Thêm column test',
+          titleAction: 'Setting colum', //test
           grvSetup: this.grvSetup,
           processNo: this.processNo,
           user: this.user,
           listColumns: this.listColumns,
         };
         let dialogColumn = this.callfc.openForm(
-          PopupAddColumnTableComponent,
+          PopupSettingTableComponent,
           '',
           550,
           400,
@@ -827,6 +829,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
             if (res.event[0]) {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+              this.settingCount = this.listColumns[0]?.settingCount ?? false;
+
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
             if (res.event[1] && !this.processNo) {

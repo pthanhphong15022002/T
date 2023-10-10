@@ -509,12 +509,35 @@
   th,
   td {
     padding: 5px;
+    font-weight: normal;
   }
   th,
   td {
     text-align: center;
   }
 
+  td
+  {
+    padding: 11px;
+    border-bottom: solid 2px white;
+    .e-radio+label
+    {
+      margin-top: -18px !important;
+    }
+    .e-radio+label::before
+    {
+      width: 18px !important;
+      height: 18px !important;
+      margin-left: -9px;
+    }
+    .e-radio+label::after
+    {
+      top: 3px;
+      height: 12px;
+      width: 12px;
+      left: -6px;
+    }
+  }
   .d-none {
     display: none !important;
   }

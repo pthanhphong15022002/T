@@ -19,7 +19,7 @@
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
       [hideMoreFunc]="false"
-      [height]="'100%'"
+      [height]="isShow ? '' : '100%'"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>

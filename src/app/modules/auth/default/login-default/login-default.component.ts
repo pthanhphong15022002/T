@@ -120,7 +120,6 @@ export class LoginDefaultComponent extends UIComponent {
 
   onInit(): void {
     console.log('logindefault device info', this.loginDevice);
-
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {

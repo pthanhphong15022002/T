@@ -687,6 +687,15 @@ export class CodxDpService {
     );
   }
 
+  getDataReleased(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetDataReleasedAsync',
+      data
+    );
+  }
+
   /// cance trifnh ki
   cancelSubmit(recID, entityName) {
     return this.api.execSv(

@@ -77,7 +77,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   constructor(
     private inject: Injector,
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private navRouter: Router,
     private notificationsService: NotificationsService,
     private tenantStore: TenantStore,
@@ -121,6 +120,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               this.sessionID = params.sk;
               this.email = res[0];
               this.mode = res[1];
+              this.getSettingForm();
               // dt.detectChanges();
               this.detectorRef.detectChanges();
               // if (
@@ -176,19 +176,11 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   onInit(): void {
-    if (this.mode == 'firstLogin' || this.mode == 'changePass') {
-      this.loginService.getUserLoginSetting(this.email).subscribe((setting) => {
-        this.sysSetting = setting;
-        console.log('setting', this.sysSetting);
-        this.initForm();
-      });
-    } else {
-      this.initForm();
-    }
+    this.initForm();
 
     // get return url from route parameters or default to '/'
     this.returnUrl =
-      this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
+      this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
     this.realHub.start('ad').then((x: RealHub) => {
       let t = this;
       x.hub.invoke('GetConnectionId').then(function (connectionId) {
@@ -196,6 +188,15 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         t.hubConnectionID = connectionId;
       });
     });
+  }
+
+  getSettingForm(callback?: any) {
+    if (this.mode == 'firstLogin' || this.mode == 'changePass') {
+      this.loginService.getUserLoginSetting(this.email).subscribe((setting) => {
+        this.sysSetting = setting;
+        if (callback) return callback();
+      });
+    }
   }
 
   // convenience getter for easy access to form fields
