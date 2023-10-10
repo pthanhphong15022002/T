@@ -1172,8 +1172,8 @@ export class InstancesComponent
       dialogModel.FormModel = formMD;
       let startControl = this.process.steps.filter( (x) => x.recID === data.stepID )[0]?.startControl;
       var obj = {
-        //recID: data?.recID,
-        refID: data?.recID,
+        recID: data?.recID,
+        //refID: data?.recID,
         processID: data?.processID,
         stepID: data?.stepID,
         data: data,
@@ -1198,7 +1198,8 @@ export class InstancesComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-            this.dataSelected.owner = e.event.owner;
+          debugger;
+            this.dataSelected.owner = e.event;
             this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
            // this.detailViewInstance.loadOwnerStep(e.event.owner);
             this.view.dataService.update(this.dataSelected).subscribe();
