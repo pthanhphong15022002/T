@@ -100,7 +100,8 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
 
   saveData() {
     if (!this.listColumns || this.listColumns?.length == 0) {
-      this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
+      // this.notiService.notify('Bảng dữ liệu chưa được thiết lập', '3'); //chơ mes Khanh
+      this.notiService.notifyCode('DP041');
       return;
     }
 

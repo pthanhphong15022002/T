@@ -75,6 +75,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       name: 'ListCustomers',
     },
   ];
+  titleName = '';
+  isSave = false;
   constructor(
     private detector: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -88,6 +90,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
     this.transID = dt?.data?.transID;
     this.objectType = dt?.data?.objectType;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.titleName = dt?.data?.titleName;
   }
   ngOnInit(): void {
     if (this.lstCampainsHadAdd == null || this.lstCampainsHadAdd.length == 0) {
@@ -115,26 +118,21 @@ export class PopupAddCampaignContactComponent implements OnInit {
 
   //#region save
   async onSave() {
-    if (this.lstCampainsAdd != null && this.lstCampainsAdd.length > 0) {
-      let lstSaves = await this.convertToCampContacts(this.lstCampainsAdd);
-      this.api
-        .execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CampaignsBusiness',
-          'AddCampaignContactsAsync',
-          [lstSaves]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.dialog.close(res);
-            this.notiSv.notifyCode('SYS006');
-          }
-        });
-    } else {
-      this.notiSv.notifyCode('Hiện tại không có dữ liệu cần thêm');
-      return;
-    }
+    this.isSave = true;
+    let lstSaves = await this.convertToCampContacts(this.lstCampainsAdd);
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'CampaignsBusiness',
+        'AddCampaignContactsAsync',
+        [lstSaves]
+      )
+      .subscribe((res) => {
+        this.notiSv.notifyCode('CM054', null, this.countAdd, this.titleName);
+        this.dialog.close(res);
+        this.isSave = false;
+      });
   }
 
   async convertToCampContacts(list = []) {
