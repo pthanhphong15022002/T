@@ -58,6 +58,7 @@ import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-
 import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
+import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
 
 @Component({
   selector: 'codx-instances',
@@ -1131,37 +1132,83 @@ export class InstancesComponent
   popupOwnerRoles(data) {
     this.dataSelected = data;
     this.cache.functionList('DPT0402').subscribe((fun) => {
+      // var formMD = new FormModel();
+      // let dialogModel = new DialogModel();
+      // formMD.funcID = fun.functionID;
+      // formMD.entityName = fun.entityName;
+      // formMD.formName = fun.formName;
+      // formMD.gridViewName = fun.gridViewName;
+      // dialogModel.zIndex = 999;
+      // dialogModel.FormModel = formMD;
+      // var startControl = this.process.steps.filter(
+      //   (x) => x.recID === data.stepID
+      // )[0].startControl;
+      // var dialog = this.callfc.openForm(
+      //   PopupEditOwnerstepComponent,
+      //   '',
+      //   500,
+      //   280,
+      //   '',
+      //   [this.lstOrg, this.titleAction, data, '0', startControl,this.grvSetup],
+      //   '',
+      //   dialogModel
+      // );
+      // dialog.closed.subscribe((e) => {
+      //   if (e && e?.event != null) {
+      //     this.dataSelected.ownerStepInstances = e.event.owner;
+      //     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      //     this.detailViewInstance.loadOwnerStep(e.event.owner);
+      //     this.view.dataService.update(this.dataSelected).subscribe();
+      //     this.detectorRef.detectChanges();
+      //   }
+      // });
       var formMD = new FormModel();
       let dialogModel = new DialogModel();
       formMD.funcID = fun.functionID;
       formMD.entityName = fun.entityName;
       formMD.formName = fun.formName;
-      formMD.gridViewName = fun.gridViewName;
+      formMD.gridViewName =fun.gridViewName;
       dialogModel.zIndex = 999;
       dialogModel.FormModel = formMD;
-      var startControl = this.process.steps.filter(
-        (x) => x.recID === data.stepID
-      )[0].startControl;
+      let startControl = this.process.steps.filter( (x) => x.recID === data.stepID )[0]?.startControl;
+      var obj = {
+        recID: data?.recID,
+        //refID: data?.recID,
+        processID: data?.processID,
+        stepID: data?.stepID,
+        data: data,
+        gridViewSetup: this.grvSetup,
+        formModel: this.view.formModel,
+        applyFor: '0',
+        titleAction: this.titleAction,
+        owner: data.owner,
+        startControl: startControl,
+        applyProcess: true,
+        buid: data.buid,
+      };
       var dialog = this.callfc.openForm(
-        PopupEditOwnerstepComponent,
+        PopupAssginDealComponent,
         '',
-        500,
-        280,
+        750,
+        400,
         '',
-        [this.lstOrg, this.titleAction, data, '0', startControl],
+        obj,
         '',
         dialogModel
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          this.dataSelected.ownerStepInstances = e.event.owner;
-          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-          this.detailViewInstance.loadOwnerStep(e.event.owner);
-          this.view.dataService.update(this.dataSelected).subscribe();
-          this.detectorRef.detectChanges();
+          debugger;
+            this.dataSelected.owner = e.event;
+            this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+           // this.detailViewInstance.loadOwnerStep(e.event.owner);
+            this.view.dataService.update(this.dataSelected).subscribe();
+            this.detectorRef.detectChanges();
         }
       });
     });
+
+
   }
 
   showInput(data) {}
@@ -2285,20 +2332,20 @@ export class InstancesComponent
         if (item) {
           this.esCategory = item;
           //gui step
-          // this.codxDpService
-          //   .getDataReleased(this.dataSelected)
-          //   .subscribe((dt) => {
-          //     if (dt) this.release(dt, this.esCategory);
-          //   });
-
-          //gui instance
           this.codxDpService
-            .checkApprovalStep(item.recID)
-            .subscribe((check) => {
-              if (check) {
-                this.release(this.dataSelected, item);
-              } else this.notificationsService.notifyCode('DP036');
+            .getDataReleased([this.dataSelected.recID, item.recID]) //data + tranID của esCategory
+            .subscribe((dt) => {
+              if (dt) this.release(dt, this.esCategory);
             });
+
+          // //gui instance
+          // this.codxDpService
+          //   .checkApprovalStep(item.recID)
+          //   .subscribe((check) => {
+          //     if (check) {
+          //       this.release(this.dataSelected, item);
+          //     } else this.notificationsService.notifyCode('DP036');
+          //   });
         }
       });
   }
@@ -2308,10 +2355,14 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      this.view.formModel.entityName,
+      // this.view.formModel.entityName,
+      'DP_Instances_Steps',
       this.view.formModel.funcID,
-      data?.title,
-      this.releaseCallback.bind(this)
+      data?.stepName,
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      'DP_Instances_Steps'
     );
   }
   //call Back
@@ -2320,14 +2371,21 @@ export class InstancesComponent
     else {
       debugger;
       ///do corre share ko tra ve status
+      this.dataSelected.approveStatus = '3';
+      this.view.dataService.update(this.dataSelected).subscribe();
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
       this.codxDpService
-        .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-        .subscribe((ins) => {
-          this.dataSelected.approveStatus = ins.approveStatus;
-          this.view.dataService.update(this.dataSelected).subscribe();
-          if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          this.notificationsService.notifyCode('ES007');
-        });
+        .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
+        .subscribe();
+
+      // this.codxDpService
+      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
+      //   .subscribe((ins) => {
+      //     this.dataSelected.approveStatus = ins.approveStatus;
+      //     this.view.dataService.update(this.dataSelected).subscribe();
+      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      //     // this.notificationsService.notifyCode('ES007');
+      //   });
     }
   }
 

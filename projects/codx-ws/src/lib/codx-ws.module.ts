@@ -39,6 +39,9 @@ import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/pa
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
+import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
+import { TooltipModule } from '@syncfusion/ej2-angular-popups';
+
 
 const routes: Routes = [
   {
@@ -189,6 +192,8 @@ const routes: Routes = [
     CodxShareModule,
     AccordionModule,
     NgbDropdownModule,
+    SpeedDialModule,
+    TooltipModule
   ],
   exports: [RouterModule],
 })

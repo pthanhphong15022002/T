@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
-import { ApiHttpService, DataRequest, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef } from 'codx-core';
 import { log } from 'console';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { Observable, finalize, map } from 'rxjs';
@@ -43,18 +43,23 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   requestData = new DataRequest();
   dataCombobox;
   dataCheck;
+  user;
+  isAdmin = false;
   constructor(
     private api: ApiHttpService,
     private stepService: StepService,
+    private authStore: AuthStore,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.taskType =  dt?.data?.taskType;
+    this.isAdmin = dt?.data?.isAdmin;
   }
 
   ngOnInit(): void {
-
+   
   }
 
   async ngAfterViewInit() {
@@ -96,13 +101,30 @@ export class PopupAddTaskCalendarComponent implements OnInit {
     this.requestData.pageSize = 20;
     this.fetch().subscribe((res) => {
      if(res){
+      let applyProcess = null;
+      let isAdminClone = false;
+      if(entityName == "CM_Deals"){
+        applyProcess = true;
+      }else if(entityName == "CM_Customers"){
+        applyProcess = false;
+      }
       this.dataCombobox = res?.map(item =>{
+        if(entityName != "CM_Customers" && entityName != "CM_Deals"){
+          applyProcess = item?.applyProcess ? true : false;
+        }
+        if(this.isAdmin){
+          isAdminClone = true;
+        }else{
+          isAdminClone = item?.permissions?.some(x => x.full) || false;
+        }
         return {
           name:item?.customerName || item?.dealName || item?.contractName || item?.leadName || item?.caseName,
           recID:item?.recID,
           refID:item?.refID,
-          applyProcess: item?.applyProcess ? true : false, 
+          applyProcess: applyProcess, 
           owner: item?.owner,
+          full: isAdminClone,
+          entityName: entityName,
         }
       } );
       console.log(this.dataCombobox);      
