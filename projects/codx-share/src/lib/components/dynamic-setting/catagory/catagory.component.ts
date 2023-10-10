@@ -289,8 +289,8 @@ export class CatagoryComponent implements OnInit {
           if (!category) return;
           data['transID'] = category.recID;
           data['type'] = '0';
-          data['data']=category;
-          data['vllShare']=category?.approverList;
+          data['data'] = category;
+          data['vllShare'] = category?.approverList;
           this.callfc.openForm(
             component,
             '',
@@ -943,18 +943,20 @@ export class CatagoryComponent implements OnInit {
 
   click($event: any) {
     var lstData: any[] = [];
-    for (const property in this.dataValue) {
+    let dataValue = this.dataValue;
+    for (var property in dataValue) {
+      if (property === 'null') property = null;
       var dt = this.settingValue.find(
         (x) => x.category == this.category && x.transType == property
       );
-      dt.dataValue = JSON.stringify(this.dataValue[property]);
+      dt.dataValue = JSON.stringify(dataValue[property]);
       lstData.push(dt);
     }
 
     if (lstData.length > 0) {
       //dt.dataValue = JSON.stringify(this.dataValue);
       this.api
-        .execAction('SYS_SettingValues', [lstData], 'UpdateAsync')
+        .execAction('SYS_SettingValues', lstData, 'UpdateAsync')
         .subscribe((res) => {
           if (res) {
             this.dialog.close();
@@ -976,7 +978,8 @@ export class CatagoryComponent implements OnInit {
             if (res) {
               dt = res;
               var lstData: any[] = [];
-              for (const property in this.dataValue) {
+              for (var property in this.dataValue) {
+                if (property === 'null') property = null;
                 var setting = this.setting.find(
                   (x) => x.transType == property && x.category == this.category
                 );
@@ -993,7 +996,7 @@ export class CatagoryComponent implements OnInit {
                 this.settingValue.push(dt);
               }
               this.api
-                .execAction('SYS_SettingValues', [lstData], 'SaveAsync')
+                .execAction('SYS_SettingValues', lstData, 'SaveAsync')
                 .subscribe((res) => {
                   if (res) {
                   }
