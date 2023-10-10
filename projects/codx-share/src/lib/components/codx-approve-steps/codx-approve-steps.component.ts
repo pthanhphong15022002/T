@@ -41,7 +41,7 @@ export class Approver {}
   styleUrls: ['./codx-approve-steps.component.scss'],
 })
 export class CodxApproveStepsComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit
 {
   @Input() transId: string = '';
   @Input() type: string = '0'; //0: có nút lưu; 1: không có nút lưu
@@ -49,12 +49,12 @@ export class CodxApproveStepsComponent
   @Input() mssgDelete = '';
   @Input() eSign: boolean = false; //Quy trình ký số
   @Input() signatureType; //Quy trình ký số
-  @Input() approveControl = '3';//Áp dụng quy trình duyệt theo: 1;Theo file trình ký; 2;ProcessID;  3;Category
-  @Input() isTemplate = false; //signFile của template mẫu  
-  @Input() refType = "ES_SignFiles"; //refType của signFile xử lí cho QTM của category
+  @Input() approveControl = '3'; //Áp dụng quy trình duyệt theo: 1;Theo file trình ký; 2;ProcessID;  3;Category
+  @Input() isTemplate = false; //signFile của template mẫu
+  @Input() refType = 'ES_SignFiles'; //refType của signFile xử lí cho QTM của category
   @Input() vllShare = null;
   @Input() dynamicApprovers = [];
-  @Input() isSettingMode = true;//True: ko hiện user nếu chọn role position
+  @Input() isSettingMode = true; //True: ko hiện user nếu chọn role position
   @Output() addEditItem = new EventEmitter();
 
   headerText = '';
@@ -78,7 +78,9 @@ export class CodxApproveStepsComponent
 
   model: any;
   isRequestListStep = false; //Thảo thêm ngày 19/04/2023 để xác nhận trả về danh sách listStep - true là trả về
-  isAfterRender =false;
+  isAfterRender = false;
+  lblAllowEditAreas: any;
+  lblConfirmControl: any;
   constructor(
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -107,14 +109,14 @@ export class CodxApproveStepsComponent
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.esService.getFormModel('EST04').then((res) => {
-      if (res) {
-        this.formModel = res;
-        this.initForm();
-      }
-    });
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.esService.getFormModel('EST04').then((res) => {
+  //     if (res) {
+  //       this.formModel = res;
+  //       this.initForm();
+  //     }
+  //   });
+  // }
 
   ngOnInit(): void {
     this.cache
@@ -122,6 +124,8 @@ export class CodxApproveStepsComponent
       .subscribe((grv) => {
         if (grv) {
           this.positionDefault = grv['Position']['headerText'];
+          this.lblAllowEditAreas = grv['AllowEditAreas']['headerText'];
+          this.lblConfirmControl = grv['ConfirmControl']['headerText'];
         }
       });
     this.esService.getFormModel('EST04').then((res) => {
@@ -146,34 +150,46 @@ export class CodxApproveStepsComponent
       this.currentStepNo = this.lstStep.length + 1;
     } else {
       if (this.transId != '') {
-        this.shareService.viewApprovalStep(this.transId,this.isSettingMode,this.dynamicApprovers).subscribe((res)=>{
-          if (res && res?.length == 2) {
-            this.lstStep = res[0] ?? [];
-            if(res[1]?.length>0){
-              let apInfos = res[1];
-              this.lstStep.forEach(st=>{
-                if(st?.approvers){
-                  st?.approvers.forEach(ap=>{
-                    let curAp =[];
-                    if(ap?.roleType !="E" && ap?.roleType !="RO"){
-                      curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
+        this.shareService
+          .viewApprovalStep(
+            this.transId,
+            this.isSettingMode,
+            this.dynamicApprovers
+          )
+          .subscribe((res) => {
+            if (res && res?.length == 2) {
+              this.lstStep = res[0] ?? [];
+              if (res[1]?.length > 0) {
+                let apInfos = res[1];
+                for (let st of this.lstStep) {
+                  if (st?.approvers) {
+                    for (let ap of st?.approvers) {
+                      let curAp = [];
+                      if (ap?.roleType != 'E' && ap?.roleType != 'RO') {
+                        curAp = apInfos.filter(
+                          (x) =>
+                            x?.approver == ap?.approver &&
+                            x?.roleType == ap?.roleType
+                        );
+                      } else {
+                        curAp = apInfos.filter(
+                          (x) => x?.roleType == ap?.roleType
+                        );
+                      }
+                      if (curAp?.length > 0) {
+                        ap.userID = curAp[0]?.userID;
+                        ap.userName = curAp[0]?.userName;
+                        ap.employeeID = curAp[0]?.employeeID;
+                        ap.position = ap?.position ?? curAp[0]?.positionName;
+                        ap.orgUnitName = curAp[0]?.orgUnitName;
+                      }
                     }
-                    else{                      
-                      curAp = apInfos.filter(x=> x?.roleType == ap?.roleType);
-                    }
-                    if(curAp?.length>0){
-                      ap.userID = curAp[0]?.userID;
-                      ap.userName = curAp[0]?.userName;
-                      ap.employeeID = curAp[0]?.employeeID;
-                      ap.position = ap?.position ?? curAp[0]?.positionName;
-                    }
-                  })
+                  }
                 }
-              });
+              }
             }
-          }          
-          this.isAfterRender = true;
-        });
+            this.isAfterRender = true;
+          });
       } else {
         this.lstStep = [];
         this.currentStepNo = this.lstStep.length + 1;
@@ -189,7 +205,6 @@ export class CodxApproveStepsComponent
   }
 
   onSaveForm() {
-    
     if (this.type == '1') {
       //Lưu khi cập nhật step
       this.updateApprovalStep();
@@ -227,7 +242,6 @@ export class CodxApproveStepsComponent
   }
 
   add() {
-   
     let data = {
       transID: this.type == '1' ? this.recID : this.transId,
       stepNo: this.lstStep.length + 1,
@@ -236,27 +250,26 @@ export class CodxApproveStepsComponent
       dataEdit: null,
       type: '0',
       signatureType: this.data?.signatureType ?? this.signatureType,
-      vllShare:this.data?.approverList,
+      vllShare: this.data?.approverList,
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       confirmControl: this.data?.confirmControl,
       allowEditAreas: this.data?.allowEditAreas,
-      hideTabQuery: false,//
+      hideTabQuery: false, //
     };
-    if(this.isTemplate){
-      data.transID=this.transId;
+    if (this.isTemplate) {
+      data.transID = this.transId;
     }
     this.openPopupAddAppStep(data);
   }
 
   edit(approvalStep) {
-    
-    if(this.lstStep && this.lstStep.length > 0)
-    {
-      this.lstStep.forEach(elm => {
-        if(!elm.signatureType) elm.signatureType = this.data?.signatureType ?? this.signatureType
+    if (this.lstStep && this.lstStep.length > 0) {
+      this.lstStep.forEach((elm) => {
+        if (!elm.signatureType)
+          elm.signatureType = this.data?.signatureType ?? this.signatureType;
       });
     }
-    
+
     let data = {
       transID: this.type == '1' ? this.recID : this.transId,
       stepNo: this.currentStepNo,
@@ -265,24 +278,21 @@ export class CodxApproveStepsComponent
       dataEdit: approvalStep,
       type: '0',
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
-      vllShare:this.data?.approverList,
-      hideTabQuery: false,//
-
+      vllShare: this.data?.approverList,
+      hideTabQuery: false, //
     };
-    
-   
-    if(this.isTemplate){
-      data.transID=this.transId;
+
+    if (this.isTemplate) {
+      data.transID = this.transId;
     }
     this.openPopupAddAppStep(data);
   }
 
   delete(approvalStep) {
-    if(this.isTemplate && this.data.refType!='ES_Categories'){
-      this.approveControl="3";
-    }
-    else{
-      this.approveControl="1";
+    if (this.isTemplate && this.data.refType != 'ES_Categories') {
+      this.approveControl = '3';
+    } else {
+      this.approveControl = '1';
     }
     let mssgCode = 'SYS030';
     if (this.type == '1' && this.mssgDelete != '') {
@@ -324,17 +334,16 @@ export class CodxApproveStepsComponent
             this.lstStep = lstNewStep;
             console.log('new step', this.lstStep);
           }
-          if (this.lstDeleteStep.length > 0 ) {
-            if(this.approveControl=='1'){
+          if (this.lstDeleteStep.length > 0) {
+            if (this.approveControl == '1') {
               if (this.lstDeleteStep[0].transID != this.recID) {
                 this.lstDeleteStep = [];
               }
-            }
-            else if(this.approveControl=='3'){
+            } else if (this.approveControl == '3') {
               if (this.lstDeleteStep[0].transID != this.transId) {
                 this.lstDeleteStep = [];
               }
-            }            
+            }
           }
 
           this.onSaveForm();
@@ -362,21 +371,19 @@ export class CodxApproveStepsComponent
 
         dialog.closed.subscribe((res) => {
           if (res?.event) {
-            if(!this.isTemplate ) {
+            if (!this.isTemplate) {
               this.approveControl = '1';
             }
             if (this.type == '1') {
               if (this.lstStep?.length > 0) {
                 for (let i = 0; i < this.lstStep.length; i++) {
-                  if(this.isTemplate){
+                  if (this.isTemplate) {
                     if (this.lstStep[i].transID != this.transId) {
                       delete this.lstStep[i].recID;
                       delete this.lstStep[i].id;
                       this.lstStep[i].transID = this.transId;
                     }
-                    
-                  }
-                  else{
+                  } else {
                     //ko phải template
                     if (this.lstStep[i].transID != this.recID) {
                       delete this.lstStep[i].recID;

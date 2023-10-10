@@ -36,7 +36,9 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import {
   ApproveProcess,
   Approver,
+  ExportUpload,
   ResponseModel,
+  TemplateInfo,
 } from './models/ApproveProcess.model';
 import { HttpClient } from '@angular/common/http';
 import axios from 'axios';
@@ -51,6 +53,7 @@ import { tmpCopyFileInfo } from './models/fileInfo.model';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
+import { T } from '@angular/cdk/keycodes';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 
 @Injectable({
@@ -1236,9 +1239,9 @@ export class CodxShareService {
       recID
     );
   }
-  deleteByObjectWithAutoCreate(
-    objectID: string,
-    objectType: string,
+  deleteByObjectsWithAutoCreate(
+    objectIDs: string,
+    module: string,
     delForever: boolean,
     autoCreate: string
   ) {
@@ -1246,8 +1249,8 @@ export class CodxShareService {
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
-      'DeleteByObjectWithAutoCreateAsync',
-      [objectID, objectType, delForever, autoCreate]
+      'DeleteByObjectsWithAutoCreateAsync',
+      [objectIDs, module, delForever, autoCreate]
     );
   }
   getSignFileTemplateByRefType(refType) {
@@ -1540,7 +1543,7 @@ export class CodxShareService {
     let signFile = new ES_SignFile();
     signFile.recID = approveProcess?.recID;
     signFile.approveControl = '2';
-    signFile.processID = approveProcess?.template?.processID;
+    signFile.processID = approveProcess?.template[0]?.processID;
     signFile.categoryID = approveProcess?.category?.categoryID;
     signFile.category = approveProcess?.category?.category;
     signFile.refID = approveProcess?.recID;
@@ -1560,7 +1563,7 @@ export class CodxShareService {
       }
     }
     if (template != null) {
-      signFile.templateID = template.templateID;
+      signFile.templateID = template[0].templateID;
     }
     return signFile;
   }
@@ -1638,8 +1641,8 @@ export class CodxShareService {
       let dialogTemplate = this.callfunc.openForm(
         CodxGetTemplateSignFileComponent,
         '',
-        400, //700,
-        250, //500,
+        700,
+        500,
         '',
         { sfTemplates: sfTemplates },
         ''
@@ -1648,12 +1651,23 @@ export class CodxShareService {
         if (res?.event) {
           let template = res?.event;
           //Gửi duyệt
-          this.apExportFileWithTemplate(
-            approveProcess,
-            releaseCallback,
-            template,
-            releaseBackground
+          let missingTemplate = template.filter(
+            (x) => x?.templateID == null || x?.templateType == null
           );
+          if (missingTemplate?.length > 0) {
+            this.notificationsService.notify(
+              'Không tìm thấy mẫu xuất dữ liệu',
+              '2'
+            );
+            return null;
+          } else {
+            this.apExportFileWithMultiTemplate(
+              approveProcess,
+              releaseCallback,
+              template,
+              releaseBackground
+            );
+          }
         } else {
           //Tắt form chọn người duyệt
           return null;
@@ -1661,192 +1675,280 @@ export class CodxShareService {
       });
     } else if (sfTemplates?.length == 1) {
       //Gửi duyệt
-      this.apExportFileWithTemplate(
-        approveProcess,
-        releaseCallback,
-        sfTemplates[0],
-        releaseBackground
+      let missingTemplate = sfTemplates.filter(
+        (x) => x?.templateID == null || x?.templateType == null
       );
+      if (missingTemplate?.length > 0) {
+        this.notificationsService.notify(
+          'Không tìm thấy mẫu xuất dữ liệu',
+          '2'
+        );
+        return null;
+      } else {
+        this.apExportFileWithMultiTemplate(
+          approveProcess,
+          releaseCallback,
+          sfTemplates,
+          releaseBackground
+        );
+      }
     }
   }
 
-  apExportFileWithTemplate(
-    approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel, component: any) => void,
-    template: any,
-    releaseBackground: boolean = false
-  ) {
-    approveProcess.template = template;
-    if (template?.templateID == null && template?.templateType == null) {
-      //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
-      this.notificationsService.alertCode('AP0001').subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
-        } else {
-          return;
-        }
-      });
-    } else if (template?.templateID != null && template?.templateID != null) {
-      let exportUpload = new ExportUpload();
-      exportUpload.templateRecID = template?.templateID;
-      exportUpload.templateType = template?.templateType;
-      exportUpload.convertToPDF = false;
-      exportUpload.title = approveProcess.title;
-      exportUpload.entityName = approveProcess.entityName;
-      exportUpload.module = approveProcess.module;
-      exportUpload.objectID = approveProcess.recID;
-      exportUpload.objectType = approveProcess.entityName;
-      exportUpload.referType = 'source';
-      exportUpload.functionID = approveProcess.funcID;
+  // apExportFileWithTemplate(
+  //   approveProcess: ApproveProcess,
+  //   releaseCallback: (response: ResponseModel, component: any) => void,
+  //   template: any,
+  //   releaseBackground: boolean = false
+  // ) {
+  //   approveProcess.template = template;
+  //   if (template?.templateID == null && template?.templateType == null) {
+  //     //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
+  //     this.notificationsService.alertCode('AP0001').subscribe((x) => {
+  //       if (x.event?.status == 'Y') {
+  //         this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
+  //       } else {
+  //         return;
+  //       }
+  //     });
+  //   } else if (template?.templateID != null && template?.templateID != null) {
+  //     let exportUpload = new ExportUpload();
+  //     //exportUpload.templateRecID = template?.templateID;
+  //     //exportUpload.templateType = template?.templateType;
+  //     exportUpload.convertToPDF = false;
+  //     exportUpload.title = approveProcess.title;
+  //     exportUpload.entityName = approveProcess.entityName;
+  //     exportUpload.module = approveProcess.module;
+  //     exportUpload.objectID = approveProcess.recID;
+  //     exportUpload.objectType = approveProcess.entityName;
+  //     exportUpload.referType = 'source';
+  //     exportUpload.functionID = approveProcess.funcID;
+  //     exportUpload.dataJson = JSON.stringify(approveProcess?.data);
 
-      this.getRpListByTemplateID(template?.templateID).subscribe(
-        (rpList: any) => {
-          if (rpList) {
-            exportUpload.reportRecID = rpList?.recID;
-            exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-            this.apCreateExportFile(
-              approveProcess,
-              releaseCallback,
-              exportUpload
-            );
-          } else {
-            exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
-            this.apCreateExportFile(
-              approveProcess,
-              releaseCallback,
-              exportUpload
-            );
-          }
-        }
-      );
-    } else {
-      this.notificationsService.notify(
-        'Vui lòng kiểm tra lại mẫu thiết lập',
-        '2'
-      );
-      return;
-    }
-  }
+  //     // this.getRpListByTemplateID(template?.templateID).subscribe(
+  //     //   (rpList: any) => {
+  //     //     if (rpList) {
+  //     //       exportUpload.reportRecID = rpList?.recID;
+  //     //       exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+  //     //       this.apCreateExportFile(
+  //     //         approveProcess,
+  //     //         releaseCallback,
+  //     //         exportUpload
+  //     //       );
+  //     //     } else {
+  //     //       exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
+  //     //       this.apCreateExportFile(
+  //     //         approveProcess,
+  //     //         releaseCallback,
+  //     //         exportUpload
+  //     //       );
+  //     //     }
+  //     //   }
+  //     // );
+  //   } else {
+  //     this.notificationsService.notify(
+  //       'Vui lòng kiểm tra lại mẫu thiết lập',
+  //       '2'
+  //     );
+  //     return;
+  //   }
+  // }
+
   apExportFileWithMultiTemplate(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
-    template: any,
+    templates: any,
     releaseBackground: boolean = false
   ) {
-    approveProcess.template = template;
-    if (template?.templateID == null && template?.templateType == null) {
-      //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
-      this.notificationsService.alertCode('AP0001').subscribe((x) => {
-        if (x.event?.status == 'Y') {
-          this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
-        } else {
-          return;
-        }
-      });
-    } else if (template?.templateID != null && template?.templateID != null) {
-      let exportUpload = new ExportUpload();
-      exportUpload.templateRecID = template?.templateID;
-      exportUpload.templateType = template?.templateType;
-      exportUpload.convertToPDF = false;
-      exportUpload.title = approveProcess.title;
-      exportUpload.entityName = approveProcess.entityName;
-      exportUpload.module = approveProcess.module;
-      exportUpload.objectID = approveProcess.recID;
-      exportUpload.objectType = approveProcess.entityName;
-      exportUpload.referType = 'source';
-      exportUpload.functionID = approveProcess.funcID;
+    approveProcess.template = templates;
+    let exportUpload = new ExportUpload();
+    //exportUpload.templateRecID = templates?.templateID;
+    //exportUpload.templateType = templates?.templateType;
+    exportUpload.convertToPDF = false;
+    exportUpload.title = approveProcess.title;
+    exportUpload.entityName = approveProcess.entityName;
+    exportUpload.module = approveProcess.module;
+    exportUpload.objectID = approveProcess.recID;
+    exportUpload.objectType = approveProcess.entityName;
+    exportUpload.referType = 'source';
+    exportUpload.functionID = approveProcess.funcID;
+    exportUpload.dataJson = JSON.stringify(approveProcess?.data);
+    exportUpload.templates = [];
 
-      this.getRpListByTemplateID(template?.templateID).subscribe(
-        (rpList: any) => {
-          if (rpList) {
-            exportUpload.reportRecID = rpList?.recID;
-            exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-            this.apCreateExportFile(
-              approveProcess,
-              releaseCallback,
-              exportUpload
+    let listTemplateRecID = [];
+    for (let temp of templates) {
+      let tmp = new TemplateInfo();
+      tmp.templateID = temp?.templateID;
+      tmp.templateType = temp?.templateType;
+
+      listTemplateRecID.push(temp?.templateID);
+      exportUpload.templates.push(temp);
+    }
+
+    this.getListRpListByTemplateID(listTemplateRecID).subscribe(
+      (rpLists: any) => {
+        if (rpLists?.length > 0) {
+          for (let temp of exportUpload.templates) {
+            let curRpList = rpLists.filter(
+              (x) => x.templateID == temp.templateID
             );
-          } else {
-            exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
-            this.apCreateExportFile(
-              approveProcess,
-              releaseCallback,
-              exportUpload
-            );
+            if (curRpList?.length > 0) {
+              temp.reportID = curRpList[0]?.recID;
+            }
           }
         }
-      );
-    } else {
-      this.notificationsService.notify(
-        'Vui lòng kiểm tra lại mẫu thiết lập',
-        '2'
-      );
-      return;
-    }
-  }
+        // this.apCreateExportFile(
+        //   approveProcess,
+        //   releaseCallback,
+        //   exportUpload
+        // );
+        this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
+          (exportedFiles: any) => {
+            //Nhận thông tin file trả lên sau khi export
+            if (exportedFiles?.length > 0) {
+              switch (approveProcess?.category?.releaseControl) {
+                case '2': //Export và tạo ES_SignFiles để gửi duyệt
+                  this.getFileByObjectID(approveProcess.recID).subscribe(
+                    (lstFile: any) => {
+                      let signFile = this.apCreateSignFile(
+                        approveProcess,
+                        lstFile
+                      );
+                      if (lstFile?.length > 0) {
+                        this.apOpenPopupSignFile(
+                          approveProcess,
+                          releaseCallback,
+                          signFile,
+                          lstFile
+                        );
+                      } else {
+                        this.notificationsService.notify(
+                          'Không tìm thấy tài liệu!',
+                          '2'
+                        );
+                      }
+                    }
+                  );
+                  break;
 
-  apCreateExportFile(
-    approveProcess: ApproveProcess,
-    releaseCallback: (response: ResponseModel, component: any) => void,
-    exportUpload: ExportUpload
-  ) {
-    this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
-      (exportedFile: any) => {
-        //Nhận thông tin file trả lên sau khi export
-        if (exportedFile) {
-          switch (approveProcess?.category?.releaseControl) {
-            case '2': //Export và tạo ES_SignFiles để gửi duyệt
-              this.getFileByObjectID(approveProcess.recID).subscribe(
-                (lstFile: any) => {
-                  let signFile = this.apCreateSignFile(approveProcess, lstFile);
-                  if (lstFile?.length > 0) {
-                    this.apOpenPopupSignFile(
-                      approveProcess,
-                      releaseCallback,
-                      signFile,
-                      lstFile
-                    );
+                case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
+                case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
+                  //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
+                  let nonPDFFile = exportedFiles.filter(
+                    (x) => x.extension != '.pdf'
+                  );
+                  if (nonPDFFile?.length > 0) {
+                    let index = 0;
+                    for (let file of nonPDFFile) {
+                      if (file?.extension != '.pdf') {
+                        this.convertFileToPDF(
+                          file?.recID,
+                          file?.extension
+                        ).subscribe((res) => {
+                          if (res) {
+                            index++;
+                            if (index == nonPDFFile?.length) {
+                              this.apReleaseWithoutSignFile(
+                                approveProcess,
+                                releaseCallback
+                              );
+                            }
+                          } else {
+                            //Xuát file lỗi xóa file export đã tạo
+                            this.deleteByObjectsWithAutoCreate(
+                              approveProcess.recID,
+                              '',
+                              true,
+                              '3'
+                            ).subscribe();
+                            this.notificationsService.notify(
+                              'Xuất tài liệu PDF thất bại!',
+                              '2'
+                            );
+
+                            return;
+                          }
+                        });
+                      }
+                    }
                   } else {
-                    this.notificationsService.notify(
-                      'Không tìm thấy tài liệu!',
-                      '2'
-                    );
-                  }
-                }
-              );
-              break;
-
-            case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
-            case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-              //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
-              if (exportedFile?.extension != '.pdf') {
-                this.convertFileToPDF(
-                  exportedFile?.recID,
-                  exportedFile?.extension
-                ).subscribe((res) => {
-                  if (res) {
                     this.apReleaseWithoutSignFile(
                       approveProcess,
                       releaseCallback
                     );
-                  } else {
-                    this.notificationsService.notify(
-                      'Xuất tài liệu PDF thất bại!',
-                      '2'
-                    );
                   }
-                });
-              } else {
-                this.apReleaseWithoutSignFile(approveProcess, releaseCallback);
+                  break;
               }
-              break;
+            } else {
+              this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
+            }
           }
-        } else {
-          this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
-        }
+        );
       }
     );
   }
+  //Gộp hàm
+  // apCreateExportFile(
+  //   approveProcess: ApproveProcess,
+  //   releaseCallback: (response: ResponseModel, component: any) => void,
+  //   exportUpload: ExportUpload
+  // ) {
+  //   this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
+  //     (exportedFile: any) => {
+  //       //Nhận thông tin file trả lên sau khi export
+  //       if (exportedFile) {
+  //         switch (approveProcess?.category?.releaseControl) {
+  //           case '2': //Export và tạo ES_SignFiles để gửi duyệt
+  //             this.getFileByObjectID(approveProcess.recID).subscribe(
+  //               (lstFile: any) => {
+  //                 let signFile = this.apCreateSignFile(approveProcess, lstFile);
+  //                 if (lstFile?.length > 0) {
+  //                   this.apOpenPopupSignFile(
+  //                     approveProcess,
+  //                     releaseCallback,
+  //                     signFile,
+  //                     lstFile
+  //                   );
+  //                 } else {
+  //                   this.notificationsService.notify(
+  //                     'Không tìm thấy tài liệu!',
+  //                     '2'
+  //                   );
+  //                 }
+  //               }
+  //             );
+  //             break;
+
+  //           case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
+  //           case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
+  //           //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
+  //             if (exportedFile?.extension != '.pdf') {
+  //               this.convertFileToPDF(
+  //                 exportedFile?.recID,
+  //                 exportedFile?.extension
+  //               ).subscribe((res) => {
+  //                 if(res){
+  //                   this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
+  //                 }
+  //                 else{
+  //                   this.notificationsService.notify(
+  //                     'Xuất tài liệu PDF thất bại!',
+  //                     '2'
+  //                   );
+  //                 }
+  //               });
+  //             }
+  //             else{
+  //               this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
+  //             }
+  //             break;
+  //         }
+  //       } else {
+  //         this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
+  //       }
+  //     }
+  //   );
+  // }
 
   apReleaseWithoutSignFile(
     approveProcess: ApproveProcess,
@@ -1856,15 +1958,12 @@ export class CodxShareService {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
-            // let signFile = this.apCreateSignFile(
-            //   approveProcess,
-            //   lstFile
-            // );
+            let signFile = this.apCreateSignFile(approveProcess, lstFile);
             if (lstFile?.length > 0) {
               this.apOpenViewSignFile(
                 approveProcess,
                 releaseCallback,
-                approveProcess.template,
+                approveProcess.template[0],
                 lstFile
               );
             } else {
@@ -2048,20 +2147,7 @@ export class Approvers {
   write: boolean = false;
   userID: string;
   userName: string;
+  orgUnitName: string;
 }
-export class ExportUpload {
-  templateRecID: string;
-  templateType: string;
-  title: string;
-  dataJson: string;
-  convertToPDF: boolean;
-  entityName: string;
-  language: string;
-  reportRecID: string;
-  module: string;
-  objectID: string;
-  objectType: string;
-  referType: string;
-  functionID: string;
-}
+
 //#endregion

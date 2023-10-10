@@ -86,6 +86,10 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
       })
     }
 
+    ClickCalendar(event){
+      this.changedInForm = true;
+    }
+
   initForm() {
     if (this.actionType == 'add') {
       this.hrService

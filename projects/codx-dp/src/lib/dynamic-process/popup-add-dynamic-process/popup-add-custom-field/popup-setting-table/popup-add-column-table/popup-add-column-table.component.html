@@ -1,0 +1,369 @@
+<codx-form
+  #form
+  [headerText]="titleAction"
+  [body]="bodyColumn"
+  [footer]="footerColumn"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [data]="column"
+>
+  <ng-template #bodyColumn>
+    <div class="card-form">
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="Title"
+            [formModel]="form.formModel"
+            default="Tên trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="title"
+            [formModel]="form.formModel"
+            [crrValue]="column?.title"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+
+        <div class="col-6">
+          <codx-label
+            fiedName="FieldName"
+            [formModel]="form.formModel"
+            default="ID trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="fieldName"
+            [type]="'text'"
+            [crrValue]="column.fieldName"
+            [formName]="'DPStepsFields'"
+            [gridViewName]="'grvDPStepsField'"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="columnWidth"
+          [formModel]="form.formModel"
+          [default]="'Độ rộng cột'"
+        ></codx-label>
+        <!-- ngDefaultControl -->
+        <codx-input
+          type="number"
+          field="columnWidth"
+          [crrValue]="column.columnWidth"
+          [placeholder]=""
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="DataType"
+          [formModel]="form.formModel"
+          [default]="'Loại dữ liệu'"
+        ></codx-label>
+        <!-- ngDefaultControl -->
+        <codx-input
+          #valueListType
+          type="valuelist"
+          field="dataType"
+          [crrValue]="column?.dataType"
+          [refValue]="refValueDataType"
+          [placeholder]="grvSetup['DataType']['headerText']"
+          (valueChange)="valueChange($event)"
+          [disabled]="action == 'edit'"
+        >
+        </codx-input>
+      </div>
+      <div
+        class="form-group"
+        *ngIf="
+          column.dataType &&
+          column.dataType != 'A' &&
+          column.dataType != 'R' &&
+          column.dataType != 'C'
+        "
+      >
+        <codx-label
+          fiedName="DataFormat"
+          [formModel]="form.formModel"
+          [default]="'Định dạng dữ liệu'"
+        >
+        </codx-label>
+        <codx-input
+          *ngIf="column.dataType == 'N'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="column?.dataFormat"
+          refValue="DP0271"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="column.dataType == 'L'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="column?.dataFormat"
+          refValue="DP0272"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="column.dataType == 'T'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="column?.dataFormat"
+          refValue="DP0273"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="column.dataType == 'D'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="column?.dataFormat"
+          refValue="DP0274"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <codx-input
+          *ngIf="column.dataType == 'P'"
+          type="valuelist"
+          ngDefaultControl
+          field="dataFormat"
+          [crrValue]="column?.dataFormat"
+          refValue="DP0275"
+          [placeholder]="grvSetup['DataFormat']['headerText']"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <ng-container
+        *ngIf="
+          column.dataType == 'L' &&
+          (column.dataFormat == 'C' || column.dataFormat == 'V')
+        "
+      >
+        <div class="form-group">
+          <div class="d-flex justify-content-between">
+            <div class="'justify-content-start">
+              <codx-label
+                [setRequire]="true"
+                fiedName="RefValue"
+                [formModel]="form.formModel"
+                [default]="'Danh sách tùy chọn'"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex justify-content-end"
+              *ngIf="column.dataFormat == 'V'"
+            >
+              <button
+                *ngIf="column.refValue"
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="clickDeletedVll()"
+              >
+                <i class="icon-close icon-16 text-danger"></i>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-icon btn-sm btn-light-primary me-2"
+                (click)="clickAddVll()"
+              >
+                <i
+                  class=" {{
+                    !column.refValue ? 'icon-add_box' : 'icon-edit'
+                  }} icon-16"
+                ></i>
+              </button>
+            </div>
+          </div>
+          <codx-input
+            *ngIf="column.dataFormat == 'C'"
+            type="combobox"
+            field="refValue"
+            [crrValue]="column.refValue"
+            [refValue]="'DPComboboxList'"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+
+          <ng-container *ngIf="column.dataFormat == 'V'">
+            <ejs-combobox
+              #datasVllCbx
+              [dataSource]="listVll"
+              [fields]="fieldsVll"
+              [value]="column.refValue"
+              [allowFiltering]="true"
+              [placeholder]="grvSetup['refValue']?.description"
+              (valueChange)="cbxChangeVll($event)"
+            ></ejs-combobox
+          ></ng-container>
+        </div>
+        <div class="form-group" *ngIf="column.dataType == 'L'">
+          <codx-label
+            class="label-colon"
+            name="demoVll"
+            [formName]="form.formModel"
+            default="Xem trước"
+            class="me-4"
+          >
+          </codx-label>
+          <ng-container *ngIf="column.dataFormat == 'C'">
+            <codx-input
+              *ngIf="column.dataFormat == 'C'"
+              type="combobox"
+              [refType]="column.refType"
+              [refValue]="column.refValue"
+            >
+            </codx-input>
+          </ng-container>
+
+          <ng-container *ngIf="column.dataFormat == 'V'">
+            <ng-container *ngIf="!this.crrVll?.multiSelect">
+              <ejs-combobox
+                #comboxView
+                [dataSource]="datasVllCrr"
+                [fields]="columnsCrrVll"
+                [value]="crrValueFirst"
+                [allowFiltering]="false"
+                [placeholder]="this.crrVll?.note"
+              ></ejs-combobox>
+            </ng-container>
+            <ng-container *ngIf="this.crrVll?.multiSelect">
+              <ejs-multiselect
+                [dataSource]="datasVllCrr"
+                [mode]="'Default'"
+                [fields]="columnsCrrVll"
+                [value]=""
+                [showDropDownIcon]="true"
+                [placeholder]="this.crrVll?.note"
+              ></ejs-multiselect>
+            </ng-container>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div class="form-group" *ngIf="column.dataType == 'A'">
+        <codx-input
+          type="checkbox"
+          field="multiselect"
+          (valueChange)="valueChange($event)"
+          labelPosition="After"
+          label="Cho phép chọn nhiều giá trị"
+          [crrValue]="column?.multiselect"
+        ></codx-input>
+      </div>
+
+      <div class="row" *ngIf="column.dataType == 'R'">
+        <div class="form-group col-3">
+          <codx-label
+            fiedName="RankIcon"
+            [formModel]="form.formModel"
+            default="Loại icon hiển thị"
+          >
+          </codx-label>
+          <div class="mt-1">
+            <codx-input
+              type="vllicon"
+              field="rankIcon"
+              [refValue]="'L1470'"
+              [iconOnly]="true"
+              [crrValue]="column?.rankIcon"
+              (valueChange)="valueChangeIcon($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group col-9">
+          <codx-label
+            fiedName="rank"
+            [formModel]="form.formModel"
+            default="Điểm tối đa"
+          >
+          </codx-label>
+          <div class="pt-3">
+            <ejs-slider
+              id="slider"
+              style="width: 375px !important"
+              [value]="column?.rank"
+              [min]="min"
+              [max]="max"
+              [type]="type"
+              [ticks]="ticks"
+              [tooltip]="tooltip"
+              (change)="sliderChange($event)"
+            ></ejs-slider>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="Note"
+          [formModel]="form.formModel"
+          default="Mô tả nhập liệu"
+        ></codx-label>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="width: 100%">
+            <codx-input
+              [field]="'note'"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-label
+          class="text-danger me-3"
+          fiedName="IsRequired"
+          [formModel]="form?.formModel"
+          default="Bắt buộc *"
+        ></codx-label>
+        <codx-input
+          type="switch"
+          field="isRequired"
+          [checked]="column?.isRequired"
+          (valueChange)="changeRequired($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footerColumn>
+    <div class="d-flex justify-content-end">
+      <!-- <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveDataAndContinue()"
+        >
+          <codx-label
+            name="lblSaveAndContinue"
+            formName="System"
+            default="Lưu và tiếp tục"
+          ></codx-label>
+        </button> -->
+      <button type="button" class="btn btn-primary ms-2" (click)="saveColumn()">
+        <codx-label name="lblSave" formName="System" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

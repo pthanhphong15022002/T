@@ -250,6 +250,7 @@ export class EmployeeListComponent extends UIComponent {
         );
         dialog.closed.subscribe((e) => {
           if (e.event) {
+            debugger
             (this.view.dataService as CRUDService).update(e.event).subscribe();
             this.hasChangedData = true;
           }

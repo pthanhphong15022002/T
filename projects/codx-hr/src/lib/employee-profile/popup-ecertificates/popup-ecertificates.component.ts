@@ -24,7 +24,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 })
 export class PopupECertificatesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   certificateObj;
   lstCertificates;
@@ -32,7 +32,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   actionType;
   idField = 'RecID';
   employId;
-  isAfterRender = false;
+  // isAfterRender = false;
   headerText: '';
   ops = ['d', 'm', 'y'];
   dataVllSupplier: any;
@@ -66,6 +66,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.formModel = dialog.formModel
     if (this.actionType == 'view') {
       this.disabledInput = true;
     }
@@ -120,10 +121,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
           if (res) {
             this.certificateObj = res?.data;
             this.certificateObj.employeeID = this.employId;
-            this.formModel.currentData = this.certificateObj;
-            this.formGroup.patchValue(this.certificateObj);
+            // this.formModel.currentData = this.certificateObj;
+            // this.form.formGroup.patchValue(this.certificateObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
             this.isNullFrom = false;
             this.isNullTo = false;
           }
@@ -139,10 +140,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         if (this.certificateObj.certificateType == '3') {
           this.displayForeignCert = true;
         }
-        this.formGroup.patchValue(this.certificateObj);
-        this.formModel.currentData = this.certificateObj;
+        // this.form.formGroup.patchValue(this.certificateObj);
+        // this.formModel.currentData = this.certificateObj;
         this.cr.detectChanges();
-        this.isAfterRender = true;
+        // this.isAfterRender = true;
         if (this.certificateObj.trainFromDate == null) this.isNullFrom = false;
         if (this.certificateObj.trainToDate == null) this.isNullTo = false;
       }
@@ -183,23 +184,25 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     });
-    this.hrService.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrService
-          .getFormGroup(
-            this.formModel.formName,
-            this.formModel.gridViewName,
-            this.formModel
-          )
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
+    this.initForm();
+
+    // this.hrService.getFormModel(this.funcID).then((formModel) => {
+    //   if (formModel) {
+    //     this.formModel = formModel;
+    //     this.hrService
+    //       .getFormGroup(
+    //         this.formModel.formName,
+    //         this.formModel.gridViewName,
+    //         this.formModel
+    //       )
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
+    //   }
+    // });
   }
 
   async onSaveForm() {
@@ -216,8 +219,8 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       return;
     }
 
-    if (this.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }
@@ -234,6 +237,13 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         );
         return;
       }
+    }
+
+    this.certificateObj.attachments =
+    this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+    if(!this.certificateObj.attachments){
+      this.certificateObj.attachments = 0;
     }
 
     if (
@@ -274,7 +284,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       (p) => p.recID == this.certificateObj.recID
     );
     this.actionType = 'edit';
-    this.formGroup?.patchValue(this.certificateObj);
+    this.form.formGroup?.patchValue(this.certificateObj);
     this.cr.detectChanges();
   }
 
@@ -309,7 +319,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   async addFiles(evt) {
     this.changedInForm = true;
     this.certificateObj.attachments = evt.data.length;
-    this.formGroup.patchValue(this.certificateObj);
+    this.form.formGroup.patchValue(this.certificateObj);
   }
 
   setIssuedPlace() {
@@ -320,7 +330,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         );
         if (trainSupplier) {
           this.certificateObj.issuedPlace = trainSupplier[0]?.TrainSupplierName;
-          this.formGroup.patchValue({
+          this.form.formGroup.patchValue({
             issuedPlace: this.certificateObj.issuedPlace,
           });
           this.cr.detectChanges();
@@ -343,7 +353,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
       this.certificateObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
-    this.formGroup.patchValue(this.certificateObj);
+    this.form.formGroup.patchValue(this.certificateObj);
   }
 
   // changeCalendar(event, changeType: string) {
@@ -372,7 +382,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   //       this.certificateObj.trainTo = strDay;
   //     }
   //     this.certificateObj.trainToDate = event.fromDate;
-  //     this.formGroup.patchValue(this.certificateObj);
+  //     this.form.formGroup.patchValue(this.certificateObj);
   //     if (this.certificateObj) {
   //       this.fromDateFormat = this.getFormatDate(this.certificateObj.trainFrom);
   //       this.toDateFormat = this.getFormatDate(this.certificateObj.trainTo);

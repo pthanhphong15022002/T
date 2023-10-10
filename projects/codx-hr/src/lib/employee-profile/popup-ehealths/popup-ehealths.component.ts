@@ -27,7 +27,7 @@ import {
 })
 export class PopupEhealthsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   dialog: DialogRef;
   healthObj: any;
   healthTemp: any;
@@ -36,7 +36,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   actionType: string;
   employId: string;
   idField = 'RecID';
-  isAfterRender = false;
+  // isAfterRender = false;
   disabledInput = false;
 
   headerText: string;
@@ -107,14 +107,16 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
+    this.initForm();
+
+    // this.hrSevice
+    //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //       .then((fg) => {
+    //         if (fg) {
+    //           this.form.formGroup = fg;
+    //           this.initForm();
+    //         }
+    //       });
 
     // this.hrSevice.getFormModel(this.funcID).then((formModel) => {
     //   if (formModel) {
@@ -123,7 +125,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     //       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     //       .then((fg) => {
     //         if (fg) {
-    //           this.formGroup = fg;
+    //           this.form.formGroup = fg;
     //           this.initForm();
     //         }
     //       });
@@ -150,25 +152,26 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
             this.healthObj = res?.data;
             this.healthObj.healthDate = null;
             this.healthObj.employeeID = this.employId;
-            this.formModel.currentData = this.healthObj;
-            this.formGroup.patchValue(this.healthObj);
+            // this.formModel.currentData = this.healthObj;
+            // this.form.formGroup.patchValue(this.healthObj);
             this.cr.detectChanges();
-            this.isAfterRender = true;
+            // this.isAfterRender = true;
           }
         });
-    } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType == 'view') {
-        this.formGroup.patchValue(this.healthObj);
-        this.formModel.currentData = this.healthObj;
-        this.cr.detectChanges();
-        this.isAfterRender = true;
-      }
-    }
+    } 
+    // else {
+    //   if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType == 'view') {
+    //     this.form.formGroup.patchValue(this.healthObj);
+    //     this.formModel.currentData = this.healthObj;
+    //     this.cr.detectChanges();
+    //     // this.isAfterRender = true;
+    //   }
+    // }
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
       return;
     }

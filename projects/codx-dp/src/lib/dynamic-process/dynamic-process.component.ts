@@ -1137,6 +1137,8 @@ export class DynamicProcessComponent
                         isAdd: false,
                         headerText: this.titleAction,
                         dataType: 'auto',
+                        templateRefID: this.itemSelected.recID,
+                        templateRefType: 'DP_Processes',
                       },
                       option
                     );

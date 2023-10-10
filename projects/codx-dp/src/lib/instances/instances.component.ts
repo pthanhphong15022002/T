@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Injector,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
@@ -236,6 +237,9 @@ export class InstancesComponent
   // For CM
   categoryCustomer: any = '';
   instanceCM: any;
+  crrFunc: any;
+  runMode: any; //view detail
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -254,10 +258,15 @@ export class InstancesComponent
   ) {
     super(inject);
     // this.funcID = 'DPT04';
-    this.dialog = dialog;
+    // this.dialog = dialog;
+
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
-      this.funcID = param['funcID'];
+      if (!this.funcID) this.funcID = param['funcID'];
+      this.cache.functionList(param.funcID).subscribe((fun) => {
+        if (fun) this.runMode = fun?.runMode;
+      });
+      this.showButtonAdd = this.funcID != 'DPT0502';
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
@@ -268,10 +277,12 @@ export class InstancesComponent
             this.loadData(res);
           }
         });
-      } else this.layoutDP.viewNameProcess(null);
+      } else {
+        this.layoutDP.viewNameProcess(null);
+        // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
+      }
     });
-    this.layout.setUrl('dp/dynamicprocess/DP01');
-    this.layout.setLogo(null);
+
     this.getColorReason();
     this.cache
       .gridViewSetup('DPInstances', 'grvDPInstances')
@@ -315,9 +326,8 @@ export class InstancesComponent
       });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
-
-    this.showButtonAdd = this.funcID != 'DPT0502';
   }
+
   ngAfterViewInit() {
     this.views = [
       {
@@ -355,6 +365,21 @@ export class InstancesComponent
         },
       },
     ];
+    //bua tạm thoi de review
+    this.cache.viewSettings(this.funcID).subscribe((res) => {
+      let setingViewMode = res;
+      this.views.forEach((v, index) => {
+        let idx = setingViewMode.findIndex((x) => x.view == v.type);
+        if (idx != -1) {
+          v.active = setingViewMode[idx].isDefault;
+          v.hide = false;
+        } else {
+          v.hide = true;
+          v.active = false;
+        }
+      });
+    });
+
     this.setColorKanban();
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
@@ -1030,7 +1055,7 @@ export class InstancesComponent
       default: {
         //Biến động tự custom
         var customData = {
-          refID: this.process.recID,
+          refID: data.processID,
           refType: 'DP_Processes',
           dataSource: data.datas,
         };
@@ -1265,20 +1290,77 @@ export class InstancesComponent
   }
 
   changeView(e) {
-    switch (e?.view.type) {
-      case 2:
-        // this.showButtonAdd = true;
-        this.viewsCurrent = 'd-';
-        break;
-      case 6:
-        // this.showButtonAdd = true;
-        if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
-        else this.kanban = (this.view.currentView as any).kanban;
-        this.viewsCurrent = 'k-';
-        break;
-      case 9:
-        this.showButtonAdd = false;
-        break;
+    this.router.params.subscribe((param) => {
+      this.funcID = param['funcID'];
+    });
+
+    if (!this.crrFunc || this.crrFunc == this.funcID) {
+      if (!this.crrFunc) this.crrFunc = this.funcID;
+      switch (e?.view.type) {
+        case 2:
+          // this.showButtonAdd = true;
+          this.viewsCurrent = 'd-';
+          break;
+        case 6:
+          // this.showButtonAdd = true;
+          if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
+          else this.kanban = (this.view.currentView as any).kanban;
+          this.viewsCurrent = 'k-';
+          break;
+        case 9:
+          this.showButtonAdd = false;
+          break;
+      }
+    } else {
+      let viewModel: any;
+      this.cache.viewSettings(this.funcID).subscribe((res) => {
+        let setingViewMode = res;
+        this.views.forEach((v, index) => {
+          let idx = setingViewMode.findIndex((x) => x.view == v.type);
+          if (idx != -1) {
+            v.active = setingViewMode[idx].isDefault;
+            if (v.active) viewModel = v;
+            v.hide = false;
+          } else {
+            v.hide = true;
+            v.active = false;
+          }
+        });
+        this.crrFunc = this.funcID;
+        if (this.funcID == 'DPT0502') {
+          this.layoutDP.viewNameProcess(null);
+
+          if (viewModel) {
+            this.view.viewActiveType = viewModel.type;
+          } else {
+            this.view.viewActiveType = 2;
+            viewModel = this.views.find((x) => x.type == 2);
+            viewModel.active = true;
+          }
+          this.view.viewChange(viewModel);
+          this.view.load();
+        }
+      });
+      // this.views.forEach((v, index) => {
+      //   if (v.type == 2) {
+      //     v.active = true;
+      //     viewModel = v;
+      //   } else {
+      //     v.active = false;
+      //     if (this.funcID == 'DPT0502') v.hide = true;
+      //     else v.hide = false;
+      //   }
+      // });
+      // this.crrFunc = this.funcID;
+      // if (this.funcID == 'DPT0502') {
+      //   this.layoutDP.viewNameProcess(null);
+
+      //   if (viewModel) {
+      //     this.view.viewActiveType = viewModel.type;
+      //     this.view.viewChange(viewModel);
+      //   }
+      //   this.view.load();
+      // }
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -2202,52 +2284,18 @@ export class InstancesComponent
       .subscribe((item: any) => {
         if (item) {
           this.esCategory = item;
+          //gui step
+          // this.codxDpService
+          //   .getDataReleased(this.dataSelected)
+          //   .subscribe((dt) => {
+          //     if (dt) this.release(dt, this.esCategory);
+          //   });
+
+          //gui instance
           this.codxDpService
             .checkApprovalStep(item.recID)
             .subscribe((check) => {
               if (check) {
-                // this.isLockButton = true;
-                // let option = new DialogModel();
-                // option.zIndex = 1001;
-                // // this.dialogTemplate = this.callfc.openForm(
-                // //   this.popupTemplate,
-                // //   '',
-                // //   600,
-                // //   500,
-                // //   '',
-                // //   null,
-                // //   '',
-                // //   option
-                // // );
-                // let obj = {
-                //   data: this.dataSelected,
-                //   formModel: this.view.formModel,
-                //   isFormExport: false,
-                //   refID: this.process.recID,
-                //   refType: 'DP_Processes',
-                //   esCategory: this.esCategory,
-                //   titleAction: this.titleAction,
-                //   loaded: true,
-                //   dataEx: this.dataEx,
-                //   dataWord: this.dataWord,
-                // };
-                // this.dialogTemplate = this.callfc.openForm(
-                //   PopupSelectTempletComponent,
-                //   '',
-                //   600,
-                //   500,
-                //   '',
-                //   obj,
-                //   '',
-                //   option
-                // );
-                // this.dialogTemplate.closed.subscribe((e) => {
-                //   if (e?.event) {
-                //     this.dataSelected = e?.event;
-                //     this.view.dataService.update(this.dataSelected).subscribe();
-                //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-                //   }
-                // });
                 this.release(this.dataSelected, item);
               } else this.notificationsService.notifyCode('DP036');
             });
@@ -2260,8 +2308,8 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      this.formModel.entityName,
-      this.formModel.funcID,
+      this.view.formModel.entityName,
+      this.view.formModel.funcID,
       data?.title,
       this.releaseCallback.bind(this)
     );
@@ -2270,6 +2318,7 @@ export class InstancesComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
+      debugger;
       ///do corre share ko tra ve status
       this.codxDpService
         .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
