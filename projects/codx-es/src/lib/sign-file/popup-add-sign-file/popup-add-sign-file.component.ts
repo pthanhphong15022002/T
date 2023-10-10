@@ -1492,7 +1492,7 @@ export class PopupAddSignFileComponent implements OnInit {
             : this.formModelCustom.funcID,
           '',
           this.data?.title,
-          this.data?.refType
+          this.approverProcess?.customEntityName != null? this.approverProcess?.customEntityName : this.data?.refType
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {

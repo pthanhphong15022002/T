@@ -1053,6 +1053,14 @@ export class CodxCmService {
       data
     );
   }
+  updateOwnerInstance(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstanceStepsBusiness',
+      'UpdateOwnerAsync',
+      data
+    );
+  }
 
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(

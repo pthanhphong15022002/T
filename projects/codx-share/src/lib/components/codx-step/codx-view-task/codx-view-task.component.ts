@@ -509,6 +509,7 @@ export class CodxViewTaskComponent implements OnInit {
       null,
       dataType,
       this.instanceStep,
+      null,
       groupId,
       true,
       null,
