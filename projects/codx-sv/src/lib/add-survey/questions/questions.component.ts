@@ -167,14 +167,13 @@ export class QuestionsComponent
       id: "O2",
       name: "Lưới trắc nghiệm",
       icon: "icon-grid_round"
-    }
-    ,
-    // {
-    //   id: "C2",
-    //   name: "Lưới hộp kiểm",
-    //   icon: "icon-grid_on",
-    //   group: true
-    // },
+    },
+    {
+      id: "C2",
+      name: "Lưới hộp kiểm",
+      icon: "icon-grid_on",
+      group: true
+    },
     {
       id: 'D',
       name: 'Ngày',
@@ -422,7 +421,6 @@ export class QuestionsComponent
   getHierarchy(dtS: any, dtQ: any) {
     if (dtS) {
       for (var i = 0; i < dtS.length; i++) {
-        debugger;
         dtS[i].children = dtQ.filter((x) => x.parentID == dtS[i].recID);
         dtQ = dtQ.filter((x) => x.parentID != dtS[i].recID);
         if (dtS[i].children && dtS[i].children.length > 0) {
