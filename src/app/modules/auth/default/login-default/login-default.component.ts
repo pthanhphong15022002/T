@@ -1,34 +1,22 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
   ViewChild,
   ElementRef,
   ChangeDetectorRef,
   Input,
   Output,
   EventEmitter,
-  AfterViewInit,
   Injector,
 } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ValidationErrors,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
-import {
-  ApiHttpService,
-  RealHub,
-  RealHubService,
-  AuthService,
-  UIComponent,
-} from 'codx-core';
+import { RealHub, RealHubService, AuthService, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { AngularDeviceInformationService } from 'angular-device-information';
 import { Modal } from 'bootstrap';
 import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';

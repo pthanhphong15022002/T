@@ -43,6 +43,7 @@ import { Login2FAComponent } from './login2-fa/login2-fa.component';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-login',
@@ -89,7 +90,8 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService,
     private deviceInfo: AngularDeviceInformationService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private ngxLoader: NgxUiLoaderService
   ) {
     super(inject);
     this.layoutCZ = environment.layoutCZ;
@@ -106,6 +108,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       //   this.iParams = params.i
       // }
       if (params.sk) {
+        this.ngxLoader.start();
         this.api
           .execSv<string[]>(
             'SYS',
@@ -115,22 +118,15 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             [params.sk]
           )
           .subscribe((res) => {
-            //[email, mode]
+            debugger;
             if (res) {
               this.sessionID = params.sk;
               this.email = res[0];
               this.mode = res[1];
               this.getSettingForm();
-              // dt.detectChanges();
               this.detectorRef.detectChanges();
-              // if (
-              //   res.msgBodyData[0].lastLogin == null ||
-              //   (params.id && params.id == 'forget')
-              // ) {
-              //   this.mode = 'firstLogin';
-              //   dt.detectChanges();
-              // }
             }
+            this.ngxLoader.stop();
           });
       } else if (params.id && params.id == 'changePass') {
         this.mode = params.id;
