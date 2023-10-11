@@ -94,7 +94,7 @@
         <div class="d-flex justify-content-start footerCard-item">
           <span class="icon-access_alarm icon-16 me-2"></span>
           <span
-            class="text-gray-800"
+            class="text-gray-600"
             [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
             [innerHTML]="
               data?.startDate
@@ -102,9 +102,9 @@
                 | async
             "
           ></span>
-          <span class="me-1 ms-1">-</span>
+          <span class="mx-1 text-gray-400">-</span>
           <span
-            class="text-gray-800"
+            class="text-gray-600"
             [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
             [innerHTML]="
               data?.endDate | formatvalue : view.formModel : 'EndDate' | async
@@ -124,7 +124,7 @@
         </div>
         <div class="footerCard-item d-flex justify-content-between mt-2">
           <div class="d-flex justify-content-start">
-            <div class="d-flex me-2" [ngbTooltip]="popupCountLeads">
+            <div class="d-flex me-4" [ngbTooltip]="popupCountLeads">
               <ng-template #popupCountLeads>
                 <codx-label
                   name="lblCountLeads"
@@ -196,7 +196,7 @@
       <div
         #description
         [id]="data?.recID"
-        class="fs-6 text-gray-800"
+        class="text-gray-600"
         [style.height]="'auto'"
         [ngClass]="
           checkIsCollapsed(data?.recID)
@@ -217,7 +217,7 @@
         "
       ></div>
     </div>
-    <div class="d-flex justify-content-between mt-1">
+    <div class="d-flex justify-content-between mt-2">
       <div class="d-flex justify-content-start">
         <codx-vll
           [name]="gridViewSetup?.Status?.referedValue"
@@ -230,17 +230,17 @@
         </codx-vll>
       </div>
       <div class="d-flex justify-content-end footerCard-item">
-        <span class="icon-access_alarm icon-16 me-2"></span>
+        <span class="icon-access_alarm icon-16 text-gray-600 me-2"></span>
         <span
-          class="text-gray-800"
+          class="text-gray-600"
           [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
           [innerHTML]="
             data?.startDate | formatvalue : view.formModel : 'StartDate' | async
           "
         ></span>
-        <span class="me-1 ms-1">-</span>
+        <span class="mx-1 text-gray-400">-</span>
         <span
-          class="text-gray-800"
+          class="text-gray-600"
           [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
           [innerHTML]="
             data?.endDate | formatvalue : view.formModel : 'EndDate' | async
@@ -250,7 +250,7 @@
     </div>
     <div class="footerCard-item d-flex justify-content-between mt-2">
       <div class="d-flex justify-content-start">
-        <div class="d-flex me-2" [ngbTooltip]="popupCountLeads">
+        <div class="d-flex me-4" [ngbTooltip]="popupCountLeads">
           <ng-template #popupCountLeads>
             <codx-label
               name="lblCountLeads"

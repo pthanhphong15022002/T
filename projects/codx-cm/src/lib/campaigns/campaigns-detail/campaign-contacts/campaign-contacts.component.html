@@ -19,7 +19,7 @@
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
       [hideMoreFunc]="false"
-      [height]="'100%'"
+      [height]="isShow ? '' : '100%'"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>
@@ -118,15 +118,15 @@
 
 <ng-template #tempContact let-data>
   <div class="d-flex justify-content-start align-items-center">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-2">
       <div
-        class="mb-1"
+        class="mb-1 fw-bold"
         [innerHTML]="
           data?.contactName | formatvalue : formModel : 'ContactName' | async
         "
       ></div>
       <div
-        class="mb-1 text-gray-700"
+        class="mb-2 fs-7 text-gray-600"
         [innerHTML]="
           data?.jobTitle | formatvalue : formModel : 'JobTitle' | async
         "

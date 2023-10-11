@@ -1,0 +1,127 @@
+// .send-request {
+//   border: none;
+//   color: orange;
+
+//   codx-label {
+//     color: black;
+//   }
+// }
+
+// .codx-approval-step::after {
+//   content: "";
+//   background-color: #ff0000;
+//   width: 2px;
+//   position: absolute;
+//   top: 0;
+//   left: 17px;
+//   bottom: 0;
+//   z-index: 999;
+// }
+
+// .active {
+//   color: blue !important;
+// }
+// .e-device .e-dlg-content,
+// .e-device .e-dlg-content * {
+//   font-size: inherit;
+// }
+
+// .tab-content {
+//   height: calc(100% - 30px) !important;
+//   overflow: auto;
+// }
+// .float-left > div {
+//   float: left;
+// }
+// codx-detail-tmp {
+//   overflow: hidden !important;
+// }
+// codx-view-list-detail .codx-detail-main {
+//   padding-bottom: 0;
+// }
+// .codx-detail-body {
+// }
+// .e-splitter.e-splitter-horizontal .e-pane.e-pane-horizontal,
+// .e-splitter.e-splitter-vertical .e-pane.e-pane-horizontal {
+//   overflow: hidden !important;
+// }
+// // .codx-detail-body {
+// //   height: calc(100% - 240px) !important;
+// // }
+// .h-od-tab .tab-content {
+//   height: calc(100% - 30px) !important;
+//   overflow: auto;
+// }
+
+codx-view-list-detail .codx-detail-main {
+  //overflow: hidden !important;
+  height: 100%;
+}
+
+// .codx-detail-body {
+//   height: 100%;
+// }
+
+.dt-es div.codx-detail-body {
+  height: calc(100vh - 203px) !important;
+  overflow: hidden !important;
+  margin-top: 2px !important;
+}
+
+.dt-es div.codx-detail-body div.codx-detail-body {
+  margin-top: 0px !important;
+}
+
+.dt-es-view div.codx-detail-body {
+  height: calc(100vh - 382px) !important;
+  overflow: hidden !important;
+  margin-top: 0 !important;
+}
+
+.dt-es-view .codx-detail-body .tab-content,
+.dt-es .codx-detail-body .tab-content {
+  height: calc(100vh - 413px) !important;
+  overflow: auto !important;
+}
+
+.dt-es-view .codx-detail-header {
+  max-height: 215px !important;
+  overflow: auto !important;
+}
+.dt-es .codx-detail-header
+{
+  max-height: 215px !important;
+}
+.dt-es .codx-detail-main {
+  position: relative !important;
+  padding-bottom: 0;
+  overflow: hidden;
+
+}
+
+.float-left>div {
+  float: left;
+}
+
+.codx-detail-main.px-6 .codx-detail-main.px-6 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.codx-detail-body.mt-2 .codx-detail-header.mt-2 {
+  margin-top: 0 !important;
+
+}
+
+.es-icon-title {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+
+.dt-es-view .codx-detail-toolbar {
+  margin-bottom: 2px;
+}

@@ -271,7 +271,7 @@
         [ngTemplateOutlet]="showToltal"
         [ngTemplateOutletContext]="{
           $implicit: genTotal(data.keyField),
-          color: getPropertiesHeader(data, 'textColor')
+          color: getPropertiesHeader(data, 'iconColor')
         }"
       ></ng-container>
       <ng-template #showToltal let-total let-color>
@@ -747,32 +747,4 @@
     [vllStatus]="'DP028'"
     [processID]="processID"
   ></codx-instance-dashboard>
-</ng-template>
-
-<ng-template #popUpQuestionStatus let-dialog="dialogQuestionForm">
-  <codx-form
-    [headerText]="titleAction"
-    [body]="bodyPopup"
-    [footer]="footerPopup"
-    [dialog]="dialogQuestionForm"
-  >
-  </codx-form>
-</ng-template>
-
-<ng-template #bodyPopup>
-  <ejs-combobox
-  [dataSource]="valueListStatusCode "
-  (valueChange)="valueChangeStatusCode($event)"
-  [fields]="fieldCbxStatusCode"
-  [placeholder]="gridViewSetup?.ObjectStatus?.description"
-  [allowFiltering]="true"
-  [value]="statusDefault"
-></ejs-combobox>
-
-</ng-template>
-
-<ng-template #footerPopup>
-  <button type="button" class="btn btn-primary" (click)="saveStatus()">
-    <codx-label fiedName="lblSave" default="Lưu"></codx-label>
-  </button>
 </ng-template>

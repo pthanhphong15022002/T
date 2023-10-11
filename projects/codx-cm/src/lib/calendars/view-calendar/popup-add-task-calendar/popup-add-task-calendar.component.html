@@ -10,7 +10,7 @@
     <div class="col-6" style="border-right: 1px solid rgb(196, 196, 196);">
       <ng-container [ngTemplateOutlet]="parLeft"> </ng-container>
     </div>
-    <div class="col-6 pe-1" style="overflow-y: auto; overflow-x: hidden; max-height: 392px">
+    <div class="col-6 pe-1 scroll-right" style="overflow-y: auto; overflow-x: hidden; max-height: 392px" (scroll)="onScroll($event)">
       <ng-container [ngTemplateOutlet]="parRight"></ng-container>
     </div>
   </div>
@@ -100,23 +100,24 @@
   </div>
 </ng-template>
 <ng-template #parRight> 
-   <div *ngFor="let item of dataCombobox" class="item-combobox w-100" (click)="chooseCM(item)">
-    <div class="d-flex align-items-center justify-content-between position-relative cursor-pointer py-1">
-      <span class="line-clamp line-clamp-1" style="width: 92%;">{{item?.name}}</span>
-      <div class="mb-3 position-absolute" style="right: 18px; bottom: 1px;">
-        <ejs-radiobutton
-          name="cmType"
-          value="1"
-          (change)="valueChangeRadio($event)"
-          [checked]="item?.recID == dataCheck?.recID"
-        ></ejs-radiobutton>
+  <div>
+    <div style="min-height: 170px;">
+      <div *ngFor="let item of dataCombobox" class="item-combobox w-100" (click)="chooseCM(item)">
+        <div class="d-flex align-items-center justify-content-between position-relative cursor-pointer py-1">
+          <span class="line-clamp line-clamp-1" style="width: 92%;">{{item?.name}}</span>
+          <div class="mb-3 position-absolute" style="right: 18px; bottom: 1px;">
+            <ejs-radiobutton
+              name="cmType"
+              value="1"
+              (change)="valueChangeRadio($event)"
+              [checked]="item?.recID == dataCheck?.recID"
+            ></ejs-radiobutton>
+          </div>
+        </div>
       </div>
     </div>
-      <!-- <codx-input
-        *ngIf="refValueType"
-        [field]="'objectID'"
-        type="combobox"
-        [refValue]="refValueType"
-      ></codx-input> -->
-   </div>
+    <div class="w-100 d-flex justify-content-center pb-1" *ngIf="isLoad">
+      <div class="spinner-3"></div>
+    </div>
+  </div>
 </ng-template>

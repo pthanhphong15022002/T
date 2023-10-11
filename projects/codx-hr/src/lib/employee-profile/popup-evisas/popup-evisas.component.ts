@@ -137,9 +137,9 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    debugger
     if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
+      
       this.form.validation(false)
       return;
     }
