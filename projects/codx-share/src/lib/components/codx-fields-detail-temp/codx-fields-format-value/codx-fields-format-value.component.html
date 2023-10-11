@@ -224,6 +224,15 @@
       >
         <thead>
           <tr class="bg-gray-100">
+            <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+              <div>
+                <codx-label
+                  name="lblNo"
+                  formName="System"
+                  [default]="'STT'"
+                ></codx-label>
+              </div>
+            </th>
             <ng-container *ngFor="let item of columns">
               <th
                 scope="col"
@@ -244,6 +253,11 @@
           <ng-container>
             <ng-container *ngFor="let value of arrDataValue; let index = index">
               <tr>
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <span>{{ index + 1 }}</span>
+                  </div>
+                </td>
                 <ng-container
                   *ngFor="let fieldFormat of formatViewTable(value)"
                 >
@@ -260,32 +274,9 @@
                     ></codx-fields-format-value>
                   </td>
                 </ng-container>
-                <!-- <td>
-                <div class="d-flex justify-content-end align-items-center">
-                  <button
-                    class="btn btn-sm btn-icon btn-light-warning"
-                    (click)="updateLine(value, index)"
-                  >
-                    <i class="icon icon-14 icon-edit"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-light-danger ms-2"
-                    (click)="removeLine(value, index)"
-                  >
-                    <i class="icon icon-14 icon-close"></i>
-                  </button>
-                </div>
-              </td> -->
               </tr>
             </ng-container>
           </ng-container>
-          <!-- <ng-container *ngIf="disable">
-          <tr>
-            <ng-container *ngFor="let item of columns">
-              <td class="ps-4">{{ item?.note }}</td>
-            </ng-container>
-          </tr>
-        </ng-container> -->
         </tbody>
       </table>
     </div>

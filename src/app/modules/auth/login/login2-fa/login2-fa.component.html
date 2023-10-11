@@ -27,26 +27,26 @@
       default="Xác thực bảo mật 2 lớp"
     ></codx-label>
     <codx-label
-      class="text-dark fs-7 my-3"
+      class="text-gray-500 fs-7 mb-3"
       default="Vui lòng chọn hình thức xác thực bảo mật 2 lớp"
     ></codx-label>
   </div>
-  <div class="content p-3">
+  <div class="content p-2 mx-3 mt-5">
     <ng-container [ngSwitch]="clickQueue[clickQueue.length - 1]">
       <div *ngSwitchCase="'1'">
         <div *ngIf="lstOptions">
           <div
-            class="d-flex align-items-center bg-hover rounded-1 cursor-pointer p-3"
+            class="d-flex align-items-center bg-hover rounded-1 cursor-pointer py-3 px-4 mt-1"
             *ngFor="let option of lstOptions"
             (click)="changeLogin2FAType(option)"
           >
-            <div [class]="'rounded-circle me-5 icon-40 ' + option.icon"></div>
+            <div [class]="'rounded-circle me-3 icon-26 text-gray-800 ' + option.icon"></div>
             <div class="w-100">
-              <div class="fs-5">
+              <div class="fs-6 fw-bold text-gray-700">
                 {{ option.text }}
               </div>
             </div>
-            <div class="w-30px ms-4 icon-arrow_forward_ios text-hover-primary"></div>
+            <div class="w-20px ms-4 icon-arrow_forward_ios text-hover-primary"></div>
           </div>
         </div>
       </div>
