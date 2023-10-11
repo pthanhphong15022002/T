@@ -59,6 +59,7 @@ import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-instances',
@@ -583,7 +584,7 @@ export class InstancesComponent
     if (data) {
       this.oldIdInstance = data.recID;
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      this.view.dataService.dataSelected.reCID =  Util.uid();
+      this.view.dataService.dataSelected.reCID = Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
@@ -2325,7 +2326,11 @@ export class InstancesComponent
           this.codxDpService
             .getDataReleased([this.dataSelected.recID, item.recID]) //data + tranID của esCategory
             .subscribe((dt) => {
-              if (dt) this.release(dt, this.esCategory);
+              let exportData: ExportData = {
+                funcID: this.view.formModel.funcID,
+                recID: this.dataSelected.recID,
+              };
+              if (dt) this.release(dt, this.esCategory, exportData);
             });
 
           // //gui instance
@@ -2340,7 +2345,7 @@ export class InstancesComponent
       });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData: any) {
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
@@ -2351,7 +2356,10 @@ export class InstancesComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      'DP_Instances_Steps'
+      'DP_Instances_Steps',
+      null,
+      null,
+      exportData
     );
   }
   //call Back
