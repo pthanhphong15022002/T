@@ -876,5 +876,15 @@ export class CodxDpService {
   getOneObject(recID, className) {
     return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
   }
+
+  getRecIDInstancesStepsReleased(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetRecIDInstancesStepsReleasedAsync',
+      data
+    );
+  }
+
   //#endregion
 }

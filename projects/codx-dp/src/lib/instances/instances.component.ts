@@ -59,6 +59,7 @@ import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-instances',
@@ -581,8 +582,9 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.view.dataService.dataSelected.reCID = Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
@@ -2324,7 +2326,11 @@ export class InstancesComponent
           this.codxDpService
             .getDataReleased([this.dataSelected.recID, item.recID]) //data + tranID của esCategory
             .subscribe((dt) => {
-              if (dt) this.release(dt, this.esCategory);
+              let exportData: ExportData = {
+                funcID: this.view.formModel.funcID,
+                recID: this.dataSelected.recID,
+              };
+              if (dt) this.release(dt, this.esCategory, exportData);
             });
 
           // //gui instance
@@ -2339,7 +2345,7 @@ export class InstancesComponent
       });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData: any) {
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
@@ -2350,7 +2356,10 @@ export class InstancesComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      'DP_Instances_Steps'
+      'DP_Instances_Steps',
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -2361,9 +2370,10 @@ export class InstancesComponent
       this.dataSelected.approveStatus = '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.codxDpService
-        .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
-        .subscribe();
+      //da cap nhat tai BE
+      // this.codxDpService
+      //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
+      //   .subscribe();
     }
   }
 
@@ -2406,38 +2416,45 @@ export class InstancesComponent
           .getESCategoryByCategoryID(this.process.processNo)
           .subscribe((res2: any) => {
             if (res2) {
-              if (res2?.eSign == true) {
-                //trình ký
-              } else if (res2?.eSign == false) {
-                //kí duyet
-                this.codxShareService
-                  .codxCancel(
-                    'DP',
-                    dt?.recID,
-                    this.view.formModel.entityName,
-                    null,
-                    null
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.dataSelected.approveStatus = '0';
-                      this.codxDpService
-                        .updateApproverStatus([dt.recID, '0'])
-                        .subscribe((res4) => {
-                          if (res4) {
-                            this.view.dataService
-                              .update(this.dataSelected)
-                              .subscribe();
-                            this.notificationsService.notifyCode('SYS007');
-                          } else this.notificationsService.notifyCode('SYS021');
-                        });
-                    } else this.notificationsService.notifyCode('SYS021');
-                  });
-              }
+              //Huy duyet instance step
+              this.cancelReleaseInstanceStep(dt.stepID, dt.recID);
+              //  //Huy duyet instance
+              // this.cancelRelease(dt.recID, this.view.formModel.entityName);
             }
           });
       }
     });
+  }
+
+  cancelReleaseInstanceStep(stepID, instanceID) {
+    this.codxDpService
+      .getRecIDInstancesStepsReleased([stepID, instanceID])
+      .subscribe((res) => {
+        if (res) {
+          this.cancelRelease(res, 'DP_Instances_Steps');
+        }
+      });
+  }
+
+  cancelRelease(transID, entityName) {
+    this.codxShareService
+      .codxCancel('DP', transID, entityName, null, null)
+      .subscribe((res3) => {
+        if (res3) {
+          this.dataSelected.approveStatus = '0';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+          // this.codxDpService
+          //   .updateApproverStatus([this.dataSelected.recID, '0'])
+          //   .subscribe((res4) => {
+          //     if (res4) {
+          //       this.view.dataService.update(this.dataSelected).subscribe();
+          //       this.notificationsService.notifyCode('SYS007');
+          //     } else this.notificationsService.notifyCode('SYS021');
+          //   });
+        } else this.notificationsService.notifyCode('SYS021');
+      });
   }
   //end duyet
 
