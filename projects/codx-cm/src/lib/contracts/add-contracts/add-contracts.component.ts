@@ -12,6 +12,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
   CM_ContractsPayments,
+  CM_Permissions,
 } from '../../models/cm_model';
 import {
   Util,
@@ -547,6 +548,8 @@ export class AddContractsComponent implements OnInit {
     var data = [this.instance, this.listInstanceSteps, null];
     this.cmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        console.log(instance);
+        
       }
     });
   }
@@ -595,6 +598,32 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
+  valueChangeOwner(event) {
+    this.contracts[event?.field] = event?.data;
+    console.log(event?.component?.itemsSelected[0]);
+    let user = event?.component?.itemsSelected[0];
+    if(!this.contracts.applyProcess && user){
+      let permissions = new CM_Permissions;
+      permissions.objectID = user?.UserID;
+      permissions.objectName = user?.UserName;
+      permissions.objectType = "U";
+      permissions.roleType = "O";
+      permissions.memberType = "0";
+      permissions.full = true;
+      permissions.read = true;
+      permissions.edit = false;
+      permissions.create =false;
+      permissions.update = true;
+      permissions.assign = true;
+      permissions.delete = true;
+      permissions.share = false;
+      permissions.upload = true;
+      permissions.download = true;
+      this.contracts.permissions = [permissions];
+    }
+    
+  }
+
   setValueComboboxDeal() {
     let listDeal = this.inputDeal.ComponentCurrent.dataService.data;
     if (listDeal) {
@@ -638,11 +667,6 @@ export class AddContractsComponent implements OnInit {
     }
   }
 
-  valueChangeOwner($event) {
-    if ($event) {
-      this.contracts.owner = $event;
-    }
-  }
   //#endregion
   //#region get data
   getCustomerByDealID(dealID) {
