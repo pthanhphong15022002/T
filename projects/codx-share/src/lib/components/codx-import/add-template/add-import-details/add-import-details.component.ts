@@ -158,7 +158,26 @@ export class AddImportDetailsComponent implements OnInit{
       .subscribe((item) => {
         if (item && item.length > 0) {
           this.dataImport2 = item;
-        }
+          this.cache
+          .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+          .subscribe((grdViews) => {
+            if (grdViews) {
+              var key = Object.keys(grdViews);
+              for (var i = 0; i < key.length; i++) {
+                var fs = key[i].slice(0,1).toLowerCase();
+                var s = key[i].slice(1);
+                let keys = fs + s;
+                var check = this.dataImport2.findIndex(x=>x.destinationField == keys);
+                if (grdViews[key[i]]?.isImport && check<0) {
+                  var obj = {
+                    destinationField: key[i],
+                    dataType: grdViews[key[i]].dataType
+                  };
+                  this.dataImport2.push(obj);
+                }
+              }
+            }});
+          }
       });
   }
   createData() {
