@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxFormComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -26,7 +27,7 @@ import moment from 'moment';
 })
 export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('form') form: CodxFormComponent;
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
   dataWorkOrder: any;
@@ -251,6 +252,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.scheduleStart = currentDate;
     this.data.scheduleTime = closestStartTime;
     this.scheduleTime = scheduleTime;
+    if (this.form) this.form?.formGroup?.patchValue(this.data);
   }
 
   setComment(comment, commentControl) {

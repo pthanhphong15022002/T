@@ -16,7 +16,6 @@
           field="statusCode"
           [formModel]="form.formModel"
           [Group]="form?.formGroup"
-          [crrValue]="data?.statusCode"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
@@ -37,8 +36,7 @@
           </div>
           <codx-input
             [formModel]="form.formModel"
-            class="test-datetime"
-            [crrValue]="data?.scheduleStart"
+            [Group]="form?.formGroup"
             (valueChange)="valueDateChange($event)"
             field="scheduleStart"
           >
