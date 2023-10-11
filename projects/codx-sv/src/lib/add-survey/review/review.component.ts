@@ -56,7 +56,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   select:any;
   isPublic:any;
   dataMatrixCount= [];
-  html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger">Đây là một câu hỏi bắt buộc</span></div>'
+  html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger fw-bold">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
       enableFloating: false,
@@ -413,17 +413,19 @@ export class ReviewComponent extends UIComponent implements OnInit {
           itemQuestion.seqNo
         ].answers = listAnswers;
       }
-      else if(e.field == 'O2')
+      else if(e.field == 'O2' || e.field =='C2')
       {
         let data = JSON.parse(JSON.stringify(itemAnswer));
         var index = this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers.findIndex(x=>x.recID == itemAnswer.recID && x.seqNo == itemR.seqNo);
         if(index < 0) 
         {
+          data.columnNo = data.seqNo
           data.seqNo = itemR.seqNo
           this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers.push(data);
         }
         else this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[index]= data;
       }
+     
       else
       {
         this.lstQuestion[itemSession.seqNo].children[itemQuestion.seqNo].answers[0] = itemAnswer;
@@ -537,19 +539,17 @@ export class ReviewComponent extends UIComponent implements OnInit {
         let respondResult: any = [];
         if(x.answers && x.answers.length > 0)
         {
-          let i = 0;
           x.answers.forEach((y) => {
             let seqNo = 0;
             let objR = null;
-            if(x.answerType == "O2")
+            if(x.answerType == "O2" || x.answerType == "C2")
             {
               objR = {
-                seqNo: i,
+                seqNo: y.seqNo,
                 answer: y.answer,
                 other: y.other,
-                columnNo: y.seqNo,
+                columnNo: y.columnNo,
               };
-              i++;
             }
             else
             {

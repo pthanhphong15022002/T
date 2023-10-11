@@ -105,7 +105,7 @@ export class PopupAssginDealComponent
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
     this.startControl = dialogData?.data.startControl;
-    this.applyProcess && this.promiseAll();
+    this.promiseAll();
   }
 
   ngAfterViewInit(): void {}
@@ -126,10 +126,8 @@ export class PopupAssginDealComponent
     this.dialogRef.close();
   }
   async promiseAll() {
-    await this.getListPermission(this.processID, this.applyFor, this.stepID);
-    this.owner &&
-      !this.applyProcess &&
-      (await this.getInformationUser(this.owner));
+    this.applyProcess && await this.getListPermission(this.processID, this.applyFor, this.stepID);
+    this.owner && (await this.getInformationUser(this.owner));
   }
   async getListPermission(processId, applyFor, stepID) {
     var data = [processId, applyFor, stepID];

@@ -581,8 +581,9 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.view.dataService.dataSelected.reCID =  Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
