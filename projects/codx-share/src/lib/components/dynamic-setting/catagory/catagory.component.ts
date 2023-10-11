@@ -68,6 +68,7 @@ export class CatagoryComponent implements OnInit {
   //labels
   labels = [];
   lineType = '1';
+  componentSub = '';
   isOpenSub: boolean = false;
 
   constructor(
@@ -418,50 +419,57 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  openSub(evt: any, recID: string, dataValue: any) {
-    this.lineType = +this.lineType + 1 + '';
+  openSub(evt: any, data: any, dataValue: any) {
+    let recID = data.recID;
     this.isOpenSub = true;
     this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
     this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
-    this.settingFull =
-      this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === this.lineType
-      ) || [];
-    this.setting =
-      this.settingFull.filter((res) => res.isVisible == true) || [];
-    this.dataValue = dataValue;
-    this.groupSetting = this.setting.filter((x) => {
-      return x.lineType === this.lineType;
-    });
-    // .filter((x) => {
-    //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
-    // });
-    // if (this.groupSetting.length > 0) {
-    //   var lstNoGroup = this.setting.filter((x) => {
-    //     return (
-    //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-    //         !x.controlType) &&
-    //       !x.refLineID
-    //     );
-    //   });
-    //   if (lstNoGroup.length > 0) {
-    //     var objGroupTMP: any = {
-    //       recID: '',
-    //       refLineID: '',
-    //       controlType: 'GroupControl',
-    //     };
-    //     this.groupSetting.splice(0, 0, objGroupTMP);
-    //   }
-    // }
-    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
-    else if (this.category === '5') this.getAlertRule();
-    else if (this.category === '6') this.getSchedules();
+    if (data.reference) {
+      this.componentSub = data.reference;
+      this.groupSetting = this.setting = this.settingFull = [data];
+    } else {
+      this.lineType = +this.lineType + 1 + '';
+      this.settingFull =
+        this.settingFull.filter(
+          (x) => x.refLineID === recID && x.lineType === this.lineType
+        ) || [];
+      this.setting =
+        this.settingFull.filter((res) => res.isVisible == true) || [];
+      this.dataValue = dataValue;
+      this.groupSetting = this.setting.filter((x) => {
+        return x.lineType === this.lineType;
+      });
+      // .filter((x) => {
+      //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+      // });
+      // if (this.groupSetting.length > 0) {
+      //   var lstNoGroup = this.setting.filter((x) => {
+      //     return (
+      //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+      //         !x.controlType) &&
+      //       !x.refLineID
+      //     );
+      //   });
+      //   if (lstNoGroup.length > 0) {
+      //     var objGroupTMP: any = {
+      //       recID: '',
+      //       refLineID: '',
+      //       controlType: 'GroupControl',
+      //     };
+      //     this.groupSetting.splice(0, 0, objGroupTMP);
+      //   }
+      // }
+      if (this.category === '2' || this.category === '7')
+        this.getIDAutoNumber();
+      else if (this.category === '5') this.getAlertRule();
+      else if (this.category === '6') this.getSchedules();
+    }
+
     this.changeDetectorRef.detectChanges;
   }
 
   backSub(evt: any) {
     this.isOpenSub = false;
-    this.lineType = +this.lineType - 1 + '';
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -471,31 +479,18 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
-    // .filter((x) => {
-    //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
-    // });
-    // if (this.groupSetting.length > 0) {
-    //   var lstNoGroup = this.setting.filter((x) => {
-    //     return (
-    //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-    //         !x.controlType) &&
-    //       !x.refLineID
-    //     );
-    //   });
-    //   if (lstNoGroup.length > 0) {
-    //     var objGroupTMP: any = {
-    //       recID: '',
-    //       refLineID: '',
-    //       controlType: 'GroupControl',
-    //     };
-    //     this.groupSetting.splice(0, 0, objGroupTMP);
-    //   }
-    // }
     this.oldSettingFull = [];
     this.oldDataValue = {};
-    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
-    else if (this.category === '5') this.getAlertRule();
-    else if (this.category === '6') this.getSchedules();
+    if (this.componentSub) {
+      this.componentSub = '';
+    } else {
+      this.lineType = +this.lineType - 1 + '';
+      if (this.category === '2' || this.category === '7')
+        this.getIDAutoNumber();
+      else if (this.category === '5') this.getAlertRule();
+      else if (this.category === '6') this.getSchedules();
+    }
+
     this.changeDetectorRef.detectChanges;
   }
 
@@ -718,10 +713,10 @@ export class CatagoryComponent implements OnInit {
       }
     } else {
       if (
+        !data.dataType ||
         (typeof value == 'boolean' &&
           data.dataType.toLowerCase() != 'boolean' &&
-          data.dataType.toLowerCase() != 'bool') ||
-        !data.dataType
+          data.dataType.toLowerCase() != 'bool')
       ) {
         value = +value + '';
       }

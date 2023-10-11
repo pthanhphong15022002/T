@@ -20,7 +20,6 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   fiscalPeriodsAutoCreate: FiscalPeriodsAutoCreate = new FiscalPeriodsAutoCreate;
   isAddNew: any;
   
-  lblAdd:any;
 
   constructor(
     inject: Injector,
@@ -42,8 +41,12 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   onInit(): void {
     this.cache.message('AC0033').subscribe((res) => {
       if (res) {
-        this.lblAdd = res?.customName;
-        this.headerText = this.lblAdd + ' năm tài chính'//
+        this.headerText += res?.customName
+      }
+    });
+    this.cache.message('AC0039').subscribe((res) => {
+      if (res) {
+        this.headerText += ' ' + res?.customName;
       }
     });
   }
@@ -65,7 +68,6 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         break;
       case 'periodControl':
         {
-          console.log(e.data);
           this.fiscalPeriodsAutoCreate.periodControl = e.data;
           if(e.data == true)
             this.fiscalPeriodsAutoCreate.moduleControl = false;
@@ -76,7 +78,6 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         break;
       case 'moduleControl':
         {
-          console.log(e.data);
           this.fiscalPeriodsAutoCreate.moduleControl = e.data;
           if(e.data == true)
             this.fiscalPeriodsAutoCreate.periodControl = false;

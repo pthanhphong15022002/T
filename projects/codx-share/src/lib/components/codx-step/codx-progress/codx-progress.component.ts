@@ -247,7 +247,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
         this.api
           .exec<any>(
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdateProgressActivitiesAsync',
             dataSave
           )
@@ -259,7 +259,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
         this.api
           .exec<any>(
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdateProgressAsync',
             dataSave
           )

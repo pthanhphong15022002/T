@@ -69,6 +69,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() lstStepProcess: any;
   @Input() isOnlyView: any;
   @Input() frmModelInstancesTask: FormModel;
+  @Input() vllApprover = 'DP043';
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
@@ -244,16 +245,6 @@ export class StagesDetailComponent implements OnInit {
     this.isStart = this.instance?.status == 2 ? true : false;
     if (changes['dataStep']) {
       if (changes['dataStep'].currentValue != null) {
-        if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
-          this.lstStepProcess.forEach((element) => {
-            if (element.stepID == this.dataStep.stepID) {
-              this.ownerStepProcess =
-                element.roles != null && element.roles.length > 0
-                  ? this.checkOwnerRoleProcess(element.roles)
-                  : null;
-            }
-          });
-        }
         if (changes['dataStep'].currentValue?.startDate != null) {
           var date = new Date(changes['dataStep'].currentValue?.startDate);
           this.startDate =
@@ -962,17 +953,49 @@ export class StagesDetailComponent implements OnInit {
     if (!value) return '';
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
-  checkOwnerRoleProcess(roles) {
-    if (roles != null && roles.length > 0) {
-      var checkOwner = roles.find((x) => x.roleType == 'S');
 
-      return checkOwner != null ? checkOwner.objectID : null;
-    } else {
-      return null;
-    }
-  }
   saveAssignStepTask(e) {
     this.saveAssign.emit(e);
+  }
+
+  setOwnerStepProcess(type) {
+    let text = {};
+    if (this.lstStepProcess != null && this.lstStepProcess.length > 0) {
+      this.lstStepProcess.forEach((element) => {
+        if (element?.stepID == this.dataStep?.stepID) {
+          text['name'] =
+            element?.roles != null && element?.roles?.length > 0
+              ? this.checkOwnerRoleProcess(element?.roles, type) != null
+                ? this.checkOwnerRoleProcess(element?.roles, type)['name']
+                : null
+              : null;
+          text['objectType'] =
+            this.checkOwnerRoleProcess(element?.roles, type) != null
+              ? this.checkOwnerRoleProcess(element?.roles, type)['objectType']
+              : null;
+        }
+      });
+    } else {
+      text = null;
+    }
+    return text;
+  }
+
+  checkOwnerRoleProcess(roles, type) {
+    let object = {};
+    if (roles != null && roles.length > 0) {
+      var checkOwner = roles.find((x) => x.roleType == 'S');
+      object['name'] =
+        checkOwner != null
+          ? type == 'id'
+            ? checkOwner?.objectID
+            : checkOwner?.objectName
+          : null;
+      object['objectType'] = checkOwner?.objectType;
+    } else {
+      object = null;
+    }
+    return object;
   }
 
   setIdAndUserRole(data, type) {

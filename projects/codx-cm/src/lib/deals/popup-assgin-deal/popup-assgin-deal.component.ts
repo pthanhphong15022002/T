@@ -68,6 +68,11 @@ export class PopupAssginDealComponent
 
   listParticipants = [];
   data: any;
+  animation: object = {
+    previous: { effect: "", duration: 0, easing: "" },
+    next: { effect: "", duration: 0, easing: "" }
+  };
+
   listUser: any[] = [];
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly viewBUID: string = 'ViewBUID';
@@ -100,7 +105,7 @@ export class PopupAssginDealComponent
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
     this.startControl = dialogData?.data.startControl;
-    this.applyProcess && this.promiseAll();
+    this.promiseAll();
   }
 
   ngAfterViewInit(): void {}
@@ -121,10 +126,8 @@ export class PopupAssginDealComponent
     this.dialogRef.close();
   }
   async promiseAll() {
-    await this.getListPermission(this.processID, this.applyFor, this.stepID);
-    this.owner &&
-      !this.applyProcess &&
-      (await this.getInformationUser(this.owner));
+    this.applyProcess && await this.getListPermission(this.processID, this.applyFor, this.stepID);
+    this.owner && (await this.getInformationUser(this.owner));
   }
   async getListPermission(processId, applyFor, stepID) {
     var data = [processId, applyFor, stepID];
@@ -323,7 +326,6 @@ export class PopupAssginDealComponent
   }
 
   saveOwner() {
-    debugger;
     if(this.applyFor == '0') {
       let datas = [this.recID, this.owner];
       this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
@@ -348,5 +350,8 @@ export class PopupAssginDealComponent
         }
       });
     }
+  }
+  disableViewTab(actionType: any) {
+    return true;
   }
 }

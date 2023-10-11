@@ -523,9 +523,10 @@ export class CalendarNotesComponent
           const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
 
           if (dt[0]?.TM_Tasks && dt[0]?.TM_Tasks.length) {
-            this.TM_TasksParam = dt[0]?.TM_Tasks[1]
-              ? JSON.parse(dt[0]?.TM_Tasks[1])
-              : null;
+            if (dt[0]?.TM_Tasks.length > 1)
+              this.TM_TasksParam = dt[0]?.TM_Tasks[1]
+                ? JSON.parse(dt[0]?.TM_Tasks[1])
+                : null;
 
             this.getRequestTM(
               dt[0]?.TM_Tasks[0],
@@ -536,9 +537,10 @@ export class CalendarNotesComponent
           }
 
           if (dt[0]?.WP_Notes && dt[0]?.WP_Notes.length) {
-            this.WP_NotesParam = dt[0]?.WP_Notes[1]
-              ? JSON.parse(dt[0]?.WP_Notes[1])
-              : null;
+            if (dt[0]?.WP_Notes.length > 1)
+              this.WP_NotesParam = dt[0]?.WP_Notes[1]
+                ? JSON.parse(dt[0]?.WP_Notes[1])
+                : null;
 
             this.getRequestWP(
               dt[0]?.WP_Notes[0],
@@ -549,9 +551,10 @@ export class CalendarNotesComponent
           }
 
           if (dt[0]?.CO_Meetings && dt[0]?.CO_Meetings.length) {
-            this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
-              ? JSON.parse(dt[0]?.CO_Meetings[1])
-              : null;
+            if (dt[0]?.CO_Meetings.length > 1)
+              this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
+                ? JSON.parse(dt[0]?.CO_Meetings[1])
+                : null;
 
             this.getRequestCO(
               dt[0]?.CO_Meetings[0],
@@ -562,9 +565,10 @@ export class CalendarNotesComponent
           }
 
           if (dt[0]?.EP_BookingRooms && dt[0]?.EP_BookingRooms.length) {
-            this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
-              ? JSON.parse(dt[0]?.EP_BookingRooms[1])
-              : null;
+            if (dt[0]?.EP_BookingRooms.length > 1)
+              this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
+                ? JSON.parse(dt[0]?.EP_BookingRooms[1])
+                : null;
 
             this.getRequestEP_BookingRoom(
               dt[0]?.EP_BookingRooms[0],
@@ -575,9 +579,10 @@ export class CalendarNotesComponent
           }
 
           if (dt[0]?.EP_BookingCars && dt[0]?.EP_BookingCars.length) {
-            this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
-              ? JSON.parse(dt[0]?.EP_BookingCars[1])
-              : null;
+            if (dt[0]?.EP_BookingCars.length > 1)
+              this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
+                ? JSON.parse(dt[0]?.EP_BookingCars[1])
+                : null;
 
             this.getRequestEP_BookingCar(
               dt[0]?.EP_BookingCars[0],
@@ -600,7 +605,7 @@ export class CalendarNotesComponent
             {
               transType: 'CO_Meetings',
               isActive: this.CO_MeetingsParam?.ShowEvent,
-              color: this.CO_MeetingsParam.ShowColor,
+              color: this.CO_MeetingsParam?.ShowColor,
             },
             {
               transType: 'EP_BookingRooms',

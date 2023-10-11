@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UIComponent } from 'codx-core';
+import { SeriesSetting, UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
@@ -58,6 +58,27 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     ],
   };
   
+  chartSettingsO2: ChartSettings = {
+    title: '',
+    seriesSetting: [
+      {
+        type: 'Column',
+        xName: 'row',
+        yName: 'count',
+        dataLabel : {
+          name: 'textMapping'
+        },
+        marker : { 
+          dataLabel: { 
+            visible: true, 
+            position: 'Top',
+            template: '<div class="text-white fw-bold">${point.y}</div>' 
+          }
+        }
+      },
+    ],
+  };
+  
   chartSettingsO: ChartSettings = {
     title: '',
     seriesSetting: [
@@ -84,6 +105,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   ["#3366CC","#FF9900","#61EFCD", "#CDDE1F", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
   "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
   
+  tooltipMatrix : Object = {
+    enable: true,
+    header: '<b>${point.tooltip}</b>',
+    shared: true
+  };
   constructor(
     private injector: Injector,
     private awserSV :CodxSVAnswerService
@@ -145,8 +171,9 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         if(item) {
           this.lstRespondents = item[0];
           this.lstQuestion = item[1]
-          this.lstCountQuestion = item[2]
+          this.lstCountQuestion = item[2];
           this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
+          this.getSetting();
           if(this.respondents && this.respondents?.responds[0])
           {
             this.setSelectedDropDown(this.respondents.responds[0].question)
@@ -158,6 +185,12 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     }
   }
   
+  getSetting()
+  {
+    this.lstCountQuestion.forEach(element => {
+      if(element.answerType == "O2" || element.answerType == "C2") element.setting = this.settingChart(element?.answerType,'seriesSetting' , element.dataChart)
+    });
+  }
   //Get content form string html
   extractContent(s:any) {
     var span = document.createElement('span');
@@ -282,6 +315,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   //Đếm số lượng câu hỏi khác rỗng
   countAnswer(answers:any)
   {
+    debugger
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
@@ -292,7 +326,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     return count
   }
 
-  settingChart(answerType:any , properties:any)
+  settingChart(answerType:any , properties:any , dataChart:any=null)
   {
     switch(answerType)
     {
@@ -395,7 +429,86 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
               return false;
             }
         }
+        break;
       }
+
+      case "O2":
+      case "C2":
+        {
+          switch(properties)
+          {
+            case "height":
+            {
+              return "auto"
+              break;
+            }
+            case 'primaryXAxis':
+            {
+              return {
+                labelIntersectAction: Browser.isDevice ? 'None' : 'Trim', 
+                labelRotation: Browser.isDevice ? -45 : 0,
+                majorGridLines: { width: 0 }, 
+                majorTickLines: { width: 0 }, 
+                interval: 1, 
+                lineStyle: { width: 0 },
+                valueType: 'Category'
+              }
+              break;
+            }
+            case 'primaryYAxis':
+            {
+              return {
+                interval: 1,
+                majorTickLines: { width: 0 },
+                lineStyle: { width: 0 },
+              }
+              break;
+            }
+            case 'seriesSetting':
+            {
+              var list = [];
+              var key = Object.keys(dataChart[0])
+              key.forEach(element => {
+                if(element != "row")
+                {
+                  var setting =   {
+                    type: 'Column',
+                    xName: "row",
+                    yName: element,
+                    name: element,
+                    marker:{ dataLabel: { visible: false, position: 'Top', font: { fontWeight: '600', color: '#ffffff' } } },
+                    width: 2
+                  }
+                  list.push(setting);
+                }
+                
+              });
+              debugger
+              return list;
+            }
+            case 'chartArea':
+            {
+              return  {
+                border: {
+                    width: 0
+                }
+              };
+            }
+            case 'legendSettings':
+            {
+              return {
+                visible: true,
+                enableHighlight : true
+              }
+            }
+            case 'isTransposed':
+              {
+                if(answerType == "C") return true;
+                return false;
+              }
+          }
+          break;
+        }
     }
     return null;
   }
