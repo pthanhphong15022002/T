@@ -262,7 +262,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
     }
     if (changes?.isChangeOwner && changes?.isChangeOwner?.currentValue) {
-      this.setOwnerByChangeOwnerInstance(this.currentStep?.instanceID,this.currentStep?.recID);
+      this.setOwnerByChangeOwnerInstance(
+        this.currentStep?.instanceID,
+        this.currentStep?.recID
+      );
     }
     this.changeDetectorRef.markForCheck();
   }
@@ -287,11 +290,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region get Data
   async getStepById(isLoad = false, recIDStep = '') {
     if (this.stepId || isLoad) {
-      let stepID = this.stepId || recIDStep
+      let stepID = this.stepId || recIDStep;
       this.currentStep = await firstValueFrom(
         this.api.exec<any>(
           'DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'GetStepByIdAsync',
           stepID
         )
@@ -301,7 +304,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         ? JSON.parse(JSON.stringify(this.dataSources))
         : this.dataSources;
     }
-    this.isRoleAll = this.isRoleAll ? this.isRoleAll : this.currentStep?.owner == this.user?.userID;
+    this.isRoleAll = this.isRoleAll
+      ? this.isRoleAll
+      : this.currentStep?.owner == this.user?.userID;
     this.isUpdateProgressGroup = this.currentStep?.progressStepControl || false;
     this.isUpdateProgressStep =
       this.currentStep?.progressTaskGroupControl || false;
@@ -490,7 +495,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            res.isblur = this.isOnlyView ? !((this.isRoleAll || isGroup || isTask) && (task?.startDate && task?.endDate)) : !(this.isTaskFirst && this.isRoleAll);
+            res.isblur = this.isOnlyView
+              ? !(
+                  (this.isRoleAll || isGroup || isTask) &&
+                  task?.startDate &&
+                  task?.endDate
+                )
+              : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
             if (
@@ -787,7 +798,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.openPopupContract('add');
     }
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [
+      .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
         task?.stepID,
         task?.recID,
       ])
@@ -982,14 +993,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let taskOutput = await this.openPopupTask('add', task, groupID);
     if (taskOutput?.event?.task) {
       let data = taskOutput?.event;
-      let groupData = this.currentStep?.taskGroups.find((group) => this.comparison(group.refID ,data.task?.taskGroupID));
+      let groupData = this.currentStep?.taskGroups.find((group) =>
+        this.comparison(group.refID, data.task?.taskGroupID)
+      );
       if (this.listGroupTask && this.listGroupTask?.length <= 0) {
         let taskGroup = {};
         taskGroup['recID'] = null; //tạo group task rỗng
         taskGroup['refID'] = null;
         this.listGroupTask.push(taskGroup);
       }
-      let group = this.listGroupTask.find((group) => this.comparison(group.refID, data.task?.taskGroupID) );
+      let group = this.listGroupTask.find((group) =>
+        this.comparison(group.refID, data.task?.taskGroupID)
+      );
 
       if (group) {
         if (!group?.task) {
@@ -1005,68 +1020,68 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep['progress'] = data?.progressStep;
       this.notiService.notifyCode('SYS006');
       if (taskOutput?.event?.isCreateMeeting) {
-        this.addMeetings(data.task)
+        this.addMeetings(data.task);
       }
       this.changeDetectorRef.detectChanges();
     }
   }
 
-  addMeetings(task){
-      let dataTask: DP_Instances_Steps_Tasks = task;
-      let functionID = 'TMT0501';
-      let meeting = new CO_Meetings();
-      meeting.meetingName = dataTask?.taskName;
-      meeting.startDate = dataTask?.startDate;
-      meeting.endDate = dataTask?.endDate;
-      meeting.fromDate = dataTask?.startDate;
-      meeting.toDate = dataTask?.endDate;
-      meeting.reminder = 15;
-      meeting.isOnline = dataTask?.isOnline;
-      meeting.meetingType = '1';
-      meeting.refID = dataTask?.recID;
-      meeting.refType = 'DP_Instances_Steps_Tasks';
-      meeting.permissions = meeting.permissions ? meeting.permissions : [];
-      let roles = JSON.parse(JSON.stringify(dataTask?.roles));
-      roles.forEach((role) => {
-        var tmpResource = new CO_Permissions();
-        if (role.objectID == dataTask?.owner) {
-          tmpResource.objectID = role?.objectID;
-          tmpResource.objectName = role?.objectName;
-          tmpResource.positionName = role?.positionName;
-          tmpResource.roleType = 'A';
-          tmpResource.taskControl = true;
-          tmpResource.objectType = role?.objectType;
-          tmpResource.full = true;
-          tmpResource.read = true;
-          tmpResource.create = true;
-          tmpResource.update = true;
-          tmpResource.assign = true;
-          tmpResource.delete = true;
-          tmpResource.share = true;
-          tmpResource.upload = true;
-          tmpResource.download = true;
-        } else {
-          tmpResource.objectID = role?.objectID;
-          tmpResource.objectName = role?.objectName;
-          tmpResource.positionName = role?.positionName;
-          tmpResource.roleType = 'P';
-          tmpResource.taskControl = true;
-          tmpResource.objectType = role?.objectType;
-          tmpResource.read = true;
-          tmpResource.download = true;
-        }
-        meeting.permissions.push(tmpResource);
-      });
+  addMeetings(task) {
+    let dataTask: DP_Instances_Steps_Tasks = task;
+    let functionID = 'TMT0501';
+    let meeting = new CO_Meetings();
+    meeting.meetingName = dataTask?.taskName;
+    meeting.startDate = dataTask?.startDate;
+    meeting.endDate = dataTask?.endDate;
+    meeting.fromDate = dataTask?.startDate;
+    meeting.toDate = dataTask?.endDate;
+    meeting.reminder = 15;
+    meeting.isOnline = dataTask?.isOnline;
+    meeting.meetingType = '1';
+    meeting.refID = dataTask?.recID;
+    meeting.refType = 'DP_Instances_Steps_Tasks';
+    meeting.permissions = meeting.permissions ? meeting.permissions : [];
+    let roles = JSON.parse(JSON.stringify(dataTask?.roles));
+    roles.forEach((role) => {
+      var tmpResource = new CO_Permissions();
+      if (role.objectID == dataTask?.owner) {
+        tmpResource.objectID = role?.objectID;
+        tmpResource.objectName = role?.objectName;
+        tmpResource.positionName = role?.positionName;
+        tmpResource.roleType = 'A';
+        tmpResource.taskControl = true;
+        tmpResource.objectType = role?.objectType;
+        tmpResource.full = true;
+        tmpResource.read = true;
+        tmpResource.create = true;
+        tmpResource.update = true;
+        tmpResource.assign = true;
+        tmpResource.delete = true;
+        tmpResource.share = true;
+        tmpResource.upload = true;
+        tmpResource.download = true;
+      } else {
+        tmpResource.objectID = role?.objectID;
+        tmpResource.objectName = role?.objectName;
+        tmpResource.positionName = role?.positionName;
+        tmpResource.roleType = 'P';
+        tmpResource.taskControl = true;
+        tmpResource.objectType = role?.objectType;
+        tmpResource.read = true;
+        tmpResource.download = true;
+      }
+      meeting.permissions.push(tmpResource);
+    });
 
-      this.api
-        .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'AddMeetingsAsync', [
-          meeting,
-          functionID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-          }
-        });
+    this.api
+      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'AddMeetingsAsync', [
+        meeting,
+        functionID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+        }
+      });
   }
 
   async editTask(task) {
@@ -1079,17 +1094,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let dataOutput = await this.openPopupTask('edit', taskEdit);
       if (dataOutput?.event.task) {
         let taskOutput = dataOutput?.event?.task;
-        let group = this.listGroupTask.find(
-          (group) => this.comparison( group.refID,taskOutput?.taskGroupID)
+        let group = this.listGroupTask.find((group) =>
+          this.comparison(group.refID, taskOutput?.taskGroupID)
         );
         let indexTask = this.currentStep?.tasks?.findIndex(
           (taskFind) => taskFind.recID == task.recID
         );
 
         if (taskOutput?.taskGroupID != groupIdOld) {
-          let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+          let groupOld = this.listGroupTask.find(
+            (group) => group.refID == groupIdOld
+          );
           if (groupOld) {
-            let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+            let index = groupOld?.task?.findIndex(
+              (taskFind) => taskFind.recID == task.recID
+            );
             if (index >= 0) {
               groupOld?.task?.splice(index, 1);
             }
@@ -1133,8 +1152,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         let data = taskOutput?.event;
         this.currentStep?.tasks?.push(data.task);
         this.currentStep['progress'] = data.progressStep;
-        let group = this.listGroupTask.find(
-          (group) => this.comparison( group.refID, data.task.taskGroupID));
+        let group = this.listGroupTask.find((group) =>
+          this.comparison(group.refID, data.task.taskGroupID)
+        );
         if (group) {
           group?.task.push(data.task);
           group['progress'] = data.progressGroup;
@@ -1147,16 +1167,23 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
+          .exec<any>(
+            'DP',
+            'InstancesStepsBusiness',
+            'DeleteTaskStepAsync',
+            task
+          )
           .subscribe((data) => {
             if (data) {
               let indexTask = this.currentStep?.tasks?.findIndex(
                 (taskFind) => taskFind.recID == task.recID
               );
-              let group = this.listGroupTask.find(
-                (group) => this.comparison( group.refID, task.taskGroupID));
-              let groupData = this.currentStep?.taskGroups?.find(
-                (group) =>this.comparison( group.refID, task.taskGroupID));
+              let group = this.listGroupTask.find((group) =>
+                this.comparison(group.refID, task.taskGroupID)
+              );
+              let groupData = this.currentStep?.taskGroups?.find((group) =>
+                this.comparison(group.refID, task.taskGroupID)
+              );
               let indexTaskGroup = -1;
               if (group?.task?.length > 0) {
                 indexTaskGroup = group?.task?.findIndex(
@@ -1263,7 +1290,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           .execSv<any>(
             'DP',
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdatedAssignedStepTasksAsync',
             [data.stepID, data.recID]
           )
@@ -1385,7 +1412,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.api
           .exec<any>(
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'DeleteGroupTaskStepAsync',
             data
           )
@@ -1448,9 +1475,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       return false;
     }
     if (this.isOnlyView && this.isStart) {
-      if(!(data?.startDate && data?.endDate)){
+      if (!(data?.startDate && data?.endDate)) {
         return false;
-      }else{
+      } else {
         return this.stepService.checkUpdateProgress(
           data,
           type,
@@ -2145,7 +2172,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task.actionStatus = '2';
         task.reference = e?.event?.recID;
         this.api
-          .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', task)
+          .exec<any>(
+            'DP',
+            'InstancesStepsBusiness',
+            'UpdateTaskStepAsync',
+            task
+          )
           .subscribe((res) => {
             if (res) {
               let group = this.listGroupTask.find(
@@ -2382,15 +2414,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region common
   comparison(value1, value2) {
-    if(value1 === value2){
+    if (value1 === value2) {
       return true;
-    }else if (value1 === null && value2 === "") {
-        return true;
-    }else if (value1 === "" && value2 === null) {
-        return true;
+    } else if (value1 === null && value2 === '') {
+      return true;
+    } else if (value1 === '' && value2 === null) {
+      return true;
     }
     return false;
-}
+  }
   //#endregion
   setNameTypeTask(taskType) {
     let type = this.listTaskType?.find((task) => task?.value == taskType);
@@ -2421,42 +2453,57 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   getFields(listField, fieldID) {
     if (listField?.length > 0) {
-      this.listFieldTask = listField?.filter((field) => fieldID.includes(field?.recID));
+      this.listFieldTask = listField?.filter((field) =>
+        fieldID.includes(field?.recID)
+      );
       return this.listFieldTask;
     }
     return null;
   }
 
   //#region set owner
-  setOwnerByChangeOwnerInstance(instanceID, insStepID){
+  setOwnerByChangeOwnerInstance(instanceID, insStepID) {
     // this.getStepById(true, this.currentStep?.recID);
     this.api
-    .exec<any>('DP', 'InstancesBusiness', 'UpdateOwnerInsStepByChangeInstanceAsync', [instanceID, insStepID])
-    .subscribe(res => {
-      if(res){
-        res?.forEach(element => {
-          if(!element?.taskGroupID && !element.taskID && element.stepID == this.currentStep?.recID){
-            this.currentStep.owner = element?.objectID;
-          }else if(element.taskGroupID && !element.taskID){
-            let group = this.listGroupTask?.find(g => g.recID == element.taskGroupID);
-            if(group){
-              group.owner = element?.objectID;
-            }
-          }else if(element.taskID){
-            let group = this.listGroupTask?.find(g => g.refID == element.taskGroupID);
-            if(group?.task?.length > 0){
-              let task = group?.task?.find(t => t.recID == element.taskID);
-              if(task){
-                task.owner = element?.objectID;
+      .exec<any>(
+        'DP',
+        'InstancesBusiness',
+        'UpdateOwnerInsStepByChangeInstanceAsync',
+        [instanceID, insStepID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          res?.forEach((element) => {
+            if (
+              !element?.taskGroupID &&
+              !element.taskID &&
+              element.stepID == this.currentStep?.recID
+            ) {
+              this.currentStep.owner = element?.objectID;
+            } else if (element.taskGroupID && !element.taskID) {
+              let group = this.listGroupTask?.find(
+                (g) => g.recID == element.taskGroupID
+              );
+              if (group) {
+                group.owner = element?.objectID;
+              }
+            } else if (element.taskID) {
+              let group = this.listGroupTask?.find(
+                (g) => g.refID == element.taskGroupID
+              );
+              if (group?.task?.length > 0) {
+                let task = group?.task?.find((t) => t.recID == element.taskID);
+                if (task) {
+                  task.owner = element?.objectID;
+                }
               }
             }
-          }
-        });
-        console.log(res);
-        console.log(this.listGroupTask);
-        console.log(this.currentStep);
-      }
-    })
+          });
+          console.log(res);
+          console.log(this.listGroupTask);
+          console.log(this.currentStep);
+        }
+      });
   }
   //#endregion
 }

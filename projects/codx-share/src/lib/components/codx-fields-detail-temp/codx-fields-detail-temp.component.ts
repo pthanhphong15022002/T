@@ -336,7 +336,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     this.api
       .exec<any>(
         'DP',
-        'InstanceStepsBusiness',
+        'InstancesStepsBusiness',
         'UpdateInstanceStepFielsByStepIDAsync',
         data
       )
