@@ -440,11 +440,11 @@ export class AddContractsComponent implements OnInit {
     return true;
   }
 
-  addContracts() {
+  async addContracts() {
     if (this.type == 'view') {
       if (this.contracts?.applyProcess) {
         this.setDataInstance(this.contracts, this.instance);
-        this.addInstance();
+        await this.addInstance();
       }
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
@@ -546,12 +546,36 @@ export class AddContractsComponent implements OnInit {
 
   async addInstance() {
     var data = [this.instance, this.listInstanceSteps, null];
-    this.cmService.addInstance(data).subscribe((instance) => {
-      if (instance) {
-        console.log(instance);
-        
+    let instance = await firstValueFrom(this.cmService.addInstance(data));
+    if (instance) {
+      console.log(instance);
+      let listPermissions = instance?.permissions;
+      if(listPermissions?.length > 0){
+        let listPermission = [];
+        listPermissions.forEach(p => {
+          let permissions = new CM_Permissions ();
+          permissions.recID = Util.uid();
+          permissions.objectID = p?.objectID;
+          permissions.objectName = p?.objectName;
+          permissions.objectType = p?.objectType;
+          permissions.roleType = p?.roleType;
+          permissions.memberType = "2";
+          permissions.full = true;
+          permissions.read = p?.read;
+          permissions.edit = p?.edit;
+          permissions.create = p?.create;
+          permissions.update = p?.update;
+          permissions.assign = p?.assign;
+          permissions.delete = p?.delete;
+          permissions.share = p?.share;
+          permissions.upload = p?.upload;
+          permissions.download = p?.download;
+          permissions.allowUpdateStatus = p?.allowUpdateStatus;
+          listPermission.push(permissions);
+        })
+        this.contracts.permissions = listPermission;
       }
-    });
+    }
   }
   //#endregion
   //#region change Input
@@ -604,6 +628,7 @@ export class AddContractsComponent implements OnInit {
     let user = event?.component?.itemsSelected[0];
     if(!this.contracts.applyProcess && user){
       let permissions = new CM_Permissions;
+      permissions.recID = Util.uid();
       permissions.objectID = user?.UserID;
       permissions.objectName = user?.UserName;
       permissions.objectType = "U";
