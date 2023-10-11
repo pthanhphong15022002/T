@@ -68,6 +68,11 @@ export class PopupAssginDealComponent
 
   listParticipants = [];
   data: any;
+  animation: object = {
+    previous: { effect: "", duration: 0, easing: "" },
+    next: { effect: "", duration: 0, easing: "" }
+  };
+
   listUser: any[] = [];
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly viewBUID: string = 'ViewBUID';
@@ -323,7 +328,6 @@ export class PopupAssginDealComponent
   }
 
   saveOwner() {
-    debugger;
     if(this.applyFor == '0') {
       let datas = [this.recID, this.owner];
       this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
@@ -348,5 +352,8 @@ export class PopupAssginDealComponent
         }
       });
     }
+  }
+  disableViewTab(actionType: any) {
+    return true;
   }
 }
