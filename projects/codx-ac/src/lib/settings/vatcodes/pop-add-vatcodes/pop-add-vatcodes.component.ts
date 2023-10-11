@@ -84,7 +84,7 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
     });
     this.cache.message('AC0038').subscribe((res) => {
       if (res) {
-        this.lblAccountSetting = res?.customName;
+        this.lblAccountSetting = res?.customName.toLowerCase();
       }
     });
   }
