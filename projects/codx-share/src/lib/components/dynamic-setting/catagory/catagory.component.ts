@@ -705,8 +705,8 @@ export class CatagoryComponent implements OnInit {
     } else {
       if (
         (typeof value == 'boolean' &&
-          data.dataType.toLowerCase() != 'boolean' &&
-          data.dataType.toLowerCase() != 'bool') ||
+          data.dataType?.toLowerCase() != 'boolean' &&
+          data.dataType?.toLowerCase() != 'bool') ||
         !data.dataType
       ) {
         value = +value + '';
@@ -920,7 +920,7 @@ export class CatagoryComponent implements OnInit {
 
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
-    if (!dataVale || !setting) return;
+    if (!dataVale || !setting ) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
         // this.cache.companySetting().subscribe((res) => {

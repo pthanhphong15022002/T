@@ -654,8 +654,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          //"Host": "172.16.7.34",
-          "Host": "localhost",
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
           "Port": 8031,
           "Location": "{DownstreamBaseUrl}, {BaseUrl}",
           "Server": "Cloud"
@@ -676,8 +676,8 @@
       "DownstreamScheme": "ws",
       "DownstreamHostAndPorts": [
         {
-          //"Host": "172.16.7.34",
-          "Host": "localhost",
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
           "Port": 8031,
           "Location": "{DownstreamBaseUrl}, {BaseUrl}",
           "Server": "Cloud"
@@ -698,8 +698,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          //"Host": "172.16.7.34",
-          "Host": "localhost",
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
           "Port": 8031,
           "Location": "{DownstreamBaseUrl}, {BaseUrl}",
           "Server": "Cloud"
@@ -717,8 +717,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          //"Host": "172.16.7.34",
-          "Host": "localhost",
+          "Host": "172.16.7.34",
+          // "Host": "localhost",
           "Port": 8032,
           "Location": "{DownstreamBaseUrl}, {BaseUrl}",
           "Server": "Cloud"
