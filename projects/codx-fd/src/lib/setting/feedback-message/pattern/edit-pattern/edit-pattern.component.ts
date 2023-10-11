@@ -144,7 +144,15 @@ export class EditPatternComponent implements OnInit {
   closeCreate(): void {}
 
   valueChange(e) {
-    if (e) this.pattern[e.field] = e.data;
+    if (e) {
+      this.pattern[e.field] = e.data;
+      if(e.field == 'stop' && e.data == true){
+        this.pattern['isDefault'] = false;
+      }
+      if(e.field == 'isDefault' && e.data == true){
+        this.pattern['stop'] = false;
+      }
+    }
   }
 
   valueChangeColor(e) {
@@ -170,8 +178,8 @@ export class EditPatternComponent implements OnInit {
   async handleFileInput(event) {}
 
   savePattern() {
-    if (!this.pattern.patternName) {
-      this.notificationsService.notify('Vui lòng nhập mô tả');//
+    if (!this.pattern.patternName.trim()) {
+      this.notificationsService.notify('Vui lòng nhập mô tả','2');
       return;
     }
     if (this.formType == 'edit' && this.checkFileUpload && this.checkGetFile) {
@@ -194,18 +202,19 @@ export class EditPatternComponent implements OnInit {
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
             this.attachment.fileUploadList = this.listFile;
-            this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
-              this.attachment
-                .saveFilesMulObservable()
-                .subscribe((result: any) => {
-                  if (this.formType == 'edit')
-                    res.update.imageSrc = result?.data?.pathDisk;
-                  else res.save.imageSrc = result?.data?.pathDisk;
-                  var obj = { data: res, listFile: this.listFile };
-                  this.dialog.close(obj);
-                  this.change.detectChanges();
-                });
-            });
+            this.attachment
+              .saveFilesMulObservable()
+              .subscribe((result: any) => {
+                if (this.formType == 'edit')
+                  res.update.imageSrc = result?.data?.pathDisk;
+                else res.save.imageSrc = result?.data?.pathDisk;
+                var obj = { data: res, listFile: this.listFile };
+                this.dialog.close(obj);
+                this.change.detectChanges();
+              });
+            // this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
+
+            // });
           } else {
             if (this.formType == 'edit')
               res.update.imageSrc = this.pattern?.imageSrc;

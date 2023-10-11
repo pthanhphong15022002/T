@@ -35,14 +35,30 @@
           </div>
           <div class="w-100 position-relative card-img img-pat-edit div-bg-img">
             <codx-img
+              *ngIf="item.backgroundColor"
               [width]="100"
               [height]="150"
+              [isFull]="true"
               imageType="square"
               [objectId]="item.recID"
+              [imgSource]="'none'"
               referType="image"
               objectType="FD_Patterns"
               [backgroundColor]="item.backgroundColor"
               [isLoadName]="false"
+            >
+            </codx-img>
+            <codx-img
+              *ngIf="!item.backgroundColor"
+              [width]="100"
+              [height]="150"
+              [isFull]="true"
+              imageType="square"
+              [objectId]="item.recID"
+              [isDefaulImg]="true"
+              [imgSource]="'./assets/themes/fd/default/img/' + item.fileName"
+              referType="image"
+              objectType="FD_Patterns"
             >
             </codx-img>
           </div>
@@ -104,9 +120,11 @@
         </div>
       </div>
       <ng-template #template>
-        <div class="card-img create-card cursor-pointer rounded-2">
+        <div class="card-img create-card cursor-pointer rounded-2 h-100">
           <div
-            id="create_card_toggle"
+            style="
+              background-image: url('./assets/themes/fd/default/img/card-add.png');
+            "
             class="card-img"
             (click)="openFormAdd()"
           ></div>
