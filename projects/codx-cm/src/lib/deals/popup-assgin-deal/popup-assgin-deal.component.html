@@ -10,7 +10,7 @@
 >
   <ng-template #body>
     <div class="d-flex justify-content-center w-100 pt-2">
-      <ejs-tab id="element">
+      <ejs-tab id="element" [animation]="animation" heightAdjustMode='Auto'>
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
@@ -87,7 +87,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem  *ngIf="applyFor != '0'">
+          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="true">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>
@@ -144,7 +144,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem  *ngIf="applyFor != '0'">
+          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="true">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>

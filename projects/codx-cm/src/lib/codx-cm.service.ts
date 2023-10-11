@@ -202,7 +202,7 @@ export class CodxCmService {
   getStepInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetStepsByInstanceIDAsync',
       data
     );
@@ -470,7 +470,7 @@ export class CodxCmService {
   getStepsByListID(lstStepIDs, lstInsID) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetListStepsByLstIDAsync',
       [lstStepIDs, lstInsID]
     );
@@ -487,7 +487,7 @@ export class CodxCmService {
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'MoveReasonByIdInstnaceAsync',
       data
     );
@@ -542,7 +542,7 @@ export class CodxCmService {
   ) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateFielsContactByInstanceIDAsync',
       [instanceID, dataValueEdit, dataValueDeleted]
     );
@@ -849,7 +849,7 @@ export class CodxCmService {
     return this.api.execSv<any>(
       'DP',
       'ERM.Business.DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'MoveBackStartByIdInstanceAsync',
       data
     );
@@ -981,7 +981,7 @@ export class CodxCmService {
   autoMoveStageInInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'AutoMoveStageAsync',
       data
     );
@@ -1006,7 +1006,7 @@ export class CodxCmService {
   updateListReason(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateReasonStepAsync',
       data
     );
@@ -1014,7 +1014,7 @@ export class CodxCmService {
   deleteListReason(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'DeleteReasonStepAsync',
       data
     );
@@ -1056,7 +1056,7 @@ export class CodxCmService {
   updateOwnerInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateOwnerAsync',
       data
     );
@@ -1073,7 +1073,7 @@ export class CodxCmService {
   getStepByStepIDAndInID(insID, stepID) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetStepByStepIDAndInIDAsync',
       [insID, stepID]
     );
@@ -1461,13 +1461,15 @@ export class CodxCmService {
   }
 
   getCustomerNameByrecID(id) {
-    return id ? this.api.execSv<any>(
-      'CM',
-      'ERM.Business.CM',
-      'ContractsBusiness',
-      'GetCustomerNameByRecIDAsync',
-      [id]
-    ) : null;
+    return id
+      ? this.api.execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'ContractsBusiness',
+          'GetCustomerNameByRecIDAsync',
+          [id]
+        )
+      : null;
   }
 
   //#region target and targetLines

@@ -58,7 +58,7 @@ export class CodxInstancesService {
   GetStepsByInstanceIDAsync(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetStepsByInstanceIDAsync',
       data
     );
@@ -67,14 +67,19 @@ export class CodxInstancesService {
   getStepsByInstanceIDAndProcessID(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetStepsByInstanceIDAndProcessIDAsync',
       data
     );
   }
 
   GetStepInstance(recID) {
-    return this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetAsync', recID);
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetAsync',
+      recID
+    );
   }
   // #step -- nvthuan
   addStep(data) {
@@ -125,7 +130,7 @@ export class CodxInstancesService {
   checkExitsInstancesStep(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'CheckExitsInstancesStep',
       data
     );
@@ -134,7 +139,7 @@ export class CodxInstancesService {
   addTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'AddGroupTaskAsync',
       data
     );
@@ -142,7 +147,7 @@ export class CodxInstancesService {
   updateTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateGroupTaskAsync',
       data
     );
@@ -150,7 +155,7 @@ export class CodxInstancesService {
   deleteTaskGroups(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'DeleteGroupTaskAsync',
       data
     );
@@ -158,7 +163,7 @@ export class CodxInstancesService {
   addTask(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'AddTaskAsync',
       data
     );
@@ -166,7 +171,7 @@ export class CodxInstancesService {
   updateTask(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateTaskAsync',
       data
     );
@@ -174,7 +179,7 @@ export class CodxInstancesService {
   deleteTask(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'DeleteTaskAsync',
       data
     );
@@ -198,7 +203,7 @@ export class CodxInstancesService {
   updateDataDrop(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'DeleteFilesAsync',
       data
     );
@@ -206,7 +211,7 @@ export class CodxInstancesService {
   updateProgressStep(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateProgressStep',
       data
     );
@@ -223,7 +228,7 @@ export class CodxInstancesService {
   moveStageByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'MoveStageByIdInstnaceAsync',
       data
     );
@@ -231,7 +236,7 @@ export class CodxInstancesService {
   autoMoveStage(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'AutoMoveStageAsync',
       data
     );
@@ -239,7 +244,7 @@ export class CodxInstancesService {
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'MoveReasonByIdInstnaceAsync',
       data
     );
@@ -247,7 +252,7 @@ export class CodxInstancesService {
   updateListReason(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateReasonStepAsync',
       data
     );
@@ -255,7 +260,7 @@ export class CodxInstancesService {
   DeleteListReason(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'DeleteReasonStepAsync',
       data
     );
@@ -364,7 +369,7 @@ export class CodxInstancesService {
   getStepByStepIDAndInID(insID, stepID) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'GetStepByStepIDAndInIDAsync',
       [insID, stepID]
     );
@@ -402,7 +407,7 @@ export class CodxInstancesService {
   updateFiels(data) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateInstanceStepFielsByStepIDAsync',
       data
     );
@@ -576,7 +581,7 @@ export class CodxInstancesService {
   updateOwnerStepAsync(step, startControl) {
     return this.api.exec<any>(
       'DP',
-      'InstanceStepsBusiness',
+      'InstancesStepsBusiness',
       'UpdateOwnerStepAsync',
       [step, startControl]
     );
