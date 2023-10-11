@@ -2344,7 +2344,6 @@ export class InstancesComponent
       'DP',
       data,
       category,
-      // this.view.formModel.entityName,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
       data?.stepName,

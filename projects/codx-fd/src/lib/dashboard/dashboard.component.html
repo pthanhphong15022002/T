@@ -7,36 +7,38 @@
             <div class="w-300px min-w-300px me-4 fd-left bg-body p-5 rounded-2">
                 <div class="fd-left-header">
                     <div class="d-flex align-items-center">
-                        <div>
-                            <codx-input class="rounded-circle" [checked]="true" [label]="'Theo phân quyền'"
-                                type="radio" name="radio">
+                        <!-- <div>
+                            <codx-input class="rounded-circle" [checked]="true" [label]="'Theo phân quyền'" type="radio"
+                                name="radio" data="MyPermission" (valueChange)="changeRadio($event)">
                             </codx-input>
-                        </div>
-                        <div class="ms-4">
-                            <codx-input class="rounded-circle" [label]="'Phiếu của tôi'" type="radio"
-                                name="radio">
+                        </div> -->
+                        <div *ngFor="let item of listRadio; index as i" class="ms-4">
+                            <codx-input class="rounded-circle" [checked]="i == 0" [label]="item.label" type="radio" name="radio"
+                                (valueChange)="changeRadio($event, item.data)">
                             </codx-input>
                         </div>
                     </div>
                     <div class="my-3">
                         <div class="mb-1 fw-bold text-dark">
-                            <codx-label
-                            default="Ngày gửi/nhận phiếu"
-                            >
+                            <codx-label default="Ngày gửi/nhận phiếu">
                             </codx-label>
                         </div>
-                        <codx-input
-                            type="datetime"
-                            placeholder=" "
-                            format="d"
-                        >
-                        </codx-input>
-                      </div>
+                        <!-- <codx-input type="datetime" placeholder=" " format="d">
+                        </codx-input> -->
+                        <codx-dropdown-calendar
+                            #calendarDrop
+                            cssPopup="h-350px w-550px"
+                            [value]="date"
+                            [selectedType]="'m'"
+                            cssClass="w-100"
+                            (change)="changeCalendar($event)"
+                        ></codx-dropdown-calendar>
+                    </div>
                 </div>
                 <hr />
                 <div class="fd-left-content">
                     <div class="fd-menuleft">
-                        <button type="button" class="btn btn-full btn-clean d-flex align-items-center">
+                        <!-- <button type="button" class="btn btn-full btn-clean d-flex align-items-center">
                             <span class="icon-military_tech icon-20 w-30px"></span>
                             <span class="fw-bold">Phiếu tuyên dương</span>
                         </button>
@@ -59,6 +61,11 @@
                         <button type="button" class="btn btn-full btn-clean d-flex align-items-center">
                             <span class="icon-redeem icon-20  w-30px"></span>
                             <span class="fw-bold">Thiệp chúc mừng</span>
+                        </button> -->
+                        <button *ngFor="let item of lstCardType" type="button"
+                            class="btn btn-full btn-clean d-flex align-items-center" (click)="clickCardType(item)">
+                            <span class="svg-icon svg-icon-1" [inlineSVG]="item.smallIcon"></span>
+                            <span class="fw-bold">{{item.customName}}</span>
                         </button>
                     </div>
                 </div>
@@ -70,23 +77,24 @@
             <div class="w-100 home-left">
                 <div class="d-flex w-100 bg-body py-2 rounded-2 mb-4">
                     <div class="w-50 d-flex justify-content-center">
-                        <button type="button" class="btn text-hover-primary d-flex align-items-center">
+                        <button type="button" class="btn text-hover-primary d-flex align-items-center"
+                            (click)="clickFavorite(lstFavorite[0])">
                             <i class="icon-i-envelope-fill icon-20 me-2"></i>
-                            <span class="fw-bold fs-6">Phiếu nhận</span>
+                            <span class="fw-bold fs-6">{{lstFavorite[0]?.favorite}}</span>
                         </button>
                     </div>
                     <div class="w-50 d-flex justify-content-center">
-                        <button type="button" class="btn text-hover-primary d-flex align-items-center">
+                        <button type="button" class="btn text-hover-primary d-flex align-items-center"
+                            (click)="clickFavorite(lstFavorite[1])">
                             <i class="icon-i-envelope-open-fill icon-20 me-2"></i>
-                            <span class="fw-bold fs-6">Phiếu gửi</span>
+                            <span class="fw-bold fs-6">{{lstFavorite[1]?.favorite}}</span>
                         </button>
                     </div>
                 </div>
                 <div class="w-100 bg-body fd-main rounded-2">
-                    <app-list-post 
-                        [isShowCreate]="false"
-                        [predicate]="predicateWP"
-                        [dataValue]="dataValueWP">
+                    <app-list-post *ngIf="showPosts" [isShowCreate]="false" [predicates]="predicateWP" entityName="FD_Cards"
+                        [dataValues]="dataValueWP" [service]="service" [assemblyName]="assembly" [className]="className"
+                        [method]="method" [funcID]="functionID" [favoriteID]="favoriteID">
                     </app-list-post>
                 </div>
             </div>
@@ -102,7 +110,7 @@
                             ...
                         </div>
                     </div>
-                    
+
                     <div class="box-body">
                         <ng-container *ngIf="lstCountCard.length > 0;else emptyTemplate">
                             <ng-container *ngFor="let item of lstCountCard">
@@ -146,7 +154,8 @@
                             <codx-img [width]="50"></codx-img>
                         </div>
                         <div class="radio-mess mt-4">
-                            Happy birthday!!! Chúc bạn sinh nhật vui vẻ, tươi trẻ, mạnh khỏe và thành công trong cuộc sống :D
+                            Happy birthday!!! Chúc bạn sinh nhật vui vẻ, tươi trẻ, mạnh khỏe và thành công trong cuộc
+                            sống :D
                         </div>
                     </div>
                 </div>

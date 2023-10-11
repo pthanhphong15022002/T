@@ -22,8 +22,8 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-    <codx-listview #listview [dataService]="dataService" [funcId]="'WP'" [formModel]="formModel"
-      entityName="WP_Comments" [itemTemplate]="itemTemplate" [emptyTemplate]="empty" [selectFirst]="true"
+    <codx-listview #listview [dataService]="dataService" [funcId]="funcID" [formModel]="formModel"
+      [entityName]="entityName" [itemTemplate]="itemTemplate" [emptyTemplate]="empty" [selectFirst]="true"
       (onSelectionChanged)="onAction($event)">
     </codx-listview>
   </div>

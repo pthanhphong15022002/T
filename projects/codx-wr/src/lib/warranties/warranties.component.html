@@ -49,7 +49,7 @@
     [formModel]="view.formModel"
     [descTmp]="descTmp"
     [footer]="footer"
-    [titleCss]="'text-dark fw-bold fs-6 mb-1'"
+    [titleCss]="'text-primary-dark'"
     [dataItem]="data"
     (mouseenter)="closePopover()"
   >
@@ -118,16 +118,16 @@
       ></div>
     </div>
 
-    <div class="d-flex justify-content-start mb-1 w-100" (mouseenter)="closePopover()">
-      <span class="icon-location_on text-hover-primary icon-16 me-1"  [ngbTooltip]="gridViewSetup['Address']?.headerText"></span>
-      <span class="text-gray-700 fs-7 line-clamp line-clamp-1">{{
+    <div class="d-flex justify-content-start mb-2 w-100" (mouseenter)="closePopover()">
+      <span class="icon-location_on text-hover-primary icon-16 text-gray-600 me-1"  [ngbTooltip]="gridViewSetup['Address']?.headerText"></span>
+      <span class="text-gray-500 fs-7 line-clamp line-clamp-1">{{
         data?.address
       }}</span>
     </div>
 
     <div class="d-flex justify-content-start mb-1 w-100">
       <span
-        class="text-gray-700 fs-7 line-clamp line-clamp-1"
+        class="text-gray-800 fs-7 line-clamp line-clamp-1"
         [innerHTML]="
           data?.problem | formatvalue : view.formModel : 'Problem' | async
         "

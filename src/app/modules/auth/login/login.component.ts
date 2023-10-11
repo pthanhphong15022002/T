@@ -444,7 +444,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               Login2FAComponent,
               '',
               400,
-              600,
+              500,
               '',
               objData
             );

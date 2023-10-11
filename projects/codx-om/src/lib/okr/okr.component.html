@@ -204,8 +204,8 @@
             <ng-template #content>
               <ng-container *ngIf="loadedData">
                 <div class="h-100" *ngIf="!planNull; else defaultEmpty">
-                  <div class="om-ejs-tab d-block mt-5">
-                    <div class="mw-1000px mx-auto">
+                  <div class="om-ejs-tab d-block mt-6">
+                    <div class="mw-1000px mx-auto px-6">
                       <codx-history [objectID]="dataOKRPlans?.recID" [formModel]="formModelPlan"
                         [funcID]="funcID"></codx-history>
                     </div>
