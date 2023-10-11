@@ -204,7 +204,6 @@ export class HomeComponent extends UIComponent implements OnInit {
   }
   
   clickMF(e, data) {
-    debugger;
     switch(e?.functionID)
     {
       case 'SYS02': {
