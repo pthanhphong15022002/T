@@ -713,10 +713,10 @@ export class CatagoryComponent implements OnInit {
       }
     } else {
       if (
+        !data.dataType ||
         (typeof value == 'boolean' &&
-          data.dataType?.toLowerCase() != 'boolean' &&
-          data.dataType?.toLowerCase() != 'bool') ||
-        !data.dataType
+          data.dataType.toLowerCase() != 'boolean' &&
+          data.dataType.toLowerCase() != 'bool')
       ) {
         value = +value + '';
       }
@@ -929,7 +929,7 @@ export class CatagoryComponent implements OnInit {
 
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
-    if (!dataVale || !setting ) return;
+    if (!dataVale || !setting) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
         // this.cache.companySetting().subscribe((res) => {

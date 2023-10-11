@@ -202,18 +202,19 @@ export class EditPatternComponent implements OnInit {
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
             this.attachment.fileUploadList = this.listFile;
-            this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
-              this.attachment
-                .saveFilesMulObservable()
-                .subscribe((result: any) => {
-                  if (this.formType == 'edit')
-                    res.update.imageSrc = result?.data?.pathDisk;
-                  else res.save.imageSrc = result?.data?.pathDisk;
-                  var obj = { data: res, listFile: this.listFile };
-                  this.dialog.close(obj);
-                  this.change.detectChanges();
-                });
-            });
+            this.attachment
+              .saveFilesMulObservable()
+              .subscribe((result: any) => {
+                if (this.formType == 'edit')
+                  res.update.imageSrc = result?.data?.pathDisk;
+                else res.save.imageSrc = result?.data?.pathDisk;
+                var obj = { data: res, listFile: this.listFile };
+                this.dialog.close(obj);
+                this.change.detectChanges();
+              });
+            // this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
+
+            // });
           } else {
             if (this.formType == 'edit')
               res.update.imageSrc = this.pattern?.imageSrc;
