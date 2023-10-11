@@ -140,6 +140,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       if(this.dataSV?.settings?.backgroudColor) {
         document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
       }
+      this.primaryColor = this.dataSV?.settings?.primaryColor
     }
   }
 
