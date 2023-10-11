@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
+import { Component, Directive, ElementRef, EventEmitter, HostListener, Input, OnInit, Optional, Output } from '@angular/core';
 import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef } from 'codx-core';
 import { log } from 'console';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
@@ -45,10 +45,16 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   dataCheck;
   user;
   isAdmin = false;
+  entityName;
+  funcID;
+  page = 1;
+  isLoad = false;
+  canceLoad = false;
   constructor(
     private api: ApiHttpService,
     private stepService: StepService,
     private authStore: AuthStore,
+    private el: ElementRef,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -75,7 +81,11 @@ export class PopupAddTaskCalendarComponent implements OnInit {
       let typeCM = this.typeCMs?.find(typeFind => typeFind.entityName == type);
       this.dataCheck = null;
       this.dataCombobox = [];
-      this.getDatas(typeCM?.entityName, typeCM?.funcID);
+      this.entityName = typeCM?.entityName;
+      this.funcID = typeCM?.funcID;
+      this.page = 1;
+      this.canceLoad = false;
+      this.getDatas(this.entityName,  this.funcID, this.page);
     }
   }
 
@@ -93,43 +103,57 @@ export class PopupAddTaskCalendarComponent implements OnInit {
   }
   searchName(e) {}
 
-  getDatas(entityName, funcID) {
+  getDatas(entityName, funcID, page) {
     this.requestData.entityName = entityName;
     this.requestData.funcID = funcID;
     this.requestData.pageLoading = true;
-    this.requestData.page = 1;
+    this.requestData.page = page;
     this.requestData.pageSize = 20;
+    this.isLoad = true;
     this.fetch().subscribe((res) => {
-     if(res){
-      let applyProcess = null;
-      let isAdminClone = false;
-      if(entityName == "CM_Deals"){
-        applyProcess = true;
-      }else if(entityName == "CM_Customers"){
-        applyProcess = false;
+     if(res && res?.length > 0){
+      let dataConvert = this.setData(res,entityName);
+      if(dataConvert?.length > 0){
+        this.dataCombobox = [...this.dataCombobox,...dataConvert];
       }
-      this.dataCombobox = res?.map(item =>{
-        if(entityName != "CM_Customers" && entityName != "CM_Deals"){
-          applyProcess = item?.applyProcess ? true : false;
-        }
-        if(this.isAdmin){
-          isAdminClone = true;
-        }else{
-          isAdminClone = item?.permissions?.some(x => x.full) || false;
-        }
-        return {
-          name:item?.customerName || item?.dealName || item?.contractName || item?.leadName || item?.caseName,
-          recID:item?.recID,
-          refID:item?.refID,
-          applyProcess: applyProcess, 
-          owner: item?.owner,
-          full: isAdminClone,
-          entityName: entityName,
-        }
-      } );
+      this.isLoad = false;
       console.log(this.dataCombobox);      
+     }else{
+      this.canceLoad = true;
+      this.isLoad = false;
      }
     });
+  }
+
+  setData(data, entityName){
+    let dataMap = [];
+    let applyProcess = null;
+    let isAdminClone = false;
+    if(entityName == "CM_Deals"){
+      applyProcess = true;
+    }else if(entityName == "CM_Customers"){
+      applyProcess = false;
+    }
+    dataMap = data?.map(item =>{
+      if(entityName != "CM_Customers" && entityName != "CM_Deals"){
+        applyProcess = item?.applyProcess ? true : false;
+      }
+      if(this.isAdmin){
+        isAdminClone = true;
+      }else{
+        isAdminClone = item?.permissions?.some(x => x.full) || false;
+      }
+      return {
+        name:item?.customerName || item?.dealName || item?.contractName || item?.leadName || item?.caseName,
+        recID:item?.recID,
+        refID:item?.refID,
+        applyProcess: applyProcess, 
+        owner: item?.owner,
+        full: isAdminClone,
+        entityName: entityName,
+      }
+    } );
+    return dataMap;  
   }
 
   fetch(): Observable<any[]> {
@@ -147,5 +171,15 @@ export class PopupAddTaskCalendarComponent implements OnInit {
           return response[0];
         })
       );
+  }
+  @HostListener('scroll', ['$event'])
+  onScroll(event: Event): void {
+    if(!this.canceLoad){
+      const element = event.target as HTMLElement;
+      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+        this.page = this.page + 1;
+        this.getDatas(this.entityName,  this.funcID, this.page);
+      }
+    }
   }
 }

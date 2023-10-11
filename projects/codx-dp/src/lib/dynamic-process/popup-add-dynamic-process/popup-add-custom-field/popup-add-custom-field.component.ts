@@ -131,6 +131,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // column: ColumnTable;
   listColumns = [];
   settingWidth = false;
+  settingCount = false;
   isShowMore = false;
   widthDefault = '550';
 
@@ -828,6 +829,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
             if (res.event[0]) {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+              this.settingCount = this.listColumns[0]?.settingCount ?? false;
+
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
             if (res.event[1] && !this.processNo) {
@@ -848,6 +851,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (Array.isArray(arr)) {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+      this.settingCount = this.listColumns[0]?.settingCount ?? false;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }

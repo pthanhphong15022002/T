@@ -103,7 +103,11 @@
         <tr class="bg-gray-100">
           <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
             <div>
-              <span>{{ countName }}</span>
+              <codx-label
+                name="lblNo"
+                formName="System"
+                [default]="'STT'"
+              ></codx-label>
             </div>
           </th>
           <ng-container *ngFor="let item of listColumns; let index = index">
@@ -145,7 +149,13 @@
       <tbody>
         <tr>
           <td class="ps-4" *ngIf="settingCount">
-            <div>{{ countName }}</div>
+            <div>
+              <codx-label
+                name="lblNo"
+                formName="System"
+                [default]="'STT'"
+              ></codx-label>
+            </div>
           </td>
           <ng-container *ngFor="let item of listColumns; let index = index">
             <td

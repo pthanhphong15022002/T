@@ -271,7 +271,7 @@
         [ngTemplateOutlet]="showToltal"
         [ngTemplateOutletContext]="{
           $implicit: genTotal(data.keyField),
-          color: getPropertiesHeader(data, 'textColor')
+          color: getPropertiesHeader(data, 'iconColor')
         }"
       ></ng-container>
       <ng-template #showToltal let-total let-color>

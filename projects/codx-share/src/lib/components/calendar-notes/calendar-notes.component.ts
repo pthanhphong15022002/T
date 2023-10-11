@@ -519,47 +519,103 @@ export class CalendarNotesComponent
           let dt = res;
           this.countEvent = dt[1];
           const dataValue = fDayOfMonth + ';' + lDayOfMonth;
-          this.TM_TasksParam = dt[0]?.TM_Tasks[1]
-            ? JSON.parse(dt[0]?.TM_Tasks[1])
-            : null;
-          this.WP_NotesParam = dt[0]?.WP_Notes[1]
-            ? JSON.parse(dt[0]?.WP_Notes[1])
-            : null;
-          this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
-            ? JSON.parse(dt[0]?.CO_Meetings[1])
-            : null;
-          this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
-            ? JSON.parse(dt[0]?.EP_BookingRooms[1])
-            : null;
-          this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
-            ? JSON.parse(dt[0]?.EP_BookingCars[1])
-            : null;
+          const lDayTimeOfMonth = moment(lDayOfMonth).endOf('date').toJSON();
+          const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
 
+          if (dt[0]?.TM_Tasks && dt[0]?.TM_Tasks.length) {
+            if (dt[0]?.TM_Tasks.length > 1)
+              this.TM_TasksParam = dt[0]?.TM_Tasks[1]
+                ? JSON.parse(dt[0]?.TM_Tasks[1])
+                : null;
+
+            this.getRequestTM(
+              dt[0]?.TM_Tasks[0],
+              dataValueTM,
+              this.TM_TasksParam,
+              this.TM_TasksParam?.ShowEvent
+            );
+          }
+
+          if (dt[0]?.WP_Notes && dt[0]?.WP_Notes.length) {
+            if (dt[0]?.WP_Notes.length > 1)
+              this.WP_NotesParam = dt[0]?.WP_Notes[1]
+                ? JSON.parse(dt[0]?.WP_Notes[1])
+                : null;
+
+            this.getRequestWP(
+              dt[0]?.WP_Notes[0],
+              dataValue,
+              this.WP_NotesParam,
+              this.WP_NotesParam?.ShowEvent
+            );
+          }
+
+          if (dt[0]?.CO_Meetings && dt[0]?.CO_Meetings.length) {
+            if (dt[0]?.CO_Meetings.length > 1)
+              this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
+                ? JSON.parse(dt[0]?.CO_Meetings[1])
+                : null;
+
+            this.getRequestCO(
+              dt[0]?.CO_Meetings[0],
+              dataValue,
+              this.CO_MeetingsParam,
+              this.CO_MeetingsParam?.ShowEvent
+            );
+          }
+
+          if (dt[0]?.EP_BookingRooms && dt[0]?.EP_BookingRooms.length) {
+            if (dt[0]?.EP_BookingRooms.length > 1)
+              this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
+                ? JSON.parse(dt[0]?.EP_BookingRooms[1])
+                : null;
+
+            this.getRequestEP_BookingRoom(
+              dt[0]?.EP_BookingRooms[0],
+              dataValue,
+              this.EP_BookingRoomsParam,
+              this.EP_BookingRoomsParam?.ShowEvent
+            );
+          }
+
+          if (dt[0]?.EP_BookingCars && dt[0]?.EP_BookingCars.length) {
+            if (dt[0]?.EP_BookingCars.length > 1)
+              this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
+                ? JSON.parse(dt[0]?.EP_BookingCars[1])
+                : null;
+
+            this.getRequestEP_BookingCar(
+              dt[0]?.EP_BookingCars[0],
+              dataValue,
+              this.EP_BookingCarsParam,
+              this.EP_BookingCarsParam?.ShowEvent
+            );
+          }
           this.lstTransType = [
             {
               transType: 'TM_Tasks',
               isActive: this.TM_TasksParam?.ShowEvent,
-              color: this.TM_TasksParam.ShowColor,
+              color: this.TM_TasksParam?.ShowColor,
             },
             {
               transType: 'WP_Notes',
               isActive: this.WP_NotesParam?.ShowEvent,
-              color: this.WP_NotesParam.ShowColor,
+              color: this.WP_NotesParam?.ShowColor,
             },
             {
               transType: 'CO_Meetings',
               isActive: this.CO_MeetingsParam?.ShowEvent,
-              color: this.CO_MeetingsParam.ShowColor,
+              color: this.CO_MeetingsParam?.ShowColor,
             },
             {
               transType: 'EP_BookingRooms',
               isActive: this.EP_BookingRoomsParam?.ShowEvent,
-              color: this.EP_BookingRoomsParam.ShowColor,
+              color: this.EP_BookingRoomsParam?.ShowColor,
             },
             {
               transType: 'EP_BookingCars',
               isActive: this.EP_BookingCarsParam?.ShowEvent,
-              color: this.EP_BookingCarsParam.ShowColor,
+              color: this.EP_BookingCarsParam?.ShowColor,
             },
           ];
 
@@ -572,38 +628,6 @@ export class CalendarNotesComponent
               this.EP_BookingRoomsParam?.ShowEvent;
             this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
           }
-          const lDayTimeOfMonth = moment(lDayOfMonth).endOf('date').toJSON();
-          const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
-          this.getRequestTM(
-            dt[0]?.TM_Tasks[0],
-            dataValueTM,
-            this.TM_TasksParam,
-            this.TM_TasksParam?.ShowEvent
-          );
-          this.getRequestWP(
-            dt[0]?.WP_Notes[0],
-            dataValue,
-            this.WP_NotesParam,
-            this.WP_NotesParam?.ShowEvent
-          );
-          this.getRequestCO(
-            dt[0]?.CO_Meetings[0],
-            dataValue,
-            this.CO_MeetingsParam,
-            this.CO_MeetingsParam?.ShowEvent
-          );
-          this.getRequestEP_BookingRoom(
-            dt[0]?.EP_BookingRooms[0],
-            dataValue,
-            this.EP_BookingRoomsParam,
-            this.EP_BookingRoomsParam?.ShowEvent
-          );
-          this.getRequestEP_BookingCar(
-            dt[0]?.EP_BookingCars[0],
-            dataValue,
-            this.EP_BookingCarsParam,
-            this.EP_BookingCarsParam?.ShowEvent
-          );
         }
       });
   }

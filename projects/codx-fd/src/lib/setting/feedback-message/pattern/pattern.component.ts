@@ -79,11 +79,18 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   LoadData() {
-    this.api.execSv("FD",'ERM.Business.FD', 'PatternsBusiness', 'GetCardTypeAsync', this.type)
+    this.api
+      .execSv(
+        'FD',
+        'ERM.Business.FD',
+        'PatternsBusiness',
+        'GetCardTypeAsync',
+        this.type
+      )
       .subscribe((res) => {
         if (res) {
           this.lstPattern = res;
-          this.lstPattern.push({})
+          this.lstPattern.push({});
           //this.change.detectChanges();
         }
       });
@@ -204,12 +211,10 @@ export class PatternComponent extends UIComponent implements OnInit {
         dialog.closed.subscribe((e) => {
           if (e?.event?.data.update) {
             this.lstPattern.forEach((dt, index) => {
-              if (dt.recID == e.event.data.update.recID)
-              {
+              if (dt.recID == e.event.data.update.recID) {
                 this.lstPattern[index] = e.event.data.update;
                 this.change.detectChanges();
-              }
-              else this.lstPattern[index].isDefault = false;
+              } else this.lstPattern[index].isDefault = false;
             });
             var data = e?.event?.data?.update;
             this.view.dataService.update(data).subscribe();
