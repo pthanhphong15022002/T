@@ -216,7 +216,7 @@ export class CodxStepChartComponent
   //ganttchar
   getDataGanttChart(instanceID, processID) {
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+      .exec<any>('DP', 'InstancesStepsBusiness', 'GetDataGanntChartAsync', [
         instanceID,
         processID,
       ])

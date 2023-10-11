@@ -502,13 +502,17 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-    if (this.lead.applyProcess && this.lead.status != '3' && this.lead.status != '13') {
+    if (
+      this.lead.applyProcess &&
+      this.lead.status != '3' &&
+      this.lead.status != '13'
+    ) {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
           'DP',
           'ERM.Business.DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'MoveReasonByIdInstnaceAsync',
           dataDP
         )
@@ -524,7 +528,7 @@ export class PopupConvertLeadComponent implements OnInit {
       this.lead.applyProcess && this.lead.status != '3'
         ? result[0]?.stepID
         : '',
-      this.transIDCamp
+      this.transIDCamp,
     ];
 
     await this.api

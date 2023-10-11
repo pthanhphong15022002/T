@@ -295,11 +295,11 @@ export class PopupAddInstanceComponent implements OnInit {
     this.instance.stepID = e;
   }
 
-  valueChangeUser(event) {
-    if (event.data) {
-      this.instance.owner = event?.data;
-    }
-  }
+  // valueChangeUser(event) {
+  //   if (event.data) {
+  //     this.instance.owner = event?.data;
+  //   }
+  // }
 
   beforeSave(option: RequestOption) {
     if (this.action === 'add' || this.action === 'copy') {
@@ -425,6 +425,7 @@ export class PopupAddInstanceComponent implements OnInit {
 
   eventUser(e) {
     this.owner = e; // thêm check null cái
+    this.instance.owner = this.owner;
   }
   getNameAndPosition(id) {
     this.codxDpService.getPositionByID(id).subscribe((res) => {

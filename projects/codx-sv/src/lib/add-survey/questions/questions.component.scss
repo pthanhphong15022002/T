@@ -292,6 +292,7 @@
 
   .action-menu {
     position: unset;
+    margin-top: 4px;
     top: 0px;
     right: 0px;
     opacity: 0;
@@ -313,6 +314,10 @@
   .title-des {
     text-align: left;
     font-size: 14px;
+    .e-editable-value-wrapper
+    {
+      overflow: auto;
+    }
   }
 
 
@@ -680,8 +685,7 @@
 .inplaceeditor-bg-none .e-editable-value-wrapper
 {
   background: none !important;
-  height: 5px;
-  margin-bottom: 15px !important;
+  min-height: 0px !important;
 }
 .inplaceeditor-bg-none .e-editable-value-wrapper:hover
 {

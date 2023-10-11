@@ -581,8 +581,9 @@ export class InstancesComponent
   }
   copy(data, titleAction) {
     if (data) {
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       this.oldIdInstance = data.recID;
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      this.view.dataService.dataSelected.reCID =  Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
       const funcIDApplyFor =
@@ -2361,9 +2362,10 @@ export class InstancesComponent
       this.dataSelected.approveStatus = '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.codxDpService
-        .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
-        .subscribe();
+      //da cap nhat tai BE
+      // this.codxDpService
+      //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
+      //   .subscribe();
     }
   }
 
@@ -2406,38 +2408,45 @@ export class InstancesComponent
           .getESCategoryByCategoryID(this.process.processNo)
           .subscribe((res2: any) => {
             if (res2) {
-              if (res2?.eSign == true) {
-                //trình ký
-              } else if (res2?.eSign == false) {
-                //kí duyet
-                this.codxShareService
-                  .codxCancel(
-                    'DP',
-                    dt?.recID,
-                    this.view.formModel.entityName,
-                    null,
-                    null
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.dataSelected.approveStatus = '0';
-                      this.codxDpService
-                        .updateApproverStatus([dt.recID, '0'])
-                        .subscribe((res4) => {
-                          if (res4) {
-                            this.view.dataService
-                              .update(this.dataSelected)
-                              .subscribe();
-                            this.notificationsService.notifyCode('SYS007');
-                          } else this.notificationsService.notifyCode('SYS021');
-                        });
-                    } else this.notificationsService.notifyCode('SYS021');
-                  });
-              }
+              //Huy duyet instance step
+              this.cancelReleaseInstanceStep(dt.stepID, dt.recID);
+              //  //Huy duyet instance
+              // this.cancelRelease(dt.recID, this.view.formModel.entityName);
             }
           });
       }
     });
+  }
+
+  cancelReleaseInstanceStep(stepID, instanceID) {
+    this.codxDpService
+      .getRecIDInstancesStepsReleased([stepID, instanceID])
+      .subscribe((res) => {
+        if (res) {
+          this.cancelRelease(res, 'DP_Instances_Steps');
+        }
+      });
+  }
+
+  cancelRelease(transID, entityName) {
+    this.codxShareService
+      .codxCancel('DP', transID, entityName, null, null)
+      .subscribe((res3) => {
+        if (res3) {
+          this.dataSelected.approveStatus = '0';
+          this.view.dataService.update(this.dataSelected).subscribe();
+          if (this.kanban) this.kanban.updateCard(this.dataSelected);
+
+          // this.codxDpService
+          //   .updateApproverStatus([this.dataSelected.recID, '0'])
+          //   .subscribe((res4) => {
+          //     if (res4) {
+          //       this.view.dataService.update(this.dataSelected).subscribe();
+          //       this.notificationsService.notifyCode('SYS007');
+          //     } else this.notificationsService.notifyCode('SYS021');
+          //   });
+        } else this.notificationsService.notifyCode('SYS021');
+      });
   }
   //end duyet
 

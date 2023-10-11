@@ -171,7 +171,7 @@ export class EditPatternComponent implements OnInit {
 
   savePattern() {
     if (!this.pattern.patternName) {
-      this.notificationsService.notify('Vui lòng nhập mô tả');
+      this.notificationsService.notify('Vui lòng nhập mô tả');//
       return;
     }
     if (this.formType == 'edit' && this.checkFileUpload && this.checkGetFile) {
