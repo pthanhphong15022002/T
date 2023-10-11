@@ -37,6 +37,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   lstQuestion : any;
   indexQuesAns: number = 0;
   indexRepons: number = 0;
+  primaryColor:any;
   chartSettingsT: ChartSettings = {
     title: '',
     seriesSetting: [
@@ -223,7 +224,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         }
       }
     });
-    debugger
     return result;
   }
   //Get content form string html
@@ -552,5 +552,18 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   {
     if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
     return data;
+  }
+
+  showHideChart(recID:any , index:any)
+  {
+
+    var element = document.getElementById("chart"+recID+index);
+    element.classList.remove("invisible");
+    element.classList.add("visible");
+
+    var dif = index == "2" ? "1": "2";
+    var element = document.getElementById("chart"+recID+dif);
+    element.classList.add("invisible");
+    element.classList.remove("visible");
   }
 }
