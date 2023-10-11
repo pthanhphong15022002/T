@@ -2222,8 +2222,8 @@ erm-quick-links-inner .dropdown-menu {
 
 lib-dynamic-process{
   .card-header.m-h-auto.p-0 {
-    border: 0;
-    margin-bottom: 10px;
+    border: 0!important;
+    //margin-bottom: 10px;
   }
 }
 

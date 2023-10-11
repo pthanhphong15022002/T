@@ -127,12 +127,6 @@
         right: 5px !important;
     }
 
-    .news-title {
-        color: var(--text-dark);
-        font-size: 15px;
-        text-transform: uppercase;
-    }
-
     .news-item .card-icon-nowrap {
         white-space: normal !important;
     }
@@ -144,7 +138,9 @@
     cursor: pointer;
     color: var(--text-primary);
 }
-
+.news-listpost .symbol > img{
+    border-radius: 0!important;
+}
 /***/
 
 
