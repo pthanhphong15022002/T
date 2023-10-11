@@ -1492,7 +1492,7 @@ export class PopupAddSignFileComponent implements OnInit {
             : this.formModelCustom.funcID,
           '',
           this.data?.title,
-          this.data?.refType
+          this.approverProcess?.customEntityName != null? this.approverProcess?.customEntityName : this.data?.refType
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {
@@ -1985,7 +1985,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   openTemplate() {
     var gridModel = new DataRequest();
-    gridModel.entityName = this.templateRefType ?? this.refType ;
+    gridModel.entityName = this.refType ;
     let tRefType = this.templateRefType ?? this.refType;
     let tRefID = this.templateRefID ?? this.data?.recID;
     let exportForm = this.callfuncService.openForm(

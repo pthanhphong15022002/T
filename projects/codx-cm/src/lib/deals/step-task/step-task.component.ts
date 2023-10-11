@@ -106,7 +106,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
     private codxCmService: CodxCmService,
-    private authstore: AuthStore,
+    private authstore: AuthStore
   ) {
     this.promiseAll();
     this.user = this.authstore.get();
@@ -121,7 +121,14 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         );
       }
     });
-    this.api.execSv<any>('DP','ERM.Business.DP','InstanceStepsBusiness','SendMailNotificationAsync').subscribe(res => {});
+    this.api
+      .execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'InstancesStepsBusiness',
+        'SendMailNotificationAsync'
+      )
+      .subscribe((res) => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -150,8 +157,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes.dataSelected) {
       this.dataSelected = changes.dataSelected?.currentValue;
       this.type = this.dataSelected.viewModeDetail || 'S';
-      if(!this.isAdmin){
-        this.isAdmin = this.dataSelected?.full || this.dataSelected?.owner == this.user?.userID;
+      if (!this.isAdmin) {
+        this.isAdmin =
+          this.dataSelected?.full ||
+          this.dataSelected?.owner == this.user?.userID;
       }
     }
   }

@@ -51,7 +51,7 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
       if (res) {
         this.signFileFM = res;
         this.sfTemplates.forEach(temp=>{
-          temp.isSelected = true;
+          temp.isSelected = false;
         })
         this.isAfterRender= true;
         this.detectorRef.detectChanges();

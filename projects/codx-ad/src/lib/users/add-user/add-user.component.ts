@@ -22,6 +22,7 @@ import {
   NotificationsService,
   LayoutAddComponent,
   Util,
+  CodxFormComponent,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -30,6 +31,7 @@ import { AD_Roles } from '../../models/AD_Roles.models';
 import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-add-user',
@@ -41,6 +43,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+
   title = '';
   header = '';
   dialog!: DialogRef;
@@ -52,8 +56,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
   adUser: any = {};
   adRoles: AD_Roles = new AD_Roles();
   adUserRoles: AD_UserRoles = new AD_UserRoles();
-  countListViewChooseRoleApp: Number = 0;
-  countListViewChooseRoleService: Number = 0;
+  countListViewChooseRoleApp: number = 0;
+  countListViewChooseRoleService: number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
   // lstChangeModule: tmpTNMD[] = [];
@@ -190,13 +194,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
           if (res) this.dataUG = res;
         });
     }
-    // this.dialog.closed.subscribe((res) => {
-    //   if (!this.isSaved) {
-    //     if (this.dataAfterSave && this.dataAfterSave.userID) {
-    //       this.deleteUserBeforeDone(this.dataAfterSave);
-    //     }
-    //   }
-    // });
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       if (res) {
         this.header =
@@ -206,7 +203,24 @@ export class AddUserComponent extends UIComponent implements OnInit {
           res?.customName.slice(1);
       }
     });
+    this.form.form.onAfterInit.subscribe((res) => {
+      this.setValidateForm();
+    });
   }
+
+  setValidateForm() {
+    let rAccountID = true;
+    let lsRequire: any = [];
+    if ((this.form.form as CodxFormComponent).data?._keyAuto == 'UserID')
+      rAccountID = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    lsRequire.push({
+      field: 'UserID',
+      isDisable: false,
+      require: rAccountID,
+    });
+    (this.form.form as CodxFormComponent).setRequire(lsRequire);
+  }
+
   openPopup(item: any) {
     let formGroup = this.form.formGroup.controls;
     if (
@@ -346,17 +360,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
     isOverrideRoles: boolean,
     item?: any
   ) {
-    // if (!this.checkBtnAdd) {
-    let formGroup = this.form.formGroup.controls;
-    if (!this.adUser.buid) formGroup.buid.setValue(null);
-    if (
-      formGroup.userID.valid &&
-      formGroup.userName.value &&
-      formGroup.buid.value &&
-      formGroup.email.value
-    ) {
+    if (this.form.formGroup.valid) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
+        .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (!res?.error) {
             if (!this.isSaved) {
@@ -397,36 +404,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 this.openPopupRoles(item);
                 break;
               }
-              // case 'changeAvatar': {
-              //   this.changeAvatar();
-              //   break;
-              // }
               default: {
                 break;
               }
             }
-
-            // if (closeAddPopup) {
-            //   this.dialog.close(this.adUser);
-            // } else {
-            //   this.adUser.userID = res.save.userID;
-            //add to group
-            // if (addToGroup) {
-            //   this.addUserToGroup(this.adUser.userGroup, isOverrideRoles);
-            // }
-            //add role
-            // else {
-            //   this.openPopupRoles(item);
-            // }
-            //   }
-            //   this.detectorRef.detectChanges();
           }
 
           this.isSaving = false;
         });
-    } else {
-      this.isSaving = false;
-      this.adService.notifyInvalid(this.form.formGroup, this.formModel);
     }
   }
 

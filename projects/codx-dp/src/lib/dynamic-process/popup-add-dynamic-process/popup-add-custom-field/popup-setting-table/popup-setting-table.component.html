@@ -1,0 +1,176 @@
+<codx-form
+  #formTable
+  [headerText]="titleAction"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [data]="column"
+>
+  <ng-template #body>
+    <div class="card-form">
+      <ng-container [ngTemplateOutlet]="tempViewTable"></ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-2" (click)="saveData()">
+        <codx-label name="lblSave" formName="System" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
+
+<ng-template #tempViewTable>
+  <div class="form-group">
+    <codx-input
+      type="checkbox"
+      field="settingWidth"
+      (valueChange)="valueChange($event)"
+      [crrValue]="settingWidth"
+    ></codx-input>
+    <span>
+      <codx-label
+        class="ms-2"
+        name="lblSettingWidth"
+        [formModel]="formTable?.formModel"
+        default="Áp dụng thiết lập độ rộng cho cho bảng"
+      ></codx-label>
+    </span>
+  </div>
+
+  <div class="form-group">
+    <codx-input
+      type="checkbox"
+      field="settingCount"
+      (valueChange)="valueChange($event)"
+      [crrValue]="settingCount"
+    ></codx-input>
+    <span>
+      <codx-label
+        class="ms-2"
+        name="lblSettingCount"
+        [formModel]="formTable?.formModel"
+        default="Đánh số thứ tự cho bảng"
+      ></codx-label>
+    </span>
+  </div>
+  <!-- d-flex justify-content-end align-items-center -->
+  <div class="">
+    <button
+      *ngIf="isShowButton"
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="addColumn()"
+    >
+      <span> <i class="icon icon-14 icon-add"></i></span>
+    </button>
+    <button
+      *ngIf="isShowButton"
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary"
+      (click)="showMore()"
+    >
+      <span>
+        <i
+          class="icon icon-14 {{
+            isShowMore ? 'icon-last_page' : 'icon-first_page'
+          }}"
+        ></i
+      ></span>
+      <span>
+        <i
+          class="icon icon-14 {{
+            !isShowMore ? 'icon-last_page' : 'icon-first_page'
+          }}"
+        ></i
+      ></span>
+    </button>
+  </div>
+  <div
+    class="h-100 scroll-x containerScroll"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-width="auto"
+  >
+    <!-- table  {{ settingWidth ? 'scroll-x' : 'w-100 ' }} -->
+    <table
+      id="table"
+      class=" {{ settingWidth ? '' : 'table' }} table-row-bordered mt-3"
+      *ngIf="listColumns?.length > 0"
+    >
+      <thead>
+        <tr class="bg-gray-100">
+          <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+            <div>
+              <codx-label
+                name="lblNo"
+                formName="System"
+                [default]="'STT'"
+              ></codx-label>
+            </div>
+          </th>
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <th
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px!important'
+                  : ''
+              "
+              scope="col"
+              class="fw-bold ps-4 has-action-menu position-relative"
+            >
+              <div>
+                <span>{{ item?.title }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">{{ item?.fieldName }}</span>
+              </div>
+              <div class="action-menu-column d-flex">
+                <div class="d-flex justify-content-end align-items-center">
+                  <button
+                    class="btn btn-sm btn-icon btn-light-warning"
+                    (click)="editColumn(item, index)"
+                  >
+                    <i class="icon icon-14 icon-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-icon btn-light-danger ms-2"
+                    (click)="deleteColumn(index)"
+                  >
+                    <i class="icon icon-14 icon-close"></i>
+                  </button>
+                </div>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="ps-4" *ngIf="settingCount">
+            <div>
+              <codx-label
+                name="lblNo"
+                formName="System"
+                [default]="'STT'"
+              ></codx-label>
+            </div>
+          </td>
+          <ng-container *ngFor="let item of listColumns; let index = index">
+            <td
+              class="ps-4"
+              [style]="
+                item?.columnWidth > 0 && settingWidth
+                  ? 'width :' + item.columnWidth + 'px!important'
+                  : ''
+              "
+            >
+              <div>{{ item?.note }}</div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

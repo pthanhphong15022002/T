@@ -39,8 +39,8 @@ import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
-import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
-import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
+//import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
+//import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
 import { PolicyCardComponent } from './setting/feedback-message/policy-card/policy-card.component';
 import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
 import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
@@ -184,8 +184,8 @@ const Component: Type<any>[] = [
   BehaviorComponent,
   PopupAddGiftComponent,
   FeedbackMessageComponent,
-  PatternComponent,
-  EditPatternComponent,
+  // PatternComponent,
+  // EditPatternComponent,
   PolicyCardComponent,
   PolicyCoinComponent,
   PolicyDedicationComponent,

@@ -39,7 +39,7 @@ export class ESApprovelComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
-      this.funcID = params['funcID'];
+      this.funcID = params['funcID'] || 'EST011';
       if (params['id']) this.getDtDis(params['id']);
       //this.getGridViewSetup(funcId);
     });
@@ -73,15 +73,16 @@ export class ESApprovelComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
   getDtDis(id: any) {
-    this.data = null;
+    this.data = {};
+    this.data.recID = id;
     if (id) {
-      this.esService.getDetailSignFile(id).subscribe((item) => {
-        //this.getChildTask(id);
-        if (item) {
-          this.data = item;
-          //this.view.dataService.setDataSelected(this.lstDtDis);
-        }
-      });
+      // this.esService.getDetailSignFile(id).subscribe((item) => {
+      //   //this.getChildTask(id);
+      //   if (item) {
+      //     this.data = item;
+      //     //this.view.dataService.setDataSelected(this.lstDtDis);
+      //   }
+      // });
     }
   }
   getSubTitle(relationType: any, agencyName: any, shareBy: any) {

@@ -59,9 +59,14 @@ const MEMBERTYPE = {
 })
 export class ListPostComponent implements OnInit, AfterViewInit {
 
-  @Input() funcID: string = '';
+  @Input() funcID: string = 'WP';
+  @Input() favoriteID: string;
   @Input() objectID: string = '';
+  @Input() service: string = '';
+  @Input() assemblyName: string = '';
+  @Input() className: string = '';
   @Input() method: string = '';
+  @Input() entityName: string = 'WP_Comments';
   @Input() predicate: any;
   @Input() dataValue: any;
   @Input() predicates: any;
@@ -116,12 +121,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     // set dataService
-    this.dataService.service = "WP";
-    this.dataService.assemblyName = "ERM.Business.WP";
-    this.dataService.className = "CommentsBusiness";
+    this.dataService.service = this.service || "WP";
+    this.dataService.assemblyName = this.assemblyName || "ERM.Business.WP";
+    this.dataService.className = this.className || "CommentsBusiness";
     this.dataService.method = this.method || "GetListPostAsync";
+    this.dataService.favoriteID = this.favoriteID;
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;
+    this.dataService.predicates = this.predicates;
+    this.dataService.dataValues = this.dataValues;
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 10;

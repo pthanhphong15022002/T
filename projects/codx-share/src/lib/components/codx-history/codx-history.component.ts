@@ -31,7 +31,7 @@ export class CodxHistoryComponent implements OnInit,OnChanges {
 
   // change objectID reload logs
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.objectID?.previousValue != changes?.objectID?.currentValue) {
+    if (!changes?.objectID.firstChange && changes?.objectID.previousValue != changes?.objectID.currentValue) {
       this.getDataAsync(this.objectID);
     }
   }

@@ -11,10 +11,10 @@
   </div>
 
   <div class=" ps-5 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup">
-    <span class="fs-6">{{data?.okrName}}
+    <span class="text-gray-600">{{data?.okrName}}
     </span>
   </div>
-  <div class=" ps-5 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup && statusVLL?.length >0">
+  <div class=" ps-6 w-100 d-flex flex-wrap pb-5" *ngIf="isPopup && statusVLL?.length >0">
     <div *ngFor="let v of statusVLL ">
       <span class="ps-4">
         <span class="icon-i-arrow-down-left-circle-fill icon-10" [style]="'color: ' + v?.textColor + ';'"></span> 

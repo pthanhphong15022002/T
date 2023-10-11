@@ -353,17 +353,20 @@ export class PopupEProcessContractComponent
     //Set contractNo => update field ContractNo undefined ??
     this.tmpContractNo = this.data.contractNo;
 
-    this.formModel.currentData = this.data;
+    // this.formModel.currentData = this.data;
 
-    this.form.formGroup.patchValue(this.data);
+    // this.form.formGroup.patchValue(this.data);
 
     if (this.employeeObj) {
-      this.form.formGroup.patchValue({
-        orgUnitID: this.employeeObj.orgUnitID,
-      });
-      this.form.formGroup.patchValue({
-        positionID: this.employeeObj.positionID,
-      });
+      this.data.orgUnitID = this.employeeObj.orgUnitID,
+      this.data.positionID = this.employeeObj.positionID;
+
+      // this.form.formGroup.patchValue({
+      //   orgUnitID: this.employeeObj.orgUnitID,
+      // });
+      // this.form.formGroup.patchValue({
+      //   positionID: this.employeeObj.positionID,
+      // });
     }
 
     this.isAfterRender = true;
@@ -552,7 +555,12 @@ export class PopupEProcessContractComponent
     this.data.positionID = this.employeeObj?.positionID;
 
     this.data.attachments =
-      this.attachment.data.length + this.attachment.fileUploadList.length;
+      this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
+
+      if(!this.data.attachments){
+        this.data.attachments = 0;
+      }
+
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
@@ -629,9 +637,12 @@ export class PopupEProcessContractComponent
   }
 
   renderChange(event) {
-    let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
-    if (tmp) {
-      this.itemContractGroup = tmp;
+    if(event.dataTemp){
+      debugger
+      let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
+      if (tmp) {
+        this.itemContractGroup = tmp;
+      }
     }
   }
 

@@ -212,7 +212,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   ];
 
   @ViewChild('form') form: LayoutAddComponent;
-  @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
+  // @ViewChild('layout', { static: true }) layout: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
@@ -351,6 +351,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   }
 
   deleteApplyExcludeObjMain(data, from, lstBeneficiaries) {
+    debugger
     switch (data) {
       case '1':
         lstBeneficiaries = lstBeneficiaries.map((item) => ({
@@ -1063,6 +1064,8 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       this.notify.notifyCode('HR033');
       return;
     }
+
+    
 
     if (
       this.attachment.fileUploadList &&

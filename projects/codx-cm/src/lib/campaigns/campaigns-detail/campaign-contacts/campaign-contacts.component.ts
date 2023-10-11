@@ -18,6 +18,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { PopupAddCampaignContactComponent } from './popup-add-campaign-contact/popup-add-campaign-contact.component';
@@ -86,14 +87,25 @@ export class CampaignContactsComponent implements OnInit {
     private cmSv: CodxCmService,
     private notiSv: NotificationsService,
     private codxShareService: CodxShareService
-  ) {}
+  ) {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          // let arrField = Object.values(this.gridViewSetup).filter(
+          //   (x: any) => x.isVisible
+          // );
+          // if (Array.isArray(arrField)) {
+          //   let arrFieldIsVisible = arrField
+          //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+          //     .map((x: any) => x.fieldName);
+          //   this.getColumnGrid(this.gridViewSetup, arrFieldIsVisible);
+          // }
+        }
+      });
+  }
   async ngOnInit() {
-    this.gridViewSetup = await firstValueFrom(
-      this.cache.gridViewSetup(
-        this.formModel?.formName,
-        this.formModel?.gridViewName
-      )
-    );
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -158,18 +170,19 @@ export class CampaignContactsComponent implements OnInit {
         let funcID = this.objectType == '1' ? 'CM0101' : 'CM0205';
         this.statusSearch = [];
         this.getFunctionList(funcID);
-        this.getList();
+        this.dataValues = this.transID + ';' + this.objectType;
+
+        this.getList(this.predicates, this.dataValues);
       } else {
         if (!this.loaded) this.loaded = true;
       }
     }
   }
 
-  getList() {
+  getList(predicates = '', dataValues = '') {
     this.loaded = false;
-    this.request.predicates = this.predicates;
-    this.dataValues = this.transID + ';' + this.objectType;
-    this.request.dataValues = this.dataValues;
+    this.request.predicates = predicates;
+    this.request.dataValues = dataValues;
     this.request.entityName = 'CM_CampaignsContacts';
     this.request.pageLoading = false;
     this.request.funcID = this.formModel.funcID;
@@ -212,6 +225,60 @@ export class CampaignContactsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  getColumnGrid(grid, arrFieldIsVisible) {
+    this.columnsGrid = [];
+
+    arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'ObjectName':
+          template = this.tempCustomerName;
+          break;
+        case 'Industries':
+          template = this.tempIndustries;
+          break;
+        case 'ContactName':
+          template = this.tempContact;
+          break;
+        case 'Owner':
+          template = this.tempOwner;
+          break;
+        case 'Status':
+          template = this.tempStatus;
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+          template: template,
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grid[key].headerText,
+        };
+      }
+
+      this.columnsGrid.push(colums);
+    });
+    let columTemp = [
+      {
+        headerTemplate: this.headerStatusCusLead,
+        template: this.tempStatusCusLead,
+        width: !this.isDoubleClick ? 150 : 300,
+      },
+      {
+        headerTemplate: this.headerHistory,
+        template: this.tempHistory,
+        width: !this.isDoubleClick ? 150 : 250,
+      },
+    ];
+    this.columnsGrid = [...this.columnsGrid, ...columTemp];
   }
 
   getListLeadBylstIDs(lstIDs = []) {
@@ -262,16 +329,16 @@ export class CampaignContactsComponent implements OnInit {
   valueChange(e) {
     console.log(e);
     let predicates = 'TransID=@0 && ObjectType=@1';
-    let dataValues = this.transID + ';' + this.objectType + e?.data[0];
+    let dataValues = this.transID + ';' + this.objectType;
     if (e && e?.data) {
       if (e?.data?.length > 0) {
-        predicates = 'TransID=@0 && ObjectType=@1 && Status=@2';
-        dataValues = this.transID + ';' + this.objectType + ';' + e?.data[0];
+        predicates += ' && Status=@2';
+        dataValues += ';' + e?.data[0];
       }
     }
     this.predicates = predicates;
     this.dataValues = dataValues;
-    this.getList();
+    this.getList(this.predicates, this.dataValues);
     this.detector.detectChanges();
   }
   //#endregion
@@ -344,41 +411,44 @@ export class CampaignContactsComponent implements OnInit {
     let dialogModel = new DialogModel();
     dialogModel.zIndex = 1010;
     dialogModel.FormModel = this.formModel;
-    this.cache
-      .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
-      .subscribe((res) => {
-        if (res) {
-          let obj = {
-            title: this.moreFuncAdd,
-            transID: this.transID,
-            objectType: this.objectType,
-            gridViewSetup: res,
-            lstCampContacts: this.lstCampContacts,
-          };
-          this.callFc
-            .openForm(
-              PopupAddCampaignContactComponent,
-              '',
-              600,
-              700,
-              '',
-              obj,
-              '',
-              dialogModel
-            )
-            .closed.subscribe((e) => {
-              if (e && e?.event) {
-                this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
-                if (this.objectType == '3') {
-                  this.cmSv.countLeadsBehavior.next(
-                    this.lstCampContacts.length
-                  );
+    this.cache.functionList(this.formModel?.funcID).subscribe((func) => {
+      this.cache
+        .gridViewSetup('CMCampaignsContacts', 'grvCMCampaignsContacts')
+        .subscribe((res) => {
+          if (res) {
+            let obj = {
+              title: this.moreFuncAdd + ' ' + func?.defaultName?.toLowerCase(),
+              transID: this.transID,
+              objectType: this.objectType,
+              gridViewSetup: res,
+              lstCampContacts: this.lstCampContacts,
+              titleName: func?.defaultName ?? func?.customName,
+            };
+            this.callFc
+              .openForm(
+                PopupAddCampaignContactComponent,
+                '',
+                600,
+                700,
+                '',
+                obj,
+                '',
+                dialogModel
+              )
+              .closed.subscribe((e) => {
+                if (e && e?.event) {
+                  this.lstCampContacts = [...this.lstCampContacts, ...e?.event];
+                  if (this.objectType == '3') {
+                    this.cmSv.countLeadsBehavior.next(
+                      this.lstCampContacts.length
+                    );
+                  }
+                  this.detector.detectChanges();
                 }
-                this.detector.detectChanges();
-              }
-            });
-        }
-      });
+              });
+          }
+        });
+    });
   }
 
   delete(data) {
@@ -519,9 +589,10 @@ export class CampaignContactsComponent implements OnInit {
     );
     if (lead) {
       if (lead?.closed) {
-        this.notiSv.notifyCode('Tiềm đang bị đóng không chuyển đổi được');
+        this.notiSv.notifyCode('CM053');
         return;
       }
+      lead.campaignID = this.transID;
       this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
         let option = new SidebarModel();
         var formMD = new FormModel();
@@ -536,6 +607,7 @@ export class CampaignContactsComponent implements OnInit {
           gridViewSetup: res,
           applyFor: '5',
           data: lead,
+          transIDCamp: this.transID,
         };
         var dialog = this.callFc.openSide(
           PopupConvertLeadComponent,
