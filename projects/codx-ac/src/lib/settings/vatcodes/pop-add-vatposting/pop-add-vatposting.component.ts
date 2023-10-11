@@ -45,6 +45,7 @@ export class PopAddVatpostingComponent extends UIComponent implements OnInit{
     });
     if (dialogData.data?.data != null) {
       this.vatPosting = dialogData.data?.data;
+      this.isDisableOffsetAcctID = this.vatPosting.postOffset == '1' ? false : true;
     }
   }
   //End Constructor

@@ -54,6 +54,9 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       name: 'ConversionInformation',
     },
   ];
+  lblAdd: any;
+  lblEdit: any;
+  lblConversion: any;
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -93,7 +96,24 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0034').subscribe((res) => {
+      if (res) {
+        this.lblEdit = res?.customName;
+      }
+    });
+    this.cache.message('AC0040').subscribe((res) => {
+      if (res) {
+        this.lblConversion = res?.customName.toLowerCase();
+      }
+    });
+  }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
   }
@@ -117,7 +137,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
       return;
     } else {
       var obj = {
-        headerText: 'Thêm mới thông tin quy đổi',///
+        headerText: this.lblAdd + ' ' + this.lblConversion,
         umid: this.unitsofmearsure.umid,
       };
       let opt = new DialogModel();
@@ -156,7 +176,7 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
   editobjectConversion(data: any) {
     let index = this.objectUmconversion.findIndex((x) => x.recID == data.recID);
     var obj = {
-      headerText: 'Thêm mới thông tin quy đổi',///
+      headerText: this.lblEdit + ' ' + this.lblConversion,
       data: { ...data },
       type: 'edit',
     };

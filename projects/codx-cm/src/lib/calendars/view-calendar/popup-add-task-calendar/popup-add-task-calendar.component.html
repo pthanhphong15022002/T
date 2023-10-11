@@ -101,16 +101,18 @@
 </ng-template>
 <ng-template #parRight> 
   <div>
-    <div *ngFor="let item of dataCombobox" class="item-combobox w-100" (click)="chooseCM(item)">
-      <div class="d-flex align-items-center justify-content-between position-relative cursor-pointer py-1">
-        <span class="line-clamp line-clamp-1" style="width: 92%;">{{item?.name}}</span>
-        <div class="mb-3 position-absolute" style="right: 18px; bottom: 1px;">
-          <ejs-radiobutton
-            name="cmType"
-            value="1"
-            (change)="valueChangeRadio($event)"
-            [checked]="item?.recID == dataCheck?.recID"
-          ></ejs-radiobutton>
+    <div style="min-height: 170px;">
+      <div *ngFor="let item of dataCombobox" class="item-combobox w-100" (click)="chooseCM(item)">
+        <div class="d-flex align-items-center justify-content-between position-relative cursor-pointer py-1">
+          <span class="line-clamp line-clamp-1" style="width: 92%;">{{item?.name}}</span>
+          <div class="mb-3 position-absolute" style="right: 18px; bottom: 1px;">
+            <ejs-radiobutton
+              name="cmType"
+              value="1"
+              (change)="valueChangeRadio($event)"
+              [checked]="item?.recID == dataCheck?.recID"
+            ></ejs-radiobutton>
+          </div>
         </div>
       </div>
     </div>

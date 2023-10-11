@@ -79,7 +79,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private stepService: StepService,
     private callFunc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {
     this.user = this.authstore.get();
   }
@@ -118,10 +118,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res?.length > 0) {
           this.isPause;
-          if(this.isAdmin){
+          if (this.isAdmin) {
             this.listActivitie = res;
-          }else{
-            this.listActivitie = res?.filter(activitie => activitie.owner == this.user?.userID);
+          } else {
+            this.listActivitie = res?.filter(
+              (activitie) => activitie.owner == this.user?.userID
+            );
           }
           this.isNoData = false;
         } else {
@@ -485,7 +487,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.api
         .exec<any>(
           'DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'UpdateProgressActivitiesAsync',
           data
         )
@@ -587,7 +589,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.stepService.openPopupContract('add');
     }
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'StartActivitiesAsync', [
+      .exec<any>('DP', 'InstancesStepsBusiness', 'StartActivitiesAsync', [
         activitie?.recID,
       ])
       .subscribe((res) => {
@@ -667,7 +669,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           .execSv<any>(
             'DP',
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdatedAssignedStepTasksAsync',
             [data.stepID, data.recID]
           )

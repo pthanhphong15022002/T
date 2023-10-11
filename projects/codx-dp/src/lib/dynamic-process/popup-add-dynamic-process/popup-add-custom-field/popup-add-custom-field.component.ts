@@ -851,6 +851,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (Array.isArray(arr)) {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+      this.settingCount = this.listColumns[0]?.settingCount ?? false;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }

@@ -359,7 +359,28 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5">Công việc</div>
+                    <div class="mt-4">
+                      <step-task
+                        [entityName]="'CM_Campaigns'"
+                        [typeTask]="2"
+                        [customerID]="dataSelected?.recID"
+                        [dataSelected]="dataSelected"
+                      ></step-task>
+                    </div>
+                    <!-- <ng-template #stepsTask>
+                      <div>
+                        <step-task
+                          [isDataLoading]="isDataLoading"
+                          [dataSelected]="dataSelected"
+                          [formModel]="formModel"
+                          [listInstanceStep]="listSteps"
+                          [applyFor]="'5'"
+                          (continueStep)="continueStep($event)"
+                          (saveAssignTask)="saveAssign($event)"
+                          [ownerInstance]="dataSelected?.owner"
+                        ></step-task>
+                      </div>
+                    </ng-template> -->
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>

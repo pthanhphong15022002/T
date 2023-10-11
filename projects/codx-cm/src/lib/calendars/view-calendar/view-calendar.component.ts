@@ -143,7 +143,7 @@ export class ViewCalendarComponent
     private cmService: CodxCmService,
     private stepService: StepService,
     private notiService: NotificationsService,
-    private callFunc: CallFuncService,
+    private callFunc: CallFuncService
   ) {
     super(inject);
     this.router.params.subscribe((param: any) => {
@@ -166,9 +166,11 @@ export class ViewCalendarComponent
         this.listTaskType = res.datas;
       }
     });
-    this.api.exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', []).subscribe((res) => {
-      this.isAdmin = res ? true : false;
-    })
+    this.api
+      .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
+      .subscribe((res) => {
+        this.isAdmin = res ? true : false;
+      });
   }
   ngAfterViewInit(): void {
     this.afterLoad();
@@ -194,63 +196,63 @@ export class ViewCalendarComponent
 
   onAction(e) {
     console.log(e);
-    if(e?.type == 'doubleClick' && e?.data){
+    if (e?.type == 'doubleClick' && e?.data) {
       this.viewTask(e?.data);
     }
-    if(e?.type == 'fav' && e?.data){
+    if (e?.type == 'fav' && e?.data) {
       this.beforeAddTask(e?.data);
     }
   }
 
-//#region view
-viewTask(data) {
-  if (data) {
-    let frmModel: FormModel = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
-      gridViewName: 'grvDPInstancesStepsTasks',
-    };
-    //a thao laasy refID
-    let listRefIDAssign = '';
+  //#region view
+  viewTask(data) {
+    if (data) {
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      //a thao laasy refID
+      let listRefIDAssign = '';
 
-    let listData = {
-      type:data?.taskType,
-      value: data,
-      step: null,
-      isRoleAll: true,
-      isUpdate: true,
-      isOnlyView: true,
-      isUpdateProgressGroup: false,
-      listRefIDAssign: listRefIDAssign,
-      instanceStep: null,
-      isActivitie: true,
-      // sessionID: this.sessionID, // session giao việc
-      // formModelAssign: this.formModelAssign, // formModel của giao việc
-      // customerName: this.customerName,
-      // dealName: this.dealName,
-      // contractName: this.contractName,
-      // leadName: this.leadName,
-    };
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1011;
-    option.FormModel = frmModel;
-    let dialog = this.callFunc.openSide(
-      CodxViewTaskComponent,
-      listData,
-      option
-    );
-    dialog.closed.subscribe(async (dataOuput) => {
-      // if (dataOuput?.event?.dataProgress) {
-      //   this.handelProgress(data, dataOuput?.event?.dataProgress);
-      // }
-      // if(dataOuput?.event?.task || dataOuput?.event?.group){
-      //   await this.getStepById();
-      // }
-    });
+      let listData = {
+        type: data?.taskType,
+        value: data,
+        step: null,
+        isRoleAll: true,
+        isUpdate: true,
+        isOnlyView: true,
+        isUpdateProgressGroup: false,
+        listRefIDAssign: listRefIDAssign,
+        instanceStep: null,
+        isActivitie: true,
+        // sessionID: this.sessionID, // session giao việc
+        // formModelAssign: this.formModelAssign, // formModel của giao việc
+        // customerName: this.customerName,
+        // dealName: this.dealName,
+        // contractName: this.contractName,
+        // leadName: this.leadName,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callFunc.openSide(
+        CodxViewTaskComponent,
+        listData,
+        option
+      );
+      dialog.closed.subscribe(async (dataOuput) => {
+        // if (dataOuput?.event?.dataProgress) {
+        //   this.handelProgress(data, dataOuput?.event?.dataProgress);
+        // }
+        // if(dataOuput?.event?.task || dataOuput?.event?.group){
+        //   await this.getStepById();
+        // }
+      });
+    }
   }
-}
-//#endregion
+  //#endregion
 
   getCellContent(evt: any) {
     if (this.dayoff && this.dayoff.length > 0) {
@@ -421,7 +423,7 @@ viewTask(data) {
         task = await firstValueFrom(
           this.api.exec<any>(
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'GetTaskInCalendarAsync',
             [data?.stepID, data?.recID, action]
           )
@@ -444,7 +446,7 @@ viewTask(data) {
     return task;
   }
 
-   async beforeAddTask(taskType) {
+  async beforeAddTask(taskType) {
     let option = new DialogModel();
     let data = {
       taskType,
@@ -462,25 +464,32 @@ viewTask(data) {
       option
     );
     let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
-    if(dataOuput?.event){
+    if (dataOuput?.event) {
       let taskType = dataOuput?.event?.taskType;
-      let dataTypeCM = dataOuput?.event?.dataCheck
+      let dataTypeCM = dataOuput?.event?.dataCheck;
       let listInsStep = [];
-      if(dataTypeCM && taskType){
+      if (dataTypeCM && taskType) {
         this.isStepTask = dataTypeCM?.applyProcess;
         this.isActivitie = !this.isStepTask;
-        if(this.isStepTask){
-          this.api.exec<any>('DP', 'InstanceStepsBusiness', 'GetInscestepCalendarAsync', [dataTypeCM?.refID, dataTypeCM?.full]).subscribe((res) => {
-            if(res){
-              if(res?.length > 0){
-                this.handleTask(taskType,"add",null,res);
+        if (this.isStepTask) {
+          this.api
+            .exec<any>(
+              'DP',
+              'InstancesStepsBusiness',
+              'GetInscestepCalendarAsync',
+              [dataTypeCM?.refID, dataTypeCM?.full]
+            )
+            .subscribe((res) => {
+              if (res) {
+                if (res?.length > 0) {
+                  this.handleTask(taskType, 'add', null, res);
+                }
               }
-            }
-          })
-        }else{
+            });
+        } else {
           this.entityName = dataTypeCM?.entityName;
           this.objectID = dataTypeCM?.recID;
-          this.handleTask(taskType,"add",null);
+          this.handleTask(taskType, 'add', null);
         }
       }
     }
@@ -523,7 +532,8 @@ viewTask(data) {
           this.convertDataCalendar(task);
           this.isActivitie = false;
           this.view.dataService.add(res).subscribe();
-          this.view.currentView['schedule'].refresh();1
+          this.view.currentView['schedule'].refresh();
+          1;
           this.notiService.notifyCode('SYS006');
           this.detectorRef.detectChanges();
         }
@@ -532,7 +542,7 @@ viewTask(data) {
   addStepTask(task) {
     console.log(task);
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
+      .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', task)
       .subscribe((res) => {
         if (res) {
           let task = res[0];
@@ -568,7 +578,7 @@ viewTask(data) {
         let fields = taskEdit.fields;
         if (this.isStepTask) {
           this.api
-            .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
+            .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
               taskEdit,
               fields,
             ])
@@ -608,7 +618,7 @@ viewTask(data) {
   async copyTask(data) {
     if (data) {
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
-      let task = await this.getTask(data,'copy');
+      let task = await this.getTask(data, 'copy');
       if (task) {
         delete task?.id;
         await this.handleTask(type, 'add', task);
@@ -623,7 +633,7 @@ viewTask(data) {
   async deleteTask(data) {
     if (data) {
       let task = await this.getTask(data);
-      if(task?.isTaskDefault){
+      if (task?.isTaskDefault) {
         this.notiService.notifyCode('Bạn không có quyền xóa công việc này');
         return;
       }
@@ -632,23 +642,32 @@ viewTask(data) {
           if (x.event && x.event.status == 'Y') {
             if (this.isStepTask) {
               this.api
-              .exec<any>('DP', 'InstanceStepsBusiness', 'DeleteTaskStepAsync', task)
-              .subscribe((rec) => {
-                this.view.dataService.remove(rec).subscribe();
-                this.view.currentView['schedule'].refresh();
-                this.detectorRef.detectChanges();
-                this.notiService.notifyCode('SYS007');
-              })
-            }else if(this.isActivitie){
-              this.api.exec<any>('DP', 'ActivitiesBusiness', 'DeleteActivitiesAsync', [
-                task?.recID,task?.objectType
-              ])
-              .subscribe((res) => {
-                this.view.dataService.remove(res).subscribe();
-                this.view.currentView['schedule'].refresh();
-                this.detectorRef.detectChanges();
-                this.notiService.notifyCode('SYS007');
-              })
+                .exec<any>(
+                  'DP',
+                  'InstancesStepsBusiness',
+                  'DeleteTaskStepAsync',
+                  task
+                )
+                .subscribe((rec) => {
+                  this.view.dataService.remove(rec).subscribe();
+                  this.view.currentView['schedule'].refresh();
+                  this.detectorRef.detectChanges();
+                  this.notiService.notifyCode('SYS007');
+                });
+            } else if (this.isActivitie) {
+              this.api
+                .exec<any>(
+                  'DP',
+                  'ActivitiesBusiness',
+                  'DeleteActivitiesAsync',
+                  [task?.recID, task?.objectType]
+                )
+                .subscribe((res) => {
+                  this.view.dataService.remove(res).subscribe();
+                  this.view.currentView['schedule'].refresh();
+                  this.detectorRef.detectChanges();
+                  this.notiService.notifyCode('SYS007');
+                });
             }
           }
         });
