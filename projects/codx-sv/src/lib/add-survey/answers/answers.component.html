@@ -78,10 +78,10 @@
         <div class="d-flex justify-content-end" *ngIf="item.isChart">
           <div class="d-flex align-items-center ps-4">
             <ng-container *ngIf="item?.answerType == 'C' || item?.answerType == 'T' || item?.answerType == 'T2' || item?.answerType == 'R' || item?.answerType == 'O2' || item?.answerType == 'C2'">
-              <i class="icon-i-bar-chart cursor-pointer" [id]="'icon'+item.recID" (click)="showHideChart(item.recID,'1')"></i>
+              <i class="icon-i-bar-chart cursor-pointer" [id]="'icon'+item.recID" [style.color]="primaryColor" (click)="showHideChart(item.recID,'1')"></i>
             </ng-container>
             <ng-container *ngIf="item?.answerType == 'L' || item?.answerType == 'O'">
-              <i class="icon-i-pie-chart cursor-pointer" [id]="'icon'+item.recID" (click)="showHideChart(item.recID,'1')"></i>
+              <i class="icon-i-pie-chart cursor-pointer" [id]="'icon'+item.recID" [style.color]="primaryColor" (click)="showHideChart(item.recID,'1')"></i>
             </ng-container>
             <i class="icon-i-layout-text-window-reverse ms-2 cursor-pointer" [id]="'icon'+item.recID" (click)="showHideChart(item.recID,'2')"></i>
           </div>
