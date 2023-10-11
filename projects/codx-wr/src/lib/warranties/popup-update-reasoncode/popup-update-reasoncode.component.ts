@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxFormComponent,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -26,7 +27,7 @@ import moment from 'moment';
 })
 export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  @ViewChild('form') form: CodxFormComponent;
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
   dataWorkOrder: any;
@@ -214,18 +215,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   setDataCommentAndDate(dateControl, commentControl, comment) {
     this.dateControl = dateControl;
-    if (this.dateControl != '0') {
-      this.gridViewSetup.ScheduleStart.isRequire =
-        this.dateControl == '2' ? true : false;
-      this.gridViewSetup.ScheduleTime.isRequire =
-        this.dateControl == '2' ? true : false;
-      this.setSchedule();
-    } else {
-      this.data.scheduleStart = null;
-      this.data.scheduleTime = '';
-      this.gridViewSetup.ScheduleStart.isRequire = false;
-      this.gridViewSetup.ScheduleTime.isRequire = false;
-    }
+    this.gridViewSetup.ScheduleStart.isRequire =
+      this.dateControl == '2' ? true : false;
+    this.gridViewSetup.ScheduleTime.isRequire =
+      this.dateControl == '2' ? true : false;
+    this.setSchedule();
+
     this.commentControl = commentControl;
     this.setComment(comment, this.commentControl);
   }
@@ -257,6 +252,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.scheduleStart = currentDate;
     this.data.scheduleTime = closestStartTime;
     this.scheduleTime = scheduleTime;
+    if (this.form) this.form?.formGroup?.patchValue(this.data);
   }
 
   setComment(comment, commentControl) {

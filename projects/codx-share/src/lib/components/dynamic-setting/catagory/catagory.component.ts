@@ -713,10 +713,10 @@ export class CatagoryComponent implements OnInit {
       }
     } else {
       if (
+        !data.dataType ||
         (typeof value == 'boolean' &&
           data.dataType.toLowerCase() != 'boolean' &&
-          data.dataType.toLowerCase() != 'bool') ||
-        !data.dataType
+          data.dataType.toLowerCase() != 'bool')
       ) {
         value = +value + '';
       }

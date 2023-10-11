@@ -16,8 +16,9 @@ export class ApproveProcess {
   approvers: Array<Approver>; //Danh sách userID của Approver
   category: any; //ES_Category của nghiệp vụ
   title: string; //Tiêu đề
-  curComponent: any;
-  template: any;
+  curComponent: any;//this: component gọi hàm
+  template: any;//ES_SignFile Template 
+  exportData: ExportData;//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
 }
 export class Approver {
   approver: string;
@@ -43,12 +44,18 @@ export class ExportUpload {
   referType: string;
   functionID: string;
   templates : Array<TemplateInfo>;
+  exportData: ExportData;
 }
 
 export class TemplateInfo {
   templateID: string;
   templateType: string;
   reportID: string;
+}
+
+export class ExportData {
+  funcID: string;
+  recID: string;
 }
 
 export const ShareType = {

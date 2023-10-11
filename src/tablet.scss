@@ -10,6 +10,7 @@
             width: 250px !important;
         }
     }
+
 }
 @media (max-width:1024px) and (min-width:992px){
   lib-layout-news codx-header{
@@ -52,11 +53,19 @@
   .aside-detail.w-250px{
     width: 200px!important;
   }
-  // WP
-
-  
+  // WP  
 }
  
+@media (max-width: 1024px) {
+  .news-header {
+    codx-page-title{
+      display: none!important;
+    }
+    .header-menu {
+      margin-left: 10px;
+    }
+  }
+}
 /*********** ipad ************/
 
 @media (max-width: 991px) {
