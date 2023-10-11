@@ -1,0 +1,64 @@
+<codx-form
+  #form
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [headerText]="title"
+  [showHeader]="true"
+  [data]="data"
+>
+  <ng-template #body>
+    <div class="form-group">
+      <codx-label
+      class="fw-bold"
+      default="Trạng thái"
+    ></codx-label>
+      <ejs-combobox
+      [dataSource]="valueListStatusCode "
+      (valueChange)="valueChangeStatusCode($event)"
+      [fields]="fieldCbxStatusCode"
+      [placeholder]="gridViewSetup?.ObjectStatus?.description"
+      [allowFiltering]="true"
+      [value]="statusDefault"
+    ></ejs-combobox>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+      class="fw-bold"
+      default="Bình luận"
+    ></codx-label>
+      <codx-input
+        field="memo"
+        [format]="'ed'"
+        type="textarea"
+        [crrValue]="statusCodecmt"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+
+  </ng-template>
+
+  <ng-template #footer>
+    <!--Footer-->
+    <div class="d-flex justify-content-end">
+      <div class="my-3 d-flex align-items-end">
+        <button
+          type="button"
+          (click)="cancel()"
+          class="btn btn-outline-primary"
+        >
+          <codx-label name="lblCancel" default="Hủy"></codx-label>
+        </button>
+        <button
+          type="button"
+          (click)="saveForm()"
+          class="btn btn-primary ms-2"
+        >
+          <codx-label name="lblSave" default="Lưu"></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

@@ -330,7 +330,7 @@
               </div>
             </ng-container>
           </ng-container>
-          <div class="setting-btnright">
+          <div class="setting-btnright" *ngIf="!componentSub">
             <a
               *ngIf="data.displayMode === '1'"
               [routerLink]="
@@ -338,7 +338,7 @@
               "
               (click)="
                 !data.reference &&
-                  openSub($event, data.recID, dataValue[data.transType])
+                  openSub($event, data, dataValue[data.transType])
               "
             >
               <span class="w-30px d-flex justify-content-center"
@@ -388,16 +388,30 @@
               </codx-input>
             </ng-container>
 
-            <ng-container *ngIf="data.displayMode === '6'">
-              <!-- <codx-img
+            <a
+              *ngIf="data.displayMode === '6'"
+              href="javascript:void(0)"
+              (click)="
+                data.reference &&
+                  openSub($event, data, dataValue[data.transType])
+              "
+            >
+              <span class="w-30px d-flex justify-content-center"
+                ><span class="icon-keyboard_arrow_right icon-22"></span></span
+            ></a>
+            <!-- <ng-container *ngIf="data.displayMode === '6'">
+
+             
+
+              <codx-img
               [updateDirect]="true"
               [isAllowEdit]="true"
               [objectId]="data.recID"
               [funcId]="function.functionID"
               [objectType]="function.entityName"
               (dataChanged)="changeLabelImg(data, $event)"
-            ></codx-img> -->
-            </ng-container>
+            ></codx-img>
+            </ng-container> -->
           </div>
         </div>
       </div>
@@ -458,6 +472,12 @@
 
     <hr class="ms-12 my-0" *ngIf="!isGroup" />
   </ng-template>
+
+  <ng-container [ngSwitch]="componentSub">
+    <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
+      <app-pattern *ngIf="setting" [type]="setting[0]?.transType"></app-pattern>
+    </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #footer>

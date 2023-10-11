@@ -232,7 +232,9 @@ export class PopupAddLeadComponent
     this.tabInfo = [this.menuGeneralInfo, this.menuGeneralSystem];
     this.tabContent = [this.tabGeneralInfoDetail, this.tabGeneralSystemDetail];
     this.executeApiCalls();
-    this.lead.permissions = !this.lead?.permissions ? []: this.lead?.permissions;
+    this.lead.permissions = !this.lead?.permissions
+      ? []
+      : this.lead?.permissions;
   }
 
   async getParameterAddress() {
@@ -268,24 +270,26 @@ export class PopupAddLeadComponent
           ownerName = $event?.component?.itemsSelected[0]?.UserName;
         }
         this.searchOwner('1', 'O', '0', this.owner, ownerName);
-      } else if ($event.field === 'salespersonID') {
-        this.searchOwner(
-          'U',
-          'S',
-          '0',
-          this.lead.salespersonID,
-          $event?.component?.itemsSelected[0]?.UserName
-        );
-      } else if ($event.field === 'consultantID') {
-        this.searchOwner(
-          'U',
-          'C',
-          '0',
-          this.lead.consultantID,
-          $event?.component?.itemsSelected[0]?.UserName
-        );
       }
     }
+  }
+  valueChangePermission($event) {
+    if ($event.data === null || $event.data === '') {
+      this.deleteOwner(
+        'U',
+        $event.field === 'salespersonID' ? 'S' : 'C',
+        '0', $event.field
+      );
+    } else {
+      this.searchOwner(
+        'U',
+        $event.field === 'salespersonID' ? 'S' : 'C',
+        '0',
+        $event.data,
+        $event?.component?.itemsSelected[0]?.UserName
+      );
+    }
+    this.lead[$event.field] = $event.data;
   }
 
   loadExchangeRate() {
@@ -416,7 +420,7 @@ export class PopupAddLeadComponent
     } else if ($event && view === this.viewOwnerProcess) {
       this.owner = $event;
       let ownerName = '';
-      this.owner
+      this.owner;
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
@@ -453,6 +457,28 @@ export class PopupAddLeadComponent
       if (index == -1) {
         this.addOwner(owner, ownerName, roleType, objectType);
       }
+    } else {
+    }
+  }
+  deleteOwner(
+    objectType: any,
+    roleType: any,
+    memberType: any,
+    field: any
+  ) {
+    let index = this.lead?.permissions.findIndex(
+      (x) =>
+        x.objectType == objectType &&
+        x.roleType === roleType &&
+        x.memberType == memberType
+    );
+    if (index != -1) {
+      if (field === 'salespersonID') {
+        this.lead.salespersonID = null;
+      } else if (field === 'consultantID') {
+        this.lead.consultantID = null;
+      }
+      this.lead.permissions.splice(index, 1);
     }
   }
   addOwner(owner, ownerName, roleType, objectType) {
@@ -468,7 +494,7 @@ export class PopupAddLeadComponent
     permission.download = true;
     permission.allowUpdateStatus =
       roleType === 'O' || roleType === 'S' ? '1' : '0';
-      permission.full = roleType === 'O';
+    permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
@@ -626,7 +652,10 @@ export class PopupAddLeadComponent
     instance.instanceNo = lead.leadID;
     instance.owner = this.owner;
     instance.processID = lead.processID;
-    instance.stepID = this.action !== this.actionEdit ?this.listInstanceSteps[0]?.stepID : lead.stepID;
+    instance.stepID =
+      this.action !== this.actionEdit
+        ? this.listInstanceSteps[0]?.stepID
+        : lead.stepID;
   }
   updateDataLead(instance: tmpInstances, lead: CM_Leads) {
     if (this.action !== this.actionEdit) {
@@ -642,7 +671,8 @@ export class PopupAddLeadComponent
     if (this.owner) {
       this.lead.owner = this.owner;
     }
-    this.lead.applyProcess &&this.convertDataInstance(this.lead, this.instance);
+    this.lead.applyProcess &&
+      this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
     this.action != this.actionEdit && this.updateDateCategory();
 
@@ -653,15 +683,13 @@ export class PopupAddLeadComponent
       await this.saveFileContact(this.contactId);
     }
     if (this.isLoading) {
-    }
-    else {
+    } else {
       if (this.action !== this.actionEdit) {
         this.lead.applyProcess && (await this.insertInstance());
-        !this.lead.applyProcess &&  this.onAdd();
-
+        !this.lead.applyProcess && this.onAdd();
       } else {
         this.lead.applyProcess && (await this.editInstance());
-        !this.lead.applyProcess &&  this.onEdit();
+        !this.lead.applyProcess && this.onEdit();
       }
     }
   }
@@ -735,24 +763,21 @@ export class PopupAddLeadComponent
       if (this.action !== this.actionEdit) this.getAutoNumber();
       this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
-    }
-    else if(this.action !== this.actionAdd) {
+    } else if (this.action !== this.actionAdd) {
       this.getListInstanceSteps(this.lead.processID);
     }
     this.itemTabsInputContact(this.isCategory);
   }
-    async getProcessSetting() {
-    this.codxCmService
-      .getListProcessDefault(['5'])
-      .subscribe((res) => {
-        if (res) {
-          // this.processId = res.recID;
-          // this.dataObj = { processID: res.recID };
-          // this.afterLoad();
+  async getProcessSetting() {
+    this.codxCmService.getListProcessDefault(['5']).subscribe((res) => {
+      if (res) {
+        // this.processId = res.recID;
+        // this.dataObj = { processID: res.recID };
+        // this.afterLoad();
         this.getListInstanceSteps(res.recID);
-          this.lead.processID = res.recID;
-        }
-      });
+        this.lead.processID = res.recID;
+      }
+    });
   }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];
