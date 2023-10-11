@@ -3292,7 +3292,7 @@ codx-toolbar-report{
 
 .dropdown-menu.h-400px{
   .h-375px{
-    height: 325px!important;
+    height: 320px!important;
   }
 }
 .h-350px.w-550px{
@@ -3313,6 +3313,10 @@ codx-toolbar-report{
     padding-top: 0;
   }
 
+}
+
+#calendarTab .e-vertical-left{
+  min-width: 85px;
 }
 .w-110px{
   width: 110px;
