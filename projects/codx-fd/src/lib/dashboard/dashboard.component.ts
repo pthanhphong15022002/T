@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
 import {
   AuthService,
@@ -41,21 +49,45 @@ export class DashboardComponent extends UIComponent {
   buttonAdd: ButtonModel;
   user = null;
 
-  //#region Đát Bo
+  /* #region filter */
+  entityName: string;
+  functionID: string;
+  favoriteID: string;
+  date: Date = new Date();
+  fromDateDropdown: string;
+  toDateDropdown: string;
+  radio: string = 'MyPermission';
+  /* #endregion */
 
-  panels:any = JSON.parse(
-    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5801149283702021_layout","row":0,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.6937258303982936_layout","row":4,"col":0,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.5667390469747078_layout","row":4,"col":8,"sizeX":8,"sizeY":4,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"0.4199281088325755_layout","row":0,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Tỷ lệ công việc được giao"},{"id":"0.4592017601751599_layout","row":0,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Theo nguồn công việc"},{"id":"0.06496875406606994_layout","row":8,"col":16,"sizeX":16,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Hiệu suất làm việc"},{"id":"0.21519762020962552_layout","row":8,"col":0,"sizeX":16,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỷ lệ hoàn thành công việc"},{"id":"0.3516224838830073_layout","row":20,"col":0,"sizeX":32,"sizeY":12,"minSizeX":32,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê công việc hoàn thành và số giờ thực hiện"},{"id":"0.36601875176456145_layout","row":8,"col":32,"sizeX":16,"sizeY":24,"minSizeX":16,"minSizeY":24,"maxSizeX":null,"maxSizeY":null,"header":"Tỷ lệ công việc theo nhóm"}]'
-  );
-  datas:any = JSON.parse(
-    '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"1"},{"panelId":"0.6937258303982936_layout","data":"1"},{"panelId":"0.5667390469747078_layout","data":"1"},{"panelId":"0.4199281088325755_layout","data":"1"},{"panelId":"0.4592017601751599_layout","data":"1"},{"panelId":"0.21519762020962552_layout","data":"1"},{"panelId":"0.06496875406606994_layout","data":"1"},{"panelId":"0.36601875176456145_layout","data":"1"},{"panelId":"0.3516224838830073_layout","data":"1"}]'
-  );
+  /* #region request get list post */
+  predicateWP = '';
+  dataValueWP = '';
+  service: string = 'FD';
+  assembly: string = 'FD';
+  className: string = 'CardsBusiness';
+  method: string = 'GetListPostAsync';
+  /* #endregion */
 
-  //#endregion
+  predicateReceive = '';
+  dataValueReceive = '';
+  predicateSend = '';
+  dataValueSend = '';
 
+  listRadio = [
+    { label: 'Theo phân quyền', data: 'MyPermission' },
+    { label: 'Phiếu của tôi', data: 'myCard' },
+  ];
+
+  listFavIcon = [
+    '../../assets/themes/fd/default/img/Receive.svg',
+    '../../assets/themes/fd/default/img/Send.svg',
+  ];
+
+  showPosts: boolean = false;
 
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   @ViewChild('listview') listview: ViewsComponent;
-  @ViewChildren('templates') templates: QueryList<any>;
+
   constructor(
     private injector: Injector,
     private dt: ChangeDetectorRef,
@@ -87,15 +119,121 @@ export class DashboardComponent extends UIComponent {
     this.getCardType();
   }
 
-  lstCountCard:any[] = [];
-  getDataAmountCard(){
-    this.api.execSv("FD","ERM.Business.FD", "CardsBusiness", "GetDataForWebAsync", [])
-    .subscribe((res:any) => {
-      if (res)
-      {
-        this.lstCountCard = JSON.parse(res);
-        this.dt.detectChanges();
-      }
+  initDate() {
+    // this.date = new Date();
+    const firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+    const lastDay = new Date(
+      this.date.getFullYear(),
+      this.date.getMonth() + 1,
+      0
+    );
+    this.fromDateDropdown = new Date(firstDay).toISOString();
+    this.toDateDropdown = new Date(lastDay).toISOString();
+  }
+
+  lstCountCard: any[] = [];
+  getDataAmountCard() {
+    this.setPredicateCountCard();
+    this.fdService
+      .countCardByCardType(
+        this.predicateReceive,
+        this.dataValueReceive,
+        this.predicateSend,
+        this.dataValueSend
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.lstCountCard = JSON.parse(res);
+          this.dt.detectChanges();
+        }
+      });
+  }
+
+  lstCardType: any[] = [];
+  getCardType() {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.SYS',
+        'FunctionListBusiness',
+        'GetByFuncAsync',
+        ['FD']
+      )
+      .subscribe((res) => {
+        this.lstCardType = res[4]?.childs;
+        this.entityName = this.lstCardType[0]?.entityName;
+        this.functionID = this.lstCardType[0]?.functionID;
+        this.getFavorite();
+      });
+  }
+
+  lstFavorite: any[] = [];
+  getFavorite() {
+    this.fdService
+      .getFavorite(this.entityName, '1', null, true)
+      .subscribe((res: any) => {
+        this.lstFavorite = res.favs;
+        this.favoriteID = res.defaultId;
+        this.loadPosts();
+      });
+  }
+
+  lstTopRadio: any[] = [];
+  getTop5Radio() {
+    const model: DataRequest = {
+      page: 1,
+      pageLoading: true,
+      pageSize: 5,
+      funcID: 'FDT08',
+      entityName: 'FD_Cards',
+      entityPermission: 'FD_Cards_Radio',
+      gridViewName: 'grvRadio',
+      favoriteID: 'c052aa8c-0937-ed11-9460-00155d035517',
+      sort: [{ field: 'CreatedOn', dir: 'desc' }],
+    };
+    this.fdService.getListCard(model).subscribe((res) => {
+      if (res) this.lstTopRadio = res[0];
+      this.lstTopRadio.forEach((item) => {
+
+        let listShare = item.permissions.filter(x => x.memberType == '3' && x.objectType != '7');
+        if (listShare && listShare.length > 0) {
+          let fItem = listShare[0];
+          if (listShare.length == 1) {
+            if (fItem.objectName) {
+              item.type = 2;
+              item.objectName = fItem.objectName;
+              item.objectID = fItem.objectID;
+            } else {
+              item.type = 1;
+              this.cache.valueList('L1901').subscribe((res) => {
+                let datas = res.datas;
+                if (datas && datas.length > 0) {
+                  let parent = datas.find((x) => x.value == fItem.objectType);
+                  if (parent) {
+                    item.objectName = parent.text;
+                    item.icon = parent.icon;
+                  }
+                }
+              });
+            }
+          } else {
+            item.type = 1;
+            this.cache.valueList('L1901').subscribe((res) => {
+              let datas = res.datas;
+              if (datas && datas.length > 0) {
+                let parent = datas.find((x) => x.value == fItem.objectType);
+                if (parent) {
+                  item.objectName = parent.text;
+                  item.icon = parent.icon;
+                }
+              }
+            });
+          }
+        } else {
+          item.type = 1;
+          item.icon = 'share_owner.svg';
+        }
+      });
     });
   }
 
