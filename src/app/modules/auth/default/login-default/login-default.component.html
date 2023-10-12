@@ -242,7 +242,8 @@
                         <div class="form-group d-grid gap-2 mb-5">
                           <!-- //nho xoa -->
                           <!-- [disabled]="loginForm.invalid" -->
-                          <button type="submit" class="btn btn-primary fw-bold px-6 py-3">
+                          <button type="submit" [disabled]="loginForm.invalid"
+                            class="btn btn-primary fw-bold px-6 py-3">
                             {{
                             "Đăng nhập " | lang : "Login" : "btnLogin" | async
                             }}
