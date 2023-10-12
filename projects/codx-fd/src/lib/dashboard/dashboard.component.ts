@@ -50,7 +50,7 @@ export class DashboardComponent extends UIComponent {
   user = null;
 
   /* #region filter */
-  entityName: string;
+  entityName: string = 'FD_Cards';
   functionID: string;
   favoriteID: string;
   date: Date = new Date();
@@ -60,6 +60,8 @@ export class DashboardComponent extends UIComponent {
   /* #endregion */
 
   /* #region request get list post */
+  predicatesWP = '';
+  dataValuesWP = '';
   predicateWP = '';
   dataValueWP = '';
   service: string = 'FD';
@@ -161,7 +163,7 @@ export class DashboardComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.lstCardType = res[4]?.childs;
-        this.entityName = this.lstCardType[0]?.entityName;
+        // this.entityName = this.lstCardType[0]?.entityName;
         this.functionID = this.lstCardType[0]?.functionID;
         this.getFavorite();
       });
@@ -265,27 +267,32 @@ export class DashboardComponent extends UIComponent {
   }
 
   setPredicates() {
-    this.predicateWP = '';
-    this.dataValueWP = '';
+    this.cache.functionList(this.functionID).subscribe((res) => {
+      this.predicateWP = res?.predicate;
+      this.dataValueWP = res?.dataValue;
 
-    if (this.fromDateDropdown && this.toDateDropdown) {
-      this.predicateWP += 'CreatedOn >= @0 && CreatedOn < @1';
-      this.dataValueWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
-    }
+      this.predicatesWP = '';
+      this.dataValuesWP = '';
 
-    switch (this.radio) {
-      case this.listRadio[0]?.data:
-        break;
-      case this.listRadio[1]?.data:
-        if (this.favoriteID == this.lstFavorite[0]?.recID) {
-          this.predicateWP += ' && ObjectID = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        } else {
-          this.predicateWP += ' && CreatedBy = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        }
-        break;
-    }
+      if (this.fromDateDropdown && this.toDateDropdown) {
+        this.predicatesWP += 'CreatedOn >= @0 && CreatedOn < @1';
+        this.dataValuesWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      }
+
+      switch (this.radio) {
+        case this.listRadio[0]?.data:
+          break;
+        case this.listRadio[1]?.data:
+          if (this.favoriteID == this.lstFavorite[0]?.recID) {
+            this.predicatesWP += ' && ObjectID = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          } else {
+            this.predicatesWP += ' && CreatedBy = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          }
+          break;
+      }
+    });
   }
 
   lstTagUser: any[] = [];
@@ -298,7 +305,7 @@ export class DashboardComponent extends UIComponent {
   clickCardType(item) {
     this.entityName = item.entityName;
     this.functionID = item.functionID;
-    this.getFavorite();
+    this.setPredicates();
   }
 
   clickFavorite(item) {
