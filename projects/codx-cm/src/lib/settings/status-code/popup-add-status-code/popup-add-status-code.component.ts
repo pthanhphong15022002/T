@@ -117,6 +117,14 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
 
   //#region save
   onSave() {
+    if ( (!this.data?.statusID || this.data?.statusID?.trim() == '') && !this.disabledShowInput) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup?.StatusID?.headerText + '"'
+      );
+      return;
+    }
     if (!this.data?.statusName || this.data?.statusName?.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
@@ -223,10 +231,14 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
     if (value != '0') {
       // existing name
       if (value == '1') {
+        headerName = gridViewSetup?.StatusID?.headerText;
+      }
+      // existing name
+      else if (value == '2') {
         headerName = gridViewSetup?.StatusName?.headerText;
       }
       // existing status
-      else if (value == '2') {
+      else if (value == '3') {
         headerName = gridViewSetup?.ObjectStatus?.headerText;
       }
       this.notiService.notifyCode('CM003', 0, '"' + headerName + '"');

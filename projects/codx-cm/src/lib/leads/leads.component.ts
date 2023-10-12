@@ -1564,7 +1564,7 @@ export class LeadsComponent
     this.dataSelected = data;
     this.statusDefault = this.dataSelected.applyProcess
       ? this.dataSelected?.statusCode
-      : this.dataSelected?.status;
+      : ['1','0'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',

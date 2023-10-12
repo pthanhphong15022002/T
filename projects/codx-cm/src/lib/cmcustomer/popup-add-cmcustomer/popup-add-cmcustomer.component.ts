@@ -105,6 +105,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   checkContact: boolean = false;
   leverSetting: number;
+  isSaved = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -395,18 +396,25 @@ export class PopupAddCmCustomerComponent implements OnInit {
   }
 
   valueChangeAdress(e) {
+    this.isSaved = true;
     if (e && e.data) {
       this.data.address = e?.data?.trim();
     } else {
       this.data.address = null;
     }
-  }
-
-  valueBlur(e) {
     this.setAddress(this.data.address);
   }
+
+  render(e) {
+    console.log(e);
+  }
+
+  focus(e){
+    this.isSaved = true;
+    console.log(e);
+  }
+
   async setAddress(name) {
-    this.isAdress = true;
     if (name != null && name != '') {
       var tmp = new BS_AddressBook();
 
@@ -496,7 +504,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.listAddress.push(tmp);
         }
       }
-      this.isAdress = false;
     } else {
       this.data.provinceID = null;
       this.data.countryID = null;
@@ -518,12 +525,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
           this.listAddress.splice(indexDelete, 1);
         }
       }
-      this.isAdress = false;
     }
     if (this.funcID == 'CM0101' || this.funcID == 'CM0102') {
       if (this.codxListAddress)
         this.codxListAddress.loadListAdress(this.listAddress);
     }
+    this.isSaved = false;
   }
 
   valueChangeContact(e) {
@@ -686,17 +693,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.gridViewSetup['ObjectID'].isRequire = false;
       }
       this.gridViewSetup['FirstName'].isRequire = false;
-
-      // if (this.data.firstName != null && this.data.firstName.trim() != '') {
-      //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
-      //     this.data.contactName =
-      //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-      //   } else {
-      //     this.data.contactName = this.data.firstName.trim();
-      //   }
-      // } else {
-      //   this.data.contactName = '';
-      // }
     }
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) {
@@ -766,13 +762,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.data.personalEmail = null;
       }
     }
-
-    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-    //   if (this.contactsPerson == null) {
-    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
-    //     return;
-    //   }
-    // }
     if (this.data.phone != null && this.data.phone.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
     }
@@ -823,43 +812,12 @@ export class PopupAddCmCustomerComponent implements OnInit {
       await firstValueFrom(
         this.imageUpload.updateFileDirectReload(this.data?.recID)
       );
-      if (this.action == 'add' || this.action == 'copy') {
-        this.onAdd();
-      } else {
-        this.onUpdate();
-      }
+
+    }
+    if (this.action == 'add' || this.action == 'copy') {
+      this.onAdd();
     } else {
-      if (
-        this.data?.address != null &&
-        this.data?.address?.trim() != '' &&
-        this.leverSetting > 0
-      ) {
-        setTimeout(async () => {
-          //Bùa, Để cho anh Huy copy địa chỉ xong lưu liền để get api theo địa chỉ tỉnh, thành phố, xã
-          if (
-            !this.cmSv.checkValidateSetting(
-              this.data.address,
-              this.data,
-              this.leverSetting,
-              this.gridViewSetup,
-              this.gridViewSetup?.Address?.headerText
-            )
-          ) {
-            return;
-          }
-          if (this.action == 'add' || this.action == 'copy') {
-            this.onAdd();
-          } else {
-            this.onUpdate();
-          }
-        }, 2000);
-      } else {
-        if (this.action == 'add' || this.action == 'copy') {
-          this.onAdd();
-        } else {
-          this.onUpdate();
-        }
-      }
+      this.onUpdate();
     }
   }
   //#endregion

@@ -4,7 +4,9 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -57,7 +59,7 @@ const MEMBERTYPE = {
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit {
+export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
 
   @Input() funcID: string = 'WP';
   @Input() favoriteID: string;
@@ -108,8 +110,26 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
+  
   ngAfterViewInit() {
     console.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // sài cho FD
+    if(!changes.favoriteID?.firstChange && changes.favoriteID?.previousValue != changes.favoriteID?.currentValue)
+    {
+      this.dataService.favoriteID = changes.favoriteID?.currentValue;
+      this.dataService.setPredicates([this.predicates],[this.dataValues]);
+    }
+    if((!changes.predicate?.firstChange && changes.predicate?.previousValue !=  changes.predicate?.currentValue) || (!changes.dataValue?.firstChange && changes.dataValue?.previousValue !=  changes.dataValue?.currentValue))
+    {
+      this.dataService.setPredicate(changes.predicate?.currentValue || this.predicate, [changes.dataValue?.currentValue || this.dataValue]);
+    }
+    if((!changes.predicates?.firstChange && changes.predicates?.previousValue !=  changes.predicates?.currentValue) || (!changes.dataValues?.firstChange && changes.dataValues?.previousValue !=  changes.dataValues?.currentValue))
+    {
+      this.dataService.setPredicates([changes.predicates?.currentValue || this.predicates],[changes.dataValues?.currentValue || this.dataValues]);
+    }
   }
 
   ngOnInit(): void {

@@ -172,8 +172,9 @@
       </codx-imgs>
     </span>
     <div
-      class="disabled-inline cursor-pointer ms-2"
+      class="disabled-inline ms-2"
       (click)="openPopupUpdateProgress(data?.value, 'T')"
+      [ngStyle]="data?.value?.startDate && data?.value?.endDate ? {cursor: 'pointer'} : {cursor: 'not-allowed'}"
     >
       <codx-progressbar
         [progress]="data?.value?.progress"

@@ -130,6 +130,7 @@ export class PopupConvertLeadComponent implements OnInit {
   applyFor: string;
   leverSetting: number;
   transIDCamp: any;
+  dealConfirm: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -159,6 +160,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.lead.customerID = null;
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
     );
@@ -194,6 +196,7 @@ export class PopupConvertLeadComponent implements OnInit {
       let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
       let paramDefault = JSON.parse(dataParam.dataValue);
       lever = paramDefault['ControlInputAddress'] ?? 0;
+      this.dealConfirm = paramDefault['DealConfirm'] ?? '1';
     }
     this.leverSetting = lever;
     this.changeDetectorRef.detectChanges();
@@ -518,66 +521,74 @@ export class PopupConvertLeadComponent implements OnInit {
         )
       );
     }
-    var data = [];
-    data = [
-      this.lead.recID,
-      this.customer,
-      this.deal,
-      this.customer.category == '1' ? this.lstContactDeal : [],
-      this.recIDContact,
-      this.lead.applyProcess && this.lead.status != '3'
-        ? result[0]?.stepID
-        : '',
-      this.transIDCamp,
-    ];
 
-    await this.api
-      .execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'LeadsBusiness',
-        'ConvertLeadToCustomerAndDealAsync',
-        data
+    this.instance.status = this.dealConfirm == '1' ? '0' : '2';
+
+    var ins = await firstValueFrom(
+      this.api.execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'InstancesBusiness',
+        'AddInstanceAsync',
+        [this.instance, this.listInstanceSteps, null]
       )
-      .subscribe(async (res) => {
-        if (res) {
-          if (this.radioChecked) {
-            // this.dialog.close(res);
-          } else {
-            if (this.avatarChange) {
-              await firstValueFrom(
-                this.imageUpload.updateFileDirectReload(this.customer.recID)
-              );
+    );
+    if (ins) {
+      this.deal.status = this.dealConfirm == '1' ? '0' : ins?.status;
+      this.deal.datas = ins?.datas;
+      this.addPermission(ins.permissions);
+      var data = [];
+      data = [
+        this.lead.recID,
+        this.customer,
+        this.deal,
+        this.customer.category == '1' ? this.lstContactDeal : [],
+        this.recIDContact,
+        this.lead.applyProcess && this.lead.status != '3'
+          ? result[0]?.stepID
+          : '',
+        this.transIDCamp,
+      ];
+
+
+      await this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'LeadsBusiness',
+          'ConvertLeadToCustomerAndDealAsync',
+          data
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            if (this.radioChecked) {
+              // this.dialog.close(res);
             } else {
-              await firstValueFrom(
-                this.cmSv.copyFileAvata(
-                  this.recIDAvt,
-                  this.customer.recID,
-                  'CM_Customers'
-                )
-              );
+              if (this.avatarChange) {
+                await firstValueFrom(
+                  this.imageUpload.updateFileDirectReload(this.customer.recID)
+                );
+              } else {
+                await firstValueFrom(
+                  this.cmSv.copyFileAvata(
+                    this.recIDAvt,
+                    this.customer.recID,
+                    'CM_Customers'
+                  )
+                );
+              }
             }
+
+            let obj = {
+              lead: res,
+              listStep: result[1],
+              salespersonID: this.deal.salespersonID,
+              consultantID: this.deal.consultantID,
+            };
+            this.dialog.close(obj);
           }
-
-          await firstValueFrom(
-            this.api.execSv<any>(
-              'DP',
-              'ERM.Business.DP',
-              'InstancesBusiness',
-              'AddInstanceAsync',
-              [this.instance, this.listInstanceSteps, null]
-            )
-          );
-
-          let obj = {
-            lead: res,
-            listStep: result[1],
-            salespersonID: this.deal.salespersonID,
-            consultantID: this.deal.consultantID,
-          };
-          this.dialog.close(obj);
-        }
-      });
+        });
+    }
   }
 
   setRecIDConvert() {
@@ -615,6 +626,34 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
+  addPermission(permissionDP) {
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        this.deal.permissions.push(this.copyPermission(item));
+      }
+    }
+  }
+
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = true;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    return permission;
+  }
   //#endregion
   valueBusinessLine(e) {
     if (e?.data != null && e?.data?.trim() != '') {
@@ -848,9 +887,7 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customer.recID = this.customerNewOld;
       }
       this.setDataCustomer();
-      setTimeout(() => {
-        this.setContact();
-      }, 1000);
+      this.setContact();
       this.countAddNew++;
 
       // this.getListContactByObjectID(this.customerNewOld);

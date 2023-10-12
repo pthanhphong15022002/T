@@ -37,8 +37,8 @@ export class DashboardComponent extends UIComponent {
   dataValueCard = '';
   predicateCoins = `Owner =@0  `;
   dataValueCoins = '';
-  // predicateWP = 'Category =@0 && Stop=false';
-  // dataValueWP = '3';
+  // predicatesWP = 'Category =@0 && Stop=false';
+  // dataValuesWP = '3';
 
   memberType = '3';
   arrVll = ['L1422', 'L1419'];
@@ -50,7 +50,7 @@ export class DashboardComponent extends UIComponent {
   user = null;
 
   /* #region filter */
-  entityName: string;
+  entityName: string = 'FD_Cards';
   functionID: string;
   favoriteID: string;
   date: Date = new Date();
@@ -60,6 +60,8 @@ export class DashboardComponent extends UIComponent {
   /* #endregion */
 
   /* #region request get list post */
+  predicatesWP = '';
+  dataValuesWP = '';
   predicateWP = '';
   dataValueWP = '';
   service: string = 'FD';
@@ -68,9 +70,19 @@ export class DashboardComponent extends UIComponent {
   method: string = 'GetListPostAsync';
   /* #endregion */
 
+  predicateReceive = '';
+  dataValueReceive = '';
+  predicateSend = '';
+  dataValueSend = '';
+
   listRadio = [
     { label: 'Theo phân quyền', data: 'MyPermission' },
     { label: 'Phiếu của tôi', data: 'myCard' },
+  ];
+
+  listFavIcon = [
+    '../../assets/themes/fd/default/img/Receive.svg',
+    '../../assets/themes/fd/default/img/Send.svg',
   ];
 
   showPosts: boolean = false;
@@ -103,8 +115,9 @@ export class DashboardComponent extends UIComponent {
   onInit(): void {
     this.user = this.auth.userValue;
     this.dataValueCoins = this.user.userID;
-    this.getDataAmountCard();
+    this.getTop5Radio();
     this.initDate();
+    this.getDataAmountCard();
     this.getCardType();
   }
 
@@ -122,13 +135,13 @@ export class DashboardComponent extends UIComponent {
 
   lstCountCard: any[] = [];
   getDataAmountCard() {
-    this.api
-      .execSv(
-        'FD',
-        'ERM.Business.FD',
-        'CardsBusiness',
-        'GetDataForWebAsync',
-        []
+    this.setPredicateCountCard();
+    this.fdService
+      .countCardByCardType(
+        this.predicateReceive,
+        this.dataValueReceive,
+        this.predicateSend,
+        this.dataValueSend
       )
       .subscribe((res: any) => {
         if (res) {
@@ -150,25 +163,10 @@ export class DashboardComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.lstCardType = res[4]?.childs;
-        this.entityName = this.lstCardType[0]?.entityName;
+        // this.entityName = this.lstCardType[0]?.entityName;
         this.functionID = this.lstCardType[0]?.functionID;
         this.getFavorite();
       });
-  }
-
-  lstTop5Radio: any[] = [];
-  getTop5Radio() {
-    const model: DataRequest = {
-      page: 1,
-      pageLoading: true,
-      pageSize: 5,
-      funcID: 'FDT08',
-      entityName: 'FD_Cards_Radio',
-      sort: [{ field: 'CreatedOn', dir: 'desc' }],
-    };
-    this.fdService.getListCard(model).subscribe((res) => {
-      this.lstTop5Radio = res[0];
-    });
   }
 
   lstFavorite: any[] = [];
@@ -178,40 +176,123 @@ export class DashboardComponent extends UIComponent {
       .subscribe((res: any) => {
         this.lstFavorite = res.favs;
         this.favoriteID = res.defaultId;
-        this.loadPosts();
+        this.setPredicates();
+        this.showPosts = true;
       });
   }
 
-  setPredicates() {
-    this.predicateWP = '';
-    this.dataValueWP = '';
+  lstTopRadio: any[] = [];
+  getTop5Radio() {
+    const model: DataRequest = {
+      page: 1,
+      pageLoading: true,
+      pageSize: 5,
+      funcID: 'FDT08',
+      entityName: 'FD_Cards',
+      entityPermission: 'FD_Cards_Radio',
+      gridViewName: 'grvRadio',
+      favoriteID: 'c052aa8c-0937-ed11-9460-00155d035517',
+      sort: [{ field: 'CreatedOn', dir: 'desc' }],
+    };
+    this.fdService.getListCard(model).subscribe((res) => {
+      if (res) this.lstTopRadio = res[0];
+      this.lstTopRadio.forEach((item) => {
+        let listShare = item.permissions.filter(
+          (x) => x.memberType == '3' && x.objectType != '7'
+        );
+        if (listShare && listShare.length > 0) {
+          let fItem = listShare[0];
+          if (listShare.length == 1) {
+            if (fItem.objectName) {
+              item.type = 2;
+              item.objectName = fItem.objectName;
+              item.objectID = fItem.objectID;
+            } else {
+              item.type = 1;
+              this.cache.valueList('L1901').subscribe((res) => {
+                let datas = res.datas;
+                if (datas && datas.length > 0) {
+                  let parent = datas.find((x) => x.value == fItem.objectType);
+                  if (parent) {
+                    item.objectName = parent.text;
+                    item.icon = parent.icon;
+                  }
+                }
+              });
+            }
+          } else {
+            item.type = 1;
+            this.cache.valueList('L1901').subscribe((res) => {
+              let datas = res.datas;
+              if (datas && datas.length > 0) {
+                let parent = datas.find((x) => x.value == fItem.objectType);
+                if (parent) {
+                  item.objectName = parent.text;
+                  item.icon = parent.icon;
+                }
+              }
+            });
+          }
+        } else {
+          item.type = 1;
+          item.icon = 'share_owner.svg';
+        }
+      });
+    });
+  }
+
+  setPredicateCountCard() {
+    this.predicateReceive = '';
+    this.dataValueReceive = '';
+    this.predicateSend = '';
+    this.dataValueSend = '';
 
     if (this.fromDateDropdown && this.toDateDropdown) {
-      this.predicateWP += 'CreatedOn >= @0 && CreatedOn < @1';
-      this.dataValueWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      this.predicateReceive += 'CreatedOn >= @0 && CreatedOn < @1';
+      this.dataValueReceive += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      this.predicateSend += 'CreatedOn >= @0 && CreatedOn < @1';
+      this.dataValueSend += `${this.fromDateDropdown};${this.toDateDropdown}`;
     }
 
     switch (this.radio) {
       case this.listRadio[0]?.data:
         break;
       case this.listRadio[1]?.data:
-        if (this.favoriteID == this.lstFavorite[0]?.recID) {
-          this.predicateWP += ' && ObjectID = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        } else {
-          this.predicateWP += ' && CreatedBy = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        }
+        this.predicateReceive += ' && ObjectID = @2';
+        this.dataValueReceive += `;${this.user.userID}`;
+        this.predicateSend += ' && CreatedBy = @2';
+        this.dataValueSend += `;${this.user.userID}`;
         break;
     }
   }
 
-  loadPosts() {
-    this.setPredicates();
-    this.showPosts = false;
-    this.dt.detectChanges();
-    this.showPosts = true;
-    this.dt.detectChanges();
+  setPredicates() {
+    this.cache.functionList(this.functionID).subscribe((res) => {
+      this.predicateWP = res?.predicate;
+      this.dataValueWP = res?.dataValue;
+
+      this.predicatesWP = '';
+      this.dataValuesWP = '';
+
+      if (this.fromDateDropdown && this.toDateDropdown) {
+        this.predicatesWP += 'CreatedOn >= @0 && CreatedOn < @1';
+        this.dataValuesWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      }
+
+      switch (this.radio) {
+        case this.listRadio[0]?.data:
+          break;
+        case this.listRadio[1]?.data:
+          if (this.favoriteID == this.lstFavorite[0]?.recID) {
+            this.predicatesWP += ' && ObjectID = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          } else {
+            this.predicatesWP += ' && CreatedBy = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          }
+          break;
+      }
+    });
   }
 
   lstTagUser: any[] = [];
@@ -224,26 +305,28 @@ export class DashboardComponent extends UIComponent {
   clickCardType(item) {
     this.entityName = item.entityName;
     this.functionID = item.functionID;
-    this.loadPosts();
+    this.setPredicates();
   }
 
   clickFavorite(item) {
     if (item) {
       this.favoriteID = item.recID;
-      this.loadPosts();
+      this.setPredicates();
     }
   }
 
   changeRadio(e, data: string) {
     this.radio = data;
-    this.loadPosts();
+    this.setPredicates();
+    this.getDataAmountCard();
   }
 
   changeCalendar(e) {
     if (e?.fromDate || e?.toDate) {
       this.fromDateDropdown = new Date(e.fromDate).toISOString();
       this.toDateDropdown = new Date(e.toDate).toISOString();
-      this.loadPosts();
+      this.setPredicates();
+      this.getDataAmountCard();
     }
   }
 

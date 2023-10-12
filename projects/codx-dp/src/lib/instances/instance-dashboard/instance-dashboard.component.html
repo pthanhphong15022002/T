@@ -145,7 +145,7 @@
     </div>
     <div
       class="w-100 d-flex justify-content-center mb-4"
-      *ngIf="countOwners?.length > 0; else tempNoData"
+      *ngIf="topOwnersLow?.length > 0; else tempNoData"
     >
       <div class="group-btn" style="z-index: 10">
         <div
@@ -174,19 +174,19 @@
         </div>
       </div>
     </div>
-    <div class="assignchart-group w-100" style="overflow-y: auto">
+    <div class="assignchart-group w-100 height_owner pe-1 my-2" style="overflow-y: auto">
       <div
-        *ngFor="let owner of countOwners; let i = index"
+        *ngFor="let owner of topOwnersLow; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end h-30px"
       >
         <div class="fw-bold me-2 quantity">{{ owner.quantity }}</div>
         <div
           class="assignchart-task h-100 d-flex align-item-center justify-content-end"
-          [style.width]="(owner.quantity / countOwners[0].quantity) * 100 + '%'"
+          [style.width]="(owner.quantity / topOwnersLow[0].quantity) * 100 + '%'"
         >
           <div
             class="d-flex align-item-center justify-content-end proress h-100"
-            [style.background-color]="paletteColor[i]"
+            [style.background-color]="owner?.color"
             style="color: #000000; border-radius: 5px 0 0 5px"
           >
             <span

@@ -7,6 +7,9 @@
 ></codx-views>
 
 <ng-template #panelLeft>
+  <!-- <div class="container-fluid p-0">
+    <ng-container *ngTemplateOutlet="dashboard"> </ng-container>
+  </div> -->
   <div class="page-home page-master p-6 scroll-y h-100 bg-body rounded-3">
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-between">
@@ -591,4 +594,50 @@
     </div>
   </div>
   <div class="modal-footer"></div>
+</ng-template>
+
+
+<ng-template #dashboard>
+  <codx-dashboard
+    #dashboard
+    [templates]="templates"
+    [panels]="panels"
+    [datas]="datas"
+    [isEditMode]="true"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #template let-data>
+  <h2 id="1">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="2">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="3">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="4">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="5">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="6">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="7">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="8">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="9">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="10">Hé lô</h2>
+</ng-template>
+<ng-template #template let-data>
+  <h2 id="1">Hé lô</h2>
 </ng-template>

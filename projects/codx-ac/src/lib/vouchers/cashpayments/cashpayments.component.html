@@ -1,15 +1,15 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="btnAddClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
+  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
-<!-- templateGrid -->
+<!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
   <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, data, 'viewgrid')" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
-<!-- templateGrid -->
+<!-- End: templateGrid -->
 
-<!-- template listdetail -->
+<!-- Start: template listdetail -->
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
@@ -107,9 +107,9 @@
     </div>
   </div>
 </ng-template>
-<!-- template listdetail -->
+<!-- End: template listdetail -->
 
-<!-- template list -->
+<!-- Start: template list -->
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'"
@@ -232,4 +232,4 @@
     </div>
   </div>
 </ng-template>
-<!-- template list -->
+<!-- End: template list -->

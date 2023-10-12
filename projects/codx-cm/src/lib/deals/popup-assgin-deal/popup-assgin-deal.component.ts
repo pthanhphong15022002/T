@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Optional,
@@ -99,7 +100,6 @@ export class PopupAssginDealComponent
         (this.processID = dialogData?.data.processID);
     }
     this.recID = dialogData?.data?.recID;
-    //this.buid = dialogData?.data?.buid;
     this.applyFor = dialogData?.data.applyFor;
     this.owner = dialogData?.data?.owner;
     this.gridViewSetup = dialogData?.data.gridViewSetup;
@@ -112,7 +112,6 @@ export class PopupAssginDealComponent
 
   onInit(): void {}
   loadTabView() {
-    this.detectorRef.detectChanges();
   }
 
   click(event: any) {
@@ -120,7 +119,7 @@ export class PopupAssginDealComponent
     }
   }
   clickMenu(item) {
-    this.detectorRef.detectChanges();
+
   }
   cancel() {
     this.dialogRef.close();
@@ -147,6 +146,9 @@ export class PopupAssginDealComponent
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {
         this.assignToSetting(user);
+      }
+      else {
+        this.notificationsService.notifyCode('Nhân viên không còn tồn tại');
       }
     });
   }
@@ -195,7 +197,7 @@ export class PopupAssginDealComponent
   changeOwner(evt: any, view: any) {
     if (evt?.data) {
       if (view === this.viewDefault) {
-        this.owner = evt.data;
+         this.owner = evt.data;
         //this.buid = '';
       } else if (view === this.viewBUID) {
         //   this.buid = evt.data;
@@ -297,20 +299,26 @@ export class PopupAssginDealComponent
     this.employeeName = user?.employeeName;
     // this.orgUnitName = user?.orgUnitName;
     // this.positionName = user?.positionName;
+    // this.owner = user;
+    // this.data.owner = this.owner;
   }
   deleteOrg() {
     this.employeeName = null;
     // this.orgUnitName = null;
     // this.positionName = null;
+
     this.owner = null;
-    if (this.cbxOwner) {
-      (
-        this.cbxOwner.ComponentCurrent as CodxComboboxComponent
-      ).dataService.data = [];
-      this.cbxOwner.crrValue = this.owner;
-    }
-    this.form.formGroup.patchValue(this.data);
     this.data.owner = this.owner;
+    // if (this.cbxOwner) {
+    //   (
+    //     this.cbxOwner.ComponentCurrent as CodxComboboxComponent
+    //   ).dataService.data = [];
+    //   this.cbxOwner.crrValue = this.owner;
+    // }
+    (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =[];
+    this.cbxOwner.crrValue = this.owner;
+    this.form.formGroup.patchValue(this.data);
+    this.detectorRef.detectChanges();
   }
 
   onSaveForm() {

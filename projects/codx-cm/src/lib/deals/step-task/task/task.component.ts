@@ -170,7 +170,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'SYS04': //copy
             break;
           case 'DP25':
-          case 'DP20':
           case 'DP26':
           case 'SYS003': //đính kèm file
           case 'SYS004':
@@ -230,6 +229,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             if (task?.status != '1') {
               res.disabled = true;
             }
+            break;
+          case 'DP20': // tiến độ
+            res.isblur =  !(task?.startDate && task?.endDate);
             break;
         }
       });
@@ -457,7 +459,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async openPopupUpdateProgress(task, type) {
-    if (this.isPause) {
+    if (this.isPause || !(task?.startDate && task?.endDate)) {
       return;
     }
     let dataInput = {

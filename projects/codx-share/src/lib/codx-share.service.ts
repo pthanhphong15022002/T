@@ -36,6 +36,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import {
   ApproveProcess,
   Approver,
+  ExportData,
   ExportUpload,
   ResponseModel,
   TemplateInfo,
@@ -1399,7 +1400,8 @@ export class CodxShareService {
     approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
-    curComponent: any = null //biến this: tại component gọi hàm
+    curComponent: any = null, //biến this: tại component gọi hàm
+    exportData : ExportData =null,//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
@@ -1414,6 +1416,7 @@ export class CodxShareService {
     approveProcess.approvers = approvers;
     approveProcess.category = category;
     approveProcess.data = data;
+    approveProcess.exportData = exportData;
     this.callBackComponent = curComponent;
 
     //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
@@ -1543,7 +1546,7 @@ export class CodxShareService {
     let signFile = new ES_SignFile();
     signFile.recID = approveProcess?.recID;
     signFile.approveControl = '2';
-    signFile.processID = approveProcess?.template[0]?.processID;
+    signFile.processID = approveProcess?.category?.recID;
     signFile.categoryID = approveProcess?.category?.categoryID;
     signFile.category = approveProcess?.category?.category;
     signFile.refID = approveProcess?.recID;
@@ -1774,6 +1777,7 @@ export class CodxShareService {
     exportUpload.functionID = approveProcess.funcID;
     exportUpload.dataJson = JSON.stringify(approveProcess?.data);
     exportUpload.templates = [];
+    exportUpload.exportData = approveProcess.exportData;
 
     let listTemplateRecID = [];
     for (let temp of templates) {
