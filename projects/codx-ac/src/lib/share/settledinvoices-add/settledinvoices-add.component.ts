@@ -89,6 +89,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -135,11 +139,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       this.payAmt,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
-        this.subInvoices[e.rowIndex] = res;
-        this.grid.refresh();
-        // this.grid.updateRow(e.rowIndex,res,false);
-        //this.grid.dataSource = [...this.subInvoices];
-        //this.grid.gridRef.updateCell(e.rowIndex,'settledAmt',res.settledAmt)
+        this.grid.updateRow(e.rowIndex,res,false);
         if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
           this.oldSelected = e.rowIndexes;
         }
@@ -150,7 +150,6 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
             this.dt.detectChanges();
           } else {
             this.grid.gridRef?.selectRows(this.oldSelected);
-            this.dt.detectChanges();
           }     
         },50);
       }

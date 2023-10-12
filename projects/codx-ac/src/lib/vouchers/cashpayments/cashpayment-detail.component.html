@@ -1,11 +1,13 @@
-<!-- template listdetail -->
-<codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="formModel"
-    [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
-    (clickMF)="clickMoreFunction($event, itemSelected)">
+<!-- Start: template listdetail -->
+<ng-container *ngIf="itemSelected">
+  <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="formModel"
+  [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
+  (clickMF)="clickMoreFunction($event, itemSelected)">
 </codx-detail-tmp>
-<!-- template listdetail -->
+</ng-container>
+<!-- End: template listdetail -->
 
-<!-- template listdetail Header-->
+<!-- Start: template listdetail Header-->
 <ng-template #TmpHeaderDetail>
     <ng-container *ngIf="itemSelected">
         <div style="position: relative;z-index: 1000;width: 50%;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
@@ -56,9 +58,9 @@
         </div>
     </ng-container>
 </ng-template>
-<!-- template listdetail Header-->
+<!-- End: template listdetail Header-->
 
-<!-- template listdetail Body-->
+<!-- Start: template listdetail Body-->
 <ng-template #TmpBodyDetail>
     <ng-container *ngIf="itemSelected">
         <div class="d-flex justify-content-between flex-grow-1 mb-1">
@@ -98,7 +100,7 @@
             [formModel]="formModel" default="Tài khoản nhận">
           </codx-label>
           <span *ngIf="(formModel.funcID == 'ACT0429' && itemSelected?.bankReceiveName)" class="text-gray-600">{{itemSelected?.bankReceiveName}}</span>
-          <span *ngIf="(formModel.funcID == 'ACT0429' && (itemSelected?.bankReceiveName == '' || itemSelected?.bankReceiveName == null) && gridViewSetup)" class="text-gray-600">{{gridViewSetup['BankAcctID'].headerText}}</span>
+          <span *ngIf="(formModel.funcID == 'ACT0429' && (itemSelected?.bankReceiveName == '' || itemSelected?.bankReceiveName == null) && gridViewSetup)" class="place-holder text-gray-600 ">{{gridViewSetup['BankAcctID'].headerText}}</span>
           <!-- Tài khoản nhận (ủy nhiệm chi)-->
         </div>
         <div class="d-flex align-items-top mb-1">
@@ -176,18 +178,18 @@
           </div>
       </ng-container>
 </ng-template>
-<!-- template listdetail Body-->
+<!-- End: template listdetail Body-->
 
-<!-- template listdetail Footer-->
+<!-- Start: template listdetail Footer-->
 <ng-template #TmpFooterDetail let-data>
     <ng-container *ngIf="itemSelected">
         <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="itemSelected?.recID"
             [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
     </ng-container>
 </ng-template>
-<!-- template listdetail Footer-->
+<!-- End: template listdetail Footer-->
 
-<!-- template Tab AcctTrans-->
+<!-- Start: template Tab AcctTrans-->
 <ng-template #tabAcctTrans>
     <ng-container *ngIf="itemSelected?.listAcctrants">
         <div class="table-responsive table-ac">
@@ -434,9 +436,9 @@
         </table>
       </ng-container>
 </ng-template>
-<!-- template Tab AcctTrans-->
+<!-- End: template Tab AcctTrans-->
 
-<!-- template Tab SettledInvoices-->
+<!-- Start: template Tab SettledInvoices-->
 <ng-template #tabSettledInvoices>
     <ng-container *ngIf="itemSelected?.listSettledInvoices">
         <div class="table-responsive table-ac">
@@ -609,9 +611,9 @@
         </table>
       </ng-container>
 </ng-template>
-<!-- template Tab SettledInvoices-->
+<!-- End: template Tab SettledInvoices-->
 
-<!-- template Tab VatInvoices-->
+<!-- Start: template Tab VatInvoices-->
 <ng-template #tabVatInvoices>
     <ng-container *ngIf="itemSelected?.listVATInvoices">
         <div class="table-responsive table-ac">
@@ -788,4 +790,4 @@
         </table>
       </ng-container>
 </ng-template>
-<!-- template Tab VatInvoices-->
+<!-- End: template Tab VatInvoices-->

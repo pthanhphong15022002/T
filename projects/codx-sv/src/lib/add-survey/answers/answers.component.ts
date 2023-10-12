@@ -38,6 +38,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   indexQuesAns: number = 0;
   indexRepons: number = 0;
   primaryColor:any;
+  backgroundColor:any;
   chartSettingsT: ChartSettings = {
     title: '',
     seriesSetting: [
@@ -135,12 +136,43 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getAvatar()
   {
+    debugger
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.backgroudColor) {
         document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
       }
-      this.primaryColor = this.dataSV?.settings?.primaryColor
+    }
+    this.backgroundColor = this.dataSV?.settings?.backgroudColor || "#EBDFFF";
+    this.primaryColor = this.dataSV?.settings?.primaryColor || "#7248B9"
+    this.setStyleIcon();
+  }
+
+  setStyleIcon()
+  {
+    var clsicon = document.getElementsByClassName('icon-chart-sv');
+    for(var i = 0; i < clsicon.length; i++) {
+      clsicon[i].removeAttribute("style");
+    }
+    var clsicon2 = document.getElementsByClassName('icon-chart-sv-1') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsicon2.length; i++) {
+      clsicon2[i].style.color = this.primaryColor
+    }
+    var clsdiv = document.getElementsByClassName('div-icon-chart');
+    for(var i = 0; i < clsdiv.length; i++) {
+      clsdiv[i].removeAttribute("style");
+    }
+
+    var clsChart = document.getElementsByClassName('view-chart-1') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsChart.length; i++) {
+      clsChart[i].classList.remove("invisible");
+      clsChart[i].classList.add("visible");
+    }
+    
+    var clsChart2 = document.getElementsByClassName('view-chart-2') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsChart2.length; i++) {
+      clsChart2[i].classList.add("invisible");
+      clsChart2[i].classList.remove("visible");
     }
   }
 
@@ -196,6 +228,12 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         element.grid.column = this.getColum(element.recID);
         element.grid.row = this.getRow(element.recID)
       }
+      else
+      {
+        element.grid = {}
+        element.grid.column = [{answer:"Câu trả lời"}];
+        element.grid.row = this.getRow2(element.recID);
+      }
     });
   }
 
@@ -209,6 +247,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getRow(questionID:any)
   {
+    debugger
     let result = [];
     this.lstRespondents.forEach(element => {
       if(element.responds && element.responds.length>0)
@@ -216,10 +255,32 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         var results = element.responds.filter(x=>x.questionID == questionID);
         if(results && results.length > 0)
         {
-          var data = [{objectID:element.objectID}];
+          var data = [];
           var listResult = results[0].results.sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
           listResult.forEach(element2 => {
-            data.push(element2.answer)
+            if(data[element2.seqNo] && Array.isArray(data[element2.seqNo])) data[element2.seqNo].push(element2.answer)
+            else data.push([element2.answer]);   
+          });
+          data.unshift({objectID:element.objectID,name:element.respondent})
+          result.push(data);
+        }
+      }
+    });
+    return result;
+  }
+
+  getRow2(questionID:any)
+  {
+    let result = [];
+    this.lstRespondents.forEach(element => {
+      if(element.responds && element.responds.length>0)
+      {
+        var results = element.responds.filter(x=>x.questionID == questionID);
+        if(results && results.length > 0)
+        {
+          var data = [{objectID:element.objectID,name:element.respondent},{data:[]}];
+          results[0].results.forEach(element2 => {
+            data[1].data.push(element2.answer)
           });
           result.push(data);
         }
@@ -561,10 +622,18 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     var element = document.getElementById("chart"+recID+index);
     element.classList.remove("invisible");
     element.classList.add("visible");
+    var elementIcon = document.getElementById("icon"+recID+index);
+    var elementDivIcon = document.getElementById("div-icon"+recID+index);
+    elementIcon.style.color = this.primaryColor;
+    elementDivIcon.style.backgroundColor = this.backgroundColor;
 
     var dif = index == "2" ? "1": "2";
-    var element = document.getElementById("chart"+recID+dif);
+    element = document.getElementById("chart"+recID+dif);
     element.classList.add("invisible");
     element.classList.remove("visible");
+    elementIcon = document.getElementById("icon"+recID+dif);
+    elementDivIcon = document.getElementById("div-icon"+recID+dif);
+    elementIcon.style.color = "";
+    elementDivIcon.style.backgroundColor = "#F5F9FA";
   }
 }

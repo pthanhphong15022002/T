@@ -284,12 +284,11 @@ export class JournalService {
       journals: this.acService.loadData$('AC', options2),
       vll077: this.cacheService.valueList('AC077').pipe(map((v) => v.datas)),
     }).subscribe(({ functionList, journals, vll077 }) => {
-      console.log(journals);
       const links: PageLink[] = [];
       for (const journal of journals as IJournal[]) {
-        if (journal.journalNo === journalNo) {
-          continue;
-        }
+        // if (journal.journalNo === journalNo) {
+        //   continue;
+        // }
 
         const functionId: string = vll077.find(
           (v) => v.value === journal.journalType

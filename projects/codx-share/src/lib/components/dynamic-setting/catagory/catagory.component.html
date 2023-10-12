@@ -5,6 +5,7 @@
   [showHeader]="dialog"
   [dialog]="dialog!"
   [footer]="footer"
+  [autoFocus]="false"
 >
 </codx-form>
 
@@ -477,6 +478,16 @@
     <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
       <app-pattern *ngIf="setting" [type]="setting[0]?.transType"></app-pattern>
     </div>
+    <ng-container *ngSwitchCase="'FDPolicies'">
+      <lib-detail-policy
+        *ngIf="formModel && setting && setting.length > 0"
+        [setting]="setting[0]"
+        [settingValue]="dataValue"
+        [formModel]="formModel"
+        [lstPolicyLines]="lstPolicyLines[setting[0].policy?.recID]"
+      >
+      </lib-detail-policy>
+    </ng-container>
   </ng-container>
 </ng-template>
 

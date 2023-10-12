@@ -29,6 +29,7 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-catagory',
@@ -70,6 +71,7 @@ export class CatagoryComponent implements OnInit {
   lineType = '1';
   componentSub = '';
   isOpenSub: boolean = false;
+  formModel: FormModel;
 
   constructor(
     private api: ApiHttpService,
@@ -77,6 +79,7 @@ export class CatagoryComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private inject: Injector,
+    private activatedRoute: ActivatedRoute,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -93,7 +96,8 @@ export class CatagoryComponent implements OnInit {
       //this.loadSettingValue();
     }
   }
-
+  lstPolicies: any = {};
+  lstPolicyLines: any = {};
   ngOnInit(): void {
     if (this.dialog) {
       if (this.setting) {
@@ -108,34 +112,22 @@ export class CatagoryComponent implements OnInit {
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
-      // this.setting = this.setting.filter((x) => {
-      //   return (
-      //     x.refLineID == '41a778ab-71cc-ed11-94a1-00155d035517' ||
-      //     x.recID == '41a778ab-71cc-ed11-94a1-00155d035517'
-      //   );
-      // });
+
       if (this.setting) {
         this.groupSetting = this.setting.filter((x) => {
           return x.lineType === this.lineType;
         });
-        // if (this.groupSetting.length > 0) {
-        //   var lstNoGroup = this.setting.filter((x) => {
-        //     return (
-        //       ((x.controlType &&
-        //         x.controlType.toLowerCase() !== 'groupcontrol') ||
-        //         !x.controlType) &&
-        //       !x.refLineID
-        //     );
-        //   });
-        //   if (lstNoGroup.length > 0) {
-        //     var objGroupTMP: any = {
-        //       recID: '',
-        //       refLineID: '',
-        //       controlType: 'GroupControl',
-        //     };
-        //     this.groupSetting.splice(0, 0, objGroupTMP);
-        //   }
-        // }
+        var funcID = this.activatedRoute.snapshot.params['funcID'];
+
+        this.cache.functionList(funcID).subscribe((res) => {
+          if (res) {
+            this.formModel = new FormModel();
+            this.formModel.formName = res.formName;
+            this.formModel.funcID = res.funcID;
+            this.formModel.gridViewName = res.gridViewName;
+            this.formModel.entityName = res.entityName;
+          }
+        });
       }
       if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
@@ -150,30 +142,31 @@ export class CatagoryComponent implements OnInit {
       }
       this.changeDetectorRef.detectChanges();
     }
-    this.loadSettingValue();
-
-    //labels
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByPredicate',
-        ['FormName=@0 and Category=@1', 'ESParameters;1']
-      )
-      .subscribe((setting: any) => {
-        if (setting) {
-          let format = JSON.parse(setting?.dataValue);
-          console.log('func', this.function);
-
-          // this.cacheService.functionList(this.lstFuncID)
-          this.labels = format?.Label?.filter((label) => {
-            return label.Language == this.function?.language;
-          });
-
-          this.changeDetectorRef.detectChanges();
-        }
+    let lstPoliciID: string[] = [];
+    if (this.category == '1') {
+      this.settingFull.forEach((st) => {
+        if (st.reference) lstPoliciID.push(st.fieldName);
       });
+    }
+
+    if (lstPoliciID && lstPoliciID.length > 0) {
+      this.api
+        .execSv('FD', 'FD', 'PoliciesBusiness', 'GetPoliciesByFieldsAsync', [
+          lstPoliciID,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.lstPolicies = res[0];
+            this.lstPolicyLines = res[1];
+            lstPoliciID.forEach((id) => {
+              let setting = this.settingFull.find((x) => x.fieldName == id);
+              setting.policy = this.lstPolicies[id];
+            });
+          }
+        });
+    }
+
+    this.loadSettingValue();
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -422,10 +415,15 @@ export class CatagoryComponent implements OnInit {
   openSub(evt: any, data: any, dataValue: any) {
     let recID = data.recID;
     this.isOpenSub = true;
-    this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
-    this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
+    if (!this.oldSettingFull || Object.keys(this.oldSettingFull).length === 0)
+      this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
+    if (!dataValue) dataValue = this.oldDataValue[data.transType];
+    if (!this.oldDataValue || Object.keys(this.oldDataValue).length === 0)
+      this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
     if (data.reference) {
       this.componentSub = data.reference;
+
+      this.dataValue = dataValue || {};
       this.groupSetting = this.setting = this.settingFull = [data];
     } else {
       this.lineType = +this.lineType + 1 + '';
@@ -469,7 +467,6 @@ export class CatagoryComponent implements OnInit {
   }
 
   backSub(evt: any) {
-    this.isOpenSub = false;
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -479,12 +476,14 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
-    this.oldSettingFull = [];
-    this.oldDataValue = {};
+    if (this.lineType == '1') {
+      this.isOpenSub = false;
+      this.oldSettingFull = [];
+      this.oldDataValue = {};
+    } else this.lineType = +this.lineType - 1 + '';
     if (this.componentSub) {
       this.componentSub = '';
     } else {
-      this.lineType = +this.lineType - 1 + '';
       if (this.category === '2' || this.category === '7')
         this.getIDAutoNumber();
       else if (this.category === '5') this.getAlertRule();
