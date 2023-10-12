@@ -4,7 +4,9 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -57,7 +59,7 @@ const MEMBERTYPE = {
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit {
+export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
 
   @Input() funcID: string = '';
   @Input() objectID: string = '';
@@ -106,8 +108,20 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
+  
   ngAfterViewInit() {
     console.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if((!changes.predicate.firstChange && changes.predicate.previousValue !=  changes.predicate.currentValue) && (!changes.dataValue.firstChange && changes.dataValue.previousValue !=  changes.dataValue.currentValue))
+    {
+      this.dataService.setPredicate(changes.predicate.currentValue,changes.dataValue.currentValue);
+    }
+    if((!changes.predicates.firstChange && changes.predicates.previousValue !=  changes.predicates.currentValue) && (!changes.dataValues.firstChange && changes.dataValues.previousValue !=  changes.dataValues.currentValue))
+    {
+      this.dataService.setPredicates(changes.predicates.currentValue,changes.dataValues.currentValue);
+    }
   }
 
   ngOnInit(): void {
