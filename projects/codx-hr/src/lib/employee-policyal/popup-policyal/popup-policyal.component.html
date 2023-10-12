@@ -1,9 +1,10 @@
-<ng-container *ngIf="alpolicyObj">
+<ng-container *ngIf="alpolicyObj && loadedAutoField == true">
+
 <codx-layout-add
   #form
   [title]="headerText"
   [tabInfo]="tabInfo"
-  [formModel]="dialog.formModel"
+  [formModel]="formModel"
   [subHeader]=""
   (setTitle)="setTitle($event)"
   [footer]="footer"
@@ -752,25 +753,27 @@
     </div>
 </div>
 <div class="d-flex flex-wrap ps-5" *ngIf="alpolicyObj.hasIncludeObjects && lstSelectedObj.length > 0">
-    <div class="me-2 mb-2 badge-with-delete" *ngFor="let obj of lstSelectedObj">
-      <!-- <span
-      class="badge badge-light-primary badge-md"
-      [innerHTML]="obj
-          | formatvalue : benefitFormModel : 'benefitID'
-          | async"
-    ></span> -->
-    <span class="badge badge-light-primary badge-md">
-        <codx-vll
-        [showText]="true"
-        [showBgColor]="true"
-        name="HRObject"
-        [value]="obj"
-      >
-      </codx-vll>
-    </span>
-    <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedObj', lstPolicyBeneficiariesApply)" type="button" class="btn btn-sm btn-icon btn-light-danger">
-      <span class="icon-close icon-16"></span>
-    </button>
+    <div *ngFor="let obj of lstSelectedObj">
+      <div class="me-2 mb-2 badge-with-delete" >
+          <!-- <span
+          class="badge badge-light-primary badge-md"
+          [innerHTML]="obj
+              | formatvalue : benefitFormModel : 'benefitID'
+              | async"
+        ></span> -->
+        <span class="badge badge-light-primary badge-md">
+            <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            name="HRObject"
+            [value]="obj"
+          >
+          </codx-vll>
+        </span>
+        <button (click)="deleteApplyExcludeObjMain(obj, 'lstSelectedObj', lstPolicyBeneficiariesApply)" type="button" class="btn btn-sm btn-icon btn-light-danger">
+          <span class="icon-close icon-16"></span>
+        </button>
+      </div>
       <!-- <button
       class="btn btn-icon ms-3"
       (click)="onClickOpenSelectIncludeObj()"

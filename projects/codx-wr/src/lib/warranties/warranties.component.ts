@@ -305,11 +305,6 @@ export class WarrantiesComponent
       case 'WR0103_8': //Cập nhật trạng thái part
         break;
       default:
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          dataSource: '', // truyen sau
-        };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -317,7 +312,7 @@ export class WarrantiesComponent
           this.view.formModel,
           this.view.dataService,
           this,
-          customData
+          null
         );
         break;
     }

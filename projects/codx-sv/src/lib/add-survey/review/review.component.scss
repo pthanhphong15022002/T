@@ -54,7 +54,7 @@
   .inplace-editor-control-section .formId {
     padding: 20px 0;
     margin-bottom: 20px;
-    border: 1px solid #e2e3ee;
+    border: 1.5px solid #e2e3ee;
     //box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
     border-radius: 7px;
   }
@@ -279,7 +279,7 @@
   .title-des {
     text-align: left;
     font-size: 14px;
-    width: 667px;
+    width: 700px;
     p
     {
       margin-bottom: 0;
@@ -509,12 +509,35 @@
   th,
   td {
     padding: 5px;
+    font-weight: normal;
   }
   th,
   td {
     text-align: center;
   }
 
+  td
+  {
+    padding: 11px;
+    border-top: solid 1px #F4F7FF;
+    .e-radio+label
+    {
+      margin-top: -18px !important;
+    }
+    .e-radio+label::before
+    {
+      width: 18px !important;
+      height: 18px !important;
+      margin-left: -9px;
+    }
+    .e-radio+label::after
+    {
+      top: 3px;
+      height: 12px;
+      width: 12px;
+      left: -6px;
+    }
+  }
   .d-none {
     display: none !important;
   }
@@ -646,4 +669,8 @@
 .sv-ip-dis:disabled
 {
   background-color: white !important;
+}
+.text-left
+{
+  text-align: left !important;
 }

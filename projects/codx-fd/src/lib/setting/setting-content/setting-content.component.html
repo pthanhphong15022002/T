@@ -1,6 +1,10 @@
 <div *ngIf="isForm" class="d-flex justify-content-end">
-  <div class="position-absolute top-0 right-0 " style="z-index: 999;">
-    <button type="button" class="btn btn-icon btn-sm btn-white mt-3 me-3" (click)="closePopUp()">
+  <div class="position-absolute top-0 right-0" style="z-index: 999">
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-white mt-3 me-3"
+      (click)="closePopUp()"
+    >
       <span class="icon-close icon-16"></span>
     </button>
   </div>
@@ -10,7 +14,11 @@
   *ngIf="groupSettings && groupSettings[cate.value]"
 >
   <div class="d-flex" *ngIf="curLineType > firstLineType">
-    <button type="button" class="btn btn-icon btn-white me-4" (click)="changeLineType(null, false)">
+    <button
+      type="button"
+      class="btn btn-icon btn-white me-4"
+      (click)="changeLineType(null, false)"
+    >
       <span class="icon-arrow_back"></span>
     </button>
     <div class="d-flex flex-column">
@@ -44,27 +52,27 @@
         [ngSwitch]="row.reference"
       >
         <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
-          <app-pattern [type]="row.transType"></app-pattern>
+          <!-- <app-pattern [type]="row.transType"></app-pattern> -->
         </div>
 
         <div
           *ngSwitchDefault
           class="category-title d-flex align-items-center py-2 list-item border-bottom border-gray-150"
         >
-          <div class="w-20px h-20px me-3 d-flex align-items-center justify-content-between">
-            <span [class]="'icon-16 text-primary' + row.icon "></span>
+          <div
+            class="w-20px h-20px me-3 d-flex align-items-center justify-content-between"
+          >
+            <span [class]="'icon-16 text-primary' + row.icon"></span>
           </div>
           <div class="d-flex flex-column w-100">
             <div
               *ngIf="row.controlType == 'GroupControl'; else rowDetail"
               class="fs-4 fw-bold text-dark category-title"
-              >
+            >
               {{ row.tilte }}
             </div>
             <ng-template #rowDetail>
-              <div
-                class="d-flex justify-content-between list-item w-100"
-              >
+              <div class="d-flex justify-content-between list-item w-100">
                 <div class="d-flex flex-column">
                   <div class="title fw-bold text-dark">
                     {{ row.tilte }}
@@ -76,7 +84,9 @@
               </div>
             </ng-template>
           </div>
-          <div class="d-flex align-items-center ms-3 min-w-300px justify-content-end category-control pe-2">
+          <div
+            class="d-flex align-items-center ms-3 min-w-300px justify-content-end category-control pe-2"
+          >
             <ng-container
               *ngIf="(row.fieldName && row?.controlType) || row.displayMode"
               class="fd-control"
@@ -93,7 +103,10 @@
                   </codx-input>
                 </div>
                 <div *ngSwitchDefault>
-                  <div class="w-225px d-flex justify-content-end" *ngIf="row.fieldName && row?.controlType">
+                  <div
+                    class="w-225px d-flex justify-content-end"
+                    *ngIf="row.fieldName && row?.controlType"
+                  >
                     <codx-input
                       [field]="row.fieldName"
                       [refType]="row?.referedType"
@@ -124,8 +137,12 @@
                 </div>
               </div>
 
-              <div [ngSwitch]="row.displayMode" class="d-flex align-items-center w-30px ms-2">
-                <button type="button"
+              <div
+                [ngSwitch]="row.displayMode"
+                class="d-flex align-items-center w-30px ms-2"
+              >
+                <button
+                  type="button"
                   *ngSwitchCase="'1'"
                   class="btn btn-icon btn-sm btn-light setting-btnright"
                   [disabled]="
@@ -133,10 +150,11 @@
                   "
                   (click)="changeLineType(row, true)"
                 >
-                <span class="icon-keyboard_arrow_right icon-20"></span>
+                  <span class="icon-keyboard_arrow_right icon-20"></span>
                 </button>
                 <div *ngSwitchCase="'2'">
-                  <button type="button"
+                  <button
+                    type="button"
                     href="javascript:void(0)"
                     class="btn btn-icon btn-sm btn-light setting-btnright"
                     (click)="openPopup($event, row)"
@@ -144,10 +162,11 @@
                       row.reference == 'FDPolicies' && row.actived == false
                     "
                   >
-                  <span class="icon-16"
-                    [ngClass]="
-                      row.category == '5' ? 'icon-email' : 'icon-edit-one'
-                    "
+                    <span
+                      class="icon-16"
+                      [ngClass]="
+                        row.category == '5' ? 'icon-email' : 'icon-edit-one'
+                      "
                     ></span>
                   </button>
                 </div>

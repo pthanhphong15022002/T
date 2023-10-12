@@ -19,6 +19,21 @@
       <h3 class="list-header mb-9">{{ title }}</h3>
     </div>
     <div class="list-content">
+      <ng-container *ngFor="let item of groupSetting">
+        <ng-container
+          *ngTemplateOutlet="
+            template;
+            context: {
+              $implicit: item,
+              isGroup:
+                item.controlType &&
+                item.controlType.toLowerCase() == 'groupcontrol'
+            }
+          "
+        >
+        </ng-container>
+      </ng-container>
+      <!-- 
       <ng-container
         *ngIf="groupSetting && groupSetting.length > 0; else noGroup"
       >
@@ -54,7 +69,7 @@
           >
           </ng-container>
         </ng-container>
-      </ng-template>
+      </ng-template> -->
     </div>
   </div>
   <ng-template #template let-data let-collapse="collapse" let-isGroup="isGroup">
@@ -315,7 +330,7 @@
               </div>
             </ng-container>
           </ng-container>
-          <div class="setting-btnright">
+          <div class="setting-btnright" *ngIf="!componentSub">
             <a
               *ngIf="data.displayMode === '1'"
               [routerLink]="
@@ -323,7 +338,7 @@
               "
               (click)="
                 !data.reference &&
-                  openSub($event, data.recID, dataValue[data.transType])
+                  openSub($event, data, dataValue[data.transType])
               "
             >
               <span class="w-30px d-flex justify-content-center"
@@ -373,16 +388,30 @@
               </codx-input>
             </ng-container>
 
-            <ng-container *ngIf="data.displayMode === '6'">
-              <!-- <codx-img
+            <a
+              *ngIf="data.displayMode === '6'"
+              href="javascript:void(0)"
+              (click)="
+                data.reference &&
+                  openSub($event, data, dataValue[data.transType])
+              "
+            >
+              <span class="w-30px d-flex justify-content-center"
+                ><span class="icon-keyboard_arrow_right icon-22"></span></span
+            ></a>
+            <!-- <ng-container *ngIf="data.displayMode === '6'">
+
+             
+
+              <codx-img
               [updateDirect]="true"
               [isAllowEdit]="true"
               [objectId]="data.recID"
               [funcId]="function.functionID"
               [objectType]="function.entityName"
               (dataChanged)="changeLabelImg(data, $event)"
-            ></codx-img> -->
-            </ng-container>
+            ></codx-img>
+            </ng-container> -->
           </div>
         </div>
       </div>
@@ -443,6 +472,22 @@
 
     <hr class="ms-12 my-0" *ngIf="!isGroup" />
   </ng-template>
+
+  <ng-container [ngSwitch]="componentSub">
+    <div *ngSwitchCase="'FDPatterns'" class="container-fluid-h-auto">
+      <app-pattern *ngIf="setting" [type]="setting[0]?.transType"></app-pattern>
+    </div>
+    <ng-container *ngSwitchCase="'FDPolicies'">
+      <lib-detail-policy
+        *ngIf="formModel && setting && setting.length > 0"
+        [setting]="setting[0]"
+        [settingValue]="dataValue"
+        [formModel]="formModel"
+        [lstPolicyLines]="lstPolicyLines[setting[0].policy?.recID]"
+      >
+      </lib-detail-policy>
+    </ng-container>
+  </ng-container>
 </ng-template>
 
 <ng-template #footer>

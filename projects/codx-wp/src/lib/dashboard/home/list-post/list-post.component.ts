@@ -4,7 +4,9 @@ import {
   Component,
   Injector,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -57,11 +59,16 @@ const MEMBERTYPE = {
   styleUrls: ['./list-post.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ListPostComponent implements OnInit, AfterViewInit {
+export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
 
-  @Input() funcID: string = '';
+  @Input() funcID: string = 'WP';
+  @Input() favoriteID: string;
   @Input() objectID: string = '';
+  @Input() service: string = '';
+  @Input() assemblyName: string = '';
+  @Input() className: string = '';
   @Input() method: string = '';
+  @Input() entityName: string = 'WP_Comments';
   @Input() predicate: any;
   @Input() dataValue: any;
   @Input() predicates: any;
@@ -103,8 +110,26 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dataService = new CRUDService(this.injector);
     this.user = this.authStore.get();
   }
+  
   ngAfterViewInit() {
     console.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // sài cho FD
+    if(!changes.favoriteID?.firstChange && changes.favoriteID?.previousValue != changes.favoriteID?.currentValue)
+    {
+      this.dataService.favoriteID = changes.favoriteID?.currentValue;
+      this.dataService.setPredicates([this.predicates],[this.dataValues]);
+    }
+    if((!changes.predicate?.firstChange && changes.predicate?.previousValue !=  changes.predicate?.currentValue) || (!changes.dataValue?.firstChange && changes.dataValue?.previousValue !=  changes.dataValue?.currentValue))
+    {
+      this.dataService.setPredicate(changes.predicate?.currentValue || this.predicate, [changes.dataValue?.currentValue || this.dataValue]);
+    }
+    if((!changes.predicates?.firstChange && changes.predicates?.previousValue !=  changes.predicates?.currentValue) || (!changes.dataValues?.firstChange && changes.dataValues?.previousValue !=  changes.dataValues?.currentValue))
+    {
+      this.dataService.setPredicates([changes.predicates?.currentValue || this.predicates],[changes.dataValues?.currentValue || this.dataValues]);
+    }
   }
 
   ngOnInit(): void {
@@ -116,12 +141,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
     // set dataService
-    this.dataService.service = "WP";
-    this.dataService.assemblyName = "ERM.Business.WP";
-    this.dataService.className = "CommentsBusiness";
+    this.dataService.service = this.service || "WP";
+    this.dataService.assemblyName = this.assemblyName || "ERM.Business.WP";
+    this.dataService.className = this.className || "CommentsBusiness";
     this.dataService.method = this.method || "GetListPostAsync";
+    this.dataService.favoriteID = this.favoriteID;
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;
+    this.dataService.predicates = this.predicates;
+    this.dataService.dataValues = this.dataValues;
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 10;

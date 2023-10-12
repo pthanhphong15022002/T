@@ -130,7 +130,7 @@ export class PopAddContactComponent extends UIComponent implements OnInit {
             var field =
               keymodel[i].charAt(0).toUpperCase() + keymodel[i].slice(1);
             this.notification.notify(
-              this.gridViewSetup[field].headerText + ' ' + 'không hợp lệ',
+              this.gridViewSetup[field].headerText + ' ' + 'không hợp lệ',//
               '2'
             );
             this.validate++;

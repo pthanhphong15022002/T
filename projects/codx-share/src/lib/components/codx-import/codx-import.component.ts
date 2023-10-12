@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   CallFuncService,
   DataRequest,
@@ -25,6 +26,7 @@ import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { AddTemplateComponent } from './add-template/add-template.component';
+import { AddImportDetailsComponent } from './add-template/add-import-details/add-import-details.component';
 
 @Component({
   selector: 'codx-import',
@@ -132,11 +134,15 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         this.fileName,
         this.importGroup.value.dataImport,
         this.formModel?.entityName,
+        this.formModel?.funcID,
         '',
-        '',
+        ''
       ])
       .subscribe((item) => {
-        if (item == '' && this.dialog) (this.dialog as DialogRef).close();
+        if (item && this.dialog) {
+          this.notifySvr.notifyCode('SYS006');
+          (this.dialog as DialogRef).close();
+        }
       });
   }
   getData() {
@@ -183,22 +189,42 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       if(res?.event) this.dt_AD_IEConnections.push(res?.event);
     });
   }
-  openForm(val: any, data: any, type: any) {
+  openForm(val: any, data: any, type: any , index:any = null) {
     switch (val) {
-      case 'add':
       case 'edit': {
         this.callfunc.openForm(
-          CodxImportAddTemplateComponent,
+          AddTemplateComponent,
           null,
-          900,
+          1200,
           800,
           '',
-          ['edit', this.formModel, data.recID, data],
+          ['edit', this.formModel, data],
           null
         );
         break;
       }
       case 'delete': {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notifySvr
+          .alertCode("SYS003", config)
+          .subscribe((x) => {
+            if (x.event.status == 'Y') {
+              if(data?.recID)
+              {
+                this.api
+                .execSv<any>("SYS",'AD', 'IEConnectionsBusiness', 'DeleteItemAsync', data?.recID)
+                .subscribe((item) => {
+                  if(item)
+                  {
+                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(x=>x.recID != data?.recID);
+                    this.notifySvr.notifyCode("SYS008")
+                  }
+                  else this.notifySvr.notifyCode("SYS022")
+                })
+              }
+            }
+        });
         break;
       }
     }

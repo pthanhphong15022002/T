@@ -13,7 +13,7 @@
   <ng-template #body>
     <div class="request-to">
       <div id="box_from" *ngIf="showFrom">
-        <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
+        <!-- <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
           <div class="d-flex align-items-top flex-grow-1">
             <div class="w-50px fw-bold">
               <codx-label
@@ -86,7 +86,7 @@
               (click)="testdata(controlShare1)"
             ></i
           ></span>
-        </div>
+        </div> -->
       </div>
       <div class="d-flex justify-content-between border-bottom mb-2 pb-1">
         <div class="d-flex align-items-top flex-grow-1">
@@ -152,23 +152,32 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-3 user-mini-icon w-20px h-20px">
-                    <img
-                      [src]="
-                        './assets/themes/sys/default/img/' +
-                        (item.icon ??
-                          (item.objectType | vll : vllShare : 'icon' | async) ??
-                          'share_default.svg')
-                      "
-                    />
-                  </div>
-                  <div class="text-gray-600 flex-grow-1 me-2">
-                    {{
-                      item.text != null
-                        ? item.text
-                        : (item.objectType | vll : vllShare : "text" | async)
-                    }}
-                  </div>
+                  <ng-container *ngIf="item.objectType != 'Email'">
+                    <div class="me-3 user-mini-icon w-20px h-20px">
+                      <img
+                        [src]="
+                          './assets/themes/sys/default/img/' +
+                          (item.icon ??
+                            (item.objectType
+                              | vll : vllShare : 'icon'
+                              | async) ??
+                            'share_default.svg')
+                        "
+                      />
+                    </div>
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{
+                        item.text != null
+                          ? item.text
+                          : (item.objectType | vll : vllShare : "text" | async)
+                      }}
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="item.objectType == 'Email'">
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{ item.objectID }}
+                    </div>
+                  </ng-container>
                   <a
                     class="text-hover-danger d-flex align-items-center"
                     (click)="deleteItem(item, 2)"
@@ -176,6 +185,13 @@
                   ></a>
                 </div>
               </ng-container>
+              <input
+                class="border-0"
+                [attr.noenter]="1"
+                (change)="toChange($event, '2')"
+                (keyup.enter)="toChange($event, '2')"
+                (keydown)="onKeydown($event, '2')"
+              />
             </div>
           </div>
         </div>
@@ -242,23 +258,32 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-2 user-mini-icon w-20px h-20px">
-                    <img
-                      class="w-20px h-20px"
-                      [src]="
-                        './assets/themes/sys/default/img/' +
-                        (item.icon ??
-                          (item.objectType | vll : vllShare : 'icon' | async) ??
-                          'share_default.svg')
-                      "
-                    />
-                  </div>
-                  <div class="text-gray-600 flex-grow-1 me-2">
-                    {{
-                      item.text ??
-                        (item.objectType | vll : vllShare : "text" | async)
-                    }}
-                  </div>
+                  <ng-container *ngIf="item.objectType != 'Email'">
+                    <div class="me-2 user-mini-icon w-20px h-20px">
+                      <img
+                        class="w-20px h-20px"
+                        [src]="
+                          './assets/themes/sys/default/img/' +
+                          (item.icon ??
+                            (item.objectType
+                              | vll : vllShare : 'icon'
+                              | async) ??
+                            'share_default.svg')
+                        "
+                      />
+                    </div>
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{
+                        item.text ??
+                          (item.objectType | vll : vllShare : "text" | async)
+                      }}
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="item.objectType == 'Email'">
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{ item.objectID }}
+                    </div>
+                  </ng-container>
                   <a
                     class="text-hover-danger d-flex align-items-center"
                     (click)="deleteItem(item, 3)"
@@ -266,6 +291,13 @@
                   ></a>
                 </div>
               </ng-container>
+              <input
+                class="border-0"
+                [attr.noenter]="1"
+                (change)="toChange($event, '3')"
+                (keyup.enter)="toChange($event, '3')"
+                (keydown)="onKeydown($event, '3')"
+              />
             </div>
           </div>
           <div class="d-flex align-items-end">
@@ -316,24 +348,33 @@
                   class="d-flex justify-content-between user-mini-nav-custom align-items-center"
                   *ngIf="item.objectType != 'U'"
                 >
-                  <div class="me-2 user-mini-icon w-20px h-20px">
-                    <img
-                      class="svg-icon w-20px h-20px"
-                      [src]="
-                        './assets/themes/sys/default/img/' +
-                        (item.icon ??
-                          (item.objectType | vll : vllShare : 'icon' | async) ??
-                          'share_default.svg')
-                      "
-                    />
-                  </div>
-                  <div class="text-gray-600 flex-grow-1 me-2">
-                    {{
-                      item.text != null
-                        ? item.text
-                        : (item.objectType | vll : vllShare : "text" | async)
-                    }}
-                  </div>
+                  <ng-container *ngIf="item.objectType != 'Email'">
+                    <div class="me-2 user-mini-icon w-20px h-20px">
+                      <img
+                        class="svg-icon w-20px h-20px"
+                        [src]="
+                          './assets/themes/sys/default/img/' +
+                          (item.icon ??
+                            (item.objectType
+                              | vll : vllShare : 'icon'
+                              | async) ??
+                            'share_default.svg')
+                        "
+                      />
+                    </div>
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{
+                        item.text != null
+                          ? item.text
+                          : (item.objectType | vll : vllShare : "text" | async)
+                      }}
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="item.objectType == 'Email'">
+                    <div class="text-gray-600 flex-grow-1 me-2">
+                      {{ item.objectID }}
+                    </div>
+                  </ng-container>
                   <a
                     class="text-hover-danger d-flex align-items-center"
                     (click)="deleteItem(item, 4)"
@@ -341,6 +382,13 @@
                   ></a>
                 </div>
               </ng-container>
+              <input
+                class="border-0"
+                [attr.noenter]="1"
+                (change)="toChange($event, '4')"
+                (keyup.enter)="toChange($event, '4')"
+                (keydown)="onKeydown($event, '4')"
+              />
             </div>
           </div>
           <div class="d-flex align-items-end">
@@ -587,10 +635,10 @@
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel">
           </codx-label>
         </a>
-        <!-- <a class="btn btn-primary fw-bold ms-2" (click)="sendEmail()">
+        <a class="btn btn-primary fw-bold ms-2" (click)="sendEmail()">
           <codx-label name="lblSend" default="Gửi" [formModel]="formModel">
           </codx-label>
-        </a> -->
+        </a>
       </div>
     </div>
   </ng-template>

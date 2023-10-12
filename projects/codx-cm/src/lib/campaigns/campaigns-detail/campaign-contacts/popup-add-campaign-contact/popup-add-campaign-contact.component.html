@@ -18,25 +18,22 @@
   [tabContent]="[tabCriteria, tabListCustomers]"
 ></codx-layout-add> -->
 <ng-template #tabCriteria>
-  <div class="form-group row">
+  <div class="form-group row mt-5">
     <div class="col-4 d-flex">
-      <div class="me-1">
+      <div class="me-2">
         <codx-input
           type="checkbox"
           [field]="'isProvince'"
           [crrValue]="isProvince"
-          (valueChange)="valueChange($event)"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
       <div
         style="cursor: pointer"
         (click)="valueChangeClick(isProvince, 'isProvince')"
       >
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblProvince"
-          default="Tỉnh/Thành phố"
-        >
+        <codx-label [formModel]="form.formModel" fiedName="ProvinceID">
         </codx-label>
       </div>
     </div>
@@ -55,10 +52,10 @@
         #cbxProvince
         type="combobox"
         field="provinceIDs"
-        [refValue]="'CMProvinces'"
+        [refValue]="gridViewSetup?.ProvinceID?.referedValue"
         [emptyText]="gridViewSetup?.ProvinceID?.headerText"
         [value]="provinceIDs"
-        [disabled]="!isProvince"
+        [disabled]="!isProvince || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -66,23 +63,20 @@
   </div>
   <div class="form-group row">
     <div class="col-4 d-flex">
-      <div class="me-1">
+      <div class="me-2">
         <codx-input
           type="checkbox"
           [field]="'isDistrict'"
           [crrValue]="isDistrict"
-          (valueChange)="valueChange($event)"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
       <div
         style="cursor: pointer"
         (click)="valueChangeClick(isDistrict, 'isDistrict')"
       >
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblDistrict"
-          default="Quận/Huyện"
-        >
+        <codx-label [formModel]="form.formModel" fiedName="DistrictID">
         </codx-label>
       </div>
     </div>
@@ -91,10 +85,10 @@
         #cbxDistrict
         type="combobox"
         field="districtIDs"
-        [refValue]="'CMDistricts'"
+        [refValue]="gridViewSetup?.DistrictID?.referedValue"
         [emptyText]="gridViewSetup?.DistrictID?.headerText"
         [value]="districtIDs"
-        [disabled]="!isDistrict"
+        [disabled]="!isDistrict || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -111,23 +105,20 @@
   </div>
   <div class="form-group row">
     <div class="col-4 d-flex">
-      <div class="me-1">
+      <div class="me-2">
         <codx-input
           type="checkbox"
           [field]="'isIndustries'"
           [crrValue]="isIndustries"
-          (valueChange)="valueChange($event)"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
       <div
         style="cursor: pointer"
         (click)="valueChangeClick(isIndustries, 'isIndustries')"
       >
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblIndustries"
-          default="Lĩnh vực hoạt động"
-        >
+        <codx-label [formModel]="form.formModel" fiedName="industries">
         </codx-label>
       </div>
     </div>
@@ -136,32 +127,185 @@
         #cbxIndustries
         type="combobox"
         field="industries"
-        [refValue]="'CMIndustries'"
+        [refValue]="gridViewSetup?.Industries?.referedValue"
         [emptyText]="gridViewSetup?.Industries?.headerText"
         [value]="industries"
-        [disabled]="!isIndustries"
+        [disabled]="!isIndustries || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
-      <!-- <codx-input
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="objectType == '1'">
+    <div class="col-4 d-flex">
+      <div class="me-2">
+        <codx-input
+          type="checkbox"
+          [field]="'isCustGroupID'"
+          [crrValue]="isCustGroupID"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
+        ></codx-input>
+      </div>
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isCustGroupID, 'isCustGroupID')"
+      >
+        <codx-label [formModel]="form.formModel" fiedName="CustGroupID">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxCustGroupID
         type="combobox"
-        [field]="'industries'"
-        [multiple]="true"
-        [crrValue]="industries"
-        [disabled]="!isIndustries"
-        refValue="CMIndustries"
+        field="custGroupIDs"
+        [refValue]="gridViewSetup?.CustGroupID?.referedValue"
+        [emptyText]="gridViewSetup?.CustGroupID?.headerText"
+        [value]="custGroupIDs"
+        [disabled]="!isCustGroupID || isSave"
+        [isMulti]="true"
         (valueChange)="valueChange($event)"
-      ></codx-input> -->
+      ></codx-dropdown-select>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-4 d-flex">
-      <div class="me-1">
+      <div class="me-2">
+        <codx-input
+          type="checkbox"
+          [field]="'isAnnualRevenue'"
+          [crrValue]="isAnnualRevenue"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
+        ></codx-input>
+      </div>
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isAnnualRevenue, 'isAnnualRevenue')"
+      >
+        <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-8 d-flex align-items-center">
+      <div class="col-5 d-flex align-items-center">
+        <codx-label
+          class="col-3 "
+          [formModel]="form.formModel"
+          name="lblFrom"
+          default="Từ"
+        >
+        </codx-label>
+        <div class="col-9">
+          <codx-input
+            [field]="'annualRevenue'"
+            [formModel]="form.formModel"
+            [disabled]="!isAnnualRevenue || isSave"
+            [crrValue]="annualRevenue1"
+            (valueChange)="valueChangeAnnual($event, 'annualRevenue1')"
+          ></codx-input>
+        </div>
+      </div>
+      <span class="col-2 d-flex justify-content-center align-items-center"
+        >-</span
+      >
+      <div class="col-5 d-flex align-items-center">
+        <codx-label
+          class="col-3"
+          [formModel]="form.formModel"
+          name="lblTo"
+          default="Đến"
+        >
+        </codx-label>
+        <div class="col-9">
+          <codx-input
+            class=""
+            [field]="'annualRevenue'"
+            [formModel]="form.formModel"
+            [disabled]="!isAnnualRevenue || isSave"
+            [crrValue]="annualRevenue2"
+            (valueChange)="valueChangeAnnual($event, 'annualRevenue2')"
+          ></codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-2">
+        <codx-input
+          type="checkbox"
+          [field]="'isHeadcounts'"
+          [crrValue]="isHeadcounts"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
+        ></codx-input>
+      </div>
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isHeadcounts, 'isHeadcounts')"
+      >
+        <codx-label [formModel]="form.formModel" [fiedName]="'Headcounts'">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxHeadCounts
+        type="valuelist"
+        field="headCounts"
+        [refValue]="gridViewSetup?.Headcounts?.referedValue"
+        [emptyText]="gridViewSetup?.Headcounts?.headerText"
+        [value]="headCounts"
+        [disabled]="!isHeadcounts || isSave"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+    </div>
+  </div>
+  <div class="form-group row" *ngIf="objectType == '1'">
+    <div class="col-4 d-flex">
+      <div class="me-2">
+        <codx-input
+          type="checkbox"
+          [field]="'isChannelIDs'"
+          [crrValue]="isChannelIDs"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
+        ></codx-input>
+      </div>
+      <div
+        style="cursor: pointer"
+        (click)="valueChangeClick(isChannelIDs, 'isChannelIDs')"
+      >
+        <codx-label [formModel]="form.formModel" [fiedName]="'ChannelID'">
+        </codx-label>
+      </div>
+    </div>
+    <div class="col-8">
+      <codx-dropdown-select
+        #cbxChannelID
+        type="combobox"
+        field="channelIDs"
+        [refValue]="gridViewSetup?.ChannelID?.referedValue"
+        [emptyText]="gridViewSetup?.ChannelID?.headerText"
+        [value]="channelIDs"
+        [disabled]="!isHeadcounts || isSave"
+        [isMulti]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-dropdown-select>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-4 d-flex">
+      <div class="me-2">
         <codx-input
           type="checkbox"
           [field]="'isStatus'"
           [crrValue]="isStatus"
-          (valueChange)="valueChange($event)"
+          [disabled]="isSave"
+          (valueChange)="valueChangeCB($event)"
         ></codx-input>
       </div>
       <div
@@ -170,8 +314,7 @@
       >
         <codx-label
           [formModel]="form.formModel"
-          name="lblStatus"
-          default="Trạng thái"
+          [fiedName]="objectType == '1' ? 'CustomerStatus' : 'LeadStatus'"
         >
         </codx-label>
       </div>
@@ -184,7 +327,7 @@
         [refValue]="objectType == '3' ? 'CRM041' : 'CRM039'"
         [emptyText]="gridViewSetup?.Status?.headerText"
         [value]="status"
-        [disabled]="!isStatus"
+        [disabled]="!isStatus || isSave"
         [isMulti]="true"
         (valueChange)="valueChange($event)"
       ></codx-dropdown-select>
@@ -293,7 +436,7 @@
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button type="button" class="btn btn-primary" [disabled]="isSave" (click)="onSave()">
       <codx-label
         name="lblSave"
         [formModel]="dialog.formModel"

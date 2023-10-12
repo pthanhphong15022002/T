@@ -34,6 +34,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { StagesDetailComponent } from './stages-detail/stages-detail.component';
+import { ActivatedRoute, Route } from '@angular/router';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -67,9 +68,9 @@ export class InstanceDetailComponent implements OnInit {
   @Input() colorFail: any;
   @Input() colorSuccesss: any;
   // View deatail Of approrver
-  @Input() isViewApprover = false;
-  @Input() hideFooter = false;
+  @Input() runMode = '';
   @Input() hideMF = false;
+  @Input() view: any;
   @Input() applyFor: any;
   @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
@@ -106,7 +107,7 @@ export class InstanceDetailComponent implements OnInit {
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'References', textDefault: 'Liên kết', isActive: false },
+    // { name: 'References', textDefault: 'Liên kết', isActive: false },
     { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
@@ -265,6 +266,11 @@ export class InstanceDetailComponent implements OnInit {
   loaded: boolean;
   listRefTask = []; //chuoi recID cua task
 
+  //approver
+  active = 1;
+  approveStatus = '0';
+  stepInsCrr: any;
+
   constructor(
     private callfc: CallFuncService,
     private dpSv: CodxDpService,
@@ -275,6 +281,7 @@ export class InstanceDetailComponent implements OnInit {
     private popupInstances: InstancesComponent,
     public sanitizer: DomSanitizer,
     private authStore: AuthStore,
+    private router: ActivatedRoute,
     private serviceInstance: InstancesComponent
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
@@ -328,8 +335,6 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
       this.isChangeData = false;
-      // this.dataSelect = changes['dataSelect'].currentValue
-
       this.loaded = true;
     }
   }
@@ -358,8 +363,10 @@ export class InstanceDetailComponent implements OnInit {
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
         this.loadTree(this.id);
-        this.getStageByStep(this.listSteps);
         this.handleProgressInstance();
+        if (this.runMode != '1') {
+          this.getStageByStep(this.listSteps);
+        }
       } else {
         this.listSteps = [];
         this.stepName = '';
@@ -500,7 +507,7 @@ export class InstanceDetailComponent implements OnInit {
   //ganttchar
   // getDataGanttChart(instanceID, processID) {
   //   this.api
-  //     .exec<any>('DP', 'InstanceStepsBusiness', 'GetDataGanntChartAsync', [
+  //     .exec<any>('DP', 'InstancesStepsBusiness', 'GetDataGanntChartAsync', [
   //       instanceID,
   //       processID,
   //     ])
@@ -875,4 +882,15 @@ export class InstanceDetailComponent implements OnInit {
     }
     this.changeDetec.detectChanges();
   }
+
+  handleViewFile(e: any) {
+    // if (e == true) {
+    //   var index = this.data.listInformationRel.findIndex(
+    //     (x) => x.userID == this.userID && x.relationType != '1'
+    //   );
+    //   if (index >= 0) this.data.listInformationRel[index].view = '3';
+    // }
+  }
+
+  getDetailSignFile(e) {}
 }

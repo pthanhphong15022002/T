@@ -37,6 +37,7 @@ import { firstValueFrom } from 'rxjs';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
+import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-deals',
@@ -80,8 +81,8 @@ export class DealsComponent
 
   popupConfirm: DialogRef;
 
-  @ViewChild('popUpQuestionStatus', { static: true }) popUpQuestionStatus;
-  dialogQuestionForm: DialogRef;
+  // @ViewChild('popUpQuestionStatus', { static: true }) popUpQuestionStatus;
+  // dialogQuestionForm: DialogRef;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -127,8 +128,7 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
-  readonly fieldCbxStatus = { text: 'text', value: 'value' };
-  readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -163,6 +163,7 @@ export class DealsComponent
   isChangeOwner = false;
   valueListStatusCode: any; // status code ID
   statusDefault: string = '';
+  statusCodecmt: string = '';
   queryParams: any;
 
   constructor(
@@ -452,7 +453,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' || data.closed;
+      eventItem.disabled =  data.full ||  data?.alloweStatus == '1' ? false: true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -1898,38 +1899,73 @@ export class DealsComponent
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = data.statusCodeID;
-    this.dialogQuestionForm = this.callfc.openForm(
-      this.popUpQuestionStatus,
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = this.funcIDCrr.functionID;
+    formMD.entityName = this.funcIDCrr.entityName;
+    formMD.formName = this.funcIDCrr.formName;
+    formMD.gridViewName = this.funcIDCrr.gridViewName;
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    this.statusDefault = data?.statusCodeID;
+    this.statusCodecmt = data?.statusCodeCmt;
+    var obj = {
+      statusDefault:this.dataSelected?.statusCodeID,
+      statusCodecmt:this.dataSelected?.statusCodeCmt,
+      applyProcess:true,
+      title: this.titleAction,
+      recID: this.dataSelected.recID,
+      valueListStatusCode:this.valueListStatusCode,
+      gridViewSetup:this.gridViewSetup
+    };
+    var dialog = this.callfc.openForm(
+      PopupUpdateStatusComponent,
       '',
+       500,
       400,
-      200
+      '',
+      obj,
+      '',
+      dialogModel
     );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.dataSelected.statusCodeID = e?.event?.statusDefault;
+        this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.dataSelected = this.dataSelected;
+        this.view.dataService.update(this.dataSelected).subscribe();
+        this.detectorRef.detectChanges();
+        this.notificationsService.notifyCode('SYS007');
+      }
+    });
   }
-  valueChangeStatusCode($event) {
-    if ($event) {
-      this.statusDefault = $event;
-    } else {
-      this.statusDefault = null;
-    }
-  }
-  saveStatus() {
-    if (this.dataSelected.statusCodeID === this.statusDefault) {
-      this.dialogQuestionForm.close();
-      this.notificationsService.notifyCode('SYS007');
-    } else {
-      var datas = [this.dataSelected.recID, this.statusDefault];
-      this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
-        if (res) {
-          this.dialogQuestionForm.close();
-          this.dataSelected.statusCodeID = this.statusDefault;
-          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-          this.view.dataService.dataSelected = this.dataSelected;
-          this.view.dataService.update(this.dataSelected).subscribe();
-          this.detectorRef.detectChanges();
-          this.notificationsService.notifyCode('SYS007');
-        }
-      });
-    }
-  }
+  // valueChangeStatusCode($event) {
+  //   if ($event) {
+  //     this.statusDefault = $event;
+  //   } else {
+  //     this.statusDefault = null;
+  //   }
+  // }
+  // valueChange($event) {
+  //   if ($event) {
+  //     this.statusCodecmt = $event.data.trim();
+  //   } else {
+  //     this.statusCodecmt = null;
+  //   }
+  // }
+  // saveStatus() {
+  //   var datas = [this.dataSelected.recID, this.statusDefault, this.statusCodecmt];
+  //   this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
+  //     if (res) {
+  //       this.dialogQuestionForm.close();
+  //       this.dataSelected.statusCodeID = this.statusDefault;
+  //       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+  //       this.view.dataService.dataSelected = this.dataSelected;
+  //       this.view.dataService.update(this.dataSelected).subscribe();
+  //       this.detectorRef.detectChanges();
+  //       this.notificationsService.notifyCode('SYS007');
+  //     }
+  //   });
+  // }
 }

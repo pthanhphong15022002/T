@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
-import { CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SidebarModel, UIComponent } from 'codx-core';
+import { CallFuncService, CodxFormComponent, DialogData, DialogModel, DialogRef, FormModel, LayoutAddComponent, NotificationsService, SidebarModel, UIComponent } from 'codx-core';
 import { VATCodes } from '../../../models/VATCodes.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { VATPosting } from '../../../models/VATPosting.model';
 import { PopAddVatpostingComponent } from '../pop-add-vatposting/pop-add-vatposting.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-vatcodes',
@@ -13,7 +14,7 @@ import { PopAddVatpostingComponent } from '../pop-add-vatposting/pop-add-vatpost
 export class PopAddVatcodesComponent extends UIComponent implements OnInit {
 
   //Constructor
-  @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('form') public form: LayoutAddComponent;
   headerText: any;
   title: any;
   formModel: FormModel;
@@ -38,6 +39,11 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
       name: 'Establish',
     },
   ];
+
+  lblAdd: any;
+  lblEdit: any;
+  lblAccountSetting: any;
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
     inject: Injector,
@@ -65,6 +71,22 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
 
   //Inir
   onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0034').subscribe((res) => {
+      if (res) {
+        this.lblEdit = res?.customName;
+      }
+    });
+    this.cache.message('AC0038').subscribe((res) => {
+      if (res) {
+        this.lblAccountSetting = res?.customName.toLowerCase();
+      }
+    });
   }
 
   ngAfterViewInit()
@@ -76,6 +98,12 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
         this.listVatPosting = res;
       }
     });
+
+    (this.form.form as CodxFormComponent).onAfterInit.subscribe((res:any)=>{
+      if(res){
+        this.setValidateForm();
+      }
+    })
   }
   //End init
 
@@ -117,46 +145,19 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
 
   //Method
   onSave(){
-    this.validate = 0;
-    this.checkValidate();
-    if (this.validate > 0) {
-      return;
-    } else {
-      if (this.formType == 'add' || this.formType == 'copy') {
-        this.dialog.dataService
-          .save(null, 0, '', 'SYS006', true)
-          .subscribe((res) => {
-            if (res.save) {
-              this.api
-                .exec(
-                  'ERM.Business.AC',
-                  'VATPostingBusiness',
-                  'UpdateAsync',
-                  [
-                    res.save.data.vatid,
-                    this.listVatPosting,
-                    this.deleteListVatPosting,
-                  ]
-                )
-                .subscribe((res: []) => {
-                  if (res) {
-                    this.dialog.close();
-                    this.dt.detectChanges();
-                  }
-                });
-            }
-        });
-      }
-      if (this.formType == 'edit') {
-        this.dialog.dataService.save(null, 0, '', '', true).subscribe((res) => {
-          if (res && res.update.data != null) {
+    if (this.formType == 'add' || this.formType == 'copy') {
+      (this.form.form as CodxFormComponent)
+      // this.dialog.dataService
+        .save(null, 0, '', 'SYS006', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res.save) {
             this.api
               .exec(
                 'ERM.Business.AC',
                 'VATPostingBusiness',
                 'UpdateAsync',
                 [
-                  res.update.data.vatid,
+                  res.save.data.vatid,
                   this.listVatPosting,
                   this.deleteListVatPosting,
                 ]
@@ -168,14 +169,38 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
                 }
               });
           }
-        });
-      }
+      });
+    }
+    if (this.formType == 'edit') {
+      (this.form.form as CodxFormComponent)
+      .save(null, 0, '', '', true,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res && res.update.data != null) {
+          this.api
+            .exec(
+              'ERM.Business.AC',
+              'VATPostingBusiness',
+              'UpdateAsync',
+              [
+                res.update.data.vatid,
+                this.listVatPosting,
+                this.deleteListVatPosting,
+              ]
+            )
+            .subscribe((res: []) => {
+              if (res) {
+                this.dialog.close();
+                this.dt.detectChanges();
+              }
+            });
+        }
+      });
     }
   }
 
   openPopupAddVatPosting()
   {
-    this.title = 'Thêm thiết lập hạch toán';
+    this.title = this.lblAdd + ' ' + this.lblAccountSetting;
     var obj = {
       formType: 'add',
       headerText: this.title,
@@ -211,7 +236,7 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
 
   onEditVatPosting(data: any)
   {
-    this.title = 'Chỉnh sửa thiết lập hạch toán';
+    this.title = this.lblEdit + ' ' + this.lblAccountSetting;
     var obj = {
       headerText: this.title,
       data: { ...data },
@@ -258,41 +283,20 @@ export class PopAddVatcodesComponent extends UIComponent implements OnInit {
   //End Method
 
   //Function
-  checkValidate() {
-    //Note: Tự động khi lưu, Không check BatchNo
-    let ignoredFields: string[] = [];
-    if (this.keyField == 'VATID') {
-      ignoredFields.push(this.keyField);
-    }
-    ignoredFields = ignoredFields.map((i) => i.toLowerCase());
-    //End Node
-
-    var keygrid = Object.keys(this.gridViewSetup);
-    var keymodel = Object.keys(this.vatCodes);
-    for (let index = 0; index < keygrid.length; index++) {
-      if (this.gridViewSetup[keygrid[index]].isRequire == true) {
-        if (ignoredFields.includes(keygrid[index].toLowerCase())) {
-          continue;
-        }
-        for (let i = 0; i < keymodel.length; i++) {
-          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
-            if (
-              this.vatCodes[keymodel[i]] == null ||
-              String(this.vatCodes[keymodel[i]]).match(/^ *$/) !== null
-            ) {
-              this.notification.notifyCode(
-                'SYS009',
-                0,
-                '"' + this.gridViewSetup[keygrid[index]].headerText + '"'
-              );
-              this.validate++;
-            }
-          }
-        }
-      }
-    }
-  }
   //End Function
+
+  //#region Function
+  /**
+   * *Hàm thay đổi validate form
+   */
+  setValidateForm(){
+    let rVATID = true;
+    let lsRequire :any = [];
+    if(this.form.form.data?._keyAuto == 'VATID') rVATID = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    lsRequire.push({field : 'VATID',isDisable : false,require:rVATID});
+    this.form.form.setRequire(lsRequire);
+  }
+  //#endregion Function
 }
 
 

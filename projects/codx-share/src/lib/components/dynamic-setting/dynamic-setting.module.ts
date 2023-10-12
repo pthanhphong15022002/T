@@ -1,4 +1,4 @@
-import { NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DynamicSettingComponent } from './dynamic-setting.component';
 import { CatagoryComponent } from './catagory/catagory.component';
@@ -6,13 +6,21 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
-import { CodxCoreModule } from 'codx-core';
+import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { GroupPipe } from './pipes/group-filter.pipe';
 import { FormatPipe } from './pipes/format-string.pipe';
 import { SubCategoryComponent } from './sub-category/sub-category.component';
 import { InputTypePipe } from './pipes/input-type.pipe';
 import { ShareSettingPipe } from './pipes/shareSetting.pipe';
 import { BindValuePipe } from './pipes/bind-value.pipe';
+import { PatternComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/pattern/pattern.component';
+import { EditPatternComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
+import { DetailPolicyComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/detail-policy/detail-policy.component';
+import { CodxShareModule } from '../../codx-share.module';
+import { HttpClientModule } from '@angular/common/http';
+import { PositionPipe } from './pipes/position.pipe';
+//import { PatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/pattern.component';
+//import { EditPatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
 
 export const routes: Routes = [
   {
@@ -33,7 +41,13 @@ export const routes: Routes = [
   },
 ];
 
-const T_Component: Type<any>[] = [CatagoryComponent, SubCategoryComponent];
+const T_Component: Type<any>[] = [
+  CatagoryComponent,
+  SubCategoryComponent,
+  PatternComponent,
+  EditPatternComponent,
+  DetailPolicyComponent,
+];
 
 const T_Pipe: Type<any>[] = [
   GroupPipe,
@@ -41,6 +55,7 @@ const T_Pipe: Type<any>[] = [
   InputTypePipe,
   ShareSettingPipe,
   BindValuePipe,
+  PositionPipe,
 ];
 
 @NgModule({
@@ -50,9 +65,22 @@ const T_Pipe: Type<any>[] = [
     NgbModule,
     FormsModule,
     SharedModule,
+    CodxShareModule,
     CodxCoreModule,
     RouterModule.forChild(routes),
   ],
   exports: [T_Component, T_Pipe],
 })
-export class DynamicSettingModule {}
+export class DynamicSettingModule {
+  public static forRoot(
+    config?: EnvironmentConfig
+  ): ModuleWithProviders<CodxCoreModule> {
+    return {
+      ngModule: CodxCoreModule,
+      providers: [
+        HttpClientModule,
+        { provide: EnvironmentConfig, useValue: config },
+      ],
+    };
+  }
+}

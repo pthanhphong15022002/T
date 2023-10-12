@@ -988,14 +988,13 @@ export class PopupPolicybenefitsComponent
           if (res) {
             if (res.key) {
               this.autoNumField = res.key;
-              this.loadedAutoField = true;
               this.df.detectChanges();
             }
+            this.loadedAutoField = true;
             res.data.status = '1';
 
             if (res.data.activeOn == '0001-01-01T00:00:00') {
               res.data.activeOn = null;
-              this.loadedAutoField = true;
               this.df.detectChanges();
             }
             this.benefitPolicyObj = res?.data;
@@ -1792,7 +1791,8 @@ export class PopupPolicybenefitsComponent
             this.benefitPolicyObj.isConstraintOther &&
             this.benefitPolicyObj.constraintBy
           ) {
-            this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+            // this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+            this.constraintsObj.policyID = this.form.data.policyID;
             this.AddPolicyConstraint(this.constraintsObj).subscribe(
               (res) => {}
             );
@@ -1904,7 +1904,8 @@ export class PopupPolicybenefitsComponent
               this.benefitPolicyObj.policyID
             ).subscribe((res) => {
               if (this.benefitPolicyObj.constraintBy) {
-                this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                // this.constraintsObj.policyID = this.benefitPolicyObj?.policyID;
+                this.constraintsObj.policyID = this.form.data?.policyID;
                 this.AddPolicyConstraint(this.constraintsObj).subscribe(
                   (res) => {}
                 );

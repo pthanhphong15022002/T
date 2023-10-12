@@ -57,7 +57,10 @@ import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
 import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PopupAddVllCustomComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-vll-custom/popup-add-vll-custom.component';
-import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-column-table/popup-add-column-table.component';
+import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-add-column-table/popup-add-column-table.component';
+import { ViewInstancesComponent } from './view-instances/view-instances.component';
+import { CdkTableModule } from '@angular/cdk/table';
+import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-setting-table.component';
 
 export const routes: Routes = [
   {
@@ -72,12 +75,12 @@ export const routes: Routes = [
       {
         path: 'instances/:funcID/:processID',
         //component: CodxInstancesComponent,
-        component: InstancesComponent,
+        component: ViewInstancesComponent,
         data: { noReuse: true },
       },
       {
         path: 'instances/:funcID/approvals',
-        component: InstancesComponent,
+        component: ViewInstancesComponent,
         data: { noReuse: true },
       },
       //dp/instances/DPT0502/approvals
@@ -146,6 +149,8 @@ const T_Component: Type<any>[] = [
   InstanceDashboardComponent,
   PopupAddVllCustomComponent,
   PopupAddColumnTableComponent,
+  PopupSettingTableComponent,
+  ViewInstancesComponent,
 ];
 
 @NgModule({
@@ -168,6 +173,7 @@ const T_Component: Type<any>[] = [
     SliderModule,
     CoreModule,
     PinchZoomModule,
+    // CdkTableModule,
     CodxCmModule.forRoot({ environment }),
   ],
   exports: [RouterModule],

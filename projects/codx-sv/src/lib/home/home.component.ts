@@ -9,9 +9,11 @@ import {
 } from '@angular/core';
 import {
   AESCryptoService,
+  AlertConfirmInputConfig,
   ButtonModel,
   CodxListviewComponent,
   DataRequest,
+  NotificationsService,
   UIComponent,
   ViewModel,
   ViewType,
@@ -59,7 +61,14 @@ export class HomeComponent extends UIComponent implements OnInit {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('lstView') lstView: CodxListviewComponent;
 
-  constructor(private injector: Injector, private change: ChangeDetectorRef , private svService: CodxSvService , private shareService : CodxShareService , private aesCrypto: AESCryptoService) {
+  constructor(private injector: Injector, 
+    private change: ChangeDetectorRef, 
+    private svService: CodxSvService, 
+    private shareService : CodxShareService, 
+    private aesCrypto: AESCryptoService,
+    private notifySvr: NotificationsService
+    ) 
+  {
     super(injector);
     this.getVll();
   }
@@ -194,7 +203,34 @@ export class HomeComponent extends UIComponent implements OnInit {
     return list.sort(compare);
   }
   
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    switch(e?.functionID)
+    {
+      case 'SYS02': {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notifySvr
+          .alertCode("SYS030", config)
+          .subscribe((x) => {
+            if (x.event.status == 'Y') this.deleteSurvey(data?.recID);
+          });
+        break;
+      }
+    }
+  }
+
+  //Xóa survey
+  deleteSurvey(recID:any)
+  {
+
+    this.api.execSv("SV","SV","SurveysBusiness","DeleteItemAsync",recID).subscribe(item=>{
+      if(item){
+        this.dataSurveys = this.dataSurveys.filter(x=>x.recID != recID);
+        this.notifySvr.notifyCode("SYS008");
+      }
+      else this.notifySvr.notifyCode("SYS022");
+    })
+  }
 
   createNewSurvey() {
     this.view.dataService.addNew().subscribe((res) => {

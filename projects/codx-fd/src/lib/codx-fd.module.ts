@@ -39,12 +39,12 @@ import { LayoutNotoolbar } from './_layoutNoToolbar/layoutNotoolbar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { FeedbackMessageComponent } from './setting/feedback-message/feedback-message.component';
-import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
-import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
+//import { PatternComponent } from './setting/feedback-message/pattern/pattern.component';
+//import { EditPatternComponent } from './setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
 import { PolicyCardComponent } from './setting/feedback-message/policy-card/policy-card.component';
 import { PolicyCoinComponent } from './setting/feedback-message/policy-coin/policy-coin.component';
 import { PolicyDedicationComponent } from './setting/feedback-message/policy-dedication/policy-dedication.component';
-import { DetailPolicyComponent } from './setting/feedback-message/detail-policy/detail-policy.component';
+//import { DetailPolicyComponent } from './setting/feedback-message/detail-policy/detail-policy.component';
 import { AddGiftsComponent } from './setting/category/gifts/add-gifts/add-gifts.component';
 import { AddWarehouseComponent } from './setting/category/gifts/add-warehouse/add-warehouse.component';
 import { AddBehaviorComponent } from './setting/category/behavior/add-behavior/add-behavior.component';
@@ -58,7 +58,7 @@ import { SettingCycleComponent } from './setting/setting-cycle/setting-cycle.com
 import { SettingPolicyLinesComponent } from './setting/setting-policy-lines/setting-policy-lines.component';
 import { AddDedicationRankComponent } from './setting/dedication-rank/add-dedication-rank/add-dedication-rank.component';
 import { SettingContentComponent } from './setting/setting-content/setting-content.component';
-import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
+//import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
 
 export const routes: Routes = [
   {
@@ -108,10 +108,11 @@ export const routes: Routes = [
         path: 'setting/cards/:funcID',
         component: FeedbackMessageComponent,
       },
-      {
-        path: 'detailpolicy',
-        component: DetailPolicyComponent,
-      },
+      // {
+      //   path: 'detailpolicy',
+      //   component: null,
+      //   //component: DetailPolicyComponent,
+      // },
       {
         path: 'setting/fedranges/:funcID',
         component: DedicationRankComponent,
@@ -184,12 +185,12 @@ const Component: Type<any>[] = [
   BehaviorComponent,
   PopupAddGiftComponent,
   FeedbackMessageComponent,
-  PatternComponent,
-  EditPatternComponent,
+  // PatternComponent,
+  // EditPatternComponent,
   PolicyCardComponent,
   PolicyCoinComponent,
   PolicyDedicationComponent,
-  DetailPolicyComponent,
+  //DetailPolicyComponent,
   AddGiftsComponent,
   AddWarehouseComponent,
   AddGiftGroupComponent,
@@ -203,7 +204,7 @@ const Component: Type<any>[] = [
   AddDedicationRankComponent,
   SettingContentComponent,
 ];
-const T_Pipe: Type<any>[] = [PositionPipe];
+const T_Pipe: Type<any>[] = [];
 @NgModule({
   imports: [
     CommonModule,

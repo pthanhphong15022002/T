@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { UIComponent } from 'codx-core';
+import { SeriesSetting, UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
@@ -37,12 +37,35 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   lstQuestion : any;
   indexQuesAns: number = 0;
   indexRepons: number = 0;
+  primaryColor:any;
+  backgroundColor:any;
   chartSettingsT: ChartSettings = {
     title: '',
     seriesSetting: [
       {
         type: 'Column',
         xName: 'answer',
+        yName: 'count',
+        dataLabel : {
+          name: 'textMapping'
+        },
+        marker : { 
+          dataLabel: { 
+            visible: true, 
+            position: 'Top',
+            template: '<div class="text-white fw-bold">${point.y}</div>' 
+          }
+        }
+      },
+    ],
+  };
+  
+  chartSettingsO2: ChartSettings = {
+    title: '',
+    seriesSetting: [
+      {
+        type: 'Column',
+        xName: 'row',
         yName: 'count',
         dataLabel : {
           name: 'textMapping'
@@ -84,6 +107,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   ["#3366CC","#FF9900","#61EFCD", "#CDDE1F", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
   "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
   
+  tooltipMatrix : Object = {
+    enable: true,
+    header: '<b>${point.tooltip}</b>',
+    shared: true
+  };
   constructor(
     private injector: Injector,
     private awserSV :CodxSVAnswerService
@@ -108,11 +136,43 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getAvatar()
   {
+    debugger
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.backgroudColor) {
         document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
       }
+    }
+    this.backgroundColor = this.dataSV?.settings?.backgroudColor || "#EBDFFF";
+    this.primaryColor = this.dataSV?.settings?.primaryColor || "#7248B9"
+    this.setStyleIcon();
+  }
+
+  setStyleIcon()
+  {
+    var clsicon = document.getElementsByClassName('icon-chart-sv');
+    for(var i = 0; i < clsicon.length; i++) {
+      clsicon[i].removeAttribute("style");
+    }
+    var clsicon2 = document.getElementsByClassName('icon-chart-sv-1') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsicon2.length; i++) {
+      clsicon2[i].style.color = this.primaryColor
+    }
+    var clsdiv = document.getElementsByClassName('div-icon-chart');
+    for(var i = 0; i < clsdiv.length; i++) {
+      clsdiv[i].removeAttribute("style");
+    }
+
+    var clsChart = document.getElementsByClassName('view-chart-1') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsChart.length; i++) {
+      clsChart[i].classList.remove("invisible");
+      clsChart[i].classList.add("visible");
+    }
+    
+    var clsChart2 = document.getElementsByClassName('view-chart-2') as HTMLCollectionOf<HTMLElement>;
+    for(var i = 0; i < clsChart2.length; i++) {
+      clsChart2[i].classList.add("invisible");
+      clsChart2[i].classList.remove("visible");
     }
   }
 
@@ -145,8 +205,9 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         if(item) {
           this.lstRespondents = item[0];
           this.lstQuestion = item[1]
-          this.lstCountQuestion = item[2]
+          this.lstCountQuestion = item[2];
           this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
+          this.getSetting();
           if(this.respondents && this.respondents?.responds[0])
           {
             this.setSelectedDropDown(this.respondents.responds[0].question)
@@ -158,6 +219,75 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     }
   }
   
+  getSetting()
+  {
+    this.lstCountQuestion.forEach(element => {
+      if(element.answerType == "O2" || element.answerType == "C2") {
+        element.setting = this.settingChart(element?.answerType,'seriesSetting' , element.dataChart);
+        element.grid = {}
+        element.grid.column = this.getColum(element.recID);
+        element.grid.row = this.getRow(element.recID)
+      }
+      else
+      {
+        element.grid = {}
+        element.grid.column = [{answer:"Câu trả lời"}];
+        element.grid.row = this.getRow2(element.recID);
+      }
+    });
+  }
+
+
+  getColum(questionID:any)
+  {
+    var ques = this.lstQuestion.filter(x=>x.recID == questionID);
+    if(ques && ques.length >0) return (ques[0].answers.filter(x=>!x.isColumn)).sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
+    return [];
+  }
+
+  getRow(questionID:any)
+  {
+    debugger
+    let result = [];
+    this.lstRespondents.forEach(element => {
+      if(element.responds && element.responds.length>0)
+      {
+        var results = element.responds.filter(x=>x.questionID == questionID);
+        if(results && results.length > 0)
+        {
+          var data = [];
+          var listResult = results[0].results.sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
+          listResult.forEach(element2 => {
+            if(data[element2.seqNo] && Array.isArray(data[element2.seqNo])) data[element2.seqNo].push(element2.answer)
+            else data.push([element2.answer]);   
+          });
+          data.unshift({objectID:element.objectID,name:element.respondent})
+          result.push(data);
+        }
+      }
+    });
+    return result;
+  }
+
+  getRow2(questionID:any)
+  {
+    let result = [];
+    this.lstRespondents.forEach(element => {
+      if(element.responds && element.responds.length>0)
+      {
+        var results = element.responds.filter(x=>x.questionID == questionID);
+        if(results && results.length > 0)
+        {
+          var data = [{objectID:element.objectID,name:element.respondent},{data:[]}];
+          results[0].results.forEach(element2 => {
+            data[1].data.push(element2.answer)
+          });
+          result.push(data);
+        }
+      }
+    });
+    return result;
+  }
   //Get content form string html
   extractContent(s:any) {
     var span = document.createElement('span');
@@ -282,6 +412,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   //Đếm số lượng câu hỏi khác rỗng
   countAnswer(answers:any)
   {
+    debugger
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
@@ -292,7 +423,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     return count
   }
 
-  settingChart(answerType:any , properties:any)
+  settingChart(answerType:any , properties:any , dataChart:any=null)
   {
     switch(answerType)
     {
@@ -395,7 +526,86 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
               return false;
             }
         }
+        break;
       }
+
+      case "O2":
+      case "C2":
+        {
+          switch(properties)
+          {
+            case "height":
+            {
+              return "auto"
+              break;
+            }
+            case 'primaryXAxis':
+            {
+              return {
+                labelIntersectAction: Browser.isDevice ? 'None' : 'Trim', 
+                labelRotation: Browser.isDevice ? -45 : 0,
+                majorGridLines: { width: 0 }, 
+                majorTickLines: { width: 0 }, 
+                interval: 1, 
+                lineStyle: { width: 0 },
+                valueType: 'Category'
+              }
+              break;
+            }
+            case 'primaryYAxis':
+            {
+              return {
+                interval: 1,
+                majorTickLines: { width: 0 },
+                lineStyle: { width: 0 },
+              }
+              break;
+            }
+            case 'seriesSetting':
+            {
+              var list = [];
+              var key = Object.keys(dataChart[0])
+              key.forEach(element => {
+                if(element != "row")
+                {
+                  var setting =   {
+                    type: 'Column',
+                    xName: "row",
+                    yName: element,
+                    name: element,
+                    marker:{ dataLabel: { visible: false, position: 'Top', font: { fontWeight: '600', color: '#ffffff' } } },
+                    width: 2
+                  }
+                  list.push(setting);
+                }
+                
+              });
+              debugger
+              return list;
+            }
+            case 'chartArea':
+            {
+              return  {
+                border: {
+                    width: 0
+                }
+              };
+            }
+            case 'legendSettings':
+            {
+              return {
+                visible: true,
+                enableHighlight : true
+              }
+            }
+            case 'isTransposed':
+              {
+                if(answerType == "C") return true;
+                return false;
+              }
+          }
+          break;
+        }
     }
     return null;
   }
@@ -404,5 +614,26 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   {
     if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
     return data;
+  }
+
+  showHideChart(recID:any , index:any)
+  {
+
+    var element = document.getElementById("chart"+recID+index);
+    element.classList.remove("invisible");
+    element.classList.add("visible");
+    var elementIcon = document.getElementById("icon"+recID+index);
+    var elementDivIcon = document.getElementById("div-icon"+recID+index);
+    elementIcon.style.color = this.primaryColor;
+    elementDivIcon.style.backgroundColor = this.backgroundColor;
+
+    var dif = index == "2" ? "1": "2";
+    element = document.getElementById("chart"+recID+dif);
+    element.classList.add("invisible");
+    element.classList.remove("visible");
+    elementIcon = document.getElementById("icon"+recID+dif);
+    elementDivIcon = document.getElementById("div-icon"+recID+dif);
+    elementIcon.style.color = "";
+    elementDivIcon.style.backgroundColor = "#F5F9FA";
   }
 }

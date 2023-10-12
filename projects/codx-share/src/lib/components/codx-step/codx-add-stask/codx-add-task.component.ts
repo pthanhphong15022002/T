@@ -49,6 +49,7 @@ export class CodxAddTaskComponent implements OnInit {
   endDateParent: Date;
   startDateParent: Date;
   instanceStep: DP_Instances_Steps;
+  listInsStep: DP_Instances_Steps[];
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
 
@@ -97,6 +98,8 @@ export class CodxAddTaskComponent implements OnInit {
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
+  disableStep = false;
+  isActivitie = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -120,6 +123,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.groupTaskID = dt?.data?.groupTaskID;
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
+    this.listInsStep = dt?.data?.listInsStep;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     // this.isStart = dt?.data?.isStart;
@@ -148,6 +152,17 @@ export class CodxAddTaskComponent implements OnInit {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
 
+    if (
+      (!this.listInsStep || this.listInsStep?.length <= 0) &&
+      this.instanceStep
+    ) {
+      this.listInsStep = [this.instanceStep];
+    } else {
+      this.disableStep = true;
+    }
+
+    this.isActivitie = !this.instanceStep && !this.listInsStep ? true : false;
+
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(
         this.instanceStep?.startDate || new Date()
@@ -169,14 +184,10 @@ export class CodxAddTaskComponent implements OnInit {
     }
 
     this.owner = this.roles?.filter(
-      (role) => role.objectID == this.stepsTasks?.owner &&  role.roleType == "U"
+      (role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U'
     );
-    this.participant = this.roles?.filter(
-      (role) => role.roleType == "P"
-    );
-    this.ownerDefaut = this.roles?.filter(
-      (role) => role.roleType == "O"
-    );
+    this.participant = this.roles?.filter((role) => role.roleType == 'P');
+    this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'O');
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
@@ -392,7 +403,7 @@ export class CodxAddTaskComponent implements OnInit {
         objectID: element.objectID,
         objectName: element.objectName,
         objectType: element.objectType,
-        roleType: "P",
+        roleType: 'P',
         taskID: this.stepsTasks['recID'],
       });
     });
@@ -409,24 +420,24 @@ export class CodxAddTaskComponent implements OnInit {
         this.owner = [role];
         this.stepsTasks.owner = role?.objectID;
         this.removeRoleDuplicate();
-      }else if( role?.objectType == '1'){
+      } else if (role?.objectType == '1') {
         this.api
-        .exec<any>(
-          'DP',
-          'InstancesBusiness',
-          'GetUserByUserID',
-          this.ownerParent
-        )
-        .subscribe((res) => {
-          console.log(res);
-          let role = new DP_Instances_Steps_Tasks_Roles();
-          role.objectID = res?.userID;
-          role.objectName = res?.userName
-          role.taskID = this.stepsTasks?.recID;
-          role.roleType = 'U';
-          this.owner = [role];
-          this.stepsTasks.owner = role?.objectID;
-        })
+          .exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetUserByUserID',
+            this.ownerParent
+          )
+          .subscribe((res) => {
+            console.log(res);
+            let role = new DP_Instances_Steps_Tasks_Roles();
+            role.objectID = res?.userID;
+            role.objectName = res?.userName;
+            role.taskID = this.stepsTasks?.recID;
+            role.roleType = 'U';
+            this.owner = [role];
+            this.stepsTasks.owner = role?.objectID;
+          });
       } else {
         let data = [];
         switch (role?.objectType) {
@@ -561,7 +572,11 @@ export class CodxAddTaskComponent implements OnInit {
   }
   //#region save
   async beforeSave(isCreateMeeting = false) {
-    this.stepsTasks['roles'] = [...this.ownerDefaut,...this.participant, ...this.owner];
+    this.stepsTasks['roles'] = [
+      ...this.ownerDefaut,
+      ...this.participant,
+      ...this.owner,
+    ];
     this.stepsTasks['parentID'] = this.litsParentID.join(';');
     let message = [];
     if (!this.isSaveTimeTask) {
@@ -628,7 +643,7 @@ export class CodxAddTaskComponent implements OnInit {
   addTask(task, isCreateMeeting = false) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'AddTaskStepAsync', task)
+        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', task)
         .subscribe((res) => {
           if (res) {
             this.dialog.close({
@@ -646,7 +661,7 @@ export class CodxAddTaskComponent implements OnInit {
   editTask(task) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstanceStepsBusiness', 'UpdateTaskStepAsync', [
+        .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
           task,
           this.listField,
         ])
@@ -774,5 +789,20 @@ export class CodxAddTaskComponent implements OnInit {
         // this.changDetec.detectChanges();
       }
     });
+  }
+
+  changeStep(event) {
+    let data = event?.value;
+    if (data) {
+      this.stepsTasks.stepID = data;
+      let stepFind = this.listInsStep?.find((x) => x.recID == data);
+      if (stepFind) {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = stepFind?.taskGroups;
+      } else {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = [];
+      }
+    }
   }
 }

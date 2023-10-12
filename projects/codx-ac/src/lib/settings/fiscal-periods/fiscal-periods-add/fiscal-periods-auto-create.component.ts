@@ -15,11 +15,12 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
   listReport: Array<any> = [];
   dialog!: DialogRef;
   gridViewSetup: any;
-  headerText: string = 'Thêm mới năm tài chính';
+  headerText: string = '';
   listFiscalYear: any;
   fiscalPeriodsAutoCreate: FiscalPeriodsAutoCreate = new FiscalPeriodsAutoCreate;
   isAddNew: any;
   
+
   constructor(
     inject: Injector,
     private notification: NotificationsService,
@@ -38,6 +39,16 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
 
   //#region Init
   onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.headerText += res?.customName
+      }
+    });
+    this.cache.message('AC0039').subscribe((res) => {
+      if (res) {
+        this.headerText += ' ' + res?.customName;
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -57,7 +68,6 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         break;
       case 'periodControl':
         {
-          console.log(e.data);
           this.fiscalPeriodsAutoCreate.periodControl = e.data;
           if(e.data == true)
             this.fiscalPeriodsAutoCreate.moduleControl = false;
@@ -68,7 +78,6 @@ export class FiscalPeriodsAutoCreateComponent extends UIComponent implements OnI
         break;
       case 'moduleControl':
         {
-          console.log(e.data);
           this.fiscalPeriodsAutoCreate.moduleControl = e.data;
           if(e.data == true)
             this.fiscalPeriodsAutoCreate.periodControl = false;

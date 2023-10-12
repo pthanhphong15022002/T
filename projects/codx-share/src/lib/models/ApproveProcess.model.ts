@@ -16,8 +16,9 @@ export class ApproveProcess {
   approvers: Array<Approver>; //Danh sách userID của Approver
   category: any; //ES_Category của nghiệp vụ
   title: string; //Tiêu đề
-  curComponent: any;
-  template: any;
+  curComponent: any;//this: component gọi hàm
+  template: any;//ES_SignFile Template 
+  exportData: ExportData;//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
 }
 export class Approver {
   approver: string;
@@ -30,6 +31,34 @@ export class ResponseModel {
   returnStatus: string;
   isLastStep: boolean;
 }
+
+export class ExportUpload {
+  title: string;
+  dataJson: string;
+  convertToPDF: boolean;
+  entityName: string;
+  language: string;
+  module: string;
+  objectID: string;
+  objectType: string;
+  referType: string;
+  functionID: string;
+  templates : Array<TemplateInfo>;
+  exportData: ExportData;
+}
+
+export class TemplateInfo {
+  templateID: string;
+  templateType: string;
+  reportID: string;
+}
+
+export class ExportData {
+  funcID: string;
+  recID: string;
+  data:string;
+}
+
 export const ShareType = {
   //Hiện tĩnh - khi có data từ form nghiệp vụ thì lấy data động để hiện:
   //--Lấy data được truyền
@@ -57,8 +86,7 @@ export const ShareType = {
   User: 'U', //	Người dùng
   
   //Hiện data động - lưu giá trị tham chiếu tĩnh
-  Position: 'P', //	Chức danh công việc  
-  
+  Position: 'P', //	Chức danh công việc
   AC: 'AC', //	Thư ký Giám đốc công ty  
   DC: 'DC', //	Phó Giám đốc công ty
   CEO: 'CEO', //	Giám đốc công ty

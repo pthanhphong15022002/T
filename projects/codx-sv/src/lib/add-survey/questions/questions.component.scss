@@ -164,7 +164,8 @@
   }
   .e-input-group:focus , .e-float-input input:focus
   {
-    border-bottom: #623DA1 solid 2px !important;
+    border-bottom: solid 2px !important;
+    border-bottom-color: var(--primary-active) !important;
     border-radius: 0;
 
   }
@@ -225,7 +226,8 @@
   }
 
   .e-input-focus {
-    border-bottom: 1px solid aqua !important;
+    border-bottom: 2px solid !important;
+    border-bottom-color: var(--primary-active) !important;
     box-shadow: 0px 0px white !important;
     border-radius: 0px !important;
   }
@@ -290,6 +292,7 @@
 
   .action-menu {
     position: unset;
+    margin-top: 4px;
     top: 0px;
     right: 0px;
     opacity: 0;
@@ -311,6 +314,10 @@
   .title-des {
     text-align: left;
     font-size: 14px;
+    .e-editable-value-wrapper
+    {
+      overflow: auto;
+    }
   }
 
 
@@ -678,8 +685,7 @@
 .inplaceeditor-bg-none .e-editable-value-wrapper
 {
   background: none !important;
-  height: 5px;
-  margin-bottom: 15px !important;
+  min-height: 0px !important;
 }
 .inplaceeditor-bg-none .e-editable-value-wrapper:hover
 {
@@ -721,4 +727,10 @@
 {
   position: absolute;
   right: 0;
+}
+.ip-matrix:focus
+{
+  border-bottom: solid 2px !important;
+  border-bottom-color: var(--primary-active) !important;
+  border-radius: 0 !important;
 }

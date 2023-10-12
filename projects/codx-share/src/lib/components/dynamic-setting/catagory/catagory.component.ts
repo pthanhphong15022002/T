@@ -29,6 +29,7 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-catagory',
@@ -67,7 +68,10 @@ export class CatagoryComponent implements OnInit {
   oldDataValue: any = {};
   //labels
   labels = [];
+  lineType = '1';
+  componentSub = '';
   isOpenSub: boolean = false;
+  formModel: FormModel;
 
   constructor(
     private api: ApiHttpService,
@@ -75,6 +79,7 @@ export class CatagoryComponent implements OnInit {
     private callfc: CallFuncService,
     private cache: CacheService,
     private inject: Injector,
+    private activatedRoute: ActivatedRoute,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -87,13 +92,19 @@ export class CatagoryComponent implements OnInit {
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
-
+      this.lineType = data.data?.lineType;
       //this.loadSettingValue();
     }
   }
-
+  lstPolicies: any = {};
+  lstPolicyLines: any = {};
   ngOnInit(): void {
     if (this.dialog) {
+      if (this.setting) {
+        this.groupSetting = this.setting.filter((x) => {
+          return x.lineType === this.lineType;
+        });
+      }
       this.dialog.closed.subscribe((res) => {
         this.dialog = null;
       });
@@ -101,36 +112,22 @@ export class CatagoryComponent implements OnInit {
       this.lstFuncID = [];
       this.autoDefault = null;
       this.dataValue = {};
-      // this.setting = this.setting.filter((x) => {
-      //   return (
-      //     x.refLineID == '41a778ab-71cc-ed11-94a1-00155d035517' ||
-      //     x.recID == '41a778ab-71cc-ed11-94a1-00155d035517'
-      //   );
-      // });
+
       if (this.setting) {
         this.groupSetting = this.setting.filter((x) => {
-          return (
-            x.controlType && x.controlType.toLowerCase() === 'groupcontrol'
-          );
+          return x.lineType === this.lineType;
         });
-        if (this.groupSetting.length > 0) {
-          var lstNoGroup = this.setting.filter((x) => {
-            return (
-              ((x.controlType &&
-                x.controlType.toLowerCase() !== 'groupcontrol') ||
-                !x.controlType) &&
-              !x.refLineID
-            );
-          });
-          if (lstNoGroup.length > 0) {
-            var objGroupTMP: any = {
-              recID: '',
-              refLineID: '',
-              controlType: 'GroupControl',
-            };
-            this.groupSetting.splice(0, 0, objGroupTMP);
+        var funcID = this.activatedRoute.snapshot.params['funcID'];
+
+        this.cache.functionList(funcID).subscribe((res) => {
+          if (res) {
+            this.formModel = new FormModel();
+            this.formModel.formName = res.formName;
+            this.formModel.funcID = res.funcID;
+            this.formModel.gridViewName = res.gridViewName;
+            this.formModel.entityName = res.entityName;
           }
-        }
+        });
       }
       if (this.valuelist && this.valuelist.datas && this.category) {
         const ds = (this.valuelist.datas as any[]).find(
@@ -145,30 +142,31 @@ export class CatagoryComponent implements OnInit {
       }
       this.changeDetectorRef.detectChanges();
     }
-    this.loadSettingValue();
-
-    //labels
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByPredicate',
-        ['FormName=@0 and Category=@1', 'ESParameters;1']
-      )
-      .subscribe((setting: any) => {
-        if (setting) {
-          let format = JSON.parse(setting?.dataValue);
-          console.log('func', this.function);
-
-          // this.cacheService.functionList(this.lstFuncID)
-          this.labels = format?.Label?.filter((label) => {
-            return label.Language == this.function?.language;
-          });
-
-          this.changeDetectorRef.detectChanges();
-        }
+    let lstPoliciID: string[] = [];
+    if (this.category == '1') {
+      this.settingFull.forEach((st) => {
+        if (st.reference) lstPoliciID.push(st.fieldName);
       });
+    }
+
+    if (lstPoliciID && lstPoliciID.length > 0) {
+      this.api
+        .execSv('FD', 'FD', 'PoliciesBusiness', 'GetPoliciesByFieldsAsync', [
+          lstPoliciID,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            this.lstPolicies = res[0];
+            this.lstPolicyLines = res[1];
+            lstPoliciID.forEach((id) => {
+              let setting = this.settingFull.find((x) => x.fieldName == id);
+              setting.policy = this.lstPolicies[id];
+            });
+          }
+        });
+    }
+
+    this.loadSettingValue();
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -183,14 +181,16 @@ export class CatagoryComponent implements OnInit {
       cssClass = '',
       dialogModel = new DialogModel();
     if (!reference) {
+      let lineType = +this.lineType + 1 + '';
       var itemChild = this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === '2'
+        (x) => x.refLineID === recID && x.lineType === lineType
       );
       data['settingFull'] = itemChild;
       data['valuelist'] = this.valuelist;
       //data['settingValue'] = this.settingValue;
       data['category'] = this.category;
       data['function'] = this.function;
+      data['lineType'] = lineType;
       width = 500;
       height = 100 * itemChild.length;
 
@@ -289,8 +289,8 @@ export class CatagoryComponent implements OnInit {
           if (!category) return;
           data['transID'] = category.recID;
           data['type'] = '0';
-          data['data']=category;
-          data['vllShare']=category?.approverList;
+          data['data'] = category;
+          data['vllShare'] = category?.approverList;
           this.callfc.openForm(
             component,
             '',
@@ -412,40 +412,56 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
-  openSub(evt: any, recID: string, dataValue: any) {
+  openSub(evt: any, data: any, dataValue: any) {
+    let recID = data.recID;
     this.isOpenSub = true;
     this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
-    this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
-    this.settingFull =
-      this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === '2'
-      ) || [];
-    this.setting =
-      this.settingFull.filter((res) => res.isVisible == true) || [];
-    this.dataValue = dataValue;
-    this.groupSetting = this.setting.filter((x) => {
-      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
-    });
-    if (this.groupSetting.length > 0) {
-      var lstNoGroup = this.setting.filter((x) => {
-        return (
-          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-            !x.controlType) &&
-          !x.refLineID
-        );
+    if (!dataValue) dataValue = this.oldDataValue[data.transType];
+    if (!this.oldDataValue || Object.keys(this.oldDataValue).length === 0)
+      this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
+    if (data.reference) {
+      this.componentSub = data.reference;
+
+      this.dataValue = dataValue || {};
+      this.groupSetting = this.setting = this.settingFull = [data];
+    } else {
+      this.lineType = +this.lineType + 1 + '';
+      this.settingFull =
+        this.settingFull.filter(
+          (x) => x.refLineID === recID && x.lineType === this.lineType
+        ) || [];
+      this.setting =
+        this.settingFull.filter((res) => res.isVisible == true) || [];
+      this.dataValue = dataValue;
+      this.groupSetting = this.setting.filter((x) => {
+        return x.lineType === this.lineType;
       });
-      if (lstNoGroup.length > 0) {
-        var objGroupTMP: any = {
-          recID: '',
-          refLineID: '',
-          controlType: 'GroupControl',
-        };
-        this.groupSetting.splice(0, 0, objGroupTMP);
-      }
+      // .filter((x) => {
+      //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+      // });
+      // if (this.groupSetting.length > 0) {
+      //   var lstNoGroup = this.setting.filter((x) => {
+      //     return (
+      //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
+      //         !x.controlType) &&
+      //       !x.refLineID
+      //     );
+      //   });
+      //   if (lstNoGroup.length > 0) {
+      //     var objGroupTMP: any = {
+      //       recID: '',
+      //       refLineID: '',
+      //       controlType: 'GroupControl',
+      //     };
+      //     this.groupSetting.splice(0, 0, objGroupTMP);
+      //   }
+      // }
+      if (this.category === '2' || this.category === '7')
+        this.getIDAutoNumber();
+      else if (this.category === '5') this.getAlertRule();
+      else if (this.category === '6') this.getSchedules();
     }
-    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
-    else if (this.category === '5') this.getAlertRule();
-    else if (this.category === '6') this.getSchedules();
+
     this.changeDetectorRef.detectChanges;
   }
 
@@ -458,30 +474,22 @@ export class CatagoryComponent implements OnInit {
     this.setting =
       this.settingFull.filter((res) => res.isVisible == true) || [];
     this.groupSetting = this.setting.filter((x) => {
-      return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
+      return x.lineType === this.lineType;
     });
-    if (this.groupSetting.length > 0) {
-      var lstNoGroup = this.setting.filter((x) => {
-        return (
-          ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-            !x.controlType) &&
-          !x.refLineID
-        );
-      });
-      if (lstNoGroup.length > 0) {
-        var objGroupTMP: any = {
-          recID: '',
-          refLineID: '',
-          controlType: 'GroupControl',
-        };
-        this.groupSetting.splice(0, 0, objGroupTMP);
-      }
+    if (this.lineType == '2') {
+      this.oldSettingFull = [];
+      this.oldDataValue = {};
     }
-    this.oldSettingFull = [];
-    this.oldDataValue = {};
-    if (this.category === '2' || this.category === '7') this.getIDAutoNumber();
-    else if (this.category === '5') this.getAlertRule();
-    else if (this.category === '6') this.getSchedules();
+    if (this.componentSub) {
+      this.componentSub = '';
+    } else {
+      this.lineType = +this.lineType - 1 + '';
+      if (this.category === '2' || this.category === '7')
+        this.getIDAutoNumber();
+      else if (this.category === '5') this.getAlertRule();
+      else if (this.category === '6') this.getSchedules();
+    }
+
     this.changeDetectorRef.detectChanges;
   }
 
@@ -704,10 +712,10 @@ export class CatagoryComponent implements OnInit {
       }
     } else {
       if (
+        !data.dataType ||
         (typeof value == 'boolean' &&
           data.dataType.toLowerCase() != 'boolean' &&
-          data.dataType.toLowerCase() != 'bool') ||
-        !data.dataType
+          data.dataType.toLowerCase() != 'bool')
       ) {
         value = +value + '';
       }
@@ -943,18 +951,20 @@ export class CatagoryComponent implements OnInit {
 
   click($event: any) {
     var lstData: any[] = [];
-    for (const property in this.dataValue) {
+    let dataValue = this.dataValue;
+    for (var property in dataValue) {
+      if (property === 'null') property = null;
       var dt = this.settingValue.find(
         (x) => x.category == this.category && x.transType == property
       );
-      dt.dataValue = JSON.stringify(this.dataValue[property]);
+      dt.dataValue = JSON.stringify(dataValue[property]);
       lstData.push(dt);
     }
 
     if (lstData.length > 0) {
       //dt.dataValue = JSON.stringify(this.dataValue);
       this.api
-        .execAction('SYS_SettingValues', [lstData], 'UpdateAsync')
+        .execAction('SYS_SettingValues', lstData, 'UpdateAsync')
         .subscribe((res) => {
           if (res) {
             this.dialog.close();
@@ -976,7 +986,8 @@ export class CatagoryComponent implements OnInit {
             if (res) {
               dt = res;
               var lstData: any[] = [];
-              for (const property in this.dataValue) {
+              for (var property in this.dataValue) {
+                if (property === 'null') property = null;
                 var setting = this.setting.find(
                   (x) => x.transType == property && x.category == this.category
                 );
@@ -993,7 +1004,7 @@ export class CatagoryComponent implements OnInit {
                 this.settingValue.push(dt);
               }
               this.api
-                .execAction('SYS_SettingValues', [lstData], 'SaveAsync')
+                .execAction('SYS_SettingValues', lstData, 'SaveAsync')
                 .subscribe((res) => {
                   if (res) {
                   }

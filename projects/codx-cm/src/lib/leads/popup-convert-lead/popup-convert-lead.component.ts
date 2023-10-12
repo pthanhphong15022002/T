@@ -77,8 +77,18 @@ export class PopupConvertLeadComponent implements OnInit {
     name: 'Contacts',
   };
   tabContents = [];
-  formModelDeals: any;
-  formModelCustomer: any;
+  formModelDeals: FormModel = {
+    formName: 'CMDeals',
+    gridViewName: 'grvCMDeals',
+    entityName: 'CM_Deals',
+    funcID: 'CM0201',
+  };
+  formModelCustomer: FormModel = {
+    formName: 'CMCustomers',
+    gridViewName: 'grvCMCustomers',
+    entityName: 'CM_Customers',
+    funcID: 'CM0101',
+  };
   listCbxProcess = [];
   listParticipants = [];
   listInstanceSteps = [];
@@ -119,6 +129,8 @@ export class PopupConvertLeadComponent implements OnInit {
   //
   applyFor: string;
   leverSetting: number;
+  transIDCamp: any;
+  dealConfirm: string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -130,7 +142,7 @@ export class PopupConvertLeadComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.lead = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    this.lead = dt?.data?.data;
     this.titleAction = dt?.data?.title;
     this.applyFor = dt?.data?.applyFor;
     this.recIDAvt = this.lead?.recID;
@@ -141,12 +153,14 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.processID = null;
     this.deal.currencyID = this.lead?.currencyID;
     this.deal.exchangeRate = this.lead?.exchangeRate;
+    this.transIDCamp = dt?.data?.transIDCamp ?? null;
+
     this.promiseAll();
     // this.customer.category = this.lead.category;
   }
 
   async ngOnInit() {
-    this.formModelDeals = await this.cmSv.getFormModel('CM0201');
+    this.lead.customerID = null;
     this.gridViewSetupDeal = await firstValueFrom(
       this.cache.gridViewSetup('CMDeals', 'grvCMDeals')
     );
@@ -182,6 +196,7 @@ export class PopupConvertLeadComponent implements OnInit {
       let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
       let paramDefault = JSON.parse(dataParam.dataValue);
       lever = paramDefault['ControlInputAddress'] ?? 0;
+      this.dealConfirm = paramDefault['DealConfirm'] ?? '1';
     }
     this.leverSetting = lever;
     this.changeDetectorRef.detectChanges();
@@ -218,6 +233,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.channelID = this.lead?.channelID;
     this.deal.businessLineID = this.lead?.businessLineID;
     this.deal.consultantID = this.lead?.consultantID;
+    this.deal.campaignID = this.lead?.campaignID;
     // this.deal.salespersonID = this.lead?.salespersonID;
     // this.deal.owner = this.lead?.salespersonID;
     this.deal.note = this.lead?.note;
@@ -489,77 +505,90 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async onConvert() {
     let result = [];
-
-    if (this.lead.applyProcess && this.lead.status != '3') {
+    if (
+      this.lead.applyProcess &&
+      this.lead.status != '3' &&
+      this.lead.status != '13'
+    ) {
       let dataDP = [this.lead.refID, '', null, true, '', this.applyFor];
       result = await firstValueFrom(
         this.api.execSv<any>(
           'DP',
           'ERM.Business.DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'MoveReasonByIdInstnaceAsync',
           dataDP
         )
       );
     }
 
-    var data = [];
-    data = [
-      this.lead.recID,
-      this.customer,
-      this.deal,
-      this.customer.category == '1' ? this.lstContactDeal : [],
-      this.recIDContact,
-      this.lead.applyProcess && this.lead.status != '3'
-        ? result[0]?.stepID
-        : '',
-    ];
+    this.instance.status = this.dealConfirm == '1' ? '0' : '2';
 
-    await this.api
-      .execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'LeadsBusiness',
-        'ConvertLeadToCustomerAndDealAsync',
-        data
+    var ins = await firstValueFrom(
+      this.api.execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'InstancesBusiness',
+        'AddInstanceAsync',
+        [this.instance, this.listInstanceSteps, null]
       )
-      .subscribe(async (res) => {
-        if (res) {
-          if (this.radioChecked) {
-            // this.dialog.close(res);
-          } else {
-            if (this.avatarChange) {
-              await firstValueFrom(
-                this.imageUpload.updateFileDirectReload(this.customer.recID)
-              );
+    );
+    if (ins) {
+      this.deal.status = this.dealConfirm == '1' ? '0' : ins?.status;
+      this.deal.datas = ins?.datas;
+      this.addPermission(ins.permissions);
+      var data = [];
+      data = [
+        this.lead.recID,
+        this.customer,
+        this.deal,
+        this.customer.category == '1' ? this.lstContactDeal : [],
+        this.recIDContact,
+        this.lead.applyProcess && this.lead.status != '3'
+          ? result[0]?.stepID
+          : '',
+        this.transIDCamp,
+      ];
+
+
+      await this.api
+        .execSv<any>(
+          'CM',
+          'ERM.Business.CM',
+          'LeadsBusiness',
+          'ConvertLeadToCustomerAndDealAsync',
+          data
+        )
+        .subscribe(async (res) => {
+          if (res) {
+            if (this.radioChecked) {
+              // this.dialog.close(res);
             } else {
-              await firstValueFrom(
-                this.cmSv.copyFileAvata(
-                  this.recIDAvt,
-                  this.customer.recID,
-                  'CM_Customers'
-                )
-              );
+              if (this.avatarChange) {
+                await firstValueFrom(
+                  this.imageUpload.updateFileDirectReload(this.customer.recID)
+                );
+              } else {
+                await firstValueFrom(
+                  this.cmSv.copyFileAvata(
+                    this.recIDAvt,
+                    this.customer.recID,
+                    'CM_Customers'
+                  )
+                );
+              }
             }
+
+            let obj = {
+              lead: res,
+              listStep: result[1],
+              salespersonID: this.deal.salespersonID,
+              consultantID: this.deal.consultantID,
+            };
+            this.dialog.close(obj);
           }
-          await firstValueFrom(
-            this.api.execSv<any>(
-              'DP',
-              'ERM.Business.DP',
-              'InstancesBusiness',
-              'AddInstanceAsync',
-              [this.instance, this.listInstanceSteps, null]
-            )
-          );
-          let obj = {
-            lead: res,
-            listStep: result[1],
-            salespersonID: this.deal.salespersonID,
-            consultantID: this.deal.consultantID,
-          };
-          this.dialog.close(obj);
-        }
-      });
+        });
+    }
   }
 
   setRecIDConvert() {
@@ -597,6 +626,34 @@ export class PopupConvertLeadComponent implements OnInit {
     }
   }
 
+  addPermission(permissionDP) {
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        this.deal.permissions.push(this.copyPermission(item));
+      }
+    }
+  }
+
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = true;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    return permission;
+  }
   //#endregion
   valueBusinessLine(e) {
     if (e?.data != null && e?.data?.trim() != '') {
@@ -798,7 +855,7 @@ export class PopupConvertLeadComponent implements OnInit {
     } else if (e.field === 'no' && e.component.checked === true) {
       this.isCheckTab();
       this.lstContactDeal = [];
-      this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
+      // this.formModelCustomer = await this.cmSv.getFormModel('CM0101');
       this.gridViewSetupCustomer = await firstValueFrom(
         this.cache.gridViewSetup('CMCustomers', 'grvCMCustomers')
       );
@@ -830,9 +887,7 @@ export class PopupConvertLeadComponent implements OnInit {
         this.customer.recID = this.customerNewOld;
       }
       this.setDataCustomer();
-      setTimeout(() => {
-        this.setContact();
-      }, 1000);
+      this.setContact();
       this.countAddNew++;
 
       // this.getListContactByObjectID(this.customerNewOld);

@@ -79,7 +79,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private stepService: StepService,
     private callFunc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {
     this.user = this.authstore.get();
   }
@@ -118,10 +118,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         if (res?.length > 0) {
           this.isPause;
-          if(this.isAdmin){
+          if (this.isAdmin) {
             this.listActivitie = res;
-          }else{
-            this.listActivitie = res?.filter(activitie => activitie.owner == this.user?.userID);
+          } else {
+            this.listActivitie = res?.filter(
+              (activitie) => activitie.owner == this.user?.userID
+            );
           }
           this.isNoData = false;
         } else {
@@ -168,7 +170,6 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           case 'SYS04': //copy
             break;
           case 'DP25':
-          case 'DP20':
           case 'DP26':
           case 'SYS003': //đính kèm file
           case 'SYS004':
@@ -228,6 +229,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             if (task?.status != '1') {
               res.disabled = true;
             }
+            break;
+          case 'DP20': // tiến độ
+            res.isblur =  !(task?.startDate && task?.endDate);
             break;
         }
       });
@@ -455,7 +459,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async openPopupUpdateProgress(task, type) {
-    if (this.isPause) {
+    if (this.isPause || !(task?.startDate && task?.endDate)) {
       return;
     }
     let dataInput = {
@@ -485,7 +489,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.api
         .exec<any>(
           'DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'UpdateProgressActivitiesAsync',
           data
         )
@@ -587,7 +591,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.stepService.openPopupContract('add');
     }
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'StartActivitiesAsync', [
+      .exec<any>('DP', 'InstancesStepsBusiness', 'StartActivitiesAsync', [
         activitie?.recID,
       ])
       .subscribe((res) => {
@@ -667,7 +671,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           .execSv<any>(
             'DP',
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdatedAssignedStepTasksAsync',
             [data.stepID, data.recID]
           )

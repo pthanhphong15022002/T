@@ -237,13 +237,12 @@ export class PopupAddDealComponent
       //   this.loadExchangeRate();
       // }
       if ($event.field === 'consultantID') {
-        this.searchOwner(
-          'U',
-          'C',
-          '0',
-          this.deal.consultantID,
-          $event?.component?.itemsSelected[0]?.UserName
-        );
+        if($event.data) {
+          this.searchOwner(  'U', 'C',  '0',   this.deal.consultantID, $event?.component?.itemsSelected[0]?.UserName );
+        }
+        else if($event.data === null || $event.data === ''){
+          this.deleteOwner(  'U', 'C',  '0',   this.deal.consultantID,$event.field );
+        }
       }
     }
   }
@@ -259,6 +258,24 @@ export class PopupAddDealComponent
         )[0].userName;
       }
       this.searchOwner('1', 'O', '0', this.deal.owner, ownerName);
+    }
+    else if ($event === null || $event === '') {
+      this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
+    }
+  }
+  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
+    let index = this.deal?.permissions.findIndex(
+      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+    if(index != -1) {
+      if(field === 'owner' ){
+        this.deal.owner = null;
+        this.owner= null;
+        this.deal.salespersonID = null;
+      }
+      else if(field === 'consultantID') {
+        this.deal.consultantID = null;
+      }
+      this.deal.permissions.splice(index, 1);
     }
   }
   searchOwner(
@@ -388,14 +405,14 @@ export class PopupAddDealComponent
       );
       return;
     }
-    if (!this.deal?.owner) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
-      );
-      return;
-    }
+    // if (!this.deal?.owner) {
+    //   this.notificationsService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['SalespersonID']?.headerText + '"'
+    //   );
+    //   return;
+    // }
     if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
       this.notificationsService.notifyCode(
         'DP032',
@@ -762,7 +779,6 @@ export class PopupAddDealComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
-          permissionRoles: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
@@ -803,6 +819,7 @@ export class PopupAddDealComponent
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
+        this.deal.status = instance.status;
         this.deal.datas = instance.datas;
         this.addPermission(instance.permissions);
         !this.isLoading && this.onAdd();
@@ -864,8 +881,8 @@ export class PopupAddDealComponent
       instance.startDate = null;
       instance.status = '1';
     }
-    instance.title = deal.dealName;
-    instance.memo = deal.memo;
+    instance.title = deal?.dealName?.trim();
+    instance.memo = deal?.memo?.trim();;
     instance.endDate = deal.endDate;
     instance.instanceNo = deal.dealID;
     instance.owner = this.owner;
