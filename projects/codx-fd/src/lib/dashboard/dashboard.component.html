@@ -2,10 +2,13 @@
 </codx-views>
 
 <ng-template #panelContent>
+  <!-- <div class="container-fluid p-0">
+    <ng-container *ngTemplateOutlet="dashboard"> </ng-container>
+  </div> -->
     <div class="fd-pagehome h-100 w-100">
         <div class="d-flex h-100 w-100">
             <div class="w-100 home-left">
-                <app-list-post 
+                <app-list-post
                     [isShowCreate]="false"
                     [predicate]="predicateWP"
                     [dataValue]="dataValueWP">
@@ -113,4 +116,19 @@
             </div>
         </div>
     </div>
+</ng-template>
+
+<ng-template #dashboard>
+  <codx-dashboard
+    #dashboard
+    [templates]="templates"
+    [panels]="panels"
+    [datas]="datas"
+    [isEditMode]="true"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #templates let-data>
+  <h2 id="1">Hé lô</h2>
 </ng-template>
