@@ -136,14 +136,15 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getAvatar()
   {
+    debugger
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.backgroudColor) {
         document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
-        this.backgroundColor = this.dataSV?.settings?.backgroudColor;
       }
-      this.primaryColor = this.dataSV?.settings?.primaryColor
     }
+    this.backgroundColor = this.dataSV?.settings?.backgroudColor || "#EBDFFF";
+    this.primaryColor = this.dataSV?.settings?.primaryColor || "#7248B9"
     this.setStyleIcon();
   }
 
@@ -246,6 +247,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getRow(questionID:any)
   {
+    debugger
     let result = [];
     this.lstRespondents.forEach(element => {
       if(element.responds && element.responds.length>0)
@@ -253,11 +255,13 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         var results = element.responds.filter(x=>x.questionID == questionID);
         if(results && results.length > 0)
         {
-          var data = [{objectID:element.objectID}];
+          var data = [];
           var listResult = results[0].results.sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
           listResult.forEach(element2 => {
-            data.push(element2.answer)
+            if(data[element2.seqNo] && Array.isArray(data[element2.seqNo])) data[element2.seqNo].push(element2.answer)
+            else data.push([element2.answer]);   
           });
+          data.unshift({objectID:element.objectID,name:element.respondent})
           result.push(data);
         }
       }
@@ -274,7 +278,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         var results = element.responds.filter(x=>x.questionID == questionID);
         if(results && results.length > 0)
         {
-          var data = [{objectID:element.objectID},{data:[]}];
+          var data = [{objectID:element.objectID,name:element.respondent},{data:[]}];
           results[0].results.forEach(element2 => {
             data[1].data.push(element2.answer)
           });

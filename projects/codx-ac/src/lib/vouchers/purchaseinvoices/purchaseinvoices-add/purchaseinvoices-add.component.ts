@@ -6,6 +6,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import {
@@ -20,21 +21,19 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService } from '../../../codx-ac.service';
+import { CodxAcService, fmPurchaseInvoicesLines, fmVATInvoices } from '../../../codx-ac.service';
 import {
   IJournal,
   Vll067,
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { IPurchaseInvoice } from '../interfaces/IPurchaseInvoice.inteface';
-import { IPurchaseInvoiceLine } from '../interfaces/IPurchaseInvoiceLine.interface';
-import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 import {
   PurchaseInvoiceService,
-  fmPurchaseInvoicesLines,
-  fmVATInvoices,
 } from '../purchaseinvoices.service';
+import { Subject, map, takeUntil } from 'rxjs';
+import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
+import { VATInvoices } from '../../../models/VATInvoices.model';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
@@ -42,503 +41,782 @@ import {
   styleUrls: ['./purchaseinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PurchaseinvoicesAddComponent
-  extends UIComponent
-  implements OnInit
-{
+export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit {
   //#region Constructor
-  @ViewChild('gridPurchaseInvoiceLines')
-  public gridPurchaseInvoiceLines: CodxGridviewV2Component;
-  @ViewChild('gridVatInvoices') public gridVatInvoices: CodxGridviewV2Component;
-  @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('eleGridPurchaseInvoice') eleGridPurchaseInvoice: CodxGridviewV2Component; //? element codx-grv2 lưới PurchaseInvoice
+  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
+  @ViewChild('formPurchaseInvoices') public formPurchaseInvoices: CodxFormComponent;
+  @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
+
   @ViewChild('tab') tab: TabComponent;
-
-  master: IPurchaseInvoice;
-  prevMaster: IPurchaseInvoice;
-  prevLine: IPurchaseInvoiceLine;
-  prevVatInvoice: IVATInvoice;
-
-  fmVATInvoices: FormModel;
-  fmPurchaseInvoicesLines: FormModel;
-
-  masterService: CRUDService;
-  isEdit: boolean = false;
-  journal: IJournal;
-  hiddenFields: string[] = [];
-  tabInfo: TabModel[] = [
+  headerText: string; //? tên tiêu đề
+  dialog: DialogRef; //? dialog truyền vào
+  dialogData?: any; //? dialog hứng data truyền vào
+  dataDefault: any; //? data của cashpayment
+  journal: any; //? data sổ nhật kí
+  baseCurr: any; //? đồng tiền hạch toán
+  taxCurr:any; //? tiền thuế
+  fmPurchaseInvoicesLines:any = fmPurchaseInvoicesLines
+  fmVATInvoices:any = fmVATInvoices
+  tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'Link', textDefault: 'Liên kết', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  acParams: any;
-
-  defaultLineData: IPurchaseInvoiceLine;
-  defaultVatInvoiceData: IVATInvoice;
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private notiService: NotificationsService,
+    private notification: NotificationsService,
     private journalService: JournalService,
     purchaseInvoiceService: PurchaseInvoiceService,
-    @Optional() public dialog?: DialogRef,
-    @Optional() public dialogData?: DialogData
+    @Optional() dialog?: DialogRef,
+    @Optional() dialogData?: DialogData
   ) {
     super(inject);
-
-    this.fmPurchaseInvoicesLines = fmPurchaseInvoicesLines;
-    this.fmVATInvoices = fmVATInvoices;
-    this.journal = purchaseInvoiceService.journal;
-
-    this.masterService = dialog.dataService;
-    this.master = this.masterService?.dataSelected;
-    this.prevMaster = { ...this.master };
-    this.isEdit = dialogData.data.formType === 'edit';
+    this.dialog = dialog; //? dialog truyền vào
+    this.dialogData = dialogData; //? data dialog truyền vào
+    this.headerText = dialogData.data?.headerText; //? get tên tiêu đề
+    this.dataDefault = { ...dialogData.data?.oData }; //? get data của Cashpayments
+    this.journal = { ...dialogData.data?.journal }; //? get data sổ nhật kí
+    this.baseCurr = dialogData.data?.baseCurr; //? get đồng tiền hạch toán
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit(): void {
-    this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-
-    this.acService.getACParameters$().subscribe((res) => {
-      this.acParams = res;
-    });
-
-    this.setDefaultData();
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.taxCurr = res?.TaxCurr;
+        }
+      })
   }
 
   ngAfterViewInit(): void {}
-  //#endregion
+
+  onAfterInitForm(event) {
+    this.setValidateForm();
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Hàm khởi tạo các tab detail khi mở form(ẩn hiện tab theo loại chứng từ)
+   * @param event
+   * @param eleTab
+   */
+  createTabDetail(event: any, eleTab: TabComponent) {
+    this.showHideTabDetail(this.formPurchaseInvoices?.data?.subType, this.elementTabDetail);
+  }
+
+  /**
+   * *Hàm thiết lập lưới trước khi init
+   * @param eleGrid 
+   */
+  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component){
+    let preDIM1 = '';
+    let dtvDIM1 = '';
+    let preDIM2 = '';
+    let dtvDIM2 = '';
+    let preDIM3 = '';
+    let dtvDIM3 = '';
+    let hideFields = [];
+
+    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
+      preDIM1 = '@0.Contains(DepartmentID)';
+      dtvDIM1 = `[${this.journal?.diM1}]`;
+    }
+    eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
+
+    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
+      preDIM2 = '@0.Contains(CostCenterID)';
+      dtvDIM2 = `[${this.journal?.diM2}]`;
+    }
+    eleGrid.setPredicates('diM2',preDIM2,dtvDIM2);
+
+    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') { //? nếu mục phí là mặc định hoặc trong danh sách
+      preDIM3 = '@0.Contains(CostItemID)';
+      dtvDIM3 = `[${this.journal?.diM3}]`;
+    }
+    eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
+
+    //* Thiết lập ẩn hiện các cột theo sổ nhật ký
+    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
+    }
+
+    if(!this.journal.useDutyTax){ //? không sử dụng thuế xuất nhập khẩu (ẩn)
+      hideFields.push('SalesTaxPct');
+      hideFields.push('SalesTaxAmt');
+      hideFields.push('SalesTaxAmt2');
+    }else{
+      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
+    }
+
+
+    if(!this.journal.useExciseTax){ //? không sử dụng thuế TTĐB (ẩn)
+      hideFields.push('ExciseTaxPct');
+      hideFields.push('ExciseTaxAmt');
+      hideFields.push('ExciseTaxAmt2');
+    }else{
+      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
+    }  
+
+    if(this.journal.vatControl == '0'){ //? không sử dụng thuế GTGT (ẩn)
+      hideFields.push('VATPct'); 
+      hideFields.push('VATAmt'); 
+      hideFields.push('VATBase'); 
+      hideFields.push('VATAmt2');
+      hideFields.push('VATBase2');
+    }else{
+      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){
+        hideFields.push('VATAmt2');
+        hideFields.push('VATBase2');
+      } 
+    } 
+
+    if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){ //? nếu không sử dụng ngoại tệ
+      hideFields.push('PurcAmt2');
+      hideFields.push('DiscAmt2');
+      hideFields.push('NetAmt2');
+      hideFields.push('MiscAmt2');
+    }
+
+    eleGrid.showHideColumns(hideFields);
+  }
+
+  //#endregion Init
 
   //#region Event
-  onAfterFormInit(form: CodxFormComponent) {
-    if (this.journal.assignRule === Vll075.TuDongKhiLuu) {
-      form.setRequire([
-        {
-          field: 'voucherNo',
-          require: false,
-        },
-      ]);
-    }
-  }
 
-  onClickMF(e, data) {
-    const grid: CodxGridviewV2Component =
-      this.tab.selectedItem === 0
-        ? this.gridPurchaseInvoiceLines
-        : this.gridVatInvoices;
-
-    switch (e.functionID) {
-      case 'SYS02':
-        grid.deleteRow(data);
-        break;
-      case 'SYS03':
-        grid.gridRef.selectRow(Number(data.index));
-        grid.gridRef.startEdit();
-        break;
-      case 'SYS04': {
-        const copiedData =
-          this.tab.selectedItem === 0
-            ? this.createNewPurchaseInvoiceLine(data)
-            : this.createNewVatInvoice(data);
-        grid.addRow(copiedData, grid.dataSource.length);
-        break;
-      }
-    }
-  }
-
-  /** Hide some mfs */
-  onInitMF(e): void {
-    for (const mf of e) {
-      if (['SYS003', 'SYS004', 'SYS001', 'SYS002'].includes(mf.functionID)) {
-        mf.disabled = true;
-      }
-    }
-  }
-
-  onTabCreated(tab: TabComponent): void {
-    tab.hideTab(1, this.master.subType !== '2');
-  }
-
-  onGridInit(grid: CodxGridviewV2Component): void {
-    if (this.journal.addNewMode === '2') {
-      return;
-    }
-
-    const requiredFields: string[] = [];
-    grid.hideColumns(this.hiddenFields);
-
-    if (
-      [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-        this.journal.diM1Control
-      )
-    ) {
-      requiredFields.push('diM1');
-      grid.setPredicates(
-        'diM1',
-        '@0.Contains(ProfitCenterID)',
-        `[${this.journal.diM1}]`
-      );
-    }
-
-    if (
-      [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-        this.journal.diM2Control
-      )
-    ) {
-      requiredFields.push('diM2');
-      grid.setPredicates(
-        'diM2',
-        '@0.Contains(CostCenterID)',
-        `[${this.journal.diM2}]`
-      );
-    }
-
-    if (
-      [Vll067.GiaTriCoDinh, Vll067.TrongDanhSach].includes(
-        this.journal.diM3Control
-      )
-    ) {
-      requiredFields.push('diM3');
-      grid.setPredicates(
-        'diM3',
-        '@0.Contains(CostItemID)',
-        `[${this.journal.diM3}]`
-      );
-    }
-
-    grid.setRequiredFields(requiredFields, true);
-  }
-
-  onAddRowClick(): void {
-    this.form.save(null, null, null, null, false).subscribe((res) => {
-      if (res === false || res.save?.error || res.update?.error) {
-        return;
-      }
-
-      if (this.tab.selectedItem === 0) {
-        if (this.journal.addNewMode === '1') {
-          this.gridPurchaseInvoiceLines.addRow(
-            this.createNewPurchaseInvoiceLine(),
-            this.gridPurchaseInvoiceLines.dataSource.length
-          );
-        } else {
-          // later
-        }
-      } else {
-        if (this.journal.addNewMode === '1') {
-          this.gridVatInvoices.addRow(
-            this.createNewVatInvoice(),
-            this.gridVatInvoices.dataSource.length
-          );
-        } else {
-          // later
-        }
-      }
-    });
-  }
-
-  onSaveClick(closeAfterSave: boolean): void {
-    this.form.save(null, null, null, null, false).subscribe((res: any) => {
-      if (res === false || res.save?.error || res.update?.error) {
-        return;
-      }
-
-      this.detectorRef.markForCheck();
-
-      this.api
-        .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateAsync', [
-          this.master,
-          this.journal,
-        ])
-        .subscribe((master) => {
-          if (!master) {
-            return;
-          }
-
-          if (closeAfterSave) {
-            this.masterService.update(master).subscribe();
-            this.dialog.close();
-          } else {
-            this.resetForm();
-          }
-        });
-    });
-  }
-
-  onCloseClick(): void {
+  /**
+   * *Hàm click nút đóng form
+   */
+  closeForm() {
+    this.onDestroy();
     this.dialog.close();
   }
 
-  onDiscardClick(): void {
-    this.masterService
-      .delete([this.master], true, null, '', 'AC0010', null, null, false)
-      .subscribe((res: any) => {
-        if (!res.error) {
-          this.dialog.close();
-        }
-      });
-  }
-
-  @HostListener('click', ['$event.target'])
-  onClick(e: HTMLElement): void {
-    if (
-      this.gridPurchaseInvoiceLines?.gridRef?.isEdit &&
-      !e.closest('.edit-value') &&
-      !e.closest('.e-gridcontent')
-    ) {
-      this.gridPurchaseInvoiceLines.endEdit();
-    }
-
-    if (!e.closest('.card-footer')) {
-      const el = document.querySelector('#footer');
-      el.classList.remove('expand');
-      el.classList.add('collape');
-    }
-  }
-  //#endregion
-
-  //#region Event Master
-  onInputChange(e: any): void {
-    console.log('onInputChange', e);
-
-    // e.data for valueChange and e.crrValue for controlBlur
-    if (!e.data && !e.crrValue) {
-      return;
-    }
-
-    if (this.master[e.field] === this.prevMaster[e.field]) {
-      return;
-    }
-
-    const field: string = e.field.toLowerCase();
-    if (
-      field === 'exchangerate' &&
-      this.acParams.BaseCurr === this.acParams.TaxCurr
-    ) {
-      this.notiService.alertCode('AC0022').subscribe(({ event }) => {
-        this.master.unbounds = {
-          requiresTaxUpdate: event.status === 'Y',
-        };
-        this.changeMaster(field);
-      });
-
-      return;
-    }
-
-    const postFields: string[] = [
-      'objectid',
-      'currencyid',
-      'voucherdate',
-      'taxexchrate',
-    ];
-    if (postFields.includes(field)) {
-      this.changeMaster(field);
-    } else {
-      this.prevMaster = { ...this.master };
+  /**
+   * *Hàm xử lí change subtype
+   * @param event 
+   */
+  changeSubType(event?: any) {
+    this.formPurchaseInvoices.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+    this.detectorRef.detectChanges();
+    if (this.elementTabDetail) {
+      this.showHideTabDetail(this.formPurchaseInvoices?.data?.subType, this.elementTabDetail);
     }
   }
 
-  onSubTypeChange(e: any): void {
-    this.master.subType = e.data[0];
-    this.tab.hideTab(1, this.master.subType !== '2');
-  }
-  //#endregion
-
-  //#region Event PurchaseInvoicesLines
-  onCellChange(e: any) {
-    console.log('onCellChange', e);
-
-    if (this.prevLine?.[e.field] == e.data[e.field]) {
-      return;
-    }
-
-    const field: string = e.field.toLowerCase();
-    const postFields: string[] = [
-      'itemid',
-      'quantity',
-      'purcprice',
-      'vatid',
-      'netamt',
-      'discpct',
-      'discamt',
-      'vatbase',
-      'vatamt',
-      'miscprice',
-      'miscamt',
-      'salestaxpct',
-      'salestaxamt',
-      'excisetaxpct',
-      'excisetaxamt',
-    ];
-    if (postFields.includes(field)) {
-      this.gridPurchaseInvoiceLines.startProcess();
-      this.api
-        .exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
-          field,
-          this.master,
-          e.data,
-        ])
-        .subscribe((line: any) => {
-          this.prevLine = { ...line };
-          Object.assign(e.data, line);
-          this.detectorRef.markForCheck();
-          this.gridPurchaseInvoiceLines.endProcess();
-        });
-    }
-  }
-
-  onActionEvent(e: any): void {
-    console.log('onActionEvent', e);
-
-    if (e.type === 'autoAdd' && this.gridPurchaseInvoiceLines.autoAddRow) {
-      this.gridPurchaseInvoiceLines.addRow(
-        this.createNewPurchaseInvoiceLine(),
-        this.gridPurchaseInvoiceLines.dataSource.length
-      );
-    }
-
-    if (e.type === 'beginEdit') {
-      this.prevLine = { ...e.data };
-    }
-  }
-  //#endregion
-
-  //#region Event VATInvoices
-  onCellChange2(e: any) {
-    console.log('onCellChange2', e);
-
-    if (this.prevVatInvoice?.[e.field] == e.data[e.field]) {
-      return;
-    }
-
-    const field: string = e.field.toLowerCase();
-    const postFields: string[] = [
-      'quantity',
-      'unitprice',
-      'vatid',
-      'vatbase',
-      'goods',
-    ];
-    if (postFields.includes(field)) {
-      if (field === 'goods') {
-        this.master.unbounds = {
-          itemID: e?.itemData?.ItemID,
-        };
+  /**
+   * *Hàm xử lí change master
+   * @param event 
+   */
+  valueChangeMaster(event: any) {
+    let field = event?.field || event?.ControlName;
+    let value = event?.data || event?.crrValue;
+    if(event && value && this.formPurchaseInvoices.hasChange(this.formPurchaseInvoices.preData,this.formPurchaseInvoices.data)){
+      this.formPurchaseInvoices.data.updateColumns = '';
+      switch (field.toLowerCase()) {
+        case 'objectid':
+          let indexObject = event?.component?.dataService?.data.find((x) =>x.ObjectID == value);
+          if (indexObject != null) {
+            this.objectIDChange(field);
+          }
+          break;
+        case 'currencyid':
+          this.currencyIDChange(field);
+          break;
+        case 'taxexchRate':
+          this.exchangeRateChange(field);
+          break;
+        case 'exchangerate':
+          this.exchangeRateChange(field);
+          break;
+        case 'taxexchrate':
+          this.taxExchRateChange(field);
+          break;
+        case 'voucherdate':
+          this.voucherDateChange(field);
+          break;
       }
-
-      this.gridVatInvoices.startProcess();
-      this.api
-        .exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
-          'AC_PurchaseInvoices',
-          this.master,
-          e.data,
-          field,
-        ])
-        .subscribe((line: any) => {
-          this.prevVatInvoice = { ...line };
-          Object.assign(e.data, line);
-          this.detectorRef.markForCheck();
-          this.gridVatInvoices.endProcess();
-        });
     }
   }
 
-  onActionEvent2(e: any): void {
-    console.log('onActionEvent2', e);
-
-    if (e.type === 'add' && this.gridVatInvoices.autoAddRow) {
-      this.gridVatInvoices.addRow(
-        this.createNewVatInvoice(),
-        this.gridVatInvoices.dataSource.length
-      );
-    }
-
-    if (e.type === 'beginEdit') {
-      this.prevVatInvoice = { ...e.data };
-    }
+  /**
+   * *Hàm xử lí change lưới PurchaseInvoices
+   * @param event 
+   */
+  valueChangeLine(event: any) {
+    let oLine = event.data;
+    this.eleGridPurchaseInvoice.startProcess();
+    this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
+      event.field,
+      this.formPurchaseInvoices.data,
+      oLine,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.detectorRef.detectChanges();
+        this.eleGridPurchaseInvoice.endProcess();
+      }
+    })
   }
-  //#endregion
+
+  /**
+   * *Hàm xử lí change lưới VATInvoices
+   * @param event 
+   */
+  valueChangeLineVATInvoices(event: any) {
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'goods') {
+      this.formPurchaseInvoices.data.unbounds = {
+        itemID: event?.itemData?.ItemID,
+      };
+    }
+    this.eleGridVatInvoices.startProcess();
+    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+      'AC_PurchaseInvoices',
+      this.formPurchaseInvoices.data,
+      oLine,
+      event.field
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.detectorRef.detectChanges();
+        this.eleGridVatInvoices.endProcess();
+      }
+    })
+  }
+
+  /**
+   * *Hàm thêm dòng cho các lưới
+   * @returns
+   */
+  onAddLine(typeBtn) {
+    this.formPurchaseInvoices.save(null, 0, '', '', false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if(!res) return;
+        if (res || res.save || res.update) {
+          if (res || !res.save.error || !res.update.error) {
+            if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
+              this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+                if(res){
+                  this.addRowDetailByType(typeBtn);
+                }
+              })
+              return;
+            }
+            if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') { //? nếu lưới cashpayment có active hoặc đang edit
+              this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+                if(res){
+                  this.addRowDetailByType(typeBtn);
+                }
+              })
+              return;
+            }
+          }
+        }
+      })
+  }
+  //#endregion Event
 
   //#region Method
-  changeMaster(field: string): void {
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
-        field,
-        this.master,
-      ])
-      .subscribe((res: any) => {
-        console.log(res);
 
-        Object.assign(this.master, res);
-        this.prevMaster = { ...this.master };
-        this.form.formGroup.patchValue(res);
-      });
-  }
-
-  resetForm(): void {
-    this.masterService
-      .addNew(() =>
-        this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetDefaultAsync', [
-          this.master.journalNo,
-        ])
-      )
-      .subscribe((res: IPurchaseInvoice) => {
-        this.form.data = this.master = this.form.formModel.currentData = res;
-        this.form.formGroup.patchValue(res);
-
-        this.prevMaster = { ...this.master };
-        this.gridPurchaseInvoiceLines.dataSource = [];
-        if (this.gridVatInvoices) {
-          this.gridVatInvoices.dataSource = [];
+  /**
+   * *Hàm hủy chứng từ
+   */
+  onDiscardVoucher(){
+    if (this.formPurchaseInvoices && this.formPurchaseInvoices.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.formPurchaseInvoices.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
         }
-
-        this.setDefaultData();
       });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
+    }
   }
 
-  setDefaultData(): void {
+  /**
+   * *Hàm lưu chứng từ
+   * @param type 
+   */
+  onSaveVoucher(type){
+    this.formPurchaseInvoices.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
+            this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }
+          if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới cashpayment có active hoặc đang edit
+            this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }      
+        }
+      }
+    });
+  }
+
+  /**
+   * lưu chứng từ
+   */
+  saveVoucher(type){
     this.api
-      .exec(
-        'AC',
-        'PurchaseInvoicesLinesBusiness',
-        'GetDefault2Async',
-        this.master
-      )
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateVoucherAsync', [
+        this.formPurchaseInvoices.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        this.defaultLineData = res.purchaseInvoiceLine.data;
-        this.defaultVatInvoiceData = res.vatInvoice.data;
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          }else{
+            this.api
+            .exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+              this.dialogData.data?.oData,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                res.data.isAdd = true;
+                this.formPurchaseInvoices.refreshData({...res.data});
+                setTimeout(() => {
+                  this.refreshGrid();
+                }, 100);
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+          if (this.formPurchaseInvoices.data.isAdd || this.formPurchaseInvoices.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
+          
+        }
+        if(this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
+        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
       });
   }
-  //#endregion
+  //#endregion Method
 
   //#region Function
-  createNewPurchaseInvoiceLine(
-    copiedData?: IPurchaseInvoiceLine
-  ): IPurchaseInvoiceLine {
-    return {
-      ...this.defaultLineData,
-      ...(copiedData || {}),
-      recID: Util.uid(),
-      lotID: Util.uid(),
-      idiMID: Util.uid(),
-      note: this.master.memo,
-      idiM4: this.master.warehouseID,
-      createdOn: new Date(),
-    };
+
+  /**
+   * *Hàm thêm dòng theo loại nút
+   */
+  addRowDetailByType(typeBtn) {
+    switch (typeBtn) {
+      case '1':
+        this.addLine();
+        break;
+      case '2':
+        this.addLineVatInvoices();
+        break;
+    }
   }
 
-  createNewVatInvoice(copiedData?: IVATInvoice): IVATInvoice {
-    return {
-      ...this.defaultVatInvoiceData,
-      ...(copiedData || {}),
-      recID: Util.uid(),
-      objectID: this.master.objectID,
-      objectName: this.master.objectName,
-      createdOn: new Date(),
-    };
+  /**
+   * *Hàm thêm mới dòng cashpayments
+   */
+  addLine() {
+    let oLine = this.setDefaultLine();
+    this.eleGridPurchaseInvoice.addRow(oLine,this.eleGridPurchaseInvoice.dataSource.length);
   }
-  //#endregion
+
+  /**
+   * *Hàm set data mặc định từ master khi thêm dòng mới
+   */
+  setDefaultLine() {
+    let oLine : any = new PurchaseInvoicesLines();
+    oLine.transID = this.formPurchaseInvoices.data.recID;
+    oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
+    oLine.note = this.formPurchaseInvoices.data.note;
+    return oLine;
+  }
+
+  /**
+   * *Hàm thêm dòng hóa đơn GTGT
+   */
+  addLineVatInvoices() {
+    let data:any  = new VATInvoices();
+    data.transID = this.formPurchaseInvoices.data.recID;
+    data.objectID = this.formPurchaseInvoices.data.objectID;
+    data.objectName = this.formPurchaseInvoices.data.objectName;
+    // data.lineID = this.eleGridCashPayment?.rowDataSelected?.recID;
+    this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
+  }
+
+  /**
+   * *Hàm change đối tượng
+   * @param field 
+   */
+  objectIDChange(field:any){
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
+      field,
+      this.formPurchaseInvoices.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        if(this.formPurchaseInvoices.data.currencyID != res?.CurrencyID){
+          this.formPurchaseInvoices.setValue('currencyID',(res?.CurrencyID || ''),{onlySelf: true,emitEvent: false});
+          this.showHideColumn();
+        } 
+        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
+          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
+          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+          setTimeout(() => {
+            if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
+              this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+              this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+              this.refreshGrid();
+            }
+          }, 100);
+          
+        }
+        this.formPurchaseInvoices.setValue('objectName',(res?.ObjectName || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('objectType',(res?.ObjectType || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('address',(res?.Address || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('taxCode',(res?.TaxCode || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('warehouseID',(res?.WarehouseID || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('pmtMethodID',(res?.PmtMethodID || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('pmtTermID',(res?.PmtTermID || ''),{onlySelf: true,emitEvent: false});
+        this.formPurchaseInvoices.setValue('delModeID',(res?.DelModeID || ''),{onlySelf: true,emitEvent: false});
+
+        this.detectorRef.detectChanges();
+      }
+    })
+  }
+
+  /**
+   * *Hàm change tiền tệ
+   * @param field 
+   */
+  currencyIDChange(field:any){
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
+      field,
+      this.formPurchaseInvoices.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {      
+        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
+          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
+          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+        }
+        this.showHideColumn();
+        setTimeout(() => {
+          if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
+            this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+            this.refreshGrid();
+          }
+        }, 100);
+        this.detectorRef.detectChanges();
+      }
+    })
+  }
+
+  /**
+   * *Hàm change tỷ giá
+   * @param field 
+   */
+  exchangeRateChange(field:any){
+    this.formPurchaseInvoices.setValue('taxExchRate',this.formPurchaseInvoices.data.exchangeRate,{onlySelf: true,emitEvent: false});
+    if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.dataSource.length) {
+      this.api.exec('AC', 'PurchaseInvoicesBusiness', 'UpdateLineAsync', [
+        this.formPurchaseInvoices.data,
+        field,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {      
+          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+          this.refreshGrid();
+        }
+      })
+    }
+    // xử lí khi có line
+    
+  }
+
+  /**
+   * *Hàm change tỷ giá tính thuế
+   * @param field 
+   */
+  taxExchRateChange(field:any){
+    if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.dataSource.length) {
+      this.api.exec('AC', 'PurchaseInvoicesBusiness', 'UpdateLineAsync', [
+        this.formPurchaseInvoices.data,
+        field,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {      
+          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+          this.refreshGrid();
+        }
+      })
+    }
+    // xử lí khi có line
+  }
+
+  /**
+   * *Hàm change ngày chứng từ
+   * @param field 
+   */
+  voucherDateChange(field){
+    this.formPurchaseInvoices.setValue('postedDate',this.formPurchaseInvoices.data.voucherDate,{onlySelf: true,emitEvent: false});
+    this.formPurchaseInvoices.setValue('invoiceDate',this.formPurchaseInvoices.data.voucherDate,{onlySelf: true,emitEvent: false});
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
+      field,
+      this.formPurchaseInvoices.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {      
+        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
+          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
+          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+          if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
+            this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+            this.refreshGrid();
+          }
+        }
+      }
+    })
+  }
+
+  /**
+   * *Hàm hủy các observable api
+   */
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * *Hàm ẩn hiện các tab detail theo loại chứng từ
+   * @param type
+   * @param eleTab
+   */
+  showHideTabDetail(type, eleTab) {
+    if (eleTab) {
+      switch (type) {
+        case '1': //? hóa đơn mua hàng trong nước,mua hàng nhập khẩu (ẩn tab hóa đơn GTGT)
+        case '3':
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, true);
+          eleTab.select(0);
+          break;
+        case '2': //? mua hàng hóa đơn nhiều VAT(hiện tab hóa đơn GTGT)
+          eleTab.hideTab(0, false);
+          eleTab.hideTab(1, false);
+          eleTab.select(0);
+          break;
+      }
+    }
+  }
+  
+  /**
+   * *Hàm ẩn hiện các cột theo đồng tiền hạch toán
+   */
+  showHideColumn() {
+    if (this.eleGridPurchaseInvoice) {
+      let hSalesTaxAmt2 = false;
+      let hExciseTaxAmt2 = false;
+      let hVATAmt2 = false;
+      let hVATBase2 = false;
+      let hPurcAmt2 = false;
+      let hDiscAmt2 = false;
+      let hNetAmt2 = false;
+      let hMiscAmt2 = false;
+
+      if(this.journal.useDutyTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+        hSalesTaxAmt2 = true;
+      } 
+      this.eleGridPurchaseInvoice.showHideColumns(['SalesTaxAmt2'],hSalesTaxAmt2);
+
+      if(this.journal.useExciseTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+        hExciseTaxAmt2 = true;
+      } 
+      this.eleGridPurchaseInvoice.showHideColumns(['ExciseTaxAmt2'],hExciseTaxAmt2);
+
+      if(this.journal.vatControl && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+        hVATAmt2 = true;
+        hVATBase2 = true;
+      } 
+      this.eleGridPurchaseInvoice.showHideColumns(['VATAmt2'],hVATAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['VATBase2'],hVATBase2);
+
+      if(this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+        hPurcAmt2 = true;
+        hDiscAmt2 = true;
+        hNetAmt2 = true;
+        hMiscAmt2 = true;
+      }
+      this.eleGridPurchaseInvoice.showHideColumns(['PurcAmt2'],hPurcAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['DiscAmt2'],hDiscAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['NetAmt2'],hNetAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['MiscAmt2'],hMiscAmt2);
+
+      this.refreshGrid();
+    }
+  }
+
+  /**
+   * *Hàm refresh grid
+   */
+  refreshGrid(){
+    if(this.eleGridPurchaseInvoice){
+      this.eleGridPurchaseInvoice.dataSource = [];
+      this.eleGridPurchaseInvoice.refresh();
+    }
+
+    if(this.eleGridVatInvoices){
+      this.eleGridVatInvoices.dataSource = [];
+      this.eleGridVatInvoices.refresh();
+    }
+  }
+
+  /**
+   * *Hàm các sự kiện của lưới cashpayment
+   * @param event
+   */
+  onActionGridPurchaseInvoice(event: any) {
+    switch (event.type) {
+      case 'autoAdd': //? tự động thêm dòng
+        this.onAddLine('1');
+        break;
+      case 'add':
+      case 'update':
+        this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+        break;
+      case 'closeEdit': //? khi thoát dòng
+      if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.rowDataSelected) {
+        this.eleGridPurchaseInvoice.rowDataSelected = null;
+      }
+      if(this.eleGridPurchaseInvoice.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+      setTimeout(() => {
+        let element = document.getElementById('btnAddPur'); //? focus lại nút thêm dòng
+        element.focus();
+      }, 100);
+        break;
+    }
+
+  }
+
+  /**
+   * *Hàm các sự kiện của lưới cashpayment
+   * @param event
+   */
+  onActionGridVatInvoice(event: any) {
+    switch (event.type) {
+      case 'autoAdd': //? tự động thêm dòng
+        this.onAddLine('2');
+        break;
+      case 'add':
+      case 'update':
+        this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+        break;
+      case 'closeEdit': //? khi thoát dòng
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
+        this.eleGridVatInvoices.rowDataSelected = null;
+      }
+      if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+      setTimeout(() => {
+        let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
+        element.focus();
+      }, 100);
+        break;
+    }
+  }
+
+  /**
+   * *Hàm set validate cho form
+   */
+  setValidateForm(){
+    let lstRequire :any = [];
+    if (this.journal.assignRule == '2') {
+      lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
+    }
+    this.formPurchaseInvoices.setRequire(lstRequire);
+  }
+
+  @HostListener('click', ['$event']) //? focus out grid
+  onClick(e) {
+    if (
+      (e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null) && 
+      e.target.closest('button') == null
+    ) {
+      if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.gridRef?.isEdit) {
+        this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridPurchaseInvoice.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
+        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridVatInvoices.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+    }
+  }
+  //#endregion Function
 }

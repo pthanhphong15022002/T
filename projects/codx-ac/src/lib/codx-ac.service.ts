@@ -11,6 +11,20 @@ import {
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Reason } from './models/Reason.model';
 
+export const fmPurchaseInvoicesLines: FormModel = {
+  entityName: 'AC_PurchaseInvoicesLines',
+  formName: 'PurchaseInvoicesLines',
+  gridViewName: 'grvPurchaseInvoicesLines',
+  entityPer: 'AC_PurchaseInvoicesLines',
+};
+
+export const fmVATInvoices: FormModel = {
+  entityName: 'AC_VATInvoices',
+  formName: 'VATInvoices',
+  gridViewName: 'grvVATInvoices',
+  entityPer: 'AC_VATInvoices',
+};
+
 @Injectable({
   providedIn: 'root',
 })

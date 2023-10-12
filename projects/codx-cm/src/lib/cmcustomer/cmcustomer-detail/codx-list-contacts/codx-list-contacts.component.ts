@@ -164,6 +164,13 @@ export class CodxListContactsComponent implements OnInit {
       this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';
       this.fetch().subscribe((item) => {
+        if(this.listContacts != null && this.listContacts.length > 0){
+          this.listContacts.forEach(res => {
+            if(!item.some(x => x.recID == res.recID)){
+              item.push(res);
+            }
+          })
+        }
         this.listContacts = this.cmSv.bringDefaultContactToFront(item);
         if (this.listContacts != null && this.listContacts.length > 0) {
           this.changeContacts(this.listContacts[0]);
