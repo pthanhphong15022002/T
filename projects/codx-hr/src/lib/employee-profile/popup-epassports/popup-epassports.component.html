@@ -12,11 +12,11 @@
     <ng-template #body>
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                     fiedName="PassportType"
                     [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input
+                <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
                 [disabled]="disabledInput"
                     field="passportType"
                     [formModel]="form.formModel"
@@ -24,11 +24,11 @@
                 ></codx-input>
             </div>
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                     fiedName="CodeNo"
                     [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input
+                <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
                 [disabled]="disabledInput"
                     field="codeNo"
                     [formModel]="form.formModel"
@@ -38,11 +38,11 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                 fiedName="PassportNo"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
             [disabled]="disabledInput"
                 field="passportNo"
                 [formModel]="form.formModel"
@@ -52,12 +52,12 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                 fiedName="IssuedDate"
                 [formModel]="form.formModel"
                 >
                 </codx-label>
-                <codx-input
+                <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
                 [disabled]="disabledInput"
                 type="datetime"
                 format="d"
@@ -67,12 +67,12 @@
                 ></codx-input>
             </div>
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                 fiedName="ExpiredDate"
                 [formModel]="form.formModel"                
                 >
                 </codx-label>
-                <codx-input
+                <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
                 [disabled]="disabledInput"
                 field="expiredDate"
                 type="datetime"
@@ -84,11 +84,11 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                 fiedName="IssuedPlace"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
             [disabled]="disabledInput"
                 field="issuedPlace"
                 [formModel]="form.formModel"
@@ -97,11 +97,11 @@
             </codx-input>
         </div>
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"  
                 fiedName="Note"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
             [disabled]="disabledInput"
                 field="note"
                 [formModel]="form.formModel"
@@ -114,7 +114,7 @@
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" (click)="onSaveForm()">
                 <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+            <codx-label *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"   default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
             </button>
         </div>
     </ng-template>
@@ -179,11 +179,11 @@
 
     <div class="form-group row mt-5">
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.PassportType.allowPopup == true"   
                 fiedName="PassportType"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.PassportType.allowPopup == true"
             [disabled]="disabledInput"
                 field="passportType"
                 [formModel]="form.formModel"
@@ -191,11 +191,11 @@
             ></codx-input>
         </div>
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.CodeNo.allowPopup == true"  
                 fiedName="CodeNo"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.CodeNo.allowPopup == true"
             [disabled]="disabledInput"
                 field="codeNo"
                 [formModel]="form.formModel"
@@ -205,11 +205,11 @@
     </div>
 
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.PassportNo.allowPopup == true"  
             fiedName="PassportNo"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.PassportNo.allowPopup == true"
         [disabled]="disabledInput"
             field="passportNo"
             [formModel]="form.formModel"
@@ -219,12 +219,12 @@
 
     <div class="form-group row">
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.IssuedDate.allowPopup == true"  
             fiedName="IssuedDate"
             [formModel]="form.formModel"
             >
             </codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.IssuedDate.allowPopup == true"
             [disabled]="disabledInput"
             type="datetime"
             format="d"
@@ -234,12 +234,12 @@
             ></codx-input>
         </div>
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.ExpiredDate.allowPopup == true"  
             fiedName="ExpiredDate"
             [formModel]="form.formModel"                
             >
             </codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.ExpiredDate.allowPopup == true"
             [disabled]="disabledInput"
             field="expiredDate"
             type="datetime"
@@ -251,11 +251,11 @@
     </div>
 
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.IssuedPlace.allowPopup == true"  
             fiedName="IssuedPlace"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.IssuedPlace.allowPopup == true"
         [disabled]="disabledInput"
             field="issuedPlace"
             [formModel]="form.formModel"
@@ -264,11 +264,11 @@
         </codx-input>
     </div>
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.Note.allowPopup == true"  
             fiedName="Note"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.Note.allowPopup == true"
         [disabled]="disabledInput"
             field="note"
             [formModel]="form.formModel"
@@ -283,7 +283,7 @@
     <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
         <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
             <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+        <codx-label  default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
         </button>
     </div>
 </ng-template>

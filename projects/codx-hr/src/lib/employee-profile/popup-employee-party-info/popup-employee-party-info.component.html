@@ -19,21 +19,21 @@
     </div>
 
     <div class="form-group d-flex align-items-bottom">
-      <codx-input
+      <codx-input *ngIf="form.gridviewSetup.IsYUnion.allowPopup == true"
         class="me-3"
         field="isYUnion"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       >
       </codx-input>
-      <codx-label fiedName="IsYUnion" [formModel]="form.formModel"> </codx-label>
+      <codx-label *ngIf="form.gridviewSetup.IsYUnion.allowPopup == true" fiedName="IsYUnion" [formModel]="form.formModel"> </codx-label>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="YUnionDate" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.YUnionDate.allowPopup == true" fiedName="YUnionDate" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.YUnionDate.allowPopup == true"
             field="yUnionDate"
             format="d"
             [formModel]="form.formModel"
@@ -42,9 +42,9 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="YUnionAt" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.YUnionAt.allowPopup == true" fiedName="YUnionAt" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.YUnionAt.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="yUnionAt"
@@ -55,9 +55,9 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="YUnionPlace" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.YUnionPlace.allowPopup == true" fiedName="YUnionPlace" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.YUnionPlace.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="yUnionPlace"
@@ -65,9 +65,9 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="YUnionFee" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.YUnionFee.allowPopup == true" fiedName="YUnionFee" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.YUnionFee.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="yUnionFee"
@@ -87,24 +87,24 @@
     </div>
 
     <div class="form-group d-flex align-items-bottom">
-      <codx-input
+      <codx-input *ngIf="form.gridviewSetup.IsParty.allowPopup == true"
         class="me-3"
         field="isParty"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       >
       </codx-input>
-      <codx-label fiedName="IsParty" [formModel]="form.formModel"> </codx-label>
+      <codx-label *ngIf="form.gridviewSetup.IsParty.allowPopup == true" fiedName="IsParty" [formModel]="form.formModel"> </codx-label>
     </div>
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.PartyBackgroundNo.allowPopup == true"
           fiedName="PartyBackgroundNo"
           [formModel]="form.formModel"
         ></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyBackgroundNo.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyBackgroundNo"
@@ -112,9 +112,9 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyNo" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyNo.allowPopup == true" fiedName="PartyNo" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyNo.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyNo"
@@ -125,9 +125,9 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyDate" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyDate.allowPopup == true" fiedName="PartyDate" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyDate.allowPopup == true"
             field="partyDate"
             type="datetime"
             format="d"
@@ -137,9 +137,9 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyAt" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyAt.allowPopup == true" fiedName="PartyAt" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyAt.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyAt"
@@ -150,12 +150,12 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.PartyOfficalDate.allowPopup == true"
           fiedName="PartyOfficalDate"
           [formModel]="form.formModel"
         ></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyOfficalDate.allowPopup == true"
             [formModel]="form.formModel"
             format="d"
             [Group]="form.formGroup"
@@ -164,12 +164,12 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.PartyPosition.allowPopup == true"
           fiedName="PartyPosition"
           [formModel]="form.formModel"
         ></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyPosition.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyPosition"
@@ -179,9 +179,9 @@
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyLevel" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyLevel.allowPopup == true" fiedName="PartyLevel" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyLevel.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyLevel"
@@ -189,9 +189,9 @@
         </div>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PartyPlace" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyPlace.allowPopup == true" fiedName="PartyPlace" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyPlace.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyPlace"
@@ -202,9 +202,9 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PartyFee" [formModel]="form.formModel"></codx-label>
+        <codx-label *ngIf="form.gridviewSetup.PartyFee.allowPopup == true" fiedName="PartyFee" [formModel]="form.formModel"></codx-label>
         <div>
-          <codx-input
+          <codx-input *ngIf="form.gridviewSetup.PartyFee.allowPopup == true"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="partyFee"
