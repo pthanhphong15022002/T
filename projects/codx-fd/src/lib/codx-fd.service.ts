@@ -7,6 +7,7 @@ import {
   CacheService,
   FormModel,
   NotificationsService,
+  DataRequest,
 } from 'codx-core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -193,6 +194,37 @@ export class CodxFdService {
       'PoliciesBusiness',
       'AddUpdateActiveAsync',
       [policyrecID]
+    );
+  }
+
+  getFavorite(entity, entityType, defaultFavID, hasNotAllFav) {
+    return this.api.execSv(
+      'SYS',
+      'SYS',
+      'SearchFavoriteBusiness',
+      'GetFavoriteAsync',
+      [entity, entityType, defaultFavID, hasNotAllFav]
+    );
+  }
+
+  getListCard(model: DataRequest) {
+    return this.api.execSv('FD', 'FD', 'CardsBusiness', 'GetListCardAsync', [
+      model,
+    ]);
+  }
+
+  countCardByCardType(
+    predicatesReceive: string,
+    dataValueReceive: string,
+    predicatesSend: string,
+    dataValueSend: string
+  ) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CountCardByCardTypeAsync',
+      [predicatesReceive, dataValueReceive, predicatesSend, dataValueSend]
     );
   }
 }

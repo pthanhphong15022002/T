@@ -522,6 +522,7 @@ export class CM_Contracts {
   closed: boolean;
   closedOn: Date;
   closedBy: string;
+  permissions: CM_Permissions[];
   // Điều khoản hồ sơ liên quan -- memo
 }
 

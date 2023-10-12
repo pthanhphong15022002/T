@@ -129,6 +129,8 @@ export class ViewDetailContractsComponent implements OnInit {
     //       }
     //     });
     // }
+    console.log('ngonchange');
+    debugger
 
     if (this.itemDetail?.benefits) {
       this.lstBenefit = JSON.parse(this.itemDetail.benefits);
@@ -172,6 +174,7 @@ export class ViewDetailContractsComponent implements OnInit {
           pObjectID
         )
         .subscribe((res: any) => {
+          debugger
           if (res?.length > 0) {
             let files = res;
             files.map((e: any) => {

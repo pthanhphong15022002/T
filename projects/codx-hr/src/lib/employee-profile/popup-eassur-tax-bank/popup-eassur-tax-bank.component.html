@@ -28,7 +28,7 @@
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center w-auto extend-title">
           <span class="text-primary text-hover-primary_darker fw-bold me-1">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
             [name]="'SocialWellfare'"
               default="Bảo hiểm xã hội"
               [formModel]="form.formModel"
@@ -47,7 +47,7 @@
     </div>
 
     <!-- <div class="row">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
                 default="Bảo hiểm xã hội"
                 [formModel]="form.formModel"
             >
@@ -55,11 +55,11 @@
         </div> -->
     <div class="form-group row">
       <div class="col-6">
-        <codx-label
+        <codx-label  *ngIf="form.gridviewSetup.SIRegisterNo.allowPopup == true" 
           fiedName="SIRegisterNo"
           [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input  *ngIf="form.gridviewSetup.SIRegisterNo.allowPopup == true"
           field="siRegisterNo"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -67,11 +67,11 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label
+        <codx-label  *ngIf="form.gridviewSetup.SIRegisterOn.allowPopup == true" 
           fiedName="SIRegisterOn"
           [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input  *ngIf="form.gridviewSetup.SIRegisterOn.allowPopup == true"
           field="siRegisterOn"
           type="datetime"
           format="d"
@@ -84,8 +84,8 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="HICardNo" [formModel]="form.formModel"></codx-label>
-        <codx-input
+        <codx-label  *ngIf="form.gridviewSetup.HICardNo.allowPopup == true"  fiedName="HICardNo" [formModel]="form.formModel"></codx-label>
+        <codx-input  *ngIf="form.gridviewSetup.HICardNo.allowPopup == true"
           field="hiCardNo"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -93,11 +93,11 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label
+        <codx-label  *ngIf="form.gridviewSetup.HIDateOf5Years.allowPopup == true" 
           fiedName="HIDateOf5Years"
           [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input  *ngIf="form.gridviewSetup.HIDateOf5Years.allowPopup == true"
           field="hiDateOf5Years"
           type="datetime"
           format="d"
@@ -110,8 +110,8 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="HICardFrom" [formModel]="form.formModel"></codx-label>
-        <codx-input
+        <codx-label  *ngIf="form.gridviewSetup.HICardFrom.allowPopup == true"  fiedName="HICardFrom" [formModel]="form.formModel"></codx-label>
+        <codx-input  *ngIf="form.gridviewSetup.HICardFrom.allowPopup == true"
           field="hiCardFrom"
           type="datetime"
           format="d"
@@ -121,8 +121,8 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="HICardTo" [formModel]="form.formModel"></codx-label>
-        <codx-input
+        <codx-label  *ngIf="form.gridviewSetup.HICardTo.allowPopup == true"  fiedName="HICardTo" [formModel]="form.formModel"></codx-label>
+        <codx-input  *ngIf="form.gridviewSetup.HICardTo.allowPopup == true"
           field="hiCardTo"
           type="datetime"
           format="d"
@@ -134,8 +134,8 @@
     </div>
 
     <div class="" form-group row>
-      <codx-label fiedName="HIHospitalID" [formModel]="form.formModel"></codx-label>
-      <codx-input
+      <codx-label  *ngIf="form.gridviewSetup.HIHospitalID.allowPopup == true"  fiedName="HIHospitalID" [formModel]="form.formModel"></codx-label>
+      <codx-input  *ngIf="form.gridviewSetup.HIHospitalID.allowPopup == true"
         field="hiHospitalID"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -147,7 +147,7 @@
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center w-auto extend-title">
           <span class="text-primary text-hover-primary_darker fw-bold me-1">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
             [name]="'PersonalTax'"
               default="Mã số thuế TNCN"
               [formModel]="form.formModel"
@@ -166,7 +166,7 @@
     </div>
 
     <!-- <div class="row">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
                 default="Mã số thuế TNCN"
                 [formModel]="form.formModel"
             >f
@@ -175,8 +175,8 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PITNumber" [formModel]="form.formModel"></codx-label>
-        <codx-input
+        <codx-label  *ngIf="form.gridviewSetup.PITNumber.allowPopup == true"  fiedName="PITNumber" [formModel]="form.formModel"></codx-label>
+        <codx-input  *ngIf="form.gridviewSetup.PITNumber.allowPopup == true"
           field="pitNumber"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
@@ -184,8 +184,8 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="PITIssuedOn" [formModel]="form.formModel"></codx-label>
-        <codx-input
+        <codx-label  *ngIf="form.gridviewSetup.PITIssuedOn.allowPopup == true"  fiedName="PITIssuedOn" [formModel]="form.formModel"></codx-label>
+        <codx-input  *ngIf="form.gridviewSetup.PITIssuedOn.allowPopup == true"
           field="pitIssuedOn"
           type="datetime"
           format="d"
@@ -197,8 +197,8 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="PITPlace" [formModel]="form.formModel"></codx-label>
-      <codx-input
+      <codx-label  *ngIf="form.gridviewSetup.PITPlace.allowPopup == true"  fiedName="PITPlace" [formModel]="form.formModel"></codx-label>
+      <codx-input  *ngIf="form.gridviewSetup.PITPlace.allowPopup == true"
         field="pitPlace"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -206,7 +206,7 @@
     </div>
 
     <!-- <div class="row">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
                 default="Tài khoản cá nhân"
                 name="lblSelfAccount"
                 [formModel]="form.formModel"
@@ -219,7 +219,7 @@
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center w-auto extend-title">
           <span class="text-primary text-hover-primary_darker fw-bold me-1">
-            <codx-label
+            <codx-label  *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" 
               default="Tài khoản cá nhân"
               [formModel]="form.formModel"
               name="lblSelfAccount"
@@ -238,8 +238,8 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
+      <codx-label  *ngIf="form.gridviewSetup.AccountNo.allowPopup == true"  fiedName="AccountNo" [formModel]="form.formModel"></codx-label>
+      <codx-input  *ngIf="form.gridviewSetup.AccountNo.allowPopup == true"
         field="accountNo"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -247,8 +247,8 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountName" [formModel]="form.formModel"></codx-label>
-      <codx-input
+      <codx-label  *ngIf="form.gridviewSetup.AccountName.allowPopup == true"  fiedName="AccountName" [formModel]="form.formModel"></codx-label>
+      <codx-input  *ngIf="form.gridviewSetup.AccountName.allowPopup == true"
         field="accountName"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -256,8 +256,8 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="AccountBankID" [formModel]="form.formModel"></codx-label>
-      <codx-input
+      <codx-label  *ngIf="form.gridviewSetup.AccountBankID.allowPopup == true"  fiedName="AccountBankID" [formModel]="form.formModel"></codx-label>
+      <codx-input  *ngIf="form.gridviewSetup.AccountBankID.allowPopup == true"
         field="accountBankID"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -265,11 +265,11 @@
     </div>
 
     <div class="form-group row">
-      <codx-label
+      <codx-label  *ngIf="form.gridviewSetup.AccountBankBranch.allowPopup == true" 
         fiedName="AccountBankBranch"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input
+      <codx-input  *ngIf="form.gridviewSetup.AccountBankBranch.allowPopup == true"
         field="accountBankBranch"
         [Group]="form.formGroup"
         [formModel]="form.formModel"

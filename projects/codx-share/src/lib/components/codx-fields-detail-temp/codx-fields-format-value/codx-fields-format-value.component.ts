@@ -25,11 +25,16 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   columns: any[];
   arrDataValue: any[];
   settingWidth = false;
+  settingCount = false;
 
   constructor(
     private cache: CacheService,
     private changeRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.cache.valueList('DP0274').subscribe((res) => {
+      if (res) this.dtFormatDate = res.datas;
+    });
+  }
 
   ngOnChanges() {
     // if (this.data.dataType == 'TA') this.getColumnTable(this.data);
@@ -38,9 +43,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   ngOnInit(): void {
     switch (this.data.dataType) {
       case 'D':
-        this.cache.valueList('DP0274').subscribe((res) => {
-          if (res) this.dtFormatDate = res.datas;
-        });
+        // this.cache.valueList('DP0274').subscribe((res) => {
+        //   if (res) this.dtFormatDate = res.datas;
+        // });
         break;
       case 'TA':
         this.getColumnTable(this.data);
@@ -66,6 +71,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     if (Array.isArray(arr)) {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
+      this.settingCount = this.columns[0]?.settingCount ?? false;
       // this.columns.forEach((x) => {
       //   this.modelJSON += '"' + x.fieldName + '":"' + '",';
       // });
@@ -119,7 +125,8 @@ export class CodxFieldsFormatValueComponent implements OnInit {
 
   fomatvalue(df) {
     //xu ly tam
-    var index = this.dtFormatDate.findIndex((x) => x.value == df);
+
+    var index = this.dtFormatDate?.findIndex((x) => x.value == df);
     if (index == -1) return '';
     return this.dtFormatDate[index]?.text;
   }

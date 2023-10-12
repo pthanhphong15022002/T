@@ -148,7 +148,6 @@ export class LeadDetailComponent implements OnInit {
           this.hasRunOnce = true;
           //  this.resetTab(this.dataSelected.applyProcess);
           this.promiseAllLoad();
-
         }
         !this.hasRunOnce && this.promiseAllLoad();
         this.oldRecId = changes['dataSelected'].currentValue.recID;
@@ -297,6 +296,7 @@ export class LeadDetailComponent implements OnInit {
   }
   getTags(data) {
     this.viewTag = '';
+    this.isLoadOwner = true;
     setTimeout(() => {
       this.viewTag = this.dataSelected?.tags;
     }, 100);

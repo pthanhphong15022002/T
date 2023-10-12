@@ -17,7 +17,7 @@
     width: 100px !important;
   }
 
-  .symbol.symbol-100px.symbol-3by2>img {
+  .symbol.symbol-100px.symbol-3by2 > img {
     height: 150px;
     width: 100px;
     max-width: none;
@@ -42,27 +42,24 @@
     border-radius: 20px;
     padding: 3px;
   }
-  .img-pat-edit
-  {
+  .img-pat-edit {
     background-image: none;
     width: 100px !important;
     height: 150px !important;
   }
-
 }
 
 .gift-card .card-name {
   height: 20px;
   overflow: hidden;
 }
-.div-bg-img
-{
+.div-bg-img {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
-#create_card_toggle
-{
-  background-image: url(../../../../../../../src/assets/demos/card/card-add.png);
-  height: 100%;
-}
+// #create_card_toggle
+// {
+//   background-image: url(../../../../../../../src/assets/demos/card/card-add.png);
+//   height: 100%;
+// }

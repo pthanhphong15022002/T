@@ -1216,9 +1216,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null || data.text == ''
-                ? data?.objectName
-                : data?.text;
+              data?.objectType != '1'
+                ? data.text == null || data.text == ''
+                  ? data?.objectName
+                  : data?.text
+                : this.user?.userName;
 
             perm.objectID =
               data?.objectType != '1'
@@ -1247,9 +1249,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null || data.text == ''
-                ? data?.objectName
-                : data?.text;
+              data?.objectType != '1'
+                ? data.text == null || data.text == ''
+                  ? data?.objectName
+                  : data?.text
+                : this.user?.userName;
 
             perm.objectID =
               data?.objectType != '1'
@@ -1283,9 +1287,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let perm = new DP_Processes_Permission();
             perm.objectName =
-              data.text == null || data.text == ''
-                ? data?.objectName
-                : data?.text;
+              data?.objectType != '1'
+                ? data.text == null || data.text == ''
+                  ? data?.objectName
+                  : data?.text
+                : this.user?.userName;
 
             perm.objectID =
               data?.objectType != '1'
@@ -1315,9 +1321,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             let data = value[i];
             let roles = new DP_Steps_Roles();
             roles.objectName =
-              data.text == null || data.text == ''
-                ? data?.objectName
-                : data?.text;
+              data?.objectType != '1'
+                ? data.text == null || data.text == ''
+                  ? data?.objectName
+                  : data?.text
+                : this.user?.userName;
             roles.objectID =
               data?.objectType != '1'
                 ? data.id != null

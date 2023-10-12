@@ -16,6 +16,7 @@ import {
   DialogModel,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   RequestOption,
   UIComponent,
@@ -25,6 +26,7 @@ import { WareHouses } from '../../../models/WareHouses.model';
 import { Objects } from '../../../models/Objects.model';
 import { Contact } from '../../../models/Contact.model';
 import { CodxAcService } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-warehouses',
@@ -33,7 +35,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 })
 export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#region Contructor
-  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('provinceID') provinceID: CodxInputComponent;
   @ViewChild('districtID') districtID: CodxInputComponent;
   headerText: string;
@@ -74,6 +76,10 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       name: 'Contact',
     },
   ];
+  lblAdd: any;
+  lblEdit: any;
+  lblContacts: any;
+  private destroy$ =  new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -112,9 +118,34 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+
+    this.cache.message('AC0034').subscribe((res) => {
+      if (res) {
+        this.lblEdit = res?.customName;
+      }
+    });
+    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'ACS20501');
+        if (m) {
+          this.lblContacts = m.defaultName.toLowerCase();
+        }
+      }
+    })
+  }
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
+    (this.form.form as CodxFormComponent).onAfterInit.subscribe((res:any)=>{
+      if(res){
+        this.setValidateForm();
+      }
+    })
   }
   //#endregion
 
@@ -157,58 +188,48 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.dt.detectChanges();
   }
   openPopupContact() {
-    this.moreFuncName = 'Thêm';///
-    this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACS20501');
-        if (m) {
-          this.funcName = m.defaultName;
-          var obj = {
-            headerText: this.moreFuncName + ' ' + this.funcName.toLowerCase(),
-            datacontact: this.objectContact,
-          };
-          let opt = new DialogModel();
-          let dataModel = new FormModel();
-          dataModel.formName = 'ContactBook';
-          dataModel.gridViewName = 'grvContactBook';
-          dataModel.entityName = 'BS_ContactBook';
-          opt.FormModel = dataModel;
-          this.cache
-            .gridViewSetup('ContactBook', 'grvContactBook')
-            .subscribe((res) => {
-              if (res) {
-                var dialogcontact = this.callfc.openForm(
-                  PopAddContactComponent,
-                  '',
-                  650,
-                  570,
-                  '',
-                  obj,
-                  '',
-                  opt
-                );
-                dialogcontact.closed.subscribe(() => {
-                  var datacontact = JSON.parse(
-                    localStorage.getItem('datacontact')
-                  );
-                  if (datacontact != null) {
-                    this.objectContact.push(datacontact);
-                  }
-                  window.localStorage.removeItem('datacontact');
-                });
-              }
-            });
+    var obj = {
+      headerText: this.lblAdd + ' ' + this.lblContacts,
+      datacontact: this.objectContact,
+    };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ContactBook';
+    dataModel.gridViewName = 'grvContactBook';
+    dataModel.entityName = 'BS_ContactBook';
+    opt.FormModel = dataModel;
+    this.cache
+      .gridViewSetup('ContactBook', 'grvContactBook')
+      .subscribe((res) => {
+        if (res) {
+          var dialogcontact = this.callfc.openForm(
+            PopAddContactComponent,
+            '',
+            650,
+            570,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialogcontact.closed.subscribe(() => {
+            var datacontact = JSON.parse(
+              localStorage.getItem('datacontact')
+            );
+            if (datacontact != null) {
+              this.objectContact.push(datacontact);
+            }
+            window.localStorage.removeItem('datacontact');
+          });
         }
-      }
-    });
+      });
   }
   editobject(data: any) {
-    this.moreFuncName = 'Chỉnh sửa';///
     let index = this.objectContact.findIndex(
       (x) => x.contactName == data.contactName && x.phone == data.phone
     );
     var ob = {
-      headerText: 'Chỉnh sửa liên hệ',
+      headerText: this.lblEdit + ' ' + this.lblContacts,
       type: 'editContact',
       data: { ...data },
     };
@@ -320,7 +341,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
         this.updateWarehouseIDBeforeSave();
       }
       if (this.formType == 'edit') {
-        this.dialog.dataService
+        (this.form.form as CodxFormComponent)
           .save((opt: RequestOption) => {
             opt.methodName = 'UpdateAsync';
             opt.className = 'WareHousesBusiness';
@@ -328,7 +349,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             opt.service = 'IV';
             opt.data = [this.warehouses];
             return true;
-          })
+          },0, '', '', true,{allowCompare:false})
+          .pipe(takeUntil(this.destroy$))
           .subscribe((res) => {
             if (res.save || res.update) {
               this.addObjects();
@@ -383,7 +405,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
 
   save()
   {
-    this.dialog.dataService
+    (this.form.form as CodxFormComponent)
     .save((opt: RequestOption) => {
       opt.methodName = 'AddAsync';
       opt.className = 'WareHousesBusiness';
@@ -391,7 +413,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       opt.service = 'IV';
       opt.data = [this.warehouses];
       return true;
-    })
+    },0, '', '', true,{allowCompare:false})
+    .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res.save) {
         this.addObjects();
@@ -402,6 +425,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
             this.objectContact,
           ])
           .subscribe(() => {});
+        this.objects.objectID = res.save.warehouseID;
         this.acService
           .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
             this.objects,
@@ -420,4 +444,17 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     });
   }
   //#endregion
+
+  //#region Function
+  /**
+   * *Hàm thay đổi validate form
+   */
+  setValidateForm(){
+    let rWarehouseID = true;
+    let lsRequire :any = [];
+    if(this.form.data?._keyAuto == 'WarehouseID') rWarehouseID = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    lsRequire.push({field : 'WarehouseID',isDisable : false,require:rWarehouseID});
+    (this.form.form as CodxFormComponent).setRequire(lsRequire);
+  }
+  //#endregion Function
 }

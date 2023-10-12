@@ -136,9 +136,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         this.formModel?.entityName,
         this.formModel?.funcID,
         '',
+        ''
       ])
       .subscribe((item) => {
-        if (item == '' && this.dialog) (this.dialog as DialogRef).close();
+        if (item && this.dialog) {
+          this.notifySvr.notifyCode('SYS006');
+          (this.dialog as DialogRef).close();
+        }
       });
   }
   getData() {

@@ -178,7 +178,16 @@ export class StepService {
     return check;
   }
 
-  checkUpdateProgress(dataUpdate,type,step,isRoleAll,isOnlyView,isUpdateProgressGroup,isUpdateProgressStep,user){
+  checkUpdateProgress(
+    dataUpdate,
+    type,
+    step,
+    isRoleAll,
+    isOnlyView,
+    isUpdateProgressGroup,
+    isUpdateProgressStep,
+    user
+  ) {
     if (isOnlyView) {
       if (type == 'P') {
         return isUpdateProgressStep && isRoleAll ? true : false;
@@ -280,7 +289,7 @@ export class StepService {
           .execSv<any>(
             'DP',
             'DP',
-            'InstanceStepsBusiness',
+            'InstancesStepsBusiness',
             'UpdatedAssignedStepTasksAsync',
             [stepTask.stepID, stepTask.recID]
           )
@@ -354,6 +363,7 @@ export class StepService {
     taskData,
     taskType,
     instanceStep,
+    listInsStep,
     groupID,
     isSave,
     ownerParent,
@@ -374,6 +384,7 @@ export class StepService {
       titleName,
       taskType,
       instanceStep,
+      listInsStep,
       task,
       groupID,
       isSave,
@@ -388,6 +399,7 @@ export class StepService {
     titleName,
     taskType,
     instanceStep,
+    listInsStep,
     dataTask,
     groupTaskID,
     isSave,
@@ -399,6 +411,7 @@ export class StepService {
       titleName: titleName,
       taskType: taskType,
       instanceStep: instanceStep,
+      listInsStep: listInsStep,
       listGroup: null,
       dataTask: dataTask || {},
       listTask: null,

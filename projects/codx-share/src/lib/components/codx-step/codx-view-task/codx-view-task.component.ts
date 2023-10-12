@@ -144,16 +144,19 @@ export class CodxViewTaskComponent implements OnInit {
       this.api
         .exec<any>(
           'DP',
-          'InstanceStepsBusiness',
+          'InstancesStepsBusiness',
           'GetInstanceStepByRecIDAsync',
           recID
         )
         .subscribe(async (res) => {
           if (res) {
             this.instanceStep = res;
-            this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
-            if(!["P","G"].includes(this.type)){
-              this.groupTask = this.instanceStep?.taskGroups.find(group => group.refID == this.dataInput?.taskGroupID)
+            this.isOnlyView =
+              this.instanceStep?.stepStatus == '1' ? true : false;
+            if (!['P', 'G'].includes(this.type)) {
+              this.groupTask = this.instanceStep?.taskGroups.find(
+                (group) => group.refID == this.dataInput?.taskGroupID
+              );
             }
           }
           await this.setDataView();
@@ -163,8 +166,10 @@ export class CodxViewTaskComponent implements OnInit {
     } else {
       await this.setDataView();
       this.settingData();
-      if(!["P","G"].includes(this.type)){
-        this.groupTask = this.instanceStep?.taskGroups.find(group => group.refID == this.dataInput?.taskGroupID)
+      if (!['P', 'G'].includes(this.type)) {
+        this.groupTask = this.instanceStep?.taskGroups.find(
+          (group) => group.refID == this.dataInput?.taskGroupID
+        );
       }
       this.isOnlyView = this.instanceStep?.stepStatus == '1' ? true : false;
       this.isUpdateProgressGroup =
@@ -250,10 +255,14 @@ export class CodxViewTaskComponent implements OnInit {
         this.title = type?.text;
       }
     });
-    let owner = this.dataView?.roles?.find((role) => role.objectID == this.dataView?.owner)
+    let owner = this.dataView?.roles?.find(
+      (role) => role.objectID == this.dataView?.owner
+    );
     this.owners = [owner] || [];
     this.participant =
-      this.dataView?.roles?.filter((role) =>  role.objectID != this.dataView?.owner) || [];
+      this.dataView?.roles?.filter(
+        (role) => role.objectID != this.dataView?.owner
+      ) || [];
     this.connection =
       this.dataView?.roles
         ?.filter((role) => role.roleType === 'R')
@@ -461,7 +470,7 @@ export class CodxViewTaskComponent implements OnInit {
     //   this.openPopupContract('add');
     // }
     this.api
-      .exec<any>('DP', 'InstanceStepsBusiness', 'StartTaskAsync', [
+      .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
         task?.stepID,
         task?.recID,
       ])
@@ -509,6 +518,7 @@ export class CodxViewTaskComponent implements OnInit {
       null,
       dataType,
       this.instanceStep,
+      null,
       groupId,
       true,
       null,

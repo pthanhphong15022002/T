@@ -29,11 +29,6 @@ codx-view-list-detail .codx-detail-footer {
 }
 .ws-body{
     height: calc(100vh - 55px);
-
-    codx-views>.container-fluid {
-        height: calc(100% - 64px)!important;
-        overflow: auto;
-    }
     co-calendar>codx-views>.container-fluid
     {
         padding: 15px 15px 0px 15px !important;

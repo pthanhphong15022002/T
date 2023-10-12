@@ -926,6 +926,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
+        console.log('function list day ne', this.lstTab);
+        
         this.clickTab(this.lstTab[0]);
       });
     }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxApprovalComponent } from 'projects/codx-share/src/lib/components/codx-approval/codx-approval.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
+import { ESApprovelComponent } from 'projects/codx-es/src/lib/sign-file/approval/approval.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,8 @@ const routes: Routes = [
     children: [
       {
         path: 'instances/:FuncID/:id',
-        component: ApprovalsComponent,
+        component: ESApprovelComponent,
+        // component: ApprovalsComponent,
       },
     ],
   },
