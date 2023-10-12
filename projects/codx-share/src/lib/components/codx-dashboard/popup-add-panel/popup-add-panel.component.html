@@ -7,9 +7,21 @@
 >
   <ng-template popup adde #body>
     <codx-label
+      name="lblHeader"
+      [formModel]="dialog.formModel"
+      default="Tiêu đề"
+    ></codx-label>
+    <codx-input
+      type="text"
+      class="test-textbox"
+      field="header"
+      placeholder=""
+      (valueChange)="valueChange($event)"
+    ></codx-input>
+    <codx-label
       name="lblSizeX"
       [formModel]="dialog.formModel"
-      default="SizeX"
+      default="Độ rộng"
     ></codx-label>
     <codx-input
       type="number"
@@ -22,7 +34,7 @@
     <codx-label
       name="lblSizeY"
       [formModel]="dialog.formModel"
-      default="SizeY"
+      default="Độ cao"
     ></codx-label>
     <codx-input
       type="number"
@@ -58,7 +70,7 @@
     <codx-label
       name="lblMinSizeX"
       [formModel]="dialog.formModel"
-      default="MinSizeX"
+      default="Độ rộng tối thiểu"
     ></codx-label>
     <codx-input
       type="number"
@@ -70,7 +82,7 @@
     <codx-label
       name="lblMinSizeY"
       [formModel]="dialog.formModel"
-      default="MinSizeY"
+      default="Độ cao tối thiểu"
     ></codx-label>
     <codx-input
       type="number"
