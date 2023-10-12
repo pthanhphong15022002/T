@@ -59,7 +59,7 @@
                 </div>
                 <div class="d-flex align-items-center mb-1">
                   <!-- <span
-                    class="text-gray-600 line-clamp-menu"
+                    class="text-gray-600 line-clamp line-clamp-1"
                     [ngbTooltip]="itemSelected?.quotationName"
                     [innerHTML]="
                       itemSelected?.quotationName
@@ -393,7 +393,7 @@
           >
           </codx-label>
           <span
-            class="text-gray-700 line-clamp-menu"
+            class="text-gray-700 line-clamp line-clamp-1"
             [ngbTooltip]="dataRef.versionName"
             #versionName
             [innerHTML]="
@@ -408,14 +408,14 @@
             class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
           ></span>
           <span
-            class="text-gray-700 line-clamp-menu pe-2"
+            class="text-gray-700 line-clamp line-clamp-1 pe-2"
             #totalAmt
             [innerHTML]="
               dataRef?.totalAmt | formatvalue : formModel : 'totalAmt' | async
             "
           ></span>
           <span
-            class="text-gray-700 line-clamp-menu"
+            class="text-gray-700 line-clamp line-clamp-1"
             #currencyID
             [innerHTML]="
               dataRef?.currencyID
@@ -469,7 +469,7 @@
           <div>
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
-              class="text-gray-700 line-clamp-menu"
+              class="text-gray-700 line-clamp line-clamp-1"
               #createdOn
               [innerHTML]="
                 dataRef?.createdOn

@@ -40,6 +40,7 @@ import { PopupAddPaymentComponent } from './payment/popup-add-payment/popup-add-
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
+import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -391,6 +392,10 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_11':
         //thất bại
         this.moveReason(data, false);
+        break;
+      case 'CM0204_14':
+        //thất bại
+        this.popupOwnerRoles(data);
         break;
       //export core làm
       // case 'SYS002':
@@ -1083,4 +1088,49 @@ export class ContractsComponent extends UIComponent {
   autoOpenPopupSusscess(e) {
     e && this.moveReason(this.itemSelected, true);
   }
+
+  popupOwnerRoles(data) {
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = "CM0201";
+    formMD.entityName = "CM_Deals";
+    formMD.formName = "CMDeals";
+    formMD.gridViewName = "grvCMDeals";
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    var obj = {
+      recID: data?.recID,
+      refID: data?.refID,
+      processID: data?.processID,
+      stepID: data?.stepID,
+      data: data,
+      gridViewSetup: null,
+      formModel: this.view.formModel,
+      applyFor: '1',
+      titleAction: this.actionName,
+      owner: data.owner,
+      startControl: data.steps.startControl,
+      applyProcess: true,
+      buid: data.buid,
+    };
+    var dialog = this.callfc.openForm(
+      PopupAssginDealComponent,
+      '',
+      750,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        // this.detailViewDeal.promiseAllAsync();
+        // this.view.dataService.update(e?.event).subscribe();
+        // this.notificationsService.notifyCode('SYS007');
+        // this.detectorRef.detectChanges();
+      }
+    });
+  }
+
 }
