@@ -215,7 +215,8 @@ export class InstanceDashboardComponent implements OnInit {
 
   countStep;
   countInstances;
-  countOwners;
+  topOwnersHigh;
+  topOwnersLow;
   countFails;
   countSuscess;
   productivityOwner = [
@@ -398,9 +399,12 @@ tooltipCountStep = {
       ])
     );
     if (data) {
+      console.log(data);
+      
       this.dataDashBoard = data;
       this.countStep = this.dataDashBoard?.countStep;
-      this.countOwners = this.dataDashBoard?.countsOwners;
+      this.topOwnersLow = this.dataDashBoard?.topOwnersLow;
+      this.topOwnersHigh = this.dataDashBoard?.topOwnersHigh;
       this.countFails = this.dataDashBoard?.countsReasonsFails;
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.countsInstance;
@@ -425,7 +429,7 @@ tooltipCountStep = {
       this.changeDetectorRef.detectChanges();
     }else{
       this.countStep = null;
-      this.countOwners = null;
+      this.topOwnersLow = null;
       this.countFails = null;
       this.countSuscess = null;
       this.countInstances = null;
