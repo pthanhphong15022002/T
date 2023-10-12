@@ -2,7 +2,9 @@
    display: flex;
    flex-direction: column;
 }
-
+.cursor_not{
+   cursor: not-allowed;
+}
 .icon-container{
    width: 32px;
    height: 32px;

@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
@@ -12,13 +14,29 @@ import {
   templateUrl: 'layout-panel.component.html',
   styleUrls: ['layout-panel.component.scss'],
 })
-export class LayoutPanelComponent {
+export class LayoutPanelComponent implements AfterViewInit {
+
+
   @Input() body?: QueryList<any>;
   @Output() addNew = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Input() selectedTemplate!: TemplateRef<any>;
   @Input() isChart: boolean = false;
   @Input() isEditMode: boolean = false;
+
+  constructor(protected elementRef:ElementRef<any>){
+
+  }
+
+  ngAfterViewInit(): void {
+
+    if(this.elementRef.nativeElement.parentElement){
+
+      if(this.elementRef.nativeElement.parentElement.querySelector('.e-panel-header')){
+        debugger
+      }
+    }
+  }
 
   close(evt: any) {
     this.delete.emit(

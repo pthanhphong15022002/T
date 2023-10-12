@@ -46,7 +46,7 @@
                   <div class="d-flex flex-column">
                     <div class="d-flex align-items-top">
                       <span
-                        class="fw-bold text-dark fs-5-sm mb-1"
+                        class="fw-bold text-dark fs-5-sm"
                         [innerHTML]="
                           dataSelected?.campaignName
                             | formatvalue : formModel : 'CampaignName'
@@ -73,7 +73,7 @@
                         </ng-template>
                       </span>
                       <span
-                        class="text-gray-600"
+                        class="text-gray-600 fs-7"
                         [innerHTML]="
                           dataSelected.location
                             | formatvalue : formModel : 'Location'
@@ -85,10 +85,10 @@
                 </div>
               </div>
               <div class="d-flex justify-content-end flex-column">
-                <div class="d-flex">
-                  <span class="icon-access_alarm icon-16 me-2"></span>
+                <div class="d-flex align-items-center">
+                  <span class="icon-access_alarm icon-14 me-2"></span>
                   <span
-                    class="text-gray-800"
+                    class="text-gray-600 fs-7"
                     [ngbTooltip]="gridViewSetup?.StartDate?.headerText"
                     [innerHTML]="
                       dataSelected?.startDate
@@ -98,7 +98,7 @@
                   ></span>
                   <span class="me-1 ms-1">-</span>
                   <span
-                    class="text-gray-800"
+                    class="text-gray-600 fs-7"
                     [ngbTooltip]="gridViewSetup?.EndDate?.headerText"
                     [innerHTML]="
                       dataSelected?.endDate

@@ -105,7 +105,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
   override onInit(): void {
-    this.itemDetailStt = 3;
+    this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
     this.cache.functionList(this.funcID).subscribe((func) => {
       if (func) {
