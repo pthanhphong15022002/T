@@ -466,7 +466,6 @@ export class CatagoryComponent implements OnInit {
   }
 
   backSub(evt: any) {
-    this.isOpenSub = false;
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -477,6 +476,7 @@ export class CatagoryComponent implements OnInit {
       return x.lineType === this.lineType;
     });
     if (this.lineType == '2') {
+      this.isOpenSub = false;
       this.oldSettingFull = [];
       this.oldDataValue = {};
     }
