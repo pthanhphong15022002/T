@@ -2326,12 +2326,14 @@ export class InstancesComponent
           this.codxDpService
             .getDataReleased([this.dataSelected.recID, item.recID]) //data + tranID của esCategory
             .subscribe((dt) => {
-              let exportData: ExportData = {
-                funcID: this.view.formModel.funcID,
-                recID: this.dataSelected.recID,
-                data: JSON.stringify(this.dataSelected),
-              };
-              if (dt) this.release(dt, this.esCategory, exportData);
+              if (dt) {
+                let exportData: ExportData = {
+                  funcID: this.view.formModel.funcID,
+                  recID: this.dataSelected.recID,
+                  data: dt[1]?.datas,
+                };
+                this.release(dt[0], this.esCategory, exportData);
+              }
             });
 
           // //gui instance
