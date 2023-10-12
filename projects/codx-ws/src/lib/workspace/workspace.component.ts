@@ -4,6 +4,8 @@ import { isObservable } from 'rxjs';
 import { SpeedDialItemModel } from '@syncfusion/ej2-angular-buttons';
 import axios from 'axios';
 import { DialogModel } from 'codx-core';
+import { T } from '@angular/cdk/keycodes';
+import { log } from 'console';
 
 @Component({
   selector: 'lib-workspace',
@@ -52,9 +54,13 @@ export class WorkspaceComponent extends WSUIComponent{
   @ViewChild("popupCV") popupCV:TemplateRef<any>;
   @ViewChild("popupEmail") popupEmail:TemplateRef<any>;
   @ViewChild("popupSocial") popupSocial:TemplateRef<any>;
+  @ViewChild("popupOKR") popupOKR:TemplateRef<any>;
+
   cvModel:CVModel = new CVModel();
   emailModel:EmailModel = new EmailModel();
   socialMediaModel:SocialMediaModel = new SocialMediaModel();
+  okrModel:OKRModel = new OKRModel();
+
   loading = false;
   speedDialItems: SpeedDialItemModel[] = [
     {
@@ -71,6 +77,11 @@ export class WorkspaceComponent extends WSUIComponent{
       id:'2',
       text:'UPload',
       iconCss:'icon-upload'
+    },
+    {
+      id:'3',
+      text:'Key Result',
+      iconCss:'icon-lightbulb'
     }
   ];
 
@@ -86,6 +97,9 @@ export class WorkspaceComponent extends WSUIComponent{
       case"2":
         this.openPopupCV();
         break;
+      case"3":
+      this.openPoupupOKR();
+      break;
     }
   }
   // CV
@@ -97,7 +111,6 @@ export class WorkspaceComponent extends WSUIComponent{
       this.callFunc.openForm(this.popupCV,"",600,700,"",null,"",option);
     }
   }
-
   // Mail
   openPopupMail(){
     if(this.popupEmail)
@@ -107,7 +120,7 @@ export class WorkspaceComponent extends WSUIComponent{
       this.callFunc.openForm(this.popupEmail,"",900,700,"",null,"",option);
     }
   }
-  //Social media
+  // Social media
   openPoupupSocial(){
     if(this.popupSocial)
     {
@@ -116,10 +129,26 @@ export class WorkspaceComponent extends WSUIComponent{
       this.callFunc.openForm(this.popupSocial,"",900,700,"",null,"",option);
     }
   }
-  // value change
-  valueChange(evt:any){
-    this.emailModel[evt.field] = evt.data;
+  // OKR Result
+  openPoupupOKR(){
+    if(this.popupOKR)
+    {
+      let option = new DialogModel();
+      this.okrModel = new OKRModel();
+      this.callFunc.openForm(this.popupOKR,"",900,700,"",null,"",option);
+    }
   }
+  // value change
+  valueChange(evt:any,type:string)
+  {
+    if(type === "email")
+      this.emailModel[evt.field] = evt.data;
+    else if(type === "social media")
+      this.socialMediaModel[evt.field] = evt.data;
+    else if(type === "okr")
+      this.okrModel[evt.field] = evt.data;
+  }
+  
   // select file cv
   onSelectFileCV(e:any){
     // api đọc CV
@@ -131,7 +160,8 @@ export class WorkspaceComponent extends WSUIComponent{
     Hãy trích xuất thông tin CV ứng viên tới định dạng JSON như sau:
     {
       "name": "",
-      birthDay:"",
+      "birthDay":"",
+      "image":"",
       "phone": "",
       "email":"",
       "address":"",
@@ -164,25 +194,32 @@ export class WorkspaceComponent extends WSUIComponent{
   }
     Lưu ý: Nếu thông tin không tìm thấy hãy để trống.
     `);
-    form.append("sourceFile", file);
-    setTimeout(() => {
-      this.loading = false;
-    }),10000;    
+    form.append("sourceFile", file); 
     axios.post(url, form).then((res:any) => {
-      this.loading = false;
       this.cvModel = JSON.parse(res.data.Data.JsonResult); 
-      console.log(this.cvModel);
       this.changeDetectorRef.detectChanges();
       // api đánh giá
       let url2 = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
-      var form2 = new FormData();
-      form2.append("prompt","Một ứng viên có CV như bên dưới, hãy xem xét có nên tuyển dụng ứng viên này và nêu lý do nếu từ chối?");
-      form2.append("sourceText",JSON.stringify(res.data.Data.SourceText));
-      axios.post(url2, form2).then((res2:any) => {
-        console.log("respone2: ",res2);
-      });
+      axios.post(
+        url2,
+        {
+          'Prompt': "Một ứng viên có CV như bên dưới, hãy xem xét có nên tuyển dụng ứng viên này và nêu lý do nếu từ chối?",
+          'GptApiKey': '',
+          'SourceText': JSON.stringify(res.data.Data.SourceText)
+        }).then((res2:any) => {
+          this.loading = false;
+          this.cvModel.result = res2.data.Data.replace(/\n/g,"<br/>");
+          this.changeDetectorRef.detectChanges();
+        }).catch((err) => {
+          console.log(err);
+          this.loading = false;
+        });
+    }).catch((err) => {
+      console.log(err);
+      this.loading = false;
     });
   }
+
   // create mail
   createdMail(){
     if(this.emailModel.subject == ""){
@@ -193,15 +230,11 @@ export class WorkspaceComponent extends WSUIComponent{
       this.notifySvr.notify("Vui lòng nhập nội dung gợi ý","2");
       return;
     }
-    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
     this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }),10000;   
+    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
     let data = {
       subject:this.emailModel.subject,
       contents:this.emailModel.contents,
-      language:'Tiếng việt',
       contact:
       {
         name:this.userInfo.userName,
@@ -211,26 +244,21 @@ export class WorkspaceComponent extends WSUIComponent{
         website:'https://www.codx.vn/'
       }
     };
-    let sourceText = JSON.stringify(data).replace(/\"/g,"'");
     axios.post(
       url,
       {
-        'Prompt': `Hãy viết email về chủ đề ${this.emailModel.subject}, với nội dung ${this.emailModel.contents}.`,
+        'Prompt': `Mẫu promt (tiếng Việt): Hãy viết email về chủ đề ${this.emailModel.subject}, nội dung  ${this.emailModel.contents}. Tên của tôi là ${this.userInfo.userName}, công ty tôi là CPTH Lạc Việt.`,
         'GptApiKey': '',
-        'SourceText': sourceText
+        'SourceText': JSON.stringify(data).replace(/\"/g,"'")
       }).then((res:any) => {
         this.loading = false;
         this.emailModel.result = res.data.Data.replace(/\n/g,"<br/>");
         this.changeDetectorRef.detectChanges();
     }).catch((err)=> {
-      console.log(err);
       this.loading = false;
     });
   }
 
-  selectMediaType(value:any){
-    this.socialMediaModel.type = value ? value.text : "";
-  }
   // create social media
   createdSocialMedia(){
     if(this.socialMediaModel.type == ""){
@@ -241,31 +269,18 @@ export class WorkspaceComponent extends WSUIComponent{
       this.notifySvr.notify("Vui lòng nhập nội dung gợi ý","2");
       return;
     }
-    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
     this.loading = true;
-    setTimeout(() => {
-      this.loading = false;
-    }),10000;
+    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
     let data = {
       socialMedia:this.socialMediaModel.type,
-      contents:this.socialMediaModel.contents,
-      language:'Tiếng việt',
-      contact:
-      {
-        name:this.userInfo.userName,
-        phone:this.userInfo.phone,
-        email:this.userInfo.email,
-        company:'CPTH Lạc Việt',
-        website:'https://www.codx.vn/'
-      }
+      contents:this.socialMediaModel.contents
     };
-    let sourceText = JSON.stringify(data).replace(/\"/g,"'");
     axios.post(
       url,
       {
-        'Prompt': `Hãy viết nội dung cho Facebook, về nội dung ${this.socialMediaModel.contents}.`,
+        'Prompt': `Mẫu promt (tiếng Việt): Hãy viết nội dung cho ${this.socialMediaModel.type} về nội dung ${this.socialMediaModel.contents}.`,
         'GptApiKey': '',
-        'SourceText': sourceText
+        'SourceText': JSON.stringify(data).replace(/\"/g,"'")
       }).then((res:any) => {
         this.loading = false;
         this.socialMediaModel.result = res.data.Data.replace(/\n/g,"<br/>");
@@ -274,6 +289,38 @@ export class WorkspaceComponent extends WSUIComponent{
       console.log(err);
       this.loading = false;
     });
+  }
+
+  // create OKR
+  createdOKR(){
+    if(this.okrModel.target == ""){
+      this.notifySvr.notify("Vui lòng nhập key result","2");
+      return;
+    }
+    if(this.okrModel.num_KPI <= 0){
+      this.notifySvr.notify("Vui lòng nhập key number","2");
+      return;
+    }
+    this.loading = true;
+    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
+    let data = {
+      target:this.okrModel.target,
+      num_KPI:this.okrModel.num_KPI
+    };
+    axios.post(
+      url,
+      {
+        'Prompt': `Mẫu promt (tiếng Việt): Bạn hành động như một chuyên gia về OKR, hãy gợi ý cho tôi ${this.okrModel.num_KPI} Key Result cho mục tiêu ${this.okrModel.target}.`,
+        'GptApiKey': '',
+        'SourceText': JSON.stringify(data).replace(/\"/g,"'")
+      }).then((res:any) => 
+      {
+        this.loading = false;
+        this.okrModel.result = res.data.Data.replace(/\n/g,"<br/>");
+        this.changeDetectorRef.detectChanges();
+      }).catch((err)=> {
+        this.loading = false;
+      });
   }
 }
 
@@ -287,6 +334,7 @@ class CVModel{
   skills:string;
   experience:any[];
   projects:any[];
+  result:string;
 
   constructor() {
     this.name = "";
@@ -298,6 +346,7 @@ class CVModel{
     this.skills = "";
     this.experience = [];
     this.projects = [];
+    this.result = "";
   }
 }
 class EmailModel{
@@ -362,8 +411,18 @@ class SocialMediaModel{
         text:"Twitter"
       }
     ];
-    this.type = "";
+    this.type = "Facebook";
     this.contents = "";
     this.result = null;
+  }
+}
+class OKRModel{
+  target:string;
+  num_KPI:number;
+  result:string;
+  constructor() {
+    this.target = "";
+    this.num_KPI = 0;
+    this.result = "";
   }
 }

@@ -4,9 +4,11 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [headerText]="title"
+  [formModel]="dialogRef.formModel"
   [showHeader]="true"
-  [headerText]="title"
   [data]="data"
+
+
 >
   <ng-template #body>
     <div class="d-flex justify-content-center w-100 pt-2">
@@ -34,8 +36,8 @@
                       <codx-input
                          #cbxOwner
                         field="owner"
-                        [formModel]="formModel"
-                        [crrValue]="owner"
+                        [formModel]="form.formModel"
+                        [Group]="form.formGroup"
                         (valueChange)="changeOwner($event,viewDefault)"
                       >
                       </codx-input>

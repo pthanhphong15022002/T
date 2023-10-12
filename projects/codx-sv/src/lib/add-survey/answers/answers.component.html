@@ -70,9 +70,29 @@
 <ng-template #btt>
   <ng-container *ngIf="lstCountQuestion && lstCountQuestion.length > 0">
     <div class="bg-white mt-5 border rounded p-7" *ngFor="let item of lstCountQuestion">
-      <div class="fs-5">{{extractContent(item.question)}}</div>
-      <div class="mt-2">{{(item?.answerType == 'O2' || item?.answerType == 'C2') ? item?.countAnswer : countAnswer(item.answers)}} câu trả lời</div>
-
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex justify-content-start flex-column">
+          <div class="fs-5">{{extractContent(item.question)}}</div>
+          <div class="mt-2">{{(item?.answerType == 'O2' || item?.answerType == 'C2') ? item?.countAnswer : countAnswer(item.answers)}} câu trả lời</div>
+        </div>
+        <div class="d-flex justify-content-end" *ngIf="item.isChart">
+          <div class="d-flex align-items-center ps-4">
+            <ng-container *ngIf="item?.answerType == 'C' || item?.answerType == 'T' || item?.answerType == 'T2' || item?.answerType == 'R' || item?.answerType == 'O2' || item?.answerType == 'C2'">
+              <div class="p-2 cursor-pointer div-icon-chart" [id]="'div-icon'+item.recID+'1'" (click)="showHideChart(item.recID,'1')" [style.backgroundColor]="backgroundColor">
+                <i class="icon-i-bar-chart icon-chart-sv icon-chart-sv-1" [id]="'icon'+item.recID+'1'" [style.color]="primaryColor" ></i>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="item?.answerType == 'L' || item?.answerType == 'O'">
+              <div class="p-2 cursor-pointer div-icon-chart" [id]="'div-icon'+item.recID+'1'" (click)="showHideChart(item.recID,'1')" [style.backgroundColor]="backgroundColor">
+                <i class="icon-i-pie-chart icon-chart-sv icon-chart-sv-1" [id]="'icon'+item.recID+'1'" [style.color]="primaryColor"></i>
+              </div>
+            </ng-container>
+            <div class="p-2 ms-1 cursor-pointer div-icon-chart" [id]="'div-icon'+item.recID+'2'" (click)="showHideChart(item.recID,'2')" [style.backgroundColor]="'#F5F9FA'">
+              <i class="icon-i-layout-text-window-reverse icon-chart-sv icon-chart-sv-2" [id]="'icon'+item.recID+'2'" ></i>
+            </div>
+          </div>
+        </div>
+      </div>
       <ng-container *ngIf="!item.isChart ; else isChart">
         <ng-container [ngSwitch]="item?.answerType">
           <ng-container  *ngFor="let an of item.answers">
@@ -133,30 +153,66 @@
       </ng-container>
       <ng-template #isChart>
         <ng-container *ngIf="item.answers && item.answers.length>0">
-          <div class="p-3 mt-5">
+          <div class="p-3 mt-5 position-relative">
             <ng-container *ngIf="item?.answerType != 'O2' && item?.answerType != 'C2'">
-              <codx-chart 
-                [height]="settingChart(item?.answerType,'height')" 
-                [primaryXAxis]="settingChart(item?.answerType,'primaryXAxis')" 
-                [primaryYAxis]="settingChart(item?.answerType,'primaryYAxis')" 
-                [seriesSetting]="settingChart(item?.answerType,'seriesSetting' , item.dataChart)"
-                [chartArea]="settingChart(item?.answerType,'chartArea')"
-                [legendSettings]="settingChart(item?.answerType,'legendSettings')"
-                [isTransposed]="settingChart(item?.answerType,'isTransposed')"
-                [dataSource]="item.dataChart"
-                [palettes]="palettes" 
-              > 
-              </codx-chart>
+              <div class="w-100 view-chart-1" [id]="'chart'+item.recID+'1'">
+                <codx-chart 
+                  [height]="settingChart(item?.answerType,'height')" 
+                  [primaryXAxis]="settingChart(item?.answerType,'primaryXAxis')" 
+                  [primaryYAxis]="settingChart(item?.answerType,'primaryYAxis')" 
+                  [seriesSetting]="settingChart(item?.answerType,'seriesSetting' , item.dataChart)"
+                  [chartArea]="settingChart(item?.answerType,'chartArea')"
+                  [legendSettings]="settingChart(item?.answerType,'legendSettings')"
+                  [isTransposed]="settingChart(item?.answerType,'isTransposed')"
+                  [dataSource]="item.dataChart"
+                  [palettes]="palettes" 
+                > 
+                </codx-chart>
+              </div>
+              <div class="invisible view-chart-2 top-0 py-2 position-absolute w-100" [id]="'chart'+item.recID+'2'" style="overflow-x:auto;">
+                <table class="w-100">
+                  <tr>
+                    <th></th>
+                    <th class="text-center" *ngFor="let column of item?.grid.column">{{column.answer}}</th>
+                  </tr>
+                  <tr class="border-bottom" *ngFor="let row of item?.grid.row">
+                    <td><codx-img [objectId]="row[0].objectID" [objectType]="'AD_Users'" referType="avt"></codx-img></td>
+                    <td><div *ngFor="let rows of row[1].data">{{rows}}</div></td>
+                  </tr>
+                </table>
+                
+              </div>
             </ng-container>
             <ng-container *ngIf="item?.answerType == 'O2' || item?.answerType == 'C2'">
-              <ejs-chart  [chartArea]="settingChart(item?.answerType,'chartArea')"  [primaryXAxis]="settingChart(item?.answerType,'primaryXAxis')" 
-                  [primaryYAxis]="settingChart(item?.answerType,'primaryYAxis')" [palettes]="palettes"  [legendSettings]="settingChart(item?.answerType,'legendSettings')" [tooltip]="tooltipMatrix">
-                  <e-series-collection>
-                    <ng-container *ngFor="let setting of item.setting">
-                      <e-series [dataSource]='item.dataChart' type='Column' xName='row' [yName]="setting.yName" [name]='setting.name' width=2 [marker]='setting.marker' [tooltipMappingName]="'row'" > </e-series>
-                    </ng-container>
-                  </e-series-collection>
-              </ejs-chart>
+              <div class="w-100 view-chart-1" [id]="'chart'+item.recID+'1'">
+                <ejs-chart  [chartArea]="settingChart(item?.answerType,'chartArea')"  [primaryXAxis]="settingChart(item?.answerType,'primaryXAxis')" 
+                    [primaryYAxis]="settingChart(item?.answerType,'primaryYAxis')" [palettes]="palettes"  [legendSettings]="settingChart(item?.answerType,'legendSettings')" [tooltip]="tooltipMatrix">
+                    <e-series-collection>
+                      <ng-container *ngFor="let setting of item.setting">
+                        <e-series [dataSource]='item.dataChart' type='Column' xName='row' [yName]="setting.yName" [name]='setting.name' width=2 [marker]='setting.marker' [tooltipMappingName]="'row'" > </e-series>
+                      </ng-container>
+                    </e-series-collection>
+                </ejs-chart>
+              </div>
+              <div class="invisible view-chart-2 top-0 py-2 position-absolute w-100" [id]="'chart'+item.recID+'2'" style="overflow-x:auto;">
+                <table class="w-100">
+                  <tr>
+                    <th></th>
+                    <th *ngFor="let column of item?.grid.column">{{column.answer}}</th>
+                  </tr>
+                  <tr class="border-bottom" *ngFor="let row of item?.grid.row">
+                    <td *ngFor="let rowChild of row , let i = index">
+                      <ng-container *ngIf="i==0">
+                        <codx-img [objectId]="rowChild.objectID" [objectType]="'AD_Users'" referType="avt"></codx-img>
+                      </ng-container>
+                      <ng-container *ngIf="i>0">
+                        {{rowChild}}
+                      </ng-container>
+                     
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </ng-container>
           </div>
         </ng-container>
