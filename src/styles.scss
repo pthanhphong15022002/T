@@ -2144,7 +2144,7 @@ a.nav-link {
   font-size: var(--fs-6);
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-  margin-right: 15px;
+  margin-right: 10px;
 }
 .personal-menu .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin-right: 0;
@@ -3909,7 +3909,7 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
     //bottom: 0;
     //left: 20px;
     //right: 20px;
-    background-color: var(--bg-body);
+    background-color: var(--white);
     
     .e-content{
       height: calc(100vh - 244px)!important;
@@ -3954,11 +3954,6 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   }
 }
 
-// chien dich
-
-.scroll-grid .e-gridcontent {
-  height: calc(100vh - 140px) !important;
-}
 
 //////////////
 // ipad and tablet

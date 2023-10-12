@@ -12,6 +12,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewChildren,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AxisModel,
@@ -41,7 +42,6 @@ import { CircularGaugeComponent } from '@syncfusion/ej2-angular-circulargauge';
 import { ɵglobal as global } from '@angular/core';
 import { tap } from 'rxjs';
 import { NgxCaptureService } from 'ngx-capture';
-import { CodxShareService } from '../../codx-share.service';
 @Component({
   selector: 'codx-dashboard',
   templateUrl: 'codx-dashboard.component.html',
@@ -345,7 +345,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           .pipe(
             tap((img) => {
               //img: string Base64
-              console.log(img);
             }),
 
             tap((img) => {
@@ -464,6 +463,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
               col: res.event.col,
               minSizeX: res.event.minSizeX,
               minSizeY: res.event.minSizeY,
+              header:res.event.header
             },
           ];
           this.objDashboard.addPanel(panel[0]);
@@ -848,6 +848,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   private createPanelContainer(panelId: any) {
     let elePanel = document.getElementById(panelId);
     var viewRef = this.panelLayout!.createEmbeddedView({ $implicit: '' });
+    if(elePanel && elePanel.querySelector('.e-panel-header') && viewRef.rootNodes[0]){
+      ((viewRef.rootNodes[0] as HTMLElement).firstChild as any).setAttribute('style','height: calc(100% - 38px) !important')
+    }
     viewRef.detectChanges();
     let contentCPanel = viewRef.rootNodes;
     let html = contentCPanel[0] as HTMLElement;

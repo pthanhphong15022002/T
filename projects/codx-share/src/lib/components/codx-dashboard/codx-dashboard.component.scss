@@ -32,3 +32,16 @@
 .e-dashboardlayout .e-control .e-panel .e-panel-transition {
   transition: top 0.1s, left 0.1s;
 }
+
+::ng-deep{
+  #defaultLayoutDashBoard.e-dashboardlayout.e-control .e-panel .e-panel-container .e-panel-header {
+    color: #212529;
+    font-size: 15px !important;
+    text-align: center !important;
+  }
+
+  #defaultLayoutDashBoard.e-dashboardlayout .e-panel-header {
+    text-align: center;
+  }
+}
+
