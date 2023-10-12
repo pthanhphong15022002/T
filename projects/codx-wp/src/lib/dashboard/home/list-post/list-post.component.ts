@@ -116,13 +116,13 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if((!changes.predicate.firstChange && changes.predicate.previousValue !=  changes.predicate.currentValue) && (!changes.dataValue.firstChange && changes.dataValue.previousValue !=  changes.dataValue.currentValue))
+    if((!changes.predicate?.firstChange && changes.predicate?.previousValue !=  changes.predicate?.currentValue) && (!changes.dataValue?.firstChange && changes.dataValue?.previousValue !=  changes.dataValue?.currentValue))
     {
       this.dataService.setPredicate(changes.predicate.currentValue,changes.dataValue.currentValue);
     }
-    if((!changes.predicates.firstChange && changes.predicates.previousValue !=  changes.predicates.currentValue) && (!changes.dataValues.firstChange && changes.dataValues.previousValue !=  changes.dataValues.currentValue))
+    if((!changes.predicates?.firstChange && changes.predicates?.previousValue !=  changes.predicates?.currentValue) || (!changes.dataValues?.firstChange && changes.dataValues?.previousValue !=  changes.dataValues?.currentValue))
     {
-      this.dataService.setPredicates(changes.predicates.currentValue,changes.dataValues.currentValue);
+      this.dataService.setPredicates([changes.predicates?.currentValue || this.predicates],[changes.dataValues?.currentValue || this.dataValues]);
     }
   }
 

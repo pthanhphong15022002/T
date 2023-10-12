@@ -88,9 +88,11 @@
                 <div class="w-100 bg-body fd-main rounded-2">
                     <app-list-post #listPost *ngIf="showPosts" [isShowCreate]="false" [predicates]="predicateWP"
                         entityName="FD_Cards" [dataValues]="dataValueWP" [service]="service" [assemblyName]="assembly"
-                        [className]="className" [method]="method" [funcID]="functionID" [favoriteID]="favoriteID">
+                        [className]="className" [method]="method" [funcID]="functionID" [favoriteID]="favoriteID"
+                        [moreFuncTmp]="noMoreFunc">
                     </app-list-post>
                 </div>
+                <ng-template #noMoreFunc></ng-template>
             </div>
             <div class="w-300px min-w-300px ms-4 home-right">
                 <div class="fd_cards bg-body p-5 rounded-2 mb-4">

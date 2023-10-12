@@ -37,8 +37,8 @@ export class DashboardComponent extends UIComponent {
   dataValueCard = '';
   predicateCoins = `Owner =@0  `;
   dataValueCoins = '';
-  // predicateWP = 'Category =@0 && Stop=false';
-  // dataValueWP = '3';
+  // predicatesWP = 'Category =@0 && Stop=false';
+  // dataValuesWP = '3';
 
   memberType = '3';
   arrVll = ['L1422', 'L1419'];
@@ -174,7 +174,8 @@ export class DashboardComponent extends UIComponent {
       .subscribe((res: any) => {
         this.lstFavorite = res.favs;
         this.favoriteID = res.defaultId;
-        this.loadPosts();
+        this.setPredicates();
+        this.showPosts = true;
       });
   }
 
@@ -194,8 +195,9 @@ export class DashboardComponent extends UIComponent {
     this.fdService.getListCard(model).subscribe((res) => {
       if (res) this.lstTopRadio = res[0];
       this.lstTopRadio.forEach((item) => {
-
-        let listShare = item.permissions.filter(x => x.memberType == '3' && x.objectType != '7');
+        let listShare = item.permissions.filter(
+          (x) => x.memberType == '3' && x.objectType != '7'
+        );
         if (listShare && listShare.length > 0) {
           let fItem = listShare[0];
           if (listShare.length == 1) {
@@ -286,14 +288,6 @@ export class DashboardComponent extends UIComponent {
     }
   }
 
-  loadPosts() {
-    this.setPredicates();
-    this.showPosts = false;
-    this.dt.detectChanges();
-    this.showPosts = true;
-    this.dt.detectChanges();
-  }
-
   lstTagUser: any[] = [];
   searchField: string = '';
   clickShowTag(card: any) {
@@ -310,13 +304,13 @@ export class DashboardComponent extends UIComponent {
   clickFavorite(item) {
     if (item) {
       this.favoriteID = item.recID;
-      this.loadPosts();
+      this.setPredicates();
     }
   }
 
   changeRadio(e, data: string) {
     this.radio = data;
-    this.loadPosts();
+    this.setPredicates();
     this.getDataAmountCard();
   }
 
@@ -324,7 +318,7 @@ export class DashboardComponent extends UIComponent {
     if (e?.fromDate || e?.toDate) {
       this.fromDateDropdown = new Date(e.fromDate).toISOString();
       this.toDateDropdown = new Date(e.toDate).toISOString();
-      this.loadPosts();
+      this.setPredicates();
       this.getDataAmountCard();
     }
   }
