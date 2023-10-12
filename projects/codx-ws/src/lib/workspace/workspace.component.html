@@ -58,15 +58,15 @@
 </div>
 
 
-<!-- template popup -->
+<!-- Popup -->
 <!-- CV -->
 <ng-template #popupCV let-dialog>
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="UPload CV" [subHeader]="CVSubHeader" [body]="CVBody" [footer]="CVFooter" >
   </codx-form>
   <ng-template #CVSubHeader>
-    <div class="d-flex flex-column justify-content-end px-4">
-      <label for="exampleFormControlInput1" class="form-label">Họ Tên</label>
-        <input type="file" id="exampleFormControlInput1" class="w-100" (change)="onSelectFileCV($event)">
+    <div class="d-flex flex-column justify-content-end">
+      <label for="exampleFormControlInput1" class="form-label">Selected File:</label>
+      <input type="file" id="exampleFormControlInput1" class="w-100 cursor-pointer" (change)="onSelectFileCV($event)">
     </div>
   </ng-template>
   <ng-template #CVBody>
@@ -123,6 +123,15 @@
           </ng-container>
         </select>
       </div>
+      <div class="mb-3" *ngIf="cvModel.result">
+        <label class="form-label">Đánh giá</label>
+        <codx-input 
+          field="result" 
+          format="ed" 
+          type="textarea" 
+          [crrValue]="cvModel.result">
+        </codx-input>
+      </div>
     </div>
   </ng-template>
   <ng-template #CVFooter>
@@ -148,12 +157,12 @@
       </div> -->
       <div class="mb-3">
         <label for="exampleFormControlInput2" class="form-label">Chủ đề</label>
-        <codx-input type="text" className="form-control" field="subject" [crrValue]="emailModel.subject" (valueChange)="valueChange($event)" placeholder="Nhập chủ đề">
+        <codx-input type="text" className="form-control" field="subject" [crrValue]="emailModel.subject" (valueChange)="valueChange($event,'email')" placeholder="Nhập chủ đề">
         </codx-input>
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput3" class="form-label">Nội dung gợi ý</label>
-        <codx-input type="textarea" format="ed2" className="form-control" field="contents" [crrValue]="emailModel.contents" (valueChange)="valueChange($event)" placeholder="Nhập nội dung">
+        <codx-input type="textarea" format="ed2" className="form-control" field="contents" [crrValue]="emailModel.contents" (valueChange)="valueChange($event,'email')" placeholder="Nhập nội dung">
         </codx-input>
       </div>
       <!-- <ng-container *ngIf="emailModel.result">
@@ -163,22 +172,21 @@
         field="result" 
         format="ed" 
         type="textarea" 
-        class="h-100"
         [crrValue]="emailModel.result" 
-        (valueChange)="valueChange($event)">
+        (valueChange)="valueChange($event,'email')">
       </codx-input>
     </div>
   </ng-template>
   <ng-template #EmailFooter>
     <div class="d-flex flex-column justify-content-end">
-      <button class="btn btn-primary" (click)="createdMail()">Tạo mail</button>
+      <button class="btn btn-primary" (click)="createdMail()">Soạn mail</button>
     </div>
   </ng-template>
 </ng-template>
 
 <!-- Social Media -->
 <ng-template #popupSocial let-dialog>
-  <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Soạn thảo Email" [body]="SocialBody" [footer]="SocialFooter" >
+  <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo nội dung" [body]="SocialBody" [footer]="SocialFooter" >
   </codx-form>
   <ng-template #SocialBody>
     <div class="px-4 py-3 h-100">
@@ -194,22 +202,17 @@
         <label for="exampleFormControlInput2" class="form-label">Social media:</label>
         <div class="row">
           <div class="col">
-            <div ngbDropdown class="d-inline-block">
-              <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-                Facebook
-              </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <ng-container *ngFor="let item of socialMediaModel.socialMedias">
-                  <button ngbDropdownItem (click)="selectMediaType(item)">{{item.text}}</button>
-                </ng-container>
-              </div>
-            </div>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="socialMediaModel.type">
+              <ng-container *ngFor="let item of socialMediaModel.socialMedias">
+                <option [ngValue]="item.text">{{item.text}}</option>
+              </ng-container>
+            </select>
           </div>
         </div>
       </div>
       <div class="mb-3">
         <label for="exampleFormControlInput3" class="form-label">Nội dung gợi ý</label>
-        <codx-input type="textarea" format="ed2" className="form-control" field="contents" [crrValue]="socialMediaModel.contents" (valueChange)="valueChange($event)" placeholder="Nhập nội dung">
+        <codx-input type="textarea" format="ed2" className="form-control" field="contents" [crrValue]="socialMediaModel.contents" (valueChange)="valueChange($event,'social media')" placeholder="Nhập nội dung">
         </codx-input>
       </div>
       <!-- <ng-container *ngIf="socialMediaModel.result">
@@ -219,7 +222,6 @@
         field="result" 
         format="ed" 
         type="textarea" 
-        class="h-100"
         [crrValue]="socialMediaModel.result">
       </codx-input>
     </div>
@@ -230,4 +232,45 @@
     </div>
   </ng-template>
 
+</ng-template>
+
+<!-- Key Result OKR -->
+<ng-template #popupOKR let-dialog>
+  <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo Key Result" [body]="OKRBody" [footer]="OKRFooter" >
+  </codx-form>
+  <ng-template #OKRBody>
+    <div class="px-4 py-3 h-100">
+      <!-- <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Ngôn ngữ</label>
+        <select class="form-select" id="exampleFormControlInput1" (change)="valueChange($event)">
+          <ng-container *ngFor="let item of emailModel.language">
+          <option [value]="item.text">{{item.text}}</option>
+          </ng-container>
+        </select>
+      </div> -->
+      <div class="mb-3">
+        <label for="exampleFormControlInput3" class="form-label">Object:</label>
+        <codx-input type="text" className="form-control" field="target" [crrValue]="okrModel.target" (valueChange)="valueChange($event,'okr')">
+        </codx-input>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlInput3" class="form-label">Số key:</label>
+        <codx-input type="text" className="form-control" field="num_KPI" [crrValue]="okrModel.num_KPI" (valueChange)="valueChange($event,'okr')">
+        </codx-input>
+      </div>
+      <div class="mb-3">
+        <codx-input 
+          field="result" 
+          format="ed" 
+          type="textarea" 
+          [crrValue]="okrModel.result">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #OKRFooter>
+    <div class="d-flex flex-column justify-content-end">
+      <button class="btn btn-primary" (click)="createdOKR()">Tạo Key Result</button>
+    </div>
+  </ng-template>
 </ng-template>

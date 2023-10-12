@@ -13,6 +13,7 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxGridviewV2Component,
   CodxService,
   DataRequest,
   DialogModel,
@@ -54,6 +55,8 @@ export class CampaignContactsComponent implements OnInit {
   @ViewChild('tempStatusCusLead') tempStatusCusLead: TemplateRef<any>;
   @ViewChild('headerHistory') headerHistory: TemplateRef<any>;
   @ViewChild('tempHistory') tempHistory: TemplateRef<any>;
+  @ViewChild('grid') grid: CodxGridviewV2Component;
+
   lstCampContacts = [];
   formModel: FormModel = {
     formName: 'CMCampaignsContacts',
@@ -117,6 +120,7 @@ export class CampaignContactsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.rollHeight();
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.columnsGrid = [
@@ -634,4 +638,11 @@ export class CampaignContactsComponent implements OnInit {
       });
     }
   }
+
+  //#region scroll heigt
+  rollHeight() {
+    let classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
+
+  }
+  //#region
 }

@@ -207,14 +207,24 @@ export class CodxFdService {
     );
   }
 
-
   getListCard(model: DataRequest) {
+    return this.api.execSv('FD', 'FD', 'CardsBusiness', 'GetListCardAsync', [
+      model,
+    ]);
+  }
+
+  countCardByCardType(
+    predicatesReceive: string,
+    dataValueReceive: string,
+    predicatesSend: string,
+    dataValueSend: string
+  ) {
     return this.api.execSv(
       'FD',
       'FD',
       'CardsBusiness',
-      'GetListCardAsync',
-      [model]
+      'CountCardByCardTypeAsync',
+      [predicatesReceive, dataValueReceive, predicatesSend, dataValueSend]
     );
   }
 }
