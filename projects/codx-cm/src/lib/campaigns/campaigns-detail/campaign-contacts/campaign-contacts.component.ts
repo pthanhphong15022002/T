@@ -6,6 +6,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AlertConfirmInputConfig,
@@ -31,6 +32,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   selector: 'codx-campaign-contacts',
   templateUrl: './campaign-contacts.component.html',
   styleUrls: ['./campaign-contacts.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CampaignContactsComponent implements OnInit {
   @Input() transID: any;
