@@ -148,6 +148,34 @@
               ></span
               ><span>
                 <codx-label
+                  name="lblApprovalTrans"
+                  [formModel]="itemDetailTemplate.formModel"
+                  default="Quy trình duyệt"
+                  class="fw-bold"
+                ></codx-label>
+              </span>
+            </div>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-container *ngIf="itemDetailStt === 1; else defaulEmpt">
+              <codx-view-approval-step
+                [transID]="transID"
+                [approveStatus]="itemDetail?.approveStatus"
+                [eSign]="true"
+              >
+              </codx-view-approval-step>
+            </ng-container>
+          </ng-template>
+        </li>
+        <!-- <li [ngbNavItem]="1">
+          <a class="ps-0" ngbNavLink>
+            <div class="d-flex align-item-center">
+              <span
+                class="icon-info icon-18 me-2"
+                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
+              ></span
+              ><span>
+                <codx-label
                   name="lblAbstract"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Mô tả ngắn gọn"
@@ -199,12 +227,12 @@
             </ng-container>
           </ng-template>
         </li>
-        <li [ngbNavItem]="3">
+        <li [ngbNavItem]="1">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
               <span
                 class="icon-people_alt icon-18 me-2"
-                [ngClass]="{ 'text-primary': itemDetailStt === 3 }"
+                [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
               ></span
               ><span>
                 <codx-label
@@ -217,7 +245,7 @@
             </div>
           </a>
           <ng-template ngbNavContent>
-            <ng-container *ngIf="itemDetailStt === 3; else defaulEmpt">
+            <ng-container *ngIf="itemDetailStt === 1; else defaulEmpt">
               <codx-view-approval-step
                 [transID]="transID"
                 [approveStatus]="itemDetail?.approveStatus"
@@ -226,7 +254,7 @@
               </codx-view-approval-step>
             </ng-container>
           </ng-template>
-        </li>
+        </li> -->
       </ul>
       <div [ngbNavOutlet]="nav" class="pt-4"></div>
     </div>
