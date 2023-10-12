@@ -1674,8 +1674,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.process.approveRule = false;
       }
+    } else if (view === 'StartInstanceView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.startInstanceControl = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.startInstanceControl = false;
+      }
     }
+    this.changeDetectorRef.detectChanges();
   }
+
 
   //end
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>

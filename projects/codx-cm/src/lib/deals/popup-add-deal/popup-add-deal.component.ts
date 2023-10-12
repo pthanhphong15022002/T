@@ -779,7 +779,6 @@ export class PopupAddDealComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
-          permissionRoles: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
@@ -820,6 +819,7 @@ export class PopupAddDealComponent
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
+        this.deal.status = instance.status;
         this.deal.datas = instance.datas;
         this.addPermission(instance.permissions);
         !this.isLoading && this.onAdd();
