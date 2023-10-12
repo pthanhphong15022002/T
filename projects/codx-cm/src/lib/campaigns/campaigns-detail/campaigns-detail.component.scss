@@ -30,3 +30,15 @@ div.collapsed {
   overflow: hidden;
 }
 
+.content-campaigns{
+  height: calc(100vh - 400px);
+  overflow: auto;
+  padding-top: 7px;
+}
+.content-campain-deals{
+  div.e-content {
+    height: calc(100vh - 445px) !important;
+    overflow: auto;
+    border: 1px aqua solid;
+}
+}
