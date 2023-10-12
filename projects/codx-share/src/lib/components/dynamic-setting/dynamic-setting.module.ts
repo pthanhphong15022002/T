@@ -31,7 +31,7 @@ export const routes: Routes = [
       {
         path: ':catagory',
         component: CatagoryComponent,
-        //data: { noReuse: true },
+        data: { isReuse: true },
       },
       {
         path: ':catagory/detail',

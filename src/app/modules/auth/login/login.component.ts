@@ -87,7 +87,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private realHub: RealHubService,
     private signalRService: SignalRService,
     private readonly authService: AuthService,
-    // private readonly extendAuthService: SocialAuthService,
     private shareService: CodxShareService,
     private deviceInfo: AngularDeviceInformationService,
     private loginService: LoginService,
@@ -98,15 +97,8 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 
-    // this.cache.systemSetting().subscribe((res) => {
-    //   this.sysSetting = res;
-    // });
-
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
-      // if (params.i){
-      //   this.iParams = params.i
-      // }
       if (params.sk) {
         this.ngxLoader.start();
         this.api

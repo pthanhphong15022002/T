@@ -78,6 +78,18 @@
             </div>
             <div class="d-flex justify-content-between align-items-center py-2">
                 <div class="d-flex flex-column">
+                    <codx-label default="Màu biểu đồ"  [fiedName]="'lblSVBackgroundColorChart'" [formName]="'SVBackgroundColorChart'" class="fs-5-sm"></codx-label>
+                    <codx-label default="Màu biểu đồ của khảo sát"  [fiedName]="'lblSVSubBackgroundColorChart'" [formName]="'SVSubBackgroundColorChart'" class="fs-7 text-gray-500"></codx-label>
+                </div>
+                <div class="row div-color">
+                    <div class="d-flex align-items-center pt-2 cursor-pointer">
+                       <div class="pallet-div" *ngFor="let items of palettes[0]" [style.backgroundColor]="items">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+                <div class="d-flex flex-column">
                     <codx-label default="Hình ảnh"  [fiedName]="'lblSVBackgroundImage'" [formName]="'SVBackgroundImage'" class="fs-5-sm"></codx-label>
                     <codx-label default="Hình ảnh hiện thị đầu trang khảo sát"  [fiedName]="'lblSVSubBackgroundImage'" [formName]="'SVSubBackgroundImage'" class="fs-7 text-gray-500"></codx-label>
                 </div>
