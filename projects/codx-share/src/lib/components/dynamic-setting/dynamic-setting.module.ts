@@ -15,8 +15,10 @@ import { ShareSettingPipe } from './pipes/shareSetting.pipe';
 import { BindValuePipe } from './pipes/bind-value.pipe';
 import { PatternComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/pattern/pattern.component';
 import { EditPatternComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
+import { DetailPolicyComponent } from '../../../../../codx-fd//src/lib/setting/feedback-message/detail-policy/detail-policy.component';
 import { CodxShareModule } from '../../codx-share.module';
 import { HttpClientModule } from '@angular/common/http';
+import { PositionPipe } from './pipes/position.pipe';
 //import { PatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/pattern.component';
 //import { EditPatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
 
@@ -44,6 +46,7 @@ const T_Component: Type<any>[] = [
   SubCategoryComponent,
   PatternComponent,
   EditPatternComponent,
+  DetailPolicyComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -52,6 +55,7 @@ const T_Pipe: Type<any>[] = [
   InputTypePipe,
   ShareSettingPipe,
   BindValuePipe,
+  PositionPipe,
 ];
 
 @NgModule({
