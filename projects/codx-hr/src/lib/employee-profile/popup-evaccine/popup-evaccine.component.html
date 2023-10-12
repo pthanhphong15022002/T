@@ -1,7 +1,7 @@
 <!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
-  [formModel]="formModel"
+  [formModel]="form.formModel"
   [footer]="footer"
   [dialog]="dialog"
   [data]="data"
@@ -14,76 +14,76 @@
       <div class="col-6">
         <codx-label
           fiedName="VaccineTypeID"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="VaccineTypeID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="VaccineName" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="VaccineName"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HopitalID" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="HopitalID"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="InjectDate" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="InjectDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="Cost" [formModel]="form.formModel"></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="Cost"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
           [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
         <codx-label
           fiedName="NextInjectDate"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
         <codx-input
         [disabled]="disabledInput"
           field="NextInjectDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="Note"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </ng-template>
@@ -95,7 +95,7 @@
         <codx-label
           default="Lưu"
           name="lblSave"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
         ></codx-label>
       </button>
     </div>
@@ -121,7 +121,7 @@
 
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-    [formModel]="formModel"
+    [formModel]="form.formModel"
     [typeMF]="'hover'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     [footer]="footerEVaccines"
@@ -180,6 +180,7 @@
     </div>
   </div>
 </ng-template> -->
+<ng-container *ngIf="data">
 
 <codx-form
     #form
@@ -187,100 +188,105 @@
     [body]="body"
     [formModel]="formModel"
     [footer]="footer"
-    [group]="formGroup"
     [dialog]="dialog"
     [data]="data"
-    *ngIf="isAfterRender"
->
+    >
+    <!-- [group]="form.formGroup"
+    *ngIf="isAfterRender" -->
 <ng-template #body>
+<ng-container *ngIf="form.formGroup">
+
   <div class="form-group row mt-5">
     <div class="col-6">
       <codx-label
         fiedName="VaccineTypeID"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="VaccineTypeID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="VaccineName" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="VaccineName"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="HopitalID" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="HopitalID"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="InjectDate" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="InjectDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="Cost" [formModel]="form.formModel"></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="Cost"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
         [showSpinButton]="false"
       ></codx-input>
     </div>
     <div class="col-6">
       <codx-label
         fiedName="NextInjectDate"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
       <codx-input
       [disabled]="disabledInput"
         field="NextInjectDate"
-        [formModel]="formModel"
-        [Group]="formGroup"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       ></codx-input>
     </div>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
     <codx-input
     [disabled]="disabledInput"
       field="Note"
-      [formModel]="formModel"
-      [Group]="formGroup"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
     ></codx-input>
   </div>
+</ng-container>
+
 </ng-template>
 </codx-form>
 
 <ng-template #footer>
   <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+    <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!form.formModel.currentData.updateColumn">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
         name="lblSave"
-        [formModel]="formModel"
+        [formModel]="form.formModel"
       ></codx-label>
     </button>
   </div>
 </ng-template>
+</ng-container>

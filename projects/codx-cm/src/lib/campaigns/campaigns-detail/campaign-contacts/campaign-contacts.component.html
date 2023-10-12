@@ -1,14 +1,25 @@
 <ng-container *ngIf="loaded">
-  <div [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+  <div class="d-flex justify-content-between mt-2">
+    <codx-dropdown-select
+      #cbxIndustries
+      type="valuelist"
+      field="statusSearch"
+      [refValue]="gridViewSetup?.Status?.referedValue"
+      [emptyText]="gridViewSetup?.Status?.headerText"
+      [value]="statusSearch"
+      (valueChange)="valueChange($event)"
+    ></codx-dropdown-select>
+  </div>
+  <div class="h-100" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
     <codx-gridview-v2
       #grid
-      service="WR"
+      service="CM"
+      rowHeight="35"
       [formModel]="formModel"
       [dataSource]="lstCampContacts"
       [templateMore]="tempMorefunction"
-      rowHeight="40"
-      [height]="'100%'"
       [hideMoreFunc]="false"
+      [height]="isShow ? '' : '100%'"
       [columnsGrid]="columnsGrid"
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>
@@ -107,15 +118,15 @@
 
 <ng-template #tempContact let-data>
   <div class="d-flex justify-content-start align-items-center">
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column py-2">
       <div
-        class="mb-1"
+        class="mb-1 fw-bold"
         [innerHTML]="
           data?.contactName | formatvalue : formModel : 'ContactName' | async
         "
       ></div>
       <div
-        class="mb-1 text-gray-700"
+        class="mb-2 fs-7 text-gray-600"
         [innerHTML]="
           data?.jobTitle | formatvalue : formModel : 'JobTitle' | async
         "
@@ -161,6 +172,63 @@
       [name]="gridViewSetup?.Status?.referedValue"
       [field]="'Status'"
       [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-sm"
+    >
+    </codx-vll>
+  </div>
+</ng-template>
+
+<ng-template #headerStatusCusLead>
+  <codx-label
+    [formModel]="formModel"
+    [fiedName]="objectType == '1' ? 'customerStatus' : 'leadStatus'"
+  >
+  </codx-label>
+</ng-template>
+
+<ng-template #tempStatusCusLead let-data>
+  <div class="d-flex align-items-end codx-badge" *ngIf="objectType == '3'">
+    <div
+      *ngIf="
+        data.leadStatus == '2' && getStepToStatus(data.objectID)?.applyProcess;
+        else statusDefault
+      "
+      [ngStyle]="{
+        'background-color': getStepToStatus(data.objectID)?.backgroundColor
+      }"
+      class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+    >
+      <span
+        [ngClass]="getStepToStatus(data.objectID)?.icon"
+        [ngStyle]="{ color: getStepToStatus(data.objectID)?.iconColor }"
+        class="me-1"
+      ></span>
+      <span
+        class="text-ellipsis line-clamp line-clamp-1"
+        [ngbTooltip]="getStepToStatus(data.objectID)?.currentStepName"
+        [ngStyle]="{ color: getStepToStatus(data.objectID)?.textColor }"
+        [innerHTML]="getStepToStatus(data.objectID)?.currentStepName"
+      ></span>
+    </div>
+    <ng-template #statusDefault>
+      <codx-vll
+        [name]="'CRM041'"
+        [field]="'Status'"
+        [value]="data?.leadStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
+    </ng-template>
+  </div>
+  <div class="d-flex align-items-end codx-badge" *ngIf="objectType == '1'">
+    <codx-vll
+      [name]="'CRM039'"
+      [field]="'Status'"
+      [value]="data?.customerStatus"
       [showText]="true"
       [showBgColor]="true"
       class="badge badge-light badge-sm"

@@ -23,7 +23,7 @@ import { formatDate } from '@angular/common';
 })
 export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
-  formGroup: FormGroup;
+  // formGroup: FormGroup;
   grvSetup;
   headerText: '';
   dialog: DialogRef;
@@ -33,8 +33,8 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   actionType;
   disabledInput = false;
 
-  data;
-  isAfterRender = false;
+  // data;
+  // isAfterRender = false;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('form') form: LayoutAddComponent;
 
@@ -60,9 +60,12 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
+    debugger
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
+    console.log('dialog nhan vao', this.dialog);
+
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     if(this.actionType == 'view'){
@@ -74,30 +77,32 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    if (!this.formModel) {
-      this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) {
-          this.formModel = formModel;
-          this.hrSevice
-            .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-            .then((fg) => {
-              if (fg) {
-                this.formGroup = fg;
-                this.initForm();
-              }
-            });
-        }
-      });
-    } else {
-      this.hrSevice
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-    }
+    // if (!this.formModel) {
+    //   this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+    //     if (formModel) {
+    //       this.formModel = formModel;
+    //       this.hrSevice
+    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //         .then((fg) => {
+    //           if (fg) {
+    //             this.form.formGroup = fg;
+    //             this.initForm();
+    //           }
+    //         });
+    //     }
+    //   });
+    // } else {
+    //   this.hrSevice
+    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
+    //     .then((fg) => {
+    //       if (fg) {
+    //         this.form.formGroup = fg;
+    //         this.initForm();
+    //       }
+    //     });
+    // }
+    this.initForm();
+
     if (this.formModel) {
       this.cache
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -119,27 +124,28 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
         .getDataDefault(this.funcID, this.formModel.entityName, this.idField)
         .subscribe((res) => {
           if (res && res.data) {
+            debugger
             this.accidentObj = res.data;
             this.accidentObj.employeeID = this.employeeId;
-            this.formModel.currentData = this.accidentObj;
-            this.formGroup.patchValue(this.accidentObj);
-            this.isAfterRender = true;
+            // this.formModel.currentData = this.accidentObj;
+            // this.form.formGroup.patchValue(this.accidentObj);
+            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else {
-      this.formModel.currentData = this.accidentObj;
-      this.formGroup.patchValue(this.accidentObj);
-      this.isAfterRender = true;
-    }
+    } 
+    // else {
+    //   this.formModel.currentData = this.accidentObj;
+    //   this.form.formGroup.patchValue(this.accidentObj);
+    //   // this.isAfterRender = true;
+    // }
   }
 
   onSaveForm() {
     this.accidentObj.employeeID = this.employeeId;
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    if (this.form.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false)
-
       return;
     }
     // if (this.accidentObj.accidentDate) {

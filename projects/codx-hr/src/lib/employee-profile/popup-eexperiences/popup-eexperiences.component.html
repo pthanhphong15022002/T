@@ -11,11 +11,11 @@
 >
     <ng-template #body>
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="CompanyName"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="companyName"
                 [formModel]="form.formModel"
@@ -24,13 +24,13 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="CompanyAddress"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="companyAddress"
                 [formModel]="form.formModel"
@@ -39,11 +39,11 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="IndustryID"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="industryID"
                 [formModel]="form.formModel"
@@ -52,11 +52,11 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="Position"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="position"
                 [formModel]="form.formModel"
@@ -66,7 +66,7 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                     fiedName="FromDate"
                     [formModel]="form.formModel"
                 ></codx-label>
@@ -79,7 +79,7 @@
                 ></ejs-datepicker>
             </div>
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                     fiedName="ToDate"
                     [formModel]="form.formModel"
                 ></codx-label>
@@ -94,11 +94,11 @@
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="Note"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="note"
                 [formModel]="form.formModel"
@@ -111,7 +111,7 @@
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" (click)="onSaveForm()">
                 <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true" default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
             </button>
         </div>
     </ng-template>
@@ -182,11 +182,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 >
     <ng-template #body>
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="CompanyName"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="companyName"
                 [formModel]="form.formModel"
@@ -195,24 +195,24 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="CompanyAddress"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="companyAddress"
             ></codx-input>
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="IndustryID"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="industryID"
                 [formModel]="form.formModel"
@@ -221,11 +221,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="Position"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="position"
                 [formModel]="form.formModel"
@@ -235,7 +235,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                     fiedName="FromDate"
                     [formModel]="form.formModel"
                 ></codx-label>
@@ -247,7 +247,7 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                 ></ejs-datepicker>
             </div>
             <div class="col-6">
-                <codx-label
+                <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                     fiedName="ToDate"
                     [formModel]="form.formModel"
                 ></codx-label>
@@ -261,11 +261,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
         </div>
 
         <div class="form-group row">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
                 fiedName="Note"
                 [formModel]="form.formModel"
             ></codx-label>
-            <codx-input
+            <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             [disabled]="disabledInput"
                 field="note"
                 [formModel]="form.formModel"
@@ -290,29 +290,33 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 <ng-container *ngIf="form.formGroup">
     <div class="form-group row">
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.FromDate.allowPopup == true"
                 fiedName="FromDate"
                 [formModel]="form.formModel"
             ></codx-label>
             <ejs-datepicker 
+            *ngIf="form.gridviewSetup.FromDate.allowPopup == true"
             [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="fromdateVal"
             [format]='format'
+            (click)="ClickCalendar($event)"
             (valueChange)="UpdateFromDate($event)"
             ></ejs-datepicker>
         </div>
         <div class="col-6">
-            <codx-label
+            <codx-label *ngIf="form.gridviewSetup.ToDate.allowPopup == true"
                 fiedName="ToDate"
                 [formModel]="form.formModel"
             ></codx-label>
             <ejs-datepicker 
+            *ngIf="form.gridviewSetup.ToDate.allowPopup == true"
             [enabled]="!disabledInput"
             [start]='start' 
             [depth]='depth' 
             [value]="todateVal"
+            (click)="ClickCalendar($event)"
             [format]='format'
             (valueChange)="UpdateToDate($event)"
             ></ejs-datepicker>
@@ -320,11 +324,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     </div>
 
     <div class="form-group row mt-5">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.CompanyName.allowPopup == true"
             fiedName="CompanyName"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.CompanyName.allowPopup == true"
         [disabled]="disabledInput"
             field="companyName"
             [formModel]="form.formModel"
@@ -333,13 +337,13 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     </div>
 
     <!-- <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             fiedName="CompanyAddress"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
         [disabled]="disabledInput"
             field="companyAddress"
             [formModel]="form.formModel"
@@ -348,11 +352,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     </div>
 
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
             fiedName="IndustryID"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.NationalityID.allowPopup == true"
         [disabled]="disabledInput"
             field="industryID"
             [formModel]="form.formModel"
@@ -361,11 +365,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     </div> -->
 
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.Position.allowPopup == true"
             fiedName="Position"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.Position.allowPopup == true"
         [disabled]="disabledInput"
             field="position"
             [formModel]="form.formModel"
@@ -376,11 +380,11 @@ cardCss="card codx_cardcenter px-2 pt-4 pb-2"
 
 
     <div class="form-group row">
-        <codx-label
+        <codx-label *ngIf="form.gridviewSetup.Note.allowPopup == true"
             fiedName="Note"
             [formModel]="form.formModel"
         ></codx-label>
-        <codx-input
+        <codx-input *ngIf="form.gridviewSetup.Note.allowPopup == true"
         [disabled]="disabledInput"
             field="note"
             [formModel]="form.formModel"

@@ -11,7 +11,7 @@ export class GroupPipe implements PipeTransform {
         (x) =>
           !x.refLineID &&
           x.lineType === lineType &&
-          x.controlType.toLowerCase() != 'groupcontrol'
+          x.controlType?.toLowerCase() != 'groupcontrol'
       );
     } else {
       dt = items.filter(

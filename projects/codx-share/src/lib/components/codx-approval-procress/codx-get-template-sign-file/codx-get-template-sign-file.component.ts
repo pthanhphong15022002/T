@@ -26,8 +26,8 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
   dialogRef: any;
   headerText='Chọn quy trình mẫu';
   sfTemplates=[];
-  fields: Object = { text: 'title', value: 'recID' };
-  crrTemplate: any;
+  //fields: Object = { text: 'title', value: 'recID' };
+  //crrTemplate: any;
   signFileFM: import("codx-core").FormModel;
   isAfterRender=false;
   selectedTemplate=[];
@@ -58,15 +58,13 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
       }
     });
   }
-  onSaveForm() {
-    if(this.crrTemplate==null)
-    {
-      this.notificationsService.notify("Quy trình mẫu ko đc bỏ trống!",'2',null);
-      return;
+  checkChange(recID:any){
+    let crrTemplate = this.sfTemplates.filter(x=>x?.recID == recID);
+    if(crrTemplate?.length>0){
+      crrTemplate[0].isSelected = !crrTemplate[0].isSelected;
     }
-    this.dialogRef && this.dialogRef.close(this.crrTemplate);
   }
-  onSaveForm1() {
+  onSaveForm() {
     this.selectedTemplate= this.sfTemplates.filter(x=>x.isSelected);
     if(this.selectedTemplate?.length >0)
     {
@@ -79,24 +77,26 @@ export class CodxGetTemplateSignFileComponent implements OnInit {
   }
 
   
-  valueChange(evt:any) {
-    if (evt !=null) {
-      let template = this.sfTemplates.filter(x=>x?.recID==evt);
-      if(template?.length>0){
-        this.crrTemplate=template[0];
-      }
-      else{
-        this.crrTemplate=null;
-      }
-      this.detectorRef.detectChanges();
-    }
-  }
-  checkChange(recID:any,isSelected:boolean){
-    let crrTemplate = this.sfTemplates.filter(x=>x?.recID == recID);
-    if(crrTemplate?.length>0){
-      crrTemplate[0].isSelected = !isSelected;
-      this.detectorRef.detectChanges();
-    }
-  }
+  // valueChange(evt:any) {
+  //   if (evt !=null) {
+  //     let template = this.sfTemplates.filter(x=>x?.recID==evt);
+  //     if(template?.length>0){
+  //       this.crrTemplate=template[0];
+  //     }
+  //     else{
+  //       this.crrTemplate=null;
+  //     }
+  //     this.detectorRef.detectChanges();
+  //   }
+  // }
+  // onSaveForm1() {
+  //   if(this.crrTemplate==null)
+  //   {
+  //     this.notificationsService.notify("Quy trình mẫu ko đc bỏ trống!",'2',null);
+  //     return;
+  //   }
+  //   this.dialogRef && this.dialogRef.close(this.crrTemplate);
+  // }
+  
   
 }

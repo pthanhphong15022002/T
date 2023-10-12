@@ -228,9 +228,11 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
             );
 
             this.cache.getCompany(this.user.userID).subscribe((res) => {
-              this.dialogAddBookingStationery.patchValue({
-                orgUnitID: res.orgUnitID,
-              });
+              if(res){
+                this.dialogAddBookingStationery.patchValue({
+                  orgUnitID: res?.orgUnitID,
+                });
+              }
             });
 
             this.detectorRef.detectChanges();

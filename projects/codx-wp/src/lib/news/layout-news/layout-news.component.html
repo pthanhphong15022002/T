@@ -7,7 +7,7 @@
         <codx-header
           [class]="codxService.headerCSSClasses"
           [headerBar]="headerBar"
-          class="header align-items-stretch"
+          class="header align-items-stretch news-header"
           [headerRightBar]="headerRightBar"
           #codxHeader
         >
@@ -100,7 +100,7 @@
         <div class="me-4 cursor-pointer">
           <span
             [class.text-primary]="category == 'home'"
-            class="p-2"
+            class="p-2 fs-6"
             (click)="navigate('home', 'WPT02')"
           >
             <codx-label
@@ -113,7 +113,7 @@
         <div class="me-4 cursor-pointer" *ngFor="let vll of valueList">
           <span
             [class.text-primary]="category == vll.value"
-            class="p-2 cursor-pointer"
+            class="p-2 fs-6 cursor-pointer"
             class="menu-link py-3"
             (click)="navigate(vll.value, 'WPT02')"
           >
@@ -123,7 +123,7 @@
         <div class="me-4 cursor-pointer">
           <div class="" ngbDropdown>
             <span
-              class="p-2 cursor-pointer"
+              class="p-2 fs-6 cursor-pointer"
               tabindex="0"
               ngbDropdownToggle
               id="navbarDropdown1"
@@ -142,7 +142,7 @@
               class="dropdown-menu"
             >
               <span
-                class="px-2"
+                class="p-2 fs-6"
                 ngbDropdownItem
                 (click)="navigate('approvals', 'WPT0211')"
                 class="dropdown-item"
@@ -184,7 +184,7 @@
         </div>
         <ng-container *ngIf="userPermission && userPermission.create">
           <div class="me-4 cursor-pointer">
-            <span class="p-2" (click)="navigate('settings', 'WPT022')">
+            <span class="p-2 fs-6" (click)="navigate('settings', 'WPT022')">
               <codx-label
                 [class.text-primary]="category == 'settings'"
                 formName="News"

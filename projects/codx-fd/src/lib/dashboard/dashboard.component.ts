@@ -1,23 +1,39 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
-import {  AuthService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent, SortModel } from 'codx-core';
+import {
+  AuthService,
+  ViewModel,
+  ViewType,
+  UIComponent,
+  ButtonModel,
+  CRUDService,
+  RequestOption,
+  NotificationsService,
+  ViewsComponent,
+  SortModel,
+  DataRequest,
+} from 'codx-core';
+import { CodxFdService } from '../codx-fd.service';
 
 @Component({
   selector: 'lib-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class DashboardComponent extends UIComponent  {
-  dataServiceWP:CRUDService;
+export class DashboardComponent extends UIComponent {
+  dataServiceWP: CRUDService;
   predicate = `Category="@0" && Stop=false `;
-  dataValue = "";
+  dataValue = '';
+  predicateCard = ``;
+  dataValueCard = '';
   predicateCoins = `Owner =@0  `;
-  dataValueCoins = "";
-  predicateWP = "Category =@0 && Stop=false";
-  dataValueWP = "3";
-  memberType = "3";
-  arrVll = ["L1422", "L1419"];
+  dataValueCoins = '';
+  // predicateWP = 'Category =@0 && Stop=false';
+  // dataValueWP = '3';
+
+  memberType = '3';
+  arrVll = ['L1422', 'L1419'];
   reciver = [];
   sender = [];
   dataRadio = null;
@@ -45,24 +61,30 @@ export class DashboardComponent extends UIComponent  {
     private dt: ChangeDetectorRef,
     private auth: AuthService,
     private signalRApi: WPService,
-    private notifiSV: NotificationsService
+    private notifiSV: NotificationsService,
+    private fdService: CodxFdService
   ) {
-    super(injector)
+    super(injector);
   }
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.content,
-      active: true,
-      model: {
-        panelLeftRef: this.panelContent
-      }
-    }];
-
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        model: {
+          panelLeftRef: this.panelContent,
+          // panelLeftRef: this.panelLeft,
+        },
+      },
+    ];
   }
   onInit(): void {
     this.user = this.auth.userValue;
     this.dataValueCoins = this.user.userID;
+    this.getTop5Radio();
+    this.initDate();
     this.getDataAmountCard();
+    this.getCardType();
   }
 
   lstCountCard:any[] = [];
@@ -76,45 +98,133 @@ export class DashboardComponent extends UIComponent  {
       }
     });
   }
-  lstTagUser:any[] = [];
-  searchField:string ="";
-  clickShowTag(card:any) {
+
+  setPredicateCountCard() {
+    this.predicateReceive = '';
+    this.dataValueReceive = '';
+    this.predicateSend = '';
+    this.dataValueSend = '';
+
+    if (this.fromDateDropdown && this.toDateDropdown) {
+      this.predicateReceive += 'CreatedOn >= @0 && CreatedOn < @1';
+      this.dataValueReceive += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      this.predicateSend += 'CreatedOn >= @0 && CreatedOn < @1';
+      this.dataValueSend += `${this.fromDateDropdown};${this.toDateDropdown}`;
+    }
+
+    switch (this.radio) {
+      case this.listRadio[0]?.data:
+        break;
+      case this.listRadio[1]?.data:
+        this.predicateReceive += ' && ObjectID = @2';
+        this.dataValueReceive += `;${this.user.userID}`;
+        this.predicateSend += ' && CreatedBy = @2';
+        this.dataValueSend += `;${this.user.userID}`;
+        break;
+    }
+  }
+
+  setPredicates() {
+    this.predicateWP = '';
+    this.dataValueWP = '';
+
+    if (this.fromDateDropdown && this.toDateDropdown) {
+      this.predicateWP += 'CreatedOn >= @0 && CreatedOn < @1';
+      this.dataValueWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
+    }
+
+    switch (this.radio) {
+      case this.listRadio[0]?.data:
+        break;
+      case this.listRadio[1]?.data:
+        if (this.favoriteID == this.lstFavorite[0]?.recID) {
+          this.predicateWP += ' && ObjectID = @2';
+          this.dataValueWP += `;${this.user.userID}`;
+        } else {
+          this.predicateWP += ' && CreatedBy = @2';
+          this.dataValueWP += `;${this.user.userID}`;
+        }
+        break;
+    }
+  }
+
+  loadPosts() {
+    this.setPredicates();
+    this.showPosts = false;
+    this.dt.detectChanges();
+    this.showPosts = true;
+    this.dt.detectChanges();
+  }
+
+  lstTagUser: any[] = [];
+  searchField: string = '';
+  clickShowTag(card: any) {
     this.lstTagUser = card.listTag;
     this.dt.detectChanges();
   }
 
-  beforDelete(option:RequestOption,data:any){
-    option.service = "WP";
-    option.assemblyName = "ERM.Business.WP";
-    option.className = "CommentsBusiness";
-    option.methodName = "DeletePostAsync";
+  clickCardType(item) {
+    this.entityName = item.entityName;
+    this.functionID = item.functionID;
+    this.getFavorite();
+  }
+
+  clickFavorite(item) {
+    if (item) {
+      this.favoriteID = item.recID;
+      this.loadPosts();
+    }
+  }
+
+  changeRadio(e, data: string) {
+    this.radio = data;
+    this.loadPosts();
+    this.getDataAmountCard();
+  }
+
+  changeCalendar(e) {
+    if (e?.fromDate || e?.toDate) {
+      this.fromDateDropdown = new Date(e.fromDate).toISOString();
+      this.toDateDropdown = new Date(e.toDate).toISOString();
+      this.loadPosts();
+      this.getDataAmountCard();
+    }
+  }
+
+  beforDelete(option: RequestOption, data: any) {
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    option.className = 'CommentsBusiness';
+    option.methodName = 'DeletePostAsync';
     option.data = data;
     return true;
   }
   removePost(data: any) {
-    (this.listview.dataService as CRUDService).
-    delete([data],true,(op:any)=>this.beforDelete(op,data)).
-    subscribe();
+    (this.listview.dataService as CRUDService)
+      .delete([data], true, (op: any) => this.beforDelete(op, data))
+      .subscribe();
   }
 
-  closeListShare(item:any){
-    if(item.isShowShare){
+  closeListShare(item: any) {
+    if (item.isShowShare) {
       item.isShowShare = false;
     }
   }
-  lstUserShare:any[] = [];
-  getShareUser(item:any) {
-    if(item.shareControl=='U' ||
-      item.shareControl=='G' || item.shareControl=='R' ||
-      item.shareControl=='P' || item.shareControl=='D' ||
-      item.shareControl=='O')
-      {
-        item.isShowShare = !item.isShowShare;
-        this.lstUserShare = item.permissions.filter((p:any) => {
-          return p.memberType == "2";
-        });
-        this.dt.detectChanges();
+  lstUserShare: any[] = [];
+  getShareUser(item: any) {
+    if (
+      item.shareControl == 'U' ||
+      item.shareControl == 'G' ||
+      item.shareControl == 'R' ||
+      item.shareControl == 'P' ||
+      item.shareControl == 'D' ||
+      item.shareControl == 'O'
+    ) {
+      item.isShowShare = !item.isShowShare;
+      this.lstUserShare = item.permissions.filter((p: any) => {
+        return p.memberType == '2';
+      });
+      this.dt.detectChanges();
     }
   }
-
 }

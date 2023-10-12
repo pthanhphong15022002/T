@@ -406,7 +406,12 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="onSave()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="isSaved"
+      (click)="onSave()"
+    >
       <codx-label
         name="lblSave"
         [formModel]="dialog.formModel"
@@ -565,9 +570,10 @@
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [crrValue]="data?.address"
-      (controlBlur)="valueBlur($event)"
+      [Group]="form.formGroup"
       (valueChange)="valueChangeAdress($event)"
+      (render)="render($event)"
+      (focus)="focus($event)"
       field="address"
     >
     </codx-input>
@@ -888,9 +894,10 @@
       <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
-        [crrValue]="data?.address"
-        (controlBlur)="valueBlur($event)"
+        [Group]="form.formGroup"
         (valueChange)="valueChangeAdress($event)"
+        (render)="render($event)"
+        (focus)="focus($event)"
         field="address"
       >
       </codx-input>
@@ -1087,9 +1094,10 @@
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [crrValue]="data?.address"
-      (controlBlur)="valueBlur($event)"
+      [Group]="form.formGroup"
       (valueChange)="valueChangeAdress($event)"
+      (render)="render($event)"
+      (focus)="focus($event)"
       field="address"
     >
     </codx-input>

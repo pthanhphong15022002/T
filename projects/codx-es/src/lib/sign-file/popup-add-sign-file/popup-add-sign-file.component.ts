@@ -132,8 +132,10 @@ export class PopupAddSignFileComponent implements OnInit {
   sfTemplates = [];
   dynamicApprovers = [];
   fields: Object = { text: 'title', value: 'recID' };
-  cbbDriver: any;
-  showStepSetting = true;
+  cbbDriver:any;
+  showStepSetting=true;
+  templateRefType: any;
+  templateRefID: any;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -168,6 +170,8 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate = data?.data?.isTemplate ? true : false;
+    this.templateRefType = data?.data?.templateRefType;//refType truyền vào form export template
+    this.templateRefID = data?.data?.templateRefID;//refID truyền vào form export template
     this.refType = data?.data?.refType ?? 'ES_SignFiles'; // Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.typeCategory =
@@ -1382,15 +1386,8 @@ export class PopupAddSignFileComponent implements OnInit {
         this.dialog && this.dialog.close(this.data);
       } else if (this.isSaved) {
         this.esService.deleteSignFile(this.data.recID).subscribe((res) => {
-          if (res) {
-            this.codxShareService
-              .deleteByObjectWithAutoCreate(
-                this.data.recID,
-                this.data?.refType,
-                true,
-                '3'
-              )
-              .subscribe();
+          if (res) {             
+            this.codxShareService.deleteByObjectsWithAutoCreate(this.data.recID, "",true,'3').subscribe();   
             this.dialog && this.dialog.close();
           }
         });
@@ -1419,14 +1416,8 @@ export class PopupAddSignFileComponent implements OnInit {
         this.dialogSignFile.invalid &&
         this.isSaved == false)
     ) {
-      this.codxShareService
-        .deleteByObjectWithAutoCreate(
-          this.data.recID,
-          this.data?.refType,
-          true,
-          '3'
-        )
-        .subscribe();
+      
+      this.codxShareService.deleteByObjectsWithAutoCreate(this.data.recID, "",true,'3').subscribe();   
       this.dialog && this.dialog.close();
     } else if (this.processTab > 0 && this.isAddNew == true) {
       if (this.data?.files.length == 0) {
@@ -1501,7 +1492,7 @@ export class PopupAddSignFileComponent implements OnInit {
             : this.formModelCustom.funcID,
           '',
           this.data?.title,
-          this.data?.refType
+          this.approverProcess?.customEntityName != null? this.approverProcess?.customEntityName : this.data?.refType
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {
@@ -1843,8 +1834,8 @@ export class PopupAddSignFileComponent implements OnInit {
         {
           action: action,
           type: type,
-          refType: this.refType,
-          refID: this.data?.recID,
+          refType: this.templateRefType ?? this.refType,
+          refID: this.templateRefID ??this.data?.recID,
         },
         '',
         option
@@ -1994,14 +1985,16 @@ export class PopupAddSignFileComponent implements OnInit {
 
   openTemplate() {
     var gridModel = new DataRequest();
-    gridModel.entityName = this.refType;
+    gridModel.entityName = this.refType ;
+    let tRefType = this.templateRefType ?? this.refType;
+    let tRefID = this.templateRefID ?? this.data?.recID;
     let exportForm = this.callfuncService.openForm(
       CodxExportComponent,
       null,
       900,
       700,
       '',
-      [gridModel, null, null, this.data.recID, this.refType],
+      [gridModel, null, null, tRefID, tRefType],
       null
     );
     exportForm.closed.subscribe((res) => {

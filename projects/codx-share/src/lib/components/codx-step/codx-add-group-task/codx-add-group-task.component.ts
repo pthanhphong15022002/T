@@ -1,4 +1,3 @@
-
 import {
   FormModel,
   DialogRef,
@@ -9,9 +8,9 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { 
-  DP_Instances_Steps_TaskGroups, 
-  DP_Instances_Steps_TaskGroups_Roles 
+import {
+  DP_Instances_Steps_TaskGroups,
+  DP_Instances_Steps_TaskGroups_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { Component, OnInit, Optional } from '@angular/core';
 @Component({
@@ -68,18 +67,18 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.getFormModel();
     let role = new DP_Instances_Steps_TaskGroups_Roles();
     this.setRole(role);
-    if(this.action == 'add' || this.action == 'copy'){
+    if (this.action == 'add' || this.action == 'copy') {
       this.taskGroup['roles'] = [role];
     }
-    if(this.action == 'copy'){
+    if (this.action == 'copy') {
       let listTast = this.taskGroup?.['task'];
-      if(listTast || listTast?.length > 0){
+      if (listTast || listTast?.length > 0) {
         listTast?.forEach((task) => {
-          let time = (task?.durationDay || 0)*24 +  (task?.durationHour || 0)
-          if(this.minHourGroups < time){
+          let time = (task?.durationDay || 0) * 24 + (task?.durationHour || 0);
+          if (this.minHourGroups < time) {
             this.minHourGroups = time;
           }
-        })        
+        });
       }
     }
   }
@@ -124,9 +123,9 @@ export class CodxAddGroupTaskComponent implements OnInit {
   }
 
   changeValueDate(event, data) {
-    if(this.checkShow){
+    if (this.checkShow) {
       this.checkShow = !this.checkShow;
-      return
+      return;
     }
     data[event?.field] = event?.data?.fromDate;
     if (
@@ -142,25 +141,25 @@ export class CodxAddGroupTaskComponent implements OnInit {
     } else {
       this.isSave = true;
     }
-    if(this.taskGroup['startDate'] && this.taskGroup['endDate']){
+    if (this.taskGroup['startDate'] && this.taskGroup['endDate']) {
       const endDate = new Date(this.taskGroup['endDate']);
       const startDate = new Date(this.taskGroup['startDate']);
-      if(endDate >= startDate){
+      if (endDate >= startDate) {
         const duration = endDate.getTime() - startDate.getTime();
-        const time = Number((duration / 60 / 1000/ 60).toFixed(1));
-        if(time < this.minHourGroups){
+        const time = Number((duration / 60 / 1000 / 60).toFixed(1));
+        if (time < this.minHourGroups) {
           this.notiService.notifyCode('DP012');
           this.checkShow = !this.checkShow;
           return;
         }
         let days = 0;
         let hours = 0;
-        if(time < 1){
-           hours = time;
-        }else{
+        if (time < 1) {
+          hours = time;
+        } else {
           hours = time % 24;
           days = Math.floor(time / 24);
-        }   
+        }
         this.taskGroup['durationHour'] = hours;
         this.taskGroup['durationDay'] = days;
       }
@@ -169,13 +168,17 @@ export class CodxAddGroupTaskComponent implements OnInit {
 
   handleSave() {
     let message = [];
-    if(this.isStart){
+    if (this.isStart) {
       for (let key of this.REQUIRE) {
-        if((typeof this.taskGroup[key] === 'string' && !this.taskGroup[key].trim()) || !this.taskGroup[key]) {
+        if (
+          (typeof this.taskGroup[key] === 'string' &&
+            !this.taskGroup[key].trim()) ||
+          !this.taskGroup[key]
+        ) {
           message.push(this.view[key]);
         }
       }
-    }else{
+    } else {
       if (!this.taskGroup['taskGroupName']?.trim()) {
         message.push(this.view['taskGroupName']);
       }
@@ -183,101 +186,117 @@ export class CodxAddGroupTaskComponent implements OnInit {
         message.push(this.view['durationDay']);
       }
     }
-   
+
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else if (!this.isSave) {
       this.notiService.notifyCode('DP019');
     } else {
-      if(this.action == 'add'){
+      if (this.action == 'add') {
         this.addGroupTask();
       }
-      if(this.action == 'edit'){
+      if (this.action == 'edit') {
         this.editGroupTask();
       }
-      if(this.action == 'copy'){
+      if (this.action == 'copy') {
         this.copyGroupTask();
       }
     }
   }
-  
-  addGroupTask(){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'AddGroupTaskStepAsync',
-      this.taskGroup
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ groupTask:res[0],progressStep: res[1]});
-      }
-    });
-  }
 
-  editGroupTask(){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'UpdateGroupTaskStepAsync',
-      this.taskGroup
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ groupTask:res,progressStep: null});
-      }
-    });
-  }
-  copyGroupTask(){
-    this.api.exec<any>(
-      'DP',
-      'InstanceStepsBusiness',
-      'CopyGroupTaskStepAsync',
-      this.taskGroup
-    ).subscribe(res => {
-      if(res){        
-        this.dialog.close({ groupTask:res[0],listTask: res[1], progressStep: res[2]});
-      }
-    });
-  }
-
-  changeRoler(event){
-    let role = event[0];
-    if(role){
-      if(role?.roleType == "Users" || role?.roleType == "Owner"){
-        this.taskGroup.roles = [role];
-        this.taskGroup.owner = role?.objectID;
-      }else{
-        let data = [];
-        switch (role?.roleType)
-        {
-          case "Departments":
-          case "OrgHierarchy":
-            data = [role?.objectID,this.step?.instanceID, this.owner]
-            break;
-          case "Roles":
-          case "Positions":
-            data = [role?.objectID,this.step?.instanceID,role?.objectType, this.owner]
-            break;
+  addGroupTask() {
+    this.api
+      .exec<any>(
+        'DP',
+        'InstancesStepsBusiness',
+        'AddGroupTaskStepAsync',
+        this.taskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close({ groupTask: res[0], progressStep: res[1] });
         }
-        if(data?.length > 0){
-          this.api.exec<any>(
-            'DP',
-            'InstancesBusiness',
-            'GetUserByOrgUnitIDAsync',
-            data
-          ).subscribe(res => {
-            if(res){     
-              let role = new DP_Instances_Steps_TaskGroups_Roles();   
-              role['objectID'] = res?.userID;
-              role['objectName'] =  res?.userName;
-              role['objectType'] = "U";
-              role['roleType'] = "Users";
-              this.taskGroup.roles = [role];
-              this.taskGroup.owner = role?.objectID;
-            }
+      });
+  }
+
+  editGroupTask() {
+    this.api
+      .exec<any>(
+        'DP',
+        'InstancesStepsBusiness',
+        'UpdateGroupTaskStepAsync',
+        this.taskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close({ groupTask: res, progressStep: null });
+        }
+      });
+  }
+  copyGroupTask() {
+    this.api
+      .exec<any>(
+        'DP',
+        'InstancesStepsBusiness',
+        'CopyGroupTaskStepAsync',
+        this.taskGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close({
+            groupTask: res[0],
+            listTask: res[1],
+            progressStep: res[2],
           });
         }
+      });
+  }
+
+  changeRoler(event) {
+    let role = event[0];
+    if (role) {
+      if (role?.roleType == 'Users' || role?.roleType == 'Owner') {
+        this.taskGroup.roles = [role];
+        this.taskGroup.owner = role?.objectID;
+      } else {
+        let data = [];
+        switch (role?.roleType) {
+          case 'Departments':
+          case 'OrgHierarchy':
+            data = [role?.objectID, this.step?.instanceID, this.owner];
+            break;
+          case 'Roles':
+          case 'Positions':
+            data = [
+              role?.objectID,
+              this.step?.instanceID,
+              role?.objectType,
+              this.owner,
+            ];
+            break;
+        }
+        if (data?.length > 0) {
+          this.api
+            .exec<any>(
+              'DP',
+              'InstancesBusiness',
+              'GetUserByOrgUnitIDAsync',
+              data
+            )
+            .subscribe((res) => {
+              if (res) {
+                let role = new DP_Instances_Steps_TaskGroups_Roles();
+                role['objectID'] = res?.userID;
+                role['objectName'] = res?.userName;
+                role['objectType'] = 'U';
+                role['roleType'] = 'Users';
+                this.taskGroup.roles = [role];
+                this.taskGroup.owner = role?.objectID;
+              }
+            });
+        }
       }
-    }else{
+    } else {
       this.taskGroup.roles = [];
       this.taskGroup.owner = null;
     }

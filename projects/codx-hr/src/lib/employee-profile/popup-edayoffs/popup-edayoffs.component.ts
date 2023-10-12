@@ -83,7 +83,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.dayoffObj.kowID = '';
       }
     } else {
-      this.dayoffObj = {};
+      this.dayoffObj = undefined;
     }
 
     this.fromListView = data?.data?.fromListView;
@@ -176,6 +176,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+            debugger
             this.dayoffObj = res?.data;
             this.dayoffObj.beginDate = null; //yêu cầu require, không default
             this.dayoffObj.endDate = null;
@@ -189,18 +190,18 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           }
         });
     } 
-    // else {
-    //   if (
-    //     this.actionType === 'edit' ||
-    //     this.actionType === 'copy' ||
-    //     this.actionType === 'view'
-    //   ) {
-    //     // this.form.formGroup.patchValue(this.dayoffObj);
-    //     // this.formModel.currentData = this.dayoffObj;
-    //     // this.isAfterRender = true;
-    //     this.cr.detectChanges();
-    //   }
-    // }
+    else {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
+        // this.form.formGroup.patchValue(this.dayoffObj);
+        // this.formModel.currentData = this.dayoffObj;
+        // this.isAfterRender = true;
+        this.cr.detectChanges();
+      }
+    }
   }
 
   UpdateFromDate(e) {

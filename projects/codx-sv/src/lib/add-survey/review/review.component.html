@@ -270,7 +270,7 @@
                               </button>
                             </div>
                           </div>
-                          <div [id]="'formError'+itemQuestion.recID" class="formError">
+                          <div [id]="'formError'+itemQuestion.recID" class="formError pt-5">
                           </div>
                         </form>
                       </div>
@@ -411,10 +411,10 @@
           [disabled]="false"
           class="test-check"
           field="C"
-          [label]="'Mục khác:'"
+          [label]="'Khác:'"
           [checked]="itemAnswer?.checked"
           (valueChange)="checkDisabelAnswerOrderC($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"
-          ngClass="w-150px"
+          ngClass="w-100px"
         ></codx-input>
         <input type="text" autocomplete="off" [id]="'ip-order-'+seqNoSession+itemQuestion?.recID" [disabled]="itemAnswer?.checked == true ? false : true" [value]="itemAnswer?.answer ? itemAnswer?.answer : ''" class="sv-ip-dis form-control border-0 h-25px w-100" (change)="checkDisabelAnswerOrder($event, itemSession, itemQuestion, itemAnswer,seqNoSession)"/>
       </div>
@@ -604,12 +604,18 @@
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
           "
         >
-          <span
-            *ngIf="itemQuestion.question"
-            [innerHTML]="itemQuestion.question"
-          ></span>
-          <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
-          <span *ngIf="itemQuestion.mandatory" class="text-danger ms-2">*</span>
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="d-flex justify-content-start">
+              <span
+                *ngIf="itemQuestion.question"
+                [innerHTML]="itemQuestion.question"
+              ></span>
+              <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
+            </div>
+            <div class="d-flex justify-content-end">
+              <span *ngIf="itemQuestion.mandatory" class="text-danger ms-2">*</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="form-group question w-100" *ngIf="itemQuestion.hideComment">
@@ -630,7 +636,7 @@
     <app-view-file [dataFile]="lstEditIV" [questionID]="itemQuestion.recID">
     </app-view-file>
   </div>
-  <div *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
+  <div class="px-5" *ngIf="(itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') ; else tmpL">
     <table class="w-100">
       <tr>
         <th scope="col" class="w-20"></th>
@@ -641,8 +647,8 @@
           <span>{{ itemC.answer }}</span>
         </th>
       </tr>
-      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers) ; let i = index" [attr.data-index]="i">
-        <td>
+      <tr class="mt-1" *ngFor="let itemR of filterDataRow(itemQuestion.answers ,itemQuestion.recID) ; let i = index" [attr.data-index]="i">
+        <td class="text-left">
           {{ itemR.answer }}
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers) ; let x = index" [attr.data-index]="x">
@@ -652,14 +658,16 @@
             labelPosition="After"
             [disabled]="false"
             class="test-check"
+            field="O2"
             [name]="'group'+itemQuestion.recID+i"
-            (valueChange)="valueChange($event, itemSession, itemQuestion, itemC)"
+            (valueChange)="valueChange($event, itemSession, itemQuestion, itemC, null , itemR)"
           ></codx-input>
           <codx-input
             *ngIf="itemQuestion.answerType == 'C2'"
             class="check-circle"
             type="checkbox"
-            field="check"
+            field="C2"
+            (valueChange)="valueChange($event, itemSession, itemQuestion, itemC, null , itemR)"
           >
           </codx-input>
         </td>
@@ -802,8 +810,8 @@
           <span>{{ itemC.answer }}</span>
         </th>
       </tr>
-      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers)">
-        <td>
+      <tr *ngFor="let itemR of filterDataRow(itemQuestion.answers , itemQuestion.recID)">
+        <td class="text-left">
           {{ itemR.answer }}
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">

@@ -398,6 +398,15 @@
       >
         <thead>
           <tr class="bg-gray-100">
+            <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+              <div>
+                <codx-label
+                  name="lblNo"
+                  formName="System"
+                  [default]="'STT'"
+                ></codx-label>
+              </div>
+            </th>
             <ng-container *ngFor="let item of columns">
               <th
                 scope="col"
@@ -423,6 +432,11 @@
           <ng-container *ngIf="!disable">
             <ng-container *ngFor="let value of arrDataValue; let index = index">
               <tr>
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <span>{{ index + 1 }}</span>
+                  </div>
+                </td>
                 <ng-container
                   *ngFor="let fieldFormat of formatViewTable(value)"
                 >
@@ -460,6 +474,15 @@
           </ng-container>
           <ng-container *ngIf="disable">
             <tr>
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblNo"
+                    formName="System"
+                    [default]="'STT'"
+                  ></codx-label>
+                </div>
+              </td>
               <ng-container *ngFor="let item of columns">
                 <td
                   class="ps-4"
