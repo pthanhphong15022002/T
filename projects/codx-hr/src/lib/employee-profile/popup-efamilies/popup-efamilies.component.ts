@@ -184,7 +184,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
 }
 
   onSaveForm() {
-    console.log('du lieu chuan bi luu', this.familyMemberObj);
+    debugger
     
     let today = new Date();
 

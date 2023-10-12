@@ -37,6 +37,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   lstQuestion : any;
   indexQuesAns: number = 0;
   indexRepons: number = 0;
+  primaryColor:any;
   chartSettingsT: ChartSettings = {
     title: '',
     seriesSetting: [
@@ -139,6 +140,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
       if(this.dataSV?.settings?.backgroudColor) {
         document.getElementById("bg-color-sv-answer").style.backgroundColor = this.dataSV?.settings?.backgroudColor;
       }
+      this.primaryColor = this.dataSV?.settings?.primaryColor
     }
   }
 
@@ -188,8 +190,42 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   getSetting()
   {
     this.lstCountQuestion.forEach(element => {
-      if(element.answerType == "O2" || element.answerType == "C2") element.setting = this.settingChart(element?.answerType,'seriesSetting' , element.dataChart)
+      if(element.answerType == "O2" || element.answerType == "C2") {
+        element.setting = this.settingChart(element?.answerType,'seriesSetting' , element.dataChart);
+        element.grid = {}
+        element.grid.column = this.getColum(element.recID);
+        element.grid.row = this.getRow(element.recID)
+      }
     });
+  }
+
+
+  getColum(questionID:any)
+  {
+    var ques = this.lstQuestion.filter(x=>x.recID == questionID);
+    if(ques && ques.length >0) return (ques[0].answers.filter(x=>!x.isColumn)).sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
+    return [];
+  }
+
+  getRow(questionID:any)
+  {
+    let result = [];
+    this.lstRespondents.forEach(element => {
+      if(element.responds && element.responds.length>0)
+      {
+        var results = element.responds.filter(x=>x.questionID == questionID);
+        if(results && results.length > 0)
+        {
+          var data = [{objectID:element.objectID}];
+          var listResult = results[0].results.sort((a:any,b:any)=> a?.seqNo - b?.seqNo);
+          listResult.forEach(element2 => {
+            data.push(element2.answer)
+          });
+          result.push(data);
+        }
+      }
+    });
+    return result;
   }
   //Get content form string html
   extractContent(s:any) {
@@ -517,5 +553,18 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   {
     if(moment(data, moment.ISO_8601, true).isValid()) return moment(data).format('DD/MM/YYYY');
     return data;
+  }
+
+  showHideChart(recID:any , index:any)
+  {
+
+    var element = document.getElementById("chart"+recID+index);
+    element.classList.remove("invisible");
+    element.classList.add("visible");
+
+    var dif = index == "2" ? "1": "2";
+    var element = document.getElementById("chart"+recID+dif);
+    element.classList.add("invisible");
+    element.classList.remove("visible");
   }
 }

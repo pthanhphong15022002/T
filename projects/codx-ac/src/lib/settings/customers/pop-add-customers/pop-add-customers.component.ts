@@ -109,14 +109,6 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.keyField = dialog.dataService!.keyField;
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res && res.length) {
-        let add = res.find((x) => x.functionID == 'SYS01');
-        let edit = res.find((x) => x.functionID == 'SYS03');
-        if (add) this.moreFuncNameAdd = add.defaultName;
-        if (edit) this.moreFuncNameEdit = edit.customName;
-      }
-    });
     this.cache
       .gridViewSetup('Customers', 'grvCustomers')
       .subscribe((res: []) => {
@@ -184,13 +176,13 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.length) {
           let m = res.find((x) => x.functionID == 'ACS20503');
-          this.funcNameBank = m.defaultName;
+          this.funcNameBank = m.defaultName.toLowerCase();
         }
       });
     this.cache.moreFunction('Contacts', 'grvContacts').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'ACS20501');
-        this.funcNameContact = m.defaultName;
+        this.funcNameContact = m.defaultName.toLowerCase();
       }
     });
     this.cache
@@ -198,7 +190,19 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res && res.length) {
           let m = res.find((x) => x.functionID == 'ACS20502');
-          this.funcNameAddress = m.defaultName;
+          this.funcNameAddress = m.defaultName.toLowerCase();
+        }
+      });
+    
+    this.cache.message('AC0033').subscribe((res) => {
+        if (res) {
+          this.moreFuncNameAdd = res?.customName;
+        }
+      });
+  
+    this.cache.message('AC0034').subscribe((res) => {
+        if (res) {
+          this.moreFuncNameEdit = res?.customName;
         }
       });
   }
@@ -637,7 +641,7 @@ export class PopAddCustomersComponent extends UIComponent implements OnInit {
         .match(phonenumberFormat);
       if (checkRegex == null) {
         this.notification.notify(
-          this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ',//
+          this.gridViewSetup['Phone'].headerText + ' ' + 'không hợp lệ',///
           '2'
         );
         this.validate++;

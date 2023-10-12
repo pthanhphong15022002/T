@@ -24,7 +24,33 @@
           (click)="openPopupSup(popupSup, dataStep)"
         ></i>
       </div>
-      <div>
+      <div class="d-flex align-items-center justify-content-end">
+        <div
+          class="ms-2 cursor-pointer"
+          *ngIf="dataStep?.approveStatus && dataStep?.approveStatus != 1"
+          [ngbTooltip]="approveStatus"
+          container="body"
+        >
+          <codx-vll
+            [name]="vllApprover"
+            [field]="'ApproveStatus'"
+            [value]="dataStep?.approveStatus"
+            [showText]="true"
+            [showBgColor]="true"
+            class="badge badge-light badge-sm line-clamp-vll"
+          >
+          </codx-vll>
+          <!-- default="Tình trạng xét duyệt" -->
+          <ng-template #approveStatus>
+            <codx-label
+              class="text-nowrap"
+              fiedName="ApproveStatus"
+              formName="DPInstancesSteps"
+              gridViewName="grvDPInstancesSteps"
+            >
+            </codx-label>
+          </ng-template>
+        </div>
         <button
           type="button"
           class="btn btn-primary btn-sm d-flex align-items-center"
@@ -42,7 +68,7 @@
           <span class="icon-16 icon-update me-1"></span>
           <codx-label
             class="text-nowrap"
-            fiedName="lblProgress"
+            name="lblProgress"
             formName="DPInstancesSteps"
             gridViewName="grvDPInstancesSteps"
             default="Cập nhật tiến độ"
