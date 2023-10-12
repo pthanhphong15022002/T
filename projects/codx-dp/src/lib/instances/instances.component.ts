@@ -2329,6 +2329,7 @@ export class InstancesComponent
               let exportData: ExportData = {
                 funcID: this.view.formModel.funcID,
                 recID: this.dataSelected.recID,
+                data: JSON.stringify(this.dataSelected),
               };
               if (dt) this.release(dt, this.esCategory, exportData);
             });
