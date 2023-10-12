@@ -37,8 +37,8 @@ export class DashboardComponent extends UIComponent {
   dataValueCard = '';
   predicateCoins = `Owner =@0  `;
   dataValueCoins = '';
-  // predicateWP = 'Category =@0 && Stop=false';
-  // dataValueWP = '3';
+  // predicatesWP = 'Category =@0 && Stop=false';
+  // dataValuesWP = '3';
 
   memberType = '3';
   arrVll = ['L1422', 'L1419'];
@@ -50,7 +50,7 @@ export class DashboardComponent extends UIComponent {
   user = null;
 
   /* #region filter */
-  entityName: string;
+  entityName: string = 'FD_Cards';
   functionID: string;
   favoriteID: string;
   date: Date = new Date();
@@ -60,6 +60,8 @@ export class DashboardComponent extends UIComponent {
   /* #endregion */
 
   /* #region request get list post */
+  predicatesWP = '';
+  dataValuesWP = '';
   predicateWP = '';
   dataValueWP = '';
   service: string = 'FD';
@@ -161,7 +163,7 @@ export class DashboardComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.lstCardType = res[4]?.childs;
-        this.entityName = this.lstCardType[0]?.entityName;
+        // this.entityName = this.lstCardType[0]?.entityName;
         this.functionID = this.lstCardType[0]?.functionID;
         this.getFavorite();
       });
@@ -174,7 +176,8 @@ export class DashboardComponent extends UIComponent {
       .subscribe((res: any) => {
         this.lstFavorite = res.favs;
         this.favoriteID = res.defaultId;
-        this.loadPosts();
+        this.setPredicates();
+        this.showPosts = true;
       });
   }
 
@@ -194,8 +197,9 @@ export class DashboardComponent extends UIComponent {
     this.fdService.getListCard(model).subscribe((res) => {
       if (res) this.lstTopRadio = res[0];
       this.lstTopRadio.forEach((item) => {
-
-        let listShare = item.permissions.filter(x => x.memberType == '3' && x.objectType != '7');
+        let listShare = item.permissions.filter(
+          (x) => x.memberType == '3' && x.objectType != '7'
+        );
         if (listShare && listShare.length > 0) {
           let fItem = listShare[0];
           if (listShare.length == 1) {
@@ -263,35 +267,32 @@ export class DashboardComponent extends UIComponent {
   }
 
   setPredicates() {
-    this.predicateWP = '';
-    this.dataValueWP = '';
+    this.cache.functionList(this.functionID).subscribe((res) => {
+      this.predicateWP = res?.predicate;
+      this.dataValueWP = res?.dataValue;
 
-    if (this.fromDateDropdown && this.toDateDropdown) {
-      this.predicateWP += 'CreatedOn >= @0 && CreatedOn < @1';
-      this.dataValueWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
-    }
+      this.predicatesWP = '';
+      this.dataValuesWP = '';
 
-    switch (this.radio) {
-      case this.listRadio[0]?.data:
-        break;
-      case this.listRadio[1]?.data:
-        if (this.favoriteID == this.lstFavorite[0]?.recID) {
-          this.predicateWP += ' && ObjectID = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        } else {
-          this.predicateWP += ' && CreatedBy = @2';
-          this.dataValueWP += `;${this.user.userID}`;
-        }
-        break;
-    }
-  }
+      if (this.fromDateDropdown && this.toDateDropdown) {
+        this.predicatesWP += 'CreatedOn >= @0 && CreatedOn < @1';
+        this.dataValuesWP += `${this.fromDateDropdown};${this.toDateDropdown}`;
+      }
 
-  loadPosts() {
-    this.setPredicates();
-    this.showPosts = false;
-    this.dt.detectChanges();
-    this.showPosts = true;
-    this.dt.detectChanges();
+      switch (this.radio) {
+        case this.listRadio[0]?.data:
+          break;
+        case this.listRadio[1]?.data:
+          if (this.favoriteID == this.lstFavorite[0]?.recID) {
+            this.predicatesWP += ' && ObjectID = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          } else {
+            this.predicatesWP += ' && CreatedBy = @2';
+            this.dataValuesWP += `;${this.user.userID}`;
+          }
+          break;
+      }
+    });
   }
 
   lstTagUser: any[] = [];
@@ -304,19 +305,19 @@ export class DashboardComponent extends UIComponent {
   clickCardType(item) {
     this.entityName = item.entityName;
     this.functionID = item.functionID;
-    this.getFavorite();
+    this.setPredicates();
   }
 
   clickFavorite(item) {
     if (item) {
       this.favoriteID = item.recID;
-      this.loadPosts();
+      this.setPredicates();
     }
   }
 
   changeRadio(e, data: string) {
     this.radio = data;
-    this.loadPosts();
+    this.setPredicates();
     this.getDataAmountCard();
   }
 
@@ -324,7 +325,7 @@ export class DashboardComponent extends UIComponent {
     if (e?.fromDate || e?.toDate) {
       this.fromDateDropdown = new Date(e.fromDate).toISOString();
       this.toDateDropdown = new Date(e.toDate).toISOString();
-      this.loadPosts();
+      this.setPredicates();
       this.getDataAmountCard();
     }
   }
