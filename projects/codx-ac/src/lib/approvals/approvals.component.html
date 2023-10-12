@@ -2,12 +2,8 @@
   #view
   [views]="views"
   [button]="button"
-  [entityName]="'ES_ApprovalTrans'"
-  [service]="'ES'"
+  [entityName]="view.entityName"
   idField="recID"
-  predicates="Module=@0 && Approver=@1"
-  [dataValues]="dataValues"
-
 >
 </codx-views>
 <ng-template #itemTemplate let-data>

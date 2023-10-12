@@ -14,7 +14,6 @@ import { HeaderComponent } from './workspace/header/header.component';
 import { PersonalComponent } from './personal/personal.component';
 import { MenuListComponent } from './personal/menu-list/menu-list.component';
 import { MasterDetailComponent } from './personal/master-detail/master-detail.component';
-import { ApprovalsComponent } from './approvals/approvals.component';
 import { MenuListApprovalComponent } from './approvals/menu-list-approval/menu-list-approval.component';
 import { AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { EPBookingComponent } from 'projects/codx-ep/src/lib/booking/ep-booking.component';
@@ -39,6 +38,7 @@ import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/pa
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
+import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -126,6 +126,10 @@ const routes: Routes = [
       {
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
+      },
+      {
+        path: 'approvevouchers/:funcID',
+        component: ApprovalsComponent,
       },
       {
         path: 'paymentorders/:funcID',

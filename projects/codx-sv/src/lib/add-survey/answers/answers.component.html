@@ -5,6 +5,7 @@
         <span class="fs-2 text-bold">{{lstRespondents.length}} câu trả lời</span>
       </div>
       <div>
+        <i class="icon-download" ngbTooltip="export"></i>
       </div>
     </div>
   </div>
@@ -72,7 +73,7 @@
     <div class="bg-white mt-5 border rounded p-7" *ngFor="let item of lstCountQuestion">
       <div class="d-flex justify-content-between align-items-start">
         <div class="d-flex justify-content-start flex-column">
-          <div class="fs-5">{{extractContent(item.question)}}</div>
+          <div class="fs-5" [innerHTML]="item.question"></div>
           <div class="mt-2">{{(item?.answerType == 'O2' || item?.answerType == 'C2') ? item?.countAnswer : countAnswer(item.answers)}} câu trả lời</div>
         </div>
         <div class="d-flex justify-content-end" *ngIf="item.isChart">
@@ -175,9 +176,18 @@
                     <th></th>
                     <th class="text-center" *ngFor="let column of item?.grid.column">{{column.answer}}</th>
                   </tr>
-                  <tr class="border-bottom" *ngFor="let row of item?.grid.row">
-                    <td><codx-img [objectId]="row[0].objectID" [objectType]="'AD_Users'" referType="avt"></codx-img></td>
-                    <td><div *ngFor="let rows of row[1].data">{{rows}}</div></td>
+                  <tr class="border-top" *ngFor="let row of item?.grid.row">
+                    <td>
+                      <ng-container *ngIf="row[0].objectID , else tmpGuest">
+                        <div class="d-flex align-items-center me-2  py-2">
+                          <codx-img [objectId]="row[0].objectID" [objectType]="'AD_Users'" referType="avt"></codx-img>
+                          <div class="d-flex flex-column mx-2">
+                            <span class="text-nowrap">{{row[0].name}}</span>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </td>
+                    <td><div class="py-2" *ngFor="let rows of row[1].data">{{rows}}</div></td>
                   </tr>
                 </table>
                 
@@ -200,13 +210,20 @@
                     <th></th>
                     <th *ngFor="let column of item?.grid.column">{{column.answer}}</th>
                   </tr>
-                  <tr class="border-bottom" *ngFor="let row of item?.grid.row">
+                  <tr class="border-top" *ngFor="let row of item?.grid.row">
                     <td *ngFor="let rowChild of row , let i = index">
                       <ng-container *ngIf="i==0">
-                        <codx-img [objectId]="rowChild.objectID" [objectType]="'AD_Users'" referType="avt"></codx-img>
+                        <ng-container *ngIf="rowChild.objectID , else tmpGuest">
+                          <div class="d-flex align-items-center me-2 py-2">
+                            <codx-img [objectId]="rowChild.objectID" [objectType]="'AD_Users'" referType="avt"></codx-img>
+                            <div class="d-flex flex-column mx-2">
+                              <span class="text-nowrap">{{rowChild.name}}</span>
+                            </div>
+                          </div>
+                        </ng-container>
                       </ng-container>
                       <ng-container *ngIf="i>0">
-                        {{rowChild}}
+                        <div *ngFor="let a of rowChild">{{a}}</div>
                       </ng-container>
                      
                     </td>
@@ -431,3 +448,11 @@
   </div>
 </ng-template>
 
+<ng-template #tmpGuest>
+  <div class="d-flex align-items-center me-2  py-2">
+    <codx-img [objectId]="" [objectType]="'AD_Users'" referType="avt"></codx-img>
+    <div class="d-flex flex-column mx-2">
+      <span class="text-nowrap">Guest</span>
+    </div>
+  </div>
+</ng-template>
