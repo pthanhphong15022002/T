@@ -56,6 +56,7 @@ export class TemplateInfo {
 export class ExportData {
   funcID: string;
   recID: string;
+  data:string;
 }
 
 export const ShareType = {

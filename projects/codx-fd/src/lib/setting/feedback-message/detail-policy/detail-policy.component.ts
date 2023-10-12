@@ -39,7 +39,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     console.log('lstPolicyLines ', this.lstPolicyLines);
-
+    if (!this.lstPolicyLines) this.lstPolicyLines = [];
     if (this.setting) {
       this.policy = this.setting.policy;
       // console.log('policyRecID ', this.policyRecID);
@@ -49,14 +49,20 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
           this.getFrom = this.setting.referdValue;
           this.cache.valueList(this.getFrom).subscribe((data) => {
             data?.datas?.forEach((e) => {
-              let pl = this.lstPolicyLines.find(
+              let pl = this.lstPolicyLines?.find(
                 (pl) => pl.itemSelect == e.value
               );
-              this.lstLines.push({
-                field: e.value,
-                text: e.text,
-                value: pl?.value,
-              });
+              let item = this.lstLines?.find((x) => x.field == e.value);
+              if (item) {
+                item.text = e.text;
+                item.value = pl?.value;
+              } else {
+                this.lstLines.push({
+                  field: e.value,
+                  text: e.text,
+                  value: pl?.value,
+                });
+              }
             });
             console.log('vll', this.lstLines);
             this;
@@ -79,6 +85,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
                 }
               }
               this.cache.combobox(this.getFrom).subscribe((data) => {
+                if (!data) return;
                 let gridModel = new DataRequest();
                 gridModel.entityName = data.entityName;
                 gridModel.entityPermission = data.entityName;
@@ -87,17 +94,27 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
                 this.fdService
                   .getDataCbbx(gridModel, data.service)
                   .subscribe((cbbData) => {
-                    let map = JSON.parse(cbbData[0]);
-                    map?.forEach((e) => {
-                      let pl = this.lstPolicyLines.find(
-                        (pl) => pl.itemSelect == e.CompetenceID
-                      );
-                      this.lstLines.push({
-                        field: e.CompetenceID,
-                        text: e.CompetenceName,
-                        value: pl?.value,
+                    if (cbbData && cbbData.length > 0) {
+                      let map = JSON.parse(cbbData[0]);
+                      map?.forEach((e) => {
+                        let pl = this.lstPolicyLines.find(
+                          (pl) => pl.itemSelect == e.CompetenceID
+                        );
+                        let item = this.lstLines?.find(
+                          (x) => x.field == e.CompetenceID
+                        );
+                        if (item) {
+                          item.text = e.CompetenceName;
+                          item.value = pl?.value;
+                        } else {
+                          this.lstLines.push({
+                            field: e.CompetenceID,
+                            text: e.CompetenceName,
+                            value: pl?.value,
+                          });
+                        }
                       });
-                    });
+                    }
                   });
               });
               break;
@@ -114,11 +131,18 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
                   value: null,
                 });
               } else {
-                this.lstLines.push({
-                  field: nullPL.itemSelect,
-                  text: '',
-                  value: nullPL.value,
-                });
+                let item = this.lstLines?.find(
+                  (x) => x.field == nullPL.itemSelect
+                );
+                if (item) {
+                  item.value = nullPL.value;
+                } else {
+                  this.lstLines.push({
+                    field: nullPL.itemSelect,
+                    text: '',
+                    value: nullPL.value,
+                  });
+                }
               }
 
               this.lstPolicyLines?.forEach((pl) => {
@@ -179,7 +203,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
         if (res && res.msgBodyData[0]) {
           let data = res.msgBodyData[0];
           let isAdded = false;
-          for (let i = 0; i < this.lstPolicyLines.length; i++) {
+          for (let i = 0; i < this.lstPolicyLines?.length; i++) {
             if (this.lstPolicyLines[i].id == data.itemSelect) {
               isAdded = true;
               this.lstPolicyLines[i].value = data.value;
@@ -187,11 +211,16 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
           }
           if (!isAdded) {
             this.lstPolicyLines.push(data);
-            this.lstLines.push({
-              field: data.itemSelect,
-              text: '',
-              value: data.value,
-            });
+            let item = this.lstLines?.find((x) => x.field == data.itemSelect);
+            if (item) {
+              item.value = data.value;
+            } else {
+              this.lstLines.push({
+                field: data.itemSelect,
+                text: '',
+                value: data.value,
+              });
+            }
           }
           this.value = undefined;
           this.detectorRef.detectChanges();

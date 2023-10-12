@@ -139,7 +139,7 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
         for (let i = 0; i < this.arrReport.length; i++) {
           arrChildren.push({
             title: this.arrReport[i].customName,
-            path: 'od/tmdashboard/' + this.arrReport[i].reportID,
+            path: 'od/tmdashboard/' + this.arrReport[i].recID,
           });
         }
         this.pageTitle.setSubTitle(arrChildren[0].title);
