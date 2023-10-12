@@ -19,6 +19,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { isObservable } from 'rxjs';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { palettes } from './setting.data';
 @Component({
   selector: 'app-setting',
   templateUrl: './setting.component.html',
@@ -49,7 +50,7 @@ export class SettingComponent
   primaryColor: any;
   backgroudColor: any;
   emailTemplate: any;
-
+  palettes = palettes
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
