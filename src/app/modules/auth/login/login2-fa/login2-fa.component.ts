@@ -270,6 +270,15 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  clear() {
+    const inputs = document.getElementById('inputs');
+    var ip = inputs.getElementsByTagName('input');
+    for (let i = 0; i < ip.length; i++) {
+      ip[i].value = '';
+      this.TOTPValues[i] = '';
+      this.otpValues[i] = '';
+    }
+  }
   changeOTP(evt, idx) {
     if (evt.target.value) {
       this.otpValues[idx] = evt.target.value;

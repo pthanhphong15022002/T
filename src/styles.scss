@@ -3956,9 +3956,18 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
 .content-campain-deals{
   .scroll-grid  div.e-content {
     height: calc(100vh - 450px) !important;
-    .e-columnheader{
-      height: 35px!important;
-    }
+  }
+}
+
+.camp-task{
+  height: calc(100vh - 400px);
+  .cm-list-task, .cm-list-task-nodate{
+    height: calc(100vh - 435px);
+    overflow: auto;
+    margin-bottom: 7px;
+  } 
+  .cm-list-task-nodate img{
+    max-width: 150px;
   }
 }
 
