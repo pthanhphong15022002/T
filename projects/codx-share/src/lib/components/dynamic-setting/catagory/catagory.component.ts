@@ -415,7 +415,8 @@ export class CatagoryComponent implements OnInit {
   openSub(evt: any, data: any, dataValue: any) {
     let recID = data.recID;
     this.isOpenSub = true;
-    this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
+    if (!this.oldSettingFull || Object.keys(this.oldSettingFull).length === 0)
+      this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
     if (!dataValue) dataValue = this.oldDataValue[data.transType];
     if (!this.oldDataValue || Object.keys(this.oldDataValue).length === 0)
       this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
@@ -466,7 +467,6 @@ export class CatagoryComponent implements OnInit {
   }
 
   backSub(evt: any) {
-    this.isOpenSub = false;
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -476,14 +476,14 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
-    if (this.lineType == '2') {
+    if (this.lineType == '1') {
+      this.isOpenSub = false;
       this.oldSettingFull = [];
       this.oldDataValue = {};
-    }
+    } else this.lineType = +this.lineType - 1 + '';
     if (this.componentSub) {
       this.componentSub = '';
     } else {
-      this.lineType = +this.lineType - 1 + '';
       if (this.category === '2' || this.category === '7')
         this.getIDAutoNumber();
       else if (this.category === '5') this.getAlertRule();
