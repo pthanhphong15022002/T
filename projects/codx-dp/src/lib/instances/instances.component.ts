@@ -2348,6 +2348,7 @@ export class InstancesComponent
       });
   }
 
+  // // data?.stepName, => tên theo quy trình
   release(data: any, category: any, exportData: any) {
     this.codxShareService.codxReleaseDynamic(
       'DP',
@@ -2355,7 +2356,7 @@ export class InstancesComponent
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      data?.stepName,
+      this.dataSelected.title,
       this.releaseCallback.bind(this),
       null,
       null,
