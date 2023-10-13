@@ -82,30 +82,14 @@ export class CodxViewApprovalStepComponent
             this.fmApprovalStep = res;
             this.shareService.viewApprovalStep(this.transID,this.isSettingMode).subscribe((res)=>{
               if (res && res?.length == 2) {
-                this.process = res[0] ?? [];
-                // if(res[1]?.length>0){
-                //   let apInfos = res[1];
-                //   this.process.forEach(st=>{
-                //     if(st?.approvers){
-                //       st?.approvers.forEach(ap=>{
-                //         let curAp = apInfos.filter(x=>x?.approver == ap?.approver && x?.roleType == ap?.roleType);
-                //         if(curAp?.length>0){
-                //           ap.userID = curAp[0]?.userID;
-                //           ap.userName = curAp[0]?.userName;
-                //           ap.employeeID = curAp[0]?.employeeID;
-                //           ap.position = ap?.position ?? curAp[0]?.positionName;
-                //         }
-                //       })
-                //     }
-                //   });
-                // }      
-                if (res[1]?.length > 0) {
+                let tempListStep = res[0] ?? [];
+                if (res[1]?.length > 0 && res[0]?.length > 0) {
                   let apInfos = res[1];
-                  for (let st of this.process) {
+                  for (let st of res[0]) {
                     if (st?.approvers) {
                       for (let ap of st?.approvers) {
                         let curAp = [];
-                        if (ap?.roleType != 'E' && ap?.roleType != 'RO') {
+                        if (ap?.roleType == 'P' && ap?.roleType == 'U') {
                           curAp = apInfos.filter(
                             (x) =>
                               x?.approver == ap?.approver &&
@@ -121,11 +105,13 @@ export class CodxViewApprovalStepComponent
                           ap.userName = curAp[0]?.userName;
                           ap.employeeID = curAp[0]?.employeeID;
                           ap.position = ap?.position ?? curAp[0]?.positionName;
+                          ap.orgUnitName = curAp[0]?.orgUnitName;
                         }
                       }
                     }
-                  }
-                }      
+                  }                 
+                  this.process = tempListStep;               
+                }                    
                 this.cr.detectChanges();            
               }
             });

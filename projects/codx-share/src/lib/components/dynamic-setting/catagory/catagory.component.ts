@@ -433,7 +433,7 @@ export class CatagoryComponent implements OnInit {
         ) || [];
       this.setting =
         this.settingFull.filter((res) => res.isVisible == true) || [];
-      this.dataValue = dataValue;
+      //this.dataValue = dataValue;
       this.groupSetting = this.setting.filter((x) => {
         return x.lineType === this.lineType;
       });
