@@ -3970,7 +3970,14 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
     max-width: 150px;
   }
 }
-
+.cm-scroll.cm-full{
+  .camp-task{
+    height: calc(100vh - 2440px);
+    .cm-list-task, .cm-list-task-nodate{
+      height: calc(100vh - 280px);
+    } 
+  }
+}
 //////////////
 // ipad and tablet
 /// /////////
