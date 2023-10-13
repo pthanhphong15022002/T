@@ -2,12 +2,7 @@
   <div class="nav p-1">
     <div class="float-end d-flex justify-content-between w-100">
       <div>
-        <button
-          type="button"
-          class="btn btn-icon btn-primary"
-          (click)="back()"
-          *ngIf="clickQueue.length > 1"
-        >
+        <button type="button" class="btn btn-icon btn-primary" (click)="back()" *ngIf="clickQueue.length > 1">
           <i class="icon-arrow_back icon-18"></i>
         </button>
       </div>
@@ -22,24 +17,15 @@
     <div class="pt-5">
       <img src="/assets/logos/logo-1.svg" class="h-35px" alt="" />
     </div>
-    <codx-label
-      class="text-dark fw-bold fs-3 my-3"
-      default="Xác thực bảo mật 2 lớp"
-    ></codx-label>
-    <codx-label
-      class="text-gray-500 fs-7 mb-3"
-      default="Vui lòng chọn hình thức xác thực bảo mật 2 lớp"
-    ></codx-label>
+    <codx-label class="text-dark fw-bold fs-3 my-3" default="Xác thực bảo mật 2 lớp"></codx-label>
+    <codx-label class="text-gray-500 fs-7 mb-3" default="Vui lòng chọn hình thức xác thực bảo mật 2 lớp"></codx-label>
   </div>
   <div class="content p-2 mx-3 mt-5">
     <ng-container [ngSwitch]="clickQueue[clickQueue.length - 1]">
       <div *ngSwitchCase="'1'">
         <div *ngIf="lstOptions">
-          <div
-            class="d-flex align-items-center bg-hover rounded-1 cursor-pointer py-3 px-4 mt-1"
-            *ngFor="let option of lstOptions"
-            (click)="changeLogin2FAType(option)"
-          >
+          <div class="d-flex align-items-center bg-hover rounded-1 cursor-pointer py-3 px-4 mt-1"
+            *ngFor="let option of lstOptions" (click)="changeLogin2FAType(option)">
             <div [class]="'rounded-circle me-3 icon-26 text-gray-800 ' + option.icon"></div>
             <div class="w-100">
               <div class="fs-6 fw-bold text-gray-700">
@@ -61,22 +47,13 @@
         <div class="d-flex align-items-center mt-6 ms-4">
           <div class="d-flex justify-content-start me-3">
             <!--begin::Switch-->
-            <codx-input
-              type="checkbox"
-              labelPosition="After"
-              field=""
-              [crrValue]="askState"
-              (valueChange)="changeAskState($event)"
-            >
+            <codx-input type="checkbox" labelPosition="After" field="" [crrValue]="askState"
+              (valueChange)="changeAskState($event)">
             </codx-input>
             <!--end::Switch-->
           </div>
           <div class="text-gray-600 text-nowrap">
-            <codx-label
-              name="lblLg2FAAsk"
-              default="Không hỏi lại trên thiết bị này"
-              class="fw-bold"
-            ></codx-label>
+            <codx-label name="lblLg2FAAsk" default="Không hỏi lại trên thiết bị này" class="fw-bold"></codx-label>
           </div>
         </div>
       </ng-container>
@@ -85,41 +62,22 @@
 </ng-container>
 
 <ng-template #tmpQR>
-  <div
-    class="w-100 h-100 d-flex flex-column justify-content-center align-items-center mt-3"
-  >
-    <div
-      class="d-flex flex-column justify-content-center align-items-center p-3"
-    >
-      <div
-        *ngIf="!isScaned; else avatar"
-        class="img d-flex justify-content-center position-relative rounded-3"
-      >
+  <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center mt-3">
+    <div class="d-flex flex-column justify-content-center align-items-center p-3">
+      <div *ngIf="!isScaned; else avatar" class="img d-flex justify-content-center position-relative rounded-3">
         <img class="w-50 h-50 ratio ratio-1x1 rounded-3" [src]="qrBase64" />
-        <div
-          class="w-50 bg-secondary ratio ratio-1x1 position-absolute rounded-3"
-          [ngClass]="{}"
-          [ngStyle]="{
+        <div class="w-50 bg-secondary ratio ratio-1x1 position-absolute rounded-3" [ngClass]="{}" [ngStyle]="{
             'z-index': qrTimeout > 0 ? -1 : 1,
             'opacity': qrTimeout > 0 ? 0 : 0.9,
-          }"
-        ></div>
-        <div
-          class="otp-btn w-100 h-100 d-flex justify-content-center align-items-center position-absolute"
-        >
-          <button
-            [disabled]="qrTimeout > 0"
-            [ngStyle]="{
+          }"></div>
+        <div class="otp-btn w-100 h-100 d-flex justify-content-center align-items-center position-absolute">
+          <button [disabled]="qrTimeout > 0" [ngStyle]="{
               'z-index': qrTimeout > 0 ? -1 : 2,
               'border':'none',
               'opacity': 0.8,
               'border-radius': '50%',
-            }"
-            type="button"
-            (click)="generateQR()"
-            tabindex="-1"
-            class="btn link-dark border border-0 btn-primary w-80px h-80px"
-          >
+            }" type="button" (click)="generateQR()" tabindex="-1"
+            class="btn link-dark border border-0 btn-primary w-80px h-80px">
             <div class="text-light icon-i-arrow-clockwise"></div>
           </button>
         </div>
@@ -153,10 +111,8 @@
       </span>
     </div>
     <div class="qr-codx-guid d-flex flex-column text-center mt-3">
-      <codx-label
-        class="fw-bold text-dark fs-6"
-        default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"
-      ></codx-label>
+      <codx-label class="fw-bold text-dark fs-6"
+        default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"></codx-label>
     </div>
   </div>
 </ng-template>
@@ -164,84 +120,38 @@
   <div class="text-start m-3">
     <form [formGroup]="loginFG" method="post" (ngSubmit)="login2FAOTP()">
       <div class="form-group mb-5 fv-plugins-icon-container">
-        <label class="fw-bold">
-          <codx-label fiedName="otp" formModel="" default="OTP"></codx-label
-        ></label>
-        <div
-          class="d-flex align-items-center form-control form-control-solid form-control-lg p-3"
-        >
+        <div class="d-flex justify-content-between">
+          <label class="fw-bold btn btn-sm">
+            <codx-label fiedName="otp" formModel="" default="OTP"></codx-label></label>
+          <label class="fw-bold btn btn-sm btn-danger">
+            <codx-label fiedName="clearOTP" default="Xóa OTP" (click)="clear()"></codx-label>
+          </label>
+        </div>
+        <div class="d-flex align-items-center form-control form-control-solid form-control-lg p-3">
           <div class="row mx-0 inputs" id="inputs">
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-0"
-              (change)="changeOTP($event, 0)"
-            />
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-1"
-              (change)="changeOTP($event, 1)"
-            />
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-2"
-              (change)="changeOTP($event, 2)"
-            />
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-3"
-              (change)="changeOTP($event, 3)"
-            />
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-4"
-              (change)="changeOTP($event, 4)"
-            />
-            <input
-              class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
-              inputmode="numeric"
-              type="text"
-              maxlength="1"
-              id="otp-5"
-              (change)="changeOTP($event, 5)"
-            />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-0" (change)="changeOTP($event, 0)" />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-1" (change)="changeOTP($event, 1)" />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-2" (change)="changeOTP($event, 2)" />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-3" (change)="changeOTP($event, 3)" />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-4" (change)="changeOTP($event, 4)" />
+            <input class="col-2 border border-1 border-gray-200 h-35px fs-5 text-gray-700 text-center"
+              inputmode="numeric" type="text" maxlength="1" id="otp-5" (change)="changeOTP($event, 5)" />
           </div>
         </div>
       </div>
       <div *ngIf="curLgType == 'otp'" class="otp-btn w-100">
-        <button
-          [disabled]="otpTimeout > 0 || email == '' || email == null"
-          type="button"
-          (click)="generateOTP()"
-          tabindex="-1"
-          class="btn btn-full btn-outline-primary"
-        >
-          <codx-label
-            formModel=""
-            class="text-primary"
-            default="Gửi mã OTP"
-          ></codx-label>
+        <button [disabled]="otpTimeout > 0 || email == '' || email == null" type="button" (click)="generateOTP()"
+          tabindex="-1" class="btn btn-full btn-outline-primary">
+          <codx-label formModel="" class="text-primary" default="Gửi mã OTP"></codx-label>
         </button>
       </div>
       <div class="" *ngIf="otpTimeout > 0">
-        <codx-label
-          formModel=""
-          default="Xác thực sẽ hết hạn sau "
-        ></codx-label>
+        <codx-label formModel="" default="Xác thực sẽ hết hạn sau "></codx-label>
         {{ otpMinutes }}:
         {{ otpTimeout % 60 }}
       </div>

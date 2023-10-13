@@ -1,10 +1,17 @@
-.scroll-grid {
-  //height: calc(100vh - 212px);
-  height: calc(100vh - 471px) !important;
-  overflow: auto;
-}
 
-.grid-full {
-  height: calc(100vh - 280px) !important;
-  overflow: auto;
+
+
+codx-campaigns-detail{
+  .e-grid .e-headercell, .e-grid .e-detailheadercell,.e-columnheader {
+    height: 35px!important;
+  }
+  .e-grid .e-headercell{
+    padding: 0!important;
+  }
+  .e-grid .e-gridheader tr:first-child th {
+    background-color:var(--gray-100);
+  }
+  .cm-full .e-content{
+    padding: 0!important;
+  }
 }

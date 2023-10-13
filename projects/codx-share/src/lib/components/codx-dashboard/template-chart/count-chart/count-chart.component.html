@@ -1,14 +1,20 @@
-<div class="w-100 h-100 d-flex justify-content-start align-items-center p-2">
+<div class="w-100 h-100 d-flex justify-content-start align-items-center p-1">
+  <!-- <img
+    [src]="this.iconUrl"
+    style="width: 25%; height: auto"
+    class="svg-icon m-2"
+  /> nvthuan comment để truyền width vào -->
   <img
     [src]="this.iconUrl"
-    style="width: 45px; height: auto"
+    [style.width]="width ? width : '25%'"
+    [style.height]="height ? height : 'auto'"
     class="svg-icon m-2"
   />
-  <div class="p-2">
+  <div class="p-2 mt-1">
     <div class="fw-bold" style="font-size: 0.75vw">
       {{ this.title }}
     </div>
-    <div class="fw-bold" style="font-size: 1.25vw">
+    <div class="fw-bold" style="font-size: 1.75vw">
       {{ +this.value }}
     </div>
   </div>

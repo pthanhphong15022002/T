@@ -11,13 +11,13 @@
 
 <ng-template #template>
   <div class="w-100 h-100" *ngIf="isLoaded">
-    <div *ngIf="reportID == 'TMD001'">
+    <div *ngIf="funcID == 'TMD001'">
       <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
     </div>
-    <div *ngIf="reportID == 'TMD002'">
+    <div *ngIf="funcID == 'TMD002'">
       <ng-container *ngTemplateOutlet="dashboard2"> </ng-container>
     </div>
-    <div *ngIf="reportID == 'TMD003'">
+    <div *ngIf="funcID == 'TMD003'">
       <ng-container *ngTemplateOutlet="dashboard3"> </ng-container>
     </div>
   </div>
@@ -48,31 +48,34 @@
 
 <ng-template #dashboard1>
   <codx-dashboard
+    #dashboard
     [templates]="templates1"
     [panels]="panels1"
     [datas]="datas1"
     [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
+    [cellSpacing]="[10, 10]"
   ></codx-dashboard>
 </ng-template>
 
 <ng-template #dashboard2>
   <codx-dashboard
+    #dashboard
     [templates]="templates2"
     [panels]="panels2"
     [datas]="datas2"
     [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
+    [cellSpacing]="[10, 10]"
   ></codx-dashboard>
 </ng-template>
 
 <ng-template #dashboard3
   ><codx-dashboard
+    #dashboard
     [templates]="templates3"
     [panels]="panels3"
     [datas]="datas3"
     [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
+    [cellSpacing]="[10, 10]"
   ></codx-dashboard
 ></ng-template>
 
@@ -80,6 +83,7 @@
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="1">
     <div
+    class="w-100 h-100 border  border-secondary rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -94,7 +98,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
         [title]="'Chưa thực hiện'"
-        [value]="+myDBData?.status?.newTasks"
+        [value]="getTaskStatus('10')"
       ></count-chart>
     </div>
   </div>
@@ -103,6 +107,7 @@
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="2">
     <div
+    class="w-100 h-100 border  border-warning rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -117,7 +122,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
         [title]="'Đang thực hiện'"
-        [value]="+myDBData?.status?.processingTasks"
+        [value]="getTaskStatus('20')"
       ></count-chart>
     </div>
   </div>
@@ -126,6 +131,7 @@
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="3">
     <div
+    class="w-100 h-100 border  border-danger rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -140,7 +146,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
         [title]="'Quá hạn'"
-        [value]="+myDBData?.status?.overdueTasks"
+        [value]="getOverdueTasks().length"
       ></count-chart>
     </div>
   </div>
@@ -149,6 +155,7 @@
 <ng-template #my_dashboard>
   <div class="w-100 h-100" id="4">
     <div
+      class="w-100 h-100 border  border-success rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -163,7 +170,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
         [title]="'Hoàn tất'"
-        [value]="+myDBData?.status?.doneTasks"
+        [value]="getTaskStatus('90')"
       ></count-chart>
     </div>
   </div>
@@ -173,17 +180,17 @@
   <div class="w-100 h-100" id="5">
     <div class="assignchart-group w-100" style="height: 70%">
       <div
-        *ngFor="let tasks of myDBData?.tasksByCategory; let i = index"
+        *ngFor="let task of taskByCategory | keyvalue; let i = index"
         class="assignchart-item d-flex align-items-center justify-content-end"
         [title]=""
       >
-        <div class="fw-bold me-2">{{ tasks.quantity }}</div>
+        <div class="fw-bold me-2">{{ task.value.length }}</div>
         <div
           class="assignchart-task"
           style="color: #000000"
           [style.background-color]="paletteColor[i]"
           [style.width]="
-            (tasks.quantity / myDBData?.tasksByCategory[0].quantity) * 100 + '%'
+            (task.value.length/dataset.length) * 100 + '%'
           "
         ></div>
       </div>
@@ -212,17 +219,16 @@
     <ejs-treemap
       align="center"
       style="display: block"
-      [dataSource]="myDBData?.tasksByRef?.tasksRef"
-      weightValuePath="quantity"
-      rangeColorValuePath="quantity"
+      [dataSource]="taskByRefType"
+      [weightValuePath]="'quantity'"
       [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
       [leafItemSettings]="{
-        labelPath: 'refName'
+        labelPath: 'refType'
       }"
       [tooltipSettings]="{
         visible: true,
         template:
-          '<div><span >${refName}: </span><span >${quantity}</span></div>'
+          '<div><span >${refType}: </span><span >${quantity}</span></div>'
       }"
       enableDrillDown="false"
     >
@@ -285,7 +291,7 @@
             [pointers]="[
               {
                 roundedCornerRadius: 20,
-                value: toFixed(myDBData?.rateDoneTask),
+                value: toFixed((getTaskStatus('90')/dataset.length)*100),
                 type: 'RangeBar',
                 radius: '100%',
                 color: '#0078ff',
@@ -334,7 +340,7 @@
             [pointers]="[
               {
                 roundedCornerRadius: 20,
-                value: toFixed(myDBData?.rateDoneTaskOnTime),
+                value: toFixed(getTasksDoneOntime().length),
                 type: 'RangeBar',
                 radius: '70%',
                 color: '#2cd9c5',
@@ -369,7 +375,7 @@
           </div>
           <div class="ms-6">
             <span class="fw-bold fs-4"
-              >{{ toFixed(myDBData?.rateDoneTask) }}%</span
+              >{{ toFixed((getTaskStatus('90')/dataset.length)*100) }}%</span
             >
           </div>
         </div>
@@ -390,7 +396,7 @@
           </div>
           <div class="ms-6">
             <span class="fw-bold fs-4"
-              >{{ toFixed(myDBData?.rateDoneTaskOnTime) }}%</span
+              >{{ toFixed(getTasksDoneOntime().length) }}%</span
             >
           </div>
         </div>
@@ -435,7 +441,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="myDBData?.workPerformance?.performance"
+                  [value]="(getEtimated()/getTotalTime())*100"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -448,7 +454,6 @@
           </e-axes>
         </ejs-circulargauge>
         <div
-          *ngIf="myDBData?.workPerformance?.performance"
           style="
             position: absolute;
             top: 50%;
@@ -457,7 +462,7 @@
           "
         >
           <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
-            {{ toFixed(myDBData?.workPerformance?.performance) }}
+            {{ toFixed((getEtimated()/getTotalTime())*100) }} %
           </p>
         </div>
       </div>
@@ -470,7 +475,7 @@
           </div>
           <div class="d-flex justify-content-center align-items-center">
             <div class="fw-bold" style="font-size: 1.75vw">
-              {{ myDBData.workPerformance?.actualHours ?? 0 }}
+              {{toFixed(getTotalTime())}}
             </div>
             <div class="ms-2" style="font-size: 0.75vw">giờ</div>
           </div>
@@ -481,7 +486,7 @@
           </div>
           <div class="d-flex justify-content-center align-items-center">
             <div class="fw-bold" style="font-size: 1.75vw">
-              {{ myDBData.workPerformance?.workHours ?? 0 }}
+              {{ toFixed(getEtimated()) }}
             </div>
             <div class="ms-2" style="font-size: 0.75vw">giờ</div>
           </div>
@@ -522,27 +527,24 @@
           style="height: 100%; width: 100%"
           [tooltip]="tooltip"
           [centerLabel]="{
-            text: myDBData?.tasksByGroupQty + '<br>công việc'
+            text:
+            getTaskGroups().length + '<br>công việc'
           }"
           [legendSettings]="{ visible: false }"
+
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="myDBData?.tasksByGroup"
-              xName="taskGroupName"
+              [dataLabel]="dataLabel"
+              [dataSource]="taskByGroup"
+              xName="groupName"
               yName="quantity"
               startAngle="0"
               innerRadius="80%"
               radius="70%"
               [explode]="true"
               [explodeOffset]="'10%'"
-              [palettes]="[
-                '#005dc7',
-                '#21b3d2',
-                '#06ddb8',
-                '#00f5e9',
-                '#a6dff5'
-              ]"
+              [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -550,23 +552,21 @@
       </div>
       <div class="h-50 position-relative">
         <div
-          class="position-absolute scroll-hover"
+          class="position-absolute overflow-x-hidden"
           style="max-height: 100%; width: 100%"
         >
-          <div *ngFor="let data of myDBData?.tasksByGroup" class="mt-4">
+          <div *ngFor="let data of taskByGroup" class="mt-4">
             <div class="mx-2 my-5">
               <div class="d-flex justify-content-between">
                 <div>
-                  <span>{{ data.taskGroupName }}</span>
+                  <span>{{ data.groupName }}</span>
                   <span>&nbsp;(</span>
                   <span>{{ data.quantity }}</span>
                   <span>)</span>
                 </div>
                 <div>
                   <span>{{
-                    data.percentage % 1 === 0
-                      ? data.percentage
-                      : data.percentage.toFixed(1)
+                    toFixed((data.quantity/dataset.length)*100)
                   }}</span
                   ><span>% </span>
                 </div>
@@ -576,7 +576,7 @@
                   <div
                     class="rounded-4 h-5px"
                     role="progressbar"
-                    [style.width]="data.percentage + '%'"
+                    [style.width]="(data.quantity/dataset.length)*100 + '%'"
                     [style.background-color]="'#3699ff'"
                   ></div>
                 </div>
@@ -598,22 +598,30 @@
       height="100%"
       [id]="newGuid()"
       [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+    }"
+    [palettes]="paletteColor"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="myDBData?.dataBarChart?.lineChart"
+          [dataSource]="doneTasks"
           type="Line"
-          xName="label"
-          yName="value"
+          [xName]="'taskID'"
+          [yName]="'completed'"
           name="WorkHours"
-          pointColorMapping="color"
+          [marker]="circleMarker"
         >
         </e-series>
         <e-series
-          [dataSource]="myDBData?.dataBarChart?.barChart"
+          [dataSource]="doneTasks"
           type="Column"
-          xName="label"
-          yName="value"
+          [xName]="'taskID'"
+          [yName]="'estimated'"
           name="Tasks"
         >
         </e-series>
@@ -628,6 +636,7 @@
 <ng-template #team_dashboard>
   <div class="w-100 h-100" id="1">
     <div
+      class="w-100 h-100 border  border-secondary rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -642,7 +651,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
         [title]="'Chưa thực hiện'"
-        [value]="+teamDBData?.status?.newTasks"
+        [value]="getTaskStatus('10')"
       ></count-chart>
     </div>
   </div>
@@ -651,6 +660,7 @@
 <ng-template #team_dashboard>
   <div class="w-100 h-100" id="2">
     <div
+    class="w-100 h-100 border  border-warning rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -665,7 +675,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
         [title]="'Đang thực hiện'"
-        [value]="+teamDBData?.status?.processingTasks"
+        [value]="getTaskStatus('20')"
       ></count-chart>
     </div>
   </div>
@@ -674,6 +684,7 @@
 <ng-template #team_dashboard>
   <div class="w-100 h-100" id="3">
     <div
+    class="w-100 h-100 border  border-danger rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -688,7 +699,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
         [title]="'Quá hạn'"
-        [value]="+teamDBData?.status?.overdueTasks"
+        [value]="getOverdueTasks().length"
       ></count-chart>
     </div>
   </div>
@@ -697,6 +708,7 @@
 <ng-template #team_dashboard>
   <div class="w-100 h-100" id="4">
     <div
+    class="w-100 h-100 border  border-success rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks(
@@ -711,7 +723,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
         [title]="'Hoàn tất'"
-        [value]="+teamDBData?.status?.doneTasks"
+        [value]="getTaskStatus('90')"
       ></count-chart>
     </div>
   </div>
@@ -731,8 +743,8 @@
               <span class="fw-bold" style="font-size: 0.5vw"
                 >{{
                   toFixed(
-                    (+teamDBData?.status?.onTimeTasks /
-                      +teamDBData?.status?.doneTasks) *
+                    (getTasksDoneOntime().length /
+                    dataset.length) *
                       100
                   )
                 }}%</span
@@ -742,9 +754,9 @@
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="+teamDBData?.status?.doneTasks"
+              [maximum]="dataset.length"
               [minimum]="0"
-              [value]="+teamDBData?.status?.onTimeTasks"
+              [value]="getTasksDoneOntime().length"
               [width]="'75'"
               [height]="'75'"
               [trackThickness]="10"
@@ -758,7 +770,7 @@
       <div class="p-2">
         <div class="fw-bold">Đúng hạn</div>
         <div class="fw-bold" style="font-size: 1.25rem">
-          {{ +teamDBData?.status?.onTimeTasks }}
+          {{ getTasksDoneOntime().length }}
         </div>
       </div>
     </div>
@@ -779,8 +791,8 @@
               <span class="fw-bold" style="font-size: 0.5vw">
                 {{
                   toFixed(
-                    (+teamDBData?.status?.overDueTasks /
-                      +teamDBData?.status?.doneTasks) *
+                    ((getOverdueTasks().length) /
+                    dataset.length) *
                       100
                   )
                 }}%</span
@@ -790,9 +802,9 @@
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="+teamDBData?.status?.doneTasks"
+              [maximum]="dataset.length"
               [minimum]="0"
-              [value]="+teamDBData?.status?.overDueTasks"
+              [value]="getOverdueTasks().length"
               [width]="'75'"
               [height]="'75'"
               [trackThickness]="10"
@@ -807,7 +819,7 @@
       <div class="p-2">
         <div class="fw-bold">Quá hạn</div>
         <div class="fw-bold" style="font-size: 1.25rem">
-          {{ +teamDBData?.status?.overDueTasks }}
+          {{ getOverdueTasks().length }}
         </div>
       </div>
     </div>
@@ -820,20 +832,23 @@
       #pie2
       class="w-100 h-100"
       style="display: block"
-      [tooltip]="tooltip"
       [centerLabel]="{
-        text: teamDBData?.tasksByGroupQty + '<br>công việc'
+        text:
+        getTaskGroups().length + '<br>công việc'
       }"
+      [tooltip]="tooltip"
+
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
-          [dataSource]="teamDBData?.tasksByGroup"
-          xName="taskGroupName"
+          [dataSource]="taskByGroup"
+          [dataLabel]="dataLabel"
+          xName="groupName"
           yName="quantity"
           startAngle="0"
           innerRadius="80%"
           radius="70%"
-          [palettes]="['#005dc7', '#21b3d2', '#06ddb8', '#00f5e9', '#a6dff5']"
+          [palettes]="palettes"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
@@ -857,13 +872,14 @@
               name="btnradio"
               id="btnLowestRadio"
               autocomplete="off"
-              checked
+
+              #eleAsc
+              (change)="changeDir(eleAsc,'8')"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
               for="btnLowestRadio"
-              default="Thấp nhất"
-            ></codx-label>
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
 
             <input
               type="radio"
@@ -871,34 +887,38 @@
               name="btnradio"
               id="btnHighestRadio"
               autocomplete="off"
+              #eleDesc
+              checked
+              (change)="changeDir(eleDesc,'8')"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
               for="btnHighestRadio"
               default="Cao nhất"
-            ></codx-label>
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
           </div>
         </div>
       </div>
-      <div class="position-relative" style="height: 90%">
+      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
         <div
-          class="position-absolute scroll-hover"
+          class="w-100 h-100 overflow-scroll"
           style="max-height: 95%; width: 100%"
+
         >
           <div
-            class="mx-2 my-5"
-            *ngFor="let data of teamDBData.topEmpByDoneTasks"
+            class="mx-2"
+            *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'onTimePercentage','desc')"
           >
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
                 <codx-img
-                  *ngIf="data.employee.userID"
+                  *ngIf="data.employeeID"
                   [objectType]="'AD_Users'"
-                  [objectId]="data.employee.userID"
+                  [objectId]="data.employeeID"
                 ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">{{ data.employee.employeeName }}</div>
-                  <div>{{ data.employee.organizationName }}</div>
+                  <div class="text-dark">{{ data.employeeName }}</div>
+                  <div>{{ data.departmentName }}</div>
                 </div>
               </div>
               <div class="progress-container">
@@ -906,8 +926,8 @@
                   <div
                     class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <span class="fw-bold" style="font-size: 0.5vw"
-                      >{{ toFixed(data.percentage) }}%</span
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{ toFixed(data.onTimePercentage) }}%</span
                     >
                   </div>
                   <ejs-progressbar
@@ -916,11 +936,11 @@
                     [type]="'Circular'"
                     [maximum]="100"
                     [minimum]="0"
-                    [value]="data.percentage"
-                    [width]="'75'"
-                    [height]="'75'"
-                    [trackThickness]="10"
-                    [progressThickness]="10"
+                    [value]="data.onTimePercentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="7"
+                    [progressThickness]="7"
                     [progressColor]="'#FF4500'"
                     [animation]="animation"
                   >
@@ -937,27 +957,31 @@
 
 <ng-template #team_dashboard>
   <div class="w-100 h-100" id="9">
-    <div class="position-relative w-100 h-100">
+    <div class="position-relative w-100 h-100 pt-5">
       <div
-        class="position-absolute scroll-hover"
+        class="position-absolute overflow-x-hidden"
         style="max-height: 100%; width: 100%"
       >
         <div
-          *ngFor="let data of teamDBData?.topEmpByQtyTasks"
+          *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'quantity','desc')"
           class="topchart-item d-flex align-items-center justify-content-end"
         >
-          <div *ngIf="+data?.percentage > 0">
-            <div class="fw-bold me-2">
-              {{ data?.quantity }}
+          <div *ngIf="+data?.percentage > 0" class="float-end row w-100">
+            <div class="fw-bold  col-4  my-auto">
+             {{data.employeeName}}
             </div>
-            <div
-              class="topchart-user"
-              style="background-color: #1d1dcc; color: #fff"
-              [style.width]="data?.percentage + '%'"
-              [title]="data?.employee?.employeeName"
-            >
-              <span>{{ data?.employee?.employeeName }}</span>
+            <div class="col-8" [title]="data.quantity+' | '+ data.totalHours + ' giờ' ">
+                <div
+                class="topchart-user"
+                style="color: #fff;float:right"
+                [style.width]="(data.quantity/sumByProp(tasksDoneOntimeEmployees,'quantity'))*100 + '%'"
+                [style.backgroundColor]="random_bg_color()"
+
+              >
+                <span>{{ data.quantity }}</span>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -974,22 +998,32 @@
       height="100%"
       [id]="newGuid()"
       [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+    }"
+    [palettes]="paletteColor"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="teamDBData?.dataBarChart?.lineChart"
+          [dataSource]="tasksDoneOntimeEmployees"
           type="Line"
-          xName="label"
-          yName="value"
+          xName="employeeName"
+          yName="totalHours"
           name="WorkHours"
+          [marker]="circleMarker"
         >
         </e-series>
         <e-series
-          [dataSource]="teamDBData?.dataBarChart?.barChart"
+          [dataSource]="tasksDoneOntimeEmployees"
           type="Column"
-          xName="label"
-          yName="value"
+          xName="employeeName"
+          yName="quantity"
           name="Tasks"
+
         >
         </e-series>
       </e-series-collection>
@@ -1033,7 +1067,7 @@
               <e-pointers>
                 <e-pointer
                   type="Marker"
-                  [value]="teamDBData?.workPerformance?.performance"
+                  [value]="(getEtimated()/getTotalTime())*100"
                   markerShape="Image"
                   imageUrl="./assets/themes/tm/default/img/Button.svg"
                   radius="90%"
@@ -1046,7 +1080,6 @@
           </e-axes>
         </ejs-circulargauge>
         <div
-          *ngIf="teamDBData?.workPerformance?.performance"
           style="
             position: absolute;
             top: 50%;
@@ -1055,7 +1088,7 @@
           "
         >
           <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
-            {{ toFixed(teamDBData?.workPerformance?.performance) }}
+            {{ toFixed((getEtimated()/getTotalTime())*100) }} %
           </p>
         </div>
       </div>
@@ -1068,7 +1101,7 @@
           </div>
           <div class="d-flex justify-content-center align-items-center">
             <div class="fw-bold" style="font-size: 1.75vw">
-              {{ teamDBData.workPerformance?.actualHours ?? 0 }}
+              {{ toFixed(getTotalTime())  }}
             </div>
             <div class="ms-2" style="font-size: 0.75vw">giờ</div>
           </div>
@@ -1079,7 +1112,7 @@
           </div>
           <div class="d-flex justify-content-center align-items-center">
             <div class="fw-bold" style="font-size: 1.75vw">
-              {{ teamDBData.workPerformance?.workHours ?? 0 }}
+              {{ toFixed(getEtimated()) }}
             </div>
             <div class="ms-2" style="font-size: 0.75vw">giờ</div>
           </div>
@@ -1127,6 +1160,7 @@
 <ng-template #assign_dashboard>
   <div class="w-100 h-100" id="1">
     <div
+    class="w-100 h-100 border  border-secondary rounded border-2"
       style="cursor: pointer"
       (click)="showTasks('Category == @0 AND Status == @1', '3;10', 'TMT0203')"
     >
@@ -1135,7 +1169,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
         [title]="'Chưa thực hiện'"
-        [value]="+assignDBData?.status?.newTasks"
+        [value]="getTaskStatus('10')"
       ></count-chart>
     </div>
   </div>
@@ -1144,6 +1178,7 @@
 <ng-template #assign_dashboard>
   <div class="w-100 h-100" id="2">
     <div
+    class="w-100 h-100 border  border-warning rounded border-2"
       style="cursor: pointer"
       (click)="showTasks('Category == @0 AND Status == @1', '3;20', 'TMT0203')"
     >
@@ -1152,7 +1187,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
         [title]="'Đang thực hiện'"
-        [value]="+assignDBData?.status?.processingTasks"
+        [value]="getTaskStatus('20')"
       ></count-chart>
     </div>
   </div>
@@ -1161,6 +1196,7 @@
 <ng-template #assign_dashboard>
   <div class="w-100 h-100" id="3">
     <div
+    class="w-100 h-100 border  border-danger rounded border-2"
       style="cursor: pointer"
       (click)="
         showTasks('Category == @0  AND IsOverdue == @1', '3;true', 'TMT0203')
@@ -1171,7 +1207,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
         [title]="'Quá hạn'"
-        [value]="+assignDBData?.status?.overdueTasks"
+        [value]="getOverdueTasks().length"
       ></count-chart>
     </div>
   </div>
@@ -1180,6 +1216,7 @@
 <ng-template #assign_dashboard>
   <div class="w-100 h-100" id="4">
     <div
+    class="w-100 h-100 border  border-success rounded border-2"
       style="cursor: pointer"
       (click)="showTasks('Category == @0 AND Status == @1', '3;90', 'TMT0203')"
     >
@@ -1188,7 +1225,7 @@
         [hasIcon]="true"
         [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
         [title]="'Hoàn tất'"
-        [value]="+assignDBData?.status?.doneTasks"
+        [value]="getTaskStatus('90')"
       ></count-chart>
     </div>
   </div>
@@ -1208,8 +1245,8 @@
               <span class="fw-bold" style="font-size: 0.5vw"
                 >{{
                   toFixed(
-                    (+assignDBData?.status?.onTimeTasks /
-                      +assignDBData?.status?.doneTasks) *
+                    (getTasksDoneOntime().length /
+                    dataset.length) *
                       100
                   )
                 }}%</span
@@ -1219,9 +1256,9 @@
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="+assignDBData?.status?.doneTasks"
+              [maximum]="dataset.length"
               [minimum]="0"
-              [value]="+assignDBData?.status?.onTimeTasks"
+              [value]="getTasksDoneOntime().length"
               [width]="'75'"
               [height]="'75'"
               [trackThickness]="10"
@@ -1235,7 +1272,7 @@
       <div class="p-2">
         <div class="fw-bold">Đúng hạn</div>
         <div class="fw-bold" style="font-size: 1.25rem">
-          {{ +assignDBData?.status?.onTimeTasks }}
+          {{ getTasksDoneOntime().length }}
         </div>
       </div>
     </div>
@@ -1256,8 +1293,8 @@
               <span class="fw-bold" style="font-size: 0.5vw"
                 >{{
                   toFixed(
-                    (+assignDBData?.status?.overDueTasks /
-                      +assignDBData?.status?.doneTasks) *
+                    ((getOverdueTasks().length) /
+                    dataset.length) *
                       100
                   )
                 }}%</span
@@ -1267,9 +1304,9 @@
               #annotation1
               [id]="newGuid()"
               [type]="'Circular'"
-              [maximum]="+assignDBData?.status?.doneTasks"
+              [maximum]="dataset.length"
               [minimum]="0"
-              [value]="+assignDBData?.status?.overDueTasks"
+              [value]="getOverdueTasks().length"
               [width]="'75'"
               [height]="'75'"
               [trackThickness]="10"
@@ -1284,7 +1321,7 @@
       <div class="p-2">
         <div class="fw-bold">Quá hạn</div>
         <div class="fw-bold" style="font-size: 1.25rem">
-          {{ +assignDBData?.status?.overDueTasks }}
+          {{ getOverdueTasks().length }}
         </div>
       </div>
     </div>
@@ -1336,29 +1373,25 @@
           class="h-100 w-100"
           style="display: block"
           [tooltip]="tooltip"
+
           [centerLabel]="{
             text:
-              assignDBData?.tasksByRef?.totalTasks.toString() + '<br>công việc'
+            getRefsTasks().length + '<br>công việc'
           }"
           [legendSettings]="{ visible: false }"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="assignDBData?.tasksByRef?.tasksRef"
-              xName="refName"
+              [dataSource]="taskByRefType"
+              xName="refType"
               yName="quantity"
               startAngle="0"
               innerRadius="80%"
               radius="70%"
               [explode]="true"
               [explodeOffset]="'10%'"
-              [palettes]="[
-                '#005dc7',
-                '#21b3d2',
-                '#06ddb8',
-                '#00f5e9',
-                '#a6dff5'
-              ]"
+              [dataLabel]="dataLabelRef"
+              [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -1366,23 +1399,23 @@
       </div>
       <div class="h-50 position-relative">
         <div
-          class="scroll-hover position-absolute"
+          class="overflow-x-hidden position-absolute"
           style="max-height: 100%; width: 100%"
         >
           <div
-            *ngFor="let ref of assignDBData?.tasksByRef?.tasksRef"
+            *ngFor="let ref of taskByRefType"
             class="mx-2 my-5"
           >
             <div class="d-flex justify-content-between">
-              <span>{{ ref.refName }} ({{ ref.quantity }})</span>
+              <span>{{ ref.refType }} ({{ ref.quantity }})</span>
               <span>
                 {{
-                  ((ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100) %
+                  ((ref.quantity / getRefsTasks().length) * 100) %
                     1 ===
                   0
-                    ? (ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100
+                    ? (ref.quantity / getRefsTasks().length) * 100
                     : (
-                        (ref.quantity / assignDBData?.tasksByRef.totalTasks) *
+                        (ref.quantity / getRefsTasks().length) *
                         100
                       ).toFixed(1)
                 }}%
@@ -1394,7 +1427,7 @@
                   class="rounded-4 h-5px"
                   role="progressbar"
                   [style.width]="
-                    (ref.quantity / assignDBData?.tasksByRef.totalTasks) * 100 +
+                    (ref.quantity / getRefsTasks().length) * 100 +
                     '%'
                   "
                   [style.background-color]="'#3699ff'"
@@ -1414,11 +1447,11 @@
   <div class="w-100 h-100" id="8">
     <div class="w-100 h-100 position-relative">
       <div
-        class="scroll-hover position-absolute"
+        class="overflow-x-hidden position-absolute"
         style="max-height: 100%; width: 100%"
       >
-        <div class="my-2" *ngFor="let task of assignDBData?.tasksByProject">
-          <div>
+        <div class="mx-3 my-4" *ngFor="let task of tasksByProjectID">
+          <div class="text-dark fw-bold">
             {{ task?.projectName ? task?.projectName : task?.projectID }}
           </div>
           <div
@@ -1427,42 +1460,53 @@
             <div class="d-block w-100">
               <div class="progress border">
                 <div
+                class="progress-bar bg-secondary"
+                [style.width]="
+                  (task.new /task.quantity) * 100 +
+                  '%'
+                "
+                [title]="
+                  (task.new / task.quantity) * 100 +
+                  '%'
+                "
+               ></div>
+                <div
                   class="progress-bar bg-danger"
                   [style.width]="
-                    (task?.tasksStatus[2]?.quantity / task?.totalTasks) * 100 +
+                    (task.overdue /task.quantity) * 100 +
                     '%'
                   "
                   [title]="
-                    (task?.tasksStatus[2]?.quantity / task?.totalTasks) * 100 +
+                    (task.overdue / task.quantity) * 100 +
                     '%'
                   "
                 ></div>
                 <div
                   class="progress-bar bg-warning"
                   [style.width]="
-                    (task?.tasksStatus[3]?.quantity / task?.totalTasks) * 100 +
+                    (task.inprocess/ task?.quantity) * 100 +
                     '%'
                   "
                   [title]="
-                    (task?.tasksStatus[3]?.quantity / task?.totalTasks) * 100 +
+                    (task?.inprocess / task?.quantity) * 100 +
                     '%'
                   "
                 ></div>
                 <div
                   class="progress-bar bg-success"
                   [style.width]="
-                    (task?.tasksStatus[4]?.quantity / task?.totalTasks) * 100 +
+                    (task.done / task.quantity) * 100 +
                     '%'
                   "
                   [title]="
-                    (task?.tasksStatus[4]?.quantity / task?.totalTasks) * 100 +
+                    (task.done / task.quantity) * 100 +
                     '%'
                   "
                 ></div>
               </div>
             </div>
             <div class="ms-2">
-              <span>{{ task?.totalTasks }}</span>
+              <span>{{ task?.quantity }}</span>
             </div>
           </div>
         </div>
@@ -1477,29 +1521,31 @@
 
 <ng-template #assign_dashboard>
   <div class="w-100 h-100" id="9">
-    <div class="topchart-group mt-3 w-100 h-100">
-      <div class="w-100 h-100 position-relative">
+    <div class="position-relative w-100 h-100 pt-5">
+      <div
+        class="position-absolute overflow-x-hidden"
+        style="max-height: 100%; width: 100%"
+      >
         <div
-          class="scroll-hover position-absolute"
-          style="max-height: 100%; width: 100%"
+          *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'quantity','desc')"
+          class="topchart-item d-flex align-items-center justify-content-end"
         >
-          <div
-            *ngFor="let data of assignDBData?.topEmpByQtyTasks"
-            class="topchart-item d-flex align-items-center justify-content-end"
-          >
-            <div *ngIf="+data?.percentage > 0">
-              <div class="fw-bold me-2">
-                {{ data?.quantity }}
-              </div>
-              <div
+          <div *ngIf="+data?.percentage > 0" class="float-end row w-100">
+            <div class="fw-bold  col-4  my-auto">
+             {{data.employeeName}}
+            </div>
+            <div class="col-8" [title]="data.quantity+' | '+ data.totalHours + ' giờ' ">
+                <div
                 class="topchart-user"
-                style="background-color: #1d1dcc; color: #fff"
-                [style.width]="data?.percentage + '%'"
-                [title]="data?.employee?.employeeName"
+                style="color: #fff;float:right"
+                [style.width]="(data.quantity/sumByProp(tasksDoneOntimeEmployees,'quantity'))*100 + '%'"
+                [style.backgroundColor]="random_bg_color()"
+
               >
-                <span>{{ data?.employee?.employeeName }}</span>
+                <span>{{ data.quantity }}</span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -1521,16 +1567,19 @@
         enable: true
       }"
       [centerLabel]="{
-        text: assignDBData?.tasksByProjectQty + '<br>công việc'
+        text: getProjectsTasks().length + '<br>công việc'
       }"
+      (pointClick)="hehe($event)"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
-          [dataSource]="assignDBData?.tasksByProject"
+          [dataSource]="tasksByProjectID"
+          [dataLabel]="dataLabelProj"
           xName="projectName"
-          yName="totalTasks"
+          yName="quantity"
           innerRadius="70%"
           [border]="{ width: 3 }"
+          [palettes]="palettes"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
@@ -1554,13 +1603,14 @@
               name="btnradio"
               id="btnLowestRadio"
               autocomplete="off"
-              checked
+
+              #eleAsc
+              (change)="changeDir(eleAsc,'8')"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
               for="btnLowestRadio"
-              default="Thấp nhất"
-            ></codx-label>
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
 
             <input
               type="radio"
@@ -1568,34 +1618,38 @@
               name="btnradio"
               id="btnHighestRadio"
               autocomplete="off"
+              #eleDesc
+              checked
+              (change)="changeDir(eleDesc,'8')"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
               for="btnHighestRadio"
               default="Cao nhất"
-            ></codx-label>
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
           </div>
         </div>
       </div>
-      <div class="position-relative" style="height: 90%">
+      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
         <div
-          class="scroll-hover position-absolute"
+          class="overflow-scroll overflow-x-hidden"
           style="max-height: 95%; width: 100%"
+
         >
           <div
-            class="mx-2 my-5"
-            *ngFor="let data of assignDBData.topEmpByDoneTasks"
+            class="mx-2"
+            *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'onTimePercentage','desc')"
           >
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
                 <codx-img
-                  *ngIf="data.employee.userID"
+                  *ngIf="data.employeeID"
                   [objectType]="'AD_Users'"
-                  [objectId]="data.employee.userID"
+                  [objectId]="data.employeeID"
                 ></codx-img>
                 <div class="ms-2">
-                  <div class="text-dark">{{ data.employee.employeeName }}</div>
-                  <div>{{ data.employee.organizationName }}</div>
+                  <div class="text-dark">{{ data.employeeName }}</div>
+                  <div>{{ data.departmentName }}</div>
                 </div>
               </div>
               <div class="progress-container">
@@ -1603,8 +1657,8 @@
                   <div
                     class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                   >
-                    <span class="fw-bold" style="font-size: 0.5vw"
-                      >{{ toFixed(data.percentage) }}%</span
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{ toFixed(data.onTimePercentage) }}%</span
                     >
                   </div>
                   <ejs-progressbar
@@ -1613,9 +1667,9 @@
                     [type]="'Circular'"
                     [maximum]="100"
                     [minimum]="0"
-                    [value]="data.percentage"
-                    [width]="'75'"
-                    [height]="'75'"
+                    [value]="data.onTimePercentage"
+                    [width]="'65'"
+                    [height]="'65'"
                     [trackThickness]="10"
                     [progressThickness]="10"
                     [progressColor]="'#FF4500'"

@@ -5,6 +5,8 @@ import {
   TemplateRef,
   ViewChild,
   AfterViewInit,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import {
   CacheService,
@@ -32,6 +34,18 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('linear') linear: ProgressBar;
   @ViewChild('chart') chart: ChartComponent;
+  @ViewChildren('template') templates: QueryList<any>;
+
+  //#region Đát Bo
+
+  panels:any = JSON.parse(
+    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":6,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null,"header":"Mức độ cảm xúc lời cảm ơn"},{"id":"0.4199281088325755_layout","row":0,"col":12,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê theo loại phiếu"},{"id":"0.4592017601751599_layout","row":0,"col":30,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên hoạt động nhiều nhất"},{"id":"0.06496875406606994_layout","row":12,"col":12,"sizeX":36,"sizeY":15,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỉ lệ phiếu theo phòng ban"},{"id":"0.21519762020962552_layout","row":7,"col":0,"sizeX":12,"sizeY":20,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Hành vi được tuyên dương"}]'
+  );
+  datas:any = JSON.parse(
+    '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.21519762020962552_layout","data":"7"}]'
+  );
+
+  //#endregion
 
   readonly TYPE_Ballot = {
     ALL: '0',
@@ -239,7 +253,16 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   columns: number = 6;
   cellSpacing: number[] = [5, 5];
   aspectRatio: any = 100 / 85;
+  dataLabel: Object = {
+    visible: true,
+    position: 'Outside', name: 'behaviorName',
+    font: {
+        fontWeight: '500'
+    },
+    connectorStyle: { length: '20px', type: 'Curve'},
 
+  };
+  palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
   constructor(
     private injector: Injector,
     private cacheService: CacheService,
@@ -262,21 +285,44 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     this.pageTitle.setBreadcrumbs([]);
   }
 
+  dataset:any=[];
+  vllFD017:any=[];
+  vllFD018:any=[];
   onInit(): void {
     this.options.pageLoading = false;
     this.options.entityName = 'FD_Receivers';
     this.options.entityPermission = 'FD_Receivers';
     this.options.gridViewName = 'grvReceivers';
     this.options.formName = 'Receivers';
+    this.cacheService.valueList('SYS062').subscribe((res) => {
+      if (res.datas) {
+        this.palettes=[];
+        res.datas.map((x:any)=>{
+          this.palettes.push(x.value);
+          return x;
+        })
+      }
+    });
     // this.options.funcID = this.funcID;
+    this.cacheService.valueList('FD017').subscribe((res) => {
+      if (res) {
+        this.vllFD017 = res.datas;
+      }
+    });
+    this.cacheService.valueList('FD018').subscribe((res) => {
+      if (res) {
+        this.vllFD018 = res.datas;
+      }
+    });
     this.cacheService.valueList('L1422').subscribe((res) => {
       if (res) {
         this.dataStore = res.datas;
         this.reloadAllChart();
       }
     });
-  }
 
+  }
+  isLoaded:boolean=false;
   ngAfterViewInit() {
     this.views = [
       // {
@@ -382,6 +428,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  ratingStats:any=[];
+  cardsByRatingType:any={};
+  cardByDepts:any={};
+  statByDepts:any=[];
+  listBehaviors:any=[];
+  cardByBevs:any=[];
+  listCardsPerBev:any=[];
+  statByBevs:any=[];
   getDataChartB() {
     var listBehavior_Temp = [];
     var listBehavior = [];
@@ -394,6 +448,25 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       ])
       .subscribe((res) => {
         if (res) {
+          this.dataset=res.lstCards;
+          this.listBehaviors=res.lstBehaivor;
+          this.mappingData()
+          this.cardsByRatingType = this.groupBy(this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName),'ratingName');
+          for(let key in this.cardsByRatingType){
+            let obj:any={};
+            obj.ratingName=key;
+            obj.quantity=this.cardsByRatingType[key].length;
+            obj.percentage = this.toFixed((obj.quantity/this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName).length)*100);
+            this.ratingStats.push(obj);
+          }
+          this.cardByDepts = this.groupBy(this.dataset,'departmentID');
+          for(let key in this.cardByDepts){
+            let obj:any={};
+            obj.departmentID=key;
+            obj.quantity=this.cardByDepts[key].length;
+            obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100);
+            this.statByDepts.push(obj);
+          }
           this.data = res.card;
           this.total = res.total;
           this.renderMiddleText(res.total);
@@ -405,9 +478,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             (sum, current) => sum + current.count,
             0
           );
-          // this.totalBehavior = _.sumBy(res.resultBehaviors, function (o) {
-          //   return o.count;
-          // });
+
           this.getDataSet();
           this.setChartBehavior(res.resultBehaviors);
 
@@ -425,6 +496,33 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             i++;
           });
           this.lstBehavior = listBehavior;
+          this.isLoaded=true;
+          this.dataset.map((x:any)=>{
+            if(!x.behavior) return x;
+            let lstBevs = x.behavior.split(';');
+            for(let i =0;i<lstBevs.length;i++){
+              let data = JSON.parse(JSON.stringify(x));
+              data.behavior = lstBevs[i];
+              data.behaviorName = this.listBehaviors.length?
+              (this.listBehaviors.find((b:any)=>b.behaviorID==lstBevs[i]) ?
+               this.listBehaviors.find((b:any)=>b.behaviorID==lstBevs[i]).behaviorName : lstBevs[i] )
+                : lstBevs[i];
+              this.listCardsPerBev.push(data);
+            }
+            return x;
+          });
+          let objGroupByBev = this.groupBy(this.listCardsPerBev,'behaviorName');
+          for(let key in objGroupByBev){
+            let obj:any={};
+            obj.behaviorID=objGroupByBev[key][0].behavior;
+            obj.behaviorName=key;
+            obj.quantity=objGroupByBev[key].length;
+            obj.percentage = this.toFixed((obj.quantity/this.listCardsPerBev.length)*100);
+            this.statByBevs.push(obj);
+          }
+          console.log(res);
+
+
         }
       });
   }
@@ -477,6 +575,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       chartDatasTemp.push(arr[0]);
     }
     this.chart_Datas = chartDatasTemp;
+    this.detectorRef.detectChanges();
     console.log('check chart_Datas', this.chart_Datas);
   }
 
@@ -643,6 +742,18 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     };
   }
 
+  mappingData(){
+    this.dataset = this.dataset.map((data:any)=>{
+      if(!data.rating) return data;
+      if(data.cardType=='2' && this.vllFD017.length){
+        data.ratingName = this.vllFD017.find((x:any)=>x.value==data.rating) ? this.vllFD017.find((x:any)=>x.value==data.rating).text : data.rating;
+      }
+      if(data.cardType != 2 && this.vllFD018.length){
+        data.ratingName = this.vllFD018.find((x:any)=>x.value==data.rating) ? this.vllFD018.find((x:any)=>x.value==data.rating).text : data.rating;
+      }
+      return data;
+    })
+  }
   newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
@@ -652,6 +763,18 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
         return v.toString(16);
       }
     );
+  }
+
+  toFixed(value: number) {
+    if (!value || isNaN(value)) {
+      return 0;
+    }
+    return value % 1 === 0 ? value : value.toFixed(2);
+  }
+
+  getCardsByType(type:string){
+    if(!type) return [];
+    return this.dataset.filter((x:any)=>x.cardType==type);
   }
 
   onActions(e: any) {
@@ -671,5 +794,12 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     //   }
     // }
     // this.isLoaded = false;
+  }
+  private groupBy(arr: any, key: any) {
+    return arr.reduce(function (r: any, a: any) {
+      r[a[key]] = r[a[key]] || [];
+      r[a[key]].push(a);
+      return r;
+    }, Object.create(null));
   }
 }

@@ -576,6 +576,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  closePopover(){
+    this.isSaved = false;
+    this.changeDetectorRef.detectChanges();
+  }
+
   //#region save
   beforeSave(op) {
     var data = [];
@@ -693,17 +698,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.gridViewSetup['ObjectID'].isRequire = false;
       }
       this.gridViewSetup['FirstName'].isRequire = false;
-
-      // if (this.data.firstName != null && this.data.firstName.trim() != '') {
-      //   if (this.data.lastName != null && this.data.lastName.trim() != '') {
-      //     this.data.contactName =
-      //       this.data.lastName.trim() + ' ' + this.data.firstName.trim();
-      //   } else {
-      //     this.data.contactName = this.data.firstName.trim();
-      //   }
-      // } else {
-      //   this.data.contactName = '';
-      // }
     }
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) {
@@ -773,13 +767,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.data.personalEmail = null;
       }
     }
-
-    // if (this.funcID != 'CM0102' && this.funcID != 'CM0104') {
-    //   if (this.contactsPerson == null) {
-    //     this.notiService.notifyCode('CM002'); //Chưa có msssg
-    //     return;
-    //   }
-    // }
     if (this.data.phone != null && this.data.phone.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.phone, 'P')) return;
     }

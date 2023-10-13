@@ -207,7 +207,7 @@
     (changeMF)="changeMF($event)"
     [listStepsProcess]="process.steps"
     [listCbxProccess]="listProccessCbx"
-    [viewModelDetail]="this.process.viewModeDetail"
+    [viewModelDetail]="viewModeDetail"
     [tabInstances]="tabInstances"
     [moreFunc]="moreFuncStart"
     (clickStartInstances)="clickStartInstances($event)"
@@ -419,7 +419,7 @@
     (changeMF)="changeMF($event)"
     [listStepsProcess]="process?.steps"
     [listCbxProccess]="listProccessCbx"
-    [viewModelDetail]="this.process?.viewModeDetail"
+    [viewModelDetail]="viewModeDetail"
     [tabInstances]="tabInstances"
     [moreFunc]="moreFuncStart"
     (clickStartInstances)="clickStartInstances($event)"
@@ -512,7 +512,7 @@
     [isToolbar]="true"
   ></codx-dropdown-select> -->
 </ng-template>
-<!-- 
+<!--
 <ng-template #popupTemplate>
   <codx-form
     #form

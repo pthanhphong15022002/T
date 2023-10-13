@@ -215,37 +215,12 @@ export class InstanceDashboardComponent implements OnInit {
 
   countStep;
   countInstances;
-  countOwners;
+  topOwnersHigh;
+  topOwnersLow;
   countFails;
   countSuscess;
-  productivityOwner = [
-    {
-      name: 'Trương Đặng Ngọc Phúc',
-      percentage: 90,
-      money:5000000,
-    },
-    {
-      name: 'Nguyễn Thanh Dung',
-      percentage: 70,
-      money:5000000,
-    },
-    {
-      name: 'Trần Công Sơn',
-      percentage: 60,
-      money:5000000,
-    },
-    {
-      name: 'Hồ Thị Trang Ngân',
-      percentage: 30,
-      money:5000000,
-    }, {
-      name: 'Lê Nguyên Trí',
-      percentage: 20,
-      money:5000000,
-    },
-
-
-  ]
+  currency;
+  productivityOwner = []
   productivityYear: ProductivityYear[] = [];
 
   CountInsSteps: any;
@@ -398,13 +373,17 @@ tooltipCountStep = {
       ])
     );
     if (data) {
+      console.log(data);
+      
       this.dataDashBoard = data;
       this.countStep = this.dataDashBoard?.countStep;
-      this.countOwners = this.dataDashBoard?.countsOwners;
+      this.topOwnersLow = this.dataDashBoard?.topOwnersLow;
+      this.topOwnersHigh = this.dataDashBoard?.topOwnersHigh;
       this.countFails = this.dataDashBoard?.countsReasonsFails;
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.countsInstance;
       this.productivityOwner = this.dataDashBoard?.productivity;
+      this.currency = this.dataDashBoard?.currency;
 
       let counts = this.countStep;
       for (var prop of counts) { 
@@ -425,7 +404,7 @@ tooltipCountStep = {
       this.changeDetectorRef.detectChanges();
     }else{
       this.countStep = null;
-      this.countOwners = null;
+      this.topOwnersLow = null;
       this.countFails = null;
       this.countSuscess = null;
       this.countInstances = null;
@@ -463,7 +442,7 @@ tooltipCountStep = {
       lineStyle: { width: 0 },
     };
     this.primaryYAxis = {
-      title: 'VND',
+      title: this.currency,
       minimum: 0,
       maximum: maximum,
       interval: interval,
