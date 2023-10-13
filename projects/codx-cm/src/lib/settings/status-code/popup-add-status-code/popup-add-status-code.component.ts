@@ -146,16 +146,11 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       this.data.objectStatus,
       this.data.statusID,
       this.data.statusName,
+      this.action
     ];
     this.codxCmService.checkStatusCode(data).subscribe((res) => {
       if (res) {
         this.getMessageError(res, this.gridViewSetup);
-      } else {
-        if (this.action == 'edit') {
-          this.onEdit();
-        } else {
-          this.onAdd();
-        }
       }
     });
   }
@@ -230,7 +225,7 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
     let headerName = '';
     if (value != '0') {
       // existing name
-      if (value == '1') {
+      if (value == '1' ) {
         headerName = gridViewSetup?.StatusID?.headerText;
       }
       // existing name
@@ -244,6 +239,14 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('CM003', 0, '"' + headerName + '"');
       return;
     }
+    else {
+      if (this.action == 'edit') {
+        this.onEdit();
+      } else {
+        this.onAdd();
+      }
+    }
+
     return;
   }
 }

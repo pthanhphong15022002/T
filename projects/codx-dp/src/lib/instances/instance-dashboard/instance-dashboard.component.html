@@ -15,6 +15,7 @@
       class="w-100 h-100"
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+      [width]="'15%'"
       [title]="getNameStatus('1')"
       [value]="countInstances?.countNew || 0"
     ></count-chart>
@@ -28,6 +29,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
       [title]="getNameStatus('2')"
+      [width]="'15%'"
       [value]="countInstances?.countProcessing || 0"
     ></count-chart>
   </div>
@@ -40,6 +42,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
       [title]="getNameStatus('3')"
+      [width]="'15%'"
       [value]="countInstances?.countSuccess || 0"
     ></count-chart>
   </div>
@@ -52,6 +55,7 @@
       [hasIcon]="true"
       [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
       [title]="getNameStatus('5')"
+      [width]="'15%'"
       [value]="countInstances?.countFail || 0"
     ></count-chart>
   </div>

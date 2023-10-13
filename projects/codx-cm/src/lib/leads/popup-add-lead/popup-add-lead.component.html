@@ -11,7 +11,7 @@
 
 <ng-template #body let-form>
   <!--Phúc bổ sung thêm điều kiện này vì dùng formGroup nên kiểm tra trước cho đỡ lỗi-->
-  <div class="contaner">
+  <div class="contaner" *ngIf="!convertCustomerToLead">
     <div class="row">
       <div class="col-6">
         <div class="form-group">
@@ -22,7 +22,7 @@
             [field]="radioCompany"
             [label]="company"
             [checked]="isCategory"
-            [disabled]="action === actionEdit || convertCustomerToLead"
+            [disabled]="action === actionEdit"
             [crrValue]="isCategory"
             (valueChange)="valueChangeCategory($event, radioCompany)"
           >
@@ -38,7 +38,7 @@
             style="width: 100%"
             [field]="radioCustomer"
             [label]="customer"
-            [disabled]="action === actionEdit || convertCustomerToLead"
+            [disabled]="action === actionEdit"
             [checked]="!isCategory"
             [crrValue]="isCategory"
             (valueChange)="valueChangeCategory($event, radioCustomer)"
