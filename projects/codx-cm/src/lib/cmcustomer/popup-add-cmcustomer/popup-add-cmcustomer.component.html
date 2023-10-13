@@ -31,21 +31,21 @@
 </ng-template>
 
 <ng-template #tabGeneralInfo>
-  <ng-container *ngIf="form?.formGroup">
-    <ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
+  <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
+    <ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" (mouseenter)="closePopover()">
       <ng-container [ngTemplateOutlet]="tabCustomer"></ng-container>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0102'">
+    <ng-container *ngIf="funcID == 'CM0102'" (mouseenter)="closePopover()">
       <ng-container [ngTemplateOutlet]="tabContact"></ng-container>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
+    <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'" (mouseenter)="closePopover()">
       <ng-container [ngTemplateOutlet]="tabPartner"></ng-container>
     </ng-container>
   </ng-container>
 </ng-template>
-<ng-template #tabAddress>
-  <ng-container *ngIf="form?.formGroup">
-    <div>
+<ng-template #tabAddress (mouseenter)="closePopover()">
+  <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
+    <div (mouseenter)="closePopover()">
       <codx-address-cm
         #codxListAddress
         (lstAddressEmit)="lstAddressEmit($event)"
@@ -58,9 +58,9 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #tabContacts>
-  <ng-container *ngIf="form?.formGroup">
-    <div>
+<ng-template #tabContacts (mouseenter)="closePopover()">
+  <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
+    <div (mouseenter)="closePopover()">
       <codx-list-contacts
         [selectAll]="false"
         (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
@@ -75,23 +75,23 @@
     </div>
   </ng-container>
 </ng-template>
-<ng-template #tabDefault>
-  <ng-container *ngIf="form?.formGroup">
-    <ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0105'">
-      <div class="mb-2">
-        <codx-label
+<ng-template #tabDefault (mouseenter)="closePopover()">
+  <ng-container *ngIf="form?.formGroup" (mouseenter)="closePopover()">
+    <ng-container *ngIf="funcID == 'CM0101' || funcID == 'CM0105'" (mouseenter)="closePopover()">
+      <div class="mb-2" (mouseenter)="closePopover()">
+        <codx-label (mouseenter)="closePopover()"
           name="lblUpdateInfo"
           class="fs-6 text-dark text-primary fw-bold"
           default="Thông tin mở rộng"
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row mt-5">
-          <div class="col-6">
-            <div class="form-group" *ngIf="funcID == 'CM0101'">
+        <div class="row mt-5" (mouseenter)="closePopover()">
+          <div class="col-6" (mouseenter)="closePopover()">
+            <div class="form-group" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
               <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="annualRevenue"
@@ -99,7 +99,7 @@
               </codx-input>
             </div>
 
-            <div class="form-group" *ngIf="funcID == 'CM0101'">
+            <div class="form-group" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
               <codx-label [formModel]="form.formModel" fiedName="WorkingDays">
               </codx-label>
               <codx-input
@@ -109,10 +109,10 @@
               >
               </codx-input>
             </div>
-            <div class="form-group">
+            <div class="form-group" (mouseenter)="closePopover()">
               <codx-label [formModel]="form.formModel" fiedName="BankAccount">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="bankAccount"
@@ -120,21 +120,21 @@
               </codx-input>
             </div>
           </div>
-          <div class="col-6">
-            <div class="form-group" *ngIf="funcID == 'CM0101'">
+          <div class="col-6" (mouseenter)="closePopover()">
+            <div class="form-group" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
               <codx-label [formModel]="form.formModel" fiedName="Headcounts">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="headcounts"
               >
               </codx-input>
             </div>
-            <div class="form-group">
-              <codx-label [formModel]="form.formModel" fiedName="bankID">
+            <div class="form-group" (mouseenter)="closePopover()">
+              <codx-label [formModel]="form.formModel" fiedName="bankID" (mouseenter)="closePopover()">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="bankID"
@@ -142,20 +142,20 @@
               </codx-input>
             </div>
             <div
-              class="form-group"
+              class="form-group" (mouseenter)="closePopover()"
               style="margin-top: 33px"
               *ngIf="funcID == 'CM0101'"
             >
-              <div class="d-flex justify-content-between">
-                <div class="me-2">
-                  <codx-input
+              <div class="d-flex justify-content-between" (mouseenter)="closePopover()">
+                <div class="me-2" (mouseenter)="closePopover()">
+                  <codx-input (mouseenter)="closePopover()"
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
                     field="officialHour"
                   >
                   </codx-input>
                 </div>
-                <div class="w-100">
+                <div class="w-100" (mouseenter)="closePopover()">
                   <codx-label
                     [formModel]="form.formModel"
                     fiedName="OfficialHour"
@@ -167,19 +167,19 @@
           </div>
         </div>
       </div>
-      <div class="mb-2 mt-5">
-        <codx-label
+      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
+        <codx-label (mouseenter)="closePopover()"
           name="lblSystemInfo"
           class="fs-6 text-dark text-primary fw-bold"
           default="Thông tin mặc định"
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row mt-3">
-          <div class="form-group">
+        <div class="row mt-3" (mouseenter)="closePopover()">
+          <div class="form-group" (mouseenter)="closePopover()">
             <codx-label [formModel]="form.formModel" fiedName="ChannelID">
             </codx-label>
-            <codx-input
+            <codx-input (mouseenter)="closePopover()"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="channelID"
@@ -201,19 +201,19 @@
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0102'">
+    <ng-container *ngIf="funcID == 'CM0102'" (mouseenter)="closePopover()">
       <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Nationality">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <codx-label [formModel]="form.formModel" fiedName="Nationality" (mouseenter)="closePopover()">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="nationality"
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="BirthPlace">
           </codx-label>
           <codx-input
@@ -224,21 +224,21 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6 form-group">
+      <div class="row" (mouseenter)="closePopover()">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="idCardNo"
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="issuedOn"
@@ -246,21 +246,21 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6 form-group">
+      <div class="row" (mouseenter)="closePopover()">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="ethnicGroup"
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Religion">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <codx-label [formModel]="form.formModel" fiedName="Religion" (mouseenter)="closePopover()">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="religion"
@@ -268,21 +268,21 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'">
+      <div class="row" (mouseenter)="closePopover()">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <codx-label [formModel]="form.formModel" [fiedName]="'BankAccount'" (mouseenter)="closePopover()">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'bankAccount'"
           >
           </codx-input>
         </div>
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" [fiedName]="'BankID'">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <codx-label [formModel]="form.formModel" [fiedName]="'BankID'" (mouseenter)="closePopover()">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'bankID'"
@@ -290,23 +290,23 @@
           </codx-input>
         </div>
       </div>
-      <div class="row">
-        <div class="col-6 form-group">
-          <div class="row">
-            <div class="col-7">
-              <codx-label [formModel]="form.formModel" fiedName="Phone">
+      <div class="row" (mouseenter)="closePopover()">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <div class="row" (mouseenter)="closePopover()">
+            <div class="col-7" (mouseenter)="closePopover()">
+              <codx-label [formModel]="form.formModel" fiedName="Phone" (mouseenter)="closePopover()">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="phone"
               >
               </codx-input>
             </div>
-            <div class="col-5">
-              <codx-label [formModel]="form.formModel" fiedName="PhoneExt">
+            <div class="col-5" (mouseenter)="closePopover()">
+              <codx-label [formModel]="form.formModel" fiedName="PhoneExt" (mouseenter)="closePopover()">
               </codx-label>
-              <codx-input
+              <codx-input (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="phoneExt"
@@ -315,10 +315,10 @@
             </div>
           </div>
         </div>
-        <div class="col-6 form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Email">
+        <div class="col-6 form-group" (mouseenter)="closePopover()">
+          <codx-label [formModel]="form.formModel" fiedName="Email" (mouseenter)="closePopover()">
           </codx-label>
-          <codx-input
+          <codx-input (mouseenter)="closePopover()"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="email"
@@ -327,8 +327,8 @@
         </div>
       </div>
     </ng-container>
-    <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'">
-      <div class="mb-2">
+    <ng-container *ngIf="funcID == 'CM0103' || funcID == 'CM0104'" (mouseenter)="closePopover()">
+      <div class="mb-2" (mouseenter)="closePopover()">
         <codx-label
           name="lblUpdateInfo"
           class="fs-6 text-dark text-primary fw-bold"
@@ -336,19 +336,19 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row mt-5">
-          <div class="col-6 form-group">
-            <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue">
+        <div class="row mt-5" (mouseenter)="closePopover()">
+          <div class="col-6 form-group" (mouseenter)="closePopover()">
+            <codx-label [formModel]="form.formModel" fiedName="AnnualRevenue" (mouseenter)="closePopover()">
             </codx-label>
-            <codx-input
+            <codx-input (mouseenter)="closePopover()"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="annualRevenue"
             >
-            </codx-input>
+            </codx-input >
           </div>
-          <div class="col-6 form-group">
-            <codx-label [formModel]="form.formModel" fiedName="Headcounts">
+          <div class="col-6 form-group" (mouseenter)="closePopover()">
+            <codx-label [formModel]="form.formModel" fiedName="Headcounts" (mouseenter)="closePopover()">
             </codx-label>
             <codx-input
               [formModel]="form.formModel"
@@ -359,7 +359,7 @@
           </div>
         </div>
       </div>
-      <div class="mb-2 mt-5">
+      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
         <codx-label
           name="lblSystemInfo"
           class="fs-6 text-dark text-primary fw-bold"
@@ -379,9 +379,9 @@
             </codx-input>
           </div> -->
           <div class="form-group">
-            <codx-label [formModel]="form.formModel" fiedName="ChannelID">
+            <codx-label [formModel]="form.formModel" fiedName="ChannelID" (mouseenter)="closePopover()">
             </codx-label>
-            <codx-input
+            <codx-input (mouseenter)="closePopover()"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="channelID"
@@ -405,7 +405,7 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" (mouseenter)="closePopover()">
     <button
       type="button"
       class="btn btn-primary"
@@ -424,20 +424,20 @@
 <ng-template #tabCustomer>
   <div class="row mt-3">
     <div class="col-6">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupID'">
+      <div class="form-group" (mouseenter)="closePopover()">
+        <codx-label [formModel]="form.formModel" [fiedName]="'CustGroupID'" (mouseenter)="closePopover()">
         </codx-label>
-        <codx-input
+        <codx-input (mouseenter)="closePopover()"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="custGroupID"
         >
         </codx-input>
       </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" [fiedName]="'CustomerID'">
+      <div class="form-group" (mouseenter)="closePopover()">
+        <codx-label [formModel]="form.formModel" [fiedName]="'CustomerID'" (mouseenter)="closePopover()">
         </codx-label>
-        <codx-input
+        <codx-input (mouseenter)="closePopover()"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [disabled]="action == 'edit' || disabledShowInput"
@@ -447,9 +447,9 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
-        <div style="height: 122px">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
+        <div style="height: 122px" (mouseenter)="closePopover()">
           <codx-label
             [formModel]="form.formModel"
             name="lblAvatar"
@@ -476,8 +476,8 @@
       </div>
     </div>
   </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" [fiedName]="'CustomerName'">
+  <div class="form-group" (mouseenter)="closePopover()">
+    <codx-label [formModel]="form.formModel" [fiedName]="'CustomerName'" (mouseenter)="closePopover()">
     </codx-label>
     <codx-input
       type="text"
@@ -488,7 +488,7 @@
     </codx-input>
   </div>
 
-  <div class="row" *ngIf="funcID == 'CM0101'">
+  <div class="row" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
     <div class="col-6">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="ShortName">
@@ -501,7 +501,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
+    <div class="col-6" (mouseenter)="closePopover()">
       <div class="form-group">
         <codx-label [formModel]="form.formModel" fiedName="TaxCode">
         </codx-label>
@@ -514,9 +514,9 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'">
-    <div class="col-6">
-      <div class="form-group">
+  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Gender">
         </codx-label>
         <codx-input
@@ -527,8 +527,8 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Birthday">
         </codx-label>
         <codx-input
@@ -540,12 +540,12 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'">
+  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
     <div class="col-6">
-      <div class="form-group">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="IDCardNo">
         </codx-label>
-        <codx-input
+        <codx-input (mouseenter)="closePopover()"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="idCardNo"
@@ -553,11 +553,11 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
+    <div class="col-6" (mouseenter)="closePopover()">
       <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="IssuedOn">
+        <codx-label [formModel]="form.formModel" fiedName="IssuedOn" (mouseenter)="closePopover()">
         </codx-label>
-        <codx-input
+        <codx-input (mouseenter)="closePopover()"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="issuedOn"
@@ -578,8 +578,8 @@
     >
     </codx-input>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0105'">
-    <div class="col-6 form-group">
+  <div class="row" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
           <codx-label [formModel]="form.formModel" [fiedName]="'Phone'">
@@ -601,14 +601,14 @@
         </div>
       </div> -->
 
-      <codx-input
+      <codx-input (mouseenter)="closePopover()"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [field]="'phone'"
       >
       </codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
           <codx-label [formModel]="form.formModel" [fiedName]="'Email'">
@@ -637,9 +637,9 @@
       </codx-input>
     </div>
   </div>
-  <div class="row" *ngIf="funcID == 'CM0101'">
-    <div class="col-6">
-      <div class="form-group">
+  <div class="row" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -649,8 +649,8 @@
         </codx-input>
       </div>
     </div>
-    <div class="col-6">
-      <div class="form-group">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
         <codx-input
           [formModel]="form.formModel"
@@ -662,7 +662,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -671,8 +671,8 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="funcID == 'CM0101'">
-    <codx-label [formModel]="form.formModel" fiedName="Industries">
+  <div class="form-group" *ngIf="funcID == 'CM0101'" (mouseenter)="closePopover()">
+    <codx-label [formModel]="form.formModel" fiedName="Industries" (mouseenter)="closePopover()">
     </codx-label>
     <!-- <codx-input
       type="combobox"
@@ -692,8 +692,8 @@
     >
     </codx-input>
   </div>
-  <div class="form-group" *ngIf="funcID == 'CM0105'">
-    <codx-label [formModel]="form.formModel" fiedName="Occupation">
+  <div class="form-group" *ngIf="funcID == 'CM0105'" (mouseenter)="closePopover()">
+    <codx-label [formModel]="form.formModel" fiedName="Occupation" (mouseenter)="closePopover()">
     </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -702,8 +702,8 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" fiedName="Owner"> </codx-label>
+  <div class="form-group" (mouseenter)="closePopover()">
+    <codx-label [formModel]="form.formModel" fiedName="Owner" (mouseenter)="closePopover()"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
       [Group]="form.formGroup"
@@ -711,7 +711,7 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -723,7 +723,7 @@
 </ng-template>
 <ng-template #tabContact>
   <ng-container>
-    <div class="mb-4">
+    <div class="mb-4" (mouseenter)="closePopover()">
       <codx-label
         name="lblLink"
         class="h4 text-dark text-primary fw-bold"
@@ -732,9 +732,9 @@
       >
       </codx-label>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
+    <div class="row" (mouseenter)="closePopover()">
+      <div class="col-6" (mouseenter)="closePopover()">
+        <div class="form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" [fiedName]="'objectType'">
           </codx-label>
           <codx-input
@@ -746,8 +746,8 @@
           ></codx-input>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group" *ngIf="data.objectType">
+      <div class="col-6" (mouseenter)="closePopover()">
+        <div class="form-group" *ngIf="data.objectType" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactType'">
           </codx-label>
           <codx-input
@@ -762,7 +762,7 @@
         </div>
       </div>
     </div>
-    <div class="form-group" *ngIf="data.objectType">
+    <div class="form-group" *ngIf="data.objectType" (mouseenter)="closePopover()">
       <codx-label
         [formModel]="form.formModel"
         [fiedName]="'ObjectID'"
@@ -777,9 +777,9 @@
         (valueChange)="valueChangeContact($event)"
       ></codx-input>
     </div>
-    <div class="form-group" *ngIf="data.objectType">
-      <div class="d-flex justify-content-between">
-        <div class="me-2">
+    <div class="form-group" *ngIf="data.objectType" (mouseenter)="closePopover()">
+      <div class="d-flex justify-content-between" (mouseenter)="closePopover()">
+        <div class="me-2" (mouseenter)="closePopover()">
           <codx-input
             [field]="'isDefault'"
             [checked]="data?.isDefault ?? false"
@@ -787,7 +787,7 @@
             (valueChange)="valueChecked($event)"
           ></codx-input>
         </div>
-        <div class="w-100">
+        <div class="w-100" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="IsDefault">
           </codx-label>
         </div>
@@ -795,7 +795,7 @@
     </div>
   </ng-container>
   <ng-container>
-    <div class="mb-4">
+    <div class="mb-4" (mouseenter)="closePopover()">
       <codx-label
         name="lblInformation"
         class="h4 text-dark text-primary fw-bold"
@@ -804,9 +804,9 @@
       >
       </codx-label>
     </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
+    <div class="row" (mouseenter)="closePopover()">
+      <div class="col-6" (mouseenter)="closePopover()">
+        <div class="form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" [fiedName]="'ContactID'">
           </codx-label>
           <codx-input
@@ -818,7 +818,7 @@
           >
           </codx-input>
         </div>
-        <div class="form-group">
+        <div class="form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" [fiedName]="'Salutation'">
           </codx-label>
           <codx-input
@@ -829,15 +829,15 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-6">
-        <div class="form-group">
-          <div style="height: 122px">
+      <div class="col-6" (mouseenter)="closePopover()">
+        <div class="form-group" (mouseenter)="closePopover()">
+          <div style="height: 122px" (mouseenter)="closePopover()">
             <codx-label
               [formModel]="form.formModel"
               name="lblAvatar"
               default="Ảnh đại diện"
             ></codx-label>
-            <div>
+            <div (mouseenter)="closePopover()">
               <codx-img
                 #imageUpload
                 class="image-inpt-wrapper fullImage"
@@ -858,8 +858,8 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <codx-label [formModel]="dialog.formModel" fiedName="ContactName">
+    <div class="form-group" (mouseenter)="closePopover()">
+      <codx-label [formModel]="dialog.formModel" fiedName="ContactName" (mouseenter)="closePopover()">
       </codx-label>
       <codx-input
         [formModel]="form.formModel"
@@ -868,8 +868,8 @@
       >
       </codx-input>
     </div>
-    <div class="row">
-      <div class="col-6 form-group">
+    <div class="row" (mouseenter)="closePopover()">
+      <div class="col-6 form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="dialog.formModel" fiedName="Gender">
         </codx-label>
         <codx-input
@@ -879,7 +879,7 @@
         >
         </codx-input>
       </div>
-      <div class="col-6 form-group">
+      <div class="col-6 form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Birthday">
         </codx-label>
         <codx-input
@@ -890,7 +890,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
@@ -902,7 +902,7 @@
       >
       </codx-input>
     </div>
-    <div class="row">
+    <div class="row" (mouseenter)="closePopover()">
       <div class="col-6 form-group">
         <codx-label [formModel]="form.formModel" [fiedName]="'Mobile'">
         </codx-label>
@@ -933,7 +933,7 @@
         >
         </codx-input>
       </div>
-      <div class="col-6 form-group">
+      <div class="col-6 form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" [fiedName]="'PersonalEmail'">
         </codx-label>
         <!-- <div class="d-flex align-items-center justify-content-between">
@@ -963,7 +963,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" [fiedName]="'WebPage'">
       </codx-label>
       <codx-input
@@ -973,8 +973,8 @@
       >
       </codx-input>
     </div>
-    <div class="row">
-      <div class="col-6 form-group">
+    <div class="row" (mouseenter)="closePopover()">
+      <div class="col-6 form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="JobTitle">
         </codx-label>
         <codx-input
@@ -984,7 +984,7 @@
         >
         </codx-input>
       </div>
-      <div class="col-6 form-group">
+      <div class="col-6 form-group" (mouseenter)="closePopover()">
         <codx-label [formModel]="form.formModel" fiedName="Department">
         </codx-label>
         <codx-input
@@ -995,7 +995,7 @@
         </codx-input>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" [fiedName]="'Memo'">
       </codx-label>
       <codx-input
@@ -1008,9 +1008,9 @@
   </ng-container>
 </ng-template>
 <ng-template #tabPartner>
-  <div class="row">
-    <div class="col-6">
-      <div class="form-group">
+  <div class="row" (mouseenter)="closePopover()">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
         <codx-label
           [formModel]="form.formModel"
           [fiedName]="funcID == 'CM0103' ? 'PartnerID' : 'CompetitorID'"
@@ -1027,9 +1027,9 @@
       </div>
     </div>
 
-    <div class="col-6">
-      <div class="form-group">
-        <div style="height: 122px">
+    <div class="col-6" (mouseenter)="closePopover()">
+      <div class="form-group" (mouseenter)="closePopover()">
+        <div style="height: 122px" (mouseenter)="closePopover()">
           <codx-label
             [formModel]="form.formModel"
             name="lblAvatar"
@@ -1056,7 +1056,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label
       [formModel]="form.formModel"
       [fiedName]="funcID == 'CM0103' ? 'PartnerName' : 'CompetitorName'"
@@ -1069,8 +1069,8 @@
     >
     </codx-input>
   </div>
-  <div class="row">
-    <div class="col-6 form-group">
+  <div class="row" (mouseenter)="closePopover()">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" fiedName="ShortName">
       </codx-label>
       <codx-input
@@ -1080,7 +1080,7 @@
       >
       </codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" fiedName="TaxCode"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
@@ -1090,7 +1090,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1103,8 +1103,8 @@
     </codx-input>
   </div>
 
-  <div class="row">
-    <div class="col-6 form-group">
+  <div class="row" (mouseenter)="closePopover()">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" fiedName="Phone"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
@@ -1113,7 +1113,7 @@
       >
       </codx-input>
     </div>
-    <div class="col-6 form-group">
+    <div class="col-6 form-group" (mouseenter)="closePopover()">
       <codx-label [formModel]="form.formModel" fiedName="FaxNo"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
@@ -1123,7 +1123,7 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="WebPage"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1132,7 +1132,7 @@
     >
     </codx-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="CEO"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1142,7 +1142,7 @@
     </codx-input>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="Industries">
     </codx-label>
     <codx-input
@@ -1165,7 +1165,7 @@
     </codx-input> -->
   </div>
 
-  <div class="form-group">
+  <div class="form-group" (mouseenter)="closePopover()">
     <codx-label [formModel]="form.formModel" fiedName="Memo"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
@@ -1176,7 +1176,7 @@
   </div>
 </ng-template>
 
-<ng-template #avata>
+<ng-template #avata (mouseenter)="closePopover()">
   <codx-img
     #imageUpload
     class="image-inpt-wrapper fullImage"
