@@ -290,6 +290,7 @@ export class NewsComponent extends UIComponent {
         }
         this.detectorRef.detectChanges();
       }
+      console.clear();
     });
   }
   // open popup search

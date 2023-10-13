@@ -410,6 +410,7 @@ export class CodxTasksComponent
       this.requestSchedule.predicate = 'Category=@0';
       this.requestSchedule.dataValue = '2';
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -1104,9 +1105,10 @@ export class CodxTasksComponent
   changeView(evt: any) {
     this.viewCrr = evt?.view?.type;
     if (this.crrFuncID != this.funcID) {
+      this.afterLoad();
       this.cache.viewSettings(this.funcID).subscribe((views) => {
         if (views?.length > 0) {
-          this.afterLoad();
+          // this.afterLoad();
           this.crrFuncID = this.funcID;
           this.views = [];
           let idxActive = -1;
