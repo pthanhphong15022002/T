@@ -200,10 +200,14 @@
                 </div>
                 <div class="d-flex align-items-top justify-content-start">
                   <codx-label
-                    default="Nhu cầu:"
-                    class="text-dark fw-bold me-2 text-nowrap"
+                  fiedName="Note"
+                  class="text-dark fw-bold me-2"
+                  [setRequire]="false"
+                  [formModel]="formModel"
+                  class="text-dark fw-bold me-2 text-nowrap"
                   ></codx-label>
-                  <span
+
+                  <!-- <span
                     class="text-gray-600"
                     #note
                     [innerHTML]="
@@ -216,7 +220,10 @@
                           : 'grvCMDeals'
                         | async
                     "
-                  ></span>
+                  ></span> -->
+                  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.note" [text]="'note'">
+
+                  </codx-show-more-less>
                 </div>
                 <div class="" *ngIf="viewTag && viewTag != ''">
                   <codx-tag
@@ -840,14 +847,18 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <span
+                  <!-- <span
                     #memo
                     [innerHTML]="
                       dataSelected.memo
                         | formatvalue : formModel : 'memo' : memo
                         | async
                     "
-                  ></span>
+                  ></span> -->
+                  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.memo" [text]="'memo'">
+
+                  </codx-show-more-less>
+
                 </div>
                 <div *ngIf="dataSelected?.steps?.isHaveField">
                   <div class="d-flex flex-column mt-5">

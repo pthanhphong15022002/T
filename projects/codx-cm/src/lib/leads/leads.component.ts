@@ -43,6 +43,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { stringify } from 'querystring';
 import { firstValueFrom } from 'rxjs';
+import moment from 'moment';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -858,7 +859,11 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
+        //    e.event.modifiedOn = new Date();
+          //  data.modifiedOn = new Date() ;
+          data.modifiedOn = moment(new Date())
+          .add(99, 'hours')
+          .toDate();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.view.dataService.update(this.dataSelected).subscribe();
