@@ -221,8 +221,6 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
         this.quitJobObj.violatedDays = dif / (1000 * 60 * 60 * 24) + 1;
         this.formGroup.patchValue({ violatedDays: this.quitJobObj.violatedDays });
       }
-      console.log('so ngay nghi som', this.quitJobObj.violatedDays);
-
     }
   }
 
@@ -235,10 +233,8 @@ export class PopupEquitjobComponent extends UIComponent implements OnInit{
 
     this.hrSevice.SaveEmployeeQuitJobInfo(this.quitJobObj).subscribe((p) => {
       if (p != null) {
-        console.log('du lieu tra ve', p);
-        
         this.notify.notifyCode('SYS007');
-        this.dialog && this.dialog.close(p);
+        this.dialog && this.dialog.close(this.form.data);
       } else this.notify.notifyCode('SYS021');
     });
   }
