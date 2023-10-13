@@ -1336,6 +1336,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep?.taskGroups?.push(data.groupTask);
       this.listGroupTask.splice(taskBeforeIndex + 1, 0, data.groupTask);
       this.currentStep['progress'] = data.progressStep;
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -1369,6 +1370,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         groupCopyView['task'] = data?.listTask || [];
         this.listGroupTask.splice(taskBeforeIndex + 1, 0, groupCopyView);
         this.currentStep['progress'] = data.progressStep;
+        this.changeDetectorRef.detectChanges();
       }
     }
   }
@@ -1400,6 +1402,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             group['memo'] = data?.groupTask?.memo;
           }
         }
+        this.changeDetectorRef.detectChanges();
       }
     }
   }
@@ -1437,6 +1440,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   }
                 }
               }
+              this.changeDetectorRef.detectChanges();
             } else {
             }
           });
@@ -1451,12 +1455,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       dataGroup: group || {},
       isEditTimeDefault: this.currentStep?.leadtimeControl,
       isStart: this.isStart,
+      owner: this.ownerInstance,
     };
     let popupTask = this.callfc.openForm(
       CodxAddGroupTaskComponent,
       '',
       500,
-      500,
+      550,
       '',
       dataInput
     );
