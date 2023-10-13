@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -43,8 +44,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
-  @ViewChild('addApproverTmp', { static: true })
-  addApproverTmp: TemplateRef<any>;
+  @ViewChild('addApproverTmp', { static: true })addApproverTmp: TemplateRef<any>;
   @ViewChild('queryBuilder', { static: false })
   queryBuilder: QueryBuilderComponent;
 
@@ -106,6 +106,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   userOrg: any;
   lblAllowEditAreas: any;
   lblConfirmControl: any;
+  indexAppr=-1;
+  stepGrv: any;
   setTitle(e: any) {
     console.log(e);
   }
@@ -438,6 +440,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.newAppr.stepType = 'A2';
     this.newAppr.confirmControl = this.confirmControl ?? '0';
     this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
+    this.indexAppr=-1;
     this.cr.detectChanges();
     let dialog = this.callfc.openForm(this.addApproverTmp, '', 400, 450);
   }
@@ -455,8 +458,30 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  saveApprover() {
-    
+  saveApprover(dialog:any, index :number) {
+    if(this.newAppr?.roleType!=null){
+      if(this.lstApprover?.length == 0) this.lstApprover=[];
+      if(index >=0){
+        this.lstApprover[index]=this.newAppr;
+      }
+      else{
+        this.lstApprover.push(this.newAppr);
+      }
+      this.cr.detectChanges();
+      dialog && dialog?.close();
+    }
+  }
+  editApprover(index:number){
+    this.newAppr = {...this.lstApprover[index]};
+    this.newAppr.signatureType = this.newAppr?.signatureType ??'2';
+    this.newAppr.stepType = this.newAppr?.stepType ?? 'A2';
+    this.cr.detectChanges();
+    this.indexAppr=index;
+    let dialog = this.callfc.openForm(this.addApproverTmp, '', 400, 450);    
+  }
+  deleteApprover(index:number){
+    this.lstApprover.splice(index,1);
+    this.cr.detectChanges();
   }
 
   applyApprover(event) {
@@ -562,6 +587,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                         }
                       });
                     } else {
+                      this.newAppr.approver = element?.id;
                       this.newAppr.roleType = element?.objectType;
                       this.newAppr.name = element?.text;
                       this.newAppr.position =
@@ -648,8 +674,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       return;
     }
     if (this.lstApprover.length == 0) {
-      this.cache
-        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      if(this.stepGrv == null){      
+        this.cache
+        .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
         .subscribe((res) => {
           if (res) {
             this.notifySvr.notifyCode(
@@ -659,13 +686,25 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
             );
           }
         });
+      }
+      else{
+        this.notifySvr.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.stepGrv?.Approvers?.headerText + '"'
+        );
+      }
+      
       return;
     }
     this.lstApprover.forEach((appr) => {
+      // appr.confirmControl = appr?.confirmControl ?? this.confirmControl;
+      // appr.allowEditAreas = appr?.confirmControl ?? this.allowEditAreas;
+      // appr.stepType = appr?.stepType ?? this.data?.stepType;
+      // appr.signatureType = appr?.signatureType ?? this.data.signatureType;
       appr.confirmControl = this.confirmControl;
       appr.allowEditAreas = this.allowEditAreas;
     });
-    console.log(this.lstApprover);
 
     this.dialogApprovalStep?.patchValue({
       approveMode: this.currentApproveMode,
@@ -678,7 +717,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.data.approvers = this.lstApprover;
     if (this.isAdd) {
       this.lstStep.push(this.data);
-
       this.dialog && this.dialog.close(this.data);
     } else {
       let i = this.lstStep.indexOf(this.dataEdit);
@@ -782,7 +820,8 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           case ShareType.DI: //	Giám đốc khối
           case ShareType.DR: //	Báo cáo trực tiếp
           case ShareType.IR: //	Báo cáo gián tiếp
-            appr.approver = element?.objectType;
+            //appr.approver = element?.objectType;
+            appr.position = element?.objectName;
             this.lstApprover.push(appr);
             break;
           //----------------------------------------------------------------------------------//
@@ -812,16 +851,16 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           case ShareType.AC: //	Thư ký Giám đốc công ty
           case ShareType.DC: //	Phó Giám đốc công ty
           case ShareType.CEO: //	Giám đốc công ty
-            this.lstApprover.push(appr);
             this.codxService
               .getCompanyApprover(this.userOrg?.companyID, element?.objectType)
               .subscribe((companyAppr) => {
                 if (companyAppr) {
-                  appr.position = companyAppr?.position;
-                  appr.userID = companyAppr?.UserID;
-                  appr.userName = companyAppr?.UserName;
+                  appr.position = companyAppr?.position ?? element?.objectName;
+                  appr.userID = companyAppr?.userID;
+                  appr.userName = companyAppr?.userName;
                   appr.orgUnitName = companyAppr?.orgUnitName;
                 }
+                this.lstApprover.push(appr);
               });
             break;
           //----------------------------------------------------------------------------------//
@@ -849,18 +888,20 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                           appr.position = element?.dataSelected?.PositionName;
                           appr.userID = lstUserInfo[0]?.userID;
                           appr.userName = lstUserInfo[0]?.userName;
-                          appr.orgUnitName = lstUserInfo[0]?.OrgUnitName;
+                          appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
                           this.lstApprover.push(appr);
                         } else {
                           return;
                         }
                       });
                     } else {
+                      appr.approver = element?.id;
                       appr.roleType = element?.objectType;
                       appr.name = element?.text;
                       appr.position = element?.dataSelected?.PositionName;
                       appr.userID = lstUserInfo[0]?.userID;
                       appr.userName = lstUserInfo[0]?.userName;
+                      appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
                       this.lstApprover.push(appr);
                     }
                   }
