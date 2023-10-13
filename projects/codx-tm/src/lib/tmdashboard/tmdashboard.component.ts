@@ -17,6 +17,7 @@ import {
 import {
   AuthStore,
   ButtonModel,
+  CacheService,
   CallFuncService,
   PageTitleService,
   UIComponent,
@@ -387,14 +388,15 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       TextMapping: 'Camera, 27 <br>11%',
     },
   ];
-
+  palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
     private routerActive: ActivatedRoute,
     private tmDBService: TMDashboardService,
     private callfunc: CallFuncService,
-    private auth: AuthStore
+    private auth: AuthStore,
+    private cacheService: CacheService,
   ) {
     super(inject);
     this.reportID = this.router.snapshot.params['funcID'];
@@ -402,6 +404,15 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.cacheService.valueList('SYS062').subscribe((res) => {
+      if (res.datas) {
+        this.palettes=[];
+        res.datas.map((x:any)=>{
+          this.palettes.push(x.value);
+          return x;
+        })
+      }
+    });
     this.buttons = [
       {
         id: '1',
@@ -713,11 +724,24 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                     });
                   }
                   if(!this.reportItem){
-                    this.reportItem = this.arrReport[0];
-                    this.pageTitle.setSubTitle(arrChildren[0].title);
-                    this.pageTitle.setChildren(arrChildren);
-                    this.codxService.navigate('', arrChildren[0].path);
-                    this.funcID= this.arrReport[0].reportID;
+                    if(this.reportID){
+                      let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+                      if(idx>-1){
+                        this.reportItem = this.arrReport[idx];
+                        this.pageTitle.setSubTitle(arrChildren[idx].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        //this.codxService.navigate('', arrChildren[idx].path);
+                        this.funcID= this.reportItem.reportID;
+                      }
+                    }
+                    else{
+                      this.reportItem = this.arrReport[0];
+                      this.pageTitle.setSubTitle(arrChildren[0].title);
+                      this.pageTitle.setChildren(arrChildren);
+                      //this.codxService.navigate('', arrChildren[0].path);
+                      this.funcID= this.arrReport[0].reportID;
+                    }
+
                     let method:any=''
                     let parameters:any={};
                     switch (this.funcID) {
