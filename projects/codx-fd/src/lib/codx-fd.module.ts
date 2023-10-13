@@ -16,8 +16,11 @@ import {
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
+  AccumulationChartAllModule,
   AccumulationChartModule,
   ChartAllModule,
+  ChartAnnotationService,
+  ColumnSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -59,6 +62,8 @@ import { SettingPolicyLinesComponent } from './setting/setting-policy-lines/sett
 import { AddDedicationRankComponent } from './setting/dedication-rank/add-dedication-rank/add-dedication-rank.component';
 import { SettingContentComponent } from './setting/setting-content/setting-content.component';
 import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 export const routes: Routes = [
   {
@@ -213,9 +218,11 @@ const T_Pipe: Type<any>[] = [PositionPipe];
     CodxShareModule,
     CoreModule,
     NgbModule,
-    AccumulationChartModule,
     ChartAllModule,
+    AccumulationChartAllModule,
     ProgressBarModule,
+    CircularGaugeModule,
+    TreeMapModule,
 
     RouterModule.forChild(routes),
   ],
