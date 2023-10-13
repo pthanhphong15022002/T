@@ -165,11 +165,11 @@ export const routes: Routes = [
         component: SalesinvoicesComponent,
         data: { noReuse: true },
       },
-      {
-        path: 'approvals/:funcID',
-        component: ApprovalsComponent,
-        data: { noReuse: true },
-      },
+      // {
+      //   path: 'approvals/:funcID',
+      //   component: ApprovalsComponent,
+      //   data: { noReuse: true },
+      // },
       {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
@@ -282,7 +282,6 @@ export const routes: Routes = [
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
     ReportsComponent,
-    ApprovalsComponent,
     ReceiptTransactionsLineAddComponent,
     Group067Component,
     GroupShareComponent,

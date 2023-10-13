@@ -30,12 +30,12 @@
     <ng-template #header let-data>
       <div class="d-flex align-items-center justify-content-between">
         <div
-          class="mb-2"
+          class="d-flex align-items-center mb-2"
           [ngbTooltip]="gridViewSetup['BusinessLineID']?.headerText"
         >
           <i class="icon-add_shopping_cart icon-18 me-2 text-gray-700"></i>
           <span
-            class="text-dark fs-6 fw-bold line-clamp-menu"
+            class="text-dark fs-6 fw-bold line-clamp line-clamp-1"
             #businessLineID
             [innerHTML]="
               dataSelected?.businessLineID
@@ -105,7 +105,7 @@
                     class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
                   ></span>
                   <span
-                    class="fw-bold line-clamp-menu pe-1"
+                    class="fw-bold line-clamp line-clamp-1 pe-1"
                     *ngIf="dataSelected?.dealValue; else defaultNull"
                     #dealValue
                     [innerHTML]="
@@ -117,7 +117,7 @@
                   <span
                     *ngIf="dataSelected?.currencyID"
                     [ngClass]="
-                      dataSelected?.currencyID ? '' : 'line-clamp-menu'
+                      dataSelected?.currencyID ? '' : 'line-clamp line-clamp-1'
                     "
                     class="text-gray-700"
                     [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
@@ -140,7 +140,7 @@
                   ></span>
                   <span
                     *ngIf="dataSelected?.probability; else defaultNull"
-                    class="line-clamp-menu"
+                    class="line-clamp line-clamp-1"
                     [ngbTooltip]="gridViewSetup?.Probability?.headerText"
                     #probability
                     [innerHTML]="
@@ -180,7 +180,7 @@
                 <div class="d-flex align-items-top mb-1">
                   <codx-label
                     fiedName="Industries"
-                    class="text-dark fw-bold me-2 label-colon"
+                    class="text-dark fw-bold me-2"
                     [setRequire]="false"
                     [formModel]="formModelCustomer"
                     default="Lĩnh vực hoạt động"
@@ -441,7 +441,7 @@
                       >
                         <codx-img
                           [width]="30"
-                          [objectId]="dataSelected.salespersonID"
+                          [objectId]="dataSelected?.salespersonID"
                           objectType="AD_Users"
                           [referType]="'avt'"
                           [numberImages]="1"
@@ -1051,7 +1051,7 @@
           ></codx-label>
           <span
             *ngIf="item?.type == '1'"
-            class="text-gray-700 line-clamp-menu"
+            class="text-gray-700 line-clamp line-clamp-1"
             [ngbTooltip]="grvSetupQuotation['VersionName']?.headerText"
             #versionName
             [innerHTML]="
@@ -1069,7 +1069,7 @@
             class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
           ></span>
           <span
-            class="text-gray-700 line-clamp-menu pe-2"
+            class="text-gray-700 line-clamp line-clamp-1 pe-2"
             #totalAmt
             [innerHTML]="
               item?.totalAmt
@@ -1078,7 +1078,7 @@
             "
           ></span>
           <span
-            class="text-gray-700 line-clamp-menu"
+            class="text-gray-700 line-clamp line-clamp-1"
             #currencyID
             [innerHTML]="
               item?.currencyID
@@ -1112,7 +1112,7 @@
           >
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
-              class="text-gray-700 line-clamp-menu"
+              class="text-gray-700 line-clamp line-clamp-1"
               #createdOn
               [innerHTML]="
                 item?.createdOn

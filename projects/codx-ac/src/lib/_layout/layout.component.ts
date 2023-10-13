@@ -1,4 +1,4 @@
-import { Component, Injector, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 
 import { CodxAcService } from '../codx-ac.service';
@@ -6,8 +6,9 @@ import { RoundService } from '../round.service';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  styleUrls: ['./layout.component.scss','../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
@@ -15,7 +16,8 @@ export class LayoutComponent extends LayoutBaseComponent {
     inject: Injector,
     private callfc: CallFuncService,
     private codxAC: CodxAcService,
-    private round: RoundService
+    private round: RoundService,
+    private detectorRef: ChangeDetectorRef,
   ) {
     super(inject);
 
@@ -25,6 +27,10 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   onInit(): void {}
   onAfterViewInit(): void {}
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
 
   childMenuClick(e) {
     if (e && e?.recID) {

@@ -31,8 +31,7 @@ declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
   templateUrl: './cashpayments.component.html',
-  styleUrls: ['./cashpayments.component.css', '../../codx-ac.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./cashpayments.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
@@ -169,10 +168,10 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Event
 
   /**
-   * * Hàm click button thêm mới
+   * * Hàm xử lí click button thêm mới
    * @param event
    */
-  btnAddClick(event) {
+  toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
@@ -220,7 +219,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.call();
+        this.transferToBank(e.text,data); //? chuyển tiền ngân hàng điện tử
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -258,6 +257,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res != null) {
+          res.isAdd = true;
           if (this.dataDefault == null) this.dataDefault = { ...res };
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
@@ -287,6 +287,7 @@ export class CashPaymentsComponent extends UIComponent {
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
+        res.isEdit = true;
         let data = {
           headerText: this.headerText, //? tiêu đề voucher
           journal: { ...this.journal }, //?  data journal
@@ -316,6 +317,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
+          res.isCopy = true;
           let datas = { ...res };
           this.view.dataService
             .saveAs(datas)
@@ -416,21 +418,6 @@ export class CashPaymentsComponent extends UIComponent {
         });
       }
       switch (data?.status) {
-        case '7':
-        case '2':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT041009' ||
-              element.functionID == 'ACT041010' ||
-              element.functionID == 'ACT042902' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
@@ -440,7 +427,7 @@ export class CashPaymentsComponent extends UIComponent {
                 element.functionID == 'ACT042905' ||
                 element.functionID == 'ACT042907' ||
                 (element.functionID == 'ACT042901' &&
-                  this.view.funcID == 'ACT0429')
+                  this.view.formModel.funcID == 'ACT0429')
               ) {
                 element.disabled = false;
               } else {
@@ -484,7 +471,7 @@ export class CashPaymentsComponent extends UIComponent {
               element.functionID == 'ACT042905' ||
               element.functionID == 'ACT042907' ||
               (element.functionID == 'ACT042901' &&
-                this.view.funcID == 'ACT0429')
+                this.view.formModel.funcID == 'ACT0429')
             ) {
               element.disabled = false;
             } else {
@@ -506,6 +493,34 @@ export class CashPaymentsComponent extends UIComponent {
             }
           });
           break;
+        case '2':
+        case '7':
+          arrBookmark.forEach((element) => {
+            if (
+              element.functionID == 'ACT041009' ||
+              element.functionID == 'ACT041010' ||
+              element.functionID == 'ACT042902' ||
+              element.functionID == 'ACT042907'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '8':
+        case '11':
+          arrBookmark.forEach((element) => {
+            if (
+              element.functionID == 'ACT042907' &&
+              this.view.formModel.funcID == 'ACT0429'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
         case '9':
           arrBookmark.forEach((element) => {
             if (
@@ -513,6 +528,19 @@ export class CashPaymentsComponent extends UIComponent {
               element.functionID == 'ACT041010' ||
               element.functionID == 'ACT042905' ||
               element.functionID == 'ACT042907'
+            ) {
+              element.disabled = false;
+            } else {
+              element.disabled = true;
+            }
+          });
+          break;
+        case '10':
+          arrBookmark.forEach((element) => {
+            if (
+              element.functionID == 'ACT042905' ||
+              (element.functionID == 'ACT042907' &&
+                this.view.formModel.funcID == 'ACT0429')
             ) {
               element.disabled = false;
             } else {
@@ -731,18 +759,66 @@ export class CashPaymentsComponent extends UIComponent {
   //#endregion
 
   //#region Bankhub
-  call() {
-    jsBh.login('accNet', (o) => this.callback(o));
+
+  /**
+   * *Hàm chuyển tiền ngân hàng điện tử
+   * @param text 
+   * @param data 
+   */
+  transferToBank(text,data) {
+    this.checkLogin((o) => {
+      if (o) {
+        let tk = jsBh.decodeCookie('bh');
+        this.api
+          .execSv<any>(
+            'AC',
+            'AC',
+            'CashPaymentsBusiness',
+            'TransferToBankAsync',
+            [data.recID, tk, 'test']
+          )
+          .subscribe((res) => {
+            if (res) {
+              let result = JSON.parse(res);
+              if (result?.Status.toLowerCase() == 'success') {
+                data.eBankingID = result?.Data?.BulkId;
+                data.status = '8';
+                this.view.dataService.updateDatas.set(data['_uuid'], data);
+                this.view.dataService
+                  .save(null, 0, '', '', false)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res: any) => {
+                    if (res && !res.update.error) {
+                      this.notification.notifyCode('AC0029', 0, text);
+                    }
+                  });
+              }else{
+                this.notification.notifyCode('AC0030', 0, text);
+              }
+            }else{
+              this.notification.notifyCode('AC0030', 0, text);
+            }  
+          });
+      }
+    });
   }
 
-  callback(o: any) {
-    if (o) {
-      this.bhLogin = true;
-      localStorage.setItem('bh_tk', o);
-      this.getbank();
-    }
+  /**
+   * *Hàm check đăng nhập
+   */
+  checkLogin(func: any) {
+    return jsBh.login('test', (o) => {
+      return func(o);
+    });
   }
 
+  afterLogin(o: any) {
+    return true;
+  }
+
+  /**
+   * *Hàm call api ngân hàng điện tử
+   */
   getbank() {
     this.acService
       .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
