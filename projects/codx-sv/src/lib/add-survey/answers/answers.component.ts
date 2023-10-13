@@ -14,6 +14,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
 import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 import moment from 'moment';
+import { palettes } from '../setting/setting.data';
 
 @Component({
   selector: 'app-answers',
@@ -103,9 +104,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   
   };
 
-  palettes: string[] = 
-  ["#3366CC","#FF9900","#61EFCD", "#CDDE1F", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
-  "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
+  palettes: string[] = palettes[0].data
   
   tooltipMatrix : Object = {
     enable: true,
@@ -206,9 +205,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           this.lstRespondents = item[0];
           this.lstQuestion = item[1]
           this.lstCountQuestion = item[2];
-          this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
+
+          var index = this.lstRespondents.findIndex(x=>x.responds && x.responds.length >0);
+          if(index >= 0) this.respondents = this.lstRespondents[index];
           this.getSetting();
-          if(this.respondents && this.respondents?.responds[0])
+          if(this.respondents && this.respondents?.responds && this.respondents?.responds[0])
           {
             this.setSelectedDropDown(this.respondents.responds[0].question)
             this.loadQuestionByID(this.respondents.responds[0].questionID);
@@ -247,7 +248,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getRow(questionID:any)
   {
-    debugger
     let result = [];
     this.lstRespondents.forEach(element => {
       if(element.responds && element.responds.length>0)
@@ -261,7 +261,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
             if(data[element2.seqNo] && Array.isArray(data[element2.seqNo])) data[element2.seqNo].push(element2.answer)
             else data.push([element2.answer]);   
           });
-          data.unshift({objectID:element.objectID,name:element.respondent})
+          data.unshift({objectID:element.objectID,name:element.respondent,email:element.email})
           result.push(data);
         }
       }
@@ -278,7 +278,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         var results = element.responds.filter(x=>x.questionID == questionID);
         if(results && results.length > 0)
         {
-          var data = [{objectID:element.objectID,name:element.respondent},{data:[]}];
+          var data = [{objectID:element.objectID,name:element.respondent,email:element.email},{data:[]}];
           results[0].results.forEach(element2 => {
             data[1].data.push(element2.answer)
           });

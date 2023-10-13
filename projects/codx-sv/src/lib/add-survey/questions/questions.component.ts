@@ -1923,7 +1923,6 @@ export class QuestionsComponent
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
-    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[

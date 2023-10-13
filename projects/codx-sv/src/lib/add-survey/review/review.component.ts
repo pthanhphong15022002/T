@@ -53,9 +53,11 @@ export class ReviewComponent extends UIComponent implements OnInit {
   expiredOn = false;
   dataRepond:any;
   dataSVRepondents:any;
+  typeRepondent:any;
   select:any;
   isPublic:any;
   dataMatrixCount= [];
+  autoCreated= false;
   html = '<div class="text-required-rv ms-6 d-flex align-items-center"><i class="icon-error_outline text-danger"></i><span class="ms-2 text-danger fw-bold">Đây là một câu hỏi bắt buộc</span></div>'
   public titleEditorModel: RichTextEditorModel = {
     toolbarSettings: {
@@ -77,6 +79,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       ],
     },
   };
+  statusRepondent:any;
 
   constructor(
     private injector: Injector,
@@ -96,31 +99,56 @@ export class ReviewComponent extends UIComponent implements OnInit {
         if(key)
         {
           var obj = JSON.parse(key);
-          this.funcID = obj?.funcID;
-          this.cache.functionList(this.funcID).subscribe((res) => {
-            if (res) {
-              this.functionList = res;
-              if (obj?.recID) {
-                this.recID = obj?.recID;
-                this.loadData();
-              }
-              else if (obj?.transID) {
-                this.repondID = obj?.transID;
-                this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
-                  this.dataSVRepondents = item;
-                  this.dataRepond = item?.responds;
-                  this.recID = item?.transID;
+          this.repondID = obj?.repondentID;
+          if(obj?.autoCreated) this.autoCreated = obj?.autoCreated
+          if(this.repondID) this.getData();
+          else
+          {
+            this.funcID = obj?.funcID;
+            this.cache.functionList(this.funcID).subscribe((res) => {
+              if (res) {
+                this.functionList = res;
+                if (obj?.recID) {
+                  this.recID = obj?.recID;
                   this.loadData();
-                })
+                }
+                else if (obj?.transID) {
+                  this.repondID = obj?.transID;
+                  this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
+                    this.dataSVRepondents = item;
+                    this.dataRepond = item?.responds;
+                    this.recID = item?.transID;
+                    this.loadData();
+                  })
+                }
+             
               }
-           
-            }
-          });
+            });
+          }
         }
-       
       }
     });
   }
+
+  getData()
+  {
+    var split = this.repondID.split(";");
+    this.repondID = split[0];
+    this.funcID = split[1];
+    this.typeRepondent = split[2];
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.functionList = res;
+        this.SVServices.getDataRepondent(this.repondID).subscribe((item:any)=>{
+          this.dataSVRepondents = item;
+          if(this.typeRepondent == "1" && this.dataSVRepondents.status != "1") this.isSent = true;
+          this.dataRepond = item?.responds;
+          this.recID = item?.transID;
+          this.loadData();
+        })
+    }})
+  }
+
 
   onInit(): void {
     this.someField = true
@@ -137,7 +165,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
       if(res && res[2]) {
         this.survey = res[2];
         if(this.survey?.expiredOn && new Date(this.survey?.expiredOn) <=  new Date()) this.expiredOn = true;
-        this.getAvatar(this.survey);
+        if(this.dataSVRepondents?.objectType == "S") this.setGuest();
+        else if(this.dataSVRepondents?.objectType == "U") this.setUser();
+        else this.getAvatar(this.survey);
       }
       if (res && res[0] && res[0].length > 0) {
         this.questions = this.getHierarchy(res[0], res[1]);
@@ -180,18 +210,33 @@ export class ReviewComponent extends UIComponent implements OnInit {
       if(data?.settings?.isPublic) {
         this.isPublic = data?.settings?.isPublic;
 
-        if(this.isPublic)
-        {
-          this.api.execSv("SYS","AD","UsersBusiness","CreateUserNoLoginAsync","").subscribe((item:any)=>{
-            if(item) this.auth.set(item);
-          });
-        }
+        if(this.isPublic) this.setAuthNoLogin();
       }
     }
   }
+
+
+  setGuest()
+  {
+    this.user.userID = "";
+    this.user.email = this.dataSVRepondents.email;
+    this.setAuthNoLogin();
+  }
+
+  setUser()
+  {
+    this.user.userID = this.dataSVRepondents.objectID;
+  }
+  setAuthNoLogin()
+  {
+    this.api.execSv("SYS","AD","UsersBusiness","CreateUserNoLoginAsync","").subscribe((item:any)=>{
+      if(item) this.auth.set(item);
+    });
+  }
+
   getDataAnswer(lstData) {
     if (lstData) {
-      if(this.repondID)
+      if(this.repondID && this.dataSVRepondents.status != "1")
       {
         lstData.forEach((x) => {
           x.children.forEach((y) => {
@@ -237,7 +282,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       res['children'] = [];
       dataQuestion.forEach((x) => {
         if (x.parentID == res.recID) {
-          if(this.repondID)
+          if(this.repondID && this.dataSVRepondents?.status != "1")
           {
             var answer = this.dataRepond.filter(r=>r.questionID == x.recID);
             switch(x.answerType)
@@ -298,7 +343,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
                 }
             }
           }
-         
           res['children'].push(x);
         }
       });
@@ -525,7 +569,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {
-    if(this.survey?.status != "5" || this.survey?.stop || this.expiredOn) return ;
+    if(this.survey?.status != "3" || this.survey?.stop || this.expiredOn) return ;
     this.checkRequired();
     let lstAnswers = [];
     this.lstQuestion.forEach((y) => {
@@ -604,8 +648,9 @@ export class ReviewComponent extends UIComponent implements OnInit {
     if(this.repondID && !check)
     {
       this.dataSVRepondents.responds = respondQuestion;
+      this.dataSVRepondents.status = "2";
       this.SVServices.onUpdate(this.dataSVRepondents).subscribe((res:any) => {
-        // if(res && res.status == 5) this.isSent = true
+        if(res) this.isSent = true
       });
     }
     else if(!check)
@@ -628,9 +673,10 @@ export class ReviewComponent extends UIComponent implements OnInit {
       this.respondents.scores = 0;
       this.respondents.duration = 20;
       this.respondents.pending = true;
-      this.respondents.status = "5";
+      this.respondents.status = "2"; //Đã trả lời
+      this.respondents.autoCreated = this.autoCreated;
       this.SVServices.onSubmit(this.respondents).subscribe((res:any) => {
-        if(res && res.status == 5) this.isSent = true
+        if(res && res.status == "2") this.isSent = true
       });
     }
     
