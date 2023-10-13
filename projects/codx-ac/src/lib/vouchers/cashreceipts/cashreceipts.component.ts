@@ -1,4 +1,4 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { AuthStore, ButtonModel, DataRequest, DialogModel, FormModel, NotificationsService, PageLink, PageTitleService, SidebarModel, TenantStore, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
@@ -14,7 +14,8 @@ import { JournalService } from '../../journals/journals.service';
 @Component({
   selector: 'lib-cashreceipts',
   templateUrl: './cashreceipts.component.html',
-  styleUrls: ['./cashreceipts.component.css', '../../codx-ac.component.scss']
+  styleUrls: ['./cashreceipts.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashreceiptsComponent extends UIComponent {
   //#region Constructor
@@ -105,6 +106,8 @@ export class CashreceiptsComponent extends UIComponent {
         model: {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft:'25%'
         },
       },
       {
@@ -207,6 +210,7 @@ export class CashreceiptsComponent extends UIComponent {
       .addNew((o) => this.setDefault(this.dataDefault))
       .subscribe((res) => {
         if (res != null) {
+          res.isAdd = true;
           if(this.dataDefault == null) this.dataDefault = {...res};
           let data = {
             headerText: this.headerText, //? tiêu đề voucher
@@ -235,6 +239,7 @@ export class CashreceiptsComponent extends UIComponent {
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
+        res.isEdit = true;
         let data = {
           headerText: this.headerText, //? tiêu đề voucher
           journal: { ...this.journal }, //?  data journal
@@ -258,25 +263,39 @@ export class CashreceiptsComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
     this.view.dataService
-      .copy((o) => this.setDefault(dataCopy))
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res != null) {
-          let data = {
-            action: 'copy', //? trạng thái của form (chỉnh sửa)
-            headerText: this.headerText, //? tiêu đề voucher
-            journal: { ...this.journal }, //?  data journal
-            oData: { ...res }, //?  data của cashpayment
-            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-            legalName: this.legalName, //? tên company
-          };
-          let dialog = this.callfc.openSide(
-            CashreceiptsAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
+          res.isCopy = true;
+          let datas = { ...res };
+          this.view.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                  legalName: this.legalName, //? tên company
+                };
+                let dialog = this.callfc.openSide(
+                  CashreceiptsAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+                this.view.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
         }
       });
   }
@@ -582,10 +601,11 @@ export class CashreceiptsComponent extends UIComponent {
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-  setDefault(data) {
+  setDefault(data:any,action: any = '') {
     return this.api.exec('AC', 'CashReceiptsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
+      action
     ]);
   }
 

@@ -219,34 +219,8 @@ export class InstanceDashboardComponent implements OnInit {
   topOwnersLow;
   countFails;
   countSuscess;
-  productivityOwner = [
-    {
-      name: 'Trương Đặng Ngọc Phúc',
-      percentage: 90,
-      money:5000000,
-    },
-    {
-      name: 'Nguyễn Thanh Dung',
-      percentage: 70,
-      money:5000000,
-    },
-    {
-      name: 'Trần Công Sơn',
-      percentage: 60,
-      money:5000000,
-    },
-    {
-      name: 'Hồ Thị Trang Ngân',
-      percentage: 30,
-      money:5000000,
-    }, {
-      name: 'Lê Nguyên Trí',
-      percentage: 20,
-      money:5000000,
-    },
-
-
-  ]
+  currency;
+  productivityOwner = []
   productivityYear: ProductivityYear[] = [];
 
   CountInsSteps: any;
@@ -409,6 +383,7 @@ tooltipCountStep = {
       this.countSuscess = this.dataDashBoard?.countsReasonsSuscess;
       this.countInstances = this.dataDashBoard?.countsInstance;
       this.productivityOwner = this.dataDashBoard?.productivity;
+      this.currency = this.dataDashBoard?.currency;
 
       let counts = this.countStep;
       for (var prop of counts) { 
@@ -467,7 +442,7 @@ tooltipCountStep = {
       lineStyle: { width: 0 },
     };
     this.primaryYAxis = {
-      title: 'VND',
+      title: this.currency,
       minimum: 0,
       maximum: maximum,
       interval: interval,

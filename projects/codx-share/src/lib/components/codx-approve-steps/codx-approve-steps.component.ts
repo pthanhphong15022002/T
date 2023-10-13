@@ -123,9 +123,9 @@ export class CodxApproveStepsComponent
       .gridViewSetup('ApprovalSteps_Approvers', 'grvApprovalSteps_Approvers')
       .subscribe((grv) => {
         if (grv) {
-          this.positionDefault = grv['Position']['headerText'];
-          this.lblAllowEditAreas = grv['AllowEditAreas']['headerText'];
-          this.lblConfirmControl = grv['ConfirmControl']['headerText'];
+          this.positionDefault = grv?.Position?.headerText;
+          this.lblAllowEditAreas = grv?.AllowEditAreas?.headerText;
+          this.lblConfirmControl = grv?.ConfirmControl?.headerText;
         }
       });
     this.esService.getFormModel('EST04').then((res) => {
@@ -158,14 +158,14 @@ export class CodxApproveStepsComponent
           )
           .subscribe((res) => {
             if (res && res?.length == 2) {
-              this.lstStep = res[0] ?? [];
-              if (res[1]?.length > 0) {
+              let tempListStep = res[0] ?? [];
+              if (res[1]?.length > 0 && res[0]?.length > 0) {
                 let apInfos = res[1];
-                for (let st of this.lstStep) {
+                for (let st of res[0]) {
                   if (st?.approvers) {
                     for (let ap of st?.approvers) {
                       let curAp = [];
-                      if (ap?.roleType != 'E' && ap?.roleType != 'RO') {
+                      if (ap?.roleType == 'P' && ap?.roleType == 'U') {
                         curAp = apInfos.filter(
                           (x) =>
                             x?.approver == ap?.approver &&
@@ -185,14 +185,19 @@ export class CodxApproveStepsComponent
                       }
                     }
                   }
-                }
+                }                 
+                this.lstStep = tempListStep;               
               }
             }
+            
             this.isAfterRender = true;
+            this.cr.detectChanges();
           });
       } else {
         this.lstStep = [];
         this.currentStepNo = this.lstStep.length + 1;
+        this.isAfterRender = true;
+        this.cr.detectChanges();
       }
     }
   }
@@ -361,7 +366,7 @@ export class CodxApproveStepsComponent
           // PopupAddApprovalStepComponent,
           AddEditApprovalStepComponent,
           '',
-          850,
+          925,
           1500,
           'EST04',
           data,

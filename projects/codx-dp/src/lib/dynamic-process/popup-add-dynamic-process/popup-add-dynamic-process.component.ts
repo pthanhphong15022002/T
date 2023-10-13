@@ -530,7 +530,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   setDefaultOwner() {
     let perm = new DP_Processes_Permission();
     perm.objectID = this.user?.userID;
-    perm.objectName = 'Owner';
+    perm.objectName = this.user?.userName;
     perm.objectType = '1';
     perm.full = true;
     perm.create = true;

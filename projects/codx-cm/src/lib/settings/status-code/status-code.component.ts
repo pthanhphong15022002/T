@@ -40,7 +40,7 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   @ViewChild('templateObjectStatus') templateObjectStatus: TemplateRef<any>;
 
   @ViewChild('templateCategory') templateCategory: TemplateRef<any>;
-  
+
   // config BE
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
@@ -97,18 +97,20 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
     //   },
     // ];
     // this.changeDetectorRef.detectChanges();
-
-   // this.loadViewModel();
+    // this.loadViewModel();
   }
 
-  async promiseAll() {
-    await this.getFunctionList();
+  async promiseAll() {}
+  onLoading($event) {
+    this.getFunctionList();
   }
 
   getFunctionList() {
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      this.getGridViewSetup(f.formName, f.gridViewName);
-    });
+    if (this.view?.formModel)
+      this.getGridViewSetup(
+        this.view?.formModel?.formName,
+        this.view?.formModel?.gridViewName
+      );
   }
 
   getGridViewSetup(formName, gridViewName) {
@@ -121,9 +123,7 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   }
 
   getColumsGrid(grvSetup) {
-    let arrField = Object.values(grvSetup).filter(
-      (x: any) => x.isVisible
-    );
+    let arrField = Object.values(grvSetup).filter((x: any) => x.isVisible);
     if (Array.isArray(arrField)) {
       this.arrFieldIsVisible = arrField
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
@@ -144,51 +144,51 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
     //     }
     //   });
     // }
-      this.columnGrids = [];
+    this.columnGrids = [];
 
-      this.arrFieldIsVisible.forEach((key) => {
-        let field = Util.camelize(key);
-        let template: any;
-        let colums: any;
-        switch (key) {
-          case 'ObjectStatus':
-            template = this.templateObjectStatus;
-            break;
-          case 'Category':
-              template = this.templateCategory;
-              break;
-          default:
-            break;
-        }
-        if (template) {
-          colums = {
-            field: field,
-            headerText: grvSetup[key].headerText,
-            width: grvSetup[key].width,
-            template: template,
-            // textAlign: 'center',
-          };
-        } else {
-          colums = {
-            field: field,
-            headerText: grvSetup[key].headerText,
-            width: grvSetup[key].width,
-          };
-        }
-        this.columnGrids.push(colums);
-      });
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      switch (key) {
+        case 'ObjectStatus':
+          template = this.templateObjectStatus;
+          break;
+        case 'Category':
+          template = this.templateCategory;
+          break;
+        default:
+          break;
+      }
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+          // textAlign: 'center',
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
+      this.columnGrids.push(colums);
+    });
 
-      this.views = [
-        {
-          type: ViewType.grid,
-          sameData: true,
-          active: false,
-          model: {
-            resources: this.columnGrids,
-            template2: this.template,
-          },
+    this.views = [
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          resources: this.columnGrids,
+          template2: this.template,
         },
-      ];
+      },
+    ];
   }
 
   click(evt: ButtonModel) {
@@ -212,10 +212,11 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
         data: this.view.dataService.dataSelected,
         action: 'add',
         headerText: this.headerText,
-        gridViewSetup : this.gridViewSetup
-      }
+        gridViewSetup: this.gridViewSetup,
+      };
       let popupAdd = this.callfunc.openSide(
-        PopupAddStatusCodeComponent,obj,
+        PopupAddStatusCodeComponent,
+        obj,
         option
       );
 
@@ -238,7 +239,9 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   changeDataMF($event, data) {
     if ($event != null && data != null) {
       for (let eventItem of $event) {
-        eventItem.disabled = !['SYS03', 'SYS02','SYS04'].includes(eventItem?.type);
+        eventItem.disabled = !['SYS03', 'SYS02', 'SYS04'].includes(
+          eventItem?.type
+        );
       }
     }
   }
@@ -255,7 +258,6 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
     if (executeFunction) {
       executeFunction();
     } else {
-
       // this.codxShareService.defaultMoreFunc(
       //   e,
       //   data,
@@ -283,10 +285,12 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
             data: this.view.dataService.dataSelected,
             action: 'edit',
             headerText: this.headerText,
-            gridViewSetup : this.gridViewSetup
-          }
+            gridViewSetup: this.gridViewSetup,
+          };
           let popupEdit = this.callfunc.openSide(
-            PopupAddStatusCodeComponent,obj,option
+            PopupAddStatusCodeComponent,
+            obj,
+            option
           );
           popupEdit.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
@@ -312,10 +316,12 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
         data: this.view.dataService.dataSelected,
         action: 'copy',
         headerText: this.headerText,
-        gridViewSetup : this.gridViewSetup
-      }
+        gridViewSetup: this.gridViewSetup,
+      };
       let popupEdit = this.callfunc.openSide(
-        PopupAddStatusCodeComponent,obj,option
+        PopupAddStatusCodeComponent,
+        obj,
+        option
       );
       popupEdit.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
@@ -328,19 +334,19 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   }
   delete(data: any) {
     this.view.dataService.dataSelected = data;
-        this.view.dataService
-          .delete([this.view.dataService.dataSelected], true, (opt) =>
-            this.beforeDel(opt)
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.view.dataService.onAction.next({
-                type: 'delete',
-                data: data,
-              });
-            }
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({
+            type: 'delete',
+            data: data,
           });
-        this.changeDetectorRef.detectChanges();
+        }
+      });
+    this.changeDetectorRef.detectChanges();
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];

@@ -129,7 +129,7 @@
                   <span
                     *ngIf="dataSelected?.currencyID"
                     [ngClass]="
-                      dataSelected?.currencyID ? '' : 'line-clamp-menu'
+                      dataSelected?.currencyID ? '' : 'line-clamp line-clamp-1'
                     "
                     class="fw-bold fs-5-sm"
                     [ngbTooltip]="gridViewSetup?.CurrencyID?.headerText"
@@ -399,6 +399,7 @@
                         [objectType]="formModel?.entityName"
                         [referType]="'avt'"
                         [width]="35"
+                        [isDefaulImg]="true"
                       >
                       </codx-img>
                     </div>
@@ -1021,7 +1022,7 @@
             "
           ></span>
           <span
-            class="fw-bold line-clamp-menu"
+            class="fw-bold line-clamp line-clamp-1"
             #currencyID
             [innerHTML]="
               tmpDeal?.currencyID
