@@ -117,29 +117,21 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // sài cho FD
-    if(!changes.entityName.firstChange && changes.entityName.previousValue != changes.entityName.currentValue)
+    if(changes.entityName && !changes.entityName.firstChange && changes.entityName.previousValue != changes.entityName.currentValue)
     {
       this.dataService.setPredicate(changes.predicate.currentValue,changes.dataValue.currentValue);
     }
-    if((!changes.predicate.firstChange && changes.predicate.previousValue !=  changes.predicate.currentValue) && (!changes.dataValue.firstChange && changes.dataValue.previousValue !=  changes.dataValue.currentValue))
+    if(changes.predicate && (!changes.predicate.firstChange && changes.predicate.previousValue !=  changes.predicate.currentValue) && (!changes.dataValue.firstChange && changes.dataValue.previousValue !=  changes.dataValue.currentValue))
     {
       this.dataService.setPredicate(changes.predicate.currentValue,changes.dataValue.currentValue);
     }
-    if((!changes.predicates.firstChange && changes.predicates.previousValue !=  changes.predicates.currentValue) && (!changes.dataValues.firstChange && changes.dataValues.previousValue !=  changes.dataValues.currentValue))
+    if(changes.predicates && (!changes.predicates.firstChange && changes.predicates.previousValue !=  changes.predicates.currentValue) && (!changes.dataValues.firstChange && changes.dataValues.previousValue !=  changes.dataValues.currentValue))
     {
       this.dataService.setPredicates(changes.predicates.currentValue,changes.dataValues.currentValue);
     }
   }
 
   ngOnInit(): void {
-    // get queryParam từ URL set predicates
-    this.route.queryParamMap.subscribe((res:any) => {
-      if(res?.params?.predicate && res?.params?.dataValue)
-      {
-        this.dataService.setPredicates([res.params.predicate],[res.params.dataValue]);
-      }
-    });
-    // set dataService
     this.dataService.service = this.service || "WP";
     this.dataService.assemblyName = this.assemblyName || "ERM.Business.WP";
     this.dataService.className = this.className || "CommentsBusiness";
@@ -147,8 +139,8 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     this.dataService.favoriteID = this.favoriteID;
     this.dataService.predicate = this.predicate;
     this.dataService.dataValue = this.dataValue;
-    this.dataService.predicates = this.predicates;
-    this.dataService.dataValues = this.dataValues;
+    this.dataService.predicates = this.predicates || this.route.snapshot.queryParamMap.get("predicate");
+    this.dataService.dataValues = this.dataValues || this.route.snapshot.queryParamMap.get("dataValue");
     let arrSort:SortModel[] = [{ field : "CreatedOn",dir:"desc"}];
     this.dataService.setSort(arrSort);
     this.dataService.pageSize = 10;
@@ -170,8 +162,7 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
       if (mssg?.customName) this.mssgWP038 = mssg.customName;
     });
     // get function - formModel - gridviewSetup - more funtion WP
-    this.cache.functionList("WP")
-      .subscribe((func) => {
+    this.cache.functionList("WP").subscribe((func) => {
         if (func)
         {
           this.function = func;
@@ -192,7 +183,7 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
           });
           this.dt.detectChanges();
         }
-      });
+    });
   }
   // click moreFC
   clickMF(event: any, post: any) {
