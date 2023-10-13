@@ -5,7 +5,7 @@
         <div class="d-flex flex-column flex-center justify-content-center">
           <img
             src="../assets/themes/sys/default/img/DataEmpty.svg"
-            class="w-200px"
+            class="w-150px"
           />
           <div class="fs-5 text-dark fw-bold mt-2 text-center">
             {{ "SYS011" | mssg | async }}
@@ -291,12 +291,12 @@
                   </ng-template>
                   <ng-template #content>
                     <codx-campaign-contacts
-                      [transID]="dataSelected?.recID"
-                      [objectType]="'1'"
-                      [isShow]="isShow"
-                      [dataSelected]="dataSelected"
-                      [isDoubleClick]="isDoubleClick"
-                    ></codx-campaign-contacts>
+                        [transID]="dataSelected?.recID"
+                        [objectType]="'1'"
+                        [isShow]="isShow"
+                        [dataSelected]="dataSelected"
+                        [isDoubleClick]="isDoubleClick"
+                      ></codx-campaign-contacts>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -315,12 +315,12 @@
                   </ng-template>
                   <ng-template #content>
                     <codx-campaign-contacts
-                      [transID]="dataSelected?.recID"
-                      [objectType]="'3'"
-                      [isShow]="isShow"
-                      [dataSelected]="dataSelected"
-                      [isDoubleClick]="isDoubleClick"
-                    ></codx-campaign-contacts>
+                        [transID]="dataSelected?.recID"
+                        [objectType]="'3'"
+                        [isShow]="isShow"
+                        [dataSelected]="dataSelected"
+                        [isDoubleClick]="isDoubleClick"
+                      ></codx-campaign-contacts>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -338,10 +338,12 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <codx-campaign-deals
-                      [transID]="dataSelected?.recID"
-                      [isShow]="isShow"
-                    ></codx-campaign-deals>
+                    <div class="content-campain-deals">
+                      <codx-campaign-deals
+                        [transID]="dataSelected?.recID"
+                        [isShow]="isShow"
+                      ></codx-campaign-deals>
+                    </div>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -359,7 +361,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-4">
+                    <div class="camp-task">
                       <step-task
                         [entityName]="'CM_Campaigns'"
                         [typeTask]="2"
@@ -398,7 +400,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5">Thảo luận</div>
+                    <div class="camp-comment">Thảo luận</div>
                   </ng-template>
                 </e-tabitem>
               </e-tabitems>

@@ -32,16 +32,7 @@
           </codx-label>
           <codx-input [disabled]="isEmpIDNotNull || formType == 'view'" field="employeeID"
             (valueChange)="valueEmp($event)" [Group]="form.formGroup" [formModel]="form.formModel">
-            <!-- *ngIf="formType == 'edit'" -->
           </codx-input>
-          <!-- <codx-input
-            field="employeeID"
-            (valueChange)="valueEmp($event)"
-            *ngIf="formType == 'add' || formType == 'copy'"
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -61,7 +52,7 @@
     <div *ngIf="userGroupVisible" class="form-group">
       <codx-label fiedName="UserGroup" [formModel]="form?.formModel">
       </codx-label>
-      <codx-input field="userGroup" (valueChange)="valueUG($event)" [Group]="form.formGroup"
+      <codx-input #userGroup field="userGroup" (valueChange)="valueUG($event)" [Group]="form.formGroup"
         [formModel]="form.formModel" [disabled]="formType == 'view'">
       </codx-input>
     </div>

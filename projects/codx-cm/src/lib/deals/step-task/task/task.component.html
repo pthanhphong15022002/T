@@ -1,5 +1,5 @@
 <div class="list-contracts h-100" *ngIf="!isLoad">
-  <div *ngIf="!isNoData">
+  <div class="cm-list-task" *ngIf="!isNoData">
     <ng-container *ngFor="let task of listActivitie; let i = index">
       <div
         cdkDrag
@@ -39,12 +39,12 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="isNoData || listActivitie?.length <= 0">
-    <div class="mb-5">
+  <div class="cm-list-task-nodate" *ngIf="isNoData || listActivitie?.length <= 0">
+    <div class="mb-2 mt-3">
       <codx-no-data [mesCode]="isAdmin ? 'SYS011' : 'SYS032'"></codx-no-data>
     </div>
   </div>
-  <div class="d-flex justify-content-center add-contract">
+  <div class="d-flex justify-content-center add-contract add-tasks">
     <button
       *ngIf="!isPause && isAdmin"
       type="button"

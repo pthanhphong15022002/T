@@ -30,9 +30,7 @@ declare var jsBh: any;
   selector: 'cashreciept-detail',
   templateUrl: './cashreciept-detail.component.html',
   styleUrls: [
-    './cashreciept-detail.component.css',
-    '../../codx-ac.component.scss',
-  ],
+    './cashreciept-detail.component.css'],
 })
 export class CashrecieptDetailComponent extends UIComponent {
   //#region Constructor
@@ -109,10 +107,6 @@ export class CashrecieptDetailComponent extends UIComponent {
 
   //#region Init
   onInit(): void {}
-
-  ngDoCheck() {
-    this.detectorRef.detectChanges();
-  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar

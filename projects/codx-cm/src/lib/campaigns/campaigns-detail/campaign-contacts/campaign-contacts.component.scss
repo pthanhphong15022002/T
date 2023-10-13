@@ -3,9 +3,8 @@
   //height: calc(100vh - 212px);
   height: calc(100vh - 471px) !important;
   overflow: auto;
-  margin-top: 5px!important;
   .e-content{
-    height: calc(100vh - 520px) !important;
+    height: calc(100vh - 512px) !important;
     overflow: auto;
   }
 }
@@ -26,7 +25,7 @@
   }
 }
 codx-campaigns-detail{
-  .e-grid .e-headercell, .e-grid .e-detailheadercell {
+  .e-grid .e-headercell, .e-grid .e-detailheadercell,.e-columnheader {
     height: 35px!important;
   }
   .e-grid .e-headercell{

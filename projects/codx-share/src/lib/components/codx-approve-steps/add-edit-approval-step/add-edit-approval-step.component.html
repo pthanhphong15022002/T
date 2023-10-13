@@ -22,37 +22,130 @@
   </div>
 </ng-template>
 <ng-template #tabInfo00>
-
-  <div class="form-group">
-    <codx-label fiedName="StepName" [formModel]="formModel"> </codx-label>
-    <codx-input type="text" ControlName="stepName" [formModel]="formModel" [Group]="dialogApprovalStep"></codx-input>
-  </div>
-
-  <div class="row">
-    <div class="col-4">
+  <div class="d-flex flex-column" role="button">
+    <div class="d-flex flex-column">
       <div class="form-group">
-        <codx-label fiedName="Leadtime" [formModel]="formModel"> </codx-label>
-        <codx-input class="text-right" type="number" field="leadtime" [min]="0" placeholder="0" [formModel]="formModel"
-          [Group]="dialogApprovalStep" [showSpinButton]="false">
-        </codx-input>
+        <codx-label fiedName="StepName" [formModel]="formModel"> </codx-label>
+        <codx-input type="text" ControlName="stepName" [formModel]="formModel" [Group]="dialogApprovalStep"></codx-input>
       </div>
-    </div>
-    <div class="col-4">
-      <div class="form-group">
-        <codx-label fiedName="ApproveMode" [formModel]="formModel">
+    
+      <div class="row">
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label fiedName="Leadtime" [formModel]="formModel"> </codx-label>
+            <codx-input class="text-right" type="number" field="leadtime" [min]="0" placeholder="0" [formModel]="formModel"
+              [Group]="dialogApprovalStep" [showSpinButton]="false">
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label fiedName="ApproveMode" [formModel]="formModel">
+            </codx-label>
+            <codx-input field="approveMode" ControlName="approveMode" [formModel]="formModel" [Group]="dialogApprovalStep">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="flex-row d-flex justify-content-between align-items-center pb-3">
+        <codx-label class="text-primary fw-bold fs-5" name="lblApprover" default="Người thực hiện"
+          [formModel]="formModel">
         </codx-label>
-        <codx-input field="approveMode" ControlName="approveMode" [formModel]="formModel" [Group]="dialogApprovalStep">
-        </codx-input>
+        <button class="d-flex btn btn-outline-primary px-2 py-2" (click)="addAppr()"> <span
+            class="icon-person_add icon-20"></span></button>
       </div>
     </div>
+    <div class="flex-grow-1 overflow-auto">
+      <table class="w-100">
+        <thead class="h-50px w-100" >
+          <tr class="bg-light">
+            <th scope="col ps-2"><codx-label name="lblApprover" default="Người thực hiện"
+                [formModel]="formModel"></codx-label></th>
+            <th scope="col"><codx-label name="lblStepType" default="Hành động" [formModel]="formModel"></codx-label>
+            </th>
+            <th scope="col"><codx-label name="lblSignatureType" default="Loại chữ ký" [formModel]="formModel"></codx-label>
+            </th>
+            <th scope="col"><codx-label name="lblAllowEditAreas" default="Chỉnh sửa vùng ký"
+                [formModel]="formModel"></codx-label></th>
+            <th scope="col"><codx-label name="lblC" default="Xác nhận xem" [formModel]="formModel"></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-bottom" *ngFor="let item of lstApprover; let index = index">
+            <td >
+              <div class=" d-flex flex-row align-items-center" >
+                <div class="d-flex align-items-start me-3">
+                  <div ngbDropdown class="dropdown">
+                    <span ngbDropdownToggle type="button" id="dropdownMenuButton1" aria-haspopup="true"
+                      aria-expanded="false">
+                      <span class="icon-more_vert icon-18"></span>
+                    </span>
+                    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                      <a ngbDropdownItem class="dropdown-item" (click)="editApprover(index)">
+                        <div class="d-flex align-items-center cursor-pointer" >
+                          <span class="icon-edit text-primary icon-16"></span>
+                          <span class="ms-2"><codx-label name="lblEdit" default="Chỉnh sửa"></codx-label> </span>
+                        </div>
+                      </a>
+                      <a ngbDropdownItem class="dropdown-item"(click)="deleteApprover(index)">
+                        <div class="d-flex align-items-center cursor-pointer" >
+                          <span class="icon-delete text-danger icon-16"></span>
+                          <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center pt-3">
+                  <codx-temp-full cardCss="card-template mb-4 w-100"
+                  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
+                  [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver ? (item?.approver | vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
+                  [subTitle]="item?.orgUnitName" [desc]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
+                  [formModel]="formModel" [dataItem]="item" typeMF="hover"
+                  [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
+                  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
+                </codx-temp-full>
+                </div>
+              </div>
+              
+              
+            </td>
+            <td class="">
+              <div >
+                <span class="icon-list_check icon-20 me-2 fw-bold"> </span>
+                <span class="fw-bold"> {{ item?.stepType !=null ? (item?.stepType| vll : "ES002" : "text" | async) : (data?.stepType | vll : "ES002" : "text" | async) }}</span>
+              </div>
+            </td>
+            <td class="">            
+              <div class=" w-100 d-flex align-items-center justify-content-center">
+                <codx-vll [value]=" item?.signatureType ?? data?.signatureType" [name]="'ES001'" [showIcon]="true" [showText]="true"
+                  [showBgColor]="true" class="badge">
+                </codx-vll>
+              </div>
+            </td>
+            <td class="">
+              <div class=" w-100 d-flex align-items-center justify-content-center">
+                <codx-input type="checkbox" field="allowEditAreas" 
+                  [checked]="item?.allowEditAreas ? true : false" [disabled]="true">
+                </codx-input>
+              </div>
+            </td>
+            <td class="">
+              <div class=" w-100 d-flex align-items-center justify-content-center">
+                <codx-input type="checkbox" field="confirmControl" 
+                  [checked]="item?.confirmControl =='1' ? true : false" [disabled]="true">
+                </codx-input>
+              </div>
+            </td>
+          </tr>
+  
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="flex-row d-flex justify-content-between align-items-center">
-    <codx-label class="text-primary fw-bold fs-4" name="lblApprover" default="Người thực hiện"
-      [formModel]="formModel">
-    </codx-label>
-    <button class="d-flex btn btn-outline-primary" (click)="addAppr()"> <span
-        class="icon-person_add icon-20"></span></button>
-  </div>
+  
+
 </ng-template>
 
 <ng-template #addApproverTmp let-dialog>
@@ -64,7 +157,7 @@
             <codx-label default="Người thực hiện" name="lblApprover"></codx-label>
           </div>
           <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close"
-            (click)="dialog.close()">
+            (click)="dialog?.close()">
             <span class="icon-close icon-20 text-dark text-hover-primary"></span>
           </button>
         </div>
@@ -73,19 +166,21 @@
 
     <div class="modal-body pt-0 overflow-auto flex-grow-1">
       <div class="mb-1 px-5">
-        <div class="form-group d-flex justify-content-between align-items-center">
+        <div class="mb-2 d-flex justify-content-between align-items-center">
           <codx-label name="lblApprover" default="Chọn người thực hiện" [formModel]="formModel">
           </codx-label>
-          <codx-input type='share' [multiple]="false" (valueChange)="applyApprover($event)" [refValue]="vllShare" [showInput]="false">
+          <codx-input type='share'  [multiple]="false" (valueChange)="applyApprover($event)" [refValue]="vllShare"
+            [showInput]="false">
           </codx-input>
         </div>
-        <div class="row" *ngIf="newAppr?.roleType">
+        <div class=" pt-4 px-4 border rounded-2 mb-2" *ngIf="newAppr?.roleType">
           <codx-temp-full cardCss="card-template mb-4 w-100"
             [imageId]="newAppr?.roleType =='U' ? newAppr?.approver : newAppr?.userID"
             [title]="newAppr?.name ? newAppr?.name : newAppr?.userName ? newAppr?.userName : newAppr?.approver ? (newAppr?.approver| vll : 'ES014' : 'text' | async) : (newAppr?.roleType | vll : 'ES014' : 'text' | async)"
             [subTitle]="newAppr?.orgUnitName"
-            [desc]="newAppr?.position ? newAppr?.position: newAppr?.roleType | vll : 'ES014' : 'text' | async" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
-            [formModel]="formModel" [dataItem]="newAppr" typeMF="hover" (clickMF)="clickMFApprover($event)"
+            [desc]="newAppr?.position ? newAppr?.position: newAppr?.roleType | vll : 'ES014' : 'text' | async"
+            [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3" [formModel]="formModel" [dataItem]="newAppr"
+            typeMF="hover" (clickMF)="clickMFApprover($event)"
             [imageSrc]="newAppr?.roleType !='U' && !newAppr?.userID? './assets/themes/sys/default/img/' + (newAppr?.icon ? newAppr?.icon : 'share_default.svg') : null"
             [imgCss]="newAppr?.roleType !='U' && !newAppr?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
@@ -125,7 +220,7 @@
 
     <div class="modal-footer p-5">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary fw-bold" (click)="saveApprover()" [disabled]="!newAppr?.roleType">
+        <button class="btn btn-primary fw-bold" (click)="saveApprover(dialog,indexAppr)" [disabled]="!newAppr?.roleType">
           <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
         </button>
       </div>
@@ -178,7 +273,7 @@
 
           <codx-temp-full cardCss="card-template mb-4 w-100"
             [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
-            [title]="item?.name ? item?.name : item?.userName ? item?.userName : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
+            [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
             [subTitle]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
             [formModel]="formModel" (clickMF)="MFClick($event, item, index)" [dataItem]="item" typeMF="hover"
             [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
@@ -359,6 +454,40 @@
       </codx-input>
     </div>
   </div>
+  <!-- <div class="d-flex flex-column mb-4">
+    <div class="fw-bold fs-6 d-block mb-2">
+      <codx-label class="text-primary" name="lblTitleComment" default="Đóng góp ý kiến" [formModel]="formModel">
+      </codx-label>
+    </div>
+    <div class="row">
+      <div class="form-group col-6">
+        <codx-label fiedName="ApproveControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="approveControl">
+        </codx-input>
+      </div>
+      <div class="form-group col-6">
+        <codx-label fiedName="RejectControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="rejectControl">
+        </codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-6">
+        <codx-label fiedName="CancelControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="cancelControl">
+        </codx-input>
+      </div>
+      <div class="form-group col-6">
+        <codx-label fiedName="RedoControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input [formModel]="formModel" [Group]="dialogApprovalStep" field="redoControl">
+        </codx-input>
+      </div>
+    </div>
+  </div> -->
   <!-- <div class="row">
     <div class="form-group col-7">
       <codx-label fiedName="AlterApprovers" [formModel]="formModel">

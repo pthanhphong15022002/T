@@ -204,6 +204,7 @@ var childAuthRoutes: Routes = [
           import(
             'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
           ).then((m) => m.DynamicSettingModule),
+        data: { isReuse: true },
       },
       {
         path: 'settingcalendar/:funcID',

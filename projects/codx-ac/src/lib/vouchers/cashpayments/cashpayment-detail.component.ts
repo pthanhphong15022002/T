@@ -30,10 +30,7 @@ declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
   templateUrl: './cashpayment-detail.component.html',
-  styleUrls: [
-    './cashpayment-detail.component.css',
-    '../../codx-ac.component.scss',
-  ],
+  styleUrls: ['./cashpayment-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashpaymentDetailComponent extends UIComponent {
@@ -70,14 +67,12 @@ export class CashpaymentDetailComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  fmCashPaymentsLines: FormModel = {
-    //? formModel của cashpaymentlines
+  fmCashPaymentsLines: FormModel = { //? formModel của cashpaymentlines
     formName: 'CashPaymentsLines',
     gridViewName: 'grvCashPaymentsLines',
     entityName: 'AC_CashPaymentsLines',
   };
-  fmAcctTrans: FormModel = {
-    //? formModel của acctTrans
+  fmAcctTrans: FormModel = { //? formModel của acctTrans
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',
     entityName: 'AC_AcctTrans',
@@ -111,10 +106,6 @@ export class CashpaymentDetailComponent extends UIComponent {
 
   //#region Init
   onInit(): void {}
-
-  ngDoCheck() {
-    this.detectorRef.detectChanges();
-  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -188,7 +179,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.transfer(data);
+        this.transferToBank(e.text,data); //? chuyển tiền ngân hàng điện tử
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -432,50 +423,29 @@ export class CashpaymentDetailComponent extends UIComponent {
     this.totalVatAtm = 0;
     this.totalVatBase = 0;
 
-    if (
-      this.itemSelected?.listAcctrants &&
-      this.itemSelected?.listAcctrants.length > 0
-    ) {
-      this.itemSelected?.listAcctrants.forEach((item) => {
-        if (this.itemSelected.currencyID == this.baseCurr) {
-          if (!item.crediting) {
-            this.totalAcctDR += item.transAmt;
-          } else {
-            this.totalAcctCR += item.transAmt;
-          }
-        } else {
-          if (!item.crediting) {
-            this.totalAcctDR += item.transAmt2;
-            this.totalTransAmt += item.transAmt;
-          } else {
-            this.totalAcctCR += item.transAmt2;
-          }
-        }
-      });
+    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
+      if (this.itemSelected.currencyID == this.baseCurr) {
+        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
+        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt,0);
+      }else{
+        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt2,0);
+        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt2,0);
+        this.totalTransAmt = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
+      }
     }
 
-    if (
-      this.itemSelected?.listSettledInvoices &&
-      this.itemSelected?.listSettledInvoices.length > 0
-    ) {
-      this.itemSelected?.listSettledInvoices.forEach((item) => {
-        this.totalbalAmt += item.balAmt;
-        this.totalsettledAmt += item.settledAmt;
-        if (this.itemSelected.currencyID != this.baseCurr) {
-          this.totalbalAmt2 += item.balAmt2;
-          this.totalsettledAmt2 += item.settledAmt2;
-        }
-      });
+    if (this.itemSelected?.listSettledInvoices && this.itemSelected?.listSettledInvoices.length > 0) {
+      this.totalbalAmt = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.balAmt,0);
+      this.totalsettledAmt = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.settledAmt,0);
+      if (this.itemSelected.currencyID != this.baseCurr) {
+        this.totalbalAmt2 = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.balAmt2,0);
+        this.totalsettledAmt2 = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.settledAmt2,0);
+      }
     }
 
-    if (
-      this.itemSelected?.listVATInvoices &&
-      this.itemSelected?.listVATInvoices.length > 0
-    ) {
-      this.itemSelected?.listVATInvoices.forEach((item) => {
-        this.totalVatAtm += item.vatAmt;
-        this.totalVatBase += item.vatBase;
-      });
+    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
+      this.totalVatAtm = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatAmt,0);
+      this.totalVatBase = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatBase,0);
     }
   }
 
@@ -773,7 +743,12 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Function
 
   //#region Bankhub
-  transfer(data) {
+  /**
+   * *Hàm chuyển tiền ngân hàng điện tử
+   * @param text 
+   * @param data 
+   */
+  transferToBank(text,data) {
     this.checkLogin((o) => {
       if (o) {
         let tk = jsBh.decodeCookie('bh');
@@ -786,12 +761,34 @@ export class CashpaymentDetailComponent extends UIComponent {
             [data.recID, tk, 'test']
           )
           .subscribe((res) => {
-            console.log(res);
+            if (res) {
+              let result = JSON.parse(res);
+              if (result?.Status.toLowerCase() == 'success') {
+                data.eBankingID = result?.Data?.BulkId;
+                data.status = '8';
+                this.dataService.updateDatas.set(data['_uuid'], data);
+                this.dataService
+                  .save(null, 0, '', '', false)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe((res: any) => {
+                    if (res && !res.update.error) {
+                      this.notification.notifyCode('AC0029', 0, text);
+                    }
+                  });
+              }else{
+                this.notification.notifyCode('AC0030', 0, text);
+              }
+            }else{
+              this.notification.notifyCode('AC0030', 0, text);
+            }  
           });
       }
     });
   }
 
+  /**
+   * *Hàm check đăng nhập
+   */
   checkLogin(func: any) {
     return jsBh.login('test', (o) => {
       return func(o);
@@ -802,6 +799,9 @@ export class CashpaymentDetailComponent extends UIComponent {
     return true;
   }
 
+  /**
+   * *Hàm call api ngân hàng điện tử
+   */
   getbank() {
     this.acService
       .call_bank('banks', { bankId: '970448', requestId: Util.uid() })

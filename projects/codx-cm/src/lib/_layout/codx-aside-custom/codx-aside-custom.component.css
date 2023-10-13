@@ -1,4 +1,4 @@
-.line-clamp-menu {
+/* .line-clamp-menu {
     display: inline-block!important;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -6,4 +6,4 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 150px;
-  }
+  } */
