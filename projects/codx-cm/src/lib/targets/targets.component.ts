@@ -549,7 +549,6 @@ export class TargetsComponent
       this.loadTreeData(year?.toString());
     }
 
-    this.changeDetec.detectChanges();
   }
 
   async valueChange(e) {
@@ -720,63 +719,64 @@ export class TargetsComponent
   add() {
     this.isButton = true;
     this.view.dataService.addNew().subscribe((res: any) => {
-      let dialogModel = new DialogModel();
-      dialogModel.DataService = this.view.dataService;
-      dialogModel.FormModel = this.view?.formModel;
-      dialogModel.zIndex = 999;
-      var obj = {
-        action: 'add',
-        title: this.titleAction,
-        currencyID: this.currencyID,
-        exchangeRate: this.exchangeRate,
-        gridViewSetupTarget: this.gridViewSetupTarget,
-        year: this.year,
-      };
-      var dialog = this.callfc.openForm(
-        PopupAddTargetComponent,
-        '',
-        850,
-        850,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        this.isButton = false;
-        if (!e?.event) this.view.dataService.clear();
-        if (e != null && e?.event != null) {
-          var data = e?.event[0];
-          if (data.year == this.year) {
-            var index = this.lstDataTree.findIndex(
-              (x) => x.businessLineID == data?.businessLineID
-            );
-            if (index != -1) {
-              this.lstDataTree[index] = data;
-              // this.lstDataTree.splice(index, 1);
-            } else {
-              this.lstDataTree.push(Object.assign({}, data));
-              this.countTarget++;
-            }
-            this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-            let lst = [];
-            this.lstDataTree.forEach((res) => {
-              res?.items?.forEach((element) => {
-                if (
-                  !lst.some(
-                    (item) => item?.salespersonID == element?.salespersonID
-                  )
-                ) {
-                  lst.push(Object.assign({}, element));
-                }
+      this.cache.functionList('CM0601').subscribe((func) => {
+        let dialogModel = new DialogModel();
+        dialogModel.DataService = this.view.dataService;
+        dialogModel.FormModel = this.view?.formModel;
+        dialogModel.zIndex = 999;
+        var obj = {
+          action: 'add',
+          title: this.titleAction,
+          currencyID: this.currencyID,
+          exchangeRate: this.exchangeRate,
+          gridViewSetupTarget: this.gridViewSetupTarget,
+          year: this.year,
+        };
+        var dialog = this.callfc.openForm(
+          PopupAddTargetComponent,
+          '',
+          850,
+          850,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        dialog.closed.subscribe((e) => {
+          this.isButton = false;
+          if (!e?.event) this.view.dataService.clear();
+          if (e != null && e?.event != null) {
+            var data = e?.event[0];
+            if (data.year == this.year) {
+              var index = this.lstDataTree.findIndex(
+                (x) => x.businessLineID == data?.businessLineID
+              );
+              if (index != -1) {
+                this.lstDataTree[index] = data;
+                // this.lstDataTree.splice(index, 1);
+              } else {
+                this.lstDataTree.push(Object.assign({}, data));
+                this.countTarget++;
+              }
+              this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+              let lst = [];
+              this.lstDataTree.forEach((res) => {
+                res?.items?.forEach((element) => {
+                  if (
+                    !lst.some(
+                      (item) => item?.salespersonID == element?.salespersonID
+                    )
+                  ) {
+                    lst.push(Object.assign({}, element));
+                  }
+                });
               });
-            });
-            this.countPersons = lst.length;
-            this.isShow = false;
+              this.countPersons = lst.length;
+              this.isShow = false;
+            }
+            this.changeDetec.detectChanges();
           }
-
-          this.changeDetec.detectChanges();
-        }
+        });
       });
     });
   }
