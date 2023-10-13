@@ -544,13 +544,7 @@
               radius="70%"
               [explode]="true"
               [explodeOffset]="'10%'"
-              [palettes]="[
-                '#005dc7',
-                '#21b3d2',
-                '#06ddb8',
-                '#00f5e9',
-                '#a6dff5'
-              ]"
+              [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -854,7 +848,7 @@
           startAngle="0"
           innerRadius="80%"
           radius="70%"
-          [palettes]="['#005dc7', '#21b3d2', '#06ddb8', '#00f5e9', '#a6dff5']"
+          [palettes]="palettes"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
@@ -905,9 +899,9 @@
           </div>
         </div>
       </div>
-      <div class="position-relative" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
+      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
         <div
-          class="position-absolute overflow-x-hidden"
+          class="w-100 h-100 overflow-scroll"
           style="max-height: 95%; width: 100%"
 
         >
@@ -945,8 +939,8 @@
                     [value]="data.onTimePercentage"
                     [width]="'65'"
                     [height]="'65'"
-                    [trackThickness]="10"
-                    [progressThickness]="10"
+                    [trackThickness]="7"
+                    [progressThickness]="7"
                     [progressColor]="'#FF4500'"
                     [animation]="animation"
                   >
@@ -1397,13 +1391,7 @@
               [explode]="true"
               [explodeOffset]="'10%'"
               [dataLabel]="dataLabelRef"
-              [palettes]="[
-                '#005dc7',
-                '#21b3d2',
-                '#06ddb8',
-                '#00f5e9',
-                '#a6dff5'
-              ]"
+              [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -1591,6 +1579,7 @@
           yName="quantity"
           innerRadius="70%"
           [border]="{ width: 3 }"
+          [palettes]="palettes"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
@@ -1641,9 +1630,9 @@
           </div>
         </div>
       </div>
-      <div class="position-relative" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
+      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
         <div
-          class="position-absolute overflow-x-hidden"
+          class="overflow-scroll overflow-x-hidden"
           style="max-height: 95%; width: 100%"
 
         >

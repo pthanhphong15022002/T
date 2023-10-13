@@ -58,6 +58,19 @@
   background-size: cover;
   background-position: center;
 }
+.gift-card.w-100px.h-150px{
+  width: 100px;
+  height: 150px;
+  overflow: hidden;
+  img{
+    min-width: 100px;
+    height: 150px;
+    width: auto;
+  }
+}
+
+
+
 // #create_card_toggle
 // {
 //   background-image: url(../../../../../../../src/assets/demos/card/card-add.png);
