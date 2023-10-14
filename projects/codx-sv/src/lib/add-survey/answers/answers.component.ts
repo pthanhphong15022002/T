@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { SeriesSetting, UIComponent } from 'codx-core';
+import { ApiHttpService, SeriesSetting, UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
@@ -113,7 +113,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   };
   constructor(
     private injector: Injector,
-    private awserSV :CodxSVAnswerService
+    private awserSV :CodxSVAnswerService,
   ) {
     super(injector);
   }
@@ -635,5 +635,78 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     elementDivIcon = document.getElementById("div-icon"+recID+dif);
     elementIcon.style.color = "";
     elementDivIcon.style.backgroundColor = "#F5F9FA";
+  }
+
+  //Export 
+  export()
+  {
+    this.api.execSv("SV","SV","AnswerSurveyBusiness","ExportAsync",this.dataSV.recID).subscribe(item=>{
+      if(item)
+      {
+        var data = this.formatData(item)
+        this.api
+        .execSv<any>(
+          "SV",
+          'Core',
+          'CMBusiness',
+          'ExportExcelDataAsync',
+          [data, '21ba30aa-6a44-11ee-91c6-d89ef34ba7ae']
+        )
+        .subscribe((item2) => {
+          if (item2) {
+            this.downloadFile(item2);
+          }
+        });
+      }
+    })
+  }
+
+  formatData(data:any)
+  {
+    var result = [];
+    data.forEach(element => {
+      var dt = 
+      {
+        SessionNo : element.sessionNo,
+        Session :  element.session,
+        SegNo : element.segNo,
+        Question :  element.question,
+        Type: element.type,
+        Details : element.details,
+        User : element.user,
+        Answer: element.answer
+      }
+      result.push(dt);
+    });
+    return result
+  }
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray("SV_Surveys" || 'excel', sampleArr);
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var dataType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    var blob = new Blob([byte], {
+      type: dataType,
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
   }
 }
