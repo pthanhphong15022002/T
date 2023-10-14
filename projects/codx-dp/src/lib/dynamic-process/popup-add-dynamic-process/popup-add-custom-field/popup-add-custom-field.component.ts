@@ -36,7 +36,6 @@ import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
-import { PopupAddColumnTableComponent } from './popup-setting-table/popup-add-column-table/popup-add-column-table.component';
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 
 @Component({
@@ -185,7 +184,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
 
-  valueChangeCbx(e) {}
 
   async valueChange(e) {
     if (e.field == 'multiselect') {
@@ -617,11 +615,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
   }
 
-  async cbxChangeVll(value, elm) {
-    if (elm) this.element = elm;
+  async cbxChangeVll(value) {
+
     this.field['refValue'] = value;
     if (!value) {
-      await this.getDefaultVll();
+      // await this.getDefaultVll();
+      this.crrVll = null ;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
