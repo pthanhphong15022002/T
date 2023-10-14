@@ -1,12 +1,5 @@
-<codx-form
-  #formTable
-  [headerText]="titleAction"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="dialog.formModel"
-  [data]="column"
->
+<codx-form #formTable [headerText]="titleAction" [body]="body" [footer]="footer" [dialog]="dialog"
+  [formModel]="dialog.formModel" [data]="column">
   <ng-template #body>
     <div class="card-form">
       <ng-container [ngTemplateOutlet]="tempViewTable"></ng-container>
@@ -23,81 +16,46 @@
 
 <ng-template #tempViewTable>
   <div class="form-group">
-    <codx-input
-      type="checkbox"
-      field="settingWidth"
-      (valueChange)="valueChange($event)"
-      [crrValue]="settingWidth"
-    ></codx-input>
+    <codx-input type="checkbox" field="settingWidth" (valueChange)="valueChange($event)"
+      [crrValue]="settingWidth"></codx-input>
     <span>
-      <codx-label
-        class="ms-2"
-        name="lblSettingWidth"
-        [formModel]="formTable?.formModel"
-        default="Áp dụng thiết lập độ rộng cho cho bảng"
-      ></codx-label>
+      <codx-label class="ms-2" name="lblSettingWidth" [formModel]="formTable?.formModel"
+        default="Áp dụng thiết lập độ rộng cho cho bảng"></codx-label>
     </span>
   </div>
 
   <div class="form-group">
-    <codx-input
-      type="checkbox"
-      field="settingCount"
-      (valueChange)="valueChange($event)"
-      [crrValue]="settingCount"
-    ></codx-input>
+    <codx-input type="checkbox" field="settingCount" (valueChange)="valueChange($event)"
+      [crrValue]="settingCount"></codx-input>
     <span>
-      <codx-label
-        class="ms-2"
-        name="lblSettingCount"
-        [formModel]="formTable?.formModel"
-        default="Đánh số thứ tự cho bảng"
-      ></codx-label>
+      <codx-label class="ms-2" name="lblSettingCount" [formModel]="formTable?.formModel"
+        default="Đánh số thứ tự cho bảng"></codx-label>
     </span>
   </div>
   <!-- d-flex justify-content-end align-items-center -->
   <div class="">
-    <button
-      *ngIf="isShowButton"
-      type="button"
-      class="btn btn-icon btn-sm btn-light-primary me-2"
-      (click)="addColumn()"
-    >
+    <button *ngIf="isShowButton" type="button" class="btn btn-icon btn-sm btn-light-primary me-2" (click)="addColumn()">
       <span> <i class="icon icon-14 icon-add"></i></span>
     </button>
-    <button
-      *ngIf="isShowButton"
-      type="button"
-      class="btn btn-icon btn-sm btn-light-primary"
-      (click)="showMore()"
-    >
+    <button *ngIf="isShowButton" type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="showMore()">
       <span>
-        <i
-          class="icon icon-14 {{
+        <i class="icon icon-14 {{
             isShowMore ? 'icon-last_page' : 'icon-first_page'
-          }}"
-        ></i
-      ></span>
+          }}"></i></span>
       <span>
-        <i
-          class="icon icon-14 {{
+        <i class="icon icon-14 {{
             !isShowMore ? 'icon-last_page' : 'icon-first_page'
-          }}"
-        ></i
-      ></span>
+          }}"></i></span>
     </button>
   </div>
-  <div
-    class="h-100 scroll-x containerScroll"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-width="auto"
-  >
-    <!-- table  {{ settingWidth ? 'scroll-x' : 'w-100 ' }} -->
-    <table
+  <div class="h-100 scroll-x containerScroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-width="auto">
+    <!-- table  {{ settingWidth ? 'scroll-x' : 'w-100 ' -->
+
+    <!-- <table
       id="table"
-      class=" {{ settingWidth ? '' : 'table' }} table-row-bordered mt-3"
-      *ngIf="listColumns?.length > 0"
+      class=" {{ settingWidth ? '' : 'table' }} table-view table-row-bordered mt-3"
+      *ngIf="listColumns?.length > 0" 
     >
       <thead>
         <tr class="bg-gray-100">
@@ -167,6 +125,113 @@
               "
             >
               <div>{{ item?.note }}</div>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table> -->
+
+    <!-- [ngClass]="tableThemeClass" -->
+
+    <table *ngIf="listColumns?.length > 0" mat-table
+      class="{{ settingWidth ? '' : 'table' }} table-view table-row-bordered mt-3 table-responsive " id="table">
+      <thead>
+        <tr class="bg-gray-100" cdkDropList cdkDropListOrientation="horizontal" [cdkDropListData]="listColumns"
+          (cdkDragReleased)="release=true" (cdkDropListDropped)="dropCol($event)">
+          <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+            <div>
+              <codx-label name="lblNo" formName="System" [default]="'STT'"></codx-label>
+            </div>
+          </th>
+          <!-- [ngClass]="{'gold': column?.color === 'gold', 'green': column?.color === 'green'}" 
+              [attr.colspan]="column?.columns ? column?.columns?.length: null" -->
+          <ng-container *ngFor="let column of listColumns, let i = index">
+            <th class="fw-bold ps-4 has-action-menu position-relative" cdkDrag (mousedown)="mouseDown($event)"
+              cdkDragLockAxis="x" (cdkDragReleased)="release=true"
+              [style]="column?.columnWidth > 0 && settingWidth? 'width :' + column.columnWidth + 'px!important': ''"
+              scope="col">
+              <!-- {{column.title}} -->
+              <div>
+                <span>{{ column?.title }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">{{ column?.fieldName }}</span>
+              </div>
+              <div class="action-menu-column d-flex">
+                <div class="d-flex justify-content-end align-items-center">
+                  <button class="btn btn-sm btn-icon btn-light-warning" (click)="editColumn(column, i)">
+                    <i class="icon icon-14 icon-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-icon btn-light-danger ms-2" (click)="deleteColumn(column)">
+                    <i class="icon icon-14 icon-close"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div *cdkDragPreview>
+                <div [style.width]="pos?.width" [style.margin-top]="pos?.y" [style.margin-left]="pos?.x">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <!-- [ngClass]="{'gold': column?.color === 'gold', 'green': column?.color === 'green'}" -->
+                      <th class="fw-bold ps-4"  scope="col">
+                        <div>
+                          <span>{{ column?.title }}</span>
+                        </div>
+                        <div>
+                          <span class="text-gray-500">{{ column?.fieldName }}</span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                </div>
+              </div>
+              <div class="placeholder" *cdkDragPlaceholder></div>
+            </th>
+          </ng-container>
+        </tr>
+        <!-- //con ben trong -->
+        <!-- <tr>
+          <ng-container *ngFor="let column of listColumns, let i = index">
+            <ng-container *ngIf="!column?.columns">
+              <th></th>
+            </ng-container>
+    
+            <ng-container *ngIf="column.columns">
+              <th>{{column.header}}</th>
+            </ng-container> 
+    
+            <ng-container *ngFor="let subColumn of column?.columns">
+              <th>
+                {{subColumn.title}}
+              </th>
+            </ng-container>
+          </ng-container>
+        </tr> -->
+      </thead>
+      <tbody cdkDropList [cdkDropListData]="listColumns" (cdkDropListDropped)="dropRow($event)">
+        <ng-container *ngFor="let element of listColumns">
+          <tr #tr cdkDrag cdkDragLockAxis="y" (mousedown)="mouseDown($event,tr)"
+            (cdkDragReleased)="onDragRelease($event)"
+            [ngStyle]="{'text-decoration' : !element?.isVisible ? 'line-through' : null }">
+
+          </tr>
+        </ng-container>
+
+        <!-- //con ben trong  [attr.colspan]="cell?.columns ? cell.columns?.length: null"-->
+        <tr>
+          <td class="ps-4" *ngIf="settingCount">
+            <div>
+              <codx-label name="lblNo" formName="System" [default]="'STT'"></codx-label>
+            </div>
+          </td>
+          <ng-container *ngFor="let cell of listColumns">
+            <td class="ps-4"
+              [style]="cell?.columnWidth > 0 && settingWidth ? 'width :' + cell.columnWidth + 'px!important': ''">
+              <!-- {{sumQuotes(cell.field)}}  -->
+
+              <div>
+                <span> {{ cell?.note }}</span>
+              </div>
             </td>
           </ng-container>
         </tr>

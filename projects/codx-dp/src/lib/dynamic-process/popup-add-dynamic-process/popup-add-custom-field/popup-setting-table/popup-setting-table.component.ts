@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  HostListener,
   OnInit,
   Optional,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import {
@@ -21,6 +23,8 @@ import {
 import { ColumnTable } from 'projects/codx-dp/src/lib/models/models';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
+import { CdkDragDrop, CdkDragRelease, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'lib-popup-setting-table',
@@ -47,6 +51,11 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   actionAdd = 'Thêm mới';
   grvSetup: any;
   user: any;
+  //table drop
+  columns :any
+  pos: any
+  data: any
+  release: boolean = true;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -55,6 +64,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     private changeRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private cache: CacheService,
+    public renderer2: Renderer2,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -79,9 +89,81 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.columns = [
+    //   { field: "isVisible", header: "Visible in output" },
+    //   { field: "quoteSummary", header: "Quote Summary" },
+    //   { field: "expiring", header: "Expiring" },
+    //   { field: "scaled", header: "Scaled" },
+    //   {
+    //     field: "strategy1",
+    //     header: "First strategy",
+    //     color: "green",
+    //     columns: [
+    //       { field: "quote", header: "Quote" },
+    //       { field: "numericDifference", header: "Delta" },
+    //       { field: "percentageDifference", header: "%" }
+    //     ]
+    //   },
+    //   {
+    //     field: "strategy2",
+    //     header: "Second strategy",
+    //     color: "gold",
+    //     columns: [
+    //       { field: "quote", header: "Quote" },
+    //       { field: "numericDifference", header: "Delta" },
+    //       { field: "percentageDifference", header: "%" }
+    //     ]
+    //   }
+    // ];
+    // this.data = [
+    //   {
+    //     quoteSummary: "Workers Compensation",
+    //     isVisible: true,
+    //     expiring: 490000,
+    //     scaled: 450000,
+    //     strategy1: 500000,
+    //     strategy2: 510000,
+    //     dataType: "quote"
+    //   },
+    //   {
+    //     quoteSummary: "Business Auto",
+    //     isVisible: true,
+    //     expiring: 265000,
+    //     scaled: 270000,
+    //     strategy1: 250000,
+    //     strategy2: 300000,
+    //     dataType: "quote"
+    //   },
+    //   {
+    //     quoteSummary: "Construction Property",
+    //     isVisible: true,
+    //     expiring: 165000,
+    //     scaled: 170000,
+    //     strategy1: 150000,
+    //     strategy2: 100000,
+    //     dataType: "quote"
+    //   },
+    //   {
+    //     quoteSummary: "Notes",
+    //     isVisible: true,
+    //     strategy1: "my notes",
+    //     strategy2: "more notes",
+    //     dataType: "notes"
+    //   },
+    //   {
+    //     quoteSummary: "TCOR",
+    //     isVisible: false,
+    //     expiring: 213213,
+    //     scaled: 223112,
+    //     strategy1: 345432,
+    //     strategy2: 234234,
+    //     dataType: "tcor"
+    //   }
+    // ];
+  }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   valueChange(e) {
     if (e.field == 'settingWidth' || e.field == 'settingCount') {
@@ -216,4 +298,62 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   }
 
   //------------------------------------END---------------------------------//
+
+
+  //--------------------------------------------------------------------------//
+  ///----------------Drag and drop table column HTML--------------------------- //
+  //--------------------------------------------------------------------------//
+
+  dropRow(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.listColumns, event.previousIndex, event.currentIndex);
+  }
+  dropCol(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.listColumns, event.previousIndex, event.currentIndex);
+    
+  }
+  mouseDown(event, el: any = null) {
+    el = el || event.target;
+    this.pos = {
+      x: el.getBoundingClientRect().left - event.clientX + "px",
+      y: el.getBoundingClientRect().top - event.clientY + "px",
+      width: el.getBoundingClientRect().width + "px"
+    };
+  }
+  onDragRelease(event: CdkDragRelease) {
+    this.renderer2.setStyle(
+      event.source.element.nativeElement,
+      "margin-left",
+      "0px"
+    );
+  }
+
+  isNumeric(value: string | number): boolean {
+    return value != null && value !== "" && !isNaN(Number(value.toString()));
+  }
+
+  calculateDifference(quote: number, expiring: number) {
+    const difference = quote - expiring;
+    return {
+      numericValue: difference,
+      percentageValue: difference / expiring
+    };
+  }
+
+  sumQuotes(fieldName: string): any {
+    if (fieldName.toLowerCase() !== "quotesummary") {
+      const sumQuoted = this.listColumns
+        .filter(item => item.dataType === "quote")
+        .map(item => item[fieldName])
+        .filter(item => item)
+        .reduce((sum, item) => {
+          return sum + item;
+        }, 0);
+
+      return sumQuoted;
+    }
+
+    return "Sum Quoted";
+  }
+  //------------------------------------END---------------------------------//
+
 }
