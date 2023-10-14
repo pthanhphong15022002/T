@@ -660,6 +660,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.respondents.email = this.user?.email;
         this.respondents.respondent = this.user?.userName;
         this.respondents.objectID = this.user?.userID;
+        this.respondents.objectType = "U";
         this.respondents.createdBy = this.user?.userID;
       }
       else
