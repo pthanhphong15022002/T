@@ -135,7 +135,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getAvatar()
   {
-    debugger
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.backgroudColor) {
@@ -412,7 +411,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   //Đếm số lượng câu hỏi khác rỗng
   countAnswer(answers:any)
   {
-    debugger
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
@@ -580,7 +578,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
                 }
                 
               });
-              debugger
               return list;
             }
             case 'chartArea':
