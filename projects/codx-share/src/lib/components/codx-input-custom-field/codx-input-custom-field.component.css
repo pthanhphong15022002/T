@@ -1,22 +1,40 @@
 .rankIcon {
-    font-size: 1.5rem;
-    color: #b0c4de;
+  font-size: 1.5rem;
+  color: #b0c4de;
 }
 
 .filled {
-    color: #FFA800 !important
-        /* #1e90ff;*/
+  color: #ffa800 !important;
+  /* #1e90ff;*/
 }
 
 .no-border {
-    border: none;
-    background-color: transparent;
-    outline: none;
-    margin-left: -10px;
-    margin-top: -5px;
-  }
-
+  border: none;
+  background-color: transparent;
+  outline: none;
+  margin-left: -10px;
+  margin-top: -5px;
+}
 
 .line-data:hover {
-    background-color:var(--primary-lighter);
-  }
+  background-color: var(--primary-lighter);
+}
+
+.table-view {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+.table-view th,
+.table-view td {
+  border: 1px solid #ccc;
+}
+.table-view th,
+.table-view td {
+  padding: 0.5rem;
+}
+.placeholder {
+  background-color: transparent;
+  height: 2.5rem;
+  border: dotted 3px #999;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
