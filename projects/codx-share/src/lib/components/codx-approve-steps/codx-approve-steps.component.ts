@@ -165,7 +165,7 @@ export class CodxApproveStepsComponent
                   if (st?.approvers) {
                     for (let ap of st?.approvers) {
                       let curAp = [];
-                      if (ap?.roleType == 'P' && ap?.roleType == 'U') {
+                      if (ap?.roleType == 'P' || ap?.roleType == 'U') {
                         curAp = apInfos.filter(
                           (x) =>
                             x?.approver == ap?.approver &&
