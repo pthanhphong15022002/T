@@ -1,6 +1,6 @@
 .ws-sub-menu
 {
-    max-width: 90px;
+    width: 280px;
     align-items: center;
 }
 .ws-menu:hover
@@ -9,7 +9,13 @@
 }
 .ws-menu.active
 {
+    font-weight: bold;
     color: var(--text-primary);
+    background-color: var(--primary-lighter) ;
+    i
+    {
+        color: var(--text-primary);
+    }
     >img 
     {
         filter: invert(90%) sepia(95%) saturate(2029%) hue-rotate(204deg) brightness(100%) contrast(100%);

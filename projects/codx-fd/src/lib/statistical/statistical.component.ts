@@ -889,8 +889,10 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   doubleClick(e:any){
     let dialogModel = new DialogModel;
-    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'',dialogModel)
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','asc'),'',dialogModel)
   }
+
+
   onActions(e: any) {
     // if (e.type == 'reportLoaded') {
     //   this.arrReport = e.data;
@@ -909,6 +911,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     // }
     // this.isLoaded = false;
   }
+
   private groupBy(arr: any, key: any) {
     return arr.reduce(function (r: any, a: any) {
       r[a[key]] = r[a[key]] || [];

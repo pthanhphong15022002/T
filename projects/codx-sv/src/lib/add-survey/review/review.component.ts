@@ -660,7 +660,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.respondents.email = this.user?.email;
         this.respondents.respondent = this.user?.userName;
         this.respondents.objectID = this.user?.userID;
-        this.respondents.objectType = "U";
         this.respondents.createdBy = this.user?.userID;
       }
       else
@@ -668,7 +667,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.respondents.createdBy = "System";
       }
       this.respondents.responds = respondQuestion;
-      this.respondents.objectType = '';
+      this.respondents.objectType = this.dataSVRepondents.objectType || 'U';
       this.respondents.finishedOn = new Date();
       this.respondents.transID = this.recID;
       this.respondents.scores = 0;
