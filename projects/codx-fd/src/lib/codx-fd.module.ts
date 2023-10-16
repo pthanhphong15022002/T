@@ -64,6 +64,7 @@ import { SettingContentComponent } from './setting/setting-content/setting-conte
 import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldown.component';
 
 export const routes: Routes = [
   {
@@ -208,6 +209,7 @@ const Component: Type<any>[] = [
   SettingPolicyLinesComponent,
   AddDedicationRankComponent,
   SettingContentComponent,
+  DrilldownComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
