@@ -4,6 +4,7 @@ import {
   isObservable,
   map,
   Observable,
+  of,
   share,
 } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -70,6 +71,7 @@ export class CodxShareService {
   private cachedObservables = new Map<string, Observable<any>>();
   listContactBehavior = new BehaviorSubject<any>(null);
   callBackComponent: any;
+  private user: any;
   //
   //
   //listApproveMF = [];
@@ -86,7 +88,9 @@ export class CodxShareService {
     private fileService: FileService,
     private signalRSV: SignalRService,
     private httpClient: HttpClient
-  ) {}
+  ) {
+    this.user = this.auth.get();
+  }
 
   loadDataCache(
     paras: any,
@@ -594,9 +598,8 @@ export class CodxShareService {
     );
   }
 
-  sendEmail(emailTemplate: any, sendToList: any , option:any=null) {
-    if(option)
-    {
+  sendEmail(emailTemplate: any, sendToList: any, option: any = null) {
+    if (option) {
       return this.api.execSv<any>(
         option.service,
         option.assembly,
@@ -605,7 +608,7 @@ export class CodxShareService {
         [emailTemplate, sendToList, option.data]
       );
     }
-    
+
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',
@@ -1420,7 +1423,7 @@ export class CodxShareService {
     customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null, //biến this: tại component gọi hàm
-    exportData : ExportData =null,//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
+    exportData: ExportData = null //biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
@@ -1502,30 +1505,30 @@ export class CodxShareService {
         case '2': //Export và tạo ES_SignFiles để gửi duyệt
         case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-        //Xóa file export cũ và trình kí số cũ nếu có
-        this.deleteExportReleaseSF(approveProcess.recID).subscribe(res=>{          
-          this.getTemplateSF(
-            approveProcess?.category?.categoryID,
-            approveProcess?.category?.category
-          ).subscribe((sfTemplates: any) => {
-            if (sfTemplates?.length >= 1) {
-              this.apGetTemplateSF(
-                sfTemplates,
-                approveProcess,
-                releaseCallback
-              );
-            } else {
-              // Ko tìm thấy template mẫu của Category hiện tại
-              this.notificationsService.notify(
-                'Không tìm thấy mẫu thiết lập, vui lòng kiểm tra lại',
-                '2',
-                null
-              );
-              return;
-            }
+          //Xóa file export cũ và trình kí số cũ nếu có
+          this.deleteExportReleaseSF(approveProcess.recID).subscribe((res) => {
+            this.getTemplateSF(
+              approveProcess?.category?.categoryID,
+              approveProcess?.category?.category
+            ).subscribe((sfTemplates: any) => {
+              if (sfTemplates?.length >= 1) {
+                this.apGetTemplateSF(
+                  sfTemplates,
+                  approveProcess,
+                  releaseCallback
+                );
+              } else {
+                // Ko tìm thấy template mẫu của Category hiện tại
+                this.notificationsService.notify(
+                  'Không tìm thấy mẫu thiết lập, vui lòng kiểm tra lại',
+                  '2',
+                  null
+                );
+                return;
+              }
+            });
           });
-        });   
-        break;
+          break;
       }
     } else {
       //Gửi duyệt thường
@@ -2150,6 +2153,31 @@ export class CodxShareService {
         return 'audio.svg';
       default:
         return 'file.svg';
+    }
+  }
+
+  getEmployeeInfor(userID: string) {
+    if (!userID) return of(null);
+    if (!this.user || this.user.userID != userID || !this.user.employee) {
+      return this.api
+        .execSv<any>(
+          'HR',
+          'ERM.Business.HR',
+          'EmployeesBusiness',
+          'GetByDomainUserAsync',
+          [userID]
+        )
+        .pipe(
+          map((res: any) => {
+            if (this.user && this.user.userID == userID) {
+              this.user.employee = res;
+              this.auth.set(this.user);
+            }
+            return res;
+          })
+        );
+    } else {
+      return of(this.user.employee);
     }
   }
 }

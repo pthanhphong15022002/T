@@ -46,10 +46,10 @@ export class CodxHistoryComponent implements OnInit,OnChanges {
         "GetLogByIDAsync",
         [objectID]).
         subscribe((res:any[]) =>{
-          if(res) 
-          {
-            this.listHistory = JSON.parse(JSON.stringify(res));
-          }
+        if(res) 
+          this.listHistory = JSON.parse(JSON.stringify(res));
+        else
+          this.listHistory = null;
       });
     }
   }

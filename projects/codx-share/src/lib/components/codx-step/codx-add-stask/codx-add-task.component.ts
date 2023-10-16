@@ -1,3 +1,4 @@
+import { change } from '@syncfusion/ej2-grids';
 import { group } from 'console';
 import {
   OnInit,
@@ -16,6 +17,7 @@ import {
   CallFuncService,
   NotificationsService,
   DialogModel,
+  CodxInputComponent,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -35,6 +37,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
@@ -100,6 +103,17 @@ export class CodxAddTaskComponent implements OnInit {
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
   disableStep = false;
   isActivitie = false;
+
+  refValue = {
+    "1":"CMCustomersOfCalendar", 
+    "3":"CMLeadsOfCalendar",
+    "5":"CMDealsOfCalendar",
+    "7":"CMContractsOfCalendar",
+    "9":"CMCasesOfCalendar",
+  }
+  refValueType = '';
+  typeCM = '';
+  dataCM = '';
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -804,5 +818,27 @@ export class CodxAddTaskComponent implements OnInit {
         this.listGroup = [];
       }
     }
+  }
+
+  changeType(event){
+    console.log(event);
+    if(event?.data){
+      if(this.typeCM != event?.data){
+        let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
+        if(listDeal){
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+          this.inputDeal.ComponentCurrent.dataService.crrValue = null;
+          this.dataCM = null;
+        }
+        
+        this.typeCM = event?.data;
+        this.refValueType = this.refValue[this.typeCM];
+      }
+    }
+  }
+  changeDataCM(event){
+    console.log(event);
+    this.dataCM = event?.data;
+    
   }
 }

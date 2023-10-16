@@ -203,3 +203,7 @@ body.tailwind #selected {
 .nav-item.disabled {
   cursor: default !important;
 }
+.calendar-left-main{
+  height: calc(100% - 50px);
+  overflow: auto;
+}

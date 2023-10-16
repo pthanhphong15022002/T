@@ -114,6 +114,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   modelJSON: string = '';
   settingWidth = false;
   settingCount = false;
+  fieldCurrent = '';
 
   constructor(
     private cache: CacheService,
@@ -755,8 +756,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
     });
   }
 
-  dropRow(event){
+  dropRow(event) {
     moveItemInArray(this.arrDataValue, event.previousIndex, event.currentIndex);
+    this.valueChangeCustom.emit({
+      e: JSON.stringify(this.arrDataValue),
+      data: this.customField,
+    });
   }
 
   //--------------end------------//
