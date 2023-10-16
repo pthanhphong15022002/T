@@ -667,6 +667,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   healthInfoFuncID: string = '';
   quitJobInfoFuncID: string = '';
 
+  curriculumVitaeFunc = null;
+  legalInfoFunc = null;
+  foreignWorkerFunc = null;
+  jobInfoFunc = null;
+  salaryBenefitInfoFunc = null;
+  workingProcessInfoFunc = null;
+  knowledgeInfoFunc = null;
+  healthInfoFunc = null;
+  quitJobInfoFunc = null;
+
   // eInfoFuncID = 'HRTEM0101';
   // ePartyFuncID = 'HRTEM0102';
   // eFamiliesFuncID = 'HRTEM0103';
@@ -730,6 +740,38 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eQuitJobFuncID = null;
   eAccidentsFuncID = null;
   eNeedToSubmitProfileFuncID = null;
+
+  eInfoFunc = null;
+  ePartyFunc = null;
+  eFamiliesFunc = null;
+  eAssurFunc = null;
+  ePassportFunc = null;
+  eDegreeFunc = null;
+  eVisaFunc = null;
+  eWorkPermitFunc = null; 
+  eCertificateFunc = null;
+  eSkillFunc = null;
+  eExperienceFunc = null; // Kinh nghiệm trước đây
+  eAssetFunc = null; // Tài sản cấp phát
+  eTimeCardFunc = null;
+  eCalSalaryFunc = null;
+  jobGeneralFunc = null;
+  eBasicSalaryFunc = null;
+  eJobSalFunc = null; //Lương chức danh
+  eTrainCourseFunc = null;
+  eBusinessTravelFunc = null;
+  eHealthFunc = null; // Khám sức khỏe
+  eVaccinesFunc = null; // Tiêm vắc xin
+  benefitFunc = null;
+  dayoffFunc = null;
+  appointionFunc = null;
+  awardFunc = null;
+  eContractFunc = null;
+  eDisciplineFunc = null;
+  eDiseasesFunc = null;
+  eQuitJobFunc = null;
+  eAccidentsFunc = null;
+  eNeedToSubmitProfileFunc = null;
   //#endregion
 
   //#region urls
@@ -839,6 +881,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   eAccidentHeaderText;
   eFamilyHeaderText;
   //#endregion
+
+  //biến cờ hiệu thể hiện nguồn tới trang này là từ WS không phải DSNV
+  fromWS = false;
 
   pageNum: number = 0;
   maxPageNum: number = 0;
@@ -1023,6 +1068,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.pageTitle.setBreadcrumbs([]);
 
     if (this.funcID) {
+      debugger
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
         console.log('function list day ne', this.lstTab);
@@ -1030,30 +1076,39 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           switch(res[i].url){
             case this.curriculumVitaeURL:
               this.curriculumVitaeFuncID = res[i].functionID;
+              this.curriculumVitaeFunc = res[i];
               break;
             case this.legalInfoURL:
               this.legalInfoFuncID = res[i].functionID;
+              this.legalInfoFunc = res[i];
               break;
             case this.foreignWorkerURL:
               this.foreignWorkerFuncID = res[i].functionID;
+              this.foreignWorkerFunc = res[i];
               break;
             case this.jobInfoURL:
               this.jobInfoFuncID = res[i].functionID;
+              this.jobInfoFunc = res[i];
               break;
             case this.salaryBenefitInfoURL:
               this.salaryBenefitInfoFuncID = res[i].functionID;
+              this.salaryBenefitInfoFunc = res[i];
               break;
             case this.workingProcessInfoURL:
               this.workingProcessInfoFuncID = res[i].functionID;
+              this.workingProcessInfoFunc = res[i];
               break;
             case this.knowledgeInfoURL:
               this.knowledgeInfoFuncID = res[i].functionID;
+              this.knowledgeInfoFunc = res[i];
               break;
             case this.healthInfoURL:
               this.healthInfoFuncID = res[i].functionID;
+              this.healthInfoFunc = res[i];
               break;
             case this.quitJobInfoURL:
               this.quitJobInfoFuncID = res[i].functionID;
+              this.quitJobInfoFunc = res[i];
               break;
           }
         }
@@ -1065,13 +1120,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.clickTab({functionID: this.crrFuncTab});
       }
       this.employeeID = params['employeeID'];
+      if(!this.employeeID){
+        this.fromWS = true;
+        
+        debugger
+      }
       this.pageNum = params['page'];
       // this.maxPageNum = params['totalPage']
       // this.totalCount = params['totalCount']
       // this.fromView = params['from']
+      debugger
       if(this.employeeID){
         // Load full thong tin employee
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
+          debugger
           if(res){
             console.log('info nv',  res[0]);
             this.infoPersonal = res[0];
@@ -3185,6 +3247,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eInfoURL){
               this.eInfoFuncID = res[i].functionID;
+              this.eInfoFunc = res[i]
               if(!this.eInfoHeaderText || !this.eInfoFormModel){
                   this.hrService.getHeaderText(this.eInfoFuncID).then((headerText) => 
                   {
@@ -3210,9 +3273,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.ePartyURL){
               this.ePartyFuncID = res[i].functionID;
+              this.ePartyFunc = res[i];
             }
             else if(res[i].url == this.eFamiliesURL){
               this.eFamiliesFuncID = res[i].functionID;
+              this.eFamiliesFunc = res[i]
 
               if(!this.eFamilyFormModel){
                 this.hrService.getFormModel(this.eFamiliesFuncID).then((res) => {
@@ -3228,6 +3293,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eExperienceURL){
               this.eExperienceFuncID = res[i].functionID;
+              this.eExperienceFunc = res[i];
 
               if(!this.eExperienceFormModel){
                 this.hrService.getFormModel(this.eExperienceFuncID).then((res) => {
@@ -3260,9 +3326,11 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   for(let i = 0; i < res.length; i++){
                     if(res[i].url == this.eAssurURL){
                       this.eAssurFuncID = res[i].functionID;
+                      this.eAssurFunc = res[i];
                     }
                     else if(res[i].url == this.ePassportURL){
                       this.ePassportFuncID = res[i].functionID;
+                      this.ePassportFunc = res[i];
 
                       if(!this.ePassportFormModel){
                         this.hrService.getFormModel(this.ePassportFuncID).then((res) => {
@@ -3272,6 +3340,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     }
                     else if(res[i].url == this.eVisaURL){
                       this.eVisaFuncID = res[i].functionID;
+                      this.eVisaFunc = res[i]
 
                       if(!this.eVisaFormModel){
                         this.hrService.getFormModel(this.eVisaFuncID).then((res) => {
@@ -3311,6 +3380,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     for(let i = 0; i <res.length; i++){
                       if(res[i].url == this.eWorkPermitURL){
                         this.eWorkPermitFuncID = res[i].functionID;
+                        this.eWorkPermitFunc = res[i]
 
                         if(!this.eWorkPermitFormModel){
                           this.hrService.getFormModel(this.eWorkPermitFuncID).then((res) => {
@@ -3363,15 +3433,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.jobGeneralURL){
               this.jobGeneralFuncID = res[i].functionID;
+              this.jobGeneralFunc = res[i];
             }
             else if(res[i].url == this.eTimeCardURL){
               this.eTimeCardFuncID = res[i].functionID;
+              this.eTimeCardFunc = res[i];
             }
             else if(res[i].url == this.eCalSalaryURL){
               this.eCalSalaryFuncID = res[i].functionID;
+              this.eCalSalaryFunc = res[i];
             }
             else if(res[i].url == this.eNeedToSubmitProfileURL){
               this.eNeedToSubmitProfileFuncID = res[i].functionID;
+              this.eNeedToSubmitProfileFunc = res[i];
               if(!this.edocumentFormModel){
                 this.hrService.getFormModel(this.eNeedToSubmitProfileFuncID).then((res) =>{
                   this.edocumentFormModel = res;
@@ -3439,6 +3513,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eBasicSalaryURL){
               this.eBasicSalaryFuncID = res[i].functionID;
+              this.eBasicSalaryFunc = res[i];
               if(!this.eBasicSalaryFormmodel){
                 this.hrService.getFormModel(this.eBasicSalaryFuncID).then((res) => {
                   this.eBasicSalaryFormmodel = res;
@@ -3447,6 +3522,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.benefitURL){
               this.benefitFuncID = res[i].functionID;
+              this.benefitFunc = res[i];
               if(!this.benefitFormodel){
                 this.hrService.getFormModel(this.benefitFuncID).then((res) => {
                   this.benefitFormodel = res;
@@ -3503,6 +3579,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eContractURL){
               this.eContractFuncID = res[i].functionID;
+              this.eContractFunc = res[i];
 
               if(!this.eContractFormModel){
                 this.hrService.getFormModel(this.eContractFuncID).then((res) => {
@@ -3512,6 +3589,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.appointionURL){
               this.appointionFuncID = res[i].functionID;
+              this.appointionFunc = res[i];
 
               if(!this.appointionFormModel){
                 this.hrService.getFormModel(this.appointionFuncID).then((res) => {
@@ -3521,6 +3599,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.dayoffURL){
               this.dayoffFuncID = res[i].functionID;
+              this.dayoffFunc = res[i];
 
               if(!this.dayoffFormModel){
                 this.hrService.getFormModel(this.dayoffFuncID).then((res) => {
@@ -3538,6 +3617,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eBusinessTravelURL){
               this.eBusinessTravelFuncID = res[i].functionID;
+              this.eBusinessTravelFunc = res[i];
 
               if(!this.EBusinessTravelFormodel){
                 this.hrService.getFormModel(this.eBusinessTravelFuncID).then((res) => {
@@ -3547,6 +3627,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.awardURL){
               this.awardFuncID = res[i].functionID;
+              this.awardFunc = res[i];
               if(!this.awardFormModel){
                 this.hrService.getFormModel(this.awardFuncID).then((res) => {
                   this.awardFormModel = res;
@@ -3555,6 +3636,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eDisciplineURL){
               this.eDisciplineFuncID = res[i].functionID;
+              this.eDisciplineFunc = res[i];
               if(!this.eDisciplineFormModel){
                 this.hrService.getFormModel(this.eDisciplineFuncID).then((res) => {
                   this.eDisciplineFormModel = res;
@@ -3627,6 +3709,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eDegreeURL){
               this.eDegreeFuncID = res[i].functionID;
+              this.eDegreeFunc = res[i]
               if(!this.eDegreeFormModel){
                 this.hrService.getFormModel(this.eDegreeFuncID).then((res) => {
                   this.eDegreeFormModel = res;
@@ -3635,6 +3718,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eCertificateURL){
               this.eCertificateFuncID = res[i].functionID;
+              this.eCertificateFunc = res[i]
               if(!this.eCertificateFormModel){
                 this.hrService.getFormModel(this.eCertificateFuncID).then((res) => {
                   this.eCertificateFormModel = res;
@@ -3643,6 +3727,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eSkillURL){
               this.eSkillFuncID = res[i].functionID;
+              this.eSkillFunc = res[i];
               if(!this.eSkillFormmodel){
                 this.hrService.getFormModel(this.eSkillFuncID).then((res) => {
                   this.eSkillFormmodel = res;
@@ -3659,6 +3744,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eTrainCourseURL){
               this.eTrainCourseFuncID = res[i].functionID;
+              this.eTrainCourseFunc = res[i];
               if(!this.eTrainCourseFormModel){
                 this.hrService.getFormModel(this.eTrainCourseFuncID).then((res) => {
                   this.eTrainCourseFormModel = res;
@@ -3722,6 +3808,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eAccidentsURL){
               this.eAccidentsFuncID = res[i].functionID;
+              this.eAccidentsFunc = res[i];
               if(!this.eAccidentsFormModel){
                 this.hrService.getFormModel(this.eAccidentsFuncID).then((res) => {
                   this.eAccidentsFormModel = res;
@@ -3738,6 +3825,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eDiseasesURL){
               this.eDiseasesFuncID = res[i].functionID;
+              this.eDiseasesFunc = res[i];
               if(!this.eDiseasesFormModel){
                 this.hrService.getFormModel(this.eDiseasesFuncID).then((res) => {
                   this.eDiseasesFormModel = res;
@@ -3754,6 +3842,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eHealthURL){
               this.eHealthFuncID = res[i].functionID;
+              this.eHealthFunc = res[i];
               if(!this.eHealthFormModel){
                 this.hrService.getFormModel(this.eHealthFuncID).then((res) => {
                   this.eHealthFormModel = res;
@@ -3762,6 +3851,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.eVaccinesURL){
               this.eVaccinesFuncID = res[i].functionID;
+              this.eVaccinesFunc = res[i];
               if(!this.eVaccineFormModel){
                 this.hrService.getFormModel(this.eVaccinesFuncID).then((res) => {
                   this.eVaccineFormModel = res;
@@ -3832,7 +3922,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.lstFuncQuitJob = res;
           for(let i = 0; i < res.length; i++){
             if(res[i].url == this.eQuitJobURL){
-              this.eQuitJobFuncID = res[i].functionID
+              this.eQuitJobFuncID = res[i].functionID;
+              this.eQuitJobFunc = res[i];
               if(!this.eQuitJobFormModel){
                 this.hrService.getFormModel(this.quitJobInfoFuncID).then((res) => {
                   this.eQuitJobFormModel = res;
