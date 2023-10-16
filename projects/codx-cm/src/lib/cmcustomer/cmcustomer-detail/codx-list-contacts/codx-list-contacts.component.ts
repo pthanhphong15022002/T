@@ -93,6 +93,7 @@ export class CodxListContactsComponent implements OnInit {
         changes['objectID']?.currentValue?.trim() != ''
       ) {
         if (this.isRole) {
+          this.listContacts = [];
           if (changes['objectID']?.currentValue == this.id) return;
           this.id = changes['objectID']?.currentValue;
           this.getListContacts();

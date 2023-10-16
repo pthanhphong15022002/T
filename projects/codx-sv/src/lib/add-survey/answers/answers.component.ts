@@ -8,12 +8,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { SeriesSetting, UIComponent } from 'codx-core';
+import { ApiHttpService, SeriesSetting, UIComponent } from 'codx-core';
 import { CodxSVAnswerService } from './answers.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { isObservable } from 'rxjs';
 import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 import moment from 'moment';
+import { palettes } from '../setting/setting.data';
 
 @Component({
   selector: 'app-answers',
@@ -103,9 +104,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   
   };
 
-  palettes: string[] = 
-  ["#3366CC","#FF9900","#61EFCD", "#CDDE1F", "#FEC200", "#CA765A", "#2485FA", "#F57D7D", "#C152D2",
-  "#8854D9", "#3D4EB8", "#00BCD7", "#4472c4", "#ed7d31", "#ffc000", "#70ad47", "#5b9bd5", "#c1c1c1", "#6f6fe2", "#e269ae", "#9e480e", "#997300"];
+  palettes: string[] = palettes[0].data
   
   tooltipMatrix : Object = {
     enable: true,
@@ -114,7 +113,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   };
   constructor(
     private injector: Injector,
-    private awserSV :CodxSVAnswerService
+    private awserSV :CodxSVAnswerService,
   ) {
     super(injector);
   }
@@ -136,7 +135,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getAvatar()
   {
-    debugger
     if(this.dataSV && this.dataSV.settings) {
       if(typeof this.dataSV.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
       if(this.dataSV?.settings?.backgroudColor) {
@@ -206,9 +204,11 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           this.lstRespondents = item[0];
           this.lstQuestion = item[1]
           this.lstCountQuestion = item[2];
-          this.respondents = this.lstRespondents[this.lstRespondents.length - 1];
+
+          var index = this.lstRespondents.findIndex(x=>x.responds && x.responds.length >0);
+          if(index >= 0) this.respondents = this.lstRespondents[index];
           this.getSetting();
-          if(this.respondents && this.respondents?.responds[0])
+          if(this.respondents && this.respondents?.responds && this.respondents?.responds[0])
           {
             this.setSelectedDropDown(this.respondents.responds[0].question)
             this.loadQuestionByID(this.respondents.responds[0].questionID);
@@ -247,7 +247,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
 
   getRow(questionID:any)
   {
-    debugger
     let result = [];
     this.lstRespondents.forEach(element => {
       if(element.responds && element.responds.length>0)
@@ -261,7 +260,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
             if(data[element2.seqNo] && Array.isArray(data[element2.seqNo])) data[element2.seqNo].push(element2.answer)
             else data.push([element2.answer]);   
           });
-          data.unshift({objectID:element.objectID,name:element.respondent})
+          data.unshift({objectID:element.objectID,name:element.respondent,email:element.email})
           result.push(data);
         }
       }
@@ -278,7 +277,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         var results = element.responds.filter(x=>x.questionID == questionID);
         if(results && results.length > 0)
         {
-          var data = [{objectID:element.objectID,name:element.respondent},{data:[]}];
+          var data = [{objectID:element.objectID,name:element.respondent,email:element.email},{data:[]}];
           results[0].results.forEach(element2 => {
             data[1].data.push(element2.answer)
           });
@@ -412,7 +411,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   //Đếm số lượng câu hỏi khác rỗng
   countAnswer(answers:any)
   {
-    debugger
     var count = 0 ;
     if(answers && answers.length > 0) 
     var listAnswers =  answers.filter(x=>x.answer);
@@ -580,7 +578,6 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
                 }
                 
               });
-              debugger
               return list;
             }
             case 'chartArea':
@@ -635,5 +632,83 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     elementDivIcon = document.getElementById("div-icon"+recID+dif);
     elementIcon.style.color = "";
     elementDivIcon.style.backgroundColor = "#F5F9FA";
+  }
+
+  //Export 
+  export()
+  {
+    this.api.execSv("SV","SV","AnswerSurveyBusiness","ExportAsync",this.dataSV.recID).subscribe(item=>{
+      if(item)
+      {
+        var data = this.formatData(item)
+        this.api
+        .execSv<any>(
+          "SV",
+          'Core',
+          'CMBusiness',
+          'ExportExcelDataAsync',
+          [data, '1eab1738-6bd0-11ee-91c8-d89ef34ba7ae']
+        )
+        .subscribe((item2) => {
+          if (item2) {
+            this.downloadFile(item2);
+          }
+        });
+      }
+    })
+  }
+
+  formatData(data:any)
+  {
+    var result = [];
+    data.forEach(element => {
+      var dt = 
+      {
+        SessionNo : element.sessionNo,
+        Session :  element.session,
+        SegNo : element.segNo,
+        Question :  element.question,
+        Type: element.type,
+        Details : element.details,
+        UserID : element.userID,
+        UserName : element.userName,
+        PositionID : element.positionID,
+        PositionName : element.positionName,
+        DepartmentID : element.departmentID,
+        DepartmentName : element.departmentName,
+        Answer: element.answer
+      }
+      result.push(dt);
+    });
+    return result
+  }
+
+  downloadFile(data: any) {
+    var sampleArr = this.base64ToArrayBuffer(data[0]);
+    this.saveByteArray("SV_Surveys" || 'excel', sampleArr);
+  }
+
+  base64ToArrayBuffer(base64) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+      var ascii = binaryString.charCodeAt(i);
+      bytes[i] = ascii;
+    }
+    return bytes;
+  }
+
+  saveByteArray(reportName, byte) {
+    var dataType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    var blob = new Blob([byte], {
+      type: dataType,
+    });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = reportName;
+    link.download = fileName;
+    link.click();
   }
 }

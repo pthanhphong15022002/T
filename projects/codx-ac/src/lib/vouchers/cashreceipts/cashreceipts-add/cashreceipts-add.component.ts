@@ -1184,22 +1184,9 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       }, 100);
         break;
       case 'beginEdit': //? trước khi thêm dòng
-        if (event?.data.dr == 0) { //? khi số tiền < 0
-          this.eleGridCashReceipt.startProcess(); //? ko cho lưu dòng
-        }
         let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
         let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
         this.setLockAndRequireFields(event?.data,oAccount,oOffsetAccount);
-        break;
-      case 'processEdit':
-        if (event?.data?.requestType == 'save') {
-          if (this.eleGridCashReceipt.isProcessing) { ///? check số tiền phải > 0
-            if (event?.rowData.dr == 0) {
-              this.eleGridCashReceipt.showErrorField('dr','E0094');
-              return;
-            } 
-          }
-        }
         break;
     }
   }
@@ -1264,6 +1251,29 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formCashReceipt.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm check validate trước khi save line (cashpayment)
+   * @param data 
+   * @returns 
+   */
+  async saveValidationLine(data:any){
+    let lsterror = [];
+    if (data.dr == 0) {
+      lsterror.push({field:'dr',msgCode:'E0094'}); //? truyền field lỗi và msgcode
+    }
+    // xử lí trường hợp call api để check validate
+    // let error = await new Promise((resolve, reject) => {
+    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
+    //     'USD'
+    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    //     if (res) {
+    //       resolve({status: true});
+    //     }
+    //   });
+    //   });
+    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

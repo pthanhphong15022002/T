@@ -9,7 +9,6 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Reason } from './models/Reason.model';
 
 export const fmPurchaseInvoicesLines: FormModel = {
   entityName: 'AC_PurchaseInvoicesLines',
@@ -133,21 +132,21 @@ export class CodxAcService {
     return newMemo;
   }
 
-  setMemo(master: any, transactiontext: Array<Reason>) {
-    let newMemo = '';
-    let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
-    for (let i = 0; i < sortTrans.length; i++) {
-      if (sortTrans[i].value != null) {
-      }
-      if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
-        newMemo += sortTrans[i].value;
-      } else {
-        if (sortTrans[i].value != null) {
-          newMemo += sortTrans[i].value + ' - ';
-        }
-      }
-    }
-    return newMemo;
+  setMemo(master: any, transactiontext: any) {
+    // let newMemo = '';
+    // let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
+    // for (let i = 0; i < sortTrans.length; i++) {
+    //   if (sortTrans[i].value != null) {
+    //   }
+    //   if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
+    //     newMemo += sortTrans[i].value;
+    //   } else {
+    //     if (sortTrans[i].value != null) {
+    //       newMemo += sortTrans[i].value + ' - ';
+    //     }
+    //   }
+    // }
+    // return newMemo;
   }
 
   /** Check if rerquired fields are valid */

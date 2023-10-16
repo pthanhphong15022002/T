@@ -41,7 +41,6 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  @ViewChild('progressbarTable') progressbarTable: ProgressBar; //? progressBar của table
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
@@ -168,7 +167,7 @@ export class CashPaymentsComponent extends UIComponent {
   //#region Event
 
   /**
-   * * Hàm xử lí click button thêm mới
+   * * Hàm xử lí click toolbar
    * @param event
    */
   toolbarClick(event) {
