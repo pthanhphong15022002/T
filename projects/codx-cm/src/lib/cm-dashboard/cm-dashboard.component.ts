@@ -22,6 +22,7 @@ import { GridModels } from '../models/tmpModel';
 import {
   AccumulationChart,
   AccumulationChartComponent,
+  IAccTextRenderEventArgs,
   IPointRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
 
@@ -250,6 +251,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //ReasonSuscess
   isReasonSuscess = true;
   valueFormat: any;
+
+  //accumulation chart
+  public piedata: Object[] = [
+    { x: 'SUV', y: 25 },
+    { x: 'Car', y: 37 },
+    { x: 'Pickup', y: 15 },
+    { x: 'Minivan', y: 23 },
+  ];
+  public datalabelAc: Object = {
+    visible: true,
+    position: 'Inside',
+    enableRotation: false,
+    connectorStyle: { type: 'Curve', length: '10%' },
+    font: { color: 'white', fontWeight: '600' },
+  };
+  public startAngle: number = 0;
+  public explodeIndex: number = 2;
+  public endAngle: number = 360;
+  public legendSettings: Object = {
+    visible: true,
+};
+  public onTextRender(args: IAccTextRenderEventArgs): void {
+    args.text = args.point.y + '%';
+}
+  //end
 
   constructor(
     inject: Injector,
