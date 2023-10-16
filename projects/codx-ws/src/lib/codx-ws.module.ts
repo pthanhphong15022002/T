@@ -41,6 +41,7 @@ import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.
 import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
+import { InformationComponent } from './personal/master-detail/information/information.component';
 
 
 const routes: Routes = [
@@ -59,7 +60,7 @@ const routes: Routes = [
       },
       {
         path: 'personal/:funcID',
-        component: PersonalsComponent,
+        component: PersonalComponent,
         //component: PersonalComponent,
       },
       {
@@ -188,7 +189,8 @@ const routes: Routes = [
     DashboardComponent,
     ReportComponent,
     RequestReviewComponent,
-    BookmarkComponent
+    BookmarkComponent,
+    InformationComponent
   ],
   imports: [
     RouterModule.forChild(routes),

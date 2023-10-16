@@ -1,24 +1,34 @@
-<div class="d-flex flex-column justify-content-between bg-white h-100">
+<div class="d-flex flex-column justify-content-between me-4 bg-white h-100">
     <ng-container *ngIf="funcList">
         <div class="h-100 menu menu-column menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-light">
             <ng-container *ngFor="let item of funcList ; let i = index">
-                <ng-container *ngIf="i < (funcList.length -1)">
-                    <ng-container *ngTemplateOutlet="tmpFunc ; context: { $implicit: item , index:i }"></ng-container>
-                </ng-container>
+                <ng-container *ngTemplateOutlet="tmpFunc ; context: { $implicit: item , index:i }"></ng-container>
+                <ng-container *ngTemplateOutlet="tmpFuncChild ; context: { $implicit: item?.childs , index:i }"></ng-container>
             </ng-container>
         </div>
-       <div class="d-flex justify-content-center h-80px border-top">
+       <!-- <div class="d-flex justify-content-center h-80px border-top">
             <ng-container *ngTemplateOutlet="tmpFunc ; context: { $implicit: funcList[(funcList.length - 1)] ,  index:(funcList.length - 1) }"></ng-container>
-        </div>
+        </div> -->
     </ng-container>
 </div>
 
 <ng-template #tmpFunc let-data let-index="index">
-    <div class="d-flex flex-column justify-content-center menu-item menu-accordion ws-sub-menu text-center p-4 cursor-pointer ws-menu" 
-        [class.active]="index == selectedIndex"
-        (click)="menuChange(data,index)"
+    <div class="d-flex align-items-center menu-item menu-accordion ws-sub-menu text-center px-4 py-3" 
     >
-        <img [src]="data?.smallIcon" (onload)="imgToSvg(this)"/>
-        <span class="mt-2">{{data?.customName}}</span>
+        <!-- <img [src]="data?.smallIcon" (onload)="imgToSvg(this)"/> -->
+        <i [ngClass]="data?.largeIcon" class="icon-20"></i>
+        <span class="ms-2 mt-1">{{data?.customName}}</span>
+    </div>
+   
+</ng-template>
+<ng-template #tmpFuncChild let-data let-index="index">
+    <div class="d-flex align-items-center menu-item menu-accordion ws-sub-menu text-center py-3 ps-8 cursor-pointer ws-menu"
+        [class.active]="item?.functionID == selectedIndex"
+        *ngFor="let item of data"
+        (click)="menuChange(item)"
+    >
+        <!-- <img [src]="item?.smallIcon" (onload)="imgToSvg(this)"/> -->
+        <i [ngClass]="item?.largeIcon" class="icon-20"></i>
+        <span class="ms-2 mt-1">{{item?.customName}}</span>
     </div>
 </ng-template>
