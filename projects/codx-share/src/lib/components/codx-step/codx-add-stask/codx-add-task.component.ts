@@ -113,7 +113,15 @@ export class CodxAddTaskComponent implements OnInit {
   }
   refValueType = '';
   typeCM = '';
-  dataCM = '';
+  dataCM = {
+    deals: '',
+    cases: '',
+    customers: '',
+    contracts: '',
+    leads:''
+  };
+  vllHeaderCM;
+  headerCM;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -160,6 +168,11 @@ export class CodxAddTaskComponent implements OnInit {
         JSON.stringify(this.instanceStep?.taskGroups || [])
       );
     }
+    this.cache.valueList('CRM060').subscribe((res) => {
+      if (res.datas) {
+        this.vllHeaderCM = res.datas;
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -824,13 +837,20 @@ export class CodxAddTaskComponent implements OnInit {
     console.log(event);
     if(event?.data){
       if(this.typeCM != event?.data){
-        let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
-        if(listDeal){
-          this.inputDeal.ComponentCurrent.dataService.data = [];
-          this.inputDeal.ComponentCurrent.dataService.crrValue = null;
-          this.dataCM = null;
-        }
-        
+        // let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
+        // if(listDeal){
+        //   this.inputDeal.ComponentCurrent.dataService.data = [];
+        //   this.inputDeal.ComponentCurrent.dataService.crrValue = null;
+        //   this.dataCM = null;
+        // }
+        this.dataCM =  {
+          deals: '',
+          cases: '',
+          customers: '',
+          contracts: '',
+          leads:''
+        };
+        this.headerCM = this.vllHeaderCM.find((x) => x.value == event?.data)?.text;
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
       }
@@ -838,7 +858,7 @@ export class CodxAddTaskComponent implements OnInit {
   }
   changeDataCM(event){
     console.log(event);
-    this.dataCM = event?.data;
+    this.dataCM[event?.field] = event?.data;
     
   }
 }
