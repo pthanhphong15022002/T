@@ -1,7 +1,81 @@
-<div class="d-flex flex-column w-100 h-100">
+<div class="d-flex flex-column w-100 h-100 px-10">
     <ng-container *ngTemplateOutlet="general"></ng-container>
 </div>
 
 <ng-template #general>
-    <codx-label default="Thông tin chung" [formName]="'fmWSGeneralInfor'" [fiedName]="'lblWSGeneralInfor'"></codx-label>
+    <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column w-100 py-4 border-bottom">
+            <codx-label [default]="label.titleGeneralInfor" [formName]="'fmWSGeneralInfor'" [fiedName]="'lblWSGeneralInfor'" class="fw-bold fs-5-sm"></codx-label>
+            <div class="d-flex align-items-center mt-4">
+                <codx-img [objectId]="user?.userID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="80"></codx-img>
+                <div class="d-flex flex-column ms-2">
+                    <span class="fw-bold fs-5-sm">{{user?.userName}}</span>
+                    <span>{{user?.positionName}}</span>
+                    <span>{{user?.departmentName}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100 py-4 border-bottom">
+           <div class="d-flex align-items-center justify-content-between py-2">
+                <codx-label [default]="label.titleAccSercurity" [formName]="'fmWSAccSecurity'" [fiedName]="'lblWSAccSecurity'" class="fw-bold fs-5-sm"></codx-label>
+                <button type="button" class="p-5px btn btn-outline-dark"><i class="icon-i-arrow-repeat"></i><codx-label [default]="label.titleChangePassword" [formName]="'fmWSChangePassword'" [fiedName]="'lblWSChangePassword'"></codx-label></button>
+            </div>
+            <div class="d-flex align-items-center py-5">
+                <codx-label [default]="label.title2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'"></codx-label>
+                <codx-input type="valuelist" [refValue]="'SYS060'" ></codx-input>
+                <i class="icon-dialpad mx-2"></i>
+            </div>
+            <div class="d-flex flex-column py-2">
+                <codx-label [default]="label.titleDis2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'" class="opacity-50"></codx-label>
+                <div class="d-flex align-items-center mt-1">
+                    <i class="icon-qr_code_scanner me-2"></i>
+                    <codx-label [default]="label.titleQR" [formName]="'fmWSQR'" [fiedName]="'lblWSQR'" class="opacity-50"></codx-label>
+                </div>
+                <div class="d-flex align-items-center mt-1">
+                    <i class="icon-email me-2"></i>
+                    <codx-label [default]="label.titleEmail" [formName]="'fmWSEmail'" [fiedName]="'lblWSEmail'" class="opacity-50"></codx-label>
+                </div>
+                <div class="d-flex align-items-center mt-1">
+                    <i class="icon-dialpad me-2"></i>
+                    <codx-label [default]="label.titleTOTP" [formName]="'fmWSTOTP'" [fiedName]="'lblWSTOTP'" class="opacity-50"></codx-label>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-100 py-4">
+            <codx-label [default]="label.titleDisplay" [formName]="'fmWSDisplay'" [fiedName]="'lblWSDisplay'" class="fw-bold fs-5-sm"></codx-label>
+            <div class="d-flex align-items-center justify-content-between p-2 border rounded w-200px my-4">
+                <codx-label
+                    fiedName="lblLanguage"
+                    [formName]="'fmLanguage'"
+                    default="Ngôn ngữ"
+                ></codx-label>
+                <div class="d-flex align-items-center">
+                    <img
+                        class="h-20px rounded-1 me-2"
+                        [src]="language?.flag"
+                        alt="flag"
+                    />
+                    <span>{{language?.name}}</span>
+                </div>
+            </div>
+            <div class="theme-color">
+                <div class="symbol-list d-flex flex-wrap mb-4">
+                    <div
+                      *ngFor="let t of themes"
+                      class="symbol symbol-40px symbol-circle me-3 cursor-pointer"
+                      (click)="selectTheme(t?.id)"
+                      [title]="t?.enable ? '' : 'Coming soon'"
+                    >
+                      <span class="symbol-label" [style.background-color]="t.color">
+                        <i
+                          *ngIf="t.active"
+                          class="fa-solid fa-check text-seconary fs-1"
+                          style="z-index: 10"
+                        ></i>
+                      </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </ng-template>
