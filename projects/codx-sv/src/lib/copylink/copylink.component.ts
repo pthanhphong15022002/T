@@ -40,7 +40,8 @@ export class CopylinkComponent implements OnInit{
     var obj = 
     {
       funcID : this.funcID,
-      recID: this.recID
+      recID: this.recID,
+      autoCreated: true
     }
     var key = JSON.stringify(obj);
     key = this.aesCrypto.encode(key);

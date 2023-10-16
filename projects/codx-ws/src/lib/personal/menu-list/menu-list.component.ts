@@ -11,7 +11,7 @@ export class MenuListComponent implements OnInit{
   @Input() funcID:any;
   @Output() selectedChange = new EventEmitter();
   funcList:any;
-  selectedIndex = 0;
+  selectedIndex = "WS00611";
   constructor(private codxWsService: CodxWsService)
   {
 
@@ -29,19 +29,31 @@ export class MenuListComponent implements OnInit{
     {
       fucList.subscribe((item : any)=>{
         if(item) {
-          this.funcList = item.filter(x=>x.parentID == this.funcID);
+          var data = item.filter(x=>x.parentID == this.funcID);
+          this.funcList = this.formatData(data,item);
+          this.selectedChange.emit(this.selectedIndex);
         }
       })
     }
     else {
-      this.funcList = fucList.filter(x=>x.parentID == this.funcID);
+      var data = fucList.filter(x=>x.parentID == this.funcID);
+      this.funcList = this.formatData(data,fucList);
+      this.selectedChange.emit(this.selectedIndex);
     }
   }
 
-  menuChange(item:any, index:any)
+  formatData(data:any , listFunc:any)
   {
-    this.selectedIndex = index;
-    this.selectedChange.emit(item);
+    data.forEach(element => {
+      element.childs = listFunc.filter(x=>x.parentID == element.functionID);
+    });
+    return data;
+  }
+
+  menuChange(item:any)
+  {
+    this.selectedIndex = item?.functionID;
+    this.selectedChange.emit(this.selectedIndex);
   }
 
   imgToSvg(e:any)

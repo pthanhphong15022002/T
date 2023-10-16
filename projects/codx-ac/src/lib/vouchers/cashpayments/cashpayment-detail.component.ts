@@ -48,15 +48,6 @@ export class CashpaymentDetailComponent extends UIComponent {
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
   itemSelected: any;
-  totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
-  totalAcctCR: any = 0; //? tông tiền có tab hạch toán
-  totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
-  totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
-  totalbalAmt: any = 0; //? tổng tiền số dư tab thông tin hóa đơn
-  totalsettledAmt2: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn,HT
-  totalbalAmt2: any = 0; //? tổng tiền số dư tab thông tin hóa đơn,HT
-  totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
-  totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
   dataCategory: any; //? data của category
   optionSidebar: SidebarModel = new SidebarModel();
   bhLogin: boolean = false;
@@ -136,7 +127,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
 
-  //#endregion
+  //#endregion Init
 
   //#region Event
   /**
@@ -204,7 +195,6 @@ export class CashpaymentDetailComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
-        this.setTotalRecord();
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
@@ -406,46 +396,6 @@ export class CashpaymentDetailComponent extends UIComponent {
           ele.hideTab(2, false);
           break;
       }
-    }
-  }
-
-  /**
-   * Hàm tính tổng các số tiền của các tab detail(hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-   */
-  setTotalRecord() {
-    this.totalAcctDR = 0;
-    this.totalAcctCR = 0;
-    this.totalTransAmt = 0;
-    this.totalbalAmt = 0;
-    this.totalbalAmt2 = 0;
-    this.totalsettledAmt = 0;
-    this.totalsettledAmt2 = 0;
-    this.totalVatAtm = 0;
-    this.totalVatBase = 0;
-
-    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
-      if (this.itemSelected.currencyID == this.baseCurr) {
-        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
-        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt,0);
-      }else{
-        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt2,0);
-        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt2,0);
-        this.totalTransAmt = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
-      }
-    }
-
-    if (this.itemSelected?.listSettledInvoices && this.itemSelected?.listSettledInvoices.length > 0) {
-      this.totalbalAmt = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.balAmt,0);
-      this.totalsettledAmt = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.settledAmt,0);
-      if (this.itemSelected.currencyID != this.baseCurr) {
-        this.totalbalAmt2 = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.balAmt2,0);
-        this.totalsettledAmt2 = this.itemSelected?.listAcctrants.reduce((sum, data:any) => sum + data?.settledAmt2,0);
-      }
-    }
-
-    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
-      this.totalVatAtm = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatAmt,0);
-      this.totalVatBase = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatBase,0);
     }
   }
 
@@ -687,13 +637,18 @@ export class CashpaymentDetailComponent extends UIComponent {
           if (res.length > 1) {
             this.openFormReportVoucher(data, res);
           } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
+            let params = {
+              ReportID:'ACT041010',
+              UserID:'ADMIN',
+              BUID:'NDHOA',
+              Recs:'da6789bd-6bcb-11ee-94c3-00155d035517',
+              TransType:'1',
+              PrintEntry:'TRUE',
+              PrintMoney:'TRUE',
+              PrintMode:'1'
+            }
+            let url = `/${this.tenant.getName()}/ac/report/detail/${res[0].recID}/${JSON.stringify(params)}`
+            window.open(url);
           }
         }
       });

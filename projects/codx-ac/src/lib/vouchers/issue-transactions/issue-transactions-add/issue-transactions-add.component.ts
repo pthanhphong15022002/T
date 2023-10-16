@@ -3,7 +3,6 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxGridviewV2Comp
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { Dialog, isCollide } from '@syncfusion/ej2-angular-popups';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { Reason } from '../../../models/Reason.model';
 import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
@@ -35,7 +34,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   private destroy$ = new Subject<void>();
 
-  reason: Array<Reason> = [];
+  reason: any = [];
   headerText: string;
   dialog!: DialogRef;
   vouchers: Vouchers = new Vouchers();
@@ -512,24 +511,24 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   /** Đặt lại giá trị cho trường ghi chú */
   setMemo(field, text, idx) {
-    if (!this.reason.some((x) => x.field == field)) {
-      let transText = new Reason();
-      transText.field = field;
-      transText.value = text;
-      transText.index = idx;
-      this.reason.push(transText);
-    } else {
-      let iTrans = this.reason.find((x) => x.field == field);
-      if (iTrans) iTrans.value = text;
-    }
+    // if (!this.reason.some((x) => x.field == field)) {
+    //   let transText = new Reason();
+    //   transText.field = field;
+    //   transText.value = text;
+    //   transText.index = idx;
+    //   this.reason.push(transText);
+    // } else {
+    //   let iTrans = this.reason.find((x) => x.field == field);
+    //   if (iTrans) iTrans.value = text;
+    // }
 
-    this.vouchers.memo = this.acService.setMemo(
-      this.vouchers,
-      this.reason
-    );
-    this.formVoucherIssue.formGroup.patchValue({
-      memo: this.vouchers.memo,
-    });
+    // this.vouchers.memo = this.acService.setMemo(
+    //   this.vouchers,
+    //   this.reason
+    // );
+    // this.formVoucherIssue.formGroup.patchValue({
+    //   memo: this.vouchers.memo,
+    // });
   }
 
   /** Cho phép lưu dòng khi click bên ngoài lưới */

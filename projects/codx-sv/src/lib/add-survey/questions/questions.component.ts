@@ -1231,7 +1231,6 @@ export class QuestionsComponent
   }
 
   addTemplateSession(seqNoSession, data) {
-    debugger;
     let lstDataAdd = data;
     data.forEach((x, index) => {
       this.questions.splice(seqNoSession + index + 1, 0, x);
@@ -1248,7 +1247,6 @@ export class QuestionsComponent
   }
 
   addTemplateQuestion(itemActive, seqNoSession, data) {
-    debugger;
     data.forEach((x, index) => {
       this.questions[seqNoSession].children.splice(
         itemActive.seqNo + index + 1,
@@ -1642,7 +1640,6 @@ export class QuestionsComponent
   }
 
   deleteAnswerRC(seqNoSession, seqNoQuestion, itemAnswer, answerType) {
-    debugger
     var dataTemp = JSON.parse(
       JSON.stringify(
         this.questions[seqNoSession].children[seqNoQuestion].answers
@@ -1685,7 +1682,6 @@ export class QuestionsComponent
     itemQuestion = null,
     itemAnswer = null
   ) {
-    debugger;
     var valueFrom = '1';
     var valueTo = '5';
     var valueRFrom = '';
@@ -1923,7 +1919,6 @@ export class QuestionsComponent
   }
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
-    debugger
     if (e.data && e.data != itemAnswer[e.field]) {
       // let dataTemp = JSON.parse(JSON.stringify(this.questions));
       // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
