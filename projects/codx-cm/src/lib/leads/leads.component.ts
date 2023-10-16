@@ -1522,6 +1522,7 @@ export class LeadsComponent
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
       buid: data.buid,
+      data: data,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
