@@ -401,7 +401,7 @@
     <codx-gridview-v2 #eleGridPurchaseInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
       [autoFitColumns]="false" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [hideMoreFunc]="true"
-      [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0"
+      [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0" [saveValidator]="saveValidationLine"
       (gridInit)="beforeInitGridPurchaseInvoices($event)" [dataValues]="formPurchaseInvoices?.data?.recID" service="AC"
       [editOnClick]="true" (eventAction)="onActionGridPurchaseInvoice($event)" (cellChanged)="valueChangeLine($event)"
       (actionCompleted)="onActionGridPurchaseInvoice($event)" rowNoField="rowNo"></codx-gridview-v2>
