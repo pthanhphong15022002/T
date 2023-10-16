@@ -257,6 +257,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   valueChangeLine(event: any) {
     let oLine = event.data;
+    if (event.field.toLowerCase() === 'itemid') {
+      oLine.itemName = event?.itemData?.ItemName;
+      this.detectorRef.detectChanges();
+    }
     this.eleGridPurchaseInvoice.startProcess();
     this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
       event.field,
@@ -780,6 +784,27 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formPurchaseInvoices.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * @param data 
+   * @returns 
+   */
+  async saveValidationLine(data:any){
+    let lsterror = [];
+    
+    // xử lí trường hợp call api để check validate
+    // let error = await new Promise((resolve, reject) => {
+    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
+    //     'USD'
+    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    //     if (res) {
+    //       resolve({status: true});
+    //     }
+    //   });
+    //   });
+    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

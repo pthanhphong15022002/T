@@ -1,109 +1,27 @@
-<codx-views
-  #view
-  [views]="views"
-  [button]="btnAdd"
-  entityName="AC_SalesInvoices"
-  service="AC"
-  predicates="JournalNo=@0"
-  [dataValues]="journalNo"
-  (buttonClick)="onClickAdd($event)"
-  (selectedChange)="onSelectChange($event)"
-  [isSubView]="true"
->
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
+  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 
-<ng-template #moreTemplate let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onInitMF($event, data)"
-    [isBookMark]="true"
-    type="view"
-  ></codx-mfunc>
+<!-- Start: templateGrid -->
+<ng-template #templateGrid let-data>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, data, 'viewgrid')" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
+<!-- End: templateGrid -->
 
-<ng-template #sider let-data>
-  <codx-temp-full
-    [descTmp]="descTmp"
-    [desc2Tmp]="desc2Tmp"
-    [titleTmp]="titleTmp"
-    cardCss="card-template border-bottom p-3 list-task"
-    [formModel]="view.formModel"
-    [modeImgs]="true"
-    [titleLine]="2"
-    [dataItem]="data"
-    [footer]="siderFooter"
-    [hideMF]="false"
-    typeMF="hover"
-    moreFuncCss="me-15"
-    (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onInitMF($event, data)"
-  >
+<!-- Start: template listdetail -->
+<ng-template #templateDetailLeft let-data>
+  <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 
+<ng-template #templateDetailRight>
+
+</ng-template>
 <ng-template #titleTmp let-data>
-  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
-  <span class="fw-bold fs-6">{{
-    data.totalAmt | currency : data.currencyID : "code"
-  }}</span>
+  
 </ng-template>
-
-<ng-template #descTmp let-data>
-  <div class="fw-bold mt-1">
-    {{ data.objectName }}
-  </div>
-</ng-template>
-
-<ng-template #desc2Tmp let-data>
-  <span
-    class="text-gray-500 mt-1 line-clamp line-clamp-2"
-    [title]="data?.memo"
-    >{{ data?.memo }}</span
-  >
-</ng-template>
-
-<ng-template #siderFooter let-data>
-  <div class="d-flex align-items-center justify-content-between mt-1">
-    <div class="d-flex align-items-center">
-      <codx-vll
-        [formModel]="view.formModel"
-        field="Status"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm me-3"
-      >
-      </codx-vll>
-      <div class="d-flex align-items-center">
-        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            data?.voucherDate
-              | formatvalue : view.formModel : 'voucherDate'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <codx-imgs
-      [objectId]="data?.createdBy"
-      objectType="AD_Users"
-      [width]="30"
-      [isToolTip]="true"
-      [numberImages]="1"
-    >
-    </codx-imgs>
-  </div>
-</ng-template>
-
-<ng-template #content>
-  <lib-salesinvoices-detail
-    [data]="master"
-    [formModel]="view.formModel"
-    [dataService]="view.dataService"
-  ></lib-salesinvoices-detail>
-</ng-template>
+<!-- End: template listdetail -->

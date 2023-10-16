@@ -733,12 +733,19 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                         //this.codxService.navigate('', arrChildren[idx].path);
                         this.funcID= this.reportItem.reportID;
                       }
+                      else{
+                        this.reportItem = this.arrReport[0];
+                        this.pageTitle.setSubTitle(arrChildren[0].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        this.codxService.navigate('', arrChildren[0].path);
+                        this.funcID= this.arrReport[0].reportID;
+                      }
                     }
                     else{
                       this.reportItem = this.arrReport[0];
                       this.pageTitle.setSubTitle(arrChildren[0].title);
                       this.pageTitle.setChildren(arrChildren);
-                      //this.codxService.navigate('', arrChildren[0].path);
+                      this.codxService.navigate('', arrChildren[0].path);
                       this.funcID= this.arrReport[0].reportID;
                     }
 

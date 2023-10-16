@@ -101,6 +101,9 @@ import { PaymentOrderComponent } from './payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './payment-order/payment-order-add/payment-order-add.component';
 import { PaymentOrderDetailComponent } from './payment-order/payment-order-detail/payment-order-detail.component';
 import { AdvancedPaymentLinkComponent } from './payment-order/advanced-payment-link/advanced-payment-link.component';
+import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
+import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
+import { VatinvoicesTableComponent } from './share/ac-tableview/vatInvoices-table/vatinvoices-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -112,7 +115,7 @@ export const routes: Routes = [
         component: CodxReportViewsComponent,
       },
       {
-        path: 'report/detail/:funcID',
+        path: 'report/detail/:funcID/:params',
         component: CodxReportViewDetailComponent,
       },
       {
@@ -337,6 +340,9 @@ export const routes: Routes = [
     PaymentOrderAddComponent,
     PaymentOrderDetailComponent,
     AdvancedPaymentLinkComponent,
+    AcctrantsTableComponent,
+    SettledinvoicesTableComponent,
+    VatinvoicesTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

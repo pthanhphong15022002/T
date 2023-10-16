@@ -39,10 +39,7 @@ import {
   styleUrls: ['./salesinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SalesinvoicesAddComponent
-  extends UIComponent
-  implements AfterViewInit
-{
+export class SalesinvoicesAddComponent extends UIComponent{
   //#region Constructor
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('grid') grid: CodxGridviewV2Component;
