@@ -290,10 +290,11 @@ export class PopupPermissionsComponent implements OnInit {
         (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
           this.lstPermissions[this.currentPemission]?.objectID ==
             this.data?.owner) ||
-        !this.data?.allowPermit ||
+        (!this.data?.allowPermit && this.entityName != 'CM_Customers') ||
         this.lstPermissions[this.currentPemission]?.memberType == '0'
-      )
+      ){
         return true;
+      }
     }
 
     return false;
