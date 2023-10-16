@@ -72,6 +72,6 @@ export class DrilldownComponent extends UIComponent implements OnInit,AfterViewI
     ];
   }
   onSave(){
-
+    this.dialog && this.dialog.close()
   }
 }

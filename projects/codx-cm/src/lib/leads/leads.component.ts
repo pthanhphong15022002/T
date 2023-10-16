@@ -1259,7 +1259,6 @@ export class LeadsComponent
                 data.processID = res[0].processID;
                 data.datas = res[0].datas;
                 data.status = res[0].status;
-                let test = res[0].permissions;
                 this.addPermission(res[0].permissions ,data);
                 let datas= [data ,isCheck];
                 this.getApiUpdateProcess(datas, res[1]);
@@ -1522,6 +1521,7 @@ export class LeadsComponent
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
       buid: data.buid,
+      data: data,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
