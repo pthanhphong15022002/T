@@ -112,7 +112,7 @@ export const routes: Routes = [
         component: CodxReportViewsComponent,
       },
       {
-        path: 'report/detail/:funcID',
+        path: 'report/detail/:funcID/:params',
         component: CodxReportViewDetailComponent,
       },
       {
