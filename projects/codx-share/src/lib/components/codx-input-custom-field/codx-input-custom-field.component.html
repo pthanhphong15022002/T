@@ -393,7 +393,9 @@
       data-kt-scroll-width="auto"
     >
       <table
-        class="{{ settingWidth ? '' : 'table' }} table-row-bordered mt-3"
+        class="{{
+          settingWidth ? '' : 'table'
+        }} table-view table-row-bordered mt-3"
         *ngIf="columns?.length > 0"
       >
         <thead>
@@ -428,13 +430,12 @@
             <th *ngIf="!disable" scope="col" class="w-100px fw-bold"></th>
           </tr>
         </thead>
-        <tbody>
-          <!-- <tbody cdkDropList (cdkDropListDropped)="dropRow($event)"> -->
+        <!-- <tbody> -->
+        <tbody cdkDropList (cdkDropListDropped)="dropRow($event)">
           <ng-container *ngIf="!disable">
             <ng-container *ngFor="let value of arrDataValue; let index = index">
-              
-                <tr >
-                  <!-- <tr cdkDrag cdkDragLockAxis="y"> -->
+              <!-- <tr > -->
+              <tr cdkDrag cdkDragLockAxis="y">
                 <td class="ps-4" *ngIf="settingCount">
                   <div>
                     <span>{{ index + 1 }}</span>
@@ -472,10 +473,14 @@
                     </button>
                   </div>
                 </td>
-                  <!-- Preview -->
-                <!-- <div *cdkDragPreview matchSize="true" class="container dragdrop-placeholder">
-                  {{index}}
-                </div> -->
+                <!-- Preview -->
+                <div
+                  *cdkDragPreview
+                  matchSize="true"
+                  class="container dragdrop-placeholder"
+                >
+                  {{ index }}
+                </div>
               </tr>
             </ng-container>
           </ng-container>

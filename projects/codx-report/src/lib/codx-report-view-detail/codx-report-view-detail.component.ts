@@ -62,6 +62,7 @@ export class CodxReportViewDetailComponent
   _paramString: any = '';
   _labelString: any = '';
   _formatString: any = '';
+  params:any = {};
   orgReportList: any = [];
   moreFc: any = [
     {
@@ -106,6 +107,11 @@ export class CodxReportViewDetailComponent
         this.reportID = param['funcID'];
         this.getReport(this.reportID);
       }
+      if (param['params']){
+        this._paramString = param['params'];
+        this.params = JSON.parse(param['params']);
+        this.getReport(this.reportID);
+      }
     });
     let objFormat: any = {};
     objFormat['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -144,6 +150,7 @@ export class CodxReportViewDetailComponent
         },
       },
     ];
+
   }
   viewChanged(e: any) {
     this.viewBase.moreFuncs = this.moreFc;
@@ -383,7 +390,10 @@ export class CodxReportViewDetailComponent
     // parameters
     if (e[1]) {
       Object.keys(e[1]).map((key) => {
-        objParam[key] = e[1][key];
+        if(this.params[key])
+          objParam[key] = this.params[key];
+        else
+         objParam[key] = e[1][key];
       });
       this._paramString = JSON.stringify(objParam);
     }
