@@ -856,7 +856,7 @@ export class DealsComponent
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
-                  data = res[0];
+                  data = res;
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
                   if (e.event.isReason != null) {
@@ -995,7 +995,7 @@ export class DealsComponent
         var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
-            data = res[0];
+            data = res;
             this.view.dataService.update(data).subscribe();
             //up kaban
             if (this.kanban) {
@@ -1048,7 +1048,7 @@ export class DealsComponent
           var datas = [data.recID, resDP[0]];
           this.codxCmService.startDeal(datas).subscribe((res) => {
             if (res) {
-              this.dataSelected = res[0];
+              this.dataSelected = res;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.detailViewDeal.reloadListStep(resDP[1]);
               this.notificationsService.notifyCode('SYS007');

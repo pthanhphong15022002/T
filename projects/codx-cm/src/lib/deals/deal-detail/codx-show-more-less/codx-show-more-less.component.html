@@ -1,6 +1,6 @@
 
 <div *ngIf="value else default">
-  <div
+  <span
   #note
   [id]="'elementNote'"
   [class.collapsed]="isCollapsed"
@@ -17,7 +17,7 @@
       | formatvalue : formModel :text
       | async
   "
-></div>
+></span>
 <div class="mt-1" *ngIf="isCollapsable">
   <codx-label
     *ngIf="isCollapsed"

@@ -23,8 +23,11 @@ import {
 import { ColumnTable } from 'projects/codx-dp/src/lib/models/models';
 import { CodxDpService } from 'projects/codx-dp/src/public-api';
 import { PopupAddColumnTableComponent } from './popup-add-column-table/popup-add-column-table.component';
-import { CdkDragDrop, CdkDragRelease, moveItemInArray } from '@angular/cdk/drag-drop';
-
+import {
+  CdkDragDrop,
+  CdkDragRelease,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lib-popup-setting-table',
@@ -52,9 +55,9 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   grvSetup: any;
   user: any;
   //table drop
-  columns :any
-  pos: any
-  data: any
+  columns: any;
+  pos: any;
+  data: any;
   release: boolean = true;
 
   constructor(
@@ -73,6 +76,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
     if (this.listColumns?.length > 0) {
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
+      this.settingCount = this.listColumns[0]?.settingCount ?? false;
     }
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -163,7 +167,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     // ];
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   valueChange(e) {
     if (e.field == 'settingWidth' || e.field == 'settingCount') {
@@ -299,7 +303,6 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
 
   //------------------------------------END---------------------------------//
 
-
   //--------------------------------------------------------------------------//
   ///----------------Drag and drop table column HTML--------------------------- //
   //--------------------------------------------------------------------------//
@@ -309,42 +312,41 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   }
   dropCol(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.listColumns, event.previousIndex, event.currentIndex);
-    
   }
   mouseDown(event, el: any = null) {
     el = el || event.target;
     this.pos = {
-      x: el.getBoundingClientRect().left - event.clientX + "px",
-      y: el.getBoundingClientRect().top - event.clientY + "px",
-      width: el.getBoundingClientRect().width + "px"
+      x: el.getBoundingClientRect().left - event.clientX + 'px',
+      y: el.getBoundingClientRect().top - event.clientY + 'px',
+      width: el.getBoundingClientRect().width + 'px',
     };
   }
   onDragRelease(event: CdkDragRelease) {
     this.renderer2.setStyle(
       event.source.element.nativeElement,
-      "margin-left",
-      "0px"
+      'margin-left',
+      '0px'
     );
   }
 
   isNumeric(value: string | number): boolean {
-    return value != null && value !== "" && !isNaN(Number(value.toString()));
+    return value != null && value !== '' && !isNaN(Number(value.toString()));
   }
 
   calculateDifference(quote: number, expiring: number) {
     const difference = quote - expiring;
     return {
       numericValue: difference,
-      percentageValue: difference / expiring
+      percentageValue: difference / expiring,
     };
   }
 
   sumQuotes(fieldName: string): any {
-    if (fieldName.toLowerCase() !== "quotesummary") {
+    if (fieldName.toLowerCase() !== 'quotesummary') {
       const sumQuoted = this.listColumns
-        .filter(item => item.dataType === "quote")
-        .map(item => item[fieldName])
-        .filter(item => item)
+        .filter((item) => item.dataType === 'quote')
+        .map((item) => item[fieldName])
+        .filter((item) => item)
         .reduce((sum, item) => {
           return sum + item;
         }, 0);
@@ -352,8 +354,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
       return sumQuoted;
     }
 
-    return "Sum Quoted";
+    return 'Sum Quoted';
   }
   //------------------------------------END---------------------------------//
-
 }

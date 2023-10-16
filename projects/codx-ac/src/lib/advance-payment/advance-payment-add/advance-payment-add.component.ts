@@ -23,7 +23,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { AdvancedPaymentLines } from '../../models/AdvancedPaymentLines.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Reason } from '../../models/Reason.model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
@@ -44,7 +43,7 @@ export class AdvancePaymentAddComponent extends UIComponent {
   formType: any;
   validate: any = 0;
   dialogRef!: DialogRef;
-  reason: Array<Reason> = [];
+  reason: any = [];
   isHaveFile: any = false;
   showLabelAttachment: any = false;
   advancedPayment: AdvancedPayment = new AdvancedPayment();

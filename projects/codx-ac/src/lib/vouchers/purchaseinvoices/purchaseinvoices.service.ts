@@ -47,33 +47,33 @@ export class PurchaseInvoiceService {
   journal: IJournal;
 
   constructor(
-    cacheService: CacheService,
-    private notiService: NotificationsService,
-    private apiService: ApiHttpService,
-    private acService: CodxAcService,
-    private shareService: CodxShareService,
-    private journalService: JournalService,
-    private callFuncService: CallFuncService
+    // cacheService: CacheService,
+    // private notiService: NotificationsService,
+    // private apiService: ApiHttpService,
+    // private acService: CodxAcService,
+    // private shareService: CodxShareService,
+    // private journalService: JournalService,
+    // private callFuncService: CallFuncService
   ) {
-    cacheService
-      .gridViewSetup(fmVATInvoices.formName, fmVATInvoices.gridViewName)
-      .subscribe();
+    // cacheService
+    //   .gridViewSetup(fmVATInvoices.formName, fmVATInvoices.gridViewName)
+    //   .subscribe();
   }
 
   /** @deprecated */
-  initCache(): void {
-    this.apiService
-      .exec('IV', 'IVBusiness', 'InitItemInfoListCacheAsync')
-      .subscribe();
+  // initCache(): void {
+  //   this.apiService
+  //     .exec('IV', 'IVBusiness', 'InitItemInfoListCacheAsync')
+  //     .subscribe();
 
-    this.apiService
-      .exec('IV', 'IVBusiness', 'InitDimGroupListCacheAsync')
-      .subscribe();
+  //   this.apiService
+  //     .exec('IV', 'IVBusiness', 'InitDimGroupListCacheAsync')
+  //     .subscribe();
 
-    this.apiService
-      .exec('IV', 'IVBusiness', 'InitDimSetupListCacheAsync')
-      .subscribe();
-  }
+  //   this.apiService
+  //     .exec('IV', 'IVBusiness', 'InitDimSetupListCacheAsync')
+  //     .subscribe();
+  // }
 
   // loadJournal(journalNo: string): void {
   //   this.journalService.getJournal$(journalNo).subscribe((res) => {
