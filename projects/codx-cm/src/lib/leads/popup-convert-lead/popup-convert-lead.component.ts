@@ -586,6 +586,7 @@ export class PopupConvertLeadComponent implements OnInit {
               consultantID: this.deal.consultantID,
             };
             this.dialog.close(obj);
+            this.notiService.notifyCode('CM055');
           }
         });
     }

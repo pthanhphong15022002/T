@@ -1,0 +1,58 @@
+
+<div *ngIf="value else default">
+  <span
+  #note
+  [id]="'elementNote'"
+  [class.collapsed]="isCollapsed"
+  [style.height]="'auto'"
+  [ngClass]="
+    isCollapsed
+      ? 'line-clamp line-clamp-2 text-popover'
+      : ''
+  "
+  class="text-gray-600"
+  style="width: 100% !important"
+  [innerHTML]="
+  value
+      | formatvalue : formModel :text
+      | async
+  "
+></span>
+<div class="mt-1" *ngIf="isCollapsable">
+  <codx-label
+    *ngIf="isCollapsed"
+    name="lblReadMore"
+    [formModel]="formModel"
+    default="Xem thêm"
+    class="text-primary text-underline"
+    style="white-space: nowrap"
+    role="button"
+    (click)="isCollapsed = !isCollapsed"
+  ></codx-label>
+  <codx-label
+    *ngIf="!isCollapsed"
+    name="lblReadLess"
+    [formModel]="formModel"
+    default="Thu lại"
+    class="text-primary text-underline"
+    role="button"
+    (click)="isCollapsed = !isCollapsed"
+  ></codx-label>
+</div>
+
+
+</div>
+<ng-template #default>
+  <span
+  class="text-gray-600"
+  #note
+  [innerHTML]="
+      value
+      | formatvalue
+        : formModel
+        : text
+        : note
+      | async
+  "
+  ></span>
+</ng-template>

@@ -576,6 +576,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  closePopover(){
+    this.isSaved = false;
+    this.changeDetectorRef.detectChanges();
+  }
+
   //#region save
   beforeSave(op) {
     var data = [];

@@ -169,18 +169,28 @@
   .e-acrdn-header
   {
     border: none !important;
-    padding: 6px 10px !important;
+    padding: 6px 0px !important;
+    background-color: transparent !important;
   }
   .e-acrdn-header-content
   {
     width: 100% !important;
+    color: black !important;
   }
   .e-acrdn-header:focus
   {
     box-shadow: none !important;
   }
+  .e-acrdn-content
+  {
+    padding: 0;
+  }
 }
 .C4IyCf {
   background-color: #eee;
   color: #757575;
+}
+.fs-32px
+{
+  font-size: 32px !important;
 }

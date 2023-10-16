@@ -594,7 +594,18 @@ export class CodxShareService {
     );
   }
 
-  sendEmail(emailTemplate: any, sendToList: any) {
+  sendEmail(emailTemplate: any, sendToList: any , option:any=null) {
+    if(option)
+    {
+      return this.api.execSv<any>(
+        option.service,
+        option.assembly,
+        option.className,
+        option.method,
+        [emailTemplate, sendToList, option.data]
+      );
+    }
+    
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',

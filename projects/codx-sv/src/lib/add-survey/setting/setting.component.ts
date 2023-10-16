@@ -274,6 +274,7 @@ export class SettingComponent
       case 'isPublic':
       case 'primaryColor':
       case 'backgroudColor':
+      case 'paletteID':
       case 'subject':
       case 'messages':
       case 'image': {

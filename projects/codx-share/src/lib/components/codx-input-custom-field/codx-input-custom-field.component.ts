@@ -23,6 +23,7 @@ import { CodxShareService } from '../../codx-share.service';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -752,6 +753,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
         });
       }
     });
+  }
+
+  dropRow(event){
+    moveItemInArray(this.arrDataValue, event.previousIndex, event.currentIndex);
   }
 
   //--------------end------------//

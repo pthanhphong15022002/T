@@ -94,7 +94,7 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = null;
   @Input() oURL = [];
-
+  @Input() curFileName :string = "";//Tên file đang view (tên file khi tải xuống)
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() approver: string = ''; // ký ngoài hệ thống
@@ -353,6 +353,7 @@ export class PdfComponent
           }
           this.curFileID = this.lstFiles[0]['fileID'];
           this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
+          this.curFileName = this.lstFiles[0]['fileName'] ?? '';
           this.curSignerID = this.signerInfo?.authorID;
           this.curSignerRecID = this.signerInfo?.recID;
         }
@@ -2351,6 +2352,7 @@ export class PdfComponent
           this.lstAreas = res;
         }
         this.curFileUrl = this.fileInfo.fileUrl;
+        this.curFileName = this.fileInfo.fileName;
         this.detectorRef.detectChanges();
       });
     this.esService
