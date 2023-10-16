@@ -97,6 +97,50 @@
       </div>
     </div>
 
+    <div class="form-group" *ngIf="true">
+      <div class="mb-1 line-clamp line-clamp-1">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          default="Thuộc loại muốn thêm: "
+        >
+        </codx-label>
+      </div>
+      <div>
+        <codx-input
+        [formModel]="dialog.formModel"
+        field=""
+        type="valuelist"
+        refValue="CRM060"
+        (valueChange)="changeType($event)"
+      >
+      </codx-input>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="true">
+      <div class="mb-1 line-clamp line-clamp-1">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          default="Thuộc loại muốn thêm: "
+        >
+        </codx-label>
+      </div>
+      <div  *ngIf="refValueType">
+        <codx-input
+          #inputDeal
+          [field]="'objectID'"
+          type="combobox"
+          [refValue]="refValueType"
+          [crrValue]="dataCM"
+          (valueChange)="changeDataCM($event)"
+        ></codx-input>
+     </div>
+    </div>
+
     <div class="form-group" *ngIf="!isActivitie">
       <div class="mb-1 line-clamp line-clamp-1">
         <codx-label
