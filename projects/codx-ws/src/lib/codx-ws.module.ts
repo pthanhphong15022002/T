@@ -42,6 +42,8 @@ import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { CashPaymentsComponent } from 'projects/codx-ac/src/lib/vouchers/cashpayments/cashpayments.component';
+import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-info-detail/employee-info-detail.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 
 
 const routes: Routes = [
@@ -103,6 +105,23 @@ const routes: Routes = [
       {
         path: 'equit/:funcID',
         component: EmployeeQuitComponent,
+      },
+      // HR - Hồ sơ cá nhân
+    //   {
+    // component: LayoutOnlyHeaderComponent,
+
+    //     path: 'employeedetail/:funcID',
+    //     component: EmployeeInfoDetailComponent,
+    //   },
+      {
+        path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeInfoDetailComponent,
+          },
+        ],
       },
       //Task + duyyet TM
       {
