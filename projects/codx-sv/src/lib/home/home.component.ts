@@ -319,7 +319,7 @@ export class HomeComponent extends UIComponent implements OnInit {
     {
       var date = "";
       if(data?.stop) return "Đã đóng ngày " + formatDate(data?.expiredOn, 'dd/MM/yyyy', 'en-US');
-      if(data?.status == "5") date = " ngày " + formatDate(data?.startedOn, 'dd/MM/yyyy', 'en-US');
+      if(data?.status == "3") date = " ngày " + formatDate(data?.startedOn, 'dd/MM/yyyy', 'en-US');
       return this.vllSV003.datas.filter(x=>x.value == data?.status)[0].default + date;
     }
     else if(type == "bg")

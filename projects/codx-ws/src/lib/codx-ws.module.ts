@@ -41,6 +41,7 @@ import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.
 import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
+import { CashPaymentsComponent } from 'projects/codx-ac/src/lib/vouchers/cashpayments/cashpayments.component';
 
 
 const routes: Routes = [
@@ -127,9 +128,10 @@ const routes: Routes = [
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
       },
+      // Phiếu chi
       {
-        path: 'approvevouchers/:funcID',
-        component: ApprovalsComponent,
+        path: 'cashpayments/:funcID',
+        component: CashPaymentsComponent,
       },
       {
         path: 'paymentorders/:funcID',

@@ -267,7 +267,7 @@
               [value]="field.refValue"
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
-              (valueChange)="cbxChangeVll($event, datasVllCbx)"
+              (valueChange)="cbxChangeVll($event)"
             ></ejs-combobox
           ></ng-container>
         </div>
@@ -425,7 +425,9 @@
     data-kt-scroll-width="auto"
   >
     <table
-      class="{{ !settingWidth ? 'table' : '' }} table-row-bordered mt-3"
+      class="{{
+        !settingWidth ? 'table' : ''
+      }} table-view table-row-bordered mt-3"
       *ngIf="listColumns.length"
     >
       <thead>

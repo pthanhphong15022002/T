@@ -38,6 +38,15 @@
 .ques-scroll {
   height: 100% !important
 }
+.ejstab-survey .e-tab-header
+{
+  background-color: white;
+  text-align: center;
+  .e-disable
+  {
+    opacity: .5 !important;
+  }
+}
 .ejstab-survey .e-tab-header .e-toolbar-item.e-active {
   color: #4C2B87 !important;
   border-bottom: 2px #623DA1 solid  !important;
@@ -135,4 +144,10 @@ app-add-survey > div
 {
   height: 16px;
   width: 16px;
+}
+.sv-no-click{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
 }

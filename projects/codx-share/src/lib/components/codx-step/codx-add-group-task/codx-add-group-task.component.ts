@@ -11,6 +11,7 @@ import {
 import {
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_TaskGroups_Roles,
+  DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { Component, OnInit, Optional } from '@angular/core';
 @Component({
@@ -255,9 +256,26 @@ export class CodxAddGroupTaskComponent implements OnInit {
   changeRoler(event) {
     let role = event[0];
     if (role) {
-      if (role?.roleType == 'Users' || role?.roleType == 'Owner') {
+      if (role?.roleType == 'Users') {
         this.taskGroup.roles = [role];
         this.taskGroup.owner = role?.objectID;
+      }else if (role?.objectType == '1') {
+        this.api
+          .exec<any>(
+            'DP',
+            'InstancesBusiness',
+            'GetUserByUserID',
+            this.owner,
+          )
+          .subscribe((res) => {
+            let role = new DP_Instances_Steps_TaskGroups_Roles();
+            role.objectID = res?.userID;
+            role.objectName = res?.userName;
+            role.taskGroupID = this.taskGroup?.recID;
+            role.roleType = 'U';
+            this.taskGroup.roles = [role];
+            this.taskGroup.owner = role?.objectID;
+          });
       } else {
         let data = [];
         switch (role?.roleType) {

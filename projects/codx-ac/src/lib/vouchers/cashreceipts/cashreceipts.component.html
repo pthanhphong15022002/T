@@ -24,8 +24,7 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
-    <!-- <div id="tipsub" [style]="'background-color:' + (data?.subType | vll : 'AC100' : 'color' | async)" -->
+  <!-- <ejs-tooltip position="RightCenter" id='tooltip' target="#tipsub">
     <div id="tipsub" style="background-color: var(--primary-dark)"
       class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
       <i style="font-size: 16px !important;" class="text-white"
@@ -35,7 +34,7 @@
       <span *ngIf="(this.view.funcID == 'ACT0401') || (this.view.funcID == 'ACT0428')">{{data?.subType | vll : 'AC065'
         : 'text' | async}}</span>
     </ng-template>
-  </ejs-tooltip>
+  </ejs-tooltip> -->
   <div class="d-flex flex-column text-content flex-grow-1">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">

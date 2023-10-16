@@ -549,7 +549,7 @@
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
         [formName]="journal.entryMode == '1'? 'CashPaymentsLines' : 'CashPaymentsLinesOneAccount'" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashPaymentsLines' : 'grvCashPaymentsLinesOneAccount'" 
-        entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
+        entityName="AC_CashPaymentsLines" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID" [saveValidator]="saveValidationLine"
         [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
