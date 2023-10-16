@@ -20,6 +20,7 @@
           (created)="firstime()"
         >
         </ejs-calendar>
+        <!--  -->
         <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
           <div ngbAccordionItem [collapsed]="false">
             <h2 ngbAccordionHeader>
@@ -50,11 +51,11 @@
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
-                <ng-template>
-                  <div class="px-5 py-2" *ngFor="let data of org">
-                    <div class="ms-5">{{ data.name }}</div>
+                <ng-container *ngIf="listOrgUnit?.length > 0">
+                  <div class="px-5 py-2" *ngFor="let item of listOrgUnit">
+                    <div class="ms-5">{{ item.orgUnitName }}</div>
                   </div>
-                </ng-template>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -191,10 +192,7 @@
         </div>
       </div>
       <div class="position-relative w-100 h-100 bg-white">
-        <co-calendar-center
-          #calendarCenter
-          [resources]="resources"
-        ></co-calendar-center>
+        <co-calendar-center #calendarCenter [resources]="resources"></co-calendar-center>
       </div>
     </div>
   </div>
