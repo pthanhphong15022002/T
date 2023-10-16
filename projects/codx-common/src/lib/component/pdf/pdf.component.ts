@@ -1664,7 +1664,7 @@ export class PdfComponent
   }
   changeConfirmState(e: any) {
     if (this.isSigned) {
-      this.confirmChange.emit(e);
+      this.confirmChange.emit(this.isSigned);
     }
   }
 
@@ -2101,7 +2101,8 @@ export class PdfComponent
             //   }
             // });
             // area.labelValue = environment.urlUpload + '/' + img?.pathDisk
-            this.changeAnnotPro(area.labelType, area.recID, img?.pathDisk);
+            //this.changeAnnotPro(area.labelType, area.recID, img?.pathDisk);
+            this.confirmChange.emit(false);
 
             // this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
             //this.changeSignature_StampImg_Area_Immediate(area,img);

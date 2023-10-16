@@ -3092,11 +3092,12 @@ codx-vll.badge.badge-md span::before{
   max-height: 70px;
   min-height: 70px;
 }
-.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
-  width: 26px!important;
-  height: 26px!important;
 
-}
+// .aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+//   width: 26px!important;
+//   height: 26px!important;
+
+// }
 
 
 lib-nosubaside{
@@ -4039,6 +4040,13 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
       }
     }
   }
+  //co hoi
+  .content-campain-deals{
+    .scroll-grid  div.e-content {
+      height: calc(100vh - 350px) !important;
+    }
+  }
+  
 
 }
 //////////////
