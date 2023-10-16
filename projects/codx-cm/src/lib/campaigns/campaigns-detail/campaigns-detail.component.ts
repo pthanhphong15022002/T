@@ -17,8 +17,8 @@ import { CRUDService } from 'codx-core';
   styleUrls: ['./campaigns-detail.component.scss'],
 })
 export class CampaignsDetailComponent implements OnInit {
-  @ViewChild('elementNote', { read: ElementRef })
-  elementNote: ElementRef<HTMLElement>;
+  @ViewChild('description', { read: ElementRef })
+  description: ElementRef<HTMLElement>;
 
   @Input() dataSelected: any;
   @Input() dataService: CRUDService;
@@ -67,21 +67,17 @@ export class CampaignsDetailComponent implements OnInit {
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.isCollapsed = false;
-        this.isCollapsable = false;
-
+        this.overflowed = false;
         this.loaded = true;
         setTimeout(() => {
-          this.seeMore(this.dataSelected?.recID);
+          const element: HTMLElement = this.description?.nativeElement;
+          this.overflowed = element?.scrollHeight > element?.clientHeight;
         }, 0);
       }
     }
   }
 
-  ngAfterViewInit(): void {
-    const element: HTMLElement = this.elementNote?.nativeElement;
-    this.overflowed = element?.scrollHeight > element?.clientHeight;
-    this.detectorRef.detectChanges();
-  }
+  ngAfterViewInit(): void {}
 
   seeMore(id) {
     let element = document.getElementById('elementNote');

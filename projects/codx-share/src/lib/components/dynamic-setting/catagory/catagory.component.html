@@ -5,6 +5,7 @@
   [showHeader]="dialog"
   [dialog]="dialog!"
   [footer]="footer"
+  [autoFocus]="false"
 >
 </codx-form>
 
@@ -16,7 +17,7 @@
           class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back"
         ></span
       ></a>
-      <h3 class="list-header mb-9">{{ title }}</h3>
+      <h3 class="list-header">{{ title }}</h3>
     </div>
     <div class="list-content">
       <ng-container *ngFor="let item of groupSetting">

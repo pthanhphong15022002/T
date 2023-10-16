@@ -5,7 +5,7 @@
         <div class="d-flex flex-column flex-center justify-content-center">
           <img
             src="../assets/themes/sys/default/img/DataEmpty.svg"
-            class="w-200px"
+            class="w-150px"
           />
           <div class="fs-5 text-dark fw-bold mt-2 text-center">
             {{ "SYS011" | mssg | async }}
@@ -176,7 +176,7 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-between w-100 mt-2">
+            <div class="d-flex justify-content-between mt-2">
               <div class="w-100">
                 <div class="d-flex w-100 pe-6">
                   <div class="w-60px">
@@ -187,43 +187,40 @@
                       [formModel]="formModel"
                     ></codx-label>
                   </div>
-                  <div class="d-flex flex-column">
-                    <div
-                      #elementNote
-                      [id]="'elementNote'"
-                      [class.collapsed]="isCollapsed"
-                      [style.height]="'auto'"
-                      [ngClass]="
-                        isCollapsed
-                          ? 'line-clamp line-clamp-2 text-popover'
-                          : ''
-                      "
+                  <div
+                    class="mb-1 ms-1"
+                    [ngClass]="!isCollapsed ? 'd-flex flex-column' : ''"
+                  >
+                    <span
+                      #description
                       class="text-gray-600"
-                      style="width: 100% !important"
+                      [ngClass]="!isCollapsed ? 'line-clamp line-clamp-2' : ''"
                       [innerHTML]="
                         dataSelected?.description
                           | formatvalue : formModel : 'Description'
                           | async
                       "
-                    ></div>
-                    <div class="mt-1" *ngIf="isCollapsable">
-                      <codx-label
-                        *ngIf="isCollapsed"
-                        name="lblReadMore"
-                        [formModel]="formModel"
-                        default="Xem thêm"
-                        class="text-primary text-underline"
-                        style="white-space: nowrap"
-                        role="button"
-                        (click)="isCollapsed = !isCollapsed"
-                      ></codx-label>
+                    ></span>
+                    <div>
                       <codx-label
                         *ngIf="!isCollapsed"
-                        name="lblReadLess"
-                        [formModel]="formModel"
-                        default="Thu lại"
-                        class="text-primary text-underline"
+                        default="Xem thêm"
+                        style="white-space: nowrap"
+                        class="text-primary text-decoration-underline me-1 mb-1"
+                        [ngClass]="!overflowed ? 'd-none' : ''"
                         role="button"
+                        (click)="isCollapsed = !isCollapsed"
+                        name="lblMore"
+                        [formModel]="formModel"
+                      ></codx-label>
+                      <codx-label
+                        *ngIf="isCollapsed"
+                        default="Thu lại"
+                        style="white-space: nowrap"
+                        class="text-primary text-decoration-underline me-1 mb-1"
+                        role="button"
+                        name="lblCollapse"
+                        [formModel]="formModel"
                         (click)="isCollapsed = !isCollapsed"
                       ></codx-label>
                     </div>
@@ -338,10 +335,12 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <codx-campaign-deals
-                      [transID]="dataSelected?.recID"
-                      [isShow]="isShow"
-                    ></codx-campaign-deals>
+                    <div class="content-campain-deals">
+                      <codx-campaign-deals
+                        [transID]="dataSelected?.recID"
+                        [isShow]="isShow"
+                      ></codx-campaign-deals>
+                    </div>
                   </ng-template>
                 </e-tabitem>
                 <e-tabitem>
@@ -359,7 +358,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-4">
+                    <div class="camp-task">
                       <step-task
                         [entityName]="'CM_Campaigns'"
                         [typeTask]="2"
@@ -398,7 +397,7 @@
                     </div>
                   </ng-template>
                   <ng-template #content>
-                    <div class="mt-5">Thảo luận</div>
+                    <div class="camp-comment">Thảo luận</div>
                   </ng-template>
                 </e-tabitem>
               </e-tabitems>

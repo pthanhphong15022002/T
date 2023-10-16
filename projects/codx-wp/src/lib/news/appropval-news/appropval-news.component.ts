@@ -248,7 +248,6 @@ export class AppropvalNewsComponent extends UIComponent {
 
   //xét duyệt bài viết
   approvalPost(entityName:string,data:any,approvalStatus:string,mssg:string){
-    debugger
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -268,6 +267,7 @@ export class AppropvalNewsComponent extends UIComponent {
         }
         else
           this.notifySvr.notifyCode("SYS019");
+        console.clear();
     });
   }
 
@@ -319,6 +319,7 @@ export class AppropvalNewsComponent extends UIComponent {
           this.view.dataService.update(obj).subscribe();
           this.detectorRef.detectChanges();
         }
+        console.clear();
       });
     } 
     // WP_Comments

@@ -594,7 +594,18 @@ export class CodxShareService {
     );
   }
 
-  sendEmail(emailTemplate: any, sendToList: any) {
+  sendEmail(emailTemplate: any, sendToList: any , option:any=null) {
+    if(option)
+    {
+      return this.api.execSv<any>(
+        option.service,
+        option.assembly,
+        option.className,
+        option.method,
+        [emailTemplate, sendToList, option.data]
+      );
+    }
+    
     return this.api.execSv<any>(
       'SYS',
       'ERM.Business.AD',
@@ -1282,7 +1293,15 @@ export class CodxShareService {
       [exportUpload]
     );
   }
-
+  deleteExportReleaseSF(recID: any): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'DeleteExportReleaseSFAsync',
+      [recID]
+    );
+  }
   copyFileByObjectID(
     oldRecID: string,
     newRecID: string,
@@ -1483,6 +1502,8 @@ export class CodxShareService {
         case '2': //Export và tạo ES_SignFiles để gửi duyệt
         case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
+        //Xóa file export cũ và trình kí số cũ nếu có
+        this.deleteExportReleaseSF(approveProcess.recID).subscribe(res=>{          
           this.getTemplateSF(
             approveProcess?.category?.categoryID,
             approveProcess?.category?.category
@@ -1503,7 +1524,8 @@ export class CodxShareService {
               return;
             }
           });
-          break;
+        });   
+        break;
       }
     } else {
       //Gửi duyệt thường

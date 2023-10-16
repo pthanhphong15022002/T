@@ -23,6 +23,8 @@ import {
   LayoutAddComponent,
   Util,
   CodxFormComponent,
+  CodxComboboxComponent,
+  CodxInputComponent,
 } from 'codx-core';
 import { PopRolesComponent } from '../pop-roles/pop-roles.component';
 import { tmpformChooseRole } from '../../models/tmpformChooseRole.models';
@@ -43,6 +45,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('form') form: LayoutAddComponent;
   @Output() loadData = new EventEmitter();
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
+  @ViewChild('userGroup') userGroup?: CodxInputComponent;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   title = '';
@@ -186,14 +189,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.formModel = this.form?.formModel;
-    if (this.formType == 'edit') {
-      // this.isAddMode = false;
-      this.adService
-        .getUserGroupByID(this.adUser.userGroup)
-        .subscribe((res) => {
-          if (res) this.dataUG = res;
-        });
-    }
     this.cache.functionList(this.formModel.funcID).subscribe((res) => {
       if (res) {
         this.header =
@@ -222,52 +217,37 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
 
   openPopup(item: any) {
-    let formGroup = this.form.formGroup.controls;
-    if (
-      formGroup.userID.valid &&
-      formGroup.userName.value &&
-      formGroup.buid.value &&
-      formGroup.email.value
-    ) {
+    if (this.form.formGroup.valid) {
+      this.dataUG = this.userGroup.ComponentCurrent.dataService.data;
       if (
         this.checkValueChangeUG == true ||
         (this.adUser.userGroup && this.dataUG && this.dataUG?.length > 0)
       ) {
-        this.dataUG.forEach((dt) => {
-          let userID = '';
-          let userName = '';
-          if (this.formType == 'edit') {
-            userID = dt.userID;
-            userName = dt.userName;
-          } else {
-            userID = dt.UserID;
-            userName = dt.UserName;
+        let group = this.dataUG.find((x) => x.GroupID == this.adUser.userGroup);
+        if (group) {
+          if (this.formType == 'add' || this.formType == 'copy') {
+            return this.notification
+              .alertCode('AD003', null, "'" + group.GroupName + "'")
+              .subscribe((info) => {
+                if (info.event?.status && info.event?.status == 'Y') {
+                  this.adUser.customize = true;
+                  this.beforeOpenPopupRoles(item);
+                }
+              });
           }
-          if (userID == this.adUser.userGroup) {
-            if (this.formType == 'add' || this.formType == 'copy') {
-              this.notification
-                .alertCode('AD003', null, "'" + userName + "'")
-                .subscribe((info) => {
-                  if (info.event.status == 'Y') {
-                    this.adUser.customize = true;
-                    this.beforeOpenPopupRoles(item);
-                  }
-                });
-            } else {
-              if (this.adUser.customize == false) {
-                this.notification
-                  .alertCode('AD003', null, "'" + userName + "'")
-                  .subscribe((info) => {
-                    if (info.event.status == 'Y') {
-                      this.adUser.customize = true;
-                      this.beforeOpenPopupRoles(item);
-                    }
-                  });
-              } else this.beforeOpenPopupRoles(item);
-            }
+          if (this.adUser.customize == false) {
+            return this.notification
+              .alertCode('AD003', null, "'" + group.GroupName + "'")
+              .subscribe((info) => {
+                if (info.event?.status && info.event?.status == 'Y') {
+                  this.adUser.customize = true;
+                  this.beforeOpenPopupRoles(item);
+                }
+              });
           }
-        });
-      } else this.beforeOpenPopupRoles(item);
+        }
+      }
+      return this.beforeOpenPopupRoles(item);
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
   }
 
