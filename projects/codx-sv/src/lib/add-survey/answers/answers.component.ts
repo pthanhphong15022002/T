@@ -647,7 +647,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
           'Core',
           'CMBusiness',
           'ExportExcelDataAsync',
-          [data, '21ba30aa-6a44-11ee-91c6-d89ef34ba7ae']
+          [data, '1eab1738-6bd0-11ee-91c8-d89ef34ba7ae']
         )
         .subscribe((item2) => {
           if (item2) {
@@ -670,7 +670,12 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
         Question :  element.question,
         Type: element.type,
         Details : element.details,
-        User : element.user,
+        UserID : element.userID,
+        UserName : element.userName,
+        PositionID : element.positionID,
+        PositionName : element.positionName,
+        DepartmentID : element.departmentID,
+        DepartmentName : element.departmentName,
         Answer: element.answer
       }
       result.push(dt);

@@ -1,4 +1,4 @@
-<div class="d-flex w-100 h-100 mt-3">
-    <lib-menu-list [funcID]="funcID"></lib-menu-list>
-    <lib-master-detail ngClass="w-100" (selectedChange)="selectedChange($event)"></lib-master-detail>
+<div class="d-flex w-100 h-100 pt-4 px-4">
+    <lib-menu-list [funcID]="funcID" (selectedChange)="selectedChange($event)"></lib-menu-list>
+    <lib-master-detail ngClass="w-100" [menuFunctionID]="menuFunctionID"></lib-master-detail>
 </div>
