@@ -185,6 +185,10 @@ export class CatagoryComponent implements OnInit {
       var itemChild = this.settingFull.filter(
         (x) => x.refLineID === recID && x.lineType === lineType
       );
+      if (!itemChild || itemChild.length == 0)
+        itemChild = this.oldSettingFull.filter(
+          (x) => x.refLineID === recID && x.lineType === lineType
+        );
       data['settingFull'] = itemChild;
       data['valuelist'] = this.valuelist;
       //data['settingValue'] = this.settingValue;
