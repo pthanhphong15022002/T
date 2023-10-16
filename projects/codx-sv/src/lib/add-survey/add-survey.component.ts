@@ -7,12 +7,16 @@ import {
   ChangeDetectorRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { AESCryptoService, AuthStore, CallFuncService, CodxMoreFunctionComponent, DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AESCryptoService, AlertConfirmInputConfig, AuthStore, CallFuncService, CodxMoreFunctionComponent, DialogModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 import { SV_Questions } from '../models/SV_Questions';
 import { SV_Surveys } from '../models/SV_Surveys';
 import { CopylinkComponent } from '../copylink/copylink.component';
 import { SharelinkComponent } from '../sharelink/sharelink.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { isObservable } from 'rxjs';
+import moment from 'moment';
+import { formatDate } from '@angular/common';
 @Component({
   selector: 'app-add-survey',
   templateUrl: './add-survey.component.html',
@@ -41,6 +45,7 @@ export class AddSurveyComponent extends UIComponent {
   backgroudColor:any;
   width= "200px";
   isChangeTmp = false;
+  email:any = {};
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
   @ViewChild('screen', { static: true }) screen: any;
@@ -70,6 +75,8 @@ export class AddSurveyComponent extends UIComponent {
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
+
+    this.getAlertRule();
   }
   getSV()
   {
@@ -194,7 +201,7 @@ export class AddSurveyComponent extends UIComponent {
       case "SVT0104":
         {
           this.dataSV.title = this.title;
-          this.dataSV.stop = true;
+          this.dataSV.status = "4";
           this.dataSV.expiredOn = new Date();
           if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
           this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
@@ -212,51 +219,90 @@ export class AddSurveyComponent extends UIComponent {
       //Phát hành
       case "SVT0100":
         {
-          this.dataSV.stop = false;
-          this.dataSV.status = "5";
-          this.dataSV.startedOn =  new Date();
-          if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
-          this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
-            if(item) 
-            {
-              if(this.mfTmp?.arrMf)
-              {
-                //var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
-                var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0104");
-                //ph[0].disabled = true;
-                dks[0].disabled = false;
+          var config = new AlertConfirmInputConfig();
+          config.type = 'YesNo';
+          var message = "Thời gian thực hiện khảo sát : " + formatDate(new Date(), 'dd/MM/yyyy', 'en-US'); 
+          if(this.dataSV?.expiredOn) message += " - " + formatDate(this.dataSV?.expiredOn, 'dd/MM/yyyy', 'en-US'); 
+          
+          this.notifySvr
+            .alert("Thông báo",message, config).closed
+            .subscribe((x) => {
+              if (x.event.status == 'Y') {
+                this.dataSV.stop = false;
+                this.dataSV.status = "3";
+                this.dataSV.startedOn =  new Date();
+                if(this.dataSV?.settings && typeof this.dataSV?.settings == "object") this.dataSV.settings = JSON.stringify(this.dataSV?.settings);
+                this.SvService.updateSV(this.recID,this.dataSV).subscribe(item=>{
+                  if(item) 
+                  {
+                    if(this.mfTmp?.arrMf)
+                    {
+                      //var ph = this.mfTmp?.arrMf.filter(x=>x.functionID == e?.functionID);
+                      var dks = this.mfTmp?.arrMf.filter(x=>x.functionID == "SVT0104");
+                      //ph[0].disabled = true;
+                      dks[0].disabled = false;
+                    }
+                    this.notifySvr.notifyCode("SV001");
+                  }
+                  else this.notifySvr.notifyCode("SV002");
+                })
               }
-              this.notifySvr.notifyCode("SV001");
-            }
-            else this.notifySvr.notifyCode("SV002");
-          })
+          });
+          
           break;
         }
       //Share link
       case "SVT0102":
         {
-          var obj = 
-          {
-            funcID : this.funcID,
-            recID: this.recID
-          }
-          var key = JSON.stringify(obj);
-          key = this.aesCrypto.encode(key);
-          var link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
+          // var obj = 
+          // {
+          //   funcID : this.funcID,
+          //   recID: this.recID
+          // }
+          // var key = JSON.stringify(obj);
+          // key = this.aesCrypto.encode(key);
+          // var link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/sv/review?_k="+key;
 
-          if(this.dataSV?.settings)
+          // if(this.dataSV?.settings)
+          // {
+          //   if(typeof this.dataSV?.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
+          //   if(this.dataSV?.settings?.isPublic == "1") link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
+          // }
+         
+          // this.callfc.openForm(SharelinkComponent,"",900,600,"",
+          //   {
+          //     headerText: e?.data?.customName,
+          //     funcID: this.funcID,
+          //     recID: this.recID,
+          //     link: link
+          //   }
+          // );
+          // service?: string;
+          // assembly?: string;
+          // className?:string;
+          // method?:string;
+          // data?:string
+          var options =
           {
-            if(typeof this.dataSV?.settings == "string") this.dataSV.settings = JSON.parse(this.dataSV.settings);
-            if(this.dataSV?.settings?.isPublic == "1") link =  window.location.protocol + "//" + window.location.host + "/" + this.user.tenant +  "/forms?_k="+key;
+            service : "SV",
+            assembly :"SV",
+            className : "SurveysBusiness",
+            method: "SendMailAsync",
+            data : [this.recID,this.funcID]
+          }
+          var data = 
+          {
+            email : this.email,
+            option : options
           }
          
-          this.callfc.openForm(SharelinkComponent,"",900,600,"",
-            {
-              headerText: e?.data?.customName,
-              funcID: this.funcID,
-              recID: this.recID,
-              link: link
-            }
+          let popEmail = this.callfunc.openForm(
+            CodxEmailComponent,
+            '',
+            800,
+            screen.height,
+            '',
+            data
           );
           break;
         }
@@ -268,10 +314,39 @@ export class AddSurveyComponent extends UIComponent {
     //this.dataSV
   }
   
+  getAlertRule()
+  {
+    var alertRule = this.SvService.loadAlertRule("SV_0001") as any;
+    if(isObservable(alertRule))
+    {
+      alertRule.subscribe((item:any)=>{
+        this.getEmailTemplate(item.emailTemplate)
+      })
+    }
+    else this.getEmailTemplate(alertRule?.emailTemplate)
+  }
+
+  getEmailTemplate(recID:any)
+  {
+    var emailTemplate = this.SvService.loadEmailTemplate(recID) as any;
+    if(isObservable(emailTemplate))
+    {
+      
+      emailTemplate.subscribe((item:any)=>{ 
+        this.email.subject = item[0]?.subject;
+        this.email.message = item[0]?.message;
+      });
+    }
+    else {
+      this.email.subject = emailTemplate[0]?.subject;
+      this.email.message = emailTemplate[0]?.message;
+    }
+  }
+
   changeDataMF(e:any , data:any)
   {
-    
-    if(data?.status == "5")
+    //Đã phát hành
+    if(data?.status == "3")
     {
       // var release = e.filter(
       //   (x: { functionID: string }) =>

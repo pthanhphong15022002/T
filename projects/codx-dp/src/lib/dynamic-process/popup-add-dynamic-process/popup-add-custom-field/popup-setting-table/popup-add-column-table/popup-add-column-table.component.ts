@@ -390,7 +390,8 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   async cbxChangeVll(value) {
     this.column['refValue'] = value;
     if (!value) {
-      await this.getDefaultVll();
+      // await this.getDefaultVll();
+      this.crrVll = null ;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
@@ -658,7 +659,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   }
 
   saveColumn() {
-    if (!this.checkValidate) return;
+    if (!this.checkValidate()) return;
     this.dialog.close([this.column, this.processNo]);
   }
 }

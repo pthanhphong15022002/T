@@ -99,17 +99,6 @@
               </codx-combobox-popup>
             </ng-container>
           </div>
-
-          <!-- <codx-input
-            type="Share"
-            refValue="DP0331"
-            (valueChange)="eventApply($event)"
-            field="owner"
-            [dataShared]="[]"
-            [multiple]="true"
-            [showInput]="false"
-          >
-          </codx-input> -->
         </div>
         <ng-container>
           <ng-container [ngTemplateOutlet]="templateOwners"></ng-container>
@@ -303,52 +292,6 @@
                 />
               </div>
             </td>
-            <!-- <td *ngFor="let time of lstTime" class="fixed-width-column">
-              <ng-container *ngFor="let line of time?.lines">
-                <span
-                  *ngIf="line.salespersonID == item?.userID && !line.isExit"
-                  class="w-100px"
-                >
-                  <div
-                    [ngClass]="
-                      line?.recID == this.editingItem ? 'user-nav-active' : null
-                    "
-                    *ngIf="editingItem !== line?.recID"
-                    (click)="dbClick(line?.recID)"
-                    class="user-nav-item text-gray-600 line-clamp line-clamp-1"
-                    [innerHTML]="targetToFixed(line?.target)"
-                    [ngbTooltip]="targetToFixed(line?.target)"
-                  >
-
-                  </div>
-                  <div
-                    [ngClass]="
-                      line?.recID == this.editingItem ? 'user-nav-active' : null
-                    "
-                    class="user-nav-item"
-                    *ngIf="editingItem === line?.recID"
-                  >
-                    <input
-                      type="number"
-                      #lblTarget
-                      name="lblTarget"
-                      [min]="0"
-                      matInput
-                      autofocus
-                      [value]="line?.target"
-                      (blur)="
-                        updateTarget(lblTarget.value, line?.recID, isAllocation)
-                      "
-                      (keydown.enter)="
-                        updateTarget(lblTarget.value, line?.recID, isAllocation)
-                      "
-                      class="no-border text-gray-600 no-spinner"
-                      style="margin-left: 0px"
-                    />
-                  </div>
-                </span>
-              </ng-container>
-            </td> -->
           </tr>
         </tbody>
         <tfoot>

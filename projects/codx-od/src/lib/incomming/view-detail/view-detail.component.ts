@@ -1298,7 +1298,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         {
           refID : "",
           refType : this.formModel?.entityName,
-          dataSource: datas,
+          //dataSource: datas,
           addPermissions: this.listPermission
         }
 

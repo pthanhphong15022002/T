@@ -406,13 +406,11 @@
   <ng-container *ngIf="formCashReceipt.data?.subType == '11'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both"
-        [autoFitColumns]="false"
-        [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
+        [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
-        entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
-        [templateMore]="TmpMFCashReceipts" service="AC" [editOnClick]="true"
-        (gridInit)="beforeInitGridCashReceipt($event)" rowNoField="rowNo"
-        (eventAction)="onActionGridCashReceipt($event)" (actionCompleted)="onActionGridCashReceipt($event)"
+        entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID" [saveValidator]="saveValidationLine"
+        [templateMore]="TmpMFCashReceipts" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashReceipt($event)"
+        rowNoField="rowNo" (eventAction)="onActionGridCashReceipt($event)" (actionCompleted)="onActionGridCashReceipt($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">

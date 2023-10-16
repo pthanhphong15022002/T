@@ -4,7 +4,7 @@
       <div>
         <span class="fs-2 text-bold">{{lstRespondents.length}} câu trả lời</span>
       </div>
-      <div>
+      <div (click)="export()">
         <i class="icon-download" ngbTooltip="export"></i>
       </div>
     </div>
@@ -213,11 +213,19 @@
                   <tr class="border-top" *ngFor="let row of item?.grid.row">
                     <td *ngFor="let rowChild of row , let i = index">
                       <ng-container *ngIf="i==0">
-                        <ng-container *ngIf="rowChild.objectID , else tmpGuest">
+                        <ng-container *ngIf="rowChild.objectID ">
                           <div class="d-flex align-items-center me-2 py-2">
                             <codx-img [objectId]="rowChild.objectID" [objectType]="'AD_Users'" referType="avt"></codx-img>
                             <div class="d-flex flex-column mx-2">
                               <span class="text-nowrap">{{rowChild.name}}</span>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="!rowChild.objectID">
+                          <div class="d-flex align-items-center py-2">
+                            <i class="icon-i-person-circle fs-32px me-2"></i>
+                            <div class="d-flex flex-column">
+                              <span>{{rowChild?.email}}</span>
                             </div>
                           </div>
                         </ng-container>
@@ -257,7 +265,7 @@
           </ng-container>
         </button>
         <div ngbDropdownMenu>
-          <ng-container *ngIf="respondents && respondents.responds.length > 0">
+          <ng-container *ngIf="respondents && respondents.responds && respondents.responds.length > 0">
             <button class="btn-dpd-1 line-clamp line-clamp-1" ngbDropdownItem *ngFor="let item of respondents.responds ; let i = index" (click)="selectedDropDown(i,item.question)">
               <span class="span-overflow" [title]="extractContent(item.question)">{{extractContent(item.question)}}</span>
             </button>
@@ -411,21 +419,41 @@
           <e-accordionitem >
             <ng-template #header>
               <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex flex-column">
-                  <span class="fw-bold">Trả lời số {{index + 1}}</span>
+                <div class="me-14">
+                  <ng-container *ngIf="i?.objectType != 'S'">
+                    <codx-img [objectId]="i?.objectID" [objectType]="'AD_Users'" >
+                    </codx-img>
+                    <span class="ms-2">{{i?.respondent}}</span>
+                  </ng-container>
+                  <ng-container *ngIf="i?.objectType == 'S'">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-i-person-circle fs-32px me-2"></i>
+                      <div class="d-flex flex-column">
+                        <span>{{i?.email}}</span>
+                      </div>
+                    </div>
+                   
+                  </ng-container>
+                </div>
+                <div class="d-flex flex-column me-10">
+                  <codx-vll
+                    [showText]="true"
+                    [showBgColor]="true"
+                    [name]="'SV007'" 
+                    [value]="i?.status"
+                    class="badge badge-light badge-square badge-md fs-7 p-2"
+                  >
+                  </codx-vll>
                   <div>
                     <span>{{i?.createdOn | date:'dd/MM/yyyy HH:mm:ss'}}</span>
                   </div>
-                </div>
-                <div class="me-14">
-                  <span>{{i?.email}}</span>
                 </div>
               </div>
             </ng-template>
             <ng-template #content>
               {{""}}
               <div *ngFor="let x of i?.responds">
-                <div class="row mb-5 border-bottom">
+                <div class="row p-5 border-top">
                   <div class="col-5 div-sv-mt fw-bold">{{extractContent(x.question)}}</div>
                   <div class="col-7">
                     <ng-container *ngFor="let z of x.results">
