@@ -148,6 +148,7 @@ export class RoleDetailComponent
   asideClick(evt: any, index: any, item: any) {
     this.selectIndex = index;
     ScrollComponent.reinitialization();
+    if (!item) return;
     this.formName = item.formName;
     this.gridViewName = item.gridViewName;
     this.functionID = item.functionID;
