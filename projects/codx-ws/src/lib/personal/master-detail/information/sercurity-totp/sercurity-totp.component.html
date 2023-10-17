@@ -1,0 +1,50 @@
+<codx-form
+    [headerText]="'Kích hoạt xác thực 2 yếu tố'"
+    [body]="body"
+    [footer]="footer"
+    [dialog]="dialog"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column py-4">
+       <div class="d-flex align-items-center mb-2" *ngFor="let item of authSteps ; let i = index">
+            <div class="d-flex justify-content-center align-items-center rounded-circle ws-circle">
+                {{(i + 1)}}
+            </div>
+            <div class="w-100 ms-2">
+                {{item.text}}
+            </div>
+        </div>
+        <div class="d-flex justify-content-center w-100 py-4">
+            <img class="w-50 ratio ratio-1x1 rounded-3" [src]="qrBase64" />
+        </div>
+        
+        <div class="d-flex flex-column justify-content-center align-items-center ">
+            <codx-label class="fw-bold py-2" fiedName="lblLogin" default="Bạn không thể quét mã này ?" class="fw-bold text-primary"></codx-label>
+            <div class="border rounded p-2">
+                <span>{{this.secret}}</span>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column mt-2">
+            <codx-label class="fw-bold ps-104px py-2" fiedName="lblLogin" default="Mã xác nhận"></codx-label>
+            <div id="ws-inputs" class="inputs d-flex justify-content-center">
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+                <input class="ws-input text-center" type="text" inputmode="numeric" maxlength="1" />
+            </div>
+        </div>
+
+        
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex flex-column py-4">
+        <button type="button" class="btn btn-md btn-primary" (click)="onSave()">
+            <codx-label class="fw-normal" fiedName="lblLogin" default="Xác nhận"></codx-label>
+        </button>
+    </div>
+</ng-template>
