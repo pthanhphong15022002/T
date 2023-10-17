@@ -225,7 +225,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   loadSettingMoreFunction() {
-    this.loadMoreFunction('FED204211', 'Gifts', 'grvGifts').subscribe((res) => {
+    this.loadMoreFunction(this.funcID, 'Gifts', 'grvGifts').subscribe((res) => {
       if (res?.length > 0) {
         this.lstMoreFunction = res;
       }
