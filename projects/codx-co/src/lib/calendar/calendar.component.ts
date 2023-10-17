@@ -102,12 +102,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   settings = {};
 
   listOrgUnit:any[] = [];
-  org = [
-    { name: 'DXN - Nhóm phát triển phần mềm' },
-    { name: 'Nhóm BA' },
-    { name: 'Nhóm DEV' },
-    { name: 'Nhóm QC' },
-  ];
+  checked:string = "1";
 
   constructor(
     injector: Injector,
