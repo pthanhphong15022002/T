@@ -240,7 +240,6 @@ export class CalendarCenterComponent
   //endRegion CO
 
   getCellContent(evt: any) {
-    debugger
     let obj = evt.date;
     if (this.dayoff && this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
