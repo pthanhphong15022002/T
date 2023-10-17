@@ -87,7 +87,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
       }
     }
 
-    this.changeRef.detectChanges();
+    //this.changeRef.detectChanges();
   }
 
   formatViewTable(value) {
