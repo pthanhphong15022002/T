@@ -142,7 +142,7 @@ th,
 td {
   padding: 2px 7px!important;
   white-space: nowrap;
-  border-bottom: 1px var(--gray-100) solid;
+  border-bottom: 1px var(--gray-100) solid !important;
   height: 32px;
   vertical-align: middle;
 }
@@ -157,4 +157,18 @@ th {
   top: 0;
   z-index: 2;
   background-color: var(--gray-100)!important;
+}
+
+.user-nav-item{
+  height: 28px;
+}
+.user-nav-item input{
+  text-align: end;
+}
+.user-nav-item.user-nav-active {
+  background-color: var(--primary-lightest);
+  border-left: 2px var(--primary) solid;
+}
+.user-nav-item:hover {
+  background-color: var(--primary-lighter);
 }

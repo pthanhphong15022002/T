@@ -887,9 +887,15 @@
       <table class="table">
         <thead class="thead-light">
           <tr>
-            <th style="width: 300px !important"></th>
+            <th
+              style="width: 300px !important"
+              style="border-bottom: 1px var(--gray-100) solid !important"
+            ></th>
             <ng-container *ngFor="let item of lstUsers">
-              <th class="w-50px">
+              <th
+                class="w-50px"
+                style="border-bottom: 1px var(--gray-100) solid !important"
+              >
                 <div class="d-flex justify-content-center">
                   <codx-imgs
                     [width]="30"
@@ -907,11 +913,14 @@
         </thead>
         <tbody *ngFor="let item of lstTitlePerformance">
           <tr>
-            <td>
+            <td style="border-bottom: 1px var(--gray-100) solid !important">
               <span class="fw-bold">{{ item.text }}</span>
             </td>
             <ng-container *ngFor="let user of lstUsers">
-              <td *ngIf="findItemUser(item.value, user.lstTitlePerformance)">
+              <td
+                *ngIf="findItemUser(item.value, user.lstTitlePerformance)"
+                style="border-bottom: 1px var(--gray-100) solid !important"
+              >
                 <div class="text-gray-800 d-flex justify-content-center">
                   {{ findItemUser(item.value, user.lstTitlePerformance)?.text }}
                 </div>
