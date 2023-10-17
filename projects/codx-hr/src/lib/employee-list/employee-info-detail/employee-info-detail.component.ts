@@ -73,6 +73,7 @@ import { FormGroup } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { log } from 'console';
 import { PopupEdocumentsComponent } from '../../employee-profile/popup-edocuments/popup-edocuments.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -933,6 +934,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     private inject: Injector,
     private routeActive: ActivatedRoute,
     private hrService: CodxHrService,
+    private share: CodxShareService,
     private auth: AuthStore,
     private df: ChangeDetectorRef,
     private layout: LayoutService,
@@ -1078,14 +1080,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.curriculumVitaeFuncID = res[i].functionID;
               this.curriculumVitaeFunc = res[i];
               break;
-            case this.legalInfoURL:
-              this.legalInfoFuncID = res[i].functionID;
-              this.legalInfoFunc = res[i];
-              break;
-            case this.foreignWorkerURL:
-              this.foreignWorkerFuncID = res[i].functionID;
-              this.foreignWorkerFunc = res[i];
-              break;
+            // case this.legalInfoURL:
+            //   this.legalInfoFuncID = res[i].functionID;
+            //   this.legalInfoFunc = res[i];
+            //   console.log('legal infone', this.legalInfoFunc);
+            //   break;
+            // case this.foreignWorkerURL:
+            //   this.foreignWorkerFuncID = res[i].functionID;
+            //   this.foreignWorkerFunc = res[i];
+            //   break;
             case this.jobInfoURL:
               this.jobInfoFuncID = res[i].functionID;
               this.jobInfoFunc = res[i];
@@ -1122,8 +1125,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.employeeID = params['employeeID'];
       if(!this.employeeID){
         this.fromWS = true;
-        
-        debugger
+        this.share.getEmployeeInfor(this.user.userID).subscribe((res) => {
+          this.employeeID = res.employeeID;
+        })
       }
       this.pageNum = params['page'];
       // this.maxPageNum = params['totalPage']
@@ -1193,6 +1197,25 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     // this.initFormModel();
     this.initSortModel();
     this.initHeaderText();
+  }
+
+  handleShowHideMfWs(evt, func){
+    if(func.isPortal == false){
+      //Được add/edit, ko delete
+      for(let i = 0; i < evt.length; i++){
+        if(evt[i].functionID == "SYS02"){
+          evt[i].disabled = true;
+        }
+      }
+    }
+    else if(func.isPortal == true){
+      //Hide edit/copy/delete
+      for(let i = 0; i < evt.length; i++){
+        if(evt[i].functionID == "SYS02" || evt[i].functionID == "SYS03" || evt[i].functionID == "SYS01" || evt[i].functionID == "SYS04"){
+          evt[i].disabled = true;
+        }
+      }
+    }
   }
 
   ngAfterViewInit(): void {
@@ -1424,12 +1447,15 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     // });
   }
 
-  handleShowHideMF(evt) {
+  handleShowHideMF(evt, func?) {
     for (let i = 0; i < evt.length; i++) {
       if (evt[i].functionID == 'SYS04') {
         evt[i].disabled = true;
         break;
       }
+    }
+    if(func == this.eNeedToSubmitProfileFunc && this.fromWS == true){
+      this.handleShowHideMfWs(evt, func);
     }
   }
 
@@ -2448,16 +2474,18 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
-  //chua dung
   clickMF(event: any, data: any, funcID = null) {
     switch (event.functionID) {
-      case this.ePassportFuncID + 'ViewAll':
+      // case this.ePassportFuncID + 'ViewAll':
+      case "HRTEM0202ViewAll":
         this.popupViewAllPassport();
         break;
-      case this.eVisaFuncID + 'ViewAll':
+      // case this.eVisaFuncID + 'ViewAll':
+      case "HRTEM0203ViewAll":
         this.popupViewAllVisa();
         break;
-      case this.eWorkPermitFuncID + 'ViewAll':
+      // case this.eWorkPermitFuncID + 'ViewAll':
+      case "HRTEM0204ViewAll":
         this.popupViewAllWorkPermit();
         break;
       case this.eContractFuncID + 'ViewAll':
@@ -3064,6 +3092,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eContractFuncID,
       {
+        func: this.eContractFunc,
+        funcUrl: this.eContractURL,
+        fromWS: this.fromWS,
         funcID: this.eContractFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.eContractFuncID, this.lstFuncHRProcess),
@@ -3097,6 +3128,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eWorkPermitFuncID,
       {
+        func: this.eWorkPermitFunc,
+        funcUrl: this.eWorkPermitURL,
+        fromWS: this.fromWS,
         funcID: this.eWorkPermitFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.eWorkPermitFuncID, this.lstFuncForeignWorkerInfo),
@@ -3134,6 +3168,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eVisaFuncID,
       {
+        func: this.eVisaFunc,
+        funcUrl: this.eVisaURL,
+        fromWS: this.fromWS,
         funcID: this.eVisaFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.eVisaFuncID, this.lstFuncLegalInfo),
@@ -3171,6 +3208,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.ePassportFuncID,
       {
+        func: this.ePassportFunc,
+        funcUrl: this.ePassportURL,
+        fromWS: this.fromWS,
         funcID: this.ePassportFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.ePassportFuncID, this.lstFuncLegalInfo),
@@ -3248,6 +3288,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             if(res[i].url == this.eInfoURL){
               this.eInfoFuncID = res[i].functionID;
               this.eInfoFunc = res[i]
+              console.log('einfofunc ne', this.eInfoFunc);
+              
               if(!this.eInfoHeaderText || !this.eInfoFormModel){
                   this.hrService.getHeaderText(this.eInfoFuncID).then((headerText) => 
                   {
@@ -3267,13 +3309,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
             else if(res[i].url == this.legalInfoURL){
               this.legalInfoFuncID = res[i].functionID;
+              this.legalInfoFunc = res[i];
+              console.log('legal infone', this.legalInfoFunc);
+
             }
             else if(res[i].url == this.foreignWorkerURL){
               this.foreignWorkerFuncID = res[i].functionID;
+              this.foreignWorkerFunc = res[i];
+              console.log('lao dong nuoc ngoai', this.foreignWorkerFunc);
             }
             else if(res[i].url == this.ePartyURL){
               this.ePartyFuncID = res[i].functionID;
               this.ePartyFunc = res[i];
+              console.log('dang doan', this.ePartyFunc);
+
             }
             else if(res[i].url == this.eFamiliesURL){
               this.eFamiliesFuncID = res[i].functionID;
@@ -3355,7 +3404,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.view = true;
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.write = res[i].write;
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.delete = res[i].delete;
-                      if(res[i].write == true){
+                      if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                         this.lstBtnAdd.push(res[i]);
                       }
                     }
@@ -3363,7 +3412,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.view = true;
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.write = res[i].write;
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.delete = res[i].delete;
-                      if(res[i].write == true){
+                      if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                         this.lstBtnAdd.push(res[i]);
                       }
                     }
@@ -3394,7 +3443,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view = true;
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write = res[i].write;
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.delete = res[i].delete;
-                        if(res[i].write == true){
+                      if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                           this.lstBtnAdd.push(res[i]);
                         }
                       }
@@ -3412,7 +3461,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.curriculumVitaePermission.eFamiliesFuncID.view = true;
                 this.curriculumVitaePermission.eFamiliesFuncID.write = res[i].write;
                 this.curriculumVitaePermission.eFamiliesFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3421,7 +3470,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.curriculumVitaePermission.eExperienceFuncID.view = true;
                 this.curriculumVitaePermission.eExperienceFuncID.write = res[i].write;
                 this.curriculumVitaePermission.eExperienceFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3456,7 +3505,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   )
                   .subscribe((res) => {
                     this.eDocumentGrvSetup = res;
-                    console.log('documentgrvsetup', res);
                   });
                 })
               }
@@ -3502,7 +3550,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                     })
                   }
                 })
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3559,7 +3607,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.view = true;
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.write = res[i].write;
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3567,7 +3615,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.salaryBenefitInfoPer.benefitFuncID.view = true;
                 this.salaryBenefitInfoPer.benefitFuncID.write = res[i].write;
                 this.salaryBenefitInfoPer.benefitFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3656,7 +3704,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eContractFuncID.view = true;
                 this.workingProcessInfoPer.eContractFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eContractFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3664,7 +3712,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.appointionFuncID.view = true;
                 this.workingProcessInfoPer.appointionFuncID.write = res[i].write;
                 this.workingProcessInfoPer.appointionFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3672,7 +3720,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.dayoffFuncID.view = true;
                 this.workingProcessInfoPer.dayoffFuncID.write = res[i].write;
                 this.workingProcessInfoPer.dayoffFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3680,7 +3728,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eBusinessTravelFuncID.view = true;
                 this.workingProcessInfoPer.eBusinessTravelFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eBusinessTravelFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3688,7 +3736,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.awardFuncID.view = true;
                 this.workingProcessInfoPer.awardFuncID.write = res[i].write;
                 this.workingProcessInfoPer.awardFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3696,7 +3744,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eDisciplineFuncID.view = true;
                 this.workingProcessInfoPer.eDisciplineFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eDisciplineFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3772,7 +3820,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eDegreeFuncID.view = true;
                 this.knowledgeInfoPer.eDegreeFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eDegreeFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3780,7 +3828,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eCertificateFuncID.view = true;
                 this.knowledgeInfoPer.eCertificateFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eCertificateFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3788,7 +3836,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eSkillFuncID.view = true;
                 this.knowledgeInfoPer.eSkillFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eSkillFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3796,7 +3844,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eTrainCourseFuncID.view = true;
                 this.knowledgeInfoPer.eTrainCourseFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eTrainCourseFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3886,7 +3934,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eHealthFuncID.view = true;
                 this.healthInfoPer.eHealthFuncID.write = res[i].write;
                 this.healthInfoPer.eHealthFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3894,7 +3942,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eDiseasesFuncID.view = true;
                 this.healthInfoPer.eDiseasesFuncID.write = res[i].write;
                 this.healthInfoPer.eDiseasesFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3902,7 +3950,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eVaccinesFuncID.view = true;
                 this.healthInfoPer.eVaccinesFuncID.write = res[i].write;
                 this.healthInfoPer.eVaccinesFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -3910,7 +3958,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eAccidentsFuncID.view = true;
                 this.healthInfoPer.eAccidentsFuncID.write = res[i].write;
                 this.healthInfoPer.eAccidentsFuncID.delete = res[i].delete;
-                if(res[i].write == true){
+                  if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
                 break;
@@ -5538,6 +5586,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.benefitFuncID,
       {
+        func: this.benefitFunc,
+        funcUrl: this.benefitURL,
+        fromWS: this.fromWS,
         funcID: this.benefitFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.benefitFuncID, this.lstFuncSalaryBenefit),
@@ -5623,6 +5674,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eBasicSalaryFuncID,
       {
+        func: this.eBasicSalaryFunc,
+        funcUrl: this.eBasicSalaryURL,
+        fromWS: this.fromWS,
         funcID: this.eBasicSalaryFuncID,
         employeeId: this.employeeID,
         headerText: this.getFormHeader2(this.eBasicSalaryFuncID, this.lstFuncSalaryBenefit),
