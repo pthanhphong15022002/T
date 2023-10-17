@@ -1,29 +1,27 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange } from '@angular/core';
 import { UIComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { fmVATInvoices } from '../../../codx-ac.service';
 
 @Component({
-  selector: 'vatinvoices-table',
-  templateUrl: './vatinvoices-table.component.html',
-  styleUrls: ['./vatinvoices-table.component.css'],
+  selector: 'purchaseinvoices-table',
+  templateUrl: './purchaseinvoices-table.component.html',
+  styleUrls: ['./purchaseinvoices-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VatinvoicesTableComponent extends UIComponent {
+export class PurchaseinvoicesTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
 
-  totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
-  totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
-  listVATInvoices:any;
-  fmVATInvoices: any = fmVATInvoices
+  totalNetAmt:any = 0; //? tổng thành tiền tab thông tin hóa đơn
+  totalQuantity:any = 0; //? tổng số lượng tab thông tin hóa đơn
+  totalVatAtm: any = 0; //? tổng tiền thuế tab thông tin hóa đơn
+  listPurchaseInvoicesLine:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector
   ) {
     super(inject);
-    //this.userID = this.authStore.get().userID; //? get tên user đăng nhập
   }
   //#endregion Constructor
 
@@ -51,13 +49,13 @@ export class VatinvoicesTableComponent extends UIComponent {
    */
   getDataDetail(dataItem) {
     this.api
-      .exec('AC', 'VATInvoicesBusiness', 'LoadDataAsync', [
+      .exec('AC', 'PurchaseInvoicesLinesBusiness', 'LoadDataAsync', [
         dataItem.recID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.listVATInvoices = res;
+          this.listPurchaseInvoicesLine = res;
           this.setTotalRecord();
           this.detectorRef.detectChanges();
         }
@@ -68,12 +66,14 @@ export class VatinvoicesTableComponent extends UIComponent {
    * Hàm tính tổng các số tiền của các tab detail(hạch toán,thông tin hóa đơn,hóa đơn GTGT)
    */
   setTotalRecord() {
+    this.totalQuantity = 0;
+    this.totalNetAmt = 0;
     this.totalVatAtm = 0;
-    this.totalVatBase = 0;
 
-    if (this.listVATInvoices && this.listVATInvoices.length > 0) {
-      this.totalVatAtm = this.listVATInvoices.reduce((sum, data:any) => sum + data?.vatAmt,0);
-      this.totalVatBase = this.listVATInvoices.reduce((sum, data:any) => sum + data?.vatBase,0);
+    if (this.listPurchaseInvoicesLine && this.listPurchaseInvoicesLine.length > 0) {
+      this.totalQuantity = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.quantity,0);
+      this.totalNetAmt = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.netAmt,0);
+      this.totalVatAtm = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.vatAmt,0);
     }
   }
 

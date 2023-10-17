@@ -25,13 +25,12 @@ import {
 } from 'codx-core';
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { Subject, takeUntil } from 'rxjs';
-import { CodxAcService } from 'projects/codx-ac/src/lib/codx-ac.service';
+import { CodxAcService, fmSettledInvoices } from 'projects/codx-ac/src/lib/codx-ac.service';
 
 @Component({
   selector: 'lib-settledinvoices-add',
   templateUrl: './settledinvoices-add.component.html',
   styleUrls: ['./settledinvoices-add.component.css'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class SettledInvoicesAdd extends UIComponent implements OnInit {
@@ -44,27 +43,21 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   vouchers: Array<any> = [];
   gridModel: DataRequest = new DataRequest();
   invoiceDueDate: any;
-  gridHeight: any = '100%';
-  formModel: FormModel = {
-    gridViewName: 'grvSettledInvoices',
-    formName: 'SettledInvoices',
-    entityName: 'AC_SettledInvoices',
-  };
+  fmSettledInvoices:any = fmSettledInvoices;
   mapPredicates = new Map<string, string>();
   mapDataValues = new Map<string, string>();
   subInvoices: Array<any> = [];
   predicates: string;
   dataValues: string;
   objectName:any;
-  morefunction: any;
   payAmt: number = 0;
   sort:any = Array<SortModel> ;
-  isInit:any = false;
+  isDblCLick: boolean = false;
+  oldSelected: any = [];
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
-    private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -76,18 +69,16 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.title = dialogData.data.title;
     this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
-    this.setDefault();
   }
-  //#region Constructor
+  //#endregion Constructor
 
   //#region Init
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '80%', '90%');
+    this.setDefault();
   }
 
-  ngAfterViewInit() {
-    this.dt.detectChanges();
-  }
+  ngAfterViewInit() {}
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -98,6 +89,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.destroy$.complete();
   }
 
+  /**
+   * *Hàm set data default
+   */
   setDefault(){
     this.mapPredicates.set('currencyID', 'CurrencyID = @0');
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
@@ -106,7 +100,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.payAmt = this.cashpayment.totalAmt;
     this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
   }
-  //#endregion
+  //#endregion Init
 
   //#region Event
   payAmtEnter(e: any) {
@@ -120,7 +114,11 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.payAmt = e.data;
   }
 
-  oldSelected: any = [];
+  /**
+   * *Hàm chọn dòng
+   * @param e 
+   * @returns 
+   */
   onSelected(e) {
     let data = e.data;
     if (data.settledAmt != 0) return;
@@ -147,7 +145,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
           if (this.isDblCLick) {
             this.isDblCLick = false;
             this.grid.gridRef.startEdit();
-            this.dt.detectChanges();
+            this.detectorRef.detectChanges();
           } else {
             this.grid.gridRef?.selectRows(this.oldSelected);
           }     
@@ -156,6 +154,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     })
   }
 
+  /**
+   * *Hàm bỏ chọn dòng || bỏ chọn tất cả
+   * @param e 
+   */
   onDeselected(e:any){
     e.data.forEach(data => {
       let index = this.grid.arrSelectedRows.findIndex(
@@ -164,10 +166,14 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       this.grid.arrSelectedRows.splice(index,1);
     }); 
     setTimeout(() => {
-      this.dt.detectChanges();
+      this.detectorRef.detectChanges();
     }, 100);
   }
 
+  /**
+   * *Hàm valuechange
+   * @param e 
+   */
   valueChange(e: any) {
     let field = e.field;
     if (!e.data || typeof e.data === 'undefined') {
@@ -249,6 +255,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     }
   }
 
+  /**
+   * *Hàm set predicate
+   * @param type 
+   */
   submit(type:number) {
     let predicates = Array.from(
       this.mapPredicates,
@@ -264,6 +274,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.loadData(type);
   }
 
+  /**
+   * *Hàm xử lí click chọn hóa đơn
+   */
   apply() {
     let data = this.grid.arrSelectedRows;
     this.api
@@ -299,19 +312,32 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     } else this.handSettledAmt(data);
   }
 
+  /**
+   * *Hàm đóng form
+   */
   close() {
     this.onDestroy();
     this.dialog.close();
   }
-  //#endregion
+  //#endregion Event
 
-  //#region function
+  //#region Function
+
+  /**
+   * *Hàm set date predicate
+   * @param day 
+   */
   setDate(day?: any) {
     let date = new Date(this.form.formGroup.value['invoiceDueDate']);
     let aDate = (date as any).addDays(day || 0);
     this.mapDataValues.set('date', aDate.toISOString());
   }
 
+  /**
+   * *Hàm tính chiết khấu,tiền chi trả
+   * @param data 
+   * @param terms 
+   */
   handSettledAmt(data = [], terms = []) {
     let pay = this.payAmt;
     let len = data.length;
@@ -357,6 +383,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     });
   }
 
+  /**
+   * *Hàm load lọc dữ liệu
+   * @param type 
+   */
   loadData(type) {
     // this.gridModel.predicate = this.morefunction.predicate;
     // this.gridModel.dataValue = this.morefunction.dataValue;
@@ -393,6 +423,10 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     })
   }
 
+  /**
+   * *Hàm cấn trừ tự động
+   * @param data 
+   */
   autoPay(data: []) {
     let accID = this.form.formGroup.controls.accountID.value;
     this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
@@ -409,15 +443,13 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       }
     })
   }
-  //#endregion
-
-  isDblCLick: boolean = false;
   onDoubleClick(e: any) {
     if (e.rowIndex) {
       this.isDblCLick = true;
       this.grid.gridRef.selectRow(e.rowIndex);
     }
   }
+
   actions(e: any) {
     if (e.type == 'endEdit') {
       if (this.oldSelected && this.oldSelected.length && this.grid.gridRef) {
@@ -427,4 +459,5 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       }
     }
   }
+  //#endregion Function
 }
