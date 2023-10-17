@@ -17,6 +17,7 @@ import {
   ViewType,
   CodxListviewComponent,
   UIComponent,
+  CacheService,
 } from 'codx-core';
 import {
   AccumulationChart,
@@ -233,9 +234,19 @@ export class WalletsComponent extends UIComponent implements OnInit {
     private dt: ChangeDetectorRef,
     private route: ActivatedRoute,
     private tenantStore: TenantStore,
-    private changedr: ChangeDetectorRef
+    private changedr: ChangeDetectorRef,
+    private cacheService: CacheService,
   ) {
     super(injector);
+    this.cacheService.valueList('SYS062').subscribe((res) => {
+      if (res.datas) {
+        this.palettes=[];
+        res.datas.map((x:any)=>{
+          this.palettes.push(x.value);
+          return x;
+        })
+      }
+    });
     this.route.params.subscribe((param) => {
       if (param) this.funcID = param['funcID'];
     });
