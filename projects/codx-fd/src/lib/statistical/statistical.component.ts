@@ -24,6 +24,8 @@ import {
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
 import { DrilldownComponent } from './popup-drilldown/popup-drilldown.component';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-statistical',
@@ -280,7 +282,8 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     private injector: Injector,
     private cacheService: CacheService,
     private modalService: NgbModal,
-    private pageTitle: PageTitleService
+    private pageTitle: PageTitleService,
+    private routerActive: ActivatedRoute,
   ) {
     super(injector);
     this.router.params.subscribe((param) => {
@@ -338,7 +341,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     this.cacheService.valueList('L1422').subscribe((res) => {
       if (res) {
         this.dataStore = res.datas;
-        this.reloadAllChart();
+        //this.reloadAllChart();
       }
     });
 
@@ -363,6 +366,9 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
         type: ViewType.content,
         active: true,
         sameData: false,
+        reportType: 'D',
+        reportView: true,
+        showFilter: true,
         model: {
           panelLeftRef: this.panelLeftRef,
         },
@@ -370,6 +376,29 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     ];
     this.userPermission = this.view.userPermission;
     //this.reloadAllChart();
+    this.pageTitle.setBreadcrumbs([]);
+    this.routerActive.params.subscribe((res) => {
+      if (res.funcID) {
+        this.isLoaded = false;
+        this.reportID=res.funcID;
+        if(this.arrReport && this.arrReport.length){
+          let idx =this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+          if(idx >-1){
+            this.reportItem = this.arrReport[idx];
+            if(this.reportItem.reportID == 'FDD001'){
+              this.typeBallot='0';
+            }
+            if(this.reportItem.reportID == 'FDD002'){
+              this.typeBallot='1';
+            }
+            this.reloadAllChart();
+          }
+
+        }
+
+      }
+    });
+    this.detectorRef.detectChanges();
   }
 
   valueChange(e) {
@@ -420,7 +449,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   changeCardType(data) {
     this.cardType = data.data;
-    this.reloadAllChart();
+    //this.reloadAllChart();
   }
 
   changeTypeCoins(typeBallot) {
@@ -434,7 +463,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     if (this.ballot_RECEIVED == false && this.ballot_SENDED == false)
       typeBallot = '0';
     this.typeBallot = typeBallot;
-    this.reloadAllChart();
+    //this.reloadAllChart();
   }
 
   reloadAllChart() {
@@ -461,6 +490,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   statByBevs:any=[];
   listCardsPerEmp:any=[];
   statByEmps:any=[]
+  subscription: Subscription;
   getDataChartB() {
     this.columnGrids = [
 
@@ -502,7 +532,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     var listBehavior = [];
     var dt = [];
     let i = 0;
-    this.api
+    this.ratingStats=[];
+    this.statByDepts=[];
+    this.listCardsPerBev=[];
+    this.statByBevs=[];
+    this.statByEmps=[];
+    this.statByDepts=[];
+    this.subscription && this.subscription.unsubscribe();
+    this.subscription = this.api
       .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatisticBallot1Async', [
         this.options,
         this.typeBallot,
@@ -726,7 +763,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     if (evt?.fromDate || evt?.toDate) {
       this.fromDateDropdown = new Date(evt.fromDate).toISOString();
       this.toDateDropdown = new Date(evt.toDate).toISOString();
-      this.reloadAllChart();
+      //this.reloadAllChart();
     }
   }
 
@@ -889,27 +926,80 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   doubleClick(e:any){
     let dialogModel = new DialogModel;
-    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','asc'),'',dialogModel)
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'',dialogModel)
   }
 
 
+  arrReport:any=[];
+  reportItem!:any;
+  reportID!:any;
   onActions(e: any) {
-    // if (e.type == 'reportLoaded') {
-    //   this.arrReport = e.data;
-    //   if (this.arrReport.length) {
-    //     let arrChildren: any = [];
-    //     for (let i = 0; i < this.arrReport.length; i++) {
-    //       arrChildren.push({
-    //         title: this.arrReport[i].customName,
-    //         path: 'tm/tmdashboard/TMD?reportID=' + this.arrReport[i].reportID,
-    //       });
-    //     }
-    //     this.pageTitle.setSubTitle(arrChildren[0].title);
-    //     this.pageTitle.setChildren(arrChildren);
-    //     this.codxService.navigate('', arrChildren[0].path);
-    //   }
-    // }
-    // this.isLoaded = false;
+    if (e.type == 'reportLoaded') {
+      this.arrReport = e.data;
+      if (this.arrReport.length) {
+        this.cache
+              .functionList(e.data[0].moduleID+e.data[0].reportType)
+              .subscribe((res: any) => {
+                if (res) {
+                  this.pageTitle.setRootNode(res.customName);
+                  this.pageTitle.setParent({
+                    title: res.customName,
+                    path: res.url,
+                  });
+                  let arrChildren: any = [];
+                  for (let i = 0; i < this.arrReport.length; i++) {
+                    arrChildren.push({
+                      title: this.arrReport[i].customName,
+                      path: 'fd/statistical/' + this.arrReport[i].recID,
+                    });
+                  }
+                  if(!this.reportItem){
+                    if(this.reportID){
+                      let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+                      if(idx>-1){
+                        this.reportItem = this.arrReport[idx];
+                        this.pageTitle.setSubTitle(arrChildren[idx].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        //this.codxService.navigate('', arrChildren[idx].path);
+                        this.funcID= this.reportItem.reportID;
+                      }
+                      else{
+                        this.reportItem = this.arrReport[0];
+                        this.pageTitle.setSubTitle(arrChildren[0].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        this.codxService.navigate('', arrChildren[0].path);
+                        this.funcID= this.arrReport[0].reportID;
+                      }
+                    }
+                    else{
+                      this.reportItem = this.arrReport[0];
+                      this.pageTitle.setSubTitle(arrChildren[0].title);
+                      this.pageTitle.setChildren(arrChildren);
+                      this.codxService.navigate('', arrChildren[0].path);
+                      this.funcID= this.arrReport[0].reportID;
+                    }
+
+
+
+                  }
+                  if(this.reportItem.reportID == 'FDD001'){
+                    this.typeBallot='0';
+                  }
+                  if(this.reportItem.reportID == 'FDD002'){
+                    this.typeBallot='1';
+                  }
+                  this.reloadAllChart();
+                  //this.reloadAllChart();
+                  //this.isLoaded = true
+                }
+              });
+
+      }
+    }
+  }
+
+  filterChange(e:any){
+    debugger
   }
 
   private groupBy(arr: any, key: any) {
