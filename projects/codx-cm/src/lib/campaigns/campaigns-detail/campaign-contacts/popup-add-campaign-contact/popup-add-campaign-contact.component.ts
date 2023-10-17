@@ -98,7 +98,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
         .execSv<any>(
           'CM',
           'ERM.Business.CM',
-          'CampaignsBusiness',
+          'CampaignsContactsBusiness',
           'GetCampaignContactsByTransIDAsync',
           [this.transID, this.objectType]
         )
@@ -124,7 +124,7 @@ export class PopupAddCampaignContactComponent implements OnInit {
       .execSv<any>(
         'CM',
         'ERM.Business.CM',
-        'CampaignsBusiness',
+        'CampaignsContactsBusiness',
         'AddCampaignContactsAsync',
         [lstSaves]
       )

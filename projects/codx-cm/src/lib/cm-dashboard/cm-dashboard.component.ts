@@ -22,7 +22,9 @@ import { GridModels } from '../models/tmpModel';
 import {
   AccumulationChart,
   AccumulationChartComponent,
+  ChartTheme,
   IAccTextRenderEventArgs,
+  IBulletLoadedEventArgs,
   IPointRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
 
@@ -252,12 +254,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isReasonSuscess = true;
   valueFormat: any;
 
+  //bulletchart
+  public minimumBullet: number = 0;
+  public maximumBullet: number = 600;
+  public interval: number = 100;
+  public dataBullet: Object[] = [{ value: 270, target: 250 }];
+  //end
+
   //accumulation chart
   public piedata: Object[] = [
-    { x: 'SUV', y: 25 },
-    { x: 'Car', y: 37 },
-    { x: 'Pickup', y: 15 },
-    { x: 'Minivan', y: 23 },
+    { x: 'Q1/2023', y: 24, text: '29' },
+    { x: 'Q2/2023', y: 23, text: '36' },
+    { x: 'Q3/2023', y: 25, text: '39' },
+    { x: 'Q4/2023', y: 30, text: '42' },
   ];
   public datalabelAc: Object = {
     visible: true,
@@ -271,12 +280,179 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   public endAngle: number = 360;
   public legendSettings: Object = {
     visible: true,
-};
-  public onTextRender(args: IAccTextRenderEventArgs): void {
-    args.text = args.point.y + '%';
-}
+  };
+  toolTipAccumulation: Object = {
+    enable: true,
+    format: '${point.y}%',
+  };
+  onTextRender: Function | any;
   //end
 
+  //top sales performance
+  lstUsers = [
+    {
+      userID: 'ADMIN',
+      userName: 'Lê Phạm Hoài Thương',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'U-0646',
+      userName: 'Nguyễn Thị Bích Vân',
+      lstTitlePerformance: [
+        { value: '1', text: '666' },
+        { value: '2', text: '777' },
+        { value: '3', text: '645000000' },
+        { value: '4', text: '13300000' },
+        { value: '5', text: '131 ngày' },
+      ],
+    },
+    {
+      userID: 'MINHDE',
+      userName: 'Huỳnh Minh Đệ',
+      lstTitlePerformance: [
+        { value: '1', text: '11111' },
+        { value: '2', text: '124444' },
+        { value: '3', text: '4332000000' },
+        { value: '4', text: '143300000' },
+        { value: '5', text: '7 ngày' },
+      ],
+    },
+    {
+      userID: 'U-0892',
+      userName: 'Trần Thị Thùy Nhiên',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'NTTDUNG',
+      userName: 'Nguyễn Thị Thanh Dung',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'NTLOI',
+      userName: 'Nguyễn Thị Lợi',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'ANHQUOC',
+      userName: 'Lê Anh Quốc',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'QUANGCHINH',
+      userName: 'Phan Quang Chính',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'KIMPHUONG',
+      userName: 'Nguyễn Kim Phương',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'KIMPHUONG',
+      userName: 'Nguyễn Kim Phương',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'KIMPHUONG',
+      userName: 'Nguyễn Kim Phương',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'QUANGCHINH',
+      userName: 'Phan Quang Chính',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'QUANGCHINH',
+      userName: 'Phan Quang Chính',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+    {
+      userID: 'QUANGCHINH',
+      userName: 'Phan Quang Chính',
+      lstTitlePerformance: [
+        { value: '1', text: '124' },
+        { value: '2', text: '124' },
+        { value: '3', text: '4000000' },
+        { value: '4', text: '100000' },
+        { value: '5', text: '4 ngày' },
+      ],
+    },
+  ];
+  lstTitlePerformance = [
+    { value: '1', text: 'Khách hàng tiềm năng đã tạo' },
+    { value: '2', text: 'Cơ hội đã tạo' },
+    { value: '3', text: 'Doanh thu đạt được' },
+    { value: '4', text: 'Doanh tu đã mất' },
+    { value: '5', text: 'Trung bình chu kỳ bán hàng' },
+  ];
+  //end
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
@@ -298,6 +474,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.datasDeals = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"},{"panelId":"121.21519762020964252_layout","data":"12"},{"panelId":"131.21519762020964252_layout","data":"13"},{"panelId":"141.21519762020964252_layout","data":"14"}]'
     );
+    this.onTextRender = (args: IAccTextRenderEventArgs) => {
+      let text = args.series['resultData']?.find((x) => x.y == args.point.y);
+      args.text = text?.text + 'M';
+    };
   }
 
   ngAfterViewInit() {
@@ -654,5 +834,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
     e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
+  }
+
+  findItemUser(value, lstTitlePerformance){
+    let title = lstTitlePerformance.find(x => x.value == value);
+    return title;
   }
 }
