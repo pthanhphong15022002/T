@@ -177,8 +177,11 @@ body.tailwind #selected {
 }
 
 .calendar-left {
-  height: calc(100vh - 70px);
+  position: relative;
+  width: 100%;
+  height: calc(100% - 70px);
   padding-bottom: 15px;
+  background-color: #fff;
 }
 
 .nav-item {

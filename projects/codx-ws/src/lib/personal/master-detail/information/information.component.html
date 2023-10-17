@@ -22,7 +22,7 @@
             </div>
             <div class="d-flex align-items-center py-5">
                 <codx-label [default]="label.title2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'"></codx-label>
-                <codx-input type="valuelist" [refValue]="'SYS060'" ></codx-input>
+                <codx-input type="valuelist" [refValue]="'SYS060'" [crrValue]="user?.extends?.TwoFA" ngClass="mx-2" (valueChange)="change2FA($event)"></codx-input>
                 <i class="icon-dialpad mx-2"></i>
             </div>
             <div class="d-flex flex-column py-2">
