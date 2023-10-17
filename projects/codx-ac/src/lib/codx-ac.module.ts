@@ -119,10 +119,6 @@ export const routes: Routes = [
         component: CodxReportViewDetailComponent,
       },
       {
-        path: 'report/detail/:funcID/:params',
-        component: CodxReportViewDetailComponent,
-      },
-      {
         path: 'periodic/:funcID',
         component: PeriodicComponent,
         data: { noReuse: true },
