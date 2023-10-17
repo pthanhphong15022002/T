@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange } from '@angular/core';
 import { UIComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
+import { fmSettledInvoices } from '../../../codx-ac.service';
 
 @Component({
   selector: 'settledinvoices-table',
@@ -12,13 +13,13 @@ export class SettledinvoicesTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
-  @Input() fmSettledInvoices: any;
 
   totalsettledAmt: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn
   totalbalAmt: any = 0; //? tổng tiền số dư tab thông tin hóa đơn
   totalsettledAmt2: any = 0; //? tổng tiền thanh toán tab thông tin hóa đơn,HT
   totalbalAmt2: any = 0; //? tổng tiền số dư tab thông tin hóa đơn,HT
   listSettledInvoices:any;
+  fmSettledInvoices: any = fmSettledInvoices
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector

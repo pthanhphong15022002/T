@@ -16,7 +16,6 @@ import {
   FormModel,
   UIComponent,
 } from 'codx-core';
-import { ISalesInvoicesLine } from '../../interfaces/ISalesInvoicesLine.interface';
 import { SalesinvoiceslinesAddComponent } from '../../salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { SalesInvoiceService, fmSalesInvoicesLines } from '../../salesinvoices.service';
 
@@ -115,7 +114,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   edit(e, data): void {
     console.log('editRow', data);
 
-    const copiedData: ISalesInvoicesLine = { ...data };
+    const copiedData: any = { ...data };
     this.dataService.dataSelected = copiedData;
     this.dataService.edit(copiedData).subscribe(() => {
       const dialogModel = new DialogModel();
@@ -148,7 +147,7 @@ export class TableLineDetailComponent extends UIComponent implements OnChanges {
   copy(e, data): void {
     console.log('copy', data);
 
-    const copiedData: ISalesInvoicesLine = { ...data };
+    const copiedData: any = { ...data };
 
     // copiedData.rowNo = this.salesInvoicesLines.length + 1;
     this.dataService.dataSelected = copiedData;

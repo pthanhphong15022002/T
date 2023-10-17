@@ -252,6 +252,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isReasonSuscess = true;
   valueFormat: any;
 
+  //bulletchart
+  public minimum: number = 0;
+  public maximum: number = 300;
+  public interval: number = 50;
+  public tooltipBullet: Object = {enable: true};
+  public dataBullet: Object[] = [
+      { value: 270, target: 250 }
+    ];
+  //end
   //accumulation chart
   public piedata: Object[] = [
     { x: 'SUV', y: 25 },

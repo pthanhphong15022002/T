@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange } from '@angular/core';
 import { UIComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
+import { fmVATInvoices } from '../../../codx-ac.service';
 
 @Component({
   selector: 'vatinvoices-table',
@@ -12,11 +13,11 @@ export class VatinvoicesTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
-  @Input() fmVatInvoices: any;
 
   totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
   totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
   listVATInvoices:any;
+  fmVATInvoices: any = fmVATInvoices
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector
@@ -50,7 +51,7 @@ export class VatinvoicesTableComponent extends UIComponent {
    */
   getDataDetail(dataItem) {
     this.api
-      .exec('AC', 'VATInvoicesBusiness', 'GetAccountingAsync', [
+      .exec('AC', 'VATInvoicesBusiness', 'LoadDataAsync', [
         dataItem.recID,
       ])
       .pipe(takeUntil(this.destroy$))

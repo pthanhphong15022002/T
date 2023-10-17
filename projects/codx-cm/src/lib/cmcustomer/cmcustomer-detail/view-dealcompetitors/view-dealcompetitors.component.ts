@@ -21,11 +21,13 @@ export class ViewDealcompetitorsComponent implements OnInit {
     formName: 'CMDeals',
     gridViewName: 'grvCMDeals',
     entityName: 'CM_Deals',
+    funcID: 'CM0201'
   };
   fromModelDealCompetitor: FormModel = {
     formName: 'CMDealsCompetitors',
     gridViewName: 'grvCMDealsCompetitors',
     entityName: 'CM_DealsCompetitors',
+    funcID: 'CM02011'
   };
   loaded: boolean;
   lstStep = [];
@@ -34,7 +36,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
   dataValues = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  className = 'DealsBusiness';
+  className = 'DealsCompetitorsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
   colorReasonSuccess: any;
   colorReasonFail: any;
@@ -64,8 +66,6 @@ export class ViewDealcompetitorsComponent implements OnInit {
 
   }
   async ngOnInit() {
-    this.fromModelDealCompetitor = await this.cmSv.getFormModel('CM02011');
-    this.fromModelDeal = await this.cmSv.getFormModel('CM0201');
     this.gridViewSetup = await firstValueFrom(this.cache.gridViewSetup(this.fromModelDeal?.formName, this.fromModelDeal?.gridViewName));
 
     this.getColorReason();
@@ -76,8 +76,7 @@ export class ViewDealcompetitorsComponent implements OnInit {
     this.request.predicates = 'CompetitorID=@0';
     this.request.dataValues = this.competitorID;
     this.request.entityName = 'CM_DealsCompetitors';
-    this.request.funcID = 'CM0201';
-    this.className = 'DealsBusiness';
+    this.request.funcID = 'CM02011';
     this.fetch().subscribe((item) => {
       this.lstDealCompetitor = item;
       if (this.lstDealCompetitor != null && this.lstDealCompetitor.length > 0) {

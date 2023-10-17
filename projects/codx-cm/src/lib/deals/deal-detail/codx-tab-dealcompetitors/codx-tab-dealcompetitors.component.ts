@@ -32,7 +32,12 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   @Input() hidenMF = true;
   lstDealCompetitors = [];
   moreFuncAdd = '';
-  formModel: FormModel;
+  formModel: FormModel = {
+    formName: 'CMDealsCompetitors',
+    gridViewName: 'grvCMDealsCompetitors',
+    entityName: 'CM_DealsCompetitors',
+    funcID: 'CM02011',
+  };
   loaded: boolean;
   lstCompetitorAddress = [];
   request = new DataRequest();
@@ -40,7 +45,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   dataValues = '';
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
-  className = 'DealsBusiness';
+  className = 'DealsCompetitorsBusiness';
   method = 'GetListDealAndDealCompetitorAsync';
   vllStatus = '';
   currentRecID = '';
@@ -64,7 +69,6 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     }
   }
   async ngOnInit() {
-    this.formModel = await this.cmSv.getFormModel('CM02011');
     let dataModel = new FormModel();
     dataModel.formName = 'CMCompetitors';
     dataModel.gridViewName = 'grvCMCompetitors';
@@ -92,7 +96,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
     this.request.predicates = 'DealID=@0';
     this.request.dataValues = this.dealID;
     this.request.entityName = 'CM_DealsCompetitors';
-    this.className = 'DealsBusiness';
+    this.request.funcID = 'CM02011';
     this.fetch().subscribe((item) => {
       this.lstDealCompetitors = item;
       var lstID = this.lstDealCompetitors.map((x) => x.competitorID);
@@ -312,7 +316,9 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
                 this.lstDealCompetitors,
                 'delete'
               );
-              this.changeComeptitor(0);
+              if (this.lstDealCompetitors?.length > 0) {
+                this.changeComeptitor(this.lstDealCompetitors[0]);
+              }
 
               this.notiService.notifyCode('SYS008');
               this.changeDetectorRef.detectChanges();

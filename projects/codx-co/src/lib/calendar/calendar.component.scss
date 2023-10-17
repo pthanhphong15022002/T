@@ -210,3 +210,14 @@ body.tailwind #selected {
   height: calc(100% - 50px);
   overflow: auto;
 }
+
+.h-20{
+  height: 20%;
+}
+.h-80{
+  height: 80%;
+}
+.max-h-50{
+  height: auto;
+  max-height: 50%;
+}

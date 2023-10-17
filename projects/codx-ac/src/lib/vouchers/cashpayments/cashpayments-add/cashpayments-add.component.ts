@@ -41,20 +41,20 @@ import {
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { Subject, Subscription, firstValueFrom, map, mergeMap, switchMap, take, takeUntil } from 'rxjs';
-import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { CodxAcService } from '../../../codx-ac.service';
+import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
-import { VATInvoices } from '../../../models/VATInvoices.model';
 import { RoundService } from '../../../round.service';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 import { E } from '@angular/cdk/keycodes';
 import { AdvancePayment } from '../cashpayments-add-advancepayment/advancepayment.component';
 import { Validators } from '@angular/forms';
+import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
+import { AC_CashPaymentsLines } from '../../../models/AC_CashPaymentsLines.model';
 @Component({
   selector: 'lib-cashpayments-add',
   templateUrl: './cashpayments-add.component.html',
@@ -85,12 +85,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   bankReceiveName: any;
   ownerReceive: any;
   isload:any = true;
-  fmCashpaymentLine: FormModel = {
-    funcID: 'ACT0410',
-    formName: 'CashPaymentsLines',
-    entityName: 'AC_CashPaymentsLines',
-    gridViewName: 'grvCashPaymentsLines',
-  };
+  fmCashpaymentLine: any = fmCashPaymentsLines;
+  fmCashpaymentLineOne: any = fmCashPaymentsLinesOneAccount;
+  fmSettledInvoices:any = fmSettledInvoices;
+  fmVATInvoices:any = fmVATInvoices;
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -621,21 +619,26 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   valueChangeLineVATInvoices(event: any) {
-    switch (event.field.toLowerCase()) {
-      case 'vatid':
-        this.acService
-          .execApi('AC', 'VATInvoicesBusiness', 'ValueChangedAsync', [
-            event.field,
-            event.value,
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              this.vatAccount = res.vatAccount;
-            }
-          });
-        break;
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'goods') {
+      this.formCashPayment.data.unbounds = {
+        itemID: event?.itemData?.ItemID,
+      };
     }
+    this.eleGridVatInvoices.startProcess();
+    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+      'AC_CashPayments',
+      this.formCashPayment.data,
+      oLine,
+      event.field
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.vatAccount = res?.vatAccount;
+        this.detectorRef.detectChanges();
+        this.eleGridVatInvoices.endProcess();
+      }
+    })
   }
 
   /**
@@ -998,7 +1001,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     let rAcctID = null;
     let oOffsetAcct = null;
     let oAccount = null;
-    let oLine : any = new CashPaymentLine();
+    let model = new AC_CashPaymentsLines();
+    let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formCashPayment.data.recID;
     oLine.objectID = this.formCashPayment.data.objectID;
     oLine.reasonID = this.formCashPayment.data.reasonID;
@@ -1279,10 +1283,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm dòng hóa đơn GTGT
    */
   addLineVatInvoices() {
-    let data:any  = new VATInvoices();
-    data.transID = this.formCashPayment.data.recID;
-    data.lineID = this.eleGridCashPayment?.rowDataSelected?.recID;
-    this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
+    let model = new AC_VATInvoices();
+    let oLine = Util.camelizekeyObj(model);
+    oLine.transID = this.formCashPayment.data.recID;
+    oLine.objectID = this.formCashPayment.data.objectID;
+    this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
   }
 
   /**
