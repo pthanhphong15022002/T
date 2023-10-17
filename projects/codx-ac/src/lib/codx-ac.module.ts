@@ -176,6 +176,12 @@ export const routes: Routes = [
       //   data: { noReuse: true },
       // },
       {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+      
+      {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
         data: { noReuse: true },
@@ -243,17 +249,25 @@ export const routes: Routes = [
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
-  {
-    path: '',
-    component: LayloutJournalComponent,
-    children: [
-      {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
-    ],
-  },
+  // {
+  //   path: '',
+  //   component: LayoutComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  // {
+  //   path: '',
+  //   component: LayloutJournalComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //   ],
+  // },
   // {
   //   path: '',
   //   component: LayoutOnlyHeaderComponent,
