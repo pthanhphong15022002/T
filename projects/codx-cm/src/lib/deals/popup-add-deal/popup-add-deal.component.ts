@@ -832,6 +832,7 @@ export class PopupAddDealComponent
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
+        this.deal.status = instance.status;
         this.deal.datas = instance.datas;
         !this.isLoading && this.onEdit();
         this.isLoading && this.editDealForDP();

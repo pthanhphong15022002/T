@@ -1,0 +1,27 @@
+<codx-form
+    [headerText]="'Bảo mật tài khoản'"
+    [subHeaderText]="'Vui lòng nhập mật khẩu để xác nhận bạn sở hữu tài khoản này'"
+    [body]="body"
+    [footer]="footer"
+    [dialog]="dialog"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column py-4">
+        <codx-label fiedName="Password" formModel="" default="Mật khẩu" class="fw-bold"></codx-label>
+        <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
+            <div class="d-flex flex-column flex-grow-1">
+            <codx-input type="password" field="Password" placeholder="Mật khẩu"
+                [class]="'border-0'" (valueChange)="changePw($event)">
+            </codx-input>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex flex-column py-4">
+        <button type="button" class="btn btn-primary" (click)="login()">
+            <codx-label class="fw-normal" fiedName="lblLogin" default="Xác nhận"></codx-label>
+        </button>
+    </div>
+</ng-template>

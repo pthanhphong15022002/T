@@ -1,0 +1,13 @@
+.form-control-lg:before {
+	content: "";
+	width: 4px;
+	height: 26px;
+	background: #005dc7;
+	border-radius: 10px;
+	margin-left: -4px;
+}
+.form-control {
+	background: #f9f9f9 !important;
+	border-radius: 10px !important;
+	border: 0;
+}

@@ -307,7 +307,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.familyMemberObj.pitNumber = evt.component.itemsSelected[0].PITNumber;
     this.familyMemberObj.siRegisterNo =
       evt.component.itemsSelected[0].SIRegisterNo;
-    console.log('this family obj', this.familyMemberObj);
     this.form.formGroup.patchValue(this.familyMemberObj);
     this.cr.detectChanges();
   }

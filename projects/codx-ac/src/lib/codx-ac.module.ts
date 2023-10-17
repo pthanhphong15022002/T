@@ -104,6 +104,8 @@ import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoi
 import { VatinvoicesTableComponent } from './share/ac-tableview/vatInvoices-table/vatinvoices-table.component';
 import { PurchaseinvoicesTableComponent } from './share/ac-tableview/purchaseinvoices-table/purchaseinvoices-table.component';
 import { SalesinvoicesTableComponent } from './share/ac-tableview/salesinvoices-table/salesinvoices-table.component';
+import { MACContentComponent } from './maccontent/maccontent.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 export const routes: Routes = [
   {
     path: '',
@@ -255,6 +257,24 @@ export const routes: Routes = [
   //       path: 'journalnames/:funcID',
   //       component: JournalV2Component,
   //       data: { noReuse: true },
+  // {
+  //   path: '',
+  //   component: LayloutJournalComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '',
+  //   component: LayoutOnlyHeaderComponent,
+  //   children: [
+  //     {
+  //       path: 'MACContent/:funcID',
+  //       component: MACContentComponent,
   //     },
   //   ],
   // },
@@ -349,6 +369,7 @@ export const routes: Routes = [
     VatinvoicesTableComponent,
     PurchaseinvoicesTableComponent,
     SalesinvoicesTableComponent,
+    MACContentComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -45,6 +45,8 @@ import { InformationComponent } from './personal/master-detail/information/infor
 import { CashPaymentsComponent } from 'projects/codx-ac/src/lib/vouchers/cashpayments/cashpayments.component';
 import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-info-detail/employee-info-detail.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LoginSercurityComponent } from './personal/master-detail/information/login-sercurity/login-sercurity.component';
+import { SercurityTOTPComponent } from './personal/master-detail/information/sercurity-totp/sercurity-totp.component';
 
 const routes: Routes = [
   {
@@ -210,7 +212,9 @@ const routes: Routes = [
     ReportComponent,
     RequestReviewComponent,
     BookmarkComponent,
-    InformationComponent
+    InformationComponent,
+    LoginSercurityComponent,
+    SercurityTOTPComponent
   ],
   imports: [
     RouterModule.forChild(routes),
