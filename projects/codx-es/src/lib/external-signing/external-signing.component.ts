@@ -65,7 +65,12 @@ export class ExternalSigningComponent implements OnInit {
   changeConfirmState(event) {
     this.isAfterRender = false;
     this.cr.detectChanges();
-    setTimeout(() => this.loadSF(), 2000);
+    if(event){
+      setTimeout(() => this.loadSF(), 2000);
+    }
+    else{
+      this.loadSF()
+    }
   }
 
   changeActiveOpenPopup(event) {}

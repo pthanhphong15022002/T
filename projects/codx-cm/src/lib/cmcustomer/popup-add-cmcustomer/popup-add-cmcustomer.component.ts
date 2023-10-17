@@ -876,6 +876,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.data.address = null;
       }
     }
+    if(this.form){
+      this.form.formGroup.patchValue(this.data);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   lstAddressDeleteEmit(e) {
@@ -887,7 +891,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
       if (index != -1) {
         var tmp = new BS_AddressBook();
         this.data.address = null;
+        this.data.provinceID = null;
+        this.data.countryID = null;
+        this.data.provinceID = null;
+        this.data.districtID = null;
+        this.data.regionID = null;
+        this.data.wardID = null;
         this.tmpAddress = tmp;
+        if(this.form){
+          this.form.formGroup.patchValue(this.data);
+        }
       }
     }
   }

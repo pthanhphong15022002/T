@@ -1,7 +1,10 @@
 <codx-views #view [views]="views" [autoLoad]="false"> </codx-views>
 
 <ng-template #templateLeft>
-  <div class="page-home page-master p-6 bg-body rounded-4">
+  <div class="container-fluid p-0" *ngIf="isLoaded">
+    <ng-container *ngTemplateOutlet="dashboard2"> </ng-container>
+  </div>
+  <!-- <div class="page-home page-master p-6 bg-body rounded-4">
     <div class="d-flex flex-row w-100">
       <div class="d-flex flex-column w-100" id="erm_content">
         <div class="container d-flex pb-0 pd-r-0">
@@ -211,19 +214,7 @@
                 </div>
               </div>
               <div class="list-performance pt-2">
-                <!-- <codx-listview
-                  #listview
-                  service="FD"
-                  assemblyName="ERM.Business.FD"
-                  className="KudosTransBusiness"
-                  method="GetDataAchievementAsync"
-                  [predicate]="options.predicate"
-                  [dataValue]="options.dataValue"
-                  entityName="FD_KudosTrans"
-                  [itemTemplate]="TemplateList"
-                  [height]="heightList"
-                >
-                </codx-listview> -->
+
                 <div *ngFor="let item of lstRate">
                   <div class="d-flex align-items-center user-card list-item mb-4"
                     (click)="openViewDetailCoins(item?.userID)">
@@ -267,7 +258,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <!-- <ng-template #TemplateList let-item>
@@ -326,3 +317,415 @@
     </div>
   </div>
 </ng-template> -->
+<ng-template #dashboard2>
+  <codx-dashboard
+    #dashboard2
+    [templates]="templates2"
+    [panels]="panels2"
+    [datas]="datas2"
+    [isEditMode]="false"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="container h-100 p-0" id="1">
+    <div class="w-100 h-100 overflow-scroll">
+      <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnCoinsIn"
+              autocomplete="off"
+              checked
+              #eleAsc
+              (change)="changeDir(eleAsc,'8',{chart1: {pie1,gauge1}, chart2:{pie2,gauge2}})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnCoinsIn"
+            ><codx-label default="Xu Nhận" [formName]="'sys'" [name]="'lblReceive'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnCoinsOut"
+              autocomplete="off"
+              #eleDesc
+
+              (change)="changeDir(eleDesc,'8',{chart1: {pie1,gauge1}, chart2:{pie2,gauge2}})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnCoinsOut"
+            ><codx-label default="Xu cho" [formName]="'sys'" [name]="'lblGiveaway'"></codx-label></label>
+          </div>
+        </div>
+      </div>
+      <div class="my-4" style="height: 45%">
+        <ejs-accumulationchart
+          #pie1
+          [id]="'btnCoinsIn'"
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+          [ngClass]="activeTab=='btnCoinsIn' ? '' : 'd-none'"
+          [centerLabel]="{
+            text:
+            sumByProp(coinsIn,'coins') + '<br>Xu Nhận'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="coinsByTypeIn"
+              xName="transName"
+              yName="coins"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+
+        <ejs-accumulationchart
+          #pie2
+          [ngClass]="activeTab=='btnCoinsOut' ? '' : 'd-none'"
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [centerLabel]="{
+            text:
+            sumByProp(coinsOut,'coins') + '<br>Xu Cho'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="coinsByTypeOut"
+              xName="transName"
+              yName="coins"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="h-45 container p-0" #gauge1 [ngClass]="activeTab=='btnCoinsIn' ? '' : 'd-none'">
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of coinsByTypeIn"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.transName }} ({{ ref.coins }})</span>
+              <span>
+                {{
+                  ref.percentage
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    ref.percentage +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-45 container p-0" #gauge2 [ngClass]="activeTab=='btnCoinsOut' ? '' : 'd-none'" >
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of coinsByTypeOut"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.transName }} ({{ ref.coins }})</span>
+              <span>
+                {{
+                  ref.percentage
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    ref.percentage +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="w-100 h-100" id="2">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 },majorGridLines: { width: 0 },
+    }"
+    [palettes]="palettes"
+    [legendSettings]=" { visible: true, position: 'Top' }"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="giftTrans"
+          type="Line"
+          [xName]="'departmentName'"
+          [yName]="'quantity'"
+          name="Số lượng quà"
+          [marker]="circleMarker"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="transferCoins"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'coins'"
+          name="Xu đổi quà"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="container p-0 h-100" id="3">
+    <div class="w-100 h-100">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div>
+        </div>
+      </div> -->
+      <div class="container p-0" style="height: 100%" *ngIf="coinsByEmp.length">
+        <div
+          class="overflow-scroll overflow-x-hidden"
+          style="max-height: 95%; width: 100%"
+
+        >
+          <div
+            class="mx-2 my-4"
+            *ngFor="let data of coinsByEmp "
+          >
+            <div class="row w-100">
+              <div class="col-1 d-flex align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+              </div>
+              <div class="col-11">
+                <div class="w-100 text-start fs-6">
+                  <span class="fw-bold">{{ data.userName}}</span>
+                </div>
+                <div class="w-100 text-start fs-7">
+                  <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
+                </div>
+                <div class="w-100">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentageIn + '%'"
+                      [style.background-color]="'#00cc99'"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageIn) + '%'">
+                      <span>{{data.coinsIn}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100  py-1">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentageOut + '%'"
+                      [style.background-color]="'#1BA3C6'"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageOut) + '%'">
+                      <span>{{data.coinsOut}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark">{{ data.username }}</div>
+                  <div>{{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                  >
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{data.percentage }}%</span
+                    >
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="data.percentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="w-100 h-100" id="4">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 },majorGridLines: { width: 0 },
+    }"
+    [palettes]="palettes"
+    [legendSettings]=" { visible: true, position: 'Top' }"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="coinsIn"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'coins'"
+          name="Xu nhận"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="coinsOut"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'coins'"
+          name="Xu cho"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>

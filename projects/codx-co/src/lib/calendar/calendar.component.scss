@@ -177,8 +177,11 @@ body.tailwind #selected {
 }
 
 .calendar-left {
-  height: calc(100vh - 70px);
+  position: relative;
+  width: 100%;
+  height: calc(100% - 70px);
   padding-bottom: 15px;
+  background-color: #fff;
 }
 
 .nav-item {
@@ -202,4 +205,19 @@ body.tailwind #selected {
 
 .nav-item.disabled {
   cursor: default !important;
+}
+.calendar-left-main{
+  height: calc(100% - 50px);
+  overflow: auto;
+}
+
+.h-20{
+  height: 20%;
+}
+.h-80{
+  height: 80%;
+}
+.max-h-50{
+  height: auto;
+  max-height: 50%;
 }

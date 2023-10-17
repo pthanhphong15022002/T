@@ -32,8 +32,8 @@ codx-view-list-detail .codx-detail-footer {
     co-calendar>codx-views>.container-fluid
     {
         padding: 15px 15px 0px 15px !important;
-        height: 100% !important;
-        overflow: auto;
+        height: calc(100vh - 50px) !important;
+        overflow: hidden;
         .calendar-left
         {
             height: 100% !important;

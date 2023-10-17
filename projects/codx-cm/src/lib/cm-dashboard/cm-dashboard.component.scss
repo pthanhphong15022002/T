@@ -8,7 +8,7 @@
     padding-right: 10px;
     height: 34px;
   }
-  
+
   .owners-top {
     codx-vll {
       width: 100%;
@@ -46,17 +46,17 @@
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
   }
-  
+
   @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
   }
-  
+
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-  
+
   /* Add animation to "page content" */
   .animate-bottom {
     position: relative;
@@ -65,14 +65,14 @@
     animation-name: animatebottom;
     animation-duration: 1s
   }
-  
+
   @-webkit-keyframes animatebottom {
-    from { bottom:-100px; opacity:0 } 
+    from { bottom:-100px; opacity:0 }
     to { bottom:0px; opacity:1 }
   }
-  
-  @keyframes animatebottom { 
-    from{ bottom:-100px; opacity:0 } 
+
+  @keyframes animatebottom {
+    from{ bottom:-100px; opacity:0 }
     to{ bottom:0; opacity:1 }
   }
  /* end css loader */
@@ -115,7 +115,7 @@
 }
 .trackball-control-section ellipse[id*=_Trackball_0] {
   stroke-width: 1 !important;
-}  
+}
 .line-clamp-name {
   display: inline-block!important;
   -webkit-line-clamp: 1;
@@ -130,4 +130,45 @@
 }
 ejs-treemap{
   height: 100% !important;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+}
+
+th,
+td {
+  padding: 2px 7px!important;
+  white-space: nowrap;
+  border-bottom: 1px var(--gray-100) solid !important;
+  height: 32px;
+  vertical-align: middle;
+}
+
+.bg-150 {
+ border-top:2px var(--primary-lighter) solid;
+}
+
+th {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: var(--gray-100)!important;
+}
+
+.user-nav-item{
+  height: 28px;
+}
+.user-nav-item input{
+  text-align: end;
+}
+.user-nav-item.user-nav-active {
+  background-color: var(--primary-lightest);
+  border-left: 2px var(--primary) solid;
+}
+.user-nav-item:hover {
+  background-color: var(--primary-lighter);
 }

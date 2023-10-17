@@ -728,21 +728,130 @@
 
 <!-- Tem TOp sale Tager -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="12" title="">bbbb</div>
+  <div class="w-100 h-100" id="12" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesTargets"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales targets"
+    ></codx-label>
+    <div class="w-100 d-flex justify-content-center">
+      <ejs-bulletchart
+        valueField="value"
+        targetField="target"
+        title="2023"
+        width="1000px"
+        height="80%"
+        [minimum]="minimumBullet"
+        [maximum]="maximumBullet"
+        [interval]="interval"
+        [dataSource]="dataBullet"
+      >
+        <e-bullet-range-collection>
+          <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+          <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+        </e-bullet-range-collection>
+      </ejs-bulletchart>
+    </div>
+    <div class="row">
+      <div class="col-6 d-flex justify-content-center">
+        <ejs-bulletchart
+          valueField="value"
+          targetField="target"
+          title="Q1"
+          width="500px"
+          height="80%"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBullet"
+          [interval]="interval"
+          [dataSource]="dataBullet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+      </div>
+      <div class="col-6 d-flex justify-content-center">
+        <ejs-bulletchart
+          valueField="value"
+          targetField="target"
+          title="Q2"
+          width="500px"
+          height="80%"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBullet"
+          [interval]="interval"
+          [dataSource]="dataBullet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 d-flex justify-content-center">
+        <ejs-bulletchart
+          valueField="value"
+          targetField="target"
+          title="Q3"
+          width="500"
+          height="80%"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBullet"
+          [interval]="interval"
+          [dataSource]="dataBullet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+      </div>
+      <div class="col-6 d-flex justify-content-center">
+        <ejs-bulletchart
+          valueField="value"
+          targetField="target"
+          title="Q4"
+          width="500"
+          height="80%"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBullet"
+          [interval]="interval"
+          [dataSource]="dataBullet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <!-- Tem templateSaker -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="13" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSakerQuarters"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sakes last 4 quarters"
+    ></codx-label>
     <ejs-accumulationchart
       id="container"
       #pie
       style="display: block; width: 92%"
       [legendSettings]="legendSettings"
       [enableSmartLabels]="false"
-      [title]="title"
       (textRender)="onTextRender($event)"
       [enableBorderOnMouseMove]="false"
+      [tooltip]="toolTipAccumulation"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
@@ -766,7 +875,62 @@
 
 <!-- Tem TOp sale performan -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="14" title="">ccc</div>
+  <div class="w-100 h-100" id="14" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalePerformance"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Top sales performance"
+    ></codx-label>
+    <div class="table-container border" style="overflow-x: auto">
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th
+              style="width: 300px !important"
+              style="border-bottom: 1px var(--gray-100) solid !important"
+            ></th>
+            <ng-container *ngFor="let item of lstUsers">
+              <th
+                class="w-50px"
+                style="border-bottom: 1px var(--gray-100) solid !important"
+              >
+                <div class="d-flex justify-content-center">
+                  <codx-imgs
+                    [width]="30"
+                    [objectId]="item?.userID"
+                    objectType="AD_Users"
+                    [numberImages]="5"
+                    class=""
+                  >
+                  </codx-imgs>
+                </div>
+                <div class="mt-1">{{ item?.userName }}</div>
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody *ngFor="let item of lstTitlePerformance">
+          <tr>
+            <td style="border-bottom: 1px var(--gray-100) solid !important">
+              <span class="fw-bold">{{ item.text }}</span>
+            </td>
+            <ng-container *ngFor="let user of lstUsers">
+              <td
+                *ngIf="findItemUser(item.value, user.lstTitlePerformance)"
+                style="border-bottom: 1px var(--gray-100) solid !important"
+              >
+                <div class="text-gray-800 d-flex justify-content-center">
+                  {{ findItemUser(item.value, user.lstTitlePerformance)?.text }}
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #noData>

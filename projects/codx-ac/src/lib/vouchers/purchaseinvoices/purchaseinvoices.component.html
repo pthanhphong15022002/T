@@ -61,8 +61,7 @@
     </div>
     <div style="height: 18px !important" class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1"
-          [innerHTML]="data?.objectID | tranformSubobject : view.formModel"></span>
+        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.objectID}}</span>
         <span *ngIf="
             (data?.objectID == '' || data?.objectID == null) &&
             view?.gridViewSetup

@@ -2158,7 +2158,7 @@ export class CodxShareService {
 
   getEmployeeInfor(userID: string) {
     if (!userID) return of(null);
-    if (!this.user || !this.user.employee) {
+    if (!this.user || this.user.userID != userID || !this.user.employee) {
       return this.api
         .execSv<any>(
           'HR',
@@ -2169,8 +2169,10 @@ export class CodxShareService {
         )
         .pipe(
           map((res: any) => {
-            this.user.employee = res;
-            this.auth.set(this.user);
+            if (this.user && this.user.userID == userID) {
+              this.user.employee = res;
+              this.auth.set(this.user);
+            }
             return res;
           })
         );

@@ -13,6 +13,7 @@ import {
   AlertConfirmInputConfig,
   ButtonModel,
   CacheService,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -28,6 +29,7 @@ import { CodxCmService } from '../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddLeadComponent } from '../leads/popup-add-lead/popup-add-lead.component';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -120,7 +122,7 @@ export class CmCustomerComponent
       }
     });
 
-    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','ReportBeginningDayAsync').subscribe(res => {});
+    // this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','RPAUpdateAddresscAsync',['CM_Customers']).subscribe(res => {});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -209,7 +211,7 @@ export class CmCustomerComponent
     this.view.dataService.methodSave = 'AddCrmAsync';
     this.view.dataService.methodUpdate = 'UpdateCrmAsync';
     this.view.dataService.methodDelete = 'DeleteCmAsync';
-    this.cmSv.initCache().subscribe(res => {});
+    this.cmSv.initCache().subscribe((res) => {});
     this.detectorRef.detectChanges();
   }
 
@@ -315,6 +317,9 @@ export class CmCustomerComponent
       case 'CM0105_2':
         this.convertCustomerToLeads(data);
         break;
+      case 'CM0101_4':
+        this.popupPermissions(data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -355,6 +360,14 @@ export class CmCustomerComponent
         if (type == 11) res.isbookmark = false;
         if (data?.status != '99') {
           switch (res.functionID) {
+            case 'SYS03':
+              if (!data.write) res.disabled = true;
+              break;
+            case 'SYS02':
+              if (!data.delete) res.disabled = true;
+              break;
+            case 'CM0105_5':
+            case 'CM0101_5':
             case 'CM0105_1':
             case 'CM0101_1':
               if (!data.write || data.isBlackList) res.disabled = true;
@@ -383,6 +396,9 @@ export class CmCustomerComponent
               )
                 res.disabled = true;
               break;
+            case 'CM0101_4':
+              if (!data.assign && !data.allowPermit) res.disabled = true;
+              break;
             default:
               break;
           }
@@ -391,6 +407,9 @@ export class CmCustomerComponent
             case 'CM0105_6':
             case 'CM0101_6':
               res.disabled = false;
+              break;
+            case 'CM0101_4':
+              if (!data.assign && !data.allowPermit) res.disabled = true;
               break;
             default:
               res.disabled = true;
@@ -823,6 +842,39 @@ export class CmCustomerComponent
                 });
               }
             });
+        }
+      });
+  }
+
+  //share permissions
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.titleAction,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
         }
       });
   }

@@ -612,7 +612,6 @@ export class PopupAddLeadComponent
             res.modifiedOn = moment(new Date())
             .add(99, 'hours')
             .toDate();
-            this.view.dataService.update(res).subscribe();
             this.dialog.close(res);
             this.notificationsService.notifyCode('CM051');
           }
@@ -622,6 +621,7 @@ export class PopupAddLeadComponent
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
           if (res?.save) {
+       //     this.view.dataService.update(res).subscribe();
             //bua save avata
             (this.dialog.dataService as CRUDService)
               .update(res.save)
