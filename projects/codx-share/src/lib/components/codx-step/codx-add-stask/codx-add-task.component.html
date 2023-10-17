@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <ng-container [ngTemplateOutlet]="addTaskInCM"></ng-container>
+    <!-- <ng-container [ngTemplateOutlet]="addTaskInCM"></ng-container> -->
 
     <div class="form-group" *ngIf="!isActivitie">
       <div class="mb-1 line-clamp line-clamp-1">
@@ -590,7 +590,7 @@
         class="text-primary"
         fiedName=""
         [formModel]="form?.formModel"
-        default="Thuộc loại muốn thêm: "
+        default="Danh mục cần thêm"
       >
       </codx-label>
     </div>
@@ -622,7 +622,7 @@
         [field]="'deals'"
         type="combobox"
         [refValue]="'CMCustomersOfCalendar'"
-        [crrValue]="dataCM?.deals"
+        [crrValue]="dataCM?.customers"
         (valueChange)="changeDataCM($event)"
       ></codx-input>
     </div>

@@ -85,7 +85,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'statistical/:funcID',
+        path: 'dashboard/:funcID',
         component: StatisticalComponent,
       },
       {

@@ -167,7 +167,7 @@ export class CodxCmService {
   countDealCompetiorsByCompetitorID(competitorID) {
     return this.api.exec<any>(
       'CM',
-      'DealsBusiness',
+      'DealsCompetitorsBusiness',
       'CountCompetitorByDealCompetitorAsync',
       [competitorID]
     );
@@ -234,7 +234,7 @@ export class CodxCmService {
   }
 
   addDealCompetitor(dealCompetitor) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'AddDealCompetitorAsync', [
+    return this.api.exec<any>('CM', 'DealsCompetitorsBusiness', 'AddDealCompetitorAsync', [
       dealCompetitor,
     ]);
   }
@@ -242,7 +242,7 @@ export class CodxCmService {
   updateStatusDealsCompetitorAsync(dealCompetitor) {
     return this.api.exec<any>(
       'CM',
-      'DealsBusiness',
+      'DealsCompetitorsBusiness',
       'UpdateStatusDealsCompetitorAsync',
       [dealCompetitor]
     );
@@ -251,7 +251,7 @@ export class CodxCmService {
   updateDealCompetitorAsync(dealCompetitor) {
     return this.api.exec<any>(
       'CM',
-      'DealsBusiness',
+      'DealsCompetitorsBusiness',
       'UpdateDealCompetitorAsync',
       [dealCompetitor]
     );
@@ -260,7 +260,7 @@ export class CodxCmService {
   deleteDealCompetitorAsync(recID) {
     return this.api.exec<any>(
       'CM',
-      'DealsBusiness',
+      'DealsCompetitorsBusiness',
       'DeleteDealCompetitorAsync',
       [recID]
     );
@@ -278,7 +278,7 @@ export class CodxCmService {
   getListDealAndDealCompetitor(competitorID) {
     return this.api.exec<any>(
       'CM',
-      'DealsBusiness',
+      'DealsCompetitorsBusiness',
       'GetListDealAndDealCompetitorAsync',
       [competitorID]
     );
