@@ -1092,7 +1092,7 @@ export class ContractsComponent extends UIComponent {
   popupOwnerRoles(data) {
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
-    formMD.funcID = "CM0201";
+    formMD.funcID = "CM0205";
     formMD.entityName = "CM_Deals";
     formMD.formName = "CMDeals";
     formMD.gridViewName = "grvCMDeals";
