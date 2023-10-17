@@ -975,8 +975,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
           let obj:any={};
           obj.groupName=key;
           obj.quantity=_taskByGroup[key].length;
+          obj.totalHours = this.sumByProp(_taskByGroup[key],'estimated');
           this.taskByGroup.push(obj);
         }
+
         this.doneTasks =this.dataset.filter((x:any)=>x.status=='90');
 
         this.subscription.unsubscribe();
@@ -987,21 +989,44 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
     }
   }
-
-  changeDir(ele:any,templateID:string){
-    if(this.tasksDoneOntimeEmployees.length && ele){
-      let ds = [...this.tasksDoneOntimeEmployees]
-      this.tasksDoneOntimeEmployees = [];
-      this.detectorRef.detectChanges();
-      if(ele.id=='btnLowestRadio'){
-        this.tasksDoneOntimeEmployees= ds.sort((a:any,b:any)=>a.percentage - b.percentage)
-      }
-      else{
-        this.tasksDoneOntimeEmployees= ds.sort((a:any,b:any)=>b.percentage - a.percentage)
-      }
-      this.tasksDoneOntimeEmployees = [... this.tasksDoneOntimeEmployees]
-      this.detectorRef.detectChanges();
+  activePane:string="btnHighestRadio"
+  changeDir(ele:any,templateID:string,obj:any){
+    if(ele.id == this.activePane) return;
+    this.activePane = ele.id;
+    if(ele.id == 'btnHighestRadio' && Object.keys(obj).length){
+      obj.paneHighest.classList.contains('d-none') && obj.paneHighest.classList.remove('d-none');
+      !obj.paneLowest.classList.contains('d-none') && obj.paneLowest.classList.add('d-none');
     }
+    if(ele.id == 'btnLowestRadio' && Object.keys(obj).length){
+      obj.paneLowest.classList.contains('d-none') && obj.paneLowest.classList.remove('d-none');
+      !obj.paneHighest.classList.contains('d-none') && obj.paneHighest.classList.add('d-none');
+    }
+      this.detectorRef.detectChanges();
+  }
+
+  activetab:string = 'groupByquantity'
+  changeGroupType(ele:any,obj:any){
+    if(ele.id == this.activetab) return;
+    this.activetab = ele.id;
+    if(ele.id == 'groupByquantity' && Object.keys(obj).length){
+      !obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.add('d-none');
+      !obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.add('d-none');
+
+      obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.remove('d-none');
+      obj.chart1.pie1.refresh();
+      obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.remove('d-none');
+
+    }
+    if(ele.id == 'groupBytime' && Object.keys(obj).length){
+      !obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.add('d-none');
+      !obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.add('d-none');
+
+      obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.remove('d-none');
+      obj.chart2.pie2.refresh();
+      obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.remove('d-none');
+
+    }
+      this.detectorRef.detectChanges();
   }
 
   random_bg_color() {

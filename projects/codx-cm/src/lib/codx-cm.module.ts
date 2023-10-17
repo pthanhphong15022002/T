@@ -8,10 +8,14 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
   AccumulationChartAllModule,
+  AccumulationChartModule,
+  AccumulationDataLabelService,
   AccumulationTooltipService,
   BubbleSeriesService,
+  BulletChartModule,
   ChartAllModule,
   ChartModule,
+  PieSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { SharedModule } from '@shared/shared.module';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
@@ -291,6 +295,8 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     TreeMapAllModule,
     ChartModule,
+    BulletChartModule,
+    AccumulationChartModule
   ],
   exports: [RouterModule],
   providers: [
@@ -298,6 +304,8 @@ const T_Component: Type<any>[] = [
     CategoryService,
     LineSeriesService,
     BubbleSeriesService,
+    PieSeriesService,
+    AccumulationDataLabelService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

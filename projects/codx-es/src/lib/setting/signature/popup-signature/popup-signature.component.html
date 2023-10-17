@@ -125,7 +125,7 @@
               *ngFor="let font of vllFontStyle; let index = index"
             >
               <span
-                class="btn btn-outline border d-flex flex-stack active p-3 mb-3"
+                class="btn btn-outline border d-flex align-items-center flex-stack active p-3 mb-3"
                 (click)="changeSelectedFont(font.text, index)"
               >
                 <codx-label
@@ -134,7 +134,7 @@
                   [default]="data?.fullName"
                   [style]="'font-family: ' + font.text + ';'"
                 ></codx-label>
-                <span class="me-3">
+                <span class="me-3 mt-n5">
                   <codx-input
                     type="radio"
                     name="radio"

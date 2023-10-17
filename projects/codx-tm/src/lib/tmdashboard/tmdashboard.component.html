@@ -504,20 +504,22 @@
           <input
             class="btn-check"
             type="radio"
-            id="left1"
+            id="groupByquantity"
             name="align1"
-            value="left"
+            #ele1
             checked
+            (change)="changeGroupType(ele1,{chart1:{pie1,gauge1},chart2:{pie2,gauge2}})"
           />
-          <label class="btn btn-outline-primary" for="left1">Số lượng</label>
+          <label class="btn btn-outline-primary" for="groupByquantity">Số lượng</label>
           <input
             class="btn-check"
             type="radio"
-            id="center1"
+            id="groupBytime"
             name="align1"
-            value="center"
+            #ele2
+            (change)="changeGroupType(ele2,{chart1:{pie1,gauge1},chart2:{pie2,gauge2}})"
           />
-          <label class="btn btn-outline-primary" for="center1">Thời gian</label>
+          <label class="btn btn-outline-primary" for="groupBytime">Thời gian</label>
         </div>
       </div>
       <div id="column" style="height: 40%">
@@ -531,6 +533,7 @@
             getTaskGroups().length + '<br>công việc'
           }"
           [legendSettings]="{ visible: false }"
+          [ngClass]="activetab=='groupByquantity' ?'' : 'd-none'"
 
         >
           <e-accumulation-series-collection>
@@ -549,8 +552,39 @@
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
+
+
+
+        <ejs-accumulationchart
+          #pie2
+          class="d-block"
+          style="height: 100%; width: 100%"
+          [tooltip]="tooltip"
+          [centerLabel]="{
+            text:
+            sumByProp(getTaskGroups(),'estimated') + '<br>Giờ'
+          }"
+          [legendSettings]="{ visible: false }"
+          [ngClass]="activetab=='groupBytime' ?'' : 'd-none'"
+
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataLabel]="dataLabel"
+              [dataSource]="taskByGroup"
+              xName="groupName"
+              yName="totalHours"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explodeOffset]="'10%'"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
       </div>
-      <div class="h-50 position-relative">
+      <div class="h-45 position-relative" #gauge1 [ngClass]="activetab=='groupByquantity' ?'' : 'd-none'">
         <div
           class="position-absolute overflow-x-hidden"
           style="max-height: 100%; width: 100%"
@@ -566,7 +600,7 @@
                 </div>
                 <div>
                   <span>{{
-                    toFixed((data.quantity/dataset.length)*100)
+                    toFixed((data.quantity/getTaskGroups().length)*100)
                   }}</span
                   ><span>% </span>
                 </div>
@@ -576,7 +610,7 @@
                   <div
                     class="rounded-4 h-5px"
                     role="progressbar"
-                    [style.width]="(data.quantity/dataset.length)*100 + '%'"
+                    [style.width]="(data.quantity/getTaskGroups().length)*100 + '%'"
                     [style.background-color]="'#3699ff'"
                   ></div>
                 </div>
@@ -585,6 +619,43 @@
           </div>
         </div>
       </div>
+      <div class="h-45 position-relative" #gauge2 [ngClass]="activetab=='groupBytime' ?'' : 'd-none'" >
+        <div
+          class="position-absolute overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div *ngFor="let data of taskByGroup" class="mt-4">
+            <div class="mx-2 my-5">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <span>{{ data.groupName }}</span>
+                  <span>&nbsp;(</span>
+                  <span>{{ data.totalHours }}</span>
+                  <span>)</span>
+                </div>
+                <div>
+                  <span>{{
+                    toFixed((data.totalHours/sumByProp(getTaskGroups(),'estimated'))*100)
+                  }}</span
+                  ><span>% </span>
+                </div>
+              </div>
+              <div class="d-flex align-items-center min-w-200px">
+                <div class="h-5px w-100 bg-gray-200 rounded-4">
+                  <div
+                    class="rounded-4 h-5px"
+                    role="progressbar"
+                    [style.width]=" (data.totalHours/sumByProp(getTaskGroups(),'estimated'))*100 + '%'"
+                    [style.background-color]="'#3699ff'"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </ng-template>
@@ -874,7 +945,7 @@
               autocomplete="off"
 
               #eleAsc
-              (change)="changeDir(eleAsc,'8')"
+              (change)="changeDir(eleAsc,'8',{paneHighest,paneLowest})"
             />
             <label
               class="btn btn-outline-primary"
@@ -889,7 +960,7 @@
               autocomplete="off"
               #eleDesc
               checked
-              (change)="changeDir(eleDesc,'8')"
+              (change)="changeDir(eleDesc,'8',{paneHighest,paneLowest})"
             />
             <label
               class="btn btn-outline-primary"
@@ -899,15 +970,68 @@
           </div>
         </div>
       </div>
-      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
+      <div class="container p-0" style="height: 90%" >
         <div
           class="w-100 h-100 overflow-scroll"
           style="max-height: 95%; width: 100%"
-
+          [ngClass]="activePane=='btnHighestRadio' ? '' : 'd-none'"
+          #paneHighest
         >
           <div
             class="mx-2"
             *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'onTimePercentage','desc')"
+          >
+            <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.employeeID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.employeeID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark">{{ data.employeeName }}</div>
+                  <div>{{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                  >
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{ toFixed(data.onTimePercentage) }}%</span
+                    >
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="data.onTimePercentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="7"
+                    [progressThickness]="7"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="w-100 h-100 overflow-scroll"
+          style="max-height: 95%; width: 100%"
+          [ngClass]="activePane=='btnLowestRadio' ? '' : 'd-none'"
+          #paneLowest
+        >
+          <div
+            class="mx-2"
+            *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'onTimePercentage','asc')"
           >
             <div class="d-flex justify-content-between">
               <div class="d-flex justify-content-between align-items-center">
@@ -1567,7 +1691,8 @@
         enable: true
       }"
       [centerLabel]="{
-        text: getProjectsTasks().length + '<br>công việc'
+        text: getProjectsTasks().length + '<br>công việc',
+        textStyle: {size:'20px',fontWeight:600}
       }"
       (pointClick)="hehe($event)"
     >
@@ -1605,7 +1730,7 @@
               autocomplete="off"
 
               #eleAsc
-              (change)="changeDir(eleAsc,'8')"
+              (change)="changeDir(eleAsc,'8',{paneHighest,paneLowest})"
             />
             <label
               class="btn btn-outline-primary"
@@ -1620,7 +1745,7 @@
               autocomplete="off"
               #eleDesc
               checked
-              (change)="changeDir(eleDesc,'8')"
+              (change)="changeDir(eleDesc,'8',{paneHighest,paneLowest})"
             />
             <label
               class="btn btn-outline-primary"
@@ -1630,11 +1755,12 @@
           </div>
         </div>
       </div>
-      <div class="container p-0" style="height: 90%" *ngIf="tasksDoneOntimeEmployees.length">
+      <div class="container p-0" style="height: 90%" >
         <div
           class="overflow-scroll overflow-x-hidden"
           style="max-height: 95%; width: 100%"
-
+          #paneHighest
+          [ngClass]="activePane=='btnHighestRadio' ? '' : 'd-none'"
         >
           <div
             class="mx-2"
@@ -1681,6 +1807,58 @@
             </div>
           </div>
         </div>
+
+        <div
+        class="overflow-scroll overflow-x-hidden"
+        style="max-height: 95%; width: 100%"
+        #paneLowest
+        [ngClass]="activePane=='btnLowestRadio' ? '' : 'd-none'"
+      >
+        <div
+          class="mx-2"
+          *ngFor="let data of sortByProp(tasksDoneOntimeEmployees,'onTimePercentage','asc')"
+        >
+          <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between align-items-center">
+              <codx-img
+                *ngIf="data.employeeID"
+                [objectType]="'AD_Users'"
+                [objectId]="data.employeeID"
+              ></codx-img>
+              <div class="ms-2">
+                <div class="text-dark">{{ data.employeeName }}</div>
+                <div>{{ data.departmentName }}</div>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-container-align position-relative">
+                <div
+                  class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                >
+                  <span class="fw-bold" style="font-size: 0.4vw"
+                    >{{ toFixed(data.onTimePercentage) }}%</span
+                  >
+                </div>
+                <ejs-progressbar
+                  #annotation1
+                  [id]="newGuid()"
+                  [type]="'Circular'"
+                  [maximum]="100"
+                  [minimum]="0"
+                  [value]="data.onTimePercentage"
+                  [width]="'65'"
+                  [height]="'65'"
+                  [trackThickness]="10"
+                  [progressThickness]="10"
+                  [progressColor]="'#FF4500'"
+                  [animation]="animation"
+                >
+                </ejs-progressbar>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </div>
