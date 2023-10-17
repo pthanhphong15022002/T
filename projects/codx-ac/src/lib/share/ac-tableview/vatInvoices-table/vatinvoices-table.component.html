@@ -86,7 +86,7 @@
               <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
                 <span #invoiceDate [innerHTML]="
                     item?.invoiceDate
-              | formatvalue : fmVatInvoices : 'invoiceDate' : invoiceDate | async
+              | formatvalue : fmVATInvoices : 'invoiceDate' : invoiceDate | async
           " class="text-gray-600"></span>
               </ng-container>
             </div>
@@ -95,7 +95,7 @@
             <div class="d-flex align-items-center justify-content-start ps-3">
               <ng-container *ngIf="(item.objectID != null && item.objectID != '')">
                 <span #objectID [innerHTML]="
-                    item?.objectID | formatvalue : fmVatInvoices : 'objectID' : objectID | async"
+                    item?.objectID | formatvalue : fmVATInvoices : 'objectID' : objectID | async"
                   class="text-gray-600"></span>
               </ng-container>
             </div>
@@ -110,7 +110,7 @@
             <div class="d-flex align-items-center justify-content-start ps-3">
               <ng-container *ngIf="(item.vatid != null && item.vatid != '')">
                 <span #vatid [innerHTML]="
-                    item?.vatid | formatvalue : fmVatInvoices : 'vatid' : vatid | async"
+                    item?.vatid | formatvalue : fmVATInvoices : 'vatid' : vatid | async"
                   class="text-gray-600"></span>
               </ng-container>
             </div>

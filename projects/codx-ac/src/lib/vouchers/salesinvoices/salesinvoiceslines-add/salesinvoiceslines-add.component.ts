@@ -19,7 +19,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
 import { NameByIdPipe } from '../../../pipes/name-by-id.pipe';
-import { ISalesInvoicesLine } from '../interfaces/ISalesInvoicesLine.interface';
 import { SalesInvoiceService } from '../salesinvoices.service';
 import { toCamelCase } from '../../../utils';
 
@@ -45,8 +44,8 @@ export class SalesinvoiceslinesAddComponent
   @ViewChild('idiM6') idiM6: CodxInputComponent;
   @ViewChild('idiM7') idiM7: CodxInputComponent;
 
-  line: ISalesInvoicesLine = {} as ISalesInvoicesLine;
-  lines: ISalesInvoicesLine[] = [];
+  line: any;
+  lines: any;
   index: number;
   isEdit: boolean = false;
   gvs: any;
@@ -231,7 +230,7 @@ export class SalesinvoiceslinesAddComponent
         if (closeAfterSave) {
           this.dialogRef.close(!this.isEdit ? this.lines : this.line);
         } else {
-          this.dataService.addNew().subscribe((res: ISalesInvoicesLine) => {
+          this.dataService.addNew().subscribe((res: any) => {
             console.log(res);
 
             res.rowNo = this.index + 1;

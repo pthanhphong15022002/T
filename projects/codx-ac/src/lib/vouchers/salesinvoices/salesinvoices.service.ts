@@ -13,7 +13,6 @@ import { lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
-import { ISalesInvoice } from './interfaces/ISalesInvoice.interface';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
@@ -60,7 +59,7 @@ export class SalesInvoiceService {
     });
   }
 
-  async onInitMFAsync(mfs: any, data: ISalesInvoice): Promise<void> {
+  async onInitMFAsync(mfs: any, data: any): Promise<void> {
     if (!this.journal) {
       this.journal = await lastValueFrom(
         this.journalService.getJournal$(data.journalNo)
@@ -123,7 +122,7 @@ export class SalesInvoiceService {
 
   onClickMF(
     e: any,
-    data: ISalesInvoice,
+    data: any,
     funcName: string,
     formModel: FormModel,
     dataService: CRUDService
@@ -156,12 +155,12 @@ export class SalesInvoiceService {
     }
   }
 
-  delete(data: ISalesInvoice, dataService: CRUDService): void {
+  delete(data: any, dataService: CRUDService): void {
     dataService.delete([data], true).subscribe();
   }
 
   edit(
-    data: ISalesInvoice,
+    data: any,
     funcName: string,
     formModel: FormModel,
     dataService
@@ -189,7 +188,7 @@ export class SalesInvoiceService {
   }
 
   copy(
-    data: ISalesInvoice,
+    data: any,
     funcName: string,
     formModel: FormModel,
     dataService: CRUDService
@@ -246,7 +245,7 @@ export class SalesInvoiceService {
 
   submitForApproval(
     e: any,
-    data: ISalesInvoice,
+    data: any,
     formModel: FormModel,
     dataService: CRUDService
   ): void {
@@ -287,7 +286,7 @@ export class SalesInvoiceService {
 
   cancelApprovalRequest(
     e: any,
-    data: ISalesInvoice,
+    data: any,
     formModel: FormModel,
     dataService: CRUDService
   ): void {

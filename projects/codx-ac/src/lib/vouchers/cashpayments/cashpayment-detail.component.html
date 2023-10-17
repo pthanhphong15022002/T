@@ -201,7 +201,7 @@
 <!-- Start: template Tab SettledInvoices-->
 <ng-template #tabSettledInvoices>
     <ng-container *ngIf="itemSelected">
-      <settledinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr" [fmSettledInvoices]="fmSettledInvoices">
+      <settledinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
       </settledinvoices-table>
     </ng-container>
 </ng-template>
@@ -210,7 +210,7 @@
 <!-- Start: template Tab VatInvoices-->
 <ng-template #tabVatInvoices>
     <ng-container *ngIf="itemSelected?.listVATInvoices">
-        <vatinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr" [fmVatInvoices]="fmVatInvoices"></vatinvoices-table>
+        <vatinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></vatinvoices-table>
       </ng-container>
 </ng-template>
 <!-- End: template Tab VatInvoices-->

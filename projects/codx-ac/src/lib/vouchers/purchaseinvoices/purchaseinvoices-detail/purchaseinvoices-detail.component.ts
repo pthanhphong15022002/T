@@ -1,5 +1,6 @@
 import {
   AfterViewChecked,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
@@ -25,12 +26,6 @@ import {
   fmPurchaseInvoicesLines,
 } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
-import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
-import {
-  SumFormat,
-  TableColumn,
-} from '../../salesinvoices/models/TableColumn.model';
-import { IPurchaseInvoiceLine } from '../../../models/PurchaseInvoiceLine.model';
 import { PurchaseInvoiceService } from '../purchaseinvoices.service';
 import { Subject, reduce, takeUntil } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -43,6 +38,7 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
   selector: 'purchaseinvoices-detail',
   templateUrl: './purchaseinvoices-detail.component.html',
   styleUrls: ['./purchaseinvoices-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PurchaseinvoicesDetailComponent extends UIComponent {
   //#region Constructor
@@ -58,27 +54,6 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
   @Input() gridViewSetup: any;
   @ViewChild('elementTabDetail') elementTabDetail: TabComponent; //? element object các tab detail (hạch toán,thông tin hóa đơn,hóa đơn GTGT)
 
-  fmPurchaseInvoicesLines: FormModel = fmPurchaseInvoicesLines;
-  totalAcctDR: any = 0; //? tổng tiền nợ tab hạch toán
-  totalAcctCR: any = 0; //? tông tiền có tab hạch toán
-  totalTransAmt: any = 0; //? tổng tiền số tiền,NT tab hạch toán
-  totalVatBase: any = 0; //? tổng tiền số tiền tab hóa đơn GTGT
-  totalVatAtm: any = 0; //? tổng tiền thuế tab hóa đơn GTGT
-  totalNetAmt:any = 0; //? tổng thành tiền tab thông tin hóa đơn
-  totalQuantity:any = 0; //? tổng số lượng tab thông tin hóa đơn
-  totalVatAtmPur: any = 0; //? tổng tiền thuế tab thông tin hóa đơn
-  fmAcctTrans: FormModel = {
-    //? formModel của acctTrans
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityName: 'AC_AcctTrans',
-  };
-  fmVatInvoices: FormModel = {
-    //? formModel của vatInvoices
-    formName: 'VATInvoices',
-    gridViewName: 'grvVATInvoices',
-    entityName: 'AC_VATInvoices',
-  };
   itemSelected: any;
   dataCategory: any; //? data của category
   optionSidebar: SidebarModel = new SidebarModel();
@@ -572,6 +547,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
     }
     return;
   }
+  
   /**
    * *Hàm get data chi tiết
    * @param data
@@ -585,7 +561,6 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         this.itemSelected = res;
-        this.setTotalRecord();
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
@@ -634,41 +609,6 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
       this.journal,
       action,
     ]);
-  }
-
-  /**
-   * Hàm tính tổng các số tiền của các tab detail(hạch toán,thông tin hóa đơn,hóa đơn GTGT)
-   */
-  setTotalRecord() {
-    this.totalAcctDR = 0;
-    this.totalAcctCR = 0;
-    this.totalTransAmt = 0;
-    this.totalVatAtm = 0;
-    this.totalVatBase = 0;
-    this.totalQuantity = 0;
-    this.totalNetAmt = 0;
-
-    if (this.itemSelected?.listPurchaseInvoicesLine && this.itemSelected?.listPurchaseInvoicesLine.length > 0) {
-      this.totalQuantity = this.itemSelected?.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.quantity,0);
-      this.totalNetAmt = this.itemSelected?.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.netAmt,0);
-      this.totalVatAtmPur = this.itemSelected?.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.vatAmt,0);
-    }
-
-    if (this.itemSelected?.listAcctrants && this.itemSelected?.listAcctrants.length > 0) {
-      if (this.itemSelected.currencyID == this.baseCurr) {
-        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
-        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt,0);
-      }else{
-        this.totalAcctDR = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt2,0);
-        this.totalAcctCR = this.itemSelected?.listAcctrants.filter(x => x.crediting == true).reduce((sum, data:any) => sum + data?.transAmt2,0);
-        this.totalTransAmt = this.itemSelected?.listAcctrants.filter(x => x.crediting == false).reduce((sum, data:any) => sum + data?.transAmt,0);
-      }
-    }
-
-    if (this.itemSelected?.listVATInvoices && this.itemSelected?.listVATInvoices.length > 0) {
-      this.totalVatAtm = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatAmt,0);
-      this.totalVatBase = this.itemSelected?.listVATInvoices.reduce((sum, data:any) => sum + data?.vatBase,0);
-    }
   }
 
   //#endregion
