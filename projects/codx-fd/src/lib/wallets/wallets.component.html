@@ -620,10 +620,12 @@
                       [style.width]="data.percentageIn + '%'"
                       [style.background-color]="'#00cc99'"
                     ></div>
-                    <div class="text-start ms-3 fw-bold fs-8 float-end "  [style.width]="(100-data.percentageIn) + '%'">
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageIn) + '%'">
                       <span>{{data.coinsIn}}</span>
                     </div>
                   </div>
+                </div>
+                <div class="w-100  py-1">
                   <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
                     <div
                       class="h-10px rounded-4 float-start "
@@ -631,7 +633,7 @@
                       [style.width]="data.percentageOut + '%'"
                       [style.background-color]="'#1BA3C6'"
                     ></div>
-                    <div class="text-start ms-3 fw-bold fs-8 float-end "  [style.width]="(100-data.percentageIOut) + '%'">
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageOut) + '%'">
                       <span>{{data.coinsOut}}</span>
                     </div>
                   </div>
@@ -700,6 +702,7 @@
         majorTickLines: { width: 0 }, lineStyle: { width: 0 }
     }"
     [palettes]="palettes"
+    [legendSettings]=" { visible: true, position: 'Top' }"
     >
       <e-series-collection>
         <e-series
