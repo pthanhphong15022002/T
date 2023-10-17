@@ -590,7 +590,7 @@
 </ng-template>
 <!-- template list employeee -->
 <ng-template #tmpViewEmployee let-employees>
-  <div ngbDropdown class="symbol-more" [container]="'body'">
+  <div *ngIf="employees?.length > 0"  ngbDropdown class="symbol-more" [container]="'body'">
     <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
       type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
       style="padding: 0 !important ; margin-left: 0 !important; border: none">

@@ -11,6 +11,7 @@ import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -100,6 +101,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   permission = '';
   settings = {};
 
+  listOrgUnit:any[] = [];
   org = [
     { name: 'DXN - Nhóm phát triển phần mềm' },
     { name: 'Nhóm BA' },
@@ -262,6 +264,31 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  // get lits HR_OrganizationUnits
+  getDataOrgUnit(){
+    if(this.listOrgUnit?.length > 0)
+      return;
+    this.cache.functionList('HRT01')
+    .subscribe((func:any) => {
+      if(func)
+      {
+        var requestOrgUnit = new DataRequest();
+        requestOrgUnit.funcID = 'HRT01';
+        requestOrgUnit.formName  = func.formName;
+        requestOrgUnit.gridViewName  = func.gridViewName;
+        requestOrgUnit.entityName  = func.entityName;
+        requestOrgUnit.entityPermission = func.entityPermission;
+        requestOrgUnit.predicate = func.predicate;
+        requestOrgUnit.dataValue = func.dataValue;
+        requestOrgUnit.pageLoading = false;
+        this.api.execSv('HR','ERM.Business.HR','HRBusiness','GetOrgUnitByCOAsync',[requestOrgUnit])
+        .subscribe((res:any) => {
+          this.listOrgUnit = res;
+          this.detectorRef.detectChanges();
+        });
+      }
+    });
+  }
   firstime() {
     console.log('firsttime start end' + this.cellStart + ' ' + this.cellEnd);
 
@@ -546,6 +573,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   changeCalendarType(type) {
     this.calendarType = type;
+    if(type=="COT01") // công ty
+    {
+      this.getDataOrgUnit();
+    }
     this.getCalendarData({
       value: this.calendarType,
     });

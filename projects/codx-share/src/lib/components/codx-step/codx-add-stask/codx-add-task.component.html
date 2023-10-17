@@ -97,6 +97,8 @@
       </div>
     </div>
 
+    <ng-container [ngTemplateOutlet]="addTaskInCM"></ng-container>
+
     <div class="form-group" *ngIf="!isActivitie">
       <div class="mb-1 line-clamp line-clamp-1">
         <codx-label
@@ -579,6 +581,128 @@
     [mail]="user.email"
     [isManager]="true"
   ></codx-meeting-online>
+</ng-template>
+
+<ng-template #addTaskInCM>
+  <div class="form-group" *ngIf="true">
+    <div class="mb-1 line-clamp line-clamp-1">
+      <codx-label
+        class="text-primary"
+        fiedName=""
+        [formModel]="form?.formModel"
+        default="Thuộc loại muốn thêm: "
+      >
+      </codx-label>
+    </div>
+    <div>
+      <codx-input
+        [formModel]="dialog.formModel"
+        field=""
+        type="valuelist"
+        refValue="CRM060"
+        (valueChange)="changeType($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div [ngClass]="typeCM == '1' ? 'd-inline' : 'd-none'">
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="'Khách hàng'"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'deals'"
+        type="combobox"
+        [refValue]="'CMCustomersOfCalendar'"
+        [crrValue]="dataCM?.deals"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+    <div [ngClass]="typeCM == '3' ? 'd-inline' : 'd-none'">
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="'Tiềm năng'"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'leads'"
+        type="combobox"
+        [refValue]="'CMLeadsOfCalendar'"
+        [crrValue]="dataCM?.leads"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+    <div [ngClass]="typeCM == '5' ? 'd-inline' : 'd-none'">
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="'Cơ hội'"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'deals'"
+        type="combobox"
+        [refValue]="'CMDealsOfCalendar'"
+        [crrValue]="dataCM?.deals"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+    <div [ngClass]="typeCM == '7' ? 'd-inline' : 'd-none'">
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="'Hợp đồng'"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'contracts'"
+        type="combobox"
+        [refValue]="'CMContractsOfCalendar'"
+        [crrValue]="dataCM?.contracts"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+    <div [ngClass]="typeCM == '9' ? 'd-inline' : 'd-none'">
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="'Sự cố'"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'cases'"
+        type="combobox"
+        [refValue]="'CMCasesOfCalendar'"
+        [crrValue]="dataCM?.cases"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+  </div>
 </ng-template>
 <!-- End cuoc hop -->
 <!-- Gui mail -->

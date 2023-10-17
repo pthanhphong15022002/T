@@ -20,6 +20,7 @@
           (created)="firstime()"
         >
         </ejs-calendar>
+        <!--  -->
         <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
           <div ngbAccordionItem [collapsed]="false">
             <h2 ngbAccordionHeader>
@@ -31,116 +32,129 @@
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
-                      <i class="icon-i-bar-chart-steps icon-20"></i>
-                      <div class="ms-2">Sơ đồ tổ chức</div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <input
-                        class="form-check-input"
-                        style="width: 1rem; height: 1rem"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="flexRadioDefault1"
-                        checked
-                      />
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <i class="icon-i-bar-chart-steps icon-20"></i>
+                        <div class="ms-2">Sơ đồ tổ chức</div>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <input
+                          class="form-check-input"
+                          style="width: 1rem; height: 1rem"
+                          type="radio"
+                          name="flexRadioDefault"
+                          id="flexRadioDefault1"
+                          checked
+                        />
+                      </div>
                     </div>
                   </div>
+                </button>
+              </h2>
+              <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                  <ng-template>
+                    <div class="px-5 py-2" *ngFor="let data of org">
+                      <div class="ms-5">{{ data.name }}</div>
+                    </div>
+                  </ng-template>
                 </div>
               </button>
             </h2>
             <div ngbAccordionCollapse>
               <div ngbAccordionBody>
-                <ng-template>
-                  <div class="px-5 py-2" *ngFor="let data of org">
-                    <div class="ms-5">{{ data.name }}</div>
+                <ng-container *ngIf="listOrgUnit?.length > 0">
+                  <div class="px-5 py-2" *ngFor="let item of listOrgUnit">
+                    <div class="ms-5">{{ item.orgUnitName }}</div>
                   </div>
-                </ng-template>
+                </ng-container>
               </div>
             </div>
-          </div>
-          <div ngbAccordionItem [disabled]="true">
-            <h2 ngbAccordionHeader>
-              <button ngbAccordionButton>
-                <div class="w-100 p-2">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
+            <div ngbAccordionItem [disabled]="true">
+              <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>
+                  <div class="w-100 p-2">
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
-                      <i class="icon-supervisor_account icon-20"></i>
-                      <div class="ms-2">Nhóm chức năng</div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                      <input
-                        class="form-check-input"
-                        style="width: 1rem; height: 1rem"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="flexRadioDefault1"
-                        disabled
-                      />
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <i class="icon-supervisor_account icon-20"></i>
+                        <div class="ms-2">Nhóm chức năng</div>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <input
+                          class="form-check-input"
+                          style="width: 1rem; height: 1rem"
+                          type="radio"
+                          name="flexRadioDefault"
+                          id="flexRadioDefault1"
+                          disabled
+                        />
+                      </div>
                     </div>
                   </div>
+                </button>
+              </h2>
+              <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                  <ng-template>Content for the second item</ng-template>
                 </div>
-              </button>
-            </h2>
-            <div ngbAccordionCollapse>
-              <div ngbAccordionBody>
-                <ng-template>Content for the second item</ng-template>
               </div>
             </div>
           </div>
-        </div>
-        <div class="px-3">
-          <ng-container #listParam>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <codx-label
-                fiedName="Events"
-                default="Danh sách sự kiện"
-                class="fw-bold"
-              ></codx-label>
-              <button
-                class="btn btn-icon btn-primary me-1"
-                (click)="settingCalendar()"
-              >
-                <i class="icon-settings text-white icon-18"></i>
-              </button>
-            </div>
-
-            <div *ngFor="let param of calendarParams | keyvalue">
-              <div class="d-flex mt-3 align-items-center">
-                <div class="w-5px me-2">
-                  <li
-                    [style.background-color]="param?.value.ShowColor"
-                    [style.color]="param?.value.ShowColor"
-                  ></li>
-                </div>
-                <div class="show-list-event w-100">
-                  <codx-vll
-                    [showText]="true"
-                    [showBgColor]="false"
-                    name="WP006"
-                    [value]="param?.key"
-                  />
-                </div>
-                <div
-                  class="show-event-check me-2 w-50px d-flex justify-content-end"
+          <div class="px-3">
+            <ng-container #listParam>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <codx-label
+                  fiedName="Events"
+                  default="Danh sách sự kiện"
+                  class="fw-bold"
+                ></codx-label>
+                <button
+                  class="btn btn-icon btn-primary me-1"
+                  (click)="settingCalendar()"
                 >
-                  <codx-input
-                    type="checkbox"
-                    [field]="param?.key"
-                    [checked]="param?.value.ShowEvent === '1'"
-                    labelPosition="Before"
-                    [disabled]="false"
-                    class="test-check"
-                    (valueChange)="updateSettingValue($event)"
+                  <i class="icon-settings text-white icon-18"></i>
+                </button>
+              </div>
+
+              <div *ngFor="let param of calendarParams | keyvalue">
+                <div class="d-flex mt-3 align-items-center">
+                  <div class="w-5px me-2">
+                    <li
+                      [style.background-color]="param?.value.ShowColor"
+                      [style.color]="param?.value.ShowColor"
+                    ></li>
+                  </div>
+                  <div class="show-list-event w-100">
+                    <codx-vll
+                      [showText]="true"
+                      [showBgColor]="false"
+                      name="WP006"
+                      [value]="param?.key"
+                    />
+                  </div>
+                  <div
+                    class="show-event-check me-2 w-50px d-flex justify-content-end"
                   >
-                  </codx-input>
+                    <codx-input
+                      type="checkbox"
+                      [field]="param?.key"
+                      [checked]="param?.value.ShowEvent === '1'"
+                      labelPosition="Before"
+                      [disabled]="false"
+                      class="test-check"
+                      (valueChange)="updateSettingValue($event)"
+                    >
+                    </codx-input>
+                  </div>
                 </div>
               </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         <div class="w-100 position-absolute left-0 bottom-0 bg-body">
           <div class="p-2 border-top">
@@ -191,10 +205,7 @@
         </div>
       </div>
       <div class="position-relative w-100 h-100 bg-white">
-        <co-calendar-center
-          #calendarCenter
-          [resources]="resources"
-        ></co-calendar-center>
+        <co-calendar-center #calendarCenter [resources]="resources"></co-calendar-center>
       </div>
     </div>
   </div>

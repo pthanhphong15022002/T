@@ -6,7 +6,7 @@ import {
   TemplateRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
+import { ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxCoService } from '../../codx-co.service';
 
 @Component({
@@ -45,11 +45,26 @@ export class CalendarCenterComponent
   dayoff: any;
   calendarID = 'STD';
 
+
+  //#region  list employee
+  scheduleHeader?: ResourceModel;
+  orgUnitID:string = "";
+
+  //#endregion
+
+  //#region list event  
+  scheduleEvent?: ResourceModel;
+
+  //#endregion
+  
+
+
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
 
   onInit(): void {
+    this.initSchedule();
     this.getDayOff();
   }
 
@@ -74,10 +89,51 @@ export class CalendarCenterComponent
         type: ViewType.schedule,
         active: true,
         sameData: true,
-        model: {},
+        request2: this.scheduleHeader,//request lấy data cho resource schedule
+        request: this.scheduleEvent,//request lấy data cho event schedule
+        model: {
+
+        },
       },
     ];
     this.detectorRef.detectChanges();
+  }
+
+  scheduleEvtModel:any = {};
+  scheduleHeaderModel:any = {};
+
+  // init schedule
+  initSchedule(){
+    // request get list event để vẽ schedule
+    this.scheduleEvent = new ResourceModel();
+    this.scheduleEvent.service = 'CO';
+    this.scheduleEvent.assemblyName = 'ERM.Business.CO';
+    this.scheduleEvent.className = '';
+    this.scheduleEvent.method = '';
+
+    this.scheduleEvtModel = {
+      id: 'recID',
+      subject: { name: 'title' },
+      startTime: { name: 'startDate' },
+      endTime: { name: 'endDate' },
+      resourceId: { name: 'resourceID' },// field mapping vs resource Schedule
+      status: 'approveStatus',
+    };
+
+    // request get list employee
+    this.scheduleHeader = new ResourceModel();
+    this.scheduleHeader.service = 'HR';
+    this.scheduleHeader.assemblyName = 'ERM.Business.HR';
+    this.scheduleHeader.className = 'HRBusiness';
+    this.scheduleHeader.method = 'GetEmployeeByCOAsync';
+
+    this.scheduleHeaderModel = {
+      Name: 'Resources',
+      Field: 'resourceID',
+      IdField: 'resourceID',// field mapping vs event Schedule
+      TextField: 'resourceName',
+      Title: 'Resources',
+    };
   }
 
   //navigate scheduler

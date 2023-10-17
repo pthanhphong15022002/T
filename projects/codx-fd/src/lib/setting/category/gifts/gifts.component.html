@@ -3,7 +3,7 @@
     [predicate]="predicate" [dataValue]="dataValue" idField="recID" [viewActiveType]="viewType.list">
 </codx-views>
 <ng-template #template let-data>
-    <div class="container-listview category-gift p-5">
+    <div class="container-listview category-gift p-4">
         <div class="list-table" *ngIf="this.searchType == '0' || this.searchType == '1' ">
             <codx-temp-full [typeMF]="'hover'" [dataItem]="data" [formModel]="view.formModel"
                 (clickMF)="clickMF($event, data)" typeMF="hover" [titleTmp]="itemGift" [imgOn]="data.modifiedOn">
@@ -13,7 +13,7 @@
 </ng-template>
 
 <ng-template #itemGift let-dataItem>
-    <div class="list-item d-flex align-items-start">
+    <div class="list-item d-flex align-items-start w-100">
         <div class="img">
             <codx-img [funcId]="funcID" aria-disabled="true" [objectType]="functionList.entityName" [width]="90"
                 [objectId]="dataItem?.giftID">
