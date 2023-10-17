@@ -8,7 +8,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 import { Validators } from '@angular/forms';
-import { VATInvoices } from '../../../models/VATInvoices.model';
+import { AC_CashReceiptsLines } from '../../../models/AC_CashReceiptsLines.model';
 
 @Component({
   selector: 'lib-cashreceipts-add',
@@ -772,15 +772,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     let rAcctID = null;
     let oOffsetAcct = null;
     let oAccount = null;
-    let oLine : any = {};
-    oLine.recID = Util.uid();
+    let model = new AC_CashReceiptsLines();
+    let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formCashReceipt.data.recID;
     oLine.objectID = this.formCashReceipt.data.objectID;
     oLine.reasonID = this.formCashReceipt.data.reasonID;
-    oLine.dr = 0;
-    oLine.dR2 = 0;
-    oLine.cr = 0;
-    oLine.cR2 = 0;
 
     let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
     if (indexCashBook > -1) {

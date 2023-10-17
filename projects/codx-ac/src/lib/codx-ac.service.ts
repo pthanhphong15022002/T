@@ -24,6 +24,41 @@ export const fmVATInvoices: FormModel = {
   entityPer: 'AC_VATInvoices',
 };
 
+export const fmCashPaymentsLines: FormModel = {
+  formName: 'CashPaymentsLines',
+  gridViewName: 'grvCashPaymentsLines',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmCashPaymentsLinesOneAccount: FormModel = {
+  formName: 'CashPaymentsLinesOneAccount',
+  gridViewName: 'grvCashPaymentsLinesOneAccount',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmAcctTrans: FormModel = {
+  formName: 'AcctTrans',
+  gridViewName: 'grvAcctTrans',
+  entityName: 'AC_AcctTrans',
+  entityPer: 'AC_AcctTrans',
+};
+
+export const fmSettledInvoices: FormModel = {
+  formName: 'SettledInvoices',
+  gridViewName: 'grvSettledInvoices',
+  entityName: 'AC_SettledInvoices',
+  entityPer: 'AC_SettledInvoices',
+};
+
+export const fmSalesInvoicesLines: FormModel = {
+  entityName: 'AC_SalesInvoicesLines',
+  formName: 'SalesInvoicesLines',
+  gridViewName: 'grvSalesInvoicesLines',
+  entityPer: 'AC_SalesInvoicesLines',
+};
+
 @Injectable({
   providedIn: 'root',
 })
