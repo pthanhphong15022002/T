@@ -1414,43 +1414,43 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   this.data.push(Object.assign({}, item2.data));
                   this.fileUploadList = [];
                   return of(item2);
-                // } else if (item2.status == 6) {
-                //   // ghi đè
-                //   fileItem.recID = item2.data.recID;
-                //   fileItem.fileName = item2.data.fileName;
-                //   var config = new AlertConfirmInputConfig();
-                //   config.type = 'YesNo';
-                //   // var objs = from(
-                //   //   this.notificationsService.alert(this.title, item2.message, config).closed
-                //   // )
-                //   return this.fileService
-                //     .addFileObservable(
-                //       fileItem,
-                //       this.actionType,
-                //       this.formModel?.entityName,
-                //       this.isDM,
-                //       this.folder,
-                //       this.fdID,
-                //       this.fdName,
-                //       this.parentID,
-                //       this.idField
-                //     )
-                //     .pipe(
-                //       map((item) => {
-                //         if (item.status == 0) {
-                //           if (this.showMessage == '1')
-                //             this.notificationsService.notify(item.message);
-                //           this.fileUploadList[0].recID = item.data.recID;
-                //           this.atSV.fileListAdded.push(Object.assign({}, item));
-                //           this.data.push(Object.assign({}, item.data));
-                //           this.fileUploadList = [];
-                //           return item;
-                //         } else {
-                //           this.notificationsService.notify(item.message);
-                //         }
-                //         return null;
-                //       })
-                //     );
+                } else if (item2.status == 6) {
+                  // ghi đè
+                  fileItem.recID = item2.data.recID;
+                  fileItem.fileName = item2.data.fileName;
+                  var config = new AlertConfirmInputConfig();
+                  config.type = 'YesNo';
+                  // var objs = from(
+                  //   this.notificationsService.alert(this.title, item2.message, config).closed
+                  // )
+                  return this.fileService
+                    .addFileObservable(
+                      fileItem,
+                      this.actionType,
+                      this.formModel?.entityName,
+                      this.isDM,
+                      this.folder,
+                      this.fdID,
+                      this.fdName,
+                      this.parentID,
+                      this.idField
+                    )
+                    .pipe(
+                      map((item) => {
+                        if (item.status == 0) {
+                          if (this.showMessage == '1')
+                            this.notificationsService.notify(item.message);
+                          this.fileUploadList[0].recID = item.data.recID;
+                          this.atSV.fileListAdded.push(Object.assign({}, item));
+                          this.data.push(Object.assign({}, item.data));
+                          this.fileUploadList = [];
+                          return item;
+                        } else {
+                          this.notificationsService.notify(item.message);
+                        }
+                        return null;
+                      })
+                    );
                 } else {
                   this.notificationsService.notify(item2.message);
                 }

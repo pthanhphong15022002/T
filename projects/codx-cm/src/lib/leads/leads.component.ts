@@ -178,6 +178,8 @@ export class LeadsComponent
     }
     this.executeApiCalls();
     this.loadParam();
+    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','RPAUpdateAddresscAsync',['CM_Leads']).subscribe(res => {});
+
   }
 
   onInit(): void {
