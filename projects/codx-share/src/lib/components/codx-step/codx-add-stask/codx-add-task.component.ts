@@ -45,8 +45,6 @@ export class CodxAddTaskComponent implements OnInit {
   typeTask;
   listGroup = [];
   recIdEmail = '';
-  isNewEmails = true;
-  isEditTimeDefault = false;
 
   dialog!: DialogRef;
   endDateParent: Date;
@@ -60,6 +58,24 @@ export class CodxAddTaskComponent implements OnInit {
   fieldsTask = { text: 'taskName', value: 'refID' };
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
 
+  isSave = true;
+  isAdmin = false;
+  isStart = false;
+  isLoadDate = false;
+  isHaveFile = false;
+  isStatusNew = true;
+  isBoughtTM = false;
+  isNewEmails = true;
+  isShowDate = false;
+  isShowTime = false;
+  isActivitie = false;
+  disableStep = false;
+  isTaskDefault = false;
+  isSaveTimeTask = true;
+  isSaveTimeGroup = true;
+  isEditTimeDefault = false;
+  isTaskFromStep = true;
+
   folderID = '';
   titleName = '';
   valueInput = '';
@@ -69,23 +85,12 @@ export class CodxAddTaskComponent implements OnInit {
   user;
   ownerParent; //
   groupTask;
-  isSave = true;
   groupTaskID = null;
-  isLoadDate = false;
-  isHaveFile = false;
-  isSaveTimeTask = true;
-  isTaskDefault = false;
-  isSaveTimeGroup = true;
   showLabelAttachment = false;
-  isStatusNew = true;
-  isStart = false;
-  isBoughtTM = false;
 
   listFieldCopy = [];
   listField = [];
 
-  isShowDate = false;
-  isShowTime = false;
   startDayOld;
   endDayOld;
 
@@ -101,8 +106,6 @@ export class CodxAddTaskComponent implements OnInit {
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
-  disableStep = false;
-  isActivitie = false;
 
   refValue = {
     "1":"CMCustomersOfCalendar", 
@@ -145,6 +148,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.listInsStep = dt?.data?.listInsStep;
+    this.isTaskFromStep =  undefined ? this.isTaskFromStep : dt?.data?.isTaskFromStep;;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     // this.isStart = dt?.data?.isStart;
@@ -168,11 +172,18 @@ export class CodxAddTaskComponent implements OnInit {
       );
     }
     this.cache.valueList('CRM060').subscribe((res) => {
-      if (res.datas) {
-        this.listTypeCM = res.datas;
+      if (res?.datas) {
+        this.listTypeCM = res?.datas?.map((data) => {
+          return {...data,refValue: this.refValue[data?.value]}
+        })
         console.log(this.listTypeCM);
         
       }
+    });
+    this.api
+    .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
+    .subscribe((res) => {
+      this.isAdmin = res ? true : false;
     });
   }
 
@@ -851,7 +862,7 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   changeDataCM(event){
-    console.log(event);
+    console.log(event?.component?.itemsSelected[0]      );
     this.dataCM = event?.data;
     
   }
