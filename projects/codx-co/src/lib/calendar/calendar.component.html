@@ -6,26 +6,29 @@
       <div
         class="w-30 min-w-225px mw-300px me-5 bg-white calendar-left scroll-y"
       >
-        <div class="calendar-left-main">
-          <ejs-calendar
-            *ngIf="calendarType == 'COT03'"
-            #ejCalendar
-            cssClass="width-calendar"
-            class="e-customStyle w-100 mw-100"
-            [locale]="locale"
-            [firstDayOfWeek]="1"
-            [value]="dateChange"
-            (change)="changeDayOfMonth($event)"
-            (navigated)="changeNewMonth($event)"
-            (renderDayCell)="onLoad($event)"
-            (created)="firstime()"
-          >
-          </ejs-calendar>
-          <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
-            <div ngbAccordionItem [collapsed]="false">
-              <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>
-                  <div class="w-100 p-2">
+        <ejs-calendar
+          *ngIf="calendarType == 'COT03'"
+          #ejCalendar
+          cssClass="width-calendar"
+          class="e-customStyle w-100 mw-100"
+          [locale]="locale"
+          [firstDayOfWeek]="1"
+          [value]="dateChange"
+          (change)="changeDayOfMonth($event)"
+          (navigated)="changeNewMonth($event)"
+          (renderDayCell)="onLoad($event)"
+          (created)="firstime()"
+        >
+        </ejs-calendar>
+        <!--  -->
+        <div ngbAccordion [closeOthers]="true" *ngIf="calendarType !== 'COT03'">
+          <div ngbAccordionItem [collapsed]="false">
+            <h2 ngbAccordionHeader>
+              <button ngbAccordionButton>
+                <div class="w-100 p-2">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
                     <div
                       class="d-flex justify-content-between align-items-center"
                     >
@@ -57,6 +60,15 @@
                     </div>
                   </ng-template>
                 </div>
+              </button>
+            </h2>
+            <div ngbAccordionCollapse>
+              <div ngbAccordionBody>
+                <ng-container *ngIf="listOrgUnit?.length > 0">
+                  <div class="px-5 py-2" *ngFor="let item of listOrgUnit">
+                    <div class="ms-5">{{ item.orgUnitName }}</div>
+                  </div>
+                </ng-container>
               </div>
             </div>
             <div ngbAccordionItem [disabled]="true">
@@ -193,10 +205,7 @@
         </div>
       </div>
       <div class="position-relative w-100 h-100 bg-white">
-        <co-calendar-center
-          #calendarCenter
-          [resources]="resources"
-        ></co-calendar-center>
+        <co-calendar-center #calendarCenter [resources]="resources"></co-calendar-center>
       </div>
     </div>
   </div>

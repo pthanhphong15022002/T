@@ -92,12 +92,10 @@ export const routes: Routes = [
       {
         path: 'files/:funcID',
         component: HomeComponent,
-        data: { noReuse: true },
       },
       {
         path: 'shares/:funcID',
         component: HomeComponent,
-        data: { noReuse: true },
       },
       // {
       //   path: ':funcID',

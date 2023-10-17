@@ -69,7 +69,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private signalRSV: SignalRService,
     private callSV: CallFuncService,
-    private fileSv: FilesService
+    private fileSv: FilesService,
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -101,9 +101,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
-    // if (this.functionList) {
-
-    // }
+    
+    this.codxCMService.isSetChangeThemes.subscribe(item=>{
+      this.setTheme(item);
+    })
   }
 
   ngAfterViewInit() {
@@ -156,6 +157,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         language.active = false;
       }
     });
+    this.codxCMService.setLanguage.next(this.language);
   }
 
   selectTheme(theme: string) {
@@ -187,6 +189,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         theme.active = false;
       }
     });
+
+    this.codxCMService.setThemes.next(this.themes);
   }
 
   setThemeMode(value: string) {

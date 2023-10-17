@@ -68,7 +68,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   user: any;
   layoutCZ: any;
   sysSetting;
-  login2FA = '';
+  //login2FA = '';
   hubConnectionID = '';
   // private fields
   unsubscribe: Subscription[] = [];
@@ -423,15 +423,15 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe((data) => {
         if (!data.error) {
-          this.login2FA = data?.data?.extends?.Login2FA ?? '';
+          let trust2FA = data?.data?.extends?.Trust2FA ?? '';
           let objData = {
             data: data,
-            login2FA: this.login2FA,
+            login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
             loginDevice: this.loginDevice,
           };
 
-          if (this.login2FA != '') {
+          if (!trust2FA) {
             let lg2FADialog = this.callfc.openForm(
               Login2FAComponent,
               '',
