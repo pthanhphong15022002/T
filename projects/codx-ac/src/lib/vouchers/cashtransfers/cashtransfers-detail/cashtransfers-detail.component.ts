@@ -17,7 +17,6 @@ import {
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
-import { IAcctTran } from '../../salesinvoices/interfaces/IAcctTran.interface';
 import { CashtransfersService } from '../cashtransfers.service';
 import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
 
@@ -43,7 +42,7 @@ export class CashtransfersDetailComponent
   expanding: boolean = false;
   loading: boolean = false;
 
-  lines: IAcctTran[][] = [[]];
+  lines: any[][] = [[]];
 
   functionName: string;
   tabControl: TabModel[] = [

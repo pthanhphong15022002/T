@@ -1,10 +1,12 @@
 .wsp-bg-primary
 {
     background-color: var(--primary-darker);
+    border:2px transparent solid;
 }
-.wsp-rounder-1
-{
-    border-radius: 3px;
+
+.wsp-bg-primary:hover{
+    border-color:var(--primary-light)!important;
+    transition: all .05s;
 }
 .icon-30px
 {

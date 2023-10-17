@@ -10,8 +10,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormModel, UIComponent } from 'codx-core';
-import { TableColumn } from '../../models/TableColumn.model';
-
 @Component({
   selector: 'lib-table-line-detail-static',
   templateUrl: './table-line-detail-static.component.html',
@@ -26,7 +24,7 @@ export class TableLineDetailStaticComponent
   @Input() loading: boolean = false;
   @Input() trTemplate: TemplateRef<any>;
   @Input() formModel: FormModel;
-  @Input() columns: TableColumn[] = [];
+  @Input() columns: any[] = [];
   @Input() autoSum: boolean = true;
 
   @ViewChild('myTable') tableRef: ElementRef<HTMLElement>;
