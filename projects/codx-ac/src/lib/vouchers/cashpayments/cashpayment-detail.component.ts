@@ -58,28 +58,6 @@ export class CashpaymentDetailComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  fmCashPaymentsLines: FormModel = { //? formModel của cashpaymentlines
-    formName: 'CashPaymentsLines',
-    gridViewName: 'grvCashPaymentsLines',
-    entityName: 'AC_CashPaymentsLines',
-  };
-  fmAcctTrans: FormModel = { //? formModel của acctTrans
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityName: 'AC_AcctTrans',
-  };
-  fmSettledInvoices: FormModel = {
-    //? formModel của settledInvoices
-    formName: 'SettledInvoices',
-    gridViewName: 'grvSettledInvoices',
-    entityName: 'AC_SettledInvoices',
-  };
-  fmVatInvoices: FormModel = {
-    //? formModel của vatInvoices
-    formName: 'VATInvoices',
-    gridViewName: 'grvVATInvoices',
-    entityName: 'AC_VATInvoices',
-  };
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,

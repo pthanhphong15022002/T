@@ -1,0 +1,183 @@
+<div class="table-responsive table-ac">
+    <table style="table-layout: fixed;" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom">
+            <div class="d-flex align-items-center justify-content-start ps-3">
+              <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblQuantity" default="Số lượng">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblUnitPrice" default="Đơn giá">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblPrice" default="Thành tiền">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế GTGT">
+              </codx-label>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of listSalesInvoicesLine;trackBy: trackByFn">
+          <tr style="border-bottom: 1px solid var(--bs-border-color) !important;">
+            <td class="text-center">
+              <div class="d-flex justify-content-start ps-3">
+                <div class="align-items-center w-100">
+                  <div *ngIf="(item.itemName != null && item.itemName != '')" class="d-flex align-items-center justify-content-start">
+                    <ng-container>
+                      <span style="text-align: left !important;"
+                        class="fw-bold line-clamp line-clamp-1">{{item.itemName}}</span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="(item.idiM0 != null && item.idiM0 != '') ||
+                                      (item.idiM1 != null && item.idiM1 != '') || 
+                                      (item.idiM2 != null && item.idiM2 != '') ||
+                                      (item.idiM3 != null && item.idiM3 != '')" class="d-flex justify-content-start">
+                    <ng-container>
+                      <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
+                      </codx-label>
+                      :&nbsp;
+                      <span *ngIf="(item.idiM0 != null && item.idiM0 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{item.idiM0}}
+                      </span>
+                      <span *ngIf="(item.idiM1 != null && item.idiM1 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM1}}
+                      </span>
+                      <span *ngIf="(item.idiM2 != null && item.idiM2 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM2}}
+                      </span>
+                      <span *ngIf="(item.idiM3 != null && item.idiM3 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM3}}
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
+                                      (item.idiM5 != null && item.idiM5 != '') || 
+                                      (item.idiM6 != null && item.idiM6 != '') ||
+                                      (item.idiM7 != null && item.idiM7 != '') ||
+                                      (item.idiM8 != null && item.idiM8 != '') ||
+                                      (item.idiM9 != null && item.idiM9 != '')" class="d-flex justify-content-start mb-1">
+                    <ng-container>
+                      <codx-label style="white-space: nowrap"
+                        class="fs-7 fw-bold" default="Kho">
+                      </codx-label>                                         
+                      :&nbsp;
+                      <span *ngIf="(item.idiM4 != null && item.idiM4 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{item.idiM4}}
+                      </span>
+                      <span *ngIf="(item.idiM5 != null && item.idiM5 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM5}}
+                      </span>
+                      <span *ngIf="(item.idiM6 != null && item.idiM6 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM6}}
+                      </span>
+                      <span *ngIf="(item.idiM7 != null && item.idiM7 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM6}}
+                      </span>
+                      <span *ngIf="(item.idiM8 != null && item.idiM8 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM8}}
+                      </span>
+                      <span *ngIf="(item.idiM9 != null && item.idiM9 != '')" class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                        {{','+item.idiM9}}
+                      </span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="item?.lineType != '1'" class="d-flex justify-content-start">
+                    <span class="badge ac-badge-light-primary">
+                      {{item?.lineType | vll : 'AC089' : 'text' | async}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.quantity
+                      | tranformValueNumber : 'B' | async"></span>
+              </div>
+              <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.purcPrice
+                      | tranformValueNumber : 'B' | async"></span>
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.netAmt
+                      | tranformValueNumber : 'B' | async"></span>
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.vatAmt
+                      | tranformValueNumber : 'B' | async"></span>
+              </div>
+              <div *ngIf="item?.taxRate" class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1">{{item.taxRate * 100 + "%"}}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length == 0" class="ac-empty">
+      <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+          <div class="fs-6 text-dark mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table style="table-layout: fixed;" class="table mb-0">
+    <tfoot class="table-footer-ac">
+      <td class="w-40">
+        <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+          <codx-label  *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
+          </codx-label>
+        </div>
+      </td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalQuantity
+                  | tranformValueNumber : 'B' | async"></span>
+        </div>
+      </td>
+      <td class="w-15"></td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
+                  | tranformValueNumber : 'B' | async"></span>
+        </div>
+      </td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatAtm
+                  | tranformValueNumber : 'B' | async"></span>
+        </div>
+      </td>
+    </tfoot>
+  </table>

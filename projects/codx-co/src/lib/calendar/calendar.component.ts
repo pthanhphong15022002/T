@@ -128,9 +128,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetParamMyCalendarAsync',
-        'WPCalendars'
-      )
-      .subscribe((res: any) => {
+        'WPCalendars')
+        .subscribe((res: any) => {
         if (res) {
           for (const prop in res) {
             let param = JSON.parse(res[prop]);
@@ -151,33 +150,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.navigate();
     this.getCalendarTypes();
     this.getCalendarNotes();
-    //Get the list allowed and data of default calendar(COT03)
-    // this.api
-    //   .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
-    //   .pipe(
-    //     switchMap((res: any) => {
-    //       if (res) {
-    //         this.calendarTypes = res;
-    //         this.defaultCalendar = 'COT03';
-    //         return this.api.exec(
-    //           'CO',
-    //           'CalendarsBusiness',
-    //           'GetCalendarDataAsync',
-    //           [this.defaultCalendar]
-    //         );
-    //       }
-    //       return null;
-    //     }),
-    //     take(1)
-    //   )
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       this.getDataAfterAddEvent(res);
-    //       this.getCalendarNotes();
-    //       this.navigate();
-    //     }
-    //   });
-
+    
     let myInterval = setInterval(() => {
       if (this.speeddial) {
         clearInterval(myInterval);
@@ -195,6 +168,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // setting mode view
     this.views = [
       {
         type: ViewType.content,
@@ -329,6 +303,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         }
       });
   }
+
   navigate() {
     this.coService.dateChange$.subscribe((res) => {
       if (res?.fromDate === 'Invalid Date' && res?.toDate === 'Invalid Date') {
@@ -533,21 +508,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       };
     }
     let calendarType = event.value;
-    // if (calendarType == 'COT02') {
-    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
-    //     'TimelineMonth';
-    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
-    //     false;
-    //   this.detectorRef.detectChanges();
-    // } else {
-    //   (this.calendarCenter.view.currentView as any).schedule.currentView =
-    //     'Month';
-    //   (this.calendarCenter.view.currentView as any).schedule.isCalendarView =
-    //     true;
-
-    //   this.detectorRef.detectChanges();
-    // }
-
     //reset data
     this.coService.calendarData$.next([]);
     this.api

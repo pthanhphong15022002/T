@@ -358,7 +358,20 @@ export class WalletsComponent extends UIComponent implements OnInit {
           this.transferCoins = this.dataset.filter((x:any)=>x.transType=='2');
           this.coinsIn = this.dataset.filter((x:any)=>x.coins >0);
           this.coinsOut = this.dataset.filter((x:any)=>x.coins <0);
-          this.coinsOut.map((x:any)=> x.coins = -x.coins);
+          let objEmp=this.groupBy(this.dataset,'userID');
+          for(let key in objEmp){
+            let  obj:any={};
+            obj.userID = key;
+            obj.userName= objEmp[key][0].userName;
+            obj.positionName= objEmp[key][0].positionName;
+            obj.departmentName= objEmp[key][0].departmentName;
+            obj.coinsIn = this.sumByProp(objEmp[key].filter((x:any)=>x.coins >0),'coins');
+            obj.coinsOut =  this.sumByProp(objEmp[key].filter((x:any)=>x.coins <0).map((c:any)=> {c.coins=-c.coins; return c}),'coins');
+            obj.percentageIn = this.toFixed((obj.coinsIn/this.sumByProp(this.coinsIn,'coins'))*100);
+            obj.percentageOut = this.toFixed((obj.coinsOut/this.sumByProp(this.coinsOut,'coins'))*100);
+            this.coinsByEmp.push(obj);
+          }
+          //this.coinsOut = this.coinsOut.map((x:any)=> x.coins = -x.coins);
           let objIn = this.groupBy(this.coinsIn,'transType');
           for(let key in objIn){
             let  obj:any={};
@@ -377,20 +390,9 @@ export class WalletsComponent extends UIComponent implements OnInit {
             obj.percentage = this.toFixed((obj.coins/this.sumByProp(this.coinsOut,'coins'))*100);
             this.coinsByTypeOut.push(obj);
           }
-          let objEmp=this.groupBy(this.dataset,'userID');
-          for(let key in objEmp){
-            let  obj:any={};
-            obj.userID = key;
-            obj.userName= objEmp[key][0].userName;
-            obj.positionName= objEmp[key][0].positionName;
-            obj.departmentName= objEmp[key][0].departmentName;
-            obj.coinsIn = this.sumByProp(objEmp[key].filter((x:any)=>x.coins >0),'coins');
-            obj.coinsOut = - this.sumByProp(objEmp[key].filter((x:any)=>x.coins <0),'coins');
-            obj.percentageIn = this.toFixed((obj.coinsIn/this.sumByProp(this.coinsIn,'coins'))*100);
-            obj.percentageOut = this.toFixed((obj.coinsOut/this.sumByProp(this.coinsOut,'coins'))*100);
-            this.coinsByEmp.push(obj);
-          }
+
           this.detectorRef.detectChanges();
+          console.log(objEmp);
           this.isLoaded = true;
         }
       });
