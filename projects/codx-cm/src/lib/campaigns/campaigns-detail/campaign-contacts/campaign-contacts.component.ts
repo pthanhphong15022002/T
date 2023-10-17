@@ -69,7 +69,7 @@ export class CampaignContactsComponent implements OnInit {
   service = 'CM';
   currentRecID = '';
   assemblyName = 'ERM.Business.CM';
-  className = 'CampaignsBusiness';
+  className = 'CampaignsContactsBusiness';
   method = 'GetListCampaignContactsAsync';
   id: any;
   objectTypeOld: any;
@@ -466,7 +466,7 @@ export class CampaignContactsComponent implements OnInit {
           .execSv<any>(
             'CM',
             'ERM.Business.CM',
-            'CampaignsBusiness',
+            'CampaignsContactsBusiness',
             'DeleteCampaignContactsAsync',
             [data?.recID]
           )
