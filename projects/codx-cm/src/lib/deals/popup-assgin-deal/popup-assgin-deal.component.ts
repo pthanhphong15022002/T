@@ -348,13 +348,13 @@ export class PopupAssginDealComponent
       let datas = [this.data, this.startControl];
       this.codxCmService.updateOwnerDeal(datas).subscribe((res) => {
         if (res) {
-          this.dialogRef.close(res[0]);
+          this.dialogRef.close(res);
         }
       });
     } else if (this.applyFor == '5') {
       this.codxCmService.updateOwnerLead(datas).subscribe((res) => {
         if (res) {
-          this.dialogRef.close(res[0]);
+          this.dialogRef.close(res);
         }
       });
     }

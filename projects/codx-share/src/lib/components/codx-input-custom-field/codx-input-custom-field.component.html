@@ -479,7 +479,25 @@
                   matchSize="true"
                   class="container dragdrop-placeholder"
                 >
-                  {{ index }}
+                  <!-- {{ fieldCurrent }} -->
+                  <ng-container
+                    *ngFor="let fieldFormat of formatViewTable(value)"
+                  >
+                    <td
+                      class="ps-4"
+                      [style]="
+                        fieldFormat?.columnWidth > 0 && settingWidth
+                          ? 'width :' +
+                            fieldFormat?.columnWidth +
+                            'px!important'
+                          : ''
+                      "
+                    >
+                      <codx-fields-format-value
+                        [data]="fieldFormat"
+                      ></codx-fields-format-value>
+                    </td>
+                  </ng-container>
                 </div>
               </tr>
             </ng-container>

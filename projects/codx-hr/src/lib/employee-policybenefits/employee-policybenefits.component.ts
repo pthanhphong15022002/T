@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, CallFuncService, DialogModel, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -31,6 +31,7 @@ export class EmployeePolicybenefitsComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private activatedRoute: ActivatedRoute,
+    private auth: AuthStore,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private shareService: CodxShareService,

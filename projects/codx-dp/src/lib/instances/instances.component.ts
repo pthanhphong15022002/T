@@ -647,7 +647,7 @@ export class InstancesComponent
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var data = e.event;
+        let data = e.event;
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
