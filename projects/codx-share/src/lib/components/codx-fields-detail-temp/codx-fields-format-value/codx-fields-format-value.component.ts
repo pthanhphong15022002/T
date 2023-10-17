@@ -72,11 +72,6 @@ export class CodxFieldsFormatValueComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
-      // this.columns.forEach((x) => {
-      //   this.modelJSON += '"' + x.fieldName + '":"' + '",';
-      // });
-      // let format = this.modelJSON.substring(0, this.modelJSON.length - 1);
-      // this.modelJSON = '{' + format + '}';
     } else this.columns = [];
 
     this.arrDataValue = [];
@@ -87,7 +82,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
       }
     }
 
-    //this.changeRef.detectChanges();
+    this.changeRef.detectChanges();
   }
 
   formatViewTable(value) {
