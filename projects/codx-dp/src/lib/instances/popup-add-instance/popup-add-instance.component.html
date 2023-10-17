@@ -88,9 +88,8 @@
 <ng-template #tabGeneralInfoDetail let-form>
   <div class="form-group">
     <codx-label
-      fiedName="InstanceNo"
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      name="lblInstanceNo"
       [default]="'Mã ' + autoName"
     >
     </codx-label>
@@ -106,8 +105,7 @@
   <div class="form-group">
     <codx-label
       [formModel]="form.formModel"
-      fiedName="Title"
-      [Group]="form.formGroup"
+      name="lblTitle"
       [default]="'Tên ' + autoName"
     >
     </codx-label>
