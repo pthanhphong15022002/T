@@ -100,6 +100,11 @@ export class InformationComponent implements OnInit{
   {
     this.codxCmService.setChangeThemes.next(id);
   }
+
+  change2FA(e:any)
+  {
+
+  }
 }
 const themeDatas: ThemeFlag[] = [
   {
