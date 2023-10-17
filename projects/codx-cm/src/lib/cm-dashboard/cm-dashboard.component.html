@@ -727,18 +727,63 @@
 </ng-template>
 
 <!-- Tem TOp sale Tager -->
-<ng-template #templateSaleTarget>
-  <div class="w-100 h-100" id="12" title=""></div
-></ng-template>
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="12" title="">
+    <ejs-bulletchart
+      valueName="value"
+      targetName="target"
+      title="Revenue"
+      [minimum]="minimum"
+      [maximum]="maximum"
+      [interval]="interval"
+      [dataSource]="dataBullet"
+      [tooltip]="tooltipBullet"
+    >
+      <e-bullet-range-collection>
+        <e-bullet-range end="100" color="#ebebeb"></e-bullet-range>
+        <e-bullet-range end="200" color="#d8d8d8"></e-bullet-range>
+        <e-bullet-range end="300" color="#7f7f7f"></e-bullet-range>
+      </e-bullet-range-collection>
+    </ejs-bulletchart>
+  </div>
+</ng-template>
 
 <!-- Tem templateSaker -->
-<ng-template #templateSaker>
-  <div class="w-100 h-100" id="13" title=""></div
-></ng-template>
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="13" title="">
+    <ejs-accumulationchart
+      id="container"
+      #pie
+      style="display: block; width: 92%"
+      [legendSettings]="legendSettings"
+      [enableSmartLabels]="false"
+      [title]="title"
+      (textRender)="onTextRender($event)"
+      [enableBorderOnMouseMove]="false"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          [dataSource]="piedata"
+          xName="x"
+          yName="y"
+          [startAngle]="startAngle"
+          [endAngle]="endAngle"
+          innerRadius="0%"
+          radius="70%"
+          [dataLabel]="dataLabel"
+          [explode]="false"
+          explodeOffset="10%"
+          [explodeIndex]="explodeIndex"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+  </div>
+</ng-template>
 
 <!-- Tem TOp sale performan -->
-<ng-template #templateTopSale>
-  <div class="w-100 h-100" id="14" title=""></div>
+<ng-template #templateDeals>
+  <div class="w-100 h-100" id="14" title="">ccc</div>
 </ng-template>
 
 <ng-template #noData>

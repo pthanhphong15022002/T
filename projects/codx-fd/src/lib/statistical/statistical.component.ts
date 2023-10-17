@@ -11,6 +11,7 @@ import {
 import {
   CacheService,
   DataRequest,
+  DialogModel,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -22,6 +23,9 @@ import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
+import { DrilldownComponent } from './popup-drilldown/popup-drilldown.component';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-statistical',
@@ -32,17 +36,27 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('department') departmentTmp!: TemplateRef<any>;
+  @ViewChild('button') button!: TemplateRef<any>;
   @ViewChild('linear') linear: ProgressBar;
   @ViewChild('chart') chart: ChartComponent;
   @ViewChildren('template') templates: QueryList<any>;
+  @ViewChildren('template2') templates2: QueryList<any>;
 
   //#region Đát Bo
 
   panels:any = JSON.parse(
-    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":6,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null,"header":"Mức độ cảm xúc lời cảm ơn"},{"id":"0.4199281088325755_layout","row":0,"col":12,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê theo loại phiếu"},{"id":"0.4592017601751599_layout","row":0,"col":30,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên hoạt động nhiều nhất"},{"id":"0.06496875406606994_layout","row":12,"col":12,"sizeX":36,"sizeY":15,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỉ lệ phiếu theo phòng ban"},{"id":"0.21519762020962552_layout","row":7,"col":0,"sizeX":12,"sizeY":20,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Hành vi được tuyên dương"}]'
+    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":6,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null,"header":"Mức độ cảm xúc lời cảm ơn"},{"id":"0.4199281088325755_layout","row":0,"col":12,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê theo loại phiếu"},{"id":"0.4592017601751599_layout","row":0,"col":30,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên hoạt động nhiều nhất"},{"id":"0.06496875406606994_layout","row":12,"col":12,"sizeX":36,"sizeY":15,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỉ lệ phiếu theo phòng ban"},{"id":"0.21519762020962552_layout","row":6,"col":0,"sizeX":12,"sizeY":21,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Hành vi được tuyên dương"}]'
   );
   datas:any = JSON.parse(
     '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.21519762020962552_layout","data":"7"}]'
+  );
+
+  panels2:any = JSON.parse(
+    '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":14,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":25,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+  );
+  datas2:any = JSON.parse(
+    '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
   );
 
   //#endregion
@@ -262,12 +276,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     connectorStyle: { length: '20px', type: 'Curve'},
 
   };
+  circleMarker: Object = { visible: true, height: 7, width: 7 , shape: 'Circle' , isFilled: true };
   palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
   constructor(
     private injector: Injector,
     private cacheService: CacheService,
     private modalService: NgbModal,
-    private pageTitle: PageTitleService
+    private pageTitle: PageTitleService,
+    private routerActive: ActivatedRoute,
   ) {
     super(injector);
     this.router.params.subscribe((param) => {
@@ -288,6 +304,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   dataset:any=[];
   vllFD017:any=[];
   vllFD018:any=[];
+  editSettings: any = {
+    allowAdding: false,
+    allowDeleting: false,
+    allowEditing: true,
+    mode: 'Dialog',
+  };
+  columnGrids:any=[];
+
   onInit(): void {
     this.options.pageLoading = false;
     this.options.entityName = 'FD_Receivers';
@@ -317,11 +341,12 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     this.cacheService.valueList('L1422').subscribe((res) => {
       if (res) {
         this.dataStore = res.datas;
-        this.reloadAllChart();
+        //this.reloadAllChart();
       }
     });
 
   }
+
   isLoaded:boolean=false;
   ngAfterViewInit() {
     this.views = [
@@ -341,12 +366,39 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
         type: ViewType.content,
         active: true,
         sameData: false,
+        reportType: 'D',
+        reportView: true,
+        showFilter: true,
         model: {
           panelLeftRef: this.panelLeftRef,
         },
       },
     ];
     this.userPermission = this.view.userPermission;
+    //this.reloadAllChart();
+    this.pageTitle.setBreadcrumbs([]);
+    this.routerActive.params.subscribe((res) => {
+      if (res.funcID) {
+        this.isLoaded = false;
+        this.reportID=res.funcID;
+        if(this.arrReport && this.arrReport.length){
+          let idx =this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+          if(idx >-1){
+            this.reportItem = this.arrReport[idx];
+            if(this.reportItem.reportID == 'FDD001'){
+              this.typeBallot='0';
+            }
+            if(this.reportItem.reportID == 'FDD002'){
+              this.typeBallot='1';
+            }
+            this.reloadAllChart();
+          }
+
+        }
+
+      }
+    });
+    this.detectorRef.detectChanges();
   }
 
   valueChange(e) {
@@ -397,7 +449,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   changeCardType(data) {
     this.cardType = data.data;
-    this.reloadAllChart();
+    //this.reloadAllChart();
   }
 
   changeTypeCoins(typeBallot) {
@@ -411,7 +463,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     if (this.ballot_RECEIVED == false && this.ballot_SENDED == false)
       typeBallot = '0';
     this.typeBallot = typeBallot;
-    this.reloadAllChart();
+    //this.reloadAllChart();
   }
 
   reloadAllChart() {
@@ -436,12 +488,58 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   cardByBevs:any=[];
   listCardsPerBev:any=[];
   statByBevs:any=[];
+  listCardsPerEmp:any=[];
+  statByEmps:any=[]
+  subscription: Subscription;
   getDataChartB() {
+    this.columnGrids = [
+
+      {
+        field: 'departmentName',
+        headerText: "Tên đơn vị",
+        //width: '25%',
+        //template: this.departmentTmp
+      },
+      {
+        headerText: "Tuyên dương",
+        //width: '15%', //width: gv['Location'].width,
+        field: 'cardType1',
+      },
+      {
+        headerText: "Lời cảm ơn",
+        //width: '10%', //gv['Equipments'].width,
+        field: 'cardType2',
+      },
+      {
+        headerText: "Góp ý thay đổi",
+        //width: '20%', //width: gv['Note'].width,
+        field: 'cardType3',
+      },
+      {
+        headerText: "Đề xuất cải tiến",
+        //width: '15%',
+        field:'cardType4'
+      },
+      {
+        //headerText: "Chia sẻ",
+        //width: '15%',
+        //field:'share'
+        template:this.button
+      },
+    ]
+
     var listBehavior_Temp = [];
     var listBehavior = [];
     var dt = [];
     let i = 0;
-    this.api
+    this.ratingStats=[];
+    this.statByDepts=[];
+    this.listCardsPerBev=[];
+    this.statByBevs=[];
+    this.statByEmps=[];
+    this.statByDepts=[];
+    this.subscription && this.subscription.unsubscribe();
+    this.subscription = this.api
       .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatisticBallot1Async', [
         this.options,
         this.typeBallot,
@@ -462,8 +560,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
           this.cardByDepts = this.groupBy(this.dataset,'departmentID');
           for(let key in this.cardByDepts){
             let obj:any={};
+            obj.recID= this.newGuid();
             obj.departmentID=key;
+            obj.departmentName=this.cardByDepts[key][0].departmentName;
             obj.quantity=this.cardByDepts[key].length;
+            obj.cardType1=this.cardByDepts[key].filter((x:any)=>x.cardType=='1').length;
+            obj.cardType2=this.cardByDepts[key].filter((x:any)=>x.cardType=='2').length;
+            obj.cardType3=this.cardByDepts[key].filter((x:any)=>x.cardType=='3').length;
+            obj.cardType4=this.cardByDepts[key].filter((x:any)=>x.cardType=='4').length;
             obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100);
             this.statByDepts.push(obj);
           }
@@ -496,7 +600,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             i++;
           });
           this.lstBehavior = listBehavior;
-          this.isLoaded=true;
+
           this.dataset.map((x:any)=>{
             if(!x.behavior) return x;
             let lstBevs = x.behavior.split(';');
@@ -517,12 +621,36 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             obj.behaviorID=objGroupByBev[key][0].behavior;
             obj.behaviorName=key;
             obj.quantity=objGroupByBev[key].length;
+            obj.departmentID = objGroupByBev[key][0].departmentID;
             obj.percentage = this.toFixed((obj.quantity/this.listCardsPerBev.length)*100);
+            obj.cardType1=objGroupByBev[key].filter((x:any)=>x.cardType=='1').length;
+            obj.cardType2=objGroupByBev[key].filter((x:any)=>x.cardType=='2').length;
+            obj.cardType3=objGroupByBev[key].filter((x:any)=>x.cardType=='3').length;
+            obj.cardType4=objGroupByBev[key].filter((x:any)=>x.cardType=='4').length;
             this.statByBevs.push(obj);
           }
+          let cardByEmps = this.groupBy(this.dataset,'receiver');
+          for(let key in cardByEmps){
+            let obj:any={};
+            obj.username=cardByEmps[key][0].receiverName;
+            obj.userID=key;
+            obj.quantity=cardByEmps[key].length;
+            obj.positionName = cardByEmps[key][0].positionName;
+            obj.departmentID = cardByEmps[key][0].departmentID;
+            obj.departmentName = cardByEmps[key][0].departmentName;
+            obj.cardType1=cardByEmps[key].filter((x:any)=>x.cardType=='1').length;
+            obj.cardType2=cardByEmps[key].filter((x:any)=>x.cardType=='2').length;
+            obj.cardType3=cardByEmps[key].filter((x:any)=>x.cardType=='3').length;
+            obj.cardType4=cardByEmps[key].filter((x:any)=>x.cardType=='4').length;
+            obj.orgUnitName = cardByEmps[key][0].orgUnitName;
+            obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100);
+            this.statByEmps.push(obj);
+          }
+          this.statByDepts = [...this.statByDepts]
+          console.log(this.statByDepts);
           console.log(res);
-
-
+          this.isLoaded=true;
+          this.detectorRef.detectChanges()
         }
       });
   }
@@ -635,7 +763,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     if (evt?.fromDate || evt?.toDate) {
       this.fromDateDropdown = new Date(evt.fromDate).toISOString();
       this.toDateDropdown = new Date(evt.toDate).toISOString();
-      this.reloadAllChart();
+      //this.reloadAllChart();
     }
   }
 
@@ -777,24 +905,103 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     return this.dataset.filter((x:any)=>x.cardType==type);
   }
 
-  onActions(e: any) {
-    // if (e.type == 'reportLoaded') {
-    //   this.arrReport = e.data;
-    //   if (this.arrReport.length) {
-    //     let arrChildren: any = [];
-    //     for (let i = 0; i < this.arrReport.length; i++) {
-    //       arrChildren.push({
-    //         title: this.arrReport[i].customName,
-    //         path: 'tm/tmdashboard/TMD?reportID=' + this.arrReport[i].reportID,
-    //       });
-    //     }
-    //     this.pageTitle.setSubTitle(arrChildren[0].title);
-    //     this.pageTitle.setChildren(arrChildren);
-    //     this.codxService.navigate('', arrChildren[0].path);
-    //   }
-    // }
-    // this.isLoaded = false;
+  sortByProp(arr:any[],property:string,dir:string='asc',take:number=0){
+    if(arr.length && property){
+      if(dir == 'asc'){
+        if(take){
+          return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> a[property]-b[property]).slice(0,take)
+        }
+        return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> a[property]-b[property]);
+      }
+      else{
+        if(take){
+          return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> b[property]-a[property]).slice(0,take)
+        }
+        return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> b[property]-a[property]);
+      }
+
+    }
+    return [];
   }
+
+  doubleClick(e:any){
+    let dialogModel = new DialogModel;
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'',dialogModel)
+  }
+
+
+  arrReport:any=[];
+  reportItem!:any;
+  reportID!:any;
+  onActions(e: any) {
+    if (e.type == 'reportLoaded') {
+      this.arrReport = e.data;
+      if (this.arrReport.length) {
+        this.cache
+              .functionList(e.data[0].moduleID+e.data[0].reportType)
+              .subscribe((res: any) => {
+                if (res) {
+                  this.pageTitle.setRootNode(res.customName);
+                  this.pageTitle.setParent({
+                    title: res.customName,
+                    path: res.url,
+                  });
+                  let arrChildren: any = [];
+                  for (let i = 0; i < this.arrReport.length; i++) {
+                    arrChildren.push({
+                      title: this.arrReport[i].customName,
+                      path: 'fd/statistical/' + this.arrReport[i].recID,
+                    });
+                  }
+                  if(!this.reportItem){
+                    if(this.reportID){
+                      let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+                      if(idx>-1){
+                        this.reportItem = this.arrReport[idx];
+                        this.pageTitle.setSubTitle(arrChildren[idx].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        //this.codxService.navigate('', arrChildren[idx].path);
+                        this.funcID= this.reportItem.reportID;
+                      }
+                      else{
+                        this.reportItem = this.arrReport[0];
+                        this.pageTitle.setSubTitle(arrChildren[0].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        this.codxService.navigate('', arrChildren[0].path);
+                        this.funcID= this.arrReport[0].reportID;
+                      }
+                    }
+                    else{
+                      this.reportItem = this.arrReport[0];
+                      this.pageTitle.setSubTitle(arrChildren[0].title);
+                      this.pageTitle.setChildren(arrChildren);
+                      this.codxService.navigate('', arrChildren[0].path);
+                      this.funcID= this.arrReport[0].reportID;
+                    }
+
+
+
+                  }
+                  if(this.reportItem.reportID == 'FDD001'){
+                    this.typeBallot='0';
+                  }
+                  if(this.reportItem.reportID == 'FDD002'){
+                    this.typeBallot='1';
+                  }
+                  this.reloadAllChart();
+                  //this.reloadAllChart();
+                  //this.isLoaded = true
+                }
+              });
+
+      }
+    }
+  }
+
+  filterChange(e:any){
+    debugger
+  }
+
   private groupBy(arr: any, key: any) {
     return arr.reduce(function (r: any, a: any) {
       r[a[key]] = r[a[key]] || [];

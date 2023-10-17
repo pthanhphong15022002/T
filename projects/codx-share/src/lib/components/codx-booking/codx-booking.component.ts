@@ -244,17 +244,17 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     sameData: false,
                     type: ViewType.schedule,
                     active: true,
-                    request2: this.scheduleHeader,
-                    request: this.scheduleEvent,
+                    request2: this.scheduleHeader,//request lấy data cho resource schedule
+                    request: this.scheduleEvent,//request lấy data cho event schedule
                     toolbarTemplate: this.footerButton,
                     showSearchBar: false,
                     showFilter: false,
                     model: {
                       //panelLeftRef:this.panelLeft,
-                      eventModel: this.scheduleEvtModel,
-                      resourceModel: this.scheduleHeaderModel, //resource
-                      template: this.cardTemplate,
-                      template4: this.resourceHeader,
+                      eventModel: this.scheduleEvtModel,// mapping của event schedule
+                      resourceModel: this.scheduleHeaderModel, // mapping của resource schedule
+                      template: this.cardTemplate,//template của event schedule
+                      template4: this.resourceHeader,//template của resource schedule
                       //template5: this.resourceTootip,//tooltip
                       template6: this.mfButton, //header
                       template8: this.contentTmp, //content
@@ -449,14 +449,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
-      resourceId: { name: 'resourceID' },
+      resourceId: { name: 'resourceID' },// field mapping vs resource Schedule
       status: 'approveStatus',
     };
 
     this.scheduleHeaderModel = {
       Name: 'Resources',
       Field: 'resourceID',
-      IdField: 'resourceID',
+      IdField: 'resourceID',// field mapping vs event Schedule
       TextField: 'resourceName',
       Title: 'Resources',
     };

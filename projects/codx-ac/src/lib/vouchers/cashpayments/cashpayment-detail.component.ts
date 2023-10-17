@@ -615,13 +615,18 @@ export class CashpaymentDetailComponent extends UIComponent {
           if (res.length > 1) {
             this.openFormReportVoucher(data, res);
           } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
+            let params = {
+              ReportID:'ACT041010',
+              UserID:'ADMIN',
+              BUID:'NDHOA',
+              Recs:'da6789bd-6bcb-11ee-94c3-00155d035517',
+              TransType:'1',
+              PrintEntry:'TRUE',
+              PrintMoney:'TRUE',
+              PrintMode:'1'
+            }
+            let url = `/${this.tenant.getName()}/ac/report/detail/${res[0].recID}/${JSON.stringify(params)}`
+            window.open(url);
           }
         }
       });

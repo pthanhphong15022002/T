@@ -19,6 +19,16 @@ import { ApproveProcess } from './models/ApproveProcess.model';
   providedIn: 'root',
 })
 export class CodxCommonService {
+ 
+  public setThemes = new BehaviorSubject<any>(null);
+  isSetThemes = this.setThemes.asObservable();
+ 
+  public setChangeThemes = new BehaviorSubject<any>(null);
+  isSetChangeThemes = this.setChangeThemes.asObservable();
+
+  public setLanguage = new BehaviorSubject<any>(null);
+  isSetLanguage = this.setLanguage.asObservable();
+
   hideAside = new BehaviorSubject<any>(null);
 
   constructor(

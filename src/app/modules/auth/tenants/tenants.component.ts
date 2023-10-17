@@ -43,7 +43,7 @@ export class TenantsComponent implements OnInit {
 
   lstTenant = [];
   private user;
-  login2FA;
+  //login2FA;
   loginDevice: Device;
 
   ngOnInit(): void {
@@ -62,14 +62,14 @@ export class TenantsComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.loginDevice.tenantID = tn;
-          this.login2FA = res?.extends?.Login2FA ?? '';
+          let trust2FA = res?.extends?.Trust2FA;
           let objData = {
             data: { data: res },
-            login2FA: this.login2FA,
+            login2FA: res?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
           };
-          if (this.login2FA != '') {
+          if (!trust2FA) {
             let lg2FADialog = this.callfc.openForm(
               Login2FAComponent,
               '',

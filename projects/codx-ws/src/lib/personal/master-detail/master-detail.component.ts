@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'lib-master-detail',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./master-detail.component.css']
 })
 export class MasterDetailComponent {
-
+  @Input() menuFunctionID:any;
 }
