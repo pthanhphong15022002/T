@@ -112,16 +112,15 @@ export class CodxAddTaskComponent implements OnInit {
     "9":"CMCasesOfCalendar",
   }
   refValueType = '';
+  listTypeCM = '';
   typeCM = '';
   dataCM = {
-    deals: '',
-    cases: '',
-    customers: '',
-    contracts: '',
-    leads:''
+    deals:"",
+    leads:"",
+    cases:"",
+    customers:"",
+    contracts:""
   };
-  vllHeaderCM;
-  headerCM;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -170,7 +169,9 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.cache.valueList('CRM060').subscribe((res) => {
       if (res.datas) {
-        this.vllHeaderCM = res.datas;
+        this.listTypeCM = res.datas;
+        console.log(this.listTypeCM);
+        
       }
     });
   }
@@ -837,20 +838,13 @@ export class CodxAddTaskComponent implements OnInit {
     console.log(event);
     if(event?.data){
       if(this.typeCM != event?.data){
-        // let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
-        // if(listDeal){
-        //   this.inputDeal.ComponentCurrent.dataService.data = [];
-        //   this.inputDeal.ComponentCurrent.dataService.crrValue = null;
-        //   this.dataCM = null;
-        // }
-        this.dataCM =  {
-          deals: '',
-          cases: '',
-          customers: '',
-          contracts: '',
-          leads:''
-        };
-        this.headerCM = this.vllHeaderCM.find((x) => x.value == event?.data)?.text;
+        let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
+        if(listDeal){
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+          this.inputDeal.ComponentCurrent.dataService.crrValue = null;
+          this.dataCM = null;
+        }
+        
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
       }
@@ -858,7 +852,22 @@ export class CodxAddTaskComponent implements OnInit {
   }
   changeDataCM(event){
     console.log(event);
-    this.dataCM[event?.field] = event?.data;
+    this.dataCM = event?.data;
     
   }
+
+  getListInstanceStep(instanceID, isRoleFull){
+      this.api
+        .exec<any>(
+          'DP',
+          'InstancesStepsBusiness',
+          'GetInscestepCalendarAsync',
+          [instanceID, isRoleFull]
+        )
+        .subscribe((res) => {
+          if (res) {
+           this.listInsStep = res;
+          }
+        });
+    }
 }
