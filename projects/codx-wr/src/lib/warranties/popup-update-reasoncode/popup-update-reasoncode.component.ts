@@ -55,6 +55,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   lstTimeVll = [];
   lstUsers = [];
   scheduleTime: any;
+
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -136,6 +137,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   //#region save
   async onSave() {
+    this.setStartAndEndTime();
     this.countValidate = this.wrSv.checkValidate(this.gridViewSetup, this.data);
     if (this.countValidate > 0) {
       return;
@@ -178,6 +180,41 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       });
   }
 
+  setStartAndEndTime() {
+    if (
+      this.data?.scheduleTime != null &&
+      this.data?.scheduleTime?.trim() != ''
+    ) {
+      const idx = this.lstTimeVll.findIndex(
+        (x) => x.value == this.data?.scheduleTime
+      );
+      if (idx != -1) {
+        const timeRange = this.lstTimeVll[idx]?.text?.split(' - ');
+        const startTime = timeRange[0];
+        const endTime = timeRange[1];
+        const [startHour, startMinute] = startTime.split('h').map(Number);
+        const [endHour, endMinute] = endTime.split('h').map(Number);
+        let date = new Date(this.data?.scheduleStart);
+        this.data.scheduleEnd = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          endHour,
+          endMinute
+        );
+        this.data.scheduleStart = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          startHour,
+          startMinute
+        );
+        this.data.startDate = this.data.scheduleStart;
+        this.data.endDate = this.data.scheduleEnd;
+      }
+    }
+  }
+
   //#endregion
 
   async valueChange(e) {
@@ -215,10 +252,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   setDataCommentAndDate(dateControl, commentControl, comment) {
     this.dateControl = dateControl;
-    this.gridViewSetup.ScheduleStart.isRequire =
-      this.dateControl == '2' ? true : false;
-    this.gridViewSetup.ScheduleTime.isRequire =
-      this.dateControl == '2' ? true : false;
+    this.gridViewSetup.ScheduleStart.isRequire = true;
+    this.gridViewSetup.ScheduleTime.isRequire = true;
     this.setSchedule();
 
     this.commentControl = commentControl;
@@ -235,7 +270,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     for (const hourItem of timeList) {
       const timeRange = hourItem?.text?.split(' - ');
       const startTime = timeRange[0].replace('h', '').replace('h', '');
-
       if (parseInt(startTime) >= currentHour) {
         closestStartTime = hourItem?.value;
         scheduleTime = hourItem?.text;
