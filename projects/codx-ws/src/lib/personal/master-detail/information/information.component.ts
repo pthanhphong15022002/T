@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AuthStore, CacheService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService } from 'codx-core';
 import { CodxWsService } from '../../../codx-ws.service';
 import { isObservable } from 'rxjs';
 import { label } from './infomation.variable';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { LoginSercurityComponent } from './login-sercurity/login-sercurity.component';
+import { SercurityTOTPComponent } from './sercurity-totp/sercurity-totp.component';
 
 @Component({
   selector: 'lib-information',
@@ -20,17 +22,18 @@ export class InformationComponent implements OnInit{
   themes = themeDatas;
 
   constructor(
+    private api: ApiHttpService,
     private authstore: AuthStore,
     private wsService: CodxWsService,
     private codxCmService: CodxCommonService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private callFunc: CallFuncService,
+    private codxService : CodxService
   ) 
   {
     this.user = this.authstore.get();
     this.user.positionName = "Thông tin chức vụ"
     this.user.departmentName = "Thông tin phòng ban";
-    debugger
-    var a = this.user.extends.TwoFA
   }
   ngOnInit(): void {
     //Lấy thông tin nhân viên
@@ -65,15 +68,15 @@ export class InformationComponent implements OnInit{
       info.subscribe((item:any)=>{
         if(item)
         {
-          this.user.positionName = item?.positionName
-          this.user.departmentName = item?.departmentName
+          this.user.positionName = item?.positionName || "Thông tin chức vụ"
+          this.user.departmentName = item?.departmentName || "Thông tin phòng ban"
         }
       })
     }
     else
     {
-      this.user.positionName = info?.positionName
-      this.user.departmentName = info?.departmentName
+      this.user.positionName = info?.positionName || "Thông tin chức vụ"
+      this.user.departmentName = info?.departmentName || "Thông tin phòng ban"
     }
   }
 
@@ -103,7 +106,43 @@ export class InformationComponent implements OnInit{
 
   change2FA(e:any)
   {
+    this.openFormSercurityLogin(e?.data);
+    //this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync","").subscribe(item=>{})
+  }
 
+  openFormSercurityLogin(id:any)
+  {
+    let popup = this.callFunc.openForm(LoginSercurityComponent,"",500,400);
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        if(id == "1" || id == "4")
+        {
+          let popup2 = this.callFunc.openForm(SercurityTOTPComponent,"",500,700,"",id);
+          popup2.closed.subscribe(res=>{
+            if(res?.event)
+            {
+              this.user.extends.TwoFA = id;
+              this.authstore.set(this.user);
+            }
+          })
+        }
+        else
+        {
+          this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync",id).subscribe(item=>{
+            if(item)
+            {
+              this.user.extends.TwoFA = id;
+              this.authstore.set(this.user);
+            }
+          })
+        }
+      }
+    })
+  }
+  changePW() {
+    var url = `auth/login`;
+    this.codxService.navigate(null, url, { id: 'changePass' });
   }
 }
 const themeDatas: ThemeFlag[] = [

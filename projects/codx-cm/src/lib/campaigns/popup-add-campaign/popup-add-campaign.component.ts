@@ -48,7 +48,7 @@ export class PopupAddCampaignComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.title;
-    this.gridViewSetup = dt?.data?.gridViewSetup
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     this.autoNumber = dt?.data?.autoNumber;
   }
   ngOnInit(): void {
@@ -99,9 +99,13 @@ export class PopupAddCampaignComponent implements OnInit {
       return;
     }
 
-    if(new Date(this.data?.startDate) >= new Date(this.data?.endDate)){
-      this.notiService.notifyCode('Vui lòng chọn thời gian kết thúc lớn hơn thời gian bắt đầu');
-      return;
+    if (this.data?.startDate && this.data?.endDate) {
+      if (new Date(this.data?.startDate) >= new Date(this.data?.endDate)) {
+        this.notiService.notifyCode(
+          'DP019'
+        );
+        return;
+      }
     }
 
     if (this.avatarChange) {
