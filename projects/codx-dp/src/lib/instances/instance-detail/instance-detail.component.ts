@@ -70,7 +70,7 @@ export class InstanceDetailComponent implements OnInit {
   // View deatail Of approrver
   @Input() runMode = '';
   @Input() hideMF = false;
-  @Input() view: any;
+
   @Input() applyFor: any;
   @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
@@ -365,7 +365,7 @@ export class InstanceDetailComponent implements OnInit {
         this.loadTree(this.id);
         this.handleProgressInstance();
         if (this.runMode != '1') {
-          this.getStageByStep(this.listSteps);
+          this.getStageByStep();
         }
       } else {
         this.listSteps = [];
@@ -403,18 +403,18 @@ export class InstanceDetailComponent implements OnInit {
     this.saveDatasInstance.emit(datas);
   }
 
-  getStageByStep(listSteps) {
+  getStageByStep() {
     this.isStart =
-      listSteps?.length > 0 && listSteps[0]['startDate'] ? true : false;
-    for (var i = 0; i < listSteps.length; i++) {
+      this.listSteps?.length > 0 && this.listSteps[0]['startDate'] ? true : false;
+    for (var i = 0; i < this.listSteps.length; i++) {
       var stepNo = i;
-      var data = listSteps[i];
+      var data = this.listSteps[i];
       if (data.stepID == this.dataSelect.stepID) {
         this.lstInv = this.getInvolved(data.roles);
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpDataSteps = data;
+        this.tmpDataSteps = JSON.parse(JSON.stringify(data)) ;
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
@@ -425,7 +425,7 @@ export class InstanceDetailComponent implements OnInit {
       }
       stepNo = i + 1;
     }
-    this.currentStep = listSteps.findIndex((x) => x.stepStatus === '1');
+    this.currentStep = this.listSteps.findIndex((x) => x.stepStatus === '1');
     this.checkCompletedInstance(this.instanceStatus);
   }
 

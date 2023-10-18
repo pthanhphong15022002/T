@@ -26,10 +26,11 @@ import {
   DialogModel,
   DataRequest,
   DialogRef,
+  AuthStore,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
-import { CM_Customers, CM_Leads } from '../models/cm_model';
+import { CM_Customers, CM_Leads, CM_Permissions } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
 import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.component';
@@ -43,6 +44,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { stringify } from 'querystring';
 import { firstValueFrom } from 'rxjs';
+import moment from 'moment';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -136,6 +138,7 @@ export class LeadsComponent
   action: any;
   currencyIDDefault: any;
   statusDefault: any;
+  user:any;
   valueListStatus: any;
 
   isLoading = false;
@@ -158,12 +161,15 @@ export class LeadsComponent
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private authStore: AuthStore,
+
   ) {
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    this.user = this.authStore.get();
     this.queryParams = this.router.snapshot.queryParams;
     if (this.queryParams?.recID) {
       this.predicate = 'RecID=@0';
@@ -172,6 +178,8 @@ export class LeadsComponent
     }
     this.executeApiCalls();
     this.loadParam();
+    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','RPAUpdateAddresscAsync',['CM_Leads']).subscribe(res => {});
+
   }
 
   onInit(): void {
@@ -397,8 +405,8 @@ export class LeadsComponent
       // Mặc định
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && !['0', '1'].includes(data.status)) ||
-            ['0', '1'].includes(data.status) ||
+          ? (data.closed && !['15', '1'].includes(data.status)) ||
+            ['15', '1'].includes(data.status) ||
             this.checkMoreReason(data) ||
             !data.applyProcess
           : true;
@@ -442,7 +450,7 @@ export class LeadsComponent
       // Bắt đầu ngay
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['0', '1'].includes(data.status) ||
+          ? !['15', '1'].includes(data.status) ||
             data.closed ||
             !data.applyProcess
           : true;
@@ -456,22 +464,22 @@ export class LeadsComponent
     let isMergeLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['0', '1'].includes(data.status) || data.closed
+        ? !['15', '1'].includes(data.status) || data.closed
         : true;
     };
 
     let isOwner = (eventItem, data) => {
       // Phân bổ
       eventItem.disabled = data.full
-        ? !['0', '1', '2'].includes(data.status) || data.closed
+        ? !['15', '1', '2'].includes(data.status) || data.closed
         : true;
     };
     let isFailReason = (eventItem, data) => {
       // Đánh dấu thất bại
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && !['0', '1'].includes(data.status)) ||
-            ['0', '1'].includes(data.status) ||
+          ? (data.closed && !['15', '1'].includes(data.status)) ||
+            ['15', '1'].includes(data.status) ||
             (data.status != '13' && this.checkMoreReason(data)) ||
             !data.applyProcess
           : true;
@@ -507,7 +515,7 @@ export class LeadsComponent
     let isApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
         (data.applyProcess && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
@@ -521,7 +529,7 @@ export class LeadsComponent
       // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         data.approveStatus != '3';
       eventItem.isblur = false;
     };
@@ -615,7 +623,7 @@ export class LeadsComponent
       this.notificationsService.notifyCode('DP039');
       return;
     }
-    if (data.status == '1' || data.status == '0') {
+    if (data.status == '1' || data.status == '15') {
       this.notificationsService.notifyCode(
         'DP038',
         0,
@@ -858,7 +866,11 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            e.event.modifiedOn = new Date();
+        //    e.event.modifiedOn = new Date();
+          //  data.modifiedOn = new Date() ;
+          data.modifiedOn = moment(new Date())
+          .add(99, 'hours')
+          .toDate();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.view.dataService.update(this.dataSelected).subscribe();
@@ -1069,7 +1081,7 @@ export class LeadsComponent
             }
 
             lst.forEach((element) => {
-              if (!['0', '1'].includes(element?.status) && !isCheck) {
+              if (!['15', '1'].includes(element?.status) && !isCheck) {
                 isCheck = true;
                 this.notificationsService.notifyCode('CM028'); //Đợi mssg
                 return;
@@ -1155,7 +1167,7 @@ export class LeadsComponent
                 var datas = [data.recID, resDP[0]];
                 this.codxCmService.startLead(datas).subscribe((res) => {
                   if (res) {
-                    this.dataSelected = res[0];
+                    this.dataSelected = res;
                     this.dataSelected = JSON.parse(
                       JSON.stringify(this.dataSelected)
                     );
@@ -1205,7 +1217,7 @@ export class LeadsComponent
   startFirstLead(datas: any, listStep: any) {
     this.codxCmService.moveStartFirstLead(datas).subscribe((res) => {
       if (res) {
-        this.dataSelected = res[0];
+        this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         listStep.length > 0 &&
@@ -1243,25 +1255,57 @@ export class LeadsComponent
             ];
             this.codxCmService.addInstanceNoRecId(datas).subscribe((res) => {
               if (res) {
-                let dataInstance = [
-                  data.recID,
-                  this.applyForLead,
-                  isCheck,
-                  this.processId,
-                  res[0],
-                  res[1],
-                ];
-                this.getApiUpdateProcess(dataInstance, res[2]);
+                data.stepID = res[0].stepID;
+                data.refID = res[0].recID;
+                data.nextStep = res[0].nextStep;
+                data.processID = res[0].processID;
+                data.datas = res[0].datas;
+                data.status = res[0].status;
+                this.addPermission(res[0].permissions ,data);
+                let datas= [data ,isCheck];
+                this.getApiUpdateProcess(datas, res[1]);
               }
             });
           }
         }
       });
   }
+  addPermission(permissionDP, lead) {
+    if (permissionDP?.length > 0 && permissionDP) {
+      for (let item of permissionDP) {
+        lead.permissions.push(this.copyPermission(item));
+      }
+    }
+  }
+    // Add permission form DP - FE
+    copyPermission(permissionDP: any) {
+      let permission = new CM_Permissions();
+      permission.objectID = permissionDP.objectID;
+      permission.objectName = permissionDP.objectName;
+      permission.objectType = permissionDP.objectType;
+      permission.roleType = permissionDP.roleType;
+      // permission.full =  permissionDP.full;
+      permission.read = permissionDP.read;
+      permission.update = permissionDP.update;
+      permission.assign = permissionDP.assign;
+      permission.delete = permissionDP.delete;
+      permission.upload = permissionDP.upload;
+      permission.download = permissionDP.download;
+      permission.isActive = permissionDP.isActive;
+      permission.create = permissionDP.create;
+      permission.memberType = '2'; // Data from DP
+      permission.allowPermit = permissionDP.allowPermit;
+      permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+      permission.createdOn = new Date();
+      permission.createdBy = this.user.userID;
+      return permission;
+    }
+
+
   getApiUpdateProcess(datas, listStep) {
     this.codxCmService.updateProcess(datas).subscribe((res) => {
       if (res) {
-        this.dataSelected = res[0];
+        this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         if (listStep.length > 0 && listStep) {
           this.detailViewLead.reloadListStep(listStep);
@@ -1376,7 +1420,7 @@ export class LeadsComponent
               var dataUpdate = [data.recID, instance.stepID];
               this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
                 if (res) {
-                  data = res[0];
+                  data = res;
                   this.view.dataService.update(data).subscribe();
                   this.detailViewLead.dataSelected = data;
 
@@ -1440,7 +1484,7 @@ export class LeadsComponent
         var datas = [data];
         this.codxCmService.moveLeadReason(datas).subscribe((res) => {
           if (res) {
-            data = res[0];
+            data = res;
             this.view.dataService.update(data).subscribe();
             this.detectorRef.detectChanges();
           }
@@ -1479,6 +1523,7 @@ export class LeadsComponent
       startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
       buid: data.buid,
+      data: data,
     };
     var dialog = this.callfc.openForm(
       PopupAssginDealComponent,
@@ -1544,7 +1589,7 @@ export class LeadsComponent
     } else {
       var datas = [this.dataSelected.recID, this.statusDefault];
       this.codxCmService.changeStatusLead(datas).subscribe((res) => {
-        if (res[0]) {
+        if (res) {
           this.dialogQuestionCopy.close();
           if (this.dataSelected?.applyProcess) {
             this.dataSelected.statusCode = this.statusDefault;
@@ -1564,7 +1609,7 @@ export class LeadsComponent
     this.dataSelected = data;
     this.statusDefault = this.dataSelected.applyProcess
       ? this.dataSelected?.statusCode
-      : ['1','0'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
+      : ['1','15'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',

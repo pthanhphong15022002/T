@@ -66,7 +66,6 @@ import { PopAddInvoiceSetlementComponent } from './periodic/invoice-setlement/po
 import { ClosingDataComponent } from './periodic/closing-data/closing-data.component';
 import { PopAddClosingDataComponent } from './periodic/closing-data/pop-add-closing-data/pop-add-closing-data.component';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-import { TableAccountingComponent } from './vouchers/salesinvoices/components/table-accounting/table-accounting.component';
 import { TranformSubobjectPipe } from './pipes/tranform-subobject.pipe';
 import { CashPaymentsComponent } from './vouchers/cashpayments/cashpayments.component';
 import { CashPaymentAddComponent } from './vouchers/cashpayments/cashpayments-add/cashpayments-add.component';
@@ -74,7 +73,6 @@ import { SettledInvoicesAdd } from './share/settledinvoices-add/settledinvoices-
 import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
 import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
-import { PurchaseinvoiceslinesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoiceslines-add/purchaseinvoiceslines-add.component';
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
@@ -101,6 +99,13 @@ import { PaymentOrderComponent } from './payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './payment-order/payment-order-add/payment-order-add.component';
 import { PaymentOrderDetailComponent } from './payment-order/payment-order-detail/payment-order-detail.component';
 import { AdvancedPaymentLinkComponent } from './payment-order/advanced-payment-link/advanced-payment-link.component';
+import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
+import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
+import { VatinvoicesTableComponent } from './share/ac-tableview/vatInvoices-table/vatinvoices-table.component';
+import { PurchaseinvoicesTableComponent } from './share/ac-tableview/purchaseinvoices-table/purchaseinvoices-table.component';
+import { SalesinvoicesTableComponent } from './share/ac-tableview/salesinvoices-table/salesinvoices-table.component';
+import { MACContentComponent } from './maccontent/maccontent.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 export const routes: Routes = [
   {
     path: '',
@@ -170,6 +175,12 @@ export const routes: Routes = [
       //   component: ApprovalsComponent,
       //   data: { noReuse: true },
       // },
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+
       {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
@@ -251,6 +262,45 @@ export const routes: Routes = [
   },
   {
     path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'MACContent', //  /:funcID',
+        component: MACContentComponent,
+      },
+    ],
+  },
+  // {
+  //   path: '',
+  //   component: LayoutComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  // {
+  //   path: '',
+  //   component: LayloutJournalComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '',
+  //   component: LayoutOnlyHeaderComponent,
+  //   children: [
+  //     {
+  //       path: 'MACContent/:funcID',
+  //       component: MACContentComponent,
+  //     },
+  //   ],
+  // },
+  {
+    path: '',
     loadChildren: () =>
       import('./settings/settings.module').then((m) => m.SettingsModule),
   },
@@ -269,7 +319,6 @@ export const routes: Routes = [
     PurchaseinvoicesAddComponent,
     JournalsAddComponent,
     DropdownDetailComponent,
-    PurchaseinvoiceslinesAddComponent,
     MultiSelectPopupComponent,
     SettledInvoicesAdd,
     DashboardComponent,
@@ -313,7 +362,6 @@ export const routes: Routes = [
     TableLineDetailStaticComponent,
     JournalV2Component,
     LayloutJournalComponent,
-    TableAccountingComponent,
     TranformSubobjectPipe,
     TranformClassBorderPipe,
     IssueTransactionsComponent,
@@ -337,6 +385,12 @@ export const routes: Routes = [
     PaymentOrderAddComponent,
     PaymentOrderDetailComponent,
     AdvancedPaymentLinkComponent,
+    AcctrantsTableComponent,
+    SettledinvoicesTableComponent,
+    VatinvoicesTableComponent,
+    PurchaseinvoicesTableComponent,
+    SalesinvoicesTableComponent,
+    MACContentComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -9,7 +9,6 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Reason } from './models/Reason.model';
 
 export const fmPurchaseInvoicesLines: FormModel = {
   entityName: 'AC_PurchaseInvoicesLines',
@@ -23,6 +22,41 @@ export const fmVATInvoices: FormModel = {
   formName: 'VATInvoices',
   gridViewName: 'grvVATInvoices',
   entityPer: 'AC_VATInvoices',
+};
+
+export const fmCashPaymentsLines: FormModel = {
+  formName: 'CashPaymentsLines',
+  gridViewName: 'grvCashPaymentsLines',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmCashPaymentsLinesOneAccount: FormModel = {
+  formName: 'CashPaymentsLinesOneAccount',
+  gridViewName: 'grvCashPaymentsLinesOneAccount',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmAcctTrans: FormModel = {
+  formName: 'AcctTrans',
+  gridViewName: 'grvAcctTrans',
+  entityName: 'AC_AcctTrans',
+  entityPer: 'AC_AcctTrans',
+};
+
+export const fmSettledInvoices: FormModel = {
+  formName: 'SettledInvoices',
+  gridViewName: 'grvSettledInvoices',
+  entityName: 'AC_SettledInvoices',
+  entityPer: 'AC_SettledInvoices',
+};
+
+export const fmSalesInvoicesLines: FormModel = {
+  entityName: 'AC_SalesInvoicesLines',
+  formName: 'SalesInvoicesLines',
+  gridViewName: 'grvSalesInvoicesLines',
+  entityPer: 'AC_SalesInvoicesLines',
 };
 
 @Injectable({
@@ -133,21 +167,21 @@ export class CodxAcService {
     return newMemo;
   }
 
-  setMemo(master: any, transactiontext: Array<Reason>) {
-    let newMemo = '';
-    let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
-    for (let i = 0; i < sortTrans.length; i++) {
-      if (sortTrans[i].value != null) {
-      }
-      if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
-        newMemo += sortTrans[i].value;
-      } else {
-        if (sortTrans[i].value != null) {
-          newMemo += sortTrans[i].value + ' - ';
-        }
-      }
-    }
-    return newMemo;
+  setMemo(master: any, transactiontext: any) {
+    // let newMemo = '';
+    // let sortTrans = transactiontext.sort((a, b) => a.index - b.index);
+    // for (let i = 0; i < sortTrans.length; i++) {
+    //   if (sortTrans[i].value != null) {
+    //   }
+    //   if (i == sortTrans.length - 1 && sortTrans[i].value != null) {
+    //     newMemo += sortTrans[i].value;
+    //   } else {
+    //     if (sortTrans[i].value != null) {
+    //       newMemo += sortTrans[i].value + ' - ';
+    //     }
+    //   }
+    // }
+    // return newMemo;
   }
 
   /** Check if rerquired fields are valid */

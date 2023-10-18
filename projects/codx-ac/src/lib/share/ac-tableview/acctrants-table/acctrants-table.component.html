@@ -1,0 +1,248 @@
+<div class="table-responsive table-ac">
+    <table style="table-layout: fixed;" class="table mb-0">
+        <thead class="border-gray-200 table-thead-ac">
+            <tr class="border-bottom">
+                <th class="w-40 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
+                        </codx-label>
+                    </div>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ">
+                        </codx-label>
+                    </div>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ, HT">
+                        </codx-label>
+                    </div>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có">
+                        </codx-label>
+                    </div>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
+                        </codx-label>
+                    </div>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblDR2" default="Số tiền, NT">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-30 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
+                        </codx-label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let item of listAcctrants;trackBy: trackByFn">
+                <tr [style]="item | tranformClassBorder : listAcctrants">
+                    <td class="text-center">
+                        <div class="d-flex justify-content-start ps-3">
+                            <div class="w-100px min-w-100px">
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <ng-container *ngIf="(item.accountID != null && item.accountID != '')">
+                                        <div class="d-flex align-items-center justify-content-start">
+                                            <span *ngIf="!item.crediting"
+                                                class="fs-6 fw-bold">N&nbsp;&nbsp;{{item.accountID}}</span>
+                                            <span *ngIf="item.crediting"
+                                                class="fw-bold fs-6 ms-5">C&nbsp;&nbsp;{{item.accountID}}</span>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div class="align-items-center w-100">
+                                <div *ngIf="(item.accountID != null && item.accountID != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <span style="text-align: left !important;" #accountID
+                                            class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="(item.objectName!= null && item.objectName != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
+                                            style="white-space: nowrap" class="fs-7 fw-bold" default="Nhà cung cấp">
+                                        </codx-label>
+                                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'"
+                                            style="white-space: nowrap" class="fs-7 fw-bold" default="Nhân viên">
+                                        </codx-label>
+                                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
+                                            class="fs-7 fw-bold" default="Đối tượng">
+                                        </codx-label>
+                                        :&nbsp;
+                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                                            {{item.objectName}}
+                                        </span>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="(item.diM3 != null && item.diM3 != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon"
+                                            fiedName="lblDIM3" default="Mục phí">
+                                        </codx-label>
+                                        :&nbsp;
+                                        <span class="fs-7 text-gray-700">{{item.diM3}}</span>
+                                        &nbsp;-&nbsp;
+                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                                            :&nbsp;{{item.costItemName}}
+                                        </span>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="(item.diM2 != null && item.diM2 != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <codx-label style="white-space: nowrap" class="fw-bold fs-7" fiedName="lblDIM2"
+                                            default="TTCP">
+                                        </codx-label>
+                                        :&nbsp;
+                                        <span class="fs-7 text-gray-700">{{item.diM2}}</span>
+                                        &nbsp;-&nbsp;
+                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                                            {{item.costCenterName}}
+                                        </span>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="(item.diM1 != null && item.diM1 != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" fiedName="lblDIM1"
+                                            default="Phòng ban">
+                                        </codx-label>
+                                        :&nbsp;
+                                        <span class="fs-7 text-gray-700">{{item.diM1}}</span>
+                                        &nbsp;-&nbsp;
+                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
+                                            {{item.departmentName}}
+                                        </span>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="(item.projectID != null && item.projectID != '')"
+                                    class="d-flex align-items-center justify-content-start">
+                                    <ng-container>
+                                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold"
+                                            fiedName="lblProjectID" default="Dự án">
+                                        </codx-label>
+                                        :&nbsp;
+                                        <span style="white-space: nowrap"
+                                            class="fs-7 text-gray-700">{{item.projectID}}</span>
+                                        &nbsp;-&nbsp;
+                                        <!-- <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
+                        item.projectID
+                          | formatvalue
+                            : fmCashPaymentsLines
+                            : 'projectID'
+                            : projectID
+                          | async
+                      "></span> -->
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div *ngIf="!item.crediting" class="d-flex align-items-center justify-content-end ps-3">
+                            <!-- <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
+                  <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.transAmt
+                    | tranformValueNumber : 'B' | async"></span>
+                </ng-container>
+                <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+                  <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                  | tranformValueNumber : 'B' | async"></span>
+                </ng-container> -->
+                            <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                    | tranformValueNumber : 'B' | async"></span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
+                            <!-- <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
+                  <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
+                  | tranformValueNumber : 'B' | async"></span>
+                </ng-container>
+                <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
+                  <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                  | tranformValueNumber : 'B' | async"></span>
+                </ng-container> -->
+                            <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                  | tranformValueNumber : 'B' | async"></span>
+                        </div>
+                    </td>
+                    <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-center">
+                        <div class="d-flex align-items-center justify-content-end ps-3">
+                            <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
+                | tranformValueNumber : 'S' | async"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <ejs-tooltip position="BottomLeft" id='tooltip' target="#tipmemo">
+                            <div id="tipmemo" *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
+                                <div class="d-flex align-items-center mb-1 ps-3">
+                                    <span class="line-clamp line-clamp-1 text-gray-600 fs-7">{{ item.memo }}</span>
+                                </div>
+                            </div>
+                            <ng-template #content>
+                                <span>{{ item.memo }}</span>
+                            </ng-template>
+                        </ejs-tooltip>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <div *ngIf="listAcctrants && listAcctrants.length == 0" class="ac-empty">
+        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+            <div class="d-flex flex-column flex-center justify-content-center">
+                <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+                <div class="fs-6 text-dark mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table style="table-layout: fixed;" class="table mb-0">
+    <tfoot class="table-footer-ac">
+        <td class="w-40">
+            <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+                <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                    default="Tổng cộng">
+                </codx-label>
+            </div>
+        </td>
+        <td class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctDR
+                  | tranformValueNumber : 'B' | async"></span>
+            </div>
+        </td>
+        <td class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctCR
+                  | tranformValueNumber : 'B' | async"></span>
+            </div>
+        </td>
+        <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalTransAmt
+                  | tranformValueNumber : 'S' | async"></span>
+            </div>
+        </td>
+        <td class="w-15"></td>
+        <td class="w-15"></td>
+    </tfoot>
+</table>

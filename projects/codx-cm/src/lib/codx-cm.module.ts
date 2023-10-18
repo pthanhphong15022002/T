@@ -8,10 +8,14 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
   AccumulationChartAllModule,
+  AccumulationChartModule,
+  AccumulationDataLabelService,
   AccumulationTooltipService,
   BubbleSeriesService,
+  BulletChartModule,
   ChartAllModule,
   ChartModule,
+  PieSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { SharedModule } from '@shared/shared.module';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
@@ -108,6 +112,7 @@ import { PopupAddCampaignContactComponent } from './campaigns/campaigns-detail/c
 import { CampaignDealsComponent } from './campaigns/campaigns-detail/campaign-deals/campaign-deals.component';
 import { PopupAddTaskCalendarComponent } from './calendars/view-calendar/popup-add-task-calendar/popup-add-task-calendar.component';
 import { PopupUpdateStatusComponent } from './deals/popup-update-status/popup-update-status.component';
+import { CodxShowMoreLessComponent } from './deals/deal-detail/codx-show-more-less/codx-show-more-less.component';
 
 export const routes: Routes = [
   {
@@ -268,6 +273,7 @@ const T_Component: Type<any>[] = [
     CampaignDealsComponent,
     PopupAddTaskCalendarComponent,
     PopupUpdateStatusComponent,
+    CodxShowMoreLessComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -289,6 +295,8 @@ const T_Component: Type<any>[] = [
     TreeMapModule,
     TreeMapAllModule,
     ChartModule,
+    BulletChartModule,
+    AccumulationChartModule
   ],
   exports: [RouterModule],
   providers: [
@@ -296,6 +304,8 @@ const T_Component: Type<any>[] = [
     CategoryService,
     LineSeriesService,
     BubbleSeriesService,
+    PieSeriesService,
+    AccumulationDataLabelService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

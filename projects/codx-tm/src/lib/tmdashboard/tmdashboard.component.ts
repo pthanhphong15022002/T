@@ -17,6 +17,7 @@ import {
 import {
   AuthStore,
   ButtonModel,
+  CacheService,
   CallFuncService,
   PageTitleService,
   UIComponent,
@@ -387,14 +388,15 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       TextMapping: 'Camera, 27 <br>11%',
     },
   ];
-
+  palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
     private routerActive: ActivatedRoute,
     private tmDBService: TMDashboardService,
     private callfunc: CallFuncService,
-    private auth: AuthStore
+    private auth: AuthStore,
+    private cacheService: CacheService,
   ) {
     super(inject);
     this.reportID = this.router.snapshot.params['funcID'];
@@ -402,6 +404,15 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.cacheService.valueList('SYS062').subscribe((res) => {
+      if (res.datas) {
+        this.palettes=[];
+        res.datas.map((x:any)=>{
+          this.palettes.push(x.value);
+          return x;
+        })
+      }
+    });
     this.buttons = [
       {
         id: '1',
@@ -709,15 +720,35 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                   for (let i = 0; i < this.arrReport.length; i++) {
                     arrChildren.push({
                       title: this.arrReport[i].customName,
-                      path: 'tm/tmdashboard/' + this.arrReport[i].recID,
+                      path: 'tm/dashboard/' + this.arrReport[i].recID,
                     });
                   }
                   if(!this.reportItem){
-                    this.reportItem = this.arrReport[0];
-                    this.pageTitle.setSubTitle(arrChildren[0].title);
-                    this.pageTitle.setChildren(arrChildren);
-                    this.codxService.navigate('', arrChildren[0].path);
-                    this.funcID= this.arrReport[0].reportID;
+                    if(this.reportID){
+                      let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+                      if(idx>-1){
+                        this.reportItem = this.arrReport[idx];
+                        this.pageTitle.setSubTitle(arrChildren[idx].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        //this.codxService.navigate('', arrChildren[idx].path);
+                        this.funcID= this.reportItem.reportID;
+                      }
+                      else{
+                        this.reportItem = this.arrReport[0];
+                        this.pageTitle.setSubTitle(arrChildren[0].title);
+                        this.pageTitle.setChildren(arrChildren);
+                        this.codxService.navigate('', arrChildren[0].path);
+                        this.funcID= this.arrReport[0].reportID;
+                      }
+                    }
+                    else{
+                      this.reportItem = this.arrReport[0];
+                      this.pageTitle.setSubTitle(arrChildren[0].title);
+                      this.pageTitle.setChildren(arrChildren);
+                      this.codxService.navigate('', arrChildren[0].path);
+                      this.funcID= this.arrReport[0].reportID;
+                    }
+
                     let method:any=''
                     let parameters:any={};
                     switch (this.funcID) {
@@ -944,8 +975,10 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
           let obj:any={};
           obj.groupName=key;
           obj.quantity=_taskByGroup[key].length;
+          obj.totalHours = this.sumByProp(_taskByGroup[key],'estimated');
           this.taskByGroup.push(obj);
         }
+
         this.doneTasks =this.dataset.filter((x:any)=>x.status=='90');
 
         this.subscription.unsubscribe();
@@ -956,21 +989,44 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
     }
   }
-
-  changeDir(ele:any,templateID:string){
-    if(this.tasksDoneOntimeEmployees.length && ele){
-      let ds = [...this.tasksDoneOntimeEmployees]
-      this.tasksDoneOntimeEmployees = [];
-      this.detectorRef.detectChanges();
-      if(ele.id=='btnLowestRadio'){
-        this.tasksDoneOntimeEmployees= ds.sort((a:any,b:any)=>a.percentage - b.percentage)
-      }
-      else{
-        this.tasksDoneOntimeEmployees= ds.sort((a:any,b:any)=>b.percentage - a.percentage)
-      }
-      this.tasksDoneOntimeEmployees = [... this.tasksDoneOntimeEmployees]
-      this.detectorRef.detectChanges();
+  activePane:string="btnHighestRadio"
+  changeDir(ele:any,templateID:string,obj:any){
+    if(ele.id == this.activePane) return;
+    this.activePane = ele.id;
+    if(ele.id == 'btnHighestRadio' && Object.keys(obj).length){
+      obj.paneHighest.classList.contains('d-none') && obj.paneHighest.classList.remove('d-none');
+      !obj.paneLowest.classList.contains('d-none') && obj.paneLowest.classList.add('d-none');
     }
+    if(ele.id == 'btnLowestRadio' && Object.keys(obj).length){
+      obj.paneLowest.classList.contains('d-none') && obj.paneLowest.classList.remove('d-none');
+      !obj.paneHighest.classList.contains('d-none') && obj.paneHighest.classList.add('d-none');
+    }
+      this.detectorRef.detectChanges();
+  }
+
+  activetab:string = 'groupByquantity'
+  changeGroupType(ele:any,obj:any){
+    if(ele.id == this.activetab) return;
+    this.activetab = ele.id;
+    if(ele.id == 'groupByquantity' && Object.keys(obj).length){
+      !obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.add('d-none');
+      !obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.add('d-none');
+
+      obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.remove('d-none');
+      obj.chart1.pie1.refresh();
+      obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.remove('d-none');
+
+    }
+    if(ele.id == 'groupBytime' && Object.keys(obj).length){
+      !obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.add('d-none');
+      !obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.add('d-none');
+
+      obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.remove('d-none');
+      obj.chart2.pie2.refresh();
+      obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.remove('d-none');
+
+    }
+      this.detectorRef.detectChanges();
   }
 
   random_bg_color() {

@@ -6,7 +6,7 @@ import {
   TemplateRef,
   Input,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
+import { ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxCoService } from '../../codx-co.service';
 
 @Component({
@@ -18,23 +18,20 @@ export class CalendarCenterComponent
   extends UIComponent
   implements AfterViewInit
 {
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('eventTemplate') eventTemplate?: TemplateRef<any>;
-  @ViewChild('cellTemplate') cellTemplate?: TemplateRef<any>;
-  @ViewChild('view')
-  viewBase: ViewsComponent;
+  @ViewChild('contentTmp') contentTmp: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+
+
   @Input() resources: any;
   @Input() resourceModel!: any;
 
+  @Input() orgUnitID: string = "";
+
   views: Array<ViewModel> | any = [];
-  fields = {
-    id: 'transID',
-    subject: { name: 'title' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    status: 'transType',
-  };
+  
   startTime: any;
   month: any;
   day: any;
@@ -45,6 +42,31 @@ export class CalendarCenterComponent
   dayoff: any;
   calendarID = 'STD';
 
+
+  //#region  list employee
+  scheduleHeader?: ResourceModel;
+  scheduleHeaderModel:any = {
+    Name: 'EmployeeName',
+    Field: 'EmployeeID',
+    IdField: 'EmployeeID',// field mapping vs event Schedule
+    TextField: 'EmployeeName',
+    Title: 'EmployeeName',
+  };
+
+  scheduleEvent?: ResourceModel;
+  scheduleEvtModel:any = {
+    id: 'transID',
+    subject: { name: 'title' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'resourceID' },// field mapping vs resource Schedule
+    status: 'approveStatus',
+  };
+
+  //#endregion
+  
+
+
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
@@ -53,33 +75,46 @@ export class CalendarCenterComponent
     this.getDayOff();
   }
 
+  // init schedule
+  initSchedule(){
+    this.scheduleEvent = new ResourceModel();
+    this.scheduleEvent.service = 'CO';
+    this.scheduleEvent.assemblyName = 'ERM.Business.CO';
+    this.scheduleEvent.className = 'CalendarsBusiness';
+    this.scheduleEvent.method = 'GetCalendarDataAsync';
+
+    this.scheduleHeader = new ResourceModel();
+    this.scheduleHeader.service = 'HR';
+    this.scheduleHeader.assemblyName = 'ERM.Business.HR';
+    this.scheduleHeader.className = 'HRBusiness';
+    this.scheduleHeader.method = 'GetEmployeeByCOAsync';
+    this.scheduleHeader.predicate = 'OrgUnitID=@0';
+    this.scheduleHeader.predicate = this.orgUnitID;
+
+  }
   ngAfterViewInit(): void {
+    // setting mode view
+    this.initSchedule();
+
     this.views = [
       {
-        type: ViewType.calendar,
-        active: true,
-        sameData: false,
-        model: {
-          isOutSource: true,
-          eventModel: this.fields,
-          resources: this.resources,
-          resourceModel: this.resourceModel,
-          template: this.eventTemplate,
-          template3: this.cellTemplate,
-          template6: this.headerTemp,
-          template8: this.contentTmp,
-        },
-      },
-      {
         type: ViewType.schedule,
-        active: true,
-        sameData: true,
-        model: {},
+        active:true,
+        request: this.scheduleEvent,//request lấy data cho event schedule
+        request2: this.scheduleHeader,//request lấy data cho resource schedule
+        showSearchBar: false,
+        showFilter: true,
+        model: {
+          eventModel: this.scheduleEvtModel,// mapping của event schedule
+          resourceModel: this.scheduleHeaderModel, // mapping của resource schedule
+          template3: this.cellTemplate,
+          template4: this.resourceHeader,//template của resource schedule
+          template6: this.mfButton,
+        },
       },
     ];
     this.detectorRef.detectChanges();
   }
-
   //navigate scheduler
   onAction(event: any) {
     if (
@@ -121,7 +156,7 @@ export class CalendarCenterComponent
 
   updateData(dataSource: any) {
     let myInterval = setInterval(() => {
-      this.calendar_center = (this.viewBase?.currentView as any)?.schedule;
+      this.calendar_center = (this.view?.currentView as any)?.schedule;
       if (this.calendar_center) {
         clearInterval(myInterval);
         for (const data of dataSource) {
@@ -205,28 +240,25 @@ export class CalendarCenterComponent
   //endRegion CO
 
   getCellContent(evt: any) {
+    let obj = evt.date;
     if (this.dayoff && this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
         let day = new Date(this.dayoff[i].startDate);
         if (
           day &&
-          evt.getFullYear() === day.getFullYear() &&
-          evt.getMonth() === day.getMonth() &&
-          evt.getDate() === day.getDate()
+          obj.getFullYear() === day.getFullYear() &&
+          obj.getMonth() === day.getMonth() &&
+          obj.getDate() === day.getDate()
         ) {
-          let time = evt.getTime();
+          let time = obj.getTime();
           let ele = document.querySelectorAll('[data-date="' + time + '"]');
           if (ele.length > 0) {
             ele.forEach((item) => {
               (item as any).style.backgroundColor = this.dayoff[i].color;
             });
             return (
-              '<icon class="' +
-              this.dayoff[i].symbol +
-              '"></icon>' +
-              '<span>' +
-              this.dayoff[i].note +
-              '</span>'
+              `<icon class="'${this.dayoff[i].symbol}'"></icon>
+              <span>${this.dayoff[i].note}</span>`
             );
           } else {
             return '';

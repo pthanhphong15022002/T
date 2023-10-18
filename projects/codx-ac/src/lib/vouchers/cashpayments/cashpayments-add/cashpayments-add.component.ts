@@ -40,21 +40,21 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Subject, Subscription, takeUntil } from 'rxjs';
-import { CashPaymentLine } from '../../../models/CashPaymentLine.model';
+import { Subject, Subscription, firstValueFrom, map, mergeMap, switchMap, take, takeUntil } from 'rxjs';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
-import { CodxAcService } from '../../../codx-ac.service';
+import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
 import { JournalService } from '../../../journals/journals.service';
 import {
   AnimationModel,
   ProgressBar,
 } from '@syncfusion/ej2-angular-progressbar';
-import { VATInvoices } from '../../../models/VATInvoices.model';
 import { RoundService } from '../../../round.service';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 import { E } from '@angular/cdk/keycodes';
 import { AdvancePayment } from '../cashpayments-add-advancepayment/advancepayment.component';
 import { Validators } from '@angular/forms';
+import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
+import { AC_CashPaymentsLines } from '../../../models/AC_CashPaymentsLines.model';
 @Component({
   selector: 'lib-cashpayments-add',
   templateUrl: './cashpayments-add.component.html',
@@ -85,12 +85,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   bankReceiveName: any;
   ownerReceive: any;
   isload:any = true;
-  fmCashpaymentLine: FormModel = {
-    funcID: 'ACT0410',
-    formName: 'CashPaymentsLines',
-    entityName: 'AC_CashPaymentsLines',
-    gridViewName: 'grvCashPaymentsLines',
-  };
+  fmCashpaymentLine: any = fmCashPaymentsLines;
+  fmCashpaymentLineOne: any = fmCashPaymentsLinesOneAccount;
+  fmSettledInvoices:any = fmSettledInvoices;
+  fmVATInvoices:any = fmVATInvoices;
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
@@ -621,21 +619,26 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   valueChangeLineVATInvoices(event: any) {
-    switch (event.field.toLowerCase()) {
-      case 'vatid':
-        this.acService
-          .execApi('AC', 'VATInvoicesBusiness', 'ValueChangedAsync', [
-            event.field,
-            event.value,
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              this.vatAccount = res.vatAccount;
-            }
-          });
-        break;
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'goods') {
+      this.formCashPayment.data.unbounds = {
+        itemID: event?.itemData?.ItemID,
+      };
     }
+    this.eleGridVatInvoices.startProcess();
+    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+      'AC_CashPayments',
+      this.formCashPayment.data,
+      oLine,
+      event.field
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.vatAccount = res?.vatAccount;
+        this.detectorRef.detectChanges();
+        this.eleGridVatInvoices.endProcess();
+      }
+    })
   }
 
   /**
@@ -998,7 +1001,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     let rAcctID = null;
     let oOffsetAcct = null;
     let oAccount = null;
-    let oLine : any = new CashPaymentLine();
+    let model = new AC_CashPaymentsLines();
+    let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formCashPayment.data.recID;
     oLine.objectID = this.formCashPayment.data.objectID;
     oLine.reasonID = this.formCashPayment.data.reasonID;
@@ -1279,10 +1283,11 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm dòng hóa đơn GTGT
    */
   addLineVatInvoices() {
-    let data:any  = new VATInvoices();
-    data.transID = this.formCashPayment.data.recID;
-    data.lineID = this.eleGridCashPayment?.rowDataSelected?.recID;
-    this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
+    let model = new AC_VATInvoices();
+    let oLine = Util.camelizekeyObj(model);
+    oLine.transID = this.formCashPayment.data.recID;
+    oLine.objectID = this.formCashPayment.data.objectID;
+    this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
   }
 
   /**
@@ -1478,23 +1483,23 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       }, 100);
         break;
       case 'beginEdit': //? trước khi thêm dòng
-        if (event?.data.dr == 0) { //? khi số tiền < 0
-          this.eleGridCashPayment.startProcess(); //? ko cho lưu dòng
-        }
+        // if (event?.data.dr == 0) { //? khi số tiền < 0
+        //   this.eleGridCashPayment.startProcess(); //? ko cho lưu dòng
+        // }
         let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
         let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
         this.setLockAndRequireFields(event?.data,oAccount,oOffsetAccount);
         break;
-      case 'processEdit':
-        if (event?.data?.requestType == 'save') {
-          if (this.eleGridCashPayment.isProcessing) { ///? check số tiền phải > 0
-            if (event?.rowData.dr == 0) {
-              this.eleGridCashPayment.showErrorField('dr','E0094');
-              return;
-            } 
-          }
-        }
-        break;
+      // case 'processEdit':
+      //   if (event?.data?.requestType == 'save') {
+      //     if (this.eleGridCashPayment.isProcessing) { ///? check số tiền phải > 0
+      //       if (event?.rowData.dr == 0) {
+      //         this.eleGridCashPayment.showErrorField('dr','E0094');
+      //         return;
+      //       } 
+      //     }
+      //   }
+      //   break;
     }
   }
   
@@ -1684,6 +1689,29 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formCashPayment.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm check validate trước khi save line (cashpayment)
+   * @param data 
+   * @returns 
+   */
+  async saveValidationLine(data:any){
+    let lsterror = [];
+    if (data.dr == 0) {
+      lsterror.push({field:'dr',msgCode:'E0094'}); //? truyền field lỗi và msgcode
+    }
+    // xử lí trường hợp call api để check validate
+    // let error = await new Promise((resolve, reject) => {
+    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
+    //     'USD'
+    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    //     if (res) {
+    //       resolve({status: true});
+    //     }
+    //   });
+    //   });
+    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

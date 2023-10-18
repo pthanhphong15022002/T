@@ -130,10 +130,21 @@
           ></span>
         </span>
         <codx-mfunc class="mt-n3"
+        *ngIf="fromWS == false"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
           [dataItem]="data"
+        >
+        </codx-mfunc>
+
+        <codx-mfunc class="mt-n3"
+        *ngIf="fromWS == true"
+          [formModel]="formModel"
+          (clickMF)="clickMF($event, data, funcID)"
+          type="hover"
+          [dataItem]="data"
+          (changeDataMF)="handleShowHideMfWs($event, func)"
         >
         </codx-mfunc>
       </div>
@@ -245,10 +256,21 @@
         </span>
       </div>
       <codx-mfunc
+      *ngIf="fromWS == false"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
         [dataItem]="data"
+      >
+      </codx-mfunc>
+
+      <codx-mfunc
+      *ngIf="fromWS == true"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+        (changeDataMF)="handleShowHideMfWs($event, func)"
       >
       </codx-mfunc>
     </div>
@@ -340,10 +362,21 @@
         </span>
       </div>
       <codx-mfunc
+      *ngIf="fromWS == false"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
         [dataItem]="data"
+      >
+      </codx-mfunc>
+
+      <codx-mfunc
+      *ngIf="fromWS == true"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+        (changeDataMF)="handleShowHideMfWs($event, func)"
       >
       </codx-mfunc>
     </div>
@@ -470,10 +503,21 @@
       </div>
     </div>
     <codx-mfunc class="mt-n3"
+    *ngIf="fromWS == false"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc class="mt-n3"
+    *ngIf="fromWS == true"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data, funcID)"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, func)"
     >
     </codx-mfunc>
   </div>
@@ -581,10 +625,21 @@
       ></span>
     </span>
     <codx-mfunc class="mt-n3"
+    *ngIf="fromWS == false"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc class="mt-n3"
+    *ngIf="fromWS == true"
+      [formModel]="formModel"
+      (clickMF)="clickMF($event, data, funcID)"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, func)"
     >
     </codx-mfunc>
   </div>
@@ -775,10 +830,21 @@
         </span>
       </div>
       <codx-mfunc
+      *ngIf="fromWS == false"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
         [dataItem]="data"
+      >
+      </codx-mfunc>
+
+      <codx-mfunc
+      *ngIf="fromWS == true"
+        [formModel]="formModel"
+        (clickMF)="clickMF($event, data, funcID)"
+        type="hover"
+        [dataItem]="data"
+        (changeDataMF)="handleShowHideMfWs($event, func)"
       >
       </codx-mfunc>
     </div>

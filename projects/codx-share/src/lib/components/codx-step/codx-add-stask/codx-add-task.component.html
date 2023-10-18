@@ -1,16 +1,29 @@
-<codx-form #form [customToolbar]="header" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formModel]="dialog?.formModel" [openMore]="false"></codx-form>
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog?.formModel"
+  [openMore]="false"
+></codx-form>
 
 <ng-template #header>
   <div class="pt-2 px-2 w-100">
     <div class="d-flex justify-content-between align-items-center w-100">
       <div class="d-flex align-items-center w-100 job">
-        <span class="icon-18 me-2 circle" [ngClass]="typeTask?.icon"
-          [ngStyle]="{ color: typeTask?.color || 'gray', border: '2px solid' }"></span>
+        <span
+          class="icon-18 me-2 circle"
+          [ngClass]="typeTask?.icon"
+          [ngStyle]="{ color: typeTask?.color || 'gray', border: '2px solid' }"
+        ></span>
         <span class="fs-4 fw-bold">{{ titleName }}</span>
       </div>
-      <button class="button-close d-flex" style="border: none; outline: none; background: none"
-        (click)="dialog.close()">
+      <button
+        class="button-close d-flex"
+        style="border: none; outline: none; background: none"
+        (click)="dialog.close()"
+      >
         <i class="icon-close icon-18 text-hover-danger p-1"></i>
       </button>
     </div>
@@ -18,7 +31,14 @@
 </ng-template>
 <ng-template #subHeader>
   <div class="ms-4" *ngIf="typeTask?.value == 'A'">
-    <codx-input class="me-2" type="colorpicker" [showText]="false" [modeSwitcher]="false" [crrValue]="" field="color">
+    <codx-input
+      class="me-2"
+      type="colorpicker"
+      [showText]="false"
+      [modeSwitcher]="false"
+      [crrValue]=""
+      field="color"
+    >
     </codx-input>
   </div>
 </ng-template>
@@ -26,8 +46,12 @@
 <ng-template #body>
   <div class="card-form">
     <div *ngIf="isStart" class="form-group d-flex align-item-center">
-      <codx-label class="label-colon text-primary" fiedName="status" [formModel]="dialog?.formModel"
-        default="Trạng thái"></codx-label>
+      <codx-label
+        class="label-colon text-primary"
+        fiedName="status"
+        [formModel]="dialog?.formModel"
+        default="Trạng thái"
+      ></codx-label>
 
       <div class="mx-5">
         <!-- <codx-input
@@ -41,10 +65,10 @@
           [disabled]="action == 'edit'"
         >
         </codx-input> -->
-        <ejs-radiobutton 
-          name="status" 
-          value="1" 
-          [label]="'Mới'" 
+        <ejs-radiobutton
+          name="status"
+          value="1"
+          [label]="'Mới'"
           (change)="valueChangeRadio($event)"
           [checked]="stepsTasks?.status == '1'"
           [disabled]="action == 'edit'"
@@ -52,9 +76,10 @@
       </div>
 
       <div class="ms-5">
-        <ejs-radiobutton 
-          name="status" value="3" 
-          [label]="'Hoàn thành'" 
+        <ejs-radiobutton
+          name="status"
+          value="3"
+          [label]="'Hoàn thành'"
           (change)="valueChangeRadio($event)"
           [checked]="stepsTasks?.status == '3'"
           [disabled]="action == 'edit'"
@@ -72,51 +97,108 @@
       </div>
     </div>
 
+    <!-- <ng-container [ngTemplateOutlet]="addTaskInCM"></ng-container> -->
+
     <div class="form-group" *ngIf="!isActivitie">
       <div class="mb-1 line-clamp line-clamp-1">
-        <codx-label class="text-primary" fiedName="stepID" [formModel]="form?.formModel" default="Thuộc giai đoạn: ">
+        <codx-label
+          class="text-primary"
+          fiedName="stepID"
+          [formModel]="form?.formModel"
+          default="Thuộc giai đoạn: "
+        >
         </codx-label>
       </div>
       <div>
-        <ejs-combobox #sample [dataSource]="listInsStep" [fields]="fieldsStep" [value]="stepsTasks?.stepID"
-          [allowCustom]="false" [enabled]="disableStep" (change)="changeStep($event)"></ejs-combobox>
+        <ejs-combobox
+          #sample
+          [dataSource]="listInsStep"
+          [fields]="fieldsStep"
+          [value]="stepsTasks?.stepID"
+          [allowCustom]="false"
+          [enabled]="disableStep"
+          (change)="changeStep($event)"
+        ></ejs-combobox>
       </div>
     </div>
 
-    <div *ngIf="!isActivitie" class="form-group d-flex justify-content-between align-item-center w-100">
+    <div
+      *ngIf="!isActivitie"
+      class="form-group d-flex justify-content-between align-item-center w-100"
+    >
       <div class="step-name w-100">
         <div>
-          <codx-label class="text-primary" fiedName="StepName" [formModel]="dialog?.formModel" default="Nhóm công việc">
+          <codx-label
+            class="text-primary"
+            fiedName="StepName"
+            [formModel]="dialog?.formModel"
+            default="Nhóm công việc"
+          >
           </codx-label>
         </div>
         <div>
-          <ejs-combobox #sample [dataSource]="listGroup" [fields]="fieldsGroup" [value]="stepsTasks?.taskGroupID"
-            (change)="filterText($event, 'taskGroupID')" [allowCustom]="false"
-            [readonly]="stepsTasks?.isTaskDefault || action == 'copy'"></ejs-combobox>
+          <ejs-combobox
+            #sample
+            [dataSource]="listGroup"
+            [fields]="fieldsGroup"
+            [value]="stepsTasks?.taskGroupID"
+            (change)="filterText($event, 'taskGroupID')"
+            [allowCustom]="false"
+            [readonly]="stepsTasks?.isTaskDefault || action == 'copy'"
+          ></ejs-combobox>
         </div>
       </div>
     </div>
     <!-- Ten Cong Viec -->
-    <div class="form-group d-flex justify-content-between align-item-center w-100">
+    <div
+      class="form-group d-flex justify-content-between align-item-center w-100"
+    >
       <!-- name -->
-      <div class="step-name w-100" [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''">
+      <div
+        class="step-name w-100"
+        [ngClass]="typeTask?.value === 'P' ? 'me-4' : ''"
+      >
         <div>
-          <codx-label fiedName="taskName" [formModel]="dialog?.formModel" default="Tên công việc">
+          <codx-label
+            fiedName="taskName"
+            [formModel]="dialog?.formModel"
+            default="Tên công việc"
+          >
           </codx-label>
         </div>
-        <codx-input field="taskName" [formModel]="dialog?.formModel" type="text" [crrValue]="stepsTasks?.taskName"
-          (valueChange)="valueChangeText($event)" [disabled]="stepsTasks?.isTaskDefault">
+        <codx-input
+          field="taskName"
+          [formModel]="dialog?.formModel"
+          type="text"
+          [crrValue]="stepsTasks?.taskName"
+          (valueChange)="valueChangeText($event)"
+          [disabled]="stepsTasks?.isTaskDefault"
+        >
         </codx-input>
       </div>
       <!--End name -->
       <!-- Cuoc goi -->
-      <div *ngIf="typeTask?.value === 'C'" class="w-100 ms-4" style="flex-basis: 100%">
+      <div
+        *ngIf="typeTask?.value === 'C'"
+        class="w-100 ms-4"
+        style="flex-basis: 100%"
+      >
         <div>
-          <codx-label fiedName="callType" [formModel]="dialog?.formModel" default="Loại cuộc gọi">
+          <codx-label
+            fiedName="callType"
+            [formModel]="dialog?.formModel"
+            default="Loại cuộc gọi"
+          >
           </codx-label>
         </div>
-        <codx-input field="callType" type="valuelist" refValue="DP023" [crrValue]="stepsTasks?.callType"
-          (valueChange)="valueChangeCombobox($event)" [disabled]="stepsTasks?.isTaskDefault">
+        <codx-input
+          field="callType"
+          type="valuelist"
+          refValue="DP023"
+          [crrValue]="stepsTasks?.callType"
+          (valueChange)="valueChangeCombobox($event)"
+          [disabled]="stepsTasks?.isTaskDefault"
+        >
         </codx-input>
       </div>
       <!--end Cuoc goi -->
@@ -125,64 +207,136 @@
 
     <div class="form-group d-flex justify-content-between" *ngIf="isShowDate">
       <div class="me-2">
-        <codx-label fiedName="startDate" [formModel]="dialog?.formModel" default="Ngày bắt đầu">
+        <codx-label
+          fiedName="startDate"
+          [formModel]="dialog?.formModel"
+          default="Ngày bắt đầu"
+        >
         </codx-label>
-        <codx-input [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault" field="startDate"
-          (valueChange)="changeValueDateExpected($event)" [crrValue]="stepsTasks?.startDate" type="datetime" format="F"
-          [disabled]="stepsTasks?.isTaskDefault">
+        <codx-input
+          [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
+          field="startDate"
+          (valueChange)="changeValueDateExpected($event)"
+          [crrValue]="stepsTasks?.startDate"
+          type="datetime"
+          format="F"
+          [disabled]="stepsTasks?.isTaskDefault"
+        >
         </codx-input>
       </div>
       <div class="ms-2">
-        <codx-label fiedName="endDate" [formModel]="dialog?.formModel" default="Ngày kết thúc">
+        <codx-label
+          fiedName="endDate"
+          [formModel]="dialog?.formModel"
+          default="Ngày kết thúc"
+        >
         </codx-label>
-        <codx-input [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault" field="endDate"
-          (valueChange)="changeValueDateExpected($event)" [crrValue]="stepsTasks?.endDate" type="datetime" format="F">
+        <codx-input
+          [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
+          field="endDate"
+          (valueChange)="changeValueDateExpected($event)"
+          [crrValue]="stepsTasks?.endDate"
+          type="datetime"
+          format="F"
+        >
         </codx-input>
       </div>
     </div>
 
     <div class="form-group" *ngIf="!isShowDate && isStart">
-      <codx-label fiedName="actualEnd" [formModel]="dialog?.formModel" default="Ngày kết thúc thực tế">
+      <codx-label
+        fiedName="actualEnd"
+        [formModel]="dialog?.formModel"
+        default="Ngày kết thúc thực tế"
+      >
       </codx-label>
-      <codx-input [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault" field="actualEnd"
-        (valueChange)="changeValueDate($event)" [crrValue]="stepsTasks?.actualEnd" type="datetime" format="F">
+      <codx-input
+        [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
+        field="actualEnd"
+        (valueChange)="changeValueDate($event)"
+        [crrValue]="stepsTasks?.actualEnd"
+        type="datetime"
+        format="F"
+      >
       </codx-input>
     </div>
 
     <div class="form-group" *ngIf="isShowTime">
       <div class="d-flex justify-content-between row">
         <div class="col-6">
-          <codx-label fiedName="durationDay" [formModel]="dialog?.formModel" default="Thời lượng công việc">
+          <codx-label
+            fiedName="durationDay"
+            [formModel]="dialog?.formModel"
+            default="Thời lượng công việc"
+          >
           </codx-label>
           <div class="d-flex justify-content-between row">
             <div class="col-6 position-relative">
-              <codx-input field="durationDay" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.durationDay"
-                (valueChange)="valueChangeText($event)" [disabled]="isStart ||stepsTasks?.isTaskDefault " type="number" min="0">
+              <codx-input
+                field="durationDay"
+                [formModel]="dialog?.formModel"
+                [crrValue]="stepsTasks?.durationDay"
+                (valueChange)="valueChangeText($event)"
+                [disabled]="isStart || stepsTasks?.isTaskDefault"
+                type="number"
+                min="0"
+              >
               </codx-input>
-              <div class="position-absolute text-gray-400" style="top: 8px; right: 14px">
-                <codx-label name="titleDate" [formModel]="form?.formModel" default="Ngày">
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 8px; right: 14px"
+              >
+                <codx-label
+                  name="titleDate"
+                  [formModel]="form?.formModel"
+                  default="Ngày"
+                >
                 </codx-label>
               </div>
             </div>
 
             <div class="col-6 position-relative">
-              <codx-input field="durationHour" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.durationHour"
-                (valueChange)="valueChangeText($event)" type="number" min="0" [disabled]="isStart || stepsTasks?.isTaskDefault">
+              <codx-input
+                field="durationHour"
+                [formModel]="dialog?.formModel"
+                [crrValue]="stepsTasks?.durationHour"
+                (valueChange)="valueChangeText($event)"
+                type="number"
+                min="0"
+                [disabled]="isStart || stepsTasks?.isTaskDefault"
+              >
               </codx-input>
-              <div class="position-absolute text-gray-400" style="top: 8px; right: 14px">
-                <codx-label name="titleHour" [formModel]="form?.formModel" default="Giờ">
+              <div
+                class="position-absolute text-gray-400"
+                style="top: 8px; right: 14px"
+              >
+                <codx-label
+                  name="titleHour"
+                  [formModel]="form?.formModel"
+                  default="Giờ"
+                >
                 </codx-label>
               </div>
             </div>
           </div>
         </div>
         <div class="col-6 ps-1">
-          <codx-label fiedName="reminders" [formModel]="dialog?.formModel" default="Nhắc nhở trước khi bắt đầu">
+          <codx-label
+            fiedName="reminders"
+            [formModel]="dialog?.formModel"
+            default="Nhắc nhở trước khi bắt đầu"
+          >
           </codx-label>
           <div>
-            <codx-input field="reminders" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.reminders"
-              refValue="DP030" type="valuelist" (valueChange)="valueChangeText($event)"
-              [disabled]="stepsTasks?.isTaskDefault">
+            <codx-input
+              field="reminders"
+              [formModel]="dialog?.formModel"
+              [crrValue]="stepsTasks?.reminders"
+              refValue="DP030"
+              type="valuelist"
+              (valueChange)="valueChangeText($event)"
+              [disabled]="stepsTasks?.isTaskDefault"
+            >
             </codx-input>
           </div>
         </div>
@@ -190,64 +344,126 @@
     </div>
 
     <div class="form-group">
-      <codx-role *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B'" [fiedName]="'roles'"
-        [formModel]="form?.formModel" [default]="'Vai trò/bộ phận thực hiện'" [dataSource]="owner"
-        [icon]="'icon-person_add_alt_1'" [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRolerOwner($event)" [vllShare]="'DP0331'" [multiple]="false" [listCombobox]="listCombobox"
-        [type]="'all'"></codx-role>
+      <codx-role
+        *ngIf="typeTask?.value != 'M' && typeTask?.value != 'B'"
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="'Vai trò/bộ phận thực hiện'"
+        [dataSource]="owner"
+        [icon]="'icon-person_add_alt_1'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRolerOwner($event)"
+        [vllShare]="'DP0331'"
+        [multiple]="false"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
     </div>
 
     <div class="form-group">
-      <codx-role *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'" [fiedName]="'roles'"
-        [formModel]="form?.formModel" [default]="
+      <codx-role
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
+        [fiedName]="'roles'"
+        [formModel]="form?.formModel"
+        [default]="
           typeTask?.value === 'M' ? 'Người chủ trì' : 'Người đi công tác'
-        " [dataSource]="owner" [icon]="'icon-person_add_alt_1'" [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRolerOwner($event)" [multiple]="false" [vllShare]="'DP0331'" [listCombobox]="listCombobox"
-        [type]="'all'"></codx-role>
+        "
+        [dataSource]="owner"
+        [icon]="'icon-person_add_alt_1'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRolerOwner($event)"
+        [multiple]="false"
+        [vllShare]="'DP0331'"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
     </div>
 
     <div class="form-group">
-      <codx-role *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'" [fiedName]="'roles'"
-        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'" [dataSource]="participant"
-        [icon]="'icon-person_add_alt_1'" [style]="{ 'justify-content': 'space-between' }"
-        (valueList)="changeRoler($event)" [vllShare]="'DP0331'" [multiple]="true" [listCombobox]="listCombobox"
-        [type]="'all'"></codx-role>
+      <codx-role
+        *ngIf="typeTask?.value === 'M' || typeTask?.value === 'B'"
+        [fiedName]="'roles'"
+        [default]="typeTask?.value === 'M' ? 'Người tham gia' : 'Người đi cùng'"
+        [dataSource]="participant"
+        [icon]="'icon-person_add_alt_1'"
+        [style]="{ 'justify-content': 'space-between' }"
+        (valueList)="changeRoler($event)"
+        [vllShare]="'DP0331'"
+        [multiple]="true"
+        [listCombobox]="listCombobox"
+        [type]="'all'"
+      ></codx-role>
     </div>
 
     <div class="form-group">
       <ng-container *ngFor="let item of listField">
-        <codx-input-custom-field [customField]="item" [objectId]="item.recID" [objectType]="'DP_Instances_Steps_Fields'"
-          [formModel]="dialog.formModel" (valueChangeCustom)="valueChangeCustom($event)"
-          (addFileCompleted)="addFileCompleted($event)"></codx-input-custom-field>
+        <codx-input-custom-field
+          [customField]="item"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        ></codx-input-custom-field>
       </ng-container>
     </div>
 
     <div class="form-group">
       <div>
-        <codx-label fiedName="memo" [formModel]="dialog?.formModel" default="Ghi chú"></codx-label>
+        <codx-label
+          fiedName="memo"
+          [formModel]="dialog?.formModel"
+          default="Ghi chú"
+        ></codx-label>
       </div>
-      <codx-input field="memo" [formModel]="dialog?.formModel" [crrValue]="stepsTasks?.memo"
-        (valueChange)="valueChangeText($event)" [disabled]="stepsTasks?.isTaskDefault">
+      <codx-input
+        field="memo"
+        [formModel]="dialog?.formModel"
+        [crrValue]="stepsTasks?.memo"
+        (valueChange)="valueChangeText($event)"
+        [disabled]="stepsTasks?.isTaskDefault"
+      >
       </codx-input>
     </div>
     <!-- Cuoc hop -->
-    <div *ngIf="typeTask?.value === 'M'" class="form-group d-flex align-item-center justify-content-between">
+    <div
+      *ngIf="typeTask?.value === 'M'"
+      class="form-group d-flex align-item-center justify-content-between"
+    >
       <div>
         <div class="d-flex align-item-center">
-          <codx-input type="switch" class="test-check me-3" [checked]="stepsTasks?.isOnline" field="isOnline"
-            (valueChange)="valueChangeAlert($event)" [disabled]="stepsTasks?.isTaskDefault"></codx-input>
-          <codx-label fiedName="isOnline" [formModel]="dialog?.formModel" default="Họp trực tuyến"></codx-label>
+          <codx-input
+            type="switch"
+            class="test-check me-3"
+            [checked]="stepsTasks?.isOnline"
+            field="isOnline"
+            (valueChange)="valueChangeAlert($event)"
+            [disabled]="stepsTasks?.isTaskDefault"
+          ></codx-input>
+          <codx-label
+            fiedName="isOnline"
+            [formModel]="dialog?.formModel"
+            default="Họp trực tuyến"
+          ></codx-label>
         </div>
-        <div class="d-flex align-items-center fw-bold" *ngIf="stepsTasks?.isOnline">
+        <div
+          class="d-flex align-items-center fw-bold"
+          *ngIf="stepsTasks?.isOnline"
+        >
           <a href="">{{ stepsTasks?.reference }}</a>
         </div>
-
       </div>
 
       <div class="d-flex align-item-center" *ngIf="stepsTasks?.isOnline">
         <span class="text-end align-items-end">
-          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupLink(addLink)">
-            <i class="icon-insert_link text-primary text-hover-primary-dark icon-24"></i>
+          <button
+            type="button"
+            class="btn btn-clean btn-sm btn-icon btn-icon-md"
+            (click)="openPopupLink(addLink)"
+          >
+            <i
+              class="icon-insert_link text-primary text-hover-primary-dark icon-24"
+            ></i>
           </button>
         </span>
       </div>
@@ -259,16 +475,34 @@
       <div class="d-flex align-items-center mb-2">
         <span class="icon-attach_file icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary">
-          <codx-label name="lblAttachments" [formModel]="dialog.formModel" default="Tài liệu đính kèm">
+          <codx-label
+            name="lblAttachments"
+            [formModel]="dialog.formModel"
+            default="Tài liệu đính kèm"
+          >
           </codx-label>
         </div>
       </div>
     </div>
     <div>
-      <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="stepsTasks?.recID"
-        hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1"
-        type="inline" allowMultiFile="1" referType="source" [formModel]="dialog.formModel"
-        (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="stepsTasks?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
       </codx-attachment>
     </div>
   </ng-container>
@@ -277,36 +511,121 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)"
-      [disabled]="stepsTasks?.isTaskDefault">
-      <i class="icon-cloud_upload fs-5"></i><span>
-        <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
+    <button
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="addFile($event)"
+      [disabled]="stepsTasks?.isTaskDefault"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Đính kèm"
+        ></codx-label>
       </span>
     </button>
     <div class="d-flex justify-content-end">
-      <button *ngIf="typeTask?.value != 'M' && (this.action == 'add' || this.action == 'copy') && isBoughtTM" type="button"
-        class="btn btn-primary ms-1" (click)="beforeSave(true)">
-        <codx-label name="Save" formName="Sprints" default="Lưu và giao việc"></codx-label>
+      <button
+        *ngIf="
+          typeTask?.value != 'M' &&
+          (this.action == 'add' || this.action == 'copy') &&
+          isBoughtTM
+        "
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="beforeSave(true)"
+      >
+        <codx-label
+          name="Save"
+          formName="Sprints"
+          default="Lưu và giao việc"
+        ></codx-label>
       </button>
 
-      <button type="button" class="btn btn-primary ms-1" (click)="beforeSave(true)" *ngIf="
-          typeTask?.value == 'M' && (this.action == 'add' || this.action == 'copy')
-        ">
-        <codx-label name="Save" formName="Sprints" default="Lưu và tạo cuộc họp"></codx-label>
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="beforeSave(true)"
+        *ngIf="
+          typeTask?.value == 'M' &&
+          (this.action == 'add' || this.action == 'copy')
+        "
+      >
+        <codx-label
+          name="Save"
+          formName="Sprints"
+          default="Lưu và tạo cuộc họp"
+        ></codx-label>
       </button>
       <button type="button" class="btn btn-primary ms-1" (click)="beforeSave()">
         <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
       </button>
-    </div>  
+    </div>
   </div>
-  
 </ng-template>
 
 <ng-template #addLink let-dialog="dialogPopupLink">
-  <codx-meeting-online #suremeet [dialog]="dialogPopupLink" [meetingTitle]="stepsTasks?.taskName"
-    [meetingDescription]="stepsTasks?.memo" [meetingStartDate]="stepsTasks?.startDate" [meetingStartTime]="'08:00'"
-    [meetingDuration]="60" [meetingPassword]="null" [meetingUrl]="stepsTasks.reference" [userName]="user.userName"
-    [mail]="user.email" [isManager]="true"></codx-meeting-online>
+  <codx-meeting-online
+    #suremeet
+    [dialog]="dialogPopupLink"
+    [meetingTitle]="stepsTasks?.taskName"
+    [meetingDescription]="stepsTasks?.memo"
+    [meetingStartDate]="stepsTasks?.startDate"
+    [meetingStartTime]="'08:00'"
+    [meetingDuration]="60"
+    [meetingPassword]="null"
+    [meetingUrl]="stepsTasks.reference"
+    [userName]="user.userName"
+    [mail]="user.email"
+    [isManager]="true"
+  ></codx-meeting-online>
+</ng-template>
+
+<ng-template #addTaskInCM>
+  <div class="form-group" *ngIf="true">
+    <div class="mb-1 line-clamp line-clamp-1">
+      <codx-label
+        class="text-primary"
+        fiedName=""
+        [formModel]="form?.formModel"
+        default="Danh mục cần thêm"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <codx-input
+        [formModel]="dialog.formModel"
+        field=""
+        type="valuelist"
+        refValue="CRM060"
+        (valueChange)="changeType($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="form-group" *ngFor="let item of listTypeCM">
+    <div [ngClass]="item?.value == typeCM ? 'd-inline' : 'd-none'" >
+      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+        <codx-label
+          class="text-primary"
+          fiedName=""
+          [formModel]="form?.formModel"
+          [default]="item?.text"
+        >
+        </codx-label>
+      </div>
+      <codx-input
+        #inputDeal
+        [field]="'deals'"
+        type="combobox"
+        [refValue]="item?.refValue"
+        (valueChange)="changeDataCM($event)"
+      ></codx-input>
+    </div>
+  </div>
 </ng-template>
 <!-- End cuoc hop -->
 <!-- Gui mail -->

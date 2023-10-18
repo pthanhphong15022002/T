@@ -25,7 +25,7 @@
       <div *ngSwitchCase="'1'">
         <div *ngIf="lstOptions">
           <div class="d-flex align-items-center bg-hover rounded-1 cursor-pointer py-3 px-4 mt-1"
-            *ngFor="let option of lstOptions" (click)="changeLogin2FAType(option)">
+            *ngFor="let option of lstOptions" (click)="changeLogin2FAType(option.value)">
             <div [class]="'rounded-circle me-3 icon-26 text-gray-800 ' + option.icon"></div>
             <div class="w-100">
               <div class="fs-6 fw-bold text-gray-700">

@@ -16,8 +16,11 @@ import {
 import { CoreModule } from '@core/core.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
+  AccumulationChartAllModule,
   AccumulationChartModule,
   ChartAllModule,
+  ChartAnnotationService,
+  ColumnSeriesService,
 } from '@syncfusion/ej2-angular-charts';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
@@ -58,7 +61,12 @@ import { SettingCycleComponent } from './setting/setting-cycle/setting-cycle.com
 import { SettingPolicyLinesComponent } from './setting/setting-policy-lines/setting-policy-lines.component';
 import { AddDedicationRankComponent } from './setting/dedication-rank/add-dedication-rank/add-dedication-rank.component';
 import { SettingContentComponent } from './setting/setting-content/setting-content.component';
-//import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
+import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-setting/pipes/position.pipe';
+import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldown.component';
+import { PopupInputPointsComponent } from './approvals/popup-input-points/popup-input-points.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
 
 export const routes: Routes = [
   {
@@ -79,7 +87,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'statistical/:funcID',
+        path: 'dashboard/:funcID',
         component: StatisticalComponent,
       },
       {
@@ -89,6 +97,10 @@ export const routes: Routes = [
       {
         path: 'cards/:funcID',
         component: CardsComponent,
+      },
+      {
+        path: 'approvals/:funcID',
+        component: ApprovalsComponent,
       },
       {
         path: 'gifttrans/:funcID',
@@ -203,6 +215,9 @@ const Component: Type<any>[] = [
   SettingPolicyLinesComponent,
   AddDedicationRankComponent,
   SettingContentComponent,
+  DrilldownComponent,
+  PopupInputPointsComponent,
+  ApprovalsComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -214,14 +229,16 @@ const T_Pipe: Type<any>[] = [];
     CodxShareModule,
     CoreModule,
     NgbModule,
-    AccumulationChartModule,
     ChartAllModule,
+    AccumulationChartAllModule,
     ProgressBarModule,
+    CircularGaugeModule,
+    TreeMapModule,
 
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [Component, T_Pipe],
+  declarations: [Component, T_Pipe, PopupInputPointsComponent, ApprovalsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {

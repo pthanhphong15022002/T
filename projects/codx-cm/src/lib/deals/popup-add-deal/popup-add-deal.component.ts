@@ -631,7 +631,7 @@ export class PopupAddDealComponent
               this.deal.endDate = this.HandleEndDate(
                 this.listInstanceSteps,
                 this.action,
-                this.action !== this.actionEdit ? null : this.deal.createdOn
+                this.action !== this.actionEdit || this.action === this.actionEdit && this.deal.status == '1'  ? null : this.deal.createdOn
               );
               this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
               if (this.listParticipants.length > 0 && this.listParticipants) {
@@ -832,6 +832,7 @@ export class PopupAddDealComponent
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
+        this.deal.status = instance.status;
         this.deal.datas = instance.datas;
         !this.isLoading && this.onEdit();
         this.isLoading && this.editDealForDP();
@@ -925,10 +926,9 @@ export class PopupAddDealComponent
   }
 
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-    var dateNow =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-    var endDate =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    endDateValue = action === this.actionAdd || action === this.actionCopy || this.action === this.actionEdit && this.deal.status == '1' ? new Date() : new Date(endDateValue);
+    let dateNow = endDateValue;
+    let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours(endDate.getHours() + listSteps[i].durationHour);

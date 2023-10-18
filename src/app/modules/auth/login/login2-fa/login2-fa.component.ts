@@ -41,6 +41,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.email = this.user.data.email;
     this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
+    this.changeLogin2FAType(dt?.data?.login2FA);
     if (dt?.data?.loginDevice) {
       this.loginDevice = dt?.data?.loginDevice;
       this.loginDevice.times = '2';
@@ -152,7 +153,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   }
 
   changeLogin2FAType(option) {
-    switch (option.value) {
+    switch (option) {
       case '2': {
         this.curLgType = 'qr';
         break;
@@ -171,9 +172,9 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       }
     }
 
-    this.clickQueue.push(option.value);
-    this.detectorRef.detectChanges();
-    if (option.value == '3' || option.value == '4') {
+    this.clickQueue.push(option);
+    //this.detectorRef.detectChanges();
+    if (option == '3' || option == '4') {
       this.setOTPEvent();
     }
   }

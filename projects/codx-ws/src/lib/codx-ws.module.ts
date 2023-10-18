@@ -41,7 +41,12 @@ import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.
 import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
-
+import { InformationComponent } from './personal/master-detail/information/information.component';
+import { CashPaymentsComponent } from 'projects/codx-ac/src/lib/vouchers/cashpayments/cashpayments.component';
+import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-info-detail/employee-info-detail.component';
+import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LoginSercurityComponent } from './personal/master-detail/information/login-sercurity/login-sercurity.component';
+import { SercurityTOTPComponent } from './personal/master-detail/information/sercurity-totp/sercurity-totp.component';
 
 const routes: Routes = [
   {
@@ -59,7 +64,7 @@ const routes: Routes = [
       },
       {
         path: 'personal/:funcID',
-        component: PersonalsComponent,
+        component: PersonalComponent,
         //component: PersonalComponent,
       },
       {
@@ -103,6 +108,23 @@ const routes: Routes = [
         path: 'equit/:funcID',
         component: EmployeeQuitComponent,
       },
+      // HR - Hồ sơ cá nhân
+    //   {
+    // component: LayoutOnlyHeaderComponent,
+
+    //     path: 'employeedetail/:funcID',
+    //     component: EmployeeInfoDetailComponent,
+    //   },
+      {
+        path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeInfoDetailComponent,
+          },
+        ],
+      },
       //Task + duyyet TM
       {
         path: 'tasks/:funcID',
@@ -127,9 +149,10 @@ const routes: Routes = [
         path: 'requestsforadvances/:funcID',
         component: AdvancePaymentComponent,
       },
+      // Phiếu chi
       {
-        path: 'approvevouchers/:funcID',
-        component: ApprovalsComponent,
+        path: 'cashpayments/:funcID',
+        component: CashPaymentsComponent,
       },
       {
         path: 'paymentorders/:funcID',
@@ -188,7 +211,10 @@ const routes: Routes = [
     DashboardComponent,
     ReportComponent,
     RequestReviewComponent,
-    BookmarkComponent
+    BookmarkComponent,
+    InformationComponent,
+    LoginSercurityComponent,
+    SercurityTOTPComponent
   ],
   imports: [
     RouterModule.forChild(routes),

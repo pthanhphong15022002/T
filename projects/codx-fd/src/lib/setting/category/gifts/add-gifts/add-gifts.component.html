@@ -24,14 +24,12 @@
                 field="giftName">
             </codx-input>
         </div>
-        <div class="form-group row">
-            <div class="col-6">
-                <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ sở hữu">
-                </codx-label>
-                <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
-                    style="border: none;" field="owner" [Group]="form.formGroup" [formModel]="form.formModel">
-                </codx-input>
-            </div>
+        <div class="form-group">
+            <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ sở hữu">
+            </codx-label>
+            <codx-input (valueChange)="changeCombobox($event)" class="form-control borderless p-0"
+                style="border: none;" field="owner" [Group]="form.formGroup" [formModel]="form.formModel">
+            </codx-input>
         </div>
         <div class="form-group">
             <codx-label class="text-dark" fiedName="Memo" [formModel]="formModel" default="Mô tả">

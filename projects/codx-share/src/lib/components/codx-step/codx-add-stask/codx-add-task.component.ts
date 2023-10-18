@@ -1,3 +1,4 @@
+import { change } from '@syncfusion/ej2-grids';
 import { group } from 'console';
 import {
   OnInit,
@@ -16,6 +17,7 @@ import {
   CallFuncService,
   NotificationsService,
   DialogModel,
+  CodxInputComponent,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -35,6 +37,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
@@ -42,8 +45,6 @@ export class CodxAddTaskComponent implements OnInit {
   typeTask;
   listGroup = [];
   recIdEmail = '';
-  isNewEmails = true;
-  isEditTimeDefault = false;
 
   dialog!: DialogRef;
   endDateParent: Date;
@@ -57,6 +58,24 @@ export class CodxAddTaskComponent implements OnInit {
   fieldsTask = { text: 'taskName', value: 'refID' };
   fieldsGroup = { text: 'taskGroupName', value: 'refID' };
 
+  isSave = true;
+  isAdmin = false;
+  isStart = false;
+  isLoadDate = false;
+  isHaveFile = false;
+  isStatusNew = true;
+  isBoughtTM = false;
+  isNewEmails = true;
+  isShowDate = false;
+  isShowTime = false;
+  isActivitie = false;
+  disableStep = false;
+  isTaskDefault = false;
+  isSaveTimeTask = true;
+  isSaveTimeGroup = true;
+  isEditTimeDefault = false;
+  isTaskFromStep = true;
+
   folderID = '';
   titleName = '';
   valueInput = '';
@@ -66,23 +85,12 @@ export class CodxAddTaskComponent implements OnInit {
   user;
   ownerParent; //
   groupTask;
-  isSave = true;
   groupTaskID = null;
-  isLoadDate = false;
-  isHaveFile = false;
-  isSaveTimeTask = true;
-  isTaskDefault = false;
-  isSaveTimeGroup = true;
   showLabelAttachment = false;
-  isStatusNew = true;
-  isStart = false;
-  isBoughtTM = false;
 
   listFieldCopy = [];
   listField = [];
 
-  isShowDate = false;
-  isShowTime = false;
   startDayOld;
   endDayOld;
 
@@ -98,8 +106,24 @@ export class CodxAddTaskComponent implements OnInit {
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
-  disableStep = false;
-  isActivitie = false;
+
+  refValue = {
+    "1":"CMCustomersOfCalendar", 
+    "3":"CMLeadsOfCalendar",
+    "5":"CMDealsOfCalendar",
+    "7":"CMContractsOfCalendar",
+    "9":"CMCasesOfCalendar",
+  }
+  refValueType = '';
+  listTypeCM = '';
+  typeCM = '';
+  dataCM = {
+    deals:"",
+    leads:"",
+    cases:"",
+    customers:"",
+    contracts:""
+  };
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -124,6 +148,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.titleName = dt?.data?.titleName || '';
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.listInsStep = dt?.data?.listInsStep;
+    this.isTaskFromStep =  undefined ? this.isTaskFromStep : dt?.data?.isTaskFromStep;;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     // this.isStart = dt?.data?.isStart;
@@ -146,6 +171,20 @@ export class CodxAddTaskComponent implements OnInit {
         JSON.stringify(this.instanceStep?.taskGroups || [])
       );
     }
+    this.cache.valueList('CRM060').subscribe((res) => {
+      if (res?.datas) {
+        this.listTypeCM = res?.datas?.map((data) => {
+          return {...data,refValue: this.refValue[data?.value]}
+        })
+        console.log(this.listTypeCM);
+        
+      }
+    });
+    this.api
+    .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
+    .subscribe((res) => {
+      this.isAdmin = res ? true : false;
+    });
   }
 
   ngOnInit(): void {
@@ -805,4 +844,41 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }
   }
+
+  changeType(event){
+    console.log(event);
+    if(event?.data){
+      if(this.typeCM != event?.data){
+        let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
+        if(listDeal){
+          this.inputDeal.ComponentCurrent.dataService.data = [];
+          this.inputDeal.ComponentCurrent.dataService.crrValue = null;
+          this.dataCM = null;
+        }
+        
+        this.typeCM = event?.data;
+        this.refValueType = this.refValue[this.typeCM];
+      }
+    }
+  }
+  changeDataCM(event){
+    console.log(event?.component?.itemsSelected[0]      );
+    this.dataCM = event?.data;
+    
+  }
+
+  getListInstanceStep(instanceID, isRoleFull){
+      this.api
+        .exec<any>(
+          'DP',
+          'InstancesStepsBusiness',
+          'GetInscestepCalendarAsync',
+          [instanceID, isRoleFull]
+        )
+        .subscribe((res) => {
+          if (res) {
+           this.listInsStep = res;
+          }
+        });
+    }
 }

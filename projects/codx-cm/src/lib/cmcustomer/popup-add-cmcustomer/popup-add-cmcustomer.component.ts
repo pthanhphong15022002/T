@@ -409,7 +409,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     console.log(e);
   }
 
-  focus(e){
+  focus(e) {
     this.isSaved = true;
     console.log(e);
   }
@@ -576,6 +576,11 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  closePopover() {
+    this.isSaved = false;
+    this.changeDetectorRef.detectChanges();
+  }
+
   //#region save
   beforeSave(op) {
     var data = [];
@@ -723,7 +728,17 @@ export class PopupAddCmCustomerComponent implements OnInit {
     }
 
     if (check) {
-      this.notiService.notifyCode('Trùng mã khách hàng');
+      this.notiService.notifyCode(
+        'SYS031',
+        null,
+        this.funcID == 'CM0102'
+          ? this.data?.contactID
+          : this.funcID == 'CM0103'
+          ? this.data?.partnerID
+          : this.funcID == 'CM0104'
+          ? this.data?.competitorID
+          : this.data?.customerID
+      );
       return;
     }
 
@@ -812,7 +827,6 @@ export class PopupAddCmCustomerComponent implements OnInit {
       await firstValueFrom(
         this.imageUpload.updateFileDirectReload(this.data?.recID)
       );
-
     }
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
@@ -871,6 +885,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
         this.data.address = null;
       }
     }
+    if (this.form) {
+      this.form.formGroup.patchValue(this.data);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   lstAddressDeleteEmit(e) {
@@ -882,7 +900,16 @@ export class PopupAddCmCustomerComponent implements OnInit {
       if (index != -1) {
         var tmp = new BS_AddressBook();
         this.data.address = null;
+        this.data.provinceID = null;
+        this.data.countryID = null;
+        this.data.provinceID = null;
+        this.data.districtID = null;
+        this.data.regionID = null;
+        this.data.wardID = null;
         this.tmpAddress = tmp;
+        if (this.form) {
+          this.form.formGroup.patchValue(this.data);
+        }
       }
     }
   }

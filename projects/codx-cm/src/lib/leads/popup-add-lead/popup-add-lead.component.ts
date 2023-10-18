@@ -30,6 +30,7 @@ import { recordEdited } from '@syncfusion/ej2-pivotview';
 import { environment } from 'src/environments/environment';
 import { T } from '@angular/cdk/keycodes';
 import { filter, firstValueFrom } from 'rxjs';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -608,6 +609,9 @@ export class PopupAddLeadComponent
         ])
         .subscribe((res) => {
           if (res) {
+            res.modifiedOn = moment(new Date())
+            .add(99, 'hours')
+            .toDate();
             this.dialog.close(res);
             this.notificationsService.notifyCode('CM051');
           }
@@ -616,12 +620,13 @@ export class PopupAddLeadComponent
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {
-          if (res?.save[0]) {
+          if (res?.save) {
+       //     this.view.dataService.update(res).subscribe();
             //bua save avata
             (this.dialog.dataService as CRUDService)
-              .update(res.save[0])
+              .update(res.save)
               .subscribe();
-            this.dialog.close(res.save[0]);
+            this.dialog.close(res.save);
           }
         });
     }
@@ -630,11 +635,11 @@ export class PopupAddLeadComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
-        if (res?.update[0]) {
+        if (res?.update) {
           (this.dialog.dataService as CRUDService)
-            .update(res.update[0])
+            .update(res.update)
             .subscribe();
-          this.dialog.close(res.update[0]);
+          this.dialog.close(res.update);
         }
       });
   }
@@ -682,15 +687,15 @@ export class PopupAddLeadComponent
     if (this.avatarChangeContact) {
       await this.saveFileContact(this.contactId);
     }
-    if (this.isLoading) {
+    this.saveAddLead();
+  }
+  async saveAddLead(){
+    if (this.action !== this.actionEdit) {
+      this.lead.applyProcess && (await this.insertInstance());
+      !this.lead.applyProcess && this.onAdd();
     } else {
-      if (this.action !== this.actionEdit) {
-        this.lead.applyProcess && (await this.insertInstance());
-        !this.lead.applyProcess && this.onAdd();
-      } else {
-        this.lead.applyProcess && (await this.editInstance());
-        !this.lead.applyProcess && this.onEdit();
-      }
+      this.lead.applyProcess && (await this.editInstance());
+      !this.lead.applyProcess && this.onEdit();
     }
   }
 
@@ -715,18 +720,25 @@ export class PopupAddLeadComponent
   }
 
   async saveFileLead(leadID) {
-    this.imageUploadLead.updateFileDirectReload(leadID).subscribe((result) => {
-      if (result) {
-      }
-    });
+    // this.imageUploadLead.updateFileDirectReload(leadID).subscribe((result) => {
+    //   if (result) {
+    //   }
+    // });
+
+    await firstValueFrom(
+      this.imageUploadLead.updateFileDirectReload(leadID)
+    );
   }
   async saveFileContact(contactID) {
-    this.imageUploadContact
-      .updateFileDirectReload(contactID)
-      .subscribe((result) => {
-        if (result) {
-        }
-      });
+    // this.imageUploadContact
+    //   .updateFileDirectReload(contactID)
+    //   .subscribe((result) => {
+    //     if (result) {
+    //     }
+    //   });
+    await firstValueFrom(
+      this.imageUploadContact.updateFileDirectReload(contactID)
+    );
   }
 
   beforeSave(option: RequestOption) {

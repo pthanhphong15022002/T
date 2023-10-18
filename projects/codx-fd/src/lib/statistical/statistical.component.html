@@ -2,491 +2,16 @@
   #view
   [views]="views"
   [funcID]="funcID"
+  (filterReportChange)="filterChange($event)"
   (onActions)="onActions($event)"
   [autoLoad]="false"
 ></codx-views>
 
 <ng-template #panelLeft>
-  <!-- <div class="container-fluid p-0">
+  <div class="container-fluid p-0" *ngIf="isLoaded">
     <ng-container *ngTemplateOutlet="dashboard"> </ng-container>
-  </div> -->
-  <div class="page-home page-master p-6 scroll-y h-100 bg-body rounded-3">
-    <div class="d-flex flex-column">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex" #control>
-          <div class="btn-30px w-200px">
-            <codx-input
-              class="form-control"
-              type="valuelist"
-              field="vllOrganize"
-              refValue="L1483"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="btn-30px w-250px ms-2">
-            <codx-input
-              class="form-control"
-              type="combobox"
-              field="Organize"
-              [refValue]="cbb"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="btn-30px ms-2">
-            <codx-dropdown-calendar
-              [cssClass]="'w-100'"
-              [cssPopup]="'h-450px w-750px border'"
-              (change)="dateChange($event)"
-            ></codx-dropdown-calendar>
-          </div>
-        </div>
-        <div class="d-flex">
-          <div class="w-150px ms-2">
-            <codx-input
-              type="valuelist"
-              placeholder=""
-              ngDefaultControl
-              refValue="L1451"
-              field="edit"
-              [crrValue]="cardType"
-              (valueChange)="changeCardType($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="btn-30px ms-2">
-            <span
-              class="btn btn-outline-secondary text-dark"
-              [class.active]="ballot_SENDED"
-              (click)="changeTypeCoins(TYPE_Ballot.Ballot_SENDED)"
-            >
-              <codx-label
-                name="lblBallotSended"
-                formName="FED_TagObjects"
-                default="Phiếu cho"
-              >
-              </codx-label>
-            </span>
-          </div>
-          <div class="btn-30px ms-2">
-            <span
-              class="btn btn-outline-secondary text-dark"
-              [class.active]="ballot_RECEIVED"
-              (click)="changeTypeCoins(TYPE_Ballot.Ballot_RECEIVED)"
-            >
-              <codx-label
-                name="lblBallotReceived"
-                formName="FED_TagObjects"
-                default="Phiếu nhận"
-              >
-              </codx-label>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-column" id="erm_content">
-        <div class="statis-main pt-9">
-          <ng-container #statistical_up>
-            <div class="row">
-              <div class="col-5 pe-9">
-                <div class="chart">
-                  <div style="display: block">
-                    <div class="control-section">
-                      <ejs-chart
-                        style="display: block"
-                        #chart
-                        id="chartcontainer"
-                        [primaryXAxis]="primaryXAxis"
-                        [tooltip]="tooltip"
-                        [height]="height"
-                        [primaryYAxis]="primaryYAxis"
-                        [title]=""
-                        [width]="width"
-                      >
-                        <e-series-collection>
-                          <e-series
-                            [dataSource]="
-                              dataReceived.length > 0 ? dataReceived : ''
-                            "
-                            fill="#0C51CB"
-                            type="Column"
-                            xName="cardTypeName"
-                            yName="receiveQuanlity"
-                            name="Phiếu nhận"
-                            width="1"
-                          >
-                          </e-series>
-                          <e-series
-                            [dataSource]="
-                              dataSended.length > 0 ? dataSended : ''
-                            "
-                            fill="#00DCB5"
-                            type="Column"
-                            xName="cardTypeName"
-                            yName="sendQuanlity"
-                            name="Phiếu cho"
-                            width="1"
-                          >
-                          </e-series>
-                        </e-series-collection>
-                      </ejs-chart>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="row">
-                  <div class="col-5">
-                    <div class="chart pie-chart">
-                      <div style="display: block">
-                        <ng-container *ngIf="chartDatas.length != 0">
-                          <ejs-accumulationchart
-                            background="transparent"
-                            id="doughnut-container-received"
-                            #pieReceived
-                            style="display: block"
-                            width="200"
-                            height="200"
-                            selectionMode="Point"
-                            [tooltip]="tooltip"
-                            [legendSettings]="legendSettings"
-                          >
-                            <e-accumulation-series-collection>
-                              <e-accumulation-series
-                                name=""
-                                [palettes]="colorCoins"
-                                [dataSource]="chart_Datas"
-                                xName="key"
-                                yName="value"
-                                [startAngle]="startAngle"
-                                [endAngle]="endAngle"
-                                innerRadius="90%"
-                                legendShape="Rectangle"
-                              >
-                              </e-accumulation-series>
-                            </e-accumulation-series-collection>
-                          </ejs-accumulationchart>
-                          <div class="total-promissory">
-                            <span
-                              >{{ totalCoins }}
-                              <codx-label
-                                name="lblBallot"
-                                formName="FED_TagObjects"
-                                default="Phiếu"
-                              ></codx-label>
-                            </span>
-                          </div>
-                        </ng-container>
-                        <ng-container *ngIf="chartDatas.length == 0">
-                          <ejs-accumulationchart
-                            background="transparent"
-                            id="doughnut-container-received"
-                            #pieReceived
-                            style="display: block"
-                            width="200"
-                            height="200"
-                            selectionMode="Point"
-                          >
-                            <e-accumulation-series-collection>
-                              <e-accumulation-series
-                                name=""
-                                [palettes]="colors_empty"
-                                [dataSource]="chartDatas_empty"
-                                xName="key"
-                                yName="value"
-                                [startAngle]="startAngle"
-                                [endAngle]="endAngle"
-                                innerRadius="90%"
-                              >
-                              </e-accumulation-series>
-                            </e-accumulation-series-collection>
-                          </ejs-accumulationchart>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-7">
-                    <div class="row">
-                      <div class="col-6">
-                        <div
-                          class="statis-card"
-                          [style.border-color]="
-                            '#' + ('3' | vll : 'L1422' : 'color' | async)
-                          "
-                        >
-                          <div>
-                            <div class="fw-bold">
-                              <codx-label
-                                name="lblChange"
-                                formName="FED_TagObjects"
-                                default="Góp ý thay đổi"
-                              >
-                              </codx-label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <div class="text-dark-75 me-2">
-                                {{ dataCount?.suggest }}
-                                <codx-label
-                                  name="lblBallot"
-                                  formName="FED_TagObjects"
-                                  default="Phiếu"
-                                ></codx-label>
-                              </div>
-                              <span
-                                class="btn btn-xxs"
-                                [style.background-color]="
-                                  '#' + ('3' | vll : 'L1422' : 'color' | async)
-                                "
-                              >
-                                {{
-                                  dataCount?.suggest > 0
-                                    ? ((dataCount?.suggest / total) * 100
-                                      | number : "1.0-0")
-                                    : 0
-                                }}%</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div
-                          class="statis-card"
-                          [style.border-color]="
-                            '#' + ('4' | vll : 'L1422' : 'color' | async)
-                          "
-                        >
-                          <div>
-                            <div class="font-weight-600">
-                              <codx-label
-                                name="lblMessage"
-                                formName="FED_TagObjects"
-                                default="Đề xuất cải tiến"
-                              >
-                              </codx-label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <div class="text-dark-75 me-2">
-                                {{ dataCount?.improvement }}
-                                <codx-label
-                                  name="lblBallot"
-                                  formName="FED_TagObjects"
-                                  default="Phiếu"
-                                ></codx-label>
-                              </div>
-                              <span
-                                class="btn btn-xxs"
-                                [style.background-color]="
-                                  '#' + ('4' | vll : 'L1422' : 'color' | async)
-                                "
-                              >
-                                {{
-                                  dataCount?.improvement > 0
-                                    ? ((dataCount?.improvement / total) * 100
-                                      | number : "1.0-0")
-                                    : 0
-                                }}%</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-6">
-                        <div
-                          class="statis-card"
-                          [style.border-color]="
-                            '#' + ('2' | vll : 'L1422' : 'color' | async)
-                          "
-                        >
-                          <div>
-                            <div class="font-weight-600">
-                              <codx-label
-                                name="lblThanks"
-                                formName="FED_TagObjects"
-                                default="Lời cảm ơn"
-                              ></codx-label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <div class="text-dark-75 me-2">
-                                {{ dataCount?.thankyou }}
-                                <codx-label
-                                  name="lblBallot"
-                                  formName="FED_TagObjects"
-                                  default="Phiếu"
-                                ></codx-label>
-                              </div>
-                              <span
-                                class="btn btn-xxs"
-                                [style.background-color]="
-                                  '#' + ('2' | vll : 'L1422' : 'color' | async)
-                                "
-                              >
-                                {{
-                                  dataCount?.thankyou > 0
-                                    ? ((dataCount?.thankyou / total) * 100
-                                      | number : "1.0-0")
-                                    : 0
-                                }}%</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div
-                          class="statis-card"
-                          style="border-left: 5px solid"
-                          [style.border-color]="
-                            '#' + ('1' | vll : 'L1422' : 'color' | async)
-                          "
-                        >
-                          <div>
-                            <div class="font-weight-600">
-                              <codx-label
-                                name="lblThanks"
-                                formName="FED_TagObjects"
-                                default="Tuyên dương"
-                              ></codx-label>
-                            </div>
-                            <div class="d-flex align-items-center">
-                              <div class="text-dark-75 me-2">
-                                {{ dataCount?.commendation }}
-                                <codx-label
-                                  name="lblBallot"
-                                  formName="FED_TagObjects"
-                                  default="Phiếu"
-                                ></codx-label>
-                              </div>
-                              <span
-                                class="btn btn-xxs"
-                                [style.background-color]="
-                                  '#' + ('1' | vll : 'L1422' : 'color' | async)
-                                "
-                              >
-                                {{
-                                  dataCount?.commendation > 0
-                                    ? ((dataCount?.commendation / total) * 100
-                                      | number : "1.0-0")
-                                    : 0
-                                }}%</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-          <ng-container #statistical_down>
-            <div class="row mt-12">
-              <div class="col-6 pe-9">
-                <div style="display: block">
-                  <table class="table mb-0 w-100">
-                    <thead>
-                      <tr>
-                        <th scope="col" class="w-40"></th>
-                        <th scope="col" class="w-20 text-right font-weight-600">
-                          <codx-label
-                            name="lblCoinReceived"
-                            formName="FED_TagObjects"
-                            default="Xu nhận"
-                          ></codx-label>
-                        </th>
-                        <th scope="col" class="w-20 text-right font-weight-600">
-                          <codx-label
-                            name="lblCoinSended"
-                            formName="FED_TagObjects"
-                            default="Xu trừ"
-                          ></codx-label>
-                        </th>
-                        <th scope="col" class="w-20 text-right font-weight-600">
-                          <codx-label
-                            name="lblTotal"
-                            formName="FED_TagObjects"
-                            default="Tổng cộng"
-                          ></codx-label>
-                        </th>
-                      </tr>
-                    </thead>
-                  </table>
-                  <div *ngFor="let item of lstTotalCoin">
-                    <hr />
-                    <ng-container
-                      *ngTemplateOutlet="template; context: { item: item }"
-                    >
-                    </ng-container>
-                  </div>
-                  <hr />
-                  <table class="table mb-0">
-                    <tbody>
-                      <tr>
-                        <td class="w-40 fw-bold font-weight-600">
-                          <codx-label
-                            name="lblTotal"
-                            formName="FED_TagObjects"
-                            default="Tổng cộng"
-                          ></codx-label>
-                        </td>
-                        <td class="w-20 text-right fw-bold font-weight-600">
-                          +{{ calculateTotalRow("totalCoinReceiver") }}
-                        </td>
-                        <td class="w-20 text-right fw-bold font-weight-600">
-                          -{{ calculateTotalRow("totalCoinSend") }}
-                        </td>
-                        <td class="w-20 text-right fw-bold font-weight-600">
-                          {{
-                            calculateTotalRow("totalCoinReceiver") -
-                              calculateTotalRow("totalCoinSend")
-                          }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="chart-progress">
-                  <div class="d-flex mb-3 mt-3">
-                    <h6>
-                      <codx-label
-                        name="lblStatistical"
-                        formName="FED_TagObjects"
-                        default="Thống kê danh sách TOP hành vi ứng xử"
-                      ></codx-label>
-                    </h6>
-                    <span
-                      class="icon-open_in_new icon-20 ms-2"
-                      (click)="open(content)"
-                    ></span>
-                  </div>
-                  <div
-                    *ngFor="
-                      let item of lstBehavior.slice(0, selectTopBehaviors)
-                    "
-                  >
-                    <ng-container
-                      *ngTemplateOutlet="
-                        templateProgress;
-                        context: { item: item }
-                      "
-                    >
-                    </ng-container>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </div>
   </div>
+
 </ng-template>
 <ng-template #template let-item="item">
   <table class="table mb-0">
@@ -596,48 +121,773 @@
   <div class="modal-footer"></div>
 </ng-template>
 
-
 <ng-template #dashboard>
   <codx-dashboard
     #dashboard
     [templates]="templates"
     [panels]="panels"
     [datas]="datas"
-    [isEditMode]="true"
+    [isEditMode]="false"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+<ng-template #dashboard2>
+  <codx-dashboard
+    #dashboard2
+    [templates]="templates2"
+    [panels]="panels2"
+    [datas]="datas2"
+    [isEditMode]="false"
     [cellSpacing]="[10, 10]"
   ></codx-dashboard>
 </ng-template>
 
 <ng-template #template let-data>
-  <h2 id="1">Hé lô</h2>
+  <div class="container h-100" id="1">
+    <div
+      class="overflow-x-hidden"
+      style="max-height: 100%; width: 100%"
+    >
+      <div *ngFor="let data of ratingStats" class="mt-4">
+      <div class="mx-2 my-5">
+        <div class="d-flex justify-content-between">
+          <div>
+            <span>{{ data.ratingName }}</span>
+            <span>&nbsp;(</span>
+            <span>{{ data.quantity }}</span>
+            <span>)</span>
+          </div>
+          <div>
+            <span>{{
+              data.percentage
+            }}</span
+            ><span>% </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center min-w-200px">
+          <div class="h-5px w-100 bg-gray-200 rounded-4">
+            <div
+              class="rounded-4 h-5px"
+              role="progressbar"
+              [style.width]="data.percentage + '%'"
+              [style.background-color]="'#ffaa00'"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="2">Hé lô</h2>
+  <h2 id="2">Hé lô 1</h2>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="3">Hé lô</h2>
+  <h2 id="3">Hé lô 2</h2>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="4">Hé lô</h2>
+  <h2 id="4">Hé lô 3</h2>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="5">Hé lô</h2>
+  <div class="container p-0 h-100" id="5">
+    <ejs-chart
+      style="display: block"
+      [width]="width"
+      align="center"
+      [tooltip]="tooltip"
+      [legendSettings]="{visible:false}"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0},
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0}, majorGridLines:{width:0}
+    }"
+    [palettes]="['#0080ff']"
+    [border]="{ width: 0, color: '#FF0000'}"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="chart_Datas"
+          type="Column"
+          [xName]="'key'"
+          [yName]="'value'"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+          name="số lượng"
+          [columnFacet]= "'Cylinder'"
+          [marker]="{ dataLabel: { visible: true }}"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="6">Hé lô</h2>
+  <div class="container p-0 h-100" id="6">
+    <div class="w-100 h-100">
+      <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <!-- <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div> -->
+        </div>
+      </div>
+      <div class="container p-0" style="height: 90%" *ngIf="statByEmps.length">
+        <div
+          class="overflow-scroll overflow-x-hidden"
+          style="max-height: 95%; width: 100%"
+
+        >
+          <div
+            class="mx-2 my-4"
+            *ngFor="let data of sortByProp(statByEmps,'quantity','desc',5)"
+          >
+            <div class="row w-100">
+              <div class="col-1 d-flex align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+              </div>
+              <div class="col-11">
+                <div class="w-100 text-start fs-6">
+                  <span class="fw-bold">{{ data.username}}</span>
+                </div>
+                <div class="w-100 text-start fs-7">
+                  <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
+                </div>
+                <div class="w-100">
+                  <div class="h-15px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-15px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentage + '%'"
+                      [style.background-color]="'#00cc99'"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-7 float-end "  [style.width]="(100-data.percentage) + '%'">
+                      <span>{{data.quantity}}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark">{{ data.username }}</div>
+                  <div>{{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                  >
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{data.percentage }}%</span
+                    >
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="data.percentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="7">Hé lô</h2>
+  <div class="container h-100 p-0" id="7">
+    <div class="w-100 h-100 overflow-scroll">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Số lượng"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Thời gian"
+            ></codx-label>
+          </div>
+        </div>
+      </div> -->
+      <div class="my-4" style="height: 45%">
+        <ejs-accumulationchart
+          #pie1
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [centerLabel]="{
+            text:
+            listCardsPerBev.length + '<br>Phiếu'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByBevs"
+              xName="behaviorID"
+              yName="quantity"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="h-50 container p-0">
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of statByBevs"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.behaviorName }} ({{ ref.quantity }})</span>
+              <span>
+                {{
+                  ((ref.quantity / listCardsPerBev.length) * 100) %
+                    1 ===
+                  0
+                    ? (ref.quantity / listCardsPerBev.length) * 100
+                    : (
+                        (ref.quantity / listCardsPerBev.length) *
+                        100
+                      ).toFixed(1)
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    (ref.quantity / listCardsPerBev.length) * 100 +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="8">Hé lô</h2>
+  <div class="container p-0 h-100" id="8">
+    <div class="row" style="height:50px">
+      <div class="col-3">
+
+      </div>
+      <div class="col-6 text-center">
+        <div class="d-flex w-100 h-100">
+          <div class="float-start w-60 d-flex align-items-center">
+            <span class="text-dark fw-bold fs-6">% Tỉ lệ số phiếu nhận/tổng số nhân viên</span>
+          </div>
+          <div class="float-end d-flex align-items-center">
+            <i class="icon-i-box-arrow-in-right icon-16"></i> &nbsp;&nbsp; <span class="text-dark fw-bold fs-6">Phiếu nhận</span>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="col-3 text-center">
+         <div class="my-1 h-10 d-flex align-items-center">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Phòng ban"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Bộ phận"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    </div>
+    <div class="row" style="height:calc( 100% - 50px)">
+      <div class="col h-100">
+        <div class="border w-100 h-100">
+          <codx-gridview-v2 #eleGridCashPayment
+          [editSettings]="editSettings" [allowSorting]="false"
+          [columnsGrid]="columnGrids"
+          [height]="'100%'"
+          [dataSource]="statByDepts"
+          [hideMoreFunc]="true"
+          (onEdit)="doubleClick($event)"
+          [editOnClick]="true"
+          [rowHeight]="50"
+         ></codx-gridview-v2>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="9">Hé lô</h2>
+  <h2 id="9">Hé lô 8</h2>
 </ng-template>
 <ng-template #template let-data>
-  <h2 id="10">Hé lô</h2>
+  <h2 id="10">Hé lô 9</h2>
 </ng-template>
-<ng-template #template let-data>
-  <h2 id="1">Hé lô</h2>
+<ng-template #department let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center py-2">
+
+    <div class="ms-4 d-flex flex-column align-items-between ">
+      <span class="fw-bold" >{{data?.departmentName}}</span>
+      <div class="float-left mt-1">
+
+        <span class="fw-bold ms-1" >data?.departmentID</span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #button let-data>
+ <button>heheheh</button>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="container h-100 p-0" id="1">
+    <div class="w-100 h-100 overflow-scroll">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Số lượng"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Thời gian"
+            ></codx-label>
+          </div>
+        </div>
+      </div> -->
+      <div class="my-4" style="height: 45%">
+        <ejs-accumulationchart
+          #pie1
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [centerLabel]="{
+            text:
+            listCardsPerBev.length + '<br>Phiếu'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByBevs"
+              xName="behaviorID"
+              yName="quantity"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="h-50 container p-0">
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of statByBevs"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.behaviorName }} ({{ ref.quantity }})</span>
+              <span>
+                {{
+                  ((ref.quantity / listCardsPerBev.length) * 100) %
+                    1 ===
+                  0
+                    ? (ref.quantity / listCardsPerBev.length) * 100
+                    : (
+                        (ref.quantity / listCardsPerBev.length) *
+                        100
+                      ).toFixed(1)
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    (ref.quantity / listCardsPerBev.length) * 100 +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="w-100 h-100" id="2">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [id]="newGuid()"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+    }"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="statByDepts"
+          type="Line"
+          [xName]="'departmentName'"
+          [yName]="'quantity'"
+          name="Số lượng quà"
+          [marker]="circleMarker"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="statByDepts"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'quantity'"
+          name="Xu đổi quà"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="container p-0 h-100" id="3">
+    <div class="w-100 h-100">
+      <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <!-- <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div> -->
+        </div>
+      </div>
+      <div class="container p-0" style="height: 90%" *ngIf="statByEmps.length">
+        <div
+          class="overflow-scroll overflow-x-hidden"
+          style="max-height: 95%; width: 100%"
+
+        >
+          <div
+            class="mx-2 my-4"
+            *ngFor="let data of sortByProp(statByEmps,'quantity','desc',5)"
+          >
+            <div class="row w-100">
+              <div class="col-1 d-flex align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+              </div>
+              <div class="col-11">
+                <div class="w-100 text-start fs-6">
+                  <span class="fw-bold">{{ data.username}}</span>
+                </div>
+                <div class="w-100 text-start fs-7">
+                  <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
+                </div>
+                <div class="w-100">
+                  <div class="h-15px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-15px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentage + '%'"
+                      [style.background-color]="'#00cc99'"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-7 float-end "  [style.width]="(100-data.percentage) + '%'">
+                      <span>{{data.quantity}}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!-- <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark">{{ data.username }}</div>
+                  <div>{{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                  >
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{data.percentage }}%</span
+                    >
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="data.percentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template2 let-data>
+  <div class="w-100 h-100" id="4">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [id]="newGuid()"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+    }"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="statByDepts"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'cardType1'"
+          name="Xu cho"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="statByDepts"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'quantity'"
+          name="Xu nhận"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
 </ng-template>

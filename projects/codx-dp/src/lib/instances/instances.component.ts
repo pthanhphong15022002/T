@@ -241,7 +241,7 @@ export class InstancesComponent
   instanceCM: any;
   crrFunc: any;
   runMode: any; //view detail
-
+  tabControl = '';
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -301,19 +301,7 @@ export class InstancesComponent
           });
         }
       });
-    this.cache.valueList('DP034').subscribe((res) => {
-      if (res && res.datas) {
-        var tabIns = [];
-        res.datas.forEach((element) => {
-          var tab = {};
-          tab['viewModelDetail'] = element?.value;
-          tab['textDefault'] = element?.text;
-          tab['icon'] = element?.icon;
-          tabIns.push(tab);
-        });
-        this.tabInstances = tabIns;
-      }
-    });
+
     if (this.funcID != 'DPT0502')
       this.cache.functionList(this.funcID).subscribe((f) => {
         // if (f) this.pageTitle.setSubTitle(f?.customName);
@@ -607,7 +595,7 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-              this.listStepInstances = JSON.parse(JSON.stringify(res));
+            
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -659,19 +647,26 @@ export class InstancesComponent
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var data = e.event;
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
         }
-        this.dataSelected = data;
+
         if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.dataSelect = this.dataSelected
+          this.detailViewInstance.getStageByStep()
         }
-        this.view?.dataService.update(this.dataSelected);
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
+     
         this.detectorRef.detectChanges();
       }
     });
@@ -698,17 +693,24 @@ export class InstancesComponent
     let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
         this.view.dataService.update(e.event).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          }else  this.kanban.updateCard(this.dataSelected); 
         }
-        this.dataSelected = e.event;
+      
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.loadChangeData();
         }
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -1682,8 +1684,15 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData();
+                this.detailViewInstance.loadChangeData();
               }
+           
+              if (this.detailViewPopup) {
+                this.detailViewPopup.dataSelect = this.dataSelected;
+                this.detailViewPopup.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData()
+              }
+      
               this.detectorRef.detectChanges();
             }
           });
@@ -2043,6 +2052,23 @@ export class InstancesComponent
   //load DATA
   async loadData(ps, reload = false) {
     this.process = ps;
+    this.tabControl =
+      this.process?.tabControl != null && this.process?.tabControl?.trim() != ''
+        ? this.process?.tabControl
+        : '31';
+    this.viewModeDetail =
+      this.tabControl == '1'
+        ? 'S'
+        : this.tabControl == '11'
+        ? this.process?.viewModeDetail != 'F'
+          ? this.process?.viewModeDetail
+          : 'S'
+        : this.tabControl == '12'
+        ? this.process?.viewModeDetail != 'G'
+          ? this.process?.viewModeDetail
+          : 'S'
+        : this.process?.viewModeDetail ?? 'S';
+    this.loadTabControl();
     this.loadEx();
     this.loadWord();
     this.addFieldsControl = ps?.addFieldsControl;
@@ -2069,7 +2095,6 @@ export class InstancesComponent
     this.isUseFail = this.stepFail?.isUsed;
     this.showButtonAdd = this.isCreate;
     this.viewMode = this.process?.viewMode ?? 6;
-    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
     //f5 hoặc copy link dán
     if (reload) {
       // if (!this.views) {
@@ -2122,6 +2147,55 @@ export class InstancesComponent
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
   }
+
+  loadTabControl() {
+    this.cache.valueList('DP034').subscribe((res) => {
+      if (res && res.datas) {
+        var tabIns = [];
+        res.datas.forEach((element) => {
+          switch (this.tabControl) {
+            case '1': // xem view giai đoạn
+              if (element?.value == 'S') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+                tabIns.push(tab);
+              }
+              break;
+            case '11': // hiển thị 2tab: gai đoạn, gantt
+              if (element?.value == 'S' || element?.value == 'G') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+                tabIns.push(tab);
+              }
+              break;
+            case '12': // 2 tab: giai đoạn, trường nhập liệu;
+              if (element?.value == 'S' || element?.value == 'F') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+                tabIns.push(tab);
+              }
+              break;
+            case '31': // xem tất cả tab
+              var tab = {};
+              tab['viewModelDetail'] = element?.value;
+              tab['textDefault'] = element?.text;
+              tab['icon'] = element?.icon;
+              tabIns.push(tab);
+
+              break;
+          }
+        });
+        this.tabInstances = tabIns;
+      }
+    });
+  }
+
   saveDatasInstance(e) {
     this.dataSelected.datas = e;
     this.view.dataService.update(this.dataSelected).subscribe();
@@ -2582,12 +2656,14 @@ export class InstancesComponent
     let data = {
       action,
       contract: contract || null,
-      type: 'view',
+      type: 'DP',
+      isAddContractInDP: true
     };
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = formModel;
+    option.DataService = this.view.dataService;
     let popupContract = this.callfc.openForm(
       AddContractsComponent,
       '',
@@ -2599,6 +2675,22 @@ export class InstancesComponent
       option
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    if (dataPopupOutput && dataPopupOutput.event != null) {
+      let data = dataPopupOutput.event;
+      if (this.kanban) {
+        // this.kanban.updateCard(data);  //core mới lỗi chô này
+        if (this.kanban?.dataSource?.length == 1) {
+          this.kanban.refresh();
+        }
+      }
+      this.dataSelected = data?.instance;
+      if (this.detailViewInstance) {
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
+      }
+      this.view?.dataService.update(this.dataSelected);
+      this.detectorRef.detectChanges();
+    }
     return dataPopupOutput;
   }
 }

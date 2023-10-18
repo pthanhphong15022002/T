@@ -32,8 +32,8 @@ import {
   PurchaseInvoiceService,
 } from '../purchaseinvoices.service';
 import { Subject, map, takeUntil } from 'rxjs';
-import { PurchaseInvoicesLines } from '../../../models/PurchaseInvoicesLines.model';
-import { VATInvoices } from '../../../models/VATInvoices.model';
+import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
+import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
@@ -48,7 +48,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   @ViewChild('formPurchaseInvoices') public formPurchaseInvoices: CodxFormComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
 
-  @ViewChild('tab') tab: TabComponent;
   headerText: string; //? tên tiêu đề
   dialog: DialogRef; //? dialog truyền vào
   dialogData?: any; //? dialog hứng data truyền vào
@@ -235,9 +234,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         case 'currencyid':
           this.currencyIDChange(field);
           break;
-        case 'taxexchRate':
-          this.exchangeRateChange(field);
-          break;
         case 'exchangerate':
           this.exchangeRateChange(field);
           break;
@@ -257,6 +253,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   valueChangeLine(event: any) {
     let oLine = event.data;
+    if (event.field.toLowerCase() === 'itemid') {
+      oLine.itemName = event?.itemData?.ItemName;
+      this.detectorRef.detectChanges();
+    }
     this.eleGridPurchaseInvoice.startProcess();
     this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
       event.field,
@@ -463,7 +463,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm set data mặc định từ master khi thêm dòng mới
    */
   setDefaultLine() {
-    let oLine : any = new PurchaseInvoicesLines();
+    let model : any = new AC_PurchaseInvoicesLines();
+    let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
     oLine.note = this.formPurchaseInvoices.data.note;
@@ -474,12 +475,12 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thêm dòng hóa đơn GTGT
    */
   addLineVatInvoices() {
-    let data:any  = new VATInvoices();
-    data.transID = this.formPurchaseInvoices.data.recID;
-    data.objectID = this.formPurchaseInvoices.data.objectID;
-    data.objectName = this.formPurchaseInvoices.data.objectName;
-    // data.lineID = this.eleGridCashPayment?.rowDataSelected?.recID;
-    this.eleGridVatInvoices.addRow(data,this.eleGridVatInvoices.dataSource.length);
+    let model = new AC_VATInvoices();
+    let oLine = Util.camelizekeyObj(model);
+    oLine.transID = this.formPurchaseInvoices.data.recID;
+    oLine.objectID = this.formPurchaseInvoices.data.objectID;
+    oLine.objectName = this.formPurchaseInvoices.data.objectName;
+    this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
   }
 
   /**
@@ -780,6 +781,30 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formPurchaseInvoices.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * @param data 
+   * @returns 
+   */
+  async saveValidationLine(data:any){
+    let lsterror = [];
+
+    // xử lí trường hợp call api để check validate
+    let error = await new Promise((resolve, reject) => {
+      this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValidateAsync', [
+        data
+      ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+        if (res?.error) {
+          resolve({ field: res?.field, msgCode: res?.msgCode });
+        } else {
+          resolve(null);
+        }
+      });
+    });
+    if(error) lsterror.push(error);
+    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

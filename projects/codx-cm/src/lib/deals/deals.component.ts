@@ -362,7 +362,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            ['1', '0'].includes(data?.status) ||
+            ['1', '0','11'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -384,7 +384,7 @@ export class DealsComponent
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0'].includes(data.status)
+          ? data.closed || ['1', '0','11'].includes(data.status)
           : true;
     };
     let isOpened = (eventItem, data) => {
@@ -401,14 +401,14 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2'].includes(data.status) ||
+        ? !['1', '2','11'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? data.status != '0' : true;
+      eventItem.disabled = data.full ? !['0'].includes(data.status)  : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -856,7 +856,7 @@ export class DealsComponent
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
-                  data = res[0];
+                  data = res;
                   this.view.dataService.update(data).subscribe();
                   this.detailViewDeal.dataSelected = data;
                   if (e.event.isReason != null) {
@@ -995,7 +995,7 @@ export class DealsComponent
         var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
-            data = res[0];
+            data = res;
             this.view.dataService.update(data).subscribe();
             //up kaban
             if (this.kanban) {
@@ -1048,7 +1048,7 @@ export class DealsComponent
           var datas = [data.recID, resDP[0]];
           this.codxCmService.startDeal(datas).subscribe((res) => {
             if (res) {
-              this.dataSelected = res[0];
+              this.dataSelected = res;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
               this.detailViewDeal.reloadListStep(resDP[1]);
               this.notificationsService.notifyCode('SYS007');

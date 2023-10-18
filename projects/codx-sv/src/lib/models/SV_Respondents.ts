@@ -18,4 +18,5 @@ export class SV_Respondents {
     createdBy: string;
     modifiedOn: string;
     modifiedBy: string;
+    autoCreated:boolean;
 }
