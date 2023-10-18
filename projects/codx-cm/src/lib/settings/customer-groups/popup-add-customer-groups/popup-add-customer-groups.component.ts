@@ -84,7 +84,7 @@ export class PopupAddCustomerGroupsComponent implements OnInit, AfterViewInit {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
-        if (res) {
+        if (res && res?.save) {
           this.dialog.close(res.save);
         }
       });

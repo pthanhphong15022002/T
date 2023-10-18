@@ -170,7 +170,7 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
         for (let i = 0; i < this.arrReport.length; i++) {
           arrChildren.push({
             title: this.arrReport[i].customName,
-            path: 'dm/dmdashboard/' + this.arrReport[i].reportID,
+            path: 'dm/dashboard/' + this.arrReport[i].reportID,
           });
         }
         this.pageTitle.setSubTitle(arrChildren[0].title);

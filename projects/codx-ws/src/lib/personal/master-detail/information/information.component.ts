@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService } from 'codx-core';
 import { CodxWsService } from '../../../codx-ws.service';
 import { isObservable } from 'rxjs';
 import { label } from './infomation.variable';
@@ -27,7 +27,8 @@ export class InformationComponent implements OnInit{
     private wsService: CodxWsService,
     private codxCmService: CodxCommonService,
     private cacheService: CacheService,
-    private callFunc: CallFuncService
+    private callFunc: CallFuncService,
+    private codxService : CodxService
   ) 
   {
     this.user = this.authstore.get();
@@ -126,8 +127,22 @@ export class InformationComponent implements OnInit{
             }
           })
         }
+        else
+        {
+          this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync",id).subscribe(item=>{
+            if(item)
+            {
+              this.user.extends.TwoFA = id;
+              this.authstore.set(this.user);
+            }
+          })
+        }
       }
     })
+  }
+  changePW() {
+    var url = `auth/login`;
+    this.codxService.navigate(null, url, { id: 'changePass' });
   }
 }
 const themeDatas: ThemeFlag[] = [

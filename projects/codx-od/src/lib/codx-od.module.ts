@@ -55,7 +55,7 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
-        path: 'oddashboard/:funcID',
+        path: 'dashboard/:funcID',
         component: ODDashboardComponent,
       },
       {
