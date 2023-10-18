@@ -686,7 +686,8 @@
           <codx-label
             class="fw-bold fs-5 text-dark me-3"
             fiedName="ApproveRule"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
           >
           </codx-label>
           <div class="me-3 pt-2">
@@ -1090,7 +1091,10 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="StartInstanceControl" [formModel]="dialog.formModel">
+            <codx-label
+              fiedName="StartInstanceControl"
+              [formModel]="dialog.formModel"
+            >
             </codx-label>
           </div>
           <div class="col-6 row">
@@ -2261,7 +2265,7 @@
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
                         class="drap-drop cursor-pointer"
-                        (dblclick)="viewTask(task);"
+                        (dblclick)="viewTask(task)"
                       >
                         <div class="has-action-menu">
                           <div
