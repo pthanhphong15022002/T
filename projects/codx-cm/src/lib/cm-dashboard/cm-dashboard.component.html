@@ -841,35 +841,40 @@
       name="lblSakerQuarters"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
-      default="Sakes last 4 quarters"
+      default="Sales last 4 quarters"
     ></codx-label>
-    <ejs-accumulationchart
-      id="container"
-      #pie
-      style="display: block; width: 92%"
-      [legendSettings]="legendSettings"
-      [enableSmartLabels]="false"
-      (textRender)="onTextRender($event)"
-      [enableBorderOnMouseMove]="false"
-      [tooltip]="toolTipAccumulation"
-    >
-      <e-accumulation-series-collection>
-        <e-accumulation-series
-          [dataSource]="piedata"
-          xName="x"
-          yName="y"
-          [startAngle]="startAngle"
-          [endAngle]="endAngle"
-          innerRadius="0%"
-          radius="70%"
-          [dataLabel]="dataLabel"
-          [explode]="false"
-          explodeOffset="10%"
-          [explodeIndex]="explodeIndex"
-        >
-        </e-accumulation-series>
-      </e-accumulation-series-collection>
-    </ejs-accumulationchart>
+    <ng-container *ngIf="piedata?.length > 0; else noData">
+      <ejs-accumulationchart
+        id="container"
+        #pie
+        style="display: block; width: 92%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        (textRender)="onTextRender($event)"
+        [enableBorderOnMouseMove]="false"
+        [tooltip]="{
+        enable: true,
+        format: '${point.y}%',
+      }"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="piedata"
+            xName="x"
+            yName="y"
+            [startAngle]="startAngle"
+            [endAngle]="endAngle"
+            innerRadius="0%"
+            radius="70%"
+            [dataLabel]="dataLabel"
+            [explode]="false"
+            explodeOffset="10%"
+            [explodeIndex]="explodeIndex"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </ng-container>
   </div>
 </ng-template>
 

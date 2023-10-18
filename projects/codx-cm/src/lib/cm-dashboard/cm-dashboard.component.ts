@@ -262,12 +262,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //accumulation chart
-  public piedata: Object[] = [
-    { x: 'Q1/2023', y: 24, text: '29' },
-    { x: 'Q2/2023', y: 23, text: '36' },
-    { x: 'Q3/2023', y: 25, text: '39' },
-    { x: 'Q4/2023', y: 30, text: '42' },
-  ];
+  public piedata: Object[] = [];
   public datalabelAc: Object = {
     visible: true,
     position: 'Inside',
@@ -281,11 +276,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   public legendSettings: Object = {
     visible: true,
   };
-  toolTipAccumulation: Object = {
-    enable: true,
-    format: '${point.y}%',
-  };
-  onTextRender: Function | any;
+
   //end
 
   //top sales performance
@@ -477,10 +468,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.datasDeals = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"},{"panelId":"121.21519762020964252_layout","data":"12"},{"panelId":"131.21519762020964252_layout","data":"13"},{"panelId":"141.21519762020964252_layout","data":"14"}]'
     );
-    this.onTextRender = (args: IAccTextRenderEventArgs) => {
-      let text = args.series['resultData']?.find((x) => x.y == args.point.y);
-      args.text = text?.text + 'M';
-    };
   }
 
   ngAfterViewInit() {
@@ -504,10 +491,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       if (res.funcID) {
         this.reportID = res.funcID;
         this.isLoaded = false;
-        debugger;
         switch (this.reportID) {
           case 'CMD001':
             //dashboard moi
+            // this.getDashBoardTargets();
             this.isLoaded = true;
             break;
           // nhom chua co tam
@@ -637,6 +624,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
             (x) => x.color
           );
+          const dashBoardTarget = this.dataDashBoard?.dashBoardTargets;
+          if (dashBoardTarget?.quarterDashBoard) {
+            this.piedata = dashBoardTarget?.quarterDashBoard?.map((x) => {
+              let data = {
+                x: x?.nameQuarter,
+                y: x?.probability,
+                text: x?.target,
+                quarter: x?.target,
+                year: x?.year,
+              };
+              return data;
+            });
+          }
         } else {
           this.dataStatisticTarget = [];
           this.maxOwners = [];
@@ -648,6 +648,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.dataSourceIndustry = [];
           this.paletteIndustry = [];
           this.palette = [];
+          this.piedata = [];
         }
         setTimeout(() => {
           this.isLoaded = true;
@@ -655,6 +656,41 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
     this.detectorRef.detectChanges();
+  }
+
+  getDashBoardTargets() {
+    this.isLoaded = false;
+    let model = new GridModels();
+    model.funcID = 'CM0601';
+    model.entityName = 'CM_Targets';
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'DealsBusiness',
+        'GertDashBoardTargetAsync',
+        [model]
+      )
+      .subscribe((res) => {
+        if (res) {
+          const data = res;
+          if (data?.quarterDashBoard) {
+            this.piedata = data?.quarterDashBoard?.map((x) => {
+              let data = {
+                x: x?.nameQuarter,
+                y: x?.probability,
+                text: x?.target,
+                quarter: x?.target,
+                year: x?.year,
+              };
+              return data;
+            });
+          }
+          setTimeout(() => {
+            this.isLoaded = true;
+          }, 500);
+        }
+      });
   }
 
   getTitle(status) {
@@ -910,5 +946,20 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
       this.detectorRef.detectChanges();
     }
+  }
+  onTextRender(args: IAccTextRenderEventArgs) {
+    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
+    let value = text?.text ?? 0;
+    let retrn = '0';
+    if (value === null || isNaN(value)) {
+      retrn = '0';
+    }
+
+    if (value >= 1000000) {
+      retrn = (value / 1000000).toFixed(2) + 'M';
+    } else if (value >= 1000) {
+      retrn = (value / 1000).toFixed(2) + 'K';
+    }
+    args.text = retrn;
   }
 }
