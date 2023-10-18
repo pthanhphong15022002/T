@@ -2635,12 +2635,14 @@ export class InstancesComponent
     let data = {
       action,
       contract: contract || null,
-      type: 'view',
+      type: 'DP',
+      isAddContractInDP: true
     };
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
     option.FormModel = formModel;
+    option.DataService = this.view.dataService;
     let popupContract = this.callfc.openForm(
       AddContractsComponent,
       '',
@@ -2652,6 +2654,22 @@ export class InstancesComponent
       option
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    if (dataPopupOutput && dataPopupOutput.event != null) {
+      let data = dataPopupOutput.event;
+      if (this.kanban) {
+        // this.kanban.updateCard(data);  //core mới lỗi chô này
+        if (this.kanban?.dataSource?.length == 1) {
+          this.kanban.refresh();
+        }
+      }
+      this.dataSelected = data?.instance;
+      if (this.detailViewInstance) {
+        this.detailViewInstance.dataSelect = this.dataSelected;
+        this.detailViewInstance.listSteps = this.listStepInstances;
+      }
+      this.view?.dataService.update(this.dataSelected);
+      this.detectorRef.detectChanges();
+    }
     return dataPopupOutput;
   }
 }
