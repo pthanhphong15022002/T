@@ -65,13 +65,9 @@ import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-set
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldown.component';
-<<<<<<< HEAD
-import { PopupInputPointsComponent } from './cards/popup-input-points/popup-input-points.component';
-import { EVouchersComponent } from './evouchers/evouchers.component';
-=======
 import { PopupInputPointsComponent } from './approvals/popup-input-points/popup-input-points.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
->>>>>>> 13f68d42f980ca973176ab98fee19401d2a110a6
+import { EVouchersComponent } from './evouchers/evouchers.component';
 
 export const routes: Routes = [
   {
@@ -227,6 +223,7 @@ const Component: Type<any>[] = [
   DrilldownComponent,
   PopupInputPointsComponent,
   ApprovalsComponent,
+  EVouchersComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -247,16 +244,12 @@ const T_Pipe: Type<any>[] = [];
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-<<<<<<< HEAD
   declarations: [
     Component,
     T_Pipe,
     PopupInputPointsComponent,
-    EVouchersComponent,
+    ApprovalsComponent,
   ],
-=======
-  declarations: [Component, T_Pipe, PopupInputPointsComponent, ApprovalsComponent],
->>>>>>> 13f68d42f980ca973176ab98fee19401d2a110a6
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {
