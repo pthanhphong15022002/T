@@ -595,7 +595,7 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-              this.listStepInstances = JSON.parse(JSON.stringify(res));
+            
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -647,19 +647,26 @@ export class InstancesComponent
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        let data = e.event;
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
         }
-        this.dataSelected = data;
+
         if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.dataSelect = this.dataSelected
+          this.detailViewInstance.getStageByStep()
         }
-        this.view?.dataService.update(this.dataSelected);
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
+     
         this.detectorRef.detectChanges();
       }
     });
@@ -686,17 +693,24 @@ export class InstancesComponent
     let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
         this.view.dataService.update(e.event).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          }else  this.kanban.updateCard(this.dataSelected); 
         }
-        this.dataSelected = e.event;
+      
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.loadChangeData();
         }
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -1670,8 +1684,15 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData();
+                this.detailViewInstance.loadChangeData();
               }
+           
+              if (this.detailViewPopup) {
+                this.detailViewPopup.dataSelect = this.dataSelected;
+                this.detailViewPopup.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData()
+              }
+      
               this.detectorRef.detectChanges();
             }
           });
