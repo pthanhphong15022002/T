@@ -254,16 +254,16 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: LayoutOnlyHeaderComponent,
-  //   children: [
-  //     {
-  //       path: 'MACContent/:funcID',
-  //       component: MACContentComponent,
-  //     },
-  //   ],
-  // },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'MACContent', //  /:funcID',
+        component: MACContentComponent,
+      },
+    ],
+  },
   {
     path: '',
     loadChildren: () =>
