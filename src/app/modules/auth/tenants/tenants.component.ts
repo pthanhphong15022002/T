@@ -61,6 +61,7 @@ export class TenantsComponent implements OnInit {
       ])
       .subscribe((res: any) => {
         if (res) {
+          debugger
           this.loginDevice.tenantID = tn;
           let trust2FA = res?.extends?.Trust2FA;
           let objData = {
