@@ -176,6 +176,12 @@ export const routes: Routes = [
       //   data: { noReuse: true },
       // },
       {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+
+      {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
         data: { noReuse: true },
@@ -264,6 +270,35 @@ export const routes: Routes = [
       },
     ],
   },
+  // {
+  //   path: '',
+  //   component: LayoutComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  // {
+  //   path: '',
+  //   component: LayloutJournalComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '',
+  //   component: LayoutOnlyHeaderComponent,
+  //   children: [
+  //     {
+  //       path: 'MACContent/:funcID',
+  //       component: MACContentComponent,
+  //     },
+  //   ],
+  // },
   {
     path: '',
     loadChildren: () =>
