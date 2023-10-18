@@ -22,7 +22,7 @@
     <div id="loader"></div>
   </div>
 
-  <div class="w-100 h-100" *ngIf="isLoaded && reportID == '5'">
+  <div class="w-100 h-100" *ngIf="isLoaded && reportID == 'CMD004'">
     <cm-targets [viewDashboard]="true"></cm-targets>
   </div>
 </ng-template>
@@ -900,6 +900,7 @@
                   <codx-imgs
                     [width]="30"
                     [objectId]="item?.userID"
+                    [objectName]="item?.userName"
                     objectType="AD_Users"
                     [numberImages]="5"
                     class=""

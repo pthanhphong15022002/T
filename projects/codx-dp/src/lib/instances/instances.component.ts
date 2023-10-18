@@ -553,9 +553,11 @@ export class InstancesComponent
                     }
                   });
               }
-            } else if (this.process.applyFor == '4') {
-              this.openPopupContract('add', formMD);
-            } else {
+            }
+            // else if (this.process.applyFor == '4') {
+            //   this.openPopupContract('add', formMD);
+            // } 
+            else {
               this.openPopUpAdd(
                 applyFor,
                 formMD,
@@ -575,8 +577,9 @@ export class InstancesComponent
       this.view.dataService.dataSelected.reCID = Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
-      const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      // const funcIDApplyFor =
+      //   this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      const funcIDApplyFor = this.checkFunctionID(this.process.applyFor);
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -644,6 +647,7 @@ export class InstancesComponent
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
     };
+    this.detailViewInstance
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
@@ -672,7 +676,7 @@ export class InstancesComponent
     });
   }
 
-  openPopupEdit(applyFor, formMD, option, titleAction) {
+  async openPopupEdit(applyFor, formMD, option, titleAction) {
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -689,8 +693,9 @@ export class InstancesComponent
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
+      processID: this.processID,
     };
-    let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
+    let dialogEditInstance = await this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.dataSelected  = JSON.parse(JSON.stringify(e.event));
@@ -719,6 +724,7 @@ export class InstancesComponent
   edit(data, titleAction) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      this.oldIdInstance = data.recID;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -2586,6 +2592,11 @@ export class InstancesComponent
       return this.callfc.openSide(PopupAddDealComponent, obj, option);
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
+    }else if (applyFor == '4') {
+      option.isFull = true;
+      option.FormModel = obj?.formMD;
+      obj = {...obj, type: 'DP', contractRefID: this.oldIdInstance}
+      return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
   }
@@ -2650,47 +2661,5 @@ export class InstancesComponent
     } else {
       return `rgb(${r}, ${g}, ${b})`;
     }
-  }
-
-  async openPopupContract(action, formModel: FormModel, contract?) {
-    let data = {
-      action,
-      contract: contract || null,
-      type: 'DP',
-      isAddContractInDP: true
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1010;
-    option.FormModel = formModel;
-    option.DataService = this.view.dataService;
-    let popupContract = this.callfc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    if (dataPopupOutput && dataPopupOutput.event != null) {
-      let data = dataPopupOutput.event;
-      if (this.kanban) {
-        // this.kanban.updateCard(data);  //core mới lỗi chô này
-        if (this.kanban?.dataSource?.length == 1) {
-          this.kanban.refresh();
-        }
-      }
-      this.dataSelected = data?.instance;
-      if (this.detailViewInstance) {
-        this.detailViewInstance.dataSelect = this.dataSelected;
-        this.detailViewInstance.listSteps = this.listStepInstances;
-      }
-      this.view?.dataService.update(this.dataSelected);
-      this.detectorRef.detectChanges();
-    }
-    return dataPopupOutput;
   }
 }

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { change } from '@syncfusion/ej2-grids';
 import { ApiHttpService, FormModel } from 'codx-core';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'fd-detail-gift',
@@ -15,6 +15,26 @@ export class ViewDetailGiftComponent implements OnInit, OnChanges {
   assemblyName: string = "ERM.Business.FD";
   className: string = "GiftTransBusiness"
   data: any = null;
+  TabControl: TabModel[] = [
+    {
+      name: 'History',
+      textDefault: 'Lịch sử',
+      isActive: true,
+      icon: 'icon-i-clock-history',
+    },
+    {
+      name: 'Attachment',
+      textDefault: 'Đính kèm',
+      isActive: false,
+      icon: 'icon-i-paperclip',
+    },
+    {
+      name: 'Comment',
+      textDefault: 'Bình luận',
+      isActive: false,
+      icon: 'icon-i-chat-right',
+    }
+  ];
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef

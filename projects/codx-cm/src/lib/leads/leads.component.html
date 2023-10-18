@@ -131,7 +131,7 @@
             </codx-vll>
           </div>
         </ng-template>
-        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1' && data?.approveStatus != '0'">
+        <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
             [field]="'ApproveStatus'"
@@ -348,7 +348,7 @@
             </codx-vll>
           </div>
           <ng-container
-            *ngIf="data?.approveStatus && data?.approveStatus != '1'"
+          *ngIf="data.approveStatus > '1' && data?.approveStatus"
           >
             <codx-vll
               [name]="vllApprove"

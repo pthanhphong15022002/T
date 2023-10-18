@@ -362,7 +362,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            ['1', '0','11'].includes(data?.status) ||
+            ['1', '0','15'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -384,7 +384,7 @@ export class DealsComponent
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0','11'].includes(data.status)
+          ? data.closed || ['1', '0','15'].includes(data.status)
           : true;
     };
     let isOpened = (eventItem, data) => {
@@ -401,7 +401,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2','11'].includes(data.status) ||
+        ? !['1', '2','15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
         : true;
