@@ -187,10 +187,10 @@ export class CodxFieldsDetailTempComponent implements OnInit {
             (x) => x.recID == obj.recID && x.dataValue != obj.dataValue
           );
           if (idx != -1) {
-            this.dataStep.fields[idx].dataValue = obj.dataValue;
+            this.dataStep.fields[idx] = JSON.parse(JSON.stringify(obj)) ;
           }
         });
-
+        this.changeDetectorRef.detectChanges();
         this.saveDataStep.emit(this.dataStep);
       }
     });
@@ -354,6 +354,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
           if (idx != -1)
             this.dataStep.fields[idx].dataValue = this.dataValueOld;
         }
+       
       });
   }
 
