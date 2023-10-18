@@ -452,6 +452,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     { value: '4', text: 'Doanh tu đã mất' },
     { value: '5', text: 'Trung bình chu kỳ bán hàng' },
   ];
+  arrReport: any;
+  viewCategory: any;
+  subscription: any;
   //end
   constructor(
     inject: Injector,
@@ -495,23 +498,33 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       },
     ];
     this.pageTitle.setBreadcrumbs([]);
-    this.router.queryParams.subscribe((res) => {
-      if (res.reportID) {
-        this.reportID = res.reportID;
+
+    // this.router.queryParams.subscribe((res) => {  //khong duoc
+    this.router.params.subscribe((res) => {
+      if (res.funcID) {
+        this.reportID = res.funcID;
         this.isLoaded = false;
+        debugger;
         switch (this.reportID) {
+          case 'CMD001':
+            //dashboard moi
+            this.isLoaded = true;
+            break;
           // nhom chua co tam
-          case '1':
+          case 'CMD002':
             this.getDataDashboard();
             break;
-          //ca nha chua co ne de vay
-          case '3':
+          //ca nhan chua co ne de vay
+          case 'CMD003':
             let predicates = 'Owner =@0';
             let dataValues = this.user.userID;
             this.getDataDashboard(predicates, dataValues);
             break;
           // target
-          case '5':
+          case 'CMD004':
+            this.isLoaded = true;
+            break;
+          default:
             this.isLoaded = true;
             break;
         }
@@ -525,12 +538,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     const param = e[1];
 
     switch (this.reportID) {
+      case 'CMD001':
+        //dashboard moi
+        this.isLoaded = true;
+        break;
       // nhom chua co tam
-      case '1':
+      case 'CMD002':
         this.getDataDashboard(predicates, dataValues, param);
         break;
       //ca nha chua co ne de vay
-      case '3':
+      case 'CMD003':
         let lenght = dataValues.split(';')?.length ?? 0;
 
         let predicate =
@@ -542,7 +559,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.getDataDashboard(predicates, dataValues, param);
         break;
       // target
-      case '5':
+      case 'CMD004':
         this.isLoaded = true;
         break;
     }
@@ -795,21 +812,52 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   onActions(e) {
     if (e.type == 'reportLoaded') {
-      this.cache.valueList('CRM057').subscribe((vl) => {
-        if (vl) {
-          this.vllData = vl.datas;
-          this.filterData = this.vllData.map((x) => {
-            return {
-              title: x.text,
-              path: 'cm/dashboard/CMD01?reportID=' + x.value,
-            };
+      //cu dung de test
+      // this.cache.valueList('CRM057').subscribe((vl) => {
+      //   if (vl) {
+      //     this.vllData = vl.datas;
+      //     this.filterData = this.vllData.map((x) => {
+      //       return {
+      //         title: x.text,
+      //         path: 'cm/dashboard/CMD01?reportID=' + x.value,
+      //       };
+      //     });
+      //   }
+      //   this.pageTitle.setSubTitle(this.filterData[0].title);
+      //   this.pageTitle.setChildren(this.filterData);
+      //   this.codxService.navigate('', this.filterData[0].path);
+      //   this.isLoaded = false;
+      // });
+
+      //moi theo report
+      this.arrReport = e.data;
+      if (this.arrReport.length) {
+        this.cache
+          .functionList(
+            this.arrReport[0].moduleID + this.arrReport[0].reportType
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              debugger;
+              this.pageTitle.setRootNode(res.customName);
+              this.pageTitle.setParent({
+                title: res.customName,
+                path: res.url,
+              });
+              let arrChildren: any = [];
+              for (let i = 0; i < this.arrReport.length; i++) {
+                arrChildren.push({
+                  title: this.arrReport[i].customName,
+                  path: 'cm/dashboard/' + this.arrReport[i].reportID,
+                });
+              }
+              this.pageTitle.setSubTitle(arrChildren[0].title);
+              this.pageTitle.setChildren(arrChildren);
+              this.codxService.navigate('', arrChildren[0].path);
+              this.isLoaded = false;
+            }
           });
-        }
-        this.pageTitle.setSubTitle(this.filterData[0].title);
-        this.pageTitle.setChildren(this.filterData);
-        this.codxService.navigate('', this.filterData[0].path);
-        this.isLoaded = false;
-      });
+      }
     }
   }
 
@@ -836,8 +884,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
   }
 
-  findItemUser(value, lstTitlePerformance){
-    let title = lstTitlePerformance.find(x => x.value == value);
+  findItemUser(value, lstTitlePerformance) {
+    let title = lstTitlePerformance.find((x) => x.value == value);
     return title;
+  }
+
+  ///Get dataSET
+  getDataset(method: string, parameters: any = undefined) {
+    if (this.isLoaded) return;
+    if (method) {
+      this.subscription = this.api
+        .execSv(
+          'rpttm',
+          'Codx.RptBusiness.CM',
+          'SalesDataSetBusiness',
+          method,
+          parameters ? [parameters] : []
+        )
+        .subscribe((res) => {
+          switch (this.viewCategory) {
+          }
+          //xu ly nv
+          this.isLoaded = true;
+        });
+
+      this.detectorRef.detectChanges();
+    }
   }
 }
