@@ -52,7 +52,7 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('viewReason', { static: true }) viewReason;
-  @Input() dataStep: any;
+  @Input() dataStep: any;  //step instance
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() titleDefault = '';
@@ -62,7 +62,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() proccesNameMove: any;
   @Input() lstIDInvo: any;
   @Input() showColumnControl = 1;
-  @Input() listStep: any;
+  @Input() listStep: any; //List step instance
   @Input() viewsCurrent = '';
   @Input() currentElmID: string;
   @Input() listUserIdRole: string[] = [];
