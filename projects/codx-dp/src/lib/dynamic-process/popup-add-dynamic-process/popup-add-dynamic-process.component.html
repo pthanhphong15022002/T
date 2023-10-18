@@ -356,7 +356,11 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="GroupID" [formModel]="dialog.formModel">
+              <codx-label
+                fiedName="GroupID"
+                [formModel]="dialog.formModel"
+                default="Nhóm quy trình"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="groupID" [crrValue]="process.groupID" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -380,7 +384,11 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel">
+              <codx-label
+                fiedName="ProcessName"
+                [formModel]="dialog.formModel"
+                default="Tên quy trình"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -403,7 +411,11 @@
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ApplyFor" [formModel]="dialog.formModel">
+              <codx-label
+                fiedName="ApplyFor"
+                [formModel]="dialog.formModel"
+                default="Đối tượng áp dụng"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="applyFor" [crrValue]="process.applyFor" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup">
@@ -425,7 +437,11 @@
           </div>
           <div class="form-group margin-form" *ngIf="process.applyFor == '0'">
             <div>
-              <codx-label fiedName="AutoName" [formModel]="dialog.formModel">
+              <codx-label
+                fiedName="AutoName"
+                [formModel]="dialog.formModel"
+                default="Tên đối tượng khi tạo mới"
+              >
               </codx-label>
             </div>
             <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
@@ -686,6 +702,7 @@
           <codx-label
             class="fw-bold fs-5 text-dark me-3"
             fiedName="ApproveRule"
+            default="Cho phép xét duyệt và trình ký"
             [formModel]="dialog.formModel"
           >
           </codx-label>
@@ -865,6 +882,7 @@
             <codx-label
               fiedName="InstanceNoSetting"
               [formModel]="dialog.formModel"
+              default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới"
             >
             </codx-label>
           </div>
@@ -920,6 +938,7 @@
             <codx-label
               fiedName="AddFieldsControl"
               [formModel]="dialog.formModel"
+              default="Cho phép nhập trường nhập liệu lúc tạo mới theo dạng"
             >
             </codx-label>
           </div>
@@ -941,7 +960,11 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="ViewMode" [formModel]="dialog.formModel">
+            <codx-label
+              fiedName="ViewMode"
+              [formModel]="dialog.formModel"
+              default="Mặc định giao diện xem danh sách nhiệm vụ"
+            >
             </codx-label>
           </div>
           <div class="col-6 row">
@@ -965,6 +988,7 @@
             <codx-label
               fiedName="ViewModeDetail"
               [formModel]="dialog.formModel"
+              default="Mặc định giao diện xem đầu tiên khi xem chi tiết nhiệm vụ"
             >
             </codx-label>
           </div>
@@ -989,6 +1013,7 @@
             <codx-label
               fiedName="ShowInstanceControl"
               [formModel]="dialog.formModel"
+              default="Chỉ xem nhiệm vụ ở tình trạng"
             >
             </codx-label>
           </div>
@@ -1017,6 +1042,7 @@
             <codx-label
               fiedName="CloseInstanceControl"
               [formModel]="dialog.formModel"
+              default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau"
             >
             </codx-label>
           </div>
@@ -1049,7 +1075,7 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="AllowCopy" [formModel]="dialog.formModel">
+            <codx-label fiedName="AllowCopy" [formModel]="dialog.formModel" default="Cho phép sao chép quy trình">
             </codx-label>
           </div>
           <div class="col-6 row">
@@ -1090,7 +1116,11 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="StartInstanceControl" [formModel]="dialog.formModel">
+            <codx-label
+              fiedName="StartInstanceControl"
+              default="Tự động bắt đầu nhiệm vụ sau khi được phân công"
+              [formModel]="dialog.formModel"
+            >
             </codx-label>
           </div>
           <div class="col-6 row">
@@ -1131,7 +1161,7 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="TabControl" [formModel]="dialog.formModel">
+            <codx-label fiedName="TabControl" [formModel]="dialog.formModel" default="Ẩn/Hiện tab khi xem nhiệm vụ">
             </codx-label>
           </div>
           <div class="col-6 row">
@@ -2261,7 +2291,7 @@
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="task"
                         class="drap-drop cursor-pointer"
-                        (dblclick)="viewTask(task);"
+                        (dblclick)="viewTask(task)"
                       >
                         <div class="has-action-menu">
                           <div
