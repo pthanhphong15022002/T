@@ -92,7 +92,7 @@ export const routes: Routes = [
         component: CodxReportViewDetailComponent,
       },
       {
-        path: 'tmdashboard/:funcID',
+        path: 'dashboard/:funcID',
         component: TMDashboardComponent,
       },
       {

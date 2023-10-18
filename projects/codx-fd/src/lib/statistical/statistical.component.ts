@@ -950,7 +950,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
                   for (let i = 0; i < this.arrReport.length; i++) {
                     arrChildren.push({
                       title: this.arrReport[i].customName,
-                      path: 'fd/statistical/' + this.arrReport[i].recID,
+                      path: 'fd/dashboard/' + this.arrReport[i].recID,
                     });
                   }
                   if(!this.reportItem){

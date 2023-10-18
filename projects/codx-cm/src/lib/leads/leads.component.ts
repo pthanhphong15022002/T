@@ -405,8 +405,8 @@ export class LeadsComponent
       // Mặc định
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && !['0', '1'].includes(data.status)) ||
-            ['0', '1'].includes(data.status) ||
+          ? (data.closed && !['15', '1'].includes(data.status)) ||
+            ['15', '1'].includes(data.status) ||
             this.checkMoreReason(data) ||
             !data.applyProcess
           : true;
@@ -450,7 +450,7 @@ export class LeadsComponent
       // Bắt đầu ngay
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['0', '1'].includes(data.status) ||
+          ? !['15', '1'].includes(data.status) ||
             data.closed ||
             !data.applyProcess
           : true;
@@ -464,22 +464,22 @@ export class LeadsComponent
     let isMergeLead = (eventItem, data) => {
       // Chuyển thành cơ hội
       eventItem.disabled = data.write
-        ? !['0', '1'].includes(data.status) || data.closed
+        ? !['15', '1'].includes(data.status) || data.closed
         : true;
     };
 
     let isOwner = (eventItem, data) => {
       // Phân bổ
       eventItem.disabled = data.full
-        ? !['0', '1', '2'].includes(data.status) || data.closed
+        ? !['15', '1', '2'].includes(data.status) || data.closed
         : true;
     };
     let isFailReason = (eventItem, data) => {
       // Đánh dấu thất bại
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && !['0', '1'].includes(data.status)) ||
-            ['0', '1'].includes(data.status) ||
+          ? (data.closed && !['15', '1'].includes(data.status)) ||
+            ['15', '1'].includes(data.status) ||
             (data.status != '13' && this.checkMoreReason(data)) ||
             !data.applyProcess
           : true;
@@ -515,7 +515,7 @@ export class LeadsComponent
     let isApprover = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
         (data.applyProcess && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
@@ -529,7 +529,7 @@ export class LeadsComponent
       // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         data.approveStatus != '3';
       eventItem.isblur = false;
     };
@@ -623,7 +623,7 @@ export class LeadsComponent
       this.notificationsService.notifyCode('DP039');
       return;
     }
-    if (data.status == '1' || data.status == '0') {
+    if (data.status == '1' || data.status == '15') {
       this.notificationsService.notifyCode(
         'DP038',
         0,
@@ -1081,7 +1081,7 @@ export class LeadsComponent
             }
 
             lst.forEach((element) => {
-              if (!['0', '1'].includes(element?.status) && !isCheck) {
+              if (!['15', '1'].includes(element?.status) && !isCheck) {
                 isCheck = true;
                 this.notificationsService.notifyCode('CM028'); //Đợi mssg
                 return;
@@ -1609,7 +1609,7 @@ export class LeadsComponent
     this.dataSelected = data;
     this.statusDefault = this.dataSelected.applyProcess
       ? this.dataSelected?.statusCode
-      : ['1','0'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
+      : ['1','15'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',
