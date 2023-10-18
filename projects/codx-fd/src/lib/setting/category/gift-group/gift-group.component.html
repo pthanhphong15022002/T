@@ -20,10 +20,15 @@
   <span [innerHTML]="item.memo"></span>
 </ng-template>
 
-<ng-template #createdOn let-item>
-  <div class="d-flex has-action-menu">
-    <span>{{ item.createdOn | fmDT }}</span>
-    <codx-mfunc [dataItem]="item" [formModel]="view?.formModel" (clickMF)="clickMF($event, item)" type="hover">
-    </codx-mfunc>
+
+<ng-template #tmpMoreFunc let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
   </div>
 </ng-template>
