@@ -302,8 +302,6 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
         }
     }
       
-    console.log('data cap nhat thong tin', this.data);
-    
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe((p) => {
       
       if (p != null) {

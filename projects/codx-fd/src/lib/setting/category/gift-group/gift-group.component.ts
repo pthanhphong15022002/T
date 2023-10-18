@@ -1,40 +1,25 @@
-import { Observable, Subject } from 'rxjs';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import {
   Component,
   OnInit,
-  Input,
   ChangeDetectorRef,
   ViewChild,
-  ElementRef,
   TemplateRef,
-  ContentChild,
   Injector,
-  EventEmitter,
-  Output,
 } from '@angular/core';
-import { LayoutService } from '@shared/services/layout.service';
 import {
-  AlertConfirmInputConfig,
-  ApiHttpService,
   AuthStore,
   ButtonModel,
   CodxGridviewComponent,
   DialogRef,
   ImageViewerComponent,
-  NotificationsService,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { LayoutModel } from '@shared/models/layout.model';
-import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { AddGiftGroupComponent } from './add-gift-group/add-gift-group.component';
-import { SettingService } from '../../setting.service';
 
 @Component({
   selector: 'app-gift-group',
@@ -74,6 +59,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
   @ViewChild('viewbase') viewbase: ViewsComponent;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('gridView') gridView: CodxGridviewComponent;
+  @ViewChild('tmpMoreFunc') tmpMoreFunc: TemplateRef<any>;
 
   constructor(
     private changedr: ChangeDetectorRef,
@@ -119,11 +105,11 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
                 headerText: res.CreatedBy.headerText,
                 template: this.itemCreateBy,
               },
-              {
-                field: 'createdOn',
-                headerText: res.CreatedOn.headerText,
-                template: this.createdOn,
-              },
+              // {
+              //   field: 'createdOn',
+              //   headerText: res.CreatedOn.headerText,
+              //   template: this.createdOn,
+              // },
             ];
           }
         });
@@ -134,6 +120,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
           active: false,
           model: {
             resources: this.columnsGrid,
+            template2: this.tmpMoreFunc,
           },
         },
       ];
@@ -183,7 +170,7 @@ export class GiftGroupComponent extends UIComponent implements OnInit {
           option
         );
         popupEdit.closed.subscribe((e) => {
-          if (!e?.event) this.viewbase.dataService.clear();
+          if (!e?.event) this.viewbase?.dataService?.clear();
           else {
             this.view.dataService.update(e.event).subscribe();
             this.changedr.detectChanges();
