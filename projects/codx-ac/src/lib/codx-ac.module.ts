@@ -180,7 +180,7 @@ export const routes: Routes = [
         component: JournalV2Component,
         data: { noReuse: true },
       },
-      
+
       {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
@@ -247,6 +247,27 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: '',
+    component: LayloutJournalComponent,
+    children: [
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutOnlyHeaderComponent,
+    children: [
+      {
+        path: 'MACContent', //  /:funcID',
+        component: MACContentComponent,
+      },
     ],
   },
   // {
