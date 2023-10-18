@@ -323,14 +323,16 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
             name="lblGeneral"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Thông tin chung"
           ></codx-label>
         </div>
         <div class="text-gray-600">
           <codx-label
             name="lblGeneral"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Thông tin chung của quy trình"
           >
           </codx-label>
@@ -358,8 +360,8 @@
             <div>
               <codx-label
                 fiedName="GroupID"
-                [formModel]="dialog.formModel"
-                default="Nhóm quy trình"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
               >
               </codx-label>
             </div>
@@ -386,8 +388,8 @@
             <div>
               <codx-label
                 fiedName="ProcessName"
-                [formModel]="dialog.formModel"
-                default="Tên quy trình"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
               >
               </codx-label>
             </div>
@@ -475,7 +477,8 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
             name="lblPermissions"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Các vai trò trong quy trình"
           >
           </codx-label>
@@ -483,7 +486,8 @@
         <div class="text-gray-600">
           <codx-label
             name="lblPerm"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Những người liên quan và có thể thực hiện các chức năng
             trong quy trình"
           >
@@ -511,7 +515,8 @@
           <codx-label
             class="fw-bold fs-4 text-dark me-3"
             name="lblSupervisor"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Người giám sát"
           >
           </codx-label>
@@ -574,7 +579,8 @@
           <codx-label
             class="fw-bold fs-5 text-dark me-3"
             name="lblParticipants"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Thành viên tham gia"
           >
           </codx-label>
@@ -598,7 +604,8 @@
           <codx-label
             class="fw-normal text-gray-400"
             name="lblParticipantControl"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Có quyền tạo nhiệm vụ trong quy trình"
           >
           </codx-label>
@@ -639,7 +646,8 @@
           <codx-label
             class="fw-bold fs-5 text-dark me-3"
             name="lblFollowers"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Người theo dõi"
           >
           </codx-label>
@@ -662,7 +670,8 @@
           <codx-label
             class="fw-normal text-gray-400"
             name="lblFollowerControl"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Có quyền xem các nhiệm vụ trong quy trình"
           >
           </codx-label>
@@ -730,7 +739,8 @@
             <codx-label
               class="fw-normal text-gray-400"
               name="lblDescriptionApproveRule"
-              [formModel]="dialog.formModel"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
               default="Các bước duyệt khi thực hiện trình kí"
             >
             </codx-label>
@@ -770,7 +780,8 @@
             <codx-label
               name="lblNotSetup"
               default="Chưa thiết lập"
-              [formModel]="dialog.formModel"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
             >
             </codx-label>
           </div>
@@ -847,14 +858,16 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
             name="lblSetting"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Tùy chỉnh quy trình"
           ></codx-label>
         </div>
         <div class="text-gray-600">
           <codx-label
             name="lblActived"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Cách thức hoạt động của quy trình"
           >
           </codx-label>
@@ -881,8 +894,8 @@
           <div class="col-6">
             <codx-label
               fiedName="InstanceNoSetting"
-              [formModel]="dialog.formModel"
-              default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
             >
             </codx-label>
           </div>
@@ -937,8 +950,8 @@
           <div class="col-6">
             <codx-label
               fiedName="AddFieldsControl"
-              [formModel]="dialog.formModel"
-              default="Cho phép nhập trường nhập liệu lúc tạo mới theo dạng"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
             >
             </codx-label>
           </div>
@@ -1122,7 +1135,8 @@
           <div class="col-6">
             <codx-label
               fiedName="StartInstanceControl"
-              [formModel]="dialog.formModel"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
             >
             </codx-label>
           </div>
@@ -1197,7 +1211,8 @@
         <div class="title text-primary fs-4 fw-bold">
           <codx-label
             name="Memo"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Hướng dẫn làm việc với quy trình"
           >
           </codx-label>
@@ -1205,7 +1220,8 @@
         <div class="text-gray-600">
           <codx-label
             name="lblMemo"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Mô tả chi tiết quy trình"
           >
           </codx-label>
@@ -1259,7 +1275,8 @@
         <div class="dropzone-msg-title mb-2">
           <codx-label
             name="lblContentAddAvatar"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="Chọn hình ảnh"
             class="fw-bold"
           >
@@ -1268,7 +1285,8 @@
         <span class="dropzone-msg-desc">
           <codx-label
             name="lblRequiredAvatar"
-            [formModel]="dialog.formModel"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
             default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
             class="fw-bold"
           ></codx-label>
