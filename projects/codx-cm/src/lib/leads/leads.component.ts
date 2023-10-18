@@ -450,7 +450,7 @@ export class LeadsComponent
       // Bắt đầu ngay
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['15', '1'].includes(data.status) ||
+          ? !['1'].includes(data.status) ||
             data.closed ||
             !data.applyProcess
           : true;
@@ -1237,14 +1237,7 @@ export class LeadsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (!isCheck) {
-            let datas = [
-              data.recID,
-              this.applyForLead,
-              isCheck,
-              this.processId,
-              '',
-              '',
-            ];
+            let datas= [data ,isCheck];
             this.getApiUpdateProcess(datas, []);
           } else {
             let datas = [
