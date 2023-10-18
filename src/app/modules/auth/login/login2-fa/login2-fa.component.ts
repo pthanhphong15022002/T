@@ -10,7 +10,6 @@ import {
   RealHubService,
   UIComponent,
 } from 'codx-core';
-import { Modal } from 'bootstrap';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
