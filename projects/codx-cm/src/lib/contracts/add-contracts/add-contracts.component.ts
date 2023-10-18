@@ -87,7 +87,7 @@ export class AddContractsComponent implements OnInit {
   instance: tmpInstances = new tmpInstances();
 
   view = [];
-
+  isAddContractInDP = false;
   isLoadDate = true;
   checkPhone = true;
   isErorrDate = true;
@@ -100,7 +100,7 @@ export class AddContractsComponent implements OnInit {
   customerID = {};
   headerTest = '';
   listTypeContract = [];
-  type: 'view' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'view'| 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   listCustomFile: any[] = [];
@@ -165,7 +165,7 @@ export class AddContractsComponent implements OnInit {
     this.projectID = dt?.data?.projectID;
     this.headerTest = dt?.data?.actionName;
     this.contractsInput = dt?.data?.contract;
-
+    this.isAddContractInDP = dt?.data?.isAddContractInDP;
     this.getFormModel();
 
     this.user = this.authStore.get();
@@ -440,6 +440,18 @@ export class AddContractsComponent implements OnInit {
     return true;
   }
 
+  beforeSaveInstance(option: RequestOption) {
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, null];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
+
+    return true;
+  }
+
   async addContracts() {
     if (this.type == 'view') {
       if (this.contracts?.applyProcess) {
@@ -459,7 +471,17 @@ export class AddContractsComponent implements OnInit {
           }
           // this.changeDetector.detectChanges();
         });
-    } else {
+    }else if(this.type == 'DP'){
+      this.setDataInstance(this.contracts, this.instance);
+      let instance = await this.addInstance();
+      this.cmService
+        .addContracts([this.contracts, this.listPaymentAdd])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({ instance: instance});
+          }
+        });
+    }else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
         .subscribe((res) => {
@@ -542,13 +564,13 @@ export class AddContractsComponent implements OnInit {
     instance.processID = contract?.processID;
     contract.refID = instance?.recID;
     contract.stepID = this.listInstanceSteps[0].stepID;
+    contract.status = this.action == 'add' ? '1' : contract.status;
   }
 
   async addInstance() {
     var data = [this.instance, this.listInstanceSteps, null];
     let instance = await firstValueFrom(this.cmService.addInstance(data));
     if (instance) {
-      console.log(instance);
       let listPermissions = instance?.permissions;
       if(listPermissions?.length > 0){
         let listPermission = [];
@@ -575,6 +597,9 @@ export class AddContractsComponent implements OnInit {
         })
         this.contracts.permissions = listPermission;
       }
+      return instance;
+    }else{
+      return null;
     }
   }
   //#endregion
@@ -939,12 +964,10 @@ export class AddContractsComponent implements OnInit {
       let exchangeRateNew = res?.exchRate ?? 0;
       if (exchangeRateNew == 0) {
         this.notiService.notify(
-          'Tỷ giá tiền tệ "' +
-            this.quotations?.currencyID +
-            '" chưa thiết lập xin hay chọn lại !',
-          '3'
+          'Tỷ giá "' + this.contracts?.currencyID + '" chưa thiết lập  !','3'
         );
-
+        this.contracts.currencyID = "VND";
+        this.contracts.exchangeRate = 1;
         return;
       } else {
         this.contracts.exchangeRate = exchangeRateNew;
@@ -1070,8 +1093,8 @@ export class AddContractsComponent implements OnInit {
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.contracts.currencyID = dataValue?.DefaultCurrency;
-      this.contracts.applyProcess = dataValue?.ProcessContract == '1';
+      this.contracts.currencyID = dataValue?.DefaultCurrency || 'VND';
+      this.contracts.applyProcess = this.isAddContractInDP ? true : dataValue?.ProcessContract == '1';
     }
   }
 
