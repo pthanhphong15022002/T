@@ -65,7 +65,8 @@ import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-set
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldown.component';
-import { PopupInputPointsComponent } from './cards/popup-input-points/popup-input-points.component';
+import { PopupInputPointsComponent } from './approvals/popup-input-points/popup-input-points.component';
+import { ApprovalsComponent } from './approvals/approvals.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +97,10 @@ export const routes: Routes = [
       {
         path: 'cards/:funcID',
         component: CardsComponent,
+      },
+      {
+        path: 'approvals/:funcID',
+        component: ApprovalsComponent,
       },
       {
         path: 'gifttrans/:funcID',
@@ -212,6 +217,7 @@ const Component: Type<any>[] = [
   SettingContentComponent,
   DrilldownComponent,
   PopupInputPointsComponent,
+  ApprovalsComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -232,7 +238,7 @@ const T_Pipe: Type<any>[] = [];
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [Component, T_Pipe, PopupInputPointsComponent],
+  declarations: [Component, T_Pipe, PopupInputPointsComponent, ApprovalsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxFdModule {
