@@ -55,6 +55,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   infoPersonal: any;
   //#endregion
 
+  empQuitJobStatus: any;
+
   //#region funcID
   ePassportFuncID = null;
   eVisaFuncID = null;
@@ -198,6 +200,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.fromWS = data?.data?.fromWS;
     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
+    this.empQuitJobStatus = data?.data?.quitjobStatus;
     this.sortModel = data?.data?.sortModel;
     this.formModel = data?.data?.formModel;
     this.hasFilter = data?.data?.hasFilter;
@@ -584,8 +587,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         }
       }
     }
-    else if(func.isPortal == true){
-      //Hide edit/copy/delete
+
+    if(func.isPortal == true || this.empQuitJobStatus == '90'){
+      //Hide edit/copy/delete more func
       for(let i = 0; i < evt.length; i++){
         if(evt[i].functionID == "SYS02" || evt[i].functionID == "SYS03" || evt[i].functionID == "SYS01" || evt[i].functionID == "SYS04"){
           evt[i].disabled = true;

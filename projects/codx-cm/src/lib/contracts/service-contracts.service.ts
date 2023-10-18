@@ -147,6 +147,14 @@ export class ContractsService {
       data
     );
   }
+  getContractByRefID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractByRefIDAsync',
+      data
+    );
+  }
 
   // async loadSetting() {
   //   this.grvSetup = await firstValueFrom(
