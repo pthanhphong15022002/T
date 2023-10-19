@@ -445,7 +445,7 @@ export class CodxViewTaskComponent implements OnInit {
         );
         break;
       case 'DP08': //them task
-        await this.chooseTypeTask();
+        await this.chooseTypeTask('step');
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.dataView, this.type);
@@ -489,14 +489,14 @@ export class CodxViewTaskComponent implements OnInit {
       });
   }
   //#region CRUD
-  async chooseTypeTask() {
+  async chooseTypeTask(type) {
     let isAddGroup = this.type == 'P' ? true : false;
     let dataType = await this.stepService.chooseTypeTask(isAddGroup);
     if (dataType) {
       if (dataType?.value == 'G') {
         await this.addGroup();
       } else {
-        await this.addTask(dataType);
+        await this.addTask(type, dataType);
       }
     }
   }
@@ -510,9 +510,10 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
 
-  async addTask(dataType) {
+  async addTask(type,dataType) {
     let groupId = this.type == 'G' ? this.dataView?.refID : null;
     let taskOutput = await this.stepService.addTask(
+      type,
       'add',
       '',
       null,
