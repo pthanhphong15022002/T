@@ -1,0 +1,176 @@
+<div class="d-flex w-100 h-100">
+    <div class="d-flex flex-column w-100">
+        <ejs-tab #tabContent id="ejstab-survey-id" class="ws-ejstab h-100" headerPlacement="Top" >
+            <e-tabitems>
+              <!-- Bài viết -->
+              <e-tabitem>
+                <ng-template #headerText class="">
+                    <div class="d-flex align-items-center">
+                        <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/mwp_post.svg" alt="" />
+                        <codx-label
+                            default="Bài viết"
+                            class="fw-bold ms-3"
+                        >
+                        </codx-label>
+                    </div>
+                </ng-template>
+                <ng-template #content class="pd-t-20">
+                  <ng-container [ngTemplateOutlet]="post"></ng-container>
+                </ng-template>
+              </e-tabitem>
+              <!-- Ảnh -->
+              <e-tabitem>
+                <ng-template #headerText class="">
+                    <div class="d-flex align-items-center">
+                        <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/mwp_image.svg" alt="" />
+                        <codx-label
+                            default="Ảnh"
+                            class="fw-bold ms-3"
+                        >
+                        </codx-label>
+                    </div>
+                </ng-template>
+                <ng-template #content class="pd-t-20">
+                    <ng-container [ngTemplateOutlet]="img"></ng-container>
+                </ng-template>
+              </e-tabitem>
+              <!-- Video -->
+              <e-tabitem>
+                <ng-template #headerText class="">
+                    <div class="d-flex align-items-center">
+                        <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/mwp_video.svg" alt="" />
+                        <codx-label
+                            default="Video"
+                            class="fw-bold ms-3"
+                        >
+                        </codx-label>
+                    </div>
+                </ng-template>
+                <ng-template #content class="pd-t-20">
+                    <ng-container [ngTemplateOutlet]="video"></ng-container>
+                </ng-template>
+              </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <div class="d-flex flex-column w-400px ms-4">
+        <ng-container [ngTemplateOutlet]="notebook"></ng-container>
+        <ng-container [ngTemplateOutlet]="storage"></ng-container>
+    </div>
+</div>
+<ng-template #post>
+    <div class="pt-4">
+        <app-list-post 
+            [predicate]="predicatePortal" 
+            [dataValue]="dataValuePortal" 
+        >
+        </app-list-post>
+    </div>
+</ng-template>
+<ng-template #img>
+    <div class="pt-4 mt-4 h-100vh bg-white">
+        <lib-img></lib-img>
+    </div>
+</ng-template>
+<ng-template #video>
+    <div class="pt-4 mt-4 h-100vh bg-white">
+        <lib-video></lib-video>
+    </div>
+</ng-template>
+
+<ng-template #notebook>
+   <div class="w-100 h-50 pb-2">
+        <div class="d-flex flex-column w-100 h-100 bg-white py-4">
+            <div class="d-flex justify-content-between align-items-center pb-2 px-4">
+                <codx-label default="Số tay cá nhân" class="fw-bold"></codx-label>
+
+                <div class="d-flex align-items-center ws-notebook-icon">
+                    <i class="icon-i-plus-square icon-14 cursor-pointer" (click)="addNoteBook()"></i>
+                    <i class="icon-i-box-arrow-up-right icon-14 ms-2 cursor-pointer" (click)="extendNoteBook()"></i>
+                </div>
+            </div>
+            <div class="ws-notebook h-100">
+                <codx-listview
+                    #listViewNoteBooks
+                    entityName="WP_NoteBooks"
+                    gridViewName="grvNoteBooks"
+                    [predicate]="predicateNoteBook"
+                    [dataValue]="dataValueNoteBook"
+                    [itemTemplate]="tmpNoteBook"
+                    type="cardView"
+                    formName="NoteBooks"
+                    funcId="MWP0094"
+                    service="WP"
+                >
+              </codx-listview>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #storage>
+    <div class="w-100 h-50 pt-2">
+        <div class="d-flex flex-column w-100 h-100 bg-white py-4">
+            <div class="d-flex justify-content-between align-items-center pb-2 px-4">
+                <codx-label default="Kho lưu trữ" class="fw-bold"></codx-label>
+
+                <div class="d-flex align-items-center ws-notebook-icon">
+                    <i class="icon-i-plus-square icon-14 cursor-pointer" (click)="addStorage()"></i>
+                    <i class="icon-i-box-arrow-up-right icon-14 ms-2 cursor-pointer" (click)="extendStorage()"></i>
+                </div>
+            </div>
+            <div class="ws-notebook h-100">
+                <codx-listview 
+                    #listViewStorages       
+                    [service]="'WP'"
+                    entityName="WP_Storages" 
+                    formName="Storages" 
+                    gridViewName="grvStorages" 
+                    [predicate]="predicateNoteBook"
+                    [dataValue]="dataValueNoteBook" 
+                    [itemTemplate]="tmpStorage" 
+                    type="cardView" 
+                    [funcId]="'MWP009'">
+                </codx-listview>
+            </div>
+        </div>
+     </div>
+ </ng-template>
+
+ <ng-template #tmpNoteBook let-data>
+    <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="openDetailPage(data?.recID)">
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <div class="d-flex flex-column ms-2 w-100">
+            <span class="w-190px">{{data.title}}</span>
+            <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="has-action-menu w-100">
+            <codx-mfunc 
+                [formModel]="listViewNoteBooks.formModel" 
+                [dataItem]="data" 
+                type="hover"
+                (clickMF)="clickMFNoteBook($event,data)"
+            >
+            </codx-mfunc>
+          </div>
+    </div>
+ </ng-template>
+
+ <ng-template #tmpStorage let-data>
+    <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="detailStorage(data?.recID)">
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <div class="d-flex flex-column ms-2 w-100">
+            <span class="w-190px">{{data.title}}</span>
+            <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="has-action-menu w-100">
+            <codx-mfunc 
+                [formModel]="listViewStorages.formModel" 
+                [dataItem]="data" 
+                type="hover"
+                (clickMF)="clickMFStorage($event,data)"
+            >
+            </codx-mfunc>
+          </div>
+    </div>
+ </ng-template>
