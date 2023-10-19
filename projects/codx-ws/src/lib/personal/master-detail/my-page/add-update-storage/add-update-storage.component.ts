@@ -1,4 +1,3 @@
-import { Storages } from './../../../model/Storages.model';
 import {
   ImageViewerComponent,
   AuthStore,
@@ -23,6 +22,7 @@ import {
   ChangeDetectorRef,
   Optional,
 } from '@angular/core';
+import { Storages } from 'projects/codx-mwp/src/lib/model/Storages.model';
 
 @Component({
   selector: 'app-add-update-storage',

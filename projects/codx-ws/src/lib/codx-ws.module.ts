@@ -47,7 +47,16 @@ import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-l
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LoginSercurityComponent } from './personal/master-detail/information/login-sercurity/login-sercurity.component';
 import { SercurityTOTPComponent } from './personal/master-detail/information/sercurity-totp/sercurity-totp.component';
-
+import { MyPageComponent } from './personal/master-detail/my-page/my-page.component';
+import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
+import { ImgComponent } from './personal/master-detail/my-page/img/img.component';
+import { VideoComponent } from './personal/master-detail/my-page/video/video.component';
+import { AddUpdateNoteBookComponent } from './personal/master-detail/my-page/add-update-note-book/add-update-note-book.component';
+import { AddUpdateStorageComponent } from './personal/master-detail/my-page/add-update-storage/add-update-storage.component';
+import { DetailStorageComponent } from './personal/master-detail/my-page/detail-storage/detail-storage.component';
+import { ExtendStorageComponent } from './personal/master-detail/my-page/extend-storage/extend-storage.component';
+import { ExtendNoteBookComponent } from './personal/master-detail/my-page/extend-note-book/extend-note-book.component';
+import { CommonModule } from '@angular/common';
 const routes: Routes = [
   {
     path: '',
@@ -67,6 +76,7 @@ const routes: Routes = [
         component: PersonalComponent,
         //component: PersonalComponent,
       },
+      
       {
         path: 'approvals/:funcID',
         component: ApprovalsComponent,
@@ -192,7 +202,16 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
+    
   },
+  {
+    path: 'storage',
+    component: ExtendStorageComponent,
+  },
+  {
+    path: 'notebook',
+    component: ExtendNoteBookComponent,
+  }
 ];
 
 @NgModule({
@@ -214,16 +233,26 @@ const routes: Routes = [
     BookmarkComponent,
     InformationComponent,
     LoginSercurityComponent,
-    SercurityTOTPComponent
+    SercurityTOTPComponent,
+    AddUpdateNoteBookComponent,
+    AddUpdateStorageComponent,
+    DetailStorageComponent,
+    ExtendStorageComponent,
+    ExtendNoteBookComponent,
+    MyPageComponent,
+    ImgComponent,
+    VideoComponent
   ],
   imports: [
+    CommonModule,
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
     CodxShareModule,
     AccordionModule,
     NgbDropdownModule,
     SpeedDialModule,
-    TooltipModule
+    TooltipModule,
+    TabAllModule
   ],
   exports: [RouterModule],
 })
