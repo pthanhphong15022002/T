@@ -1029,7 +1029,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // ---------------------------FUNC ----------------------------//
 
   // --------------------------------------------//
-  //Get DATA Ca nhan
+  //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
   changeMySales(dataSet) {
     if (dataSet?.lenght == 0) return;
@@ -1134,6 +1134,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  // --------------------------------------------//
+  //End Ca nhan
+  // --------------------------------------------//
+
+  // --------------------------------------------//
+  // DASHBOAD SALES TAGET                     //
+  // --------------------------------------------//
   //get sales 4 quarter
   getDashBoardTargetSales(lstTargetLines = [], param) {
     let lstPiaData = [];
@@ -1225,8 +1232,4 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return lstUsers;
   }
   //end
-
-  // --------------------------------------------//
-  //End Ca nhan
-  // --------------------------------------------//
 }
