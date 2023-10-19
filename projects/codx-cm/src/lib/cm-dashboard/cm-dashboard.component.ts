@@ -35,6 +35,8 @@ import {
 })
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
+  @ViewChildren('templateTarget') dashBoardTaget: QueryList<any>;
+
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('noData') noData: TemplateRef<any>;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
@@ -43,8 +45,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     id: 'btnAdd',
   };
   isEditMode = false;
-  panelsDeals: any;
-  datasDeals: any;
+  //setting  CMD001
+  panelsDeals1: any;
+  datasDeals1: any;
+  //setting  CMD002 ||  CMD003
+  panelsDeals2: any;
+  datasDeals2: any;
+
   arrVllStatus: any = [];
   vllStatus = '';
   dataDashBoard: any;
@@ -262,12 +269,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //accumulation chart
-  public piedata: Object[] = [
-    { x: 'Q1/2023', y: 24, text: '29' },
-    { x: 'Q2/2023', y: 23, text: '36' },
-    { x: 'Q3/2023', y: 25, text: '39' },
-    { x: 'Q4/2023', y: 30, text: '42' },
-  ];
+  public piedata: Object[] = [];
   public datalabelAc: Object = {
     visible: true,
     position: 'Inside',
@@ -281,11 +283,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   public legendSettings: Object = {
     visible: true,
   };
-  toolTipAccumulation: Object = {
-    enable: true,
-    format: '${point.y}%',
-  };
-  onTextRender: Function | any;
+
   //end
 
   //top sales performance
@@ -312,139 +310,140 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         { value: '5', text: '131 ngày' },
       ],
     },
-    {
-      userID: 'MINHDE',
-      userName: 'Huỳnh Minh Đệ',
-      lstTitlePerformance: [
-        { value: '1', text: '11111' },
-        { value: '2', text: '124444' },
-        { value: '3', text: '4332000000' },
-        { value: '4', text: '143300000' },
-        { value: '5', text: '7 ngày' },
-      ],
-    },
-    {
-      userID: 'U-0892',
-      userName: 'Trần Thị Thùy Nhiên',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'NTTDUNG',
-      userName: 'Nguyễn Thị Thanh Dung',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'NTLOI',
-      userName: 'Nguyễn Thị Lợi',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'ANHQUOC',
-      userName: 'Lê Anh Quốc',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'QUANGCHINH',
-      userName: 'Phan Quang Chính',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'KIMPHUONG',
-      userName: 'Nguyễn Kim Phương',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'KIMPHUONG',
-      userName: 'Nguyễn Kim Phương',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'KIMPHUONG',
-      userName: 'Nguyễn Kim Phương',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'QUANGCHINH',
-      userName: 'Phan Quang Chính',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'QUANGCHINH',
-      userName: 'Phan Quang Chính',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'QUANGCHINH',
-      userName: 'Phan Quang Chính',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
+    //   {
+    //     userID: 'MINHDE',
+    //     userName: 'Huỳnh Minh Đệ',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '11111' },
+    //       { value: '2', text: '124444' },
+    //       { value: '3', text: '4332000000' },
+    //       { value: '4', text: '143300000' },
+    //       { value: '5', text: '7 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'U-0892',
+    //     userName: 'Trần Thị Thùy Nhiên',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'NTTDUNG',
+    //     userName: 'Nguyễn Thị Thanh Dung',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'NTLOI',
+    //     userName: 'Nguyễn Thị Lợi',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'ANHQUOC',
+    //     userName: 'Lê Anh Quốc',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'QUANGCHINH',
+    //     userName: 'Phan Quang Chính',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'KIMPHUONG',
+    //     userName: 'Nguyễn Kim Phương',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'KIMPHUONG',
+    //     userName: 'Nguyễn Kim Phương',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'KIMPHUONG',
+    //     userName: 'Nguyễn Kim Phương',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'QUANGCHINH',
+    //     userName: 'Phan Quang Chính',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'QUANGCHINH',
+    //     userName: 'Phan Quang Chính',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
+    //   {
+    //     userID: 'QUANGCHINH',
+    //     userName: 'Phan Quang Chính',
+    //     lstTitlePerformance: [
+    //       { value: '1', text: '124' },
+    //       { value: '2', text: '124' },
+    //       { value: '3', text: '4000000' },
+    //       { value: '4', text: '100000' },
+    //       { value: '5', text: '4 ngày' },
+    //     ],
+    //   },
   ];
+
   lstTitlePerformance = [
     { value: '1', text: 'Khách hàng tiềm năng đã tạo' },
     { value: '2', text: 'Cơ hội đã tạo' },
@@ -452,9 +451,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     { value: '4', text: 'Doanh tu đã mất' },
     { value: '5', text: 'Trung bình chu kỳ bán hàng' },
   ];
-  arrReport: any;
+
+  //new
+  arrReport: any = [];
   viewCategory: any;
   subscription: any;
+  reportItem: any;
+
+  countNew = 0;
+  countProcessing = 0;
+  countSuccess = 0;
+  countFail = 0;
+
   //end
   constructor(
     inject: Injector,
@@ -465,22 +473,27 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   ) {
     super(inject);
     this.user = this.authstore.get();
-    this.funcID = 'DPT01';
+    // this.funcID = 'DPT01';
     this.language = this.auth.userValue?.language?.toLowerCase();
-    this.funcID = this.router.snapshot.params['funcID'];
+    // this.funcID = this.router.snapshot.params['funcID'];
+    this.reportID = this.router.snapshot.params['funcID'];
     this.loadChangeDefault();
   }
   onInit(): void {
-    this.panelsDeals = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"81.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"91.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"101.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"111.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"121.21519762020964252_layout","row":31,"col":0,"sizeX":32,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"131.21519762020964252_layout","row":31,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"141.21519762020964252_layout","row":41,"col":0,"sizeX":48,"sizeY":10,"minSizeX":48,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+    this.panelsDeals1 = JSON.parse(
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":10,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":20,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":30,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":40,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":34,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":50,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
-    this.datasDeals = JSON.parse(
-      '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.36639064171709834_layout","data":"8"},{"panelId":"91.06496875406606994_layout","data":"9"},{"panelId":"101.21519762020962552_layout","data":"10"},{"panelId":"111.21519762020964252_layout","data":"11"},{"panelId":"121.21519762020964252_layout","data":"12"},{"panelId":"131.21519762020964252_layout","data":"13"},{"panelId":"141.21519762020964252_layout","data":"14"}]'
+    this.datasDeals1 = JSON.parse(
+      '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.21519762020964252_layout","data":"8"},{"panelId":"91.21519762020964252_layout","data":"9"},{"panelId":"101.21519762020964252_layout","data":"10"}]'
     );
-    this.onTextRender = (args: IAccTextRenderEventArgs) => {
-      let text = args.series['resultData']?.find((x) => x.y == args.point.y);
-      args.text = text?.text + 'M';
-    };
+
+    this.panelsDeals2 = JSON.parse(
+      '[{"id":"12.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"22.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"32.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"42.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"52.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"62.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"72.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"82.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"92.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"102.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"112.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datasDeals2 = JSON.parse(
+      '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
+    );
+
   }
 
   ngAfterViewInit() {
@@ -499,47 +512,63 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ];
     this.pageTitle.setBreadcrumbs([]);
 
-    // this.router.queryParams.subscribe((res) => {  //khong duoc
     this.router.params.subscribe((res) => {
       if (res.funcID) {
         this.reportID = res.funcID;
         this.isLoaded = false;
-        debugger;
-        switch (this.reportID) {
-          case 'CMD001':
-            //dashboard moi
-            this.isLoaded = true;
-            break;
-          // nhom chua co tam
-          case 'CMD002':
-            this.getDataDashboard();
-            break;
-          //ca nhan chua co ne de vay
-          case 'CMD003':
-            let predicates = 'Owner =@0';
-            let dataValues = this.user.userID;
-            this.getDataDashboard(predicates, dataValues);
-            break;
-          // target
-          case 'CMD004':
-            this.isLoaded = true;
-            break;
-          default:
-            this.isLoaded = true;
-            break;
+        let reportItem = this.arrReport.find((x: any) => x.recID == res.funcID);
+        if (reportItem) {
+          this.reportItem = reportItem;
+          this.funcID = reportItem?.reportID;
+          let method: string = '';
+          switch (this.reportID) {
+            case 'CMD001':
+              //dashboard moi
+              //dashboard moi
+              // this.getDashBoardTargets();
+              this.isLoaded = true;
+              break;
+            // nhom chua co tam
+            case 'CMD002':
+              // code cũ chạy tạm
+              this.getDataDashboard();
+              break;
+            //ca nhan chua co ne de vay
+            case 'CMD003':
+              // code cũ chạy tạm
+              // let predicates = 'Owner =@0';
+              // let dataValues = this.user.userID;
+              // // this.getDataDashboard(predicates, dataValues);
+              //test DataSet
+              this.getDataset(
+                'GetReportSourceAsync',
+                null,
+                '@0.Contains(Owner)',
+                this.user.userID
+              );
+              break;
+            // target
+            case 'CMD004':
+              this.isLoaded = true;
+              break;
+          }
         }
       }
     });
+    this.detectorRef.detectChanges();
   }
 
   filterChange(e: any) {
     this.isLoaded = false;
     let { predicates, dataValues } = e[0];
     const param = e[1];
-
-    switch (this.reportID) {
+    if (this.subscription) this.subscription.unsubscribe();
+    let method: any = '';
+    if (!this.funcID) return;
+    switch (this.funcID) {
       case 'CMD001':
         //dashboard moi
+        // this.getDashBoardTargets();
         this.isLoaded = true;
         break;
       // nhom chua co tam
@@ -548,15 +577,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
-        let lenght = dataValues.split(';')?.length ?? 0;
+        // let lenght = dataValues.split(';')?.length ?? 0;
 
-        let predicate =
-          lenght == 0 ? 'Owner =@' + lenght : ' and ' + 'Owner =@' + lenght;
-        let dataValue = lenght == 0 ? this.user.userID : ';' + this.user.userID;
+        // let predicate =
+        //   lenght == 0 ? 'Owner =@' + lenght : ' and ' + 'Owner =@' + lenght;
+        // let dataValue = lenght == 0 ? this.user.userID : ';' + this.user.userID;
 
-        predicates += predicate;
-        dataValues += dataValue;
-        this.getDataDashboard(predicates, dataValues, param);
+        // predicates += predicate;
+        // dataValues += dataValue;
+        // this.getDataDashboard(predicates, dataValues, param);
+        this.getDataset(
+          'GetReportSourceAsync',
+          param,
+          '@0.Contains(Owner)',
+          this.user.userID
+        );
         break;
       // target
       case 'CMD004':
@@ -582,6 +617,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         this.dataDashBoard = res;
         if (res) {
+          this.countNew = this.dataDashBoard?.counts?.countNew;
+          this.countProcessing = this.dataDashBoard?.counts?.countProcessing;
+          this.countSuccess = this.dataDashBoard?.counts?.countSuccess;
+          this.countFail = this.dataDashBoard?.counts?.countFail;
+
           if (this.dataDashBoard.countsBussinessLines) {
             this.palette = this.dataDashBoard.countsBussinessLines?.map(
               (x) => x.color
@@ -637,17 +677,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
             (x) => x.color
           );
+          const dashBoardTarget = this.dataDashBoard?.dashBoardTargets;
+          if (dashBoardTarget?.quarterDashBoard) {
+            this.piedata = dashBoardTarget?.quarterDashBoard?.map((x) => {
+              let data = {
+                x: x?.nameQuarter,
+                y: x?.probability,
+                text: x?.target,
+                quarter: x?.target,
+                year: x?.year,
+              };
+              return data;
+            });
+          }
         } else {
-          this.dataStatisticTarget = [];
-          this.maxOwners = [];
-          this.minOwners = [];
-          this.productivityOwner = [];
-          this.dataSourcePyStatus = [];
-          this.dataSourcePyStage = [];
-          this.dataSourceBussnessLine = [];
-          this.dataSourceIndustry = [];
-          this.paletteIndustry = [];
-          this.palette = [];
+          this.resetData();
         }
         setTimeout(() => {
           this.isLoaded = true;
@@ -655,6 +699,41 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
     this.detectorRef.detectChanges();
+  }
+
+  getDashBoardTargets() {
+    this.isLoaded = false;
+    let model = new GridModels();
+    model.funcID = 'CM0601';
+    model.entityName = 'CM_Targets';
+    this.api
+      .execSv<any>(
+        'CM',
+        'ERM.Business.CM',
+        'DealsBusiness',
+        'GertDashBoardTargetAsync',
+        [model]
+      )
+      .subscribe((res) => {
+        if (res) {
+          const data = res;
+          if (data?.quarterDashBoard) {
+            this.piedata = data?.quarterDashBoard?.map((x) => {
+              let data = {
+                x: x?.nameQuarter,
+                y: x?.probability,
+                text: x?.target,
+                quarter: x?.target,
+                year: x?.year,
+              };
+              return data;
+            });
+          }
+          setTimeout(() => {
+            this.isLoaded = true;
+          }, 500);
+        }
+      });
   }
 
   getTitle(status) {
@@ -806,9 +885,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  //--------------Change Filter--------------//
-  valueChangeFilter(e) {}
-  //--------------end Change Filter--------------//
 
   onActions(e) {
     if (e.type == 'reportLoaded') {
@@ -838,7 +914,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           )
           .subscribe((res: any) => {
             if (res) {
-              debugger;
               this.pageTitle.setRootNode(res.customName);
               this.pageTitle.setParent({
                 title: res.customName,
@@ -848,13 +923,69 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               for (let i = 0; i < this.arrReport.length; i++) {
                 arrChildren.push({
                   title: this.arrReport[i].customName,
-                  path: 'cm/dashboard/' + this.arrReport[i].reportID,
+                  // path: 'cm/dashboard/' + this.arrReport[i].reportID,  //trầm kêu có thể trùn reportID
+                  path: 'cm/dashboard/' + this.arrReport[i].recID, //chuẩn theo Trầm
                 });
               }
-              this.pageTitle.setSubTitle(arrChildren[0].title);
-              this.pageTitle.setChildren(arrChildren);
-              this.codxService.navigate('', arrChildren[0].path);
+
               this.isLoaded = false;
+
+              if (!this.reportItem) {
+                if (this.reportID) {
+                  let idx = this.arrReport.findIndex(
+                    (x: any) => x.recID == this.reportID
+                  );
+                  if (idx != -1) {
+                    this.reportItem = this.arrReport[idx];
+                    this.pageTitle.setSubTitle(arrChildren[idx].title);
+                    this.pageTitle.setChildren(arrChildren);
+                    this.funcID = this.reportItem.reportID;
+                  } else {
+                    this.reportItem = this.arrReport[0];
+                    this.pageTitle.setSubTitle(arrChildren[0].title);
+                    this.pageTitle.setChildren(arrChildren);
+                    this.codxService.navigate('', arrChildren[0].path);
+                    this.funcID = this.arrReport[0].reportID;
+                  }
+                } else {
+                  this.reportItem = this.arrReport[0];
+                  this.pageTitle.setSubTitle(arrChildren[0].title);
+                  this.pageTitle.setChildren(arrChildren);
+                  this.codxService.navigate('', arrChildren[0].path);
+                  this.funcID = this.arrReport[0].reportID;
+                }
+
+                switch (this.funcID) {
+                  case 'CMD001':
+                    //dashboard moi
+                    // this.getDashBoardTargets();
+                    this.isLoaded = true;
+                    break;
+                  // nhom chua co tam
+                  case 'CMD002':
+                    this.getDataDashboard();
+                    break;
+                  //ca nhan chua co ne de vay
+                  case 'CMD003':
+                    // let predicates = 'Owner =@0';
+                    // let dataValues = this.user.userID;
+                    // this.getDataDashboard(predicates, dataValues);
+                    //test DataSet
+                    this.getDataset(
+                      'GetReportSourceAsync',
+                      null,
+                      '@0.Contains(Owner)',
+                      this.user.userID
+                    );
+                    break;
+                  // target
+                  case 'CMD004':
+                    this.isLoaded = true;
+                    break;
+                }
+
+                this.detectorRef.detectChanges();
+              }
             }
           });
       }
@@ -889,26 +1020,107 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return title;
   }
 
-  ///Get dataSET
-  getDataset(method: string, parameters: any = undefined) {
+  onTextRender(args: IAccTextRenderEventArgs) {
+    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
+    let value = text?.text ?? 0;
+    let retrn = '0';
+    if (value === null || isNaN(value)) {
+      retrn = '0';
+    }
+
+    if (value >= 1000000) {
+      retrn = (value / 1000000).toFixed(2) + 'M';
+    } else if (value >= 1000) {
+      retrn = (value / 1000).toFixed(2) + 'K';
+    }
+    args.text = retrn;
+  }
+
+  ///-------------------------Get DATASET---------------------------------------------//
+  getDataset(
+    method: string,
+    parameters = null,
+    predicate = null,
+    dataValue = null
+  ) {
     if (this.isLoaded) return;
+    this.resetData();
     if (method) {
       this.subscription = this.api
         .execSv(
-          'rpttm',
+          'rptcm',
           'Codx.RptBusiness.CM',
           'SalesDataSetBusiness',
           method,
-          parameters ? [parameters] : []
+          [parameters, predicate, dataValue]
         )
         .subscribe((res) => {
-          switch (this.viewCategory) {
+          if (res) {
+            //xu ly nv
+            switch (this.funcID) {
+              case 'CMD001':
+                break;
+              case 'CMD002':
+                break;
+              case 'CMD003':
+                this.changeMySales(res);
+                break;
+              case 'CMD001':
+                break;
+            }
           }
-          //xu ly nv
           this.isLoaded = true;
         });
 
       this.detectorRef.detectChanges();
     }
   }
+
+  resetData() {
+    this.dataStatisticTarget = [];
+    this.maxOwners = [];
+    this.minOwners = [];
+    this.productivityOwner = [];
+    this.dataSourcePyStatus = [];
+    this.dataSourcePyStage = [];
+    this.dataSourceBussnessLine = [];
+    this.dataSourceIndustry = [];
+    this.paletteIndustry = [];
+    this.palette = [];
+    this.countNew = 0;
+    this.countSuccess = 0;
+    this.countFail = 0;
+    this.countProcessing = 0;
+  }
+
+  //sort lấy top
+  sortByProp(arr: any[], property: string, dir: string = 'asc') {
+    if (arr.length && property) {
+      if (dir == 'asc') {
+        return JSON.parse(JSON.stringify(arr)).sort(
+          (a: any, b: any) => a[property] - b[property]
+        );
+      } else {
+        return JSON.parse(JSON.stringify(arr)).sort(
+          (a: any, b: any) => b[property] - a[property]
+        );
+      }
+    }
+    return [];
+  }
+
+  // --------------------------------------------//
+  //Get DATA Ca nhan
+  // --------------------------------------------//
+  changeMySales(deals) {
+    this.countNew = deals.filter(
+      (x) => x.status == '1' || x.status == '0'
+    )?.length;
+    this.countProcessing = deals.filter((x) => x.status == '2')?.length;
+    this.countSuccess = deals.filter((x) => x.status == '3')?.length;
+    this.countFail = deals.filter((x) => x.status == '5')?.length;
+  }
+  // --------------------------------------------//
+  //End Ca nhan
+  // --------------------------------------------//
 }

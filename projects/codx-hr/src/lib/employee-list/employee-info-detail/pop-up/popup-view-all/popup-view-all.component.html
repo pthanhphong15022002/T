@@ -130,7 +130,7 @@
           ></span>
         </span>
         <codx-mfunc class="mt-n3"
-        *ngIf="fromWS == false"
+        *ngIf="fromWS == false && empQuitJobStatus != '90'"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -139,7 +139,7 @@
         </codx-mfunc>
 
         <codx-mfunc class="mt-n3"
-        *ngIf="fromWS == true"
+        *ngIf="fromWS == true || empQuitJobStatus == '90'"
           [formModel]="formModel"
           (clickMF)="clickMF($event, data, funcID)"
           type="hover"
@@ -256,7 +256,7 @@
         </span>
       </div>
       <codx-mfunc
-      *ngIf="fromWS == false"
+      *ngIf="fromWS == false && empQuitJobStatus != '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -265,7 +265,7 @@
       </codx-mfunc>
 
       <codx-mfunc
-      *ngIf="fromWS == true"
+      *ngIf="fromWS == true || empQuitJobStatus == '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -362,7 +362,7 @@
         </span>
       </div>
       <codx-mfunc
-      *ngIf="fromWS == false"
+      *ngIf="fromWS == false && empQuitJobStatus != '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -371,7 +371,7 @@
       </codx-mfunc>
 
       <codx-mfunc
-      *ngIf="fromWS == true"
+      *ngIf="fromWS == true || empQuitJobStatus == '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -503,7 +503,7 @@
       </div>
     </div>
     <codx-mfunc class="mt-n3"
-    *ngIf="fromWS == false"
+    *ngIf="fromWS == false && empQuitJobStatus != '90'"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -512,7 +512,7 @@
     </codx-mfunc>
 
     <codx-mfunc class="mt-n3"
-    *ngIf="fromWS == true"
+    *ngIf="fromWS == true || empQuitJobStatus == '90'"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -625,7 +625,7 @@
       ></span>
     </span>
     <codx-mfunc class="mt-n3"
-    *ngIf="fromWS == false"
+    *ngIf="fromWS == false && empQuitJobStatus != '90'"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -634,7 +634,7 @@
     </codx-mfunc>
 
     <codx-mfunc class="mt-n3"
-    *ngIf="fromWS == true"
+    *ngIf="fromWS == true || empQuitJobStatus == '90'"
       [formModel]="formModel"
       (clickMF)="clickMF($event, data, funcID)"
       type="hover"
@@ -830,7 +830,7 @@
         </span>
       </div>
       <codx-mfunc
-      *ngIf="fromWS == false"
+      *ngIf="fromWS == false && empQuitJobStatus != '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
@@ -839,7 +839,7 @@
       </codx-mfunc>
 
       <codx-mfunc
-      *ngIf="fromWS == true"
+      *ngIf="fromWS == true || empQuitJobStatus == '90'"
         [formModel]="formModel"
         (clickMF)="clickMF($event, data, funcID)"
         type="hover"
