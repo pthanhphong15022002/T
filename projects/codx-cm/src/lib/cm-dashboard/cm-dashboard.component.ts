@@ -493,10 +493,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
 
-    this.onTextRender = (args: IAccTextRenderEventArgs) => {
-      let text = args.series['resultData']?.find((x) => x.y == args.point.y);
-      args.text = text?.text + 'M';
-    };
   }
 
   ngAfterViewInit() {
