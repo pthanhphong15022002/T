@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, SimpleChanges, TemplateRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef } from '@angular/core';
 import { ApiHttpService, ButtonModel, CacheService, DataRequest, ViewModel, ViewType } from 'codx-core';
 import { Observable } from 'rxjs';
 
@@ -20,13 +20,19 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   @Input() dataValue: string = '';
   @Input() predicates: string = '';
   @Input() dataValues: string = '';
+  @Input() entityName: string = '';
+  @Input() formName: string = '';
+  @Input() gridViewName: string = '';
   @Input() dataSource:any;
   @Input() bodyCss:any;
   
+  @Input() isAdd: boolean = true;
+  @Output() btnClick = new EventEmitter();
   request:DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
   constructor(
+    private ref : ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
   ) 
@@ -36,8 +42,8 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.request.pageSize = 20
   }
   ngAfterViewInit(): void {
-    const elem = document.querySelector('#view2-header')
-    new ResizeObserver(this.setHeight).observe(elem)
+    const elem = document.querySelector('#view2-header');
+    if(elem) new ResizeObserver(this.setHeight).observe(elem)
   }
 
   setHeight()
@@ -63,7 +69,9 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.request.dataValue = this.dataValue;
     this.request.predicates = this.predicates;
     this.request.dataValues = this.dataValues;
-
+    this.request.entityName = this.entityName;
+    this.request.gridViewName = this.gridViewName;
+    this.request.formName = this.formName;
     this.viewList = 
     [
       {
@@ -100,6 +108,8 @@ export class CodxView2Component implements OnInit , AfterViewInit{
         disabled: false,
       },
     ];
+
+    if(!this.dataSource) this.loadData();
   }
   
   ngOnChanges(changes: SimpleChanges) {
@@ -154,4 +164,15 @@ export class CodxView2Component implements OnInit , AfterViewInit{
 
   }
 
+  addClick()
+  {
+    this.btnClick.emit()
+  }
+
+  updateDataSource(data:any)
+  {
+    if(!this.dataSource) this.dataSource = [];
+    this.dataSource.push(data);
+    this.ref.detectChanges();
+  }
 }

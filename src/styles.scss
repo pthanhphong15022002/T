@@ -4049,6 +4049,13 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   
 
 }
+
+.e-fab.e-btn{
+  z-index: 999;
+}
+.textarea-keyresult .e-content.e-keyboard{
+  max-height: calc(100vh - 400px);
+}
 //////////////
 // ipad and tablet
 /// /////////

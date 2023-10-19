@@ -11,7 +11,7 @@
 
 <ng-template #template>
   <div *ngIf="isLoaded">
-    <div *ngIf="reportID == 'DMD001'">
+    <div>
       <ng-container *ngTemplateOutlet="dashboard1"> </ng-container>
     </div>
   </div>
@@ -34,36 +34,42 @@
       <div class="d-flex justify-content-center h-10">
         <div id="group1" class="btn-group">
           <input
+            #eleType
             class="btn-check"
             type="radio"
-            id="left1"
+            id="viewType"
             name="align1"
             value="left"
             checked
+            (change)="viewChange(eleType,{chart1:{pie1,gauge1},chart2:{pie2,gauge2}})"
           />
-          <label class="btn btn-outline-primary" for="left1">Loại file</label>
+          <label class="btn btn-outline-primary" for="viewType">Loại file</label>
           <input
+            #eleModule
             class="btn-check"
             type="radio"
-            id="center1"
+            id="viewModule"
             name="align1"
             value="center"
+            (change)="viewChange(eleModule,{chart1:{pie1,gauge1},chart2:{pie2,gauge2}})"
           />
-          <label class="btn btn-outline-primary" for="center1">Ứng dụng</label>
-          <input
+          <label class="btn btn-outline-primary" for="viewModule">Ứng dụng</label>
+          <!-- <input
             class="btn-check"
             type="radio"
             id="right1"
             name="align1"
             value="right"
           />
-          <label class="btn btn-outline-primary" for="right1">Phân loại</label>
+          <label class="btn btn-outline-primary" for="right1">Phân loại</label> -->
         </div>
       </div>
       <div id="column" style="height: 40%">
         <ejs-accumulationchart
-          id="pie"
+          id="pie1"
+          #pie1
           class="d-block"
+          [ngClass]="activeView=='viewType' ? '' :'d-none'"
           style="height: 100%; width: 100%"
           [legendSettings]="{
           visible: false,
@@ -75,18 +81,39 @@
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="dbData?.a1"
+              [dataSource]="statByType"
               xName="extension"
-              yName="totalFileSize"
+              yName="quantity"
               innerRadius="70%"
               [border]="{ width: 3 }"
-              [palettes]="[
-                '#005dc7',
-                '#21b3d2',
-                '#06ddb8',
-                '#00f5e9',
-                '#a6dff5'
-              ]"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+
+        <ejs-accumulationchart
+          id="pie2"
+          #pie2
+          class="d-block"
+          [ngClass]="activeView=='viewModule' ? '' :'d-none'"
+          style="height: 100%; width: 100%"
+          [legendSettings]="{
+          visible: false,
+        }"
+          [tooltip]="{ enable: true, format: '${point.x}' }"
+          [enableAnimation]="{
+            enable: true
+          }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByModule"
+              xName="module"
+              yName="quantity"
+              innerRadius="70%"
+              [border]="{ width: 3 }"
+              [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -96,8 +123,10 @@
         <div
           class="scroll-hover position-absolute"
           style="max-height: 100%; width: 100%"
-        >
-          <div *ngFor="let item of dbData?.a1">
+          #gauge1
+          [ngClass]="activeView=='viewType' ? '' : 'd-none'"
+             >
+          <div *ngFor="let item of statByType">
             <div class="card mx-2 mb-2" style="border: #f0f0f0 solid 1px">
               <div class="p-2">
                 <div class="d-flex justify-content-between align-items-center">
@@ -112,12 +141,45 @@
                     <div>
                       <h5 class="card-title">{{ item.extension }}</h5>
                       <h6 class="card-subtitle mb-2 text-muted">
-                        {{ item.totalFile }} files
+                        {{ item.quantity }} files
                       </h6>
                     </div>
                   </div>
                   <div class="d-flex align-items-center">
                     <h5 class="fw-bold">
+                      {{ item.totalFileSize | filesize }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="scroll-hover position-absolute"
+          style="max-height: 100%; width: 100%"
+          #gauge2
+          [ngClass]="activeView=='viewModule' ? '' : 'd-none'"
+        >
+          <div *ngFor="let item of statByModule,let i = index">
+            <div class="card mx-2 mb-2" style="border: #f0f0f0 solid 1px">
+              <div class="p-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="h-100 w-5 d-flex align-items-center">
+                    <div style="width:15px;height:15px" class="rounded-circle" [style.backgroundColor]="palettes[i]" ></div>
+                  </div>
+
+                  <div
+                    class="w-75 ms-2 float-start"
+                  >
+
+                  <h6 class="mb-0text-dark fw-bold">
+                    {{ item.module }}
+                  </h6>
+                  </div>
+                  <div class="w-20">
+                    <h5 class="fw-bold mb-0">
                       {{ item.totalFileSize | filesize }}
                     </h5>
                   </div>
@@ -137,14 +199,14 @@
       id="treemap"
       style="display: block"
       height="350px"
-      [dataSource]="dbData?.b"
-      weightValuePath="percentage"
+      [dataSource]="statByModule"
+      weightValuePath="quantity"
       [leafItemSettings]="{
-        labelPath: 'moduleID',
+        labelPath: 'module',
       }"
       enableDrillDown="false"
       [levels]="levels"
-      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [palette]="palettes"
     >
     </ejs-treemap>
   </div>
@@ -156,30 +218,36 @@
       <div class="d-flex justify-content-center">
         <div id="group2" class="btn-group">
           <input
+            #eleSize
             class="btn-check"
             type="radio"
-            id="left2"
+            id="topSize"
             name="align2"
             value="left"
             checked
+            (change)="topOrgChange(eleSize,{topSize,topQuantity})"
           />
-          <label class="btn btn-outline-primary" for="left2">Dung lượng</label>
+          <label class="btn btn-outline-primary" for="topSize">Dung lượng</label>
           <input
+            #eleQuantity
             class="btn-check"
             type="radio"
-            id="center2"
+            id="topQuantity"
             name="align2"
             value="center"
+            (change)="topOrgChange(eleQuantity,{topSize,topQuantity})"
           />
-          <label class="btn btn-outline-primary" for="center2">Số lượng</label>
+          <label class="btn btn-outline-primary" for="topQuantity">Số lượng</label>
         </div>
       </div>
       <div class="position-relative" style="height: 80%">
         <div
           class="scroll-hover position-absolute"
           style="max-height: 100%; width: 100%"
+          #topSize
+          [ngClass]="activeTypeOrg == 'topSize'? '' : 'd-none'"
         >
-          <div *ngFor="let item of dbData?.d">
+          <div *ngFor="let item of sortByProp(statByOrg,'totalFileSize','desc')">
             <div class="m-2">
               <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
@@ -193,6 +261,41 @@
                 </div>
                 <div class="fw-bold">
                   {{ item.totalFileSize | filesize }}
+                </div>
+              </div>
+              <div class="my-2">
+                <div class="progress border" style="height: 12px">
+                  <div
+                    class="progress-bar"
+                    style="height: 12px"
+                    [style.width]="item.sizePercentage + '%'"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="scroll-hover position-absolute"
+          style="max-height: 100%; width: 100%"
+          #topQuantity
+          [ngClass]="activeTypeOrg == 'topQuantity'? '' : 'd-none'"
+        >
+          <div *ngFor="let item of sortByProp(statByOrg,'quantity','desc')">
+            <div class="m-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                  <codx-img
+                    [objectId]="item.organizationName"
+                    [objectType]="'AD_Users'"
+                    [width]="25"
+                  >
+                  </codx-img>
+                  <div class="ms-2">{{ item.organizationName }}</div>
+                </div>
+                <div class="fw-bold">
+                  {{ item.quantity}}
                 </div>
               </div>
               <div class="my-2">
@@ -218,42 +321,41 @@
       id="chart-container"
       [primaryXAxis]="primaryXAxis"
       [legendSettings]="{ visible: true }"
+      [primaryYAxis]="{majorGridLines:{width:0}}"
+      [palettes]="palettes"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="chartData"
+          [dataSource]="statByOrg"
           type="StackingColumn"
-          xName="orgUnitID"
+          xName="organizationName"
           yName="pdf"
           name="pdf"
-          fill="#0e68c6"
           columnWidth="0.25"
         ></e-series>
         <e-series
-          [dataSource]="chartData"
+          [dataSource]="statByOrg"
           type="StackingColumn"
-          xName="orgUnitID"
+          xName="organizationName"
           yName="docx"
           name="docx"
           fill="#0e68c6"
           columnWidth="0.25"
         ></e-series>
         <e-series
-          [dataSource]="chartData"
+          [dataSource]="statByOrg"
           type="StackingColumn"
-          xName="orgUnitID"
+          xName="organizationName"
           yName="xlsx"
           name="xlsx"
-          fill="#0e68c6"
           columnWidth="0.25"
         ></e-series>
         <e-series
-          [dataSource]="chartData"
+          [dataSource]="statByOrg"
           type="StackingColumn"
-          xName="orgUnitID"
+          xName="organizationName"
           yName="exe"
           name="exe"
-          fill="#0e68c6"
           columnWidth="0.25"
         ></e-series>
       </e-series-collection>
@@ -266,52 +368,128 @@
     <div class="d-flex justify-content-center">
       <div id="group3" class="btn-group">
         <input
+          #ele1
           class="btn-check"
           type="radio"
-          id="left3"
+          id="topView"
           name="align3"
           value="left"
           checked
+          (change)="topFileChange(ele1,{topView,topNew,topDownload})"
         />
-        <label class="btn btn-outline-primary" for="left3">Xem</label>
+        <label class="btn btn-outline-primary" for="topView">Xem</label>
         <input
+        #ele2
           class="btn-check"
           type="radio"
-          id="center3"
+          id="topNew"
           name="align3"
           value="center"
+          (change)="topFileChange(ele2,{topView,topNew,topDownload})"
         />
-        <label class="btn btn-outline-primary" for="center3">Mới</label>
-        <input
+        <label class="btn btn-outline-primary" for="topNew">Mới</label>
+        <!-- <input
+        #ele3
           class="btn-check"
           type="radio"
-          id="right3"
+          id="topShare"
           name="align3"
           value="right"
+          (change)="topFileChange(ele3,{topView,topShare,topNew,topDownload})"
         />
-        <label class="btn btn-outline-primary" for="right3">Chia sẻ</label>
+        <label class="btn btn-outline-primary" for="topShare">Chia sẻ</label> -->
         <input
+        #ele4
           class="btn-check"
           type="radio"
-          id="right13"
+          id="topDownload"
           name="align3"
           value="right"
+          (change)="topFileChange(ele4,{topView,topNew,topDownload})"
         />
-        <label class="btn btn-outline-primary" for="right13">Download</label>
+        <label class="btn btn-outline-primary" for="topDownload">Download</label>
       </div>
     </div>
-    <div class="position-relative" style="height: 90%">
+    <div class="position-relative" style="height: 90%" #topView [ngClass]="activeType=='topView' ? '' : 'd-none'">
       <div
         class="scroll-hover position-absolute"
         style="max-height: 100%; width: 100%"
       >
-        <div *ngFor="let item of dbData?.e">
+        <div *ngFor="let item of sortByProp(dbData,'countView','desc',20)">
           <div class="card">
             <div class="p-2">
               <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-column">
                   <codx-thumbnail
-                    [files]="[item?.fileInfo]"
+                    [files]="[item]"
+                    displayThumb="simple"
+                    [hideDelete]="'1'"
+                    [hideMoreF]="'0'"
+                  >
+                  </codx-thumbnail>
+                  <div>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      {{ item.extension }} |
+                      {{ item.createdOn | fmDT : "dmy" }} |
+                      {{ item.createdBy }}
+                    </h6>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <i class="icon-16 icon-i-eye"></i><h5 class="fw-bold ms-1">{{ item.countView }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="position-relative" style="height: 90%" #topNew [ngClass]="activeType=='topNew' ? '' : 'd-none'" >
+      <div
+        class="scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
+        <div *ngFor="let item of sortByProp(dbData,'createdOn','desc',20)">
+          <div class="card">
+            <div class="p-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                  <codx-thumbnail
+                    [files]="[item]"
+                    displayThumb="simple"
+                    [hideDelete]="'1'"
+                    [hideMoreF]="'0'"
+                  >
+                  </codx-thumbnail>
+                  <div>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      {{ item.extension }} |
+                      {{ item.createdOn | fmDT : "dmy" }} |
+                      {{ item.createdBy }}
+                    </h6>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <!-- <h5 class="fw-bold">{{ item.countView }}</h5> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="position-relative" style="height: 90%" #topShare [ngClass]="activeType=='topShare' ? '' : 'd-none'">
+      <div
+        class="scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
+        <div *ngFor="let item of sortByProp(dbData,'countView','desc',20)">
+          <div class="card">
+            <div class="p-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                  <codx-thumbnail
+                    [files]="[item]"
                     displayThumb="simple"
                     [hideDelete]="'1'"
                     [hideMoreF]="'0'"
@@ -327,6 +505,40 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <h5 class="fw-bold">{{ item.countView }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="position-relative" style="height: 90%" #topDownload [ngClass]="activeType=='topDownload' ? '' : 'd-none'">
+      <div
+        class="scroll-hover position-absolute"
+        style="max-height: 100%; width: 100%"
+      >
+        <div *ngFor="let item of sortByProp(dbData,'countDownload','desc',20)">
+          <div class="card">
+            <div class="p-2">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                  <codx-thumbnail
+                    [files]="[item]"
+                    displayThumb="simple"
+                    [hideDelete]="'1'"
+                    [hideMoreF]="'0'"
+                  >
+                  </codx-thumbnail>
+                  <div>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      {{ item.extension }} |
+                      {{ item.createdOn | fmDT : "dmy" }} |
+                      {{ item.createdBy }}
+                    </h6>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <i class="icon-16 icon-cloud_download"></i><h5 class="fw-bold ms-1">{{ item.countDownload }}</h5>
                 </div>
               </div>
             </div>

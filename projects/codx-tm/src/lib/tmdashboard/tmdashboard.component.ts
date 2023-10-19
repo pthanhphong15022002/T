@@ -674,10 +674,11 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-
+  objParams:any;
   filterChange(e: any) {
     this.isLoaded = false;
     let parameters = e[1];
+    this.objParams=parameters;
     if(this.subscription) this.subscription.unsubscribe();
     let method:any=''
     if(!this.funcID) return;
@@ -699,7 +700,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         break;
 
     }
-    this.getDataset(method,parameters)
+    this.reportItem && this.getDataset(method,parameters)
     this.detectorRef.detectChanges();
   }
 
@@ -720,7 +721,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                   for (let i = 0; i < this.arrReport.length; i++) {
                     arrChildren.push({
                       title: this.arrReport[i].customName,
-                      path: 'tm/tmdashboard/' + this.arrReport[i].recID,
+                      path: 'tm/dashboard/' + this.arrReport[i].recID,
                     });
                   }
                   if(!this.reportItem){
@@ -897,7 +898,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   tasksByProjectID:any=[];
 
   getDataset(method:string,parameters:any=undefined){
-    if(this.isLoaded)  return;
     if(method){
       this.taskByCategory={};
       this.taskByEmployees={};
@@ -906,7 +906,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       this.taskByProject={};
       this.tasksByProjectID=[];
       this.taskByRefType=[];
-
+      if(parameters) this.objParams = parameters;
+      else parameters = this.objParams;
+      this.subscription &&  this.subscription.unsubscribe();
       this.subscription= this.api
       .execSv(
         'rpttm',

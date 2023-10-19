@@ -36,7 +36,7 @@ import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
-import { PopupInputPointsComponent } from './popup-input-points/popup-input-points.component';
+import { PopupInputPointsComponent } from '../approvals/popup-input-points/popup-input-points.component';
 
 @Component({
   selector: 'lib-cards',
@@ -45,7 +45,6 @@ import { PopupInputPointsComponent } from './popup-input-points/popup-input-poin
   encapsulation: ViewEncapsulation.None,
 })
 export class CardsComponent extends UIComponent {
-  funcIDApproval = 'FDT10';
   user = null;
   buttonAdd: ButtonModel;
   views: Array<ViewModel> = [];
@@ -63,7 +62,6 @@ export class CardsComponent extends UIComponent {
   activeKudos: string;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
-  @ViewChild('view') viewComponent: ViewsComponent;
 
   constructor(
     private inject: Injector,
@@ -96,7 +94,6 @@ export class CardsComponent extends UIComponent {
         }
       }
     });
-    this.getSetting();
   }
 
   ngAfterViewInit() {
@@ -115,92 +112,6 @@ export class CardsComponent extends UIComponent {
         },
       },
     ];
-  }
-
-  getSetting() {
-    if (this.funcID == this.funcIDApproval) {
-      // Get activeCoins and activeKudos
-      this.api
-        .call(
-          'ERM.Business.FD',
-          'WalletsBusiness',
-          'GetDataForSettingWalletNewAsync',
-          []
-        )
-        .subscribe((res) => {
-          if (res && res.msgBodyData[0].length > 0) {
-            const listActiveCoins = res.msgBodyData[0][1];
-            const listActiveKudos = res.msgBodyData[0][3];
-            if (listActiveCoins) {
-              this.activeCoins = listActiveCoins.find(
-                (x) => x.fieldName == 'Manual' && x.transType == 'ActiveCoins'
-              )?.fieldValue;
-            }
-            if (listActiveKudos) {
-              this.activeKudos = listActiveKudos.find(
-                (x) => x.fieldName == 'Manual' && x.transType == 'ActiveMyKudos'
-              )?.fieldValue;
-            }
-          }
-        });
-    }
-  }
-
-  accept(item) {
-    if (this.activeCoins == '1' || this.activeKudos == '1') {
-      this.openPopupInputPoints(item);
-    } else this.update(item, 1);
-  }
-
-  notAccept(item) {
-    this.update(item, 2);
-  }
-
-  update(item, status) {
-    this.api
-      .execSv<any>('FD', 'FD', 'CardsBusiness', 'ApprovalMobileAsync', [
-        item.recID,
-        status,
-      ])
-      .subscribe((res) => {
-        if (res.error == false) {
-          if (status == 1) {
-            this.notiService.notifyCode('SYS007');
-          } else {
-            this.notiService.notifyCode('SYS007');
-          }
-          this.updateApproveStatus(item, status);
-        }
-      });
-  }
-
-  updateApproveStatus(item, status) {
-    item.approveStatus = status;
-    this.viewComponent.dataService.update(item).subscribe();
-  }
-
-  // tạo bài viết
-  openPopupInputPoints(item) {
-    var obj = {
-      recID: item.recID,
-      activeCoins: this.activeCoins,
-      activeKudos: this.activeKudos,
-      cardType: item.cardType,
-    };
-
-    let popup = this.callFC.openForm(
-      PopupInputPointsComponent,
-      '',
-      200,
-      300,
-      '',
-      obj,
-      ''
-    );
-    popup.closed.subscribe((res: any) => {
-      if (!res || res.closedBy == 'escape' || !res.event) return;
-      this.update(item, 1);
-    });
   }
 
   selectedItem(event: any) {
@@ -263,8 +174,6 @@ export class CardsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
-    } else {
-      this.openPopupInputPoints(data);
     }
   }
 

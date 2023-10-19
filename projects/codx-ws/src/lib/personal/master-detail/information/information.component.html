@@ -1,4 +1,4 @@
-<div class="d-flex flex-column w-100 h-100 px-10">
+<div class="d-flex flex-column w-100 h-100 px-10 bg-white">
     <ng-container *ngTemplateOutlet="general"></ng-container>
 </div>
 
@@ -18,12 +18,12 @@
         <div class="d-flex flex-column w-100 py-4 border-bottom">
            <div class="d-flex align-items-center justify-content-between py-2">
                 <codx-label [default]="label.titleAccSercurity" [formName]="'fmWSAccSecurity'" [fiedName]="'lblWSAccSecurity'" class="fw-bold fs-5-sm"></codx-label>
-                <button type="button" class="p-5px btn btn-outline-dark"><i class="icon-i-arrow-repeat"></i><codx-label [default]="label.titleChangePassword" [formName]="'fmWSChangePassword'" [fiedName]="'lblWSChangePassword'"></codx-label></button>
+                <button type="button" class="p-5px btn btn-outline-dark" (click)="changePW()"><i class="icon-i-arrow-repeat"></i><codx-label [default]="label.titleChangePassword" [formName]="'fmWSChangePassword'" [fiedName]="'lblWSChangePassword'" ></codx-label></button>
             </div>
             <div class="d-flex align-items-center py-5">
                 <codx-label [default]="label.title2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'"></codx-label>
                 <codx-input type="valuelist" [refValue]="'SYS060'" [crrValue]="user?.extends?.TwoFA" ngClass="mx-2" (valueChange)="change2FA($event)"></codx-input>
-                <i class="icon-dialpad mx-2"></i>
+                <i class="icon-dialpad mx-2 cursor-pointer" [class.opacity-50]="user?.extends?.TwoFA != '1' && user?.extends?.TwoFA != '4'" (click)="expend()"></i>
             </div>
             <div class="d-flex flex-column py-2">
                 <codx-label [default]="label.titleDis2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'" class="opacity-50"></codx-label>
@@ -77,5 +77,69 @@
                 </div>
             </div>
         </div>
+        <ng-container *ngIf="hasES">
+            <div class="d-flex flex-column py-4">
+                <codx-label [default]="label.titleSignatures" [formName]="'fmWSsignatures'" [fiedName]="'lblWSsignatures'" class="fw-bold fs-5-sm"></codx-label>
+                <div class="d-flex align-items-center mt-4 ws-singfile" *ngIf="dataSignatures && formModelES">
+                    <codx-img
+                        #imgSignature1
+                        class="symbol symbol-120 square me-8 image-inpt-wrapper fullImage"
+                        [imageType]="'square'"
+                        [width]="80"
+                        referType="S1"
+                        [objectId]="dataSignatures?.recID"
+                        [objectName]="'S1'"
+                        [objectType]="formModelES?.entityName"
+                        data-kt-menu-trigger="click"
+                        data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end"
+                        data-kt-menu-flip="bottom"
+                        [isAllowEdit]="true"
+                        [updateDirect]="true"
+                        (dataChanged)="dataImageChanged($event, 'S1')"
+                        [funcId]="formModelES?.funcID"
+                    >
+                    </codx-img>
+                    <codx-img
+                        #imgSignature1
+                        class="symbol symbol-120 square me-8 image-inpt-wrapper fullImage"
+                        [imageType]="'square'"
+                        [width]="80"
+                        referType="S2"
+                        [objectId]="dataSignatures?.recID"
+                        [objectName]="'S2'"
+                        [objectType]="formModelES?.entityName"
+                        data-kt-menu-trigger="click"
+                        data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end"
+                        data-kt-menu-flip="bottom"
+                        [isAllowEdit]="true"
+                        [updateDirect]="true"
+                        (dataChanged)="dataImageChanged($event, 'S1')"
+                        [funcId]="formModelES?.funcID"
+                    >
+                    </codx-img>
+                    <codx-img
+                        #imgSignature1
+                        class="symbol symbol-120 square image-inpt-wrapper fullImage"
+                        [imageType]="'square'"
+                        [width]="80"
+                        referType="S3"
+                        [objectId]="dataSignatures?.recID"
+                        [objectName]="'S3'"
+                        [objectType]="formModelES?.entityName"
+                        data-kt-menu-trigger="click"
+                        data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end"
+                        data-kt-menu-flip="bottom"
+                        [isAllowEdit]="true"
+                        [updateDirect]="true"
+                        (dataChanged)="dataImageChanged($event, 'S1')"
+                        [funcId]="formModelES?.funcID"
+                    >
+                    </codx-img>
+                </div>
+            </div>
+        </ng-container>
     </div>
 </ng-template>

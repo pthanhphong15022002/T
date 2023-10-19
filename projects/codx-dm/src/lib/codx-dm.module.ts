@@ -78,7 +78,7 @@ export const routes: Routes = [
         component: CodxReportViewDetailComponent,
       },
       {
-        path: 'dmdashboard/:funcID',
+        path: 'dashboard/:funcID',
         component: DMDashboardComponent,
       },
       {

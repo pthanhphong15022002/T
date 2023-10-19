@@ -175,6 +175,7 @@
               field="processID"
               [crrValue]="contracts?.processID"
               (valueChange)="cbxProcessChange($event)"
+              [disabled]="contracts?.processID"
             >
             </codx-input>
           </div>
