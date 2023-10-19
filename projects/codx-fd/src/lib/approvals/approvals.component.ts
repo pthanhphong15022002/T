@@ -38,8 +38,7 @@ export class ApprovalsComponent extends UIComponent {
   service = 'FD';
   assemblyName = 'ERM.Business.FD';
   className = 'CardsBusiness';
-  method = 'GetListCardByApprovalAsync'
-    
+  method = 'GetListCardByApprovalAsync';
 
   activeCoins: string;
   activeKudos: string;
@@ -243,20 +242,30 @@ export class ApprovalsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
-    } else if (event.functionID === 'FDT1001'){
+    } else if (event.functionID === 'FDT1001') {
       this.accept(data);
-    } else if(event.functionID === 'FDT1002') {
+    } else if (event.functionID === 'FDT1002') {
       this.notAccept(data);
     }
   }
 
   deleteCard(card: any) {}
 
-  changeDataMF(event: any) {
+  changeDataMF(event: any, data) {
     if (event?.length > 0) {
       const mf = event.find((i) => i.functionID === 'SYS03');
       if (mf) {
         mf.disabled = true;
+      }
+      if (data.approveStatus != '0') {
+        const fdt1001 = event.find((i) => i.functionID === 'FDT1001');
+        if (fdt1001) {
+          fdt1001.disabled = true;
+        }
+        const fdt1002 = event.find((i) => i.functionID === 'FDT1002');
+        if (fdt1002) {
+          fdt1002.disabled = true;
+        }
       }
     }
   }

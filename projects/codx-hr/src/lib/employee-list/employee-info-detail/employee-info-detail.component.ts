@@ -1080,15 +1080,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               this.curriculumVitaeFuncID = res[i].functionID;
               this.curriculumVitaeFunc = res[i];
               break;
-            // case this.legalInfoURL:
-            //   this.legalInfoFuncID = res[i].functionID;
-            //   this.legalInfoFunc = res[i];
-            //   console.log('legal infone', this.legalInfoFunc);
-            //   break;
-            // case this.foreignWorkerURL:
-            //   this.foreignWorkerFuncID = res[i].functionID;
-            //   this.foreignWorkerFunc = res[i];
-            //   break;
             case this.jobInfoURL:
               this.jobInfoFuncID = res[i].functionID;
               this.jobInfoFunc = res[i];
@@ -1139,7 +1130,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
           debugger
           if(res){
-            console.log('info nv',  res[0]);
+            console.log('thong tin nv',  res[0]);
             this.infoPersonal = res[0];
           this.getManagerEmployeeInfoById();
             this.infoPersonal.PositionName = res[1]
@@ -1208,8 +1199,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         }
       }
     }
-    else if(func.isPortal == true){
-      //Hide edit/copy/delete
+
+    if(func.isPortal == true || this.infoPersonal.status == '90'){
+      //Hide edit/copy/delete more func
       for(let i = 0; i < evt.length; i++){
         if(evt[i].functionID == "SYS02" || evt[i].functionID == "SYS03" || evt[i].functionID == "SYS01" || evt[i].functionID == "SYS04"){
           evt[i].disabled = true;
@@ -1454,7 +1446,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         break;
       }
     }
-    if(func == this.eNeedToSubmitProfileFunc && this.fromWS == true){
+    if((func == this.eNeedToSubmitProfileFunc && this.fromWS == true) || this.infoPersonal.status == '90'){
       this.handleShowHideMfWs(evt, func);
     }
   }
@@ -3092,6 +3084,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eContractFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.eContractFunc,
         funcUrl: this.eContractURL,
         fromWS: this.fromWS,
@@ -3128,6 +3121,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eWorkPermitFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.eWorkPermitFunc,
         funcUrl: this.eWorkPermitURL,
         fromWS: this.fromWS,
@@ -3168,6 +3162,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eVisaFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.eVisaFunc,
         funcUrl: this.eVisaURL,
         fromWS: this.fromWS,
@@ -3208,6 +3203,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.ePassportFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.ePassportFunc,
         funcUrl: this.ePassportURL,
         fromWS: this.fromWS,
@@ -3297,8 +3293,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                   });
                   this.hrService.getFormModel(this.eInfoFuncID).then((res) => {
                     this.eInfoFormModel = res;
-                    console.log('einfoformmodel', this.eInfoFormModel);
-                    
                     this.hrService.getFormGroup(this.eInfoFormModel.formName, this.eInfoFormModel.gridViewName, this.eInfoFormModel).then((fg) =>{
                       this.eInfoFormGroup = fg;
                       this.eInfoFormGroup.patchValue(this.infoPersonal);
@@ -3316,7 +3310,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             else if(res[i].url == this.foreignWorkerURL){
               this.foreignWorkerFuncID = res[i].functionID;
               this.foreignWorkerFunc = res[i];
-              console.log('lao dong nuoc ngoai', this.foreignWorkerFunc);
             }
             else if(res[i].url == this.ePartyURL){
               this.ePartyFuncID = res[i].functionID;
@@ -3596,7 +3589,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[2]){
-            debugger
             this.active[2] = this.eBasicSalaryFuncID;
           }
           this.lstBtnAdd = []
@@ -5586,6 +5578,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.benefitFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.benefitFunc,
         funcUrl: this.benefitURL,
         fromWS: this.fromWS,
@@ -5674,6 +5667,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       550,
       this.eBasicSalaryFuncID,
       {
+        quitjobStatus: this.infoPersonal.status,
         func: this.eBasicSalaryFunc,
         funcUrl: this.eBasicSalaryURL,
         fromWS: this.fromWS,
