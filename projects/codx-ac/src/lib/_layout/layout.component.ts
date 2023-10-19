@@ -30,7 +30,6 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   ngDoCheck() {
-    this.codxService.activeMenu.id = 'ACT';
     this.detectorRef.detectChanges();
   }
 }

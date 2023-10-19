@@ -28,13 +28,11 @@ import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-o
 import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { RequestReviewComponent } from './approvals/request-review/request-review.component';
-import { AdvancePaymentComponent } from 'projects/codx-ac/src/lib/advance-payment/advance-payment.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
-import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
@@ -47,6 +45,10 @@ import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-l
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LoginSercurityComponent } from './personal/master-detail/information/login-sercurity/login-sercurity.component';
 import { SercurityTOTPComponent } from './personal/master-detail/information/sercurity-totp/sercurity-totp.component';
+import { AdvancePaymentRequestComponent } from 'projects/codx-ac/src/lib/vouchers/advance-payment-request/advance-payment-request.component';
+import { LayoutNoasideAcComponent } from 'projects/codx-ac/src/lib/_layout-noaside-ac/layout-noaside-ac.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
+import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/vouchers/payment-order/payment-order.component';
 
 const routes: Routes = [
   {
@@ -146,18 +148,36 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-        path: 'requestsforadvances/:funcID',
-        component: AdvancePaymentComponent,
+        path: '',
+        component: LayoutNoasideAcComponent,
+        children: [
+          {
+            path: 'requestsforadvances/:funcID',
+            component: AdvancePaymentRequestComponent,
+            data: { noReuse: true },
+          },
+        ],
+      },
+      {
+        path: '',
+        component: LayoutNoasideAcComponent,
+        children: [
+          {
+            path: 'paymentorders/:funcID',
+            component: PaymentOrderComponent,
+            data: { noReuse: true },
+          },
+        ],
       },
       // Phiếu chi
-      {
-        path: 'cashpayments/:funcID',
-        component: CashPaymentsComponent,
-      },
-      {
-        path: 'paymentorders/:funcID',
-        component: PaymentOrderComponent,
-      },
+      // {
+      //   path: 'cashpayments/:funcID',
+      //   component: CashPaymentsComponent,
+      // },
+      // {
+      //   path: 'paymentorders/:funcID',
+      //   component: PaymentOrderComponent,
+      // },
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
       {
