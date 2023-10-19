@@ -500,6 +500,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .subscribe((res) => {
           if (res) {
             this.data = res[0];
+            if(this.isFristVer) this.data = this.formatFristVersion(this.data);
             this.fileGet.emit(this.data);
             this.changeDetectorRef.detectChanges();
           }
@@ -544,6 +545,28 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     //Kiểm tra tenant đã có chưa
   }
+
+    //Lấy version đầu tiên
+    formatFristVersion(data)
+    {
+      data.forEach(elm => {
+        if(elm.history && elm.history.length>0)
+        {
+          var frist = elm?.history.filter(x=>x.version == "Ver 001");
+          if(frist && frist[0])
+          {
+            var f = frist[0];
+            elm.extension = f.extension;
+            elm.fileSize = f.fileSize;
+            elm.thumbnail = f.thumbnail;
+            elm.pathDisk = f.pathDisk;
+            elm.uploadId = f.uploadId;
+          }
+        }
+       
+      });
+      return data;
+    }
 
   onSelectionAddChanged($data, tree) {
     var id = $data.dataItem.recID;

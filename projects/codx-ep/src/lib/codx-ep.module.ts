@@ -34,6 +34,7 @@ import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTra
 import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup-driver-assign.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components/codx-view-content/codx-view-content.component';
+import { EPDashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -112,6 +113,10 @@ export const routes: Routes = [
         component: ResourcesComponent,
       },
       {
+        path: 'dashboard/:funcID',
+        component: EPDashboardComponent,
+      },
+      {
         path: 'rooms/:funcID',
         component: ResourcesComponent,
       },
@@ -166,6 +171,7 @@ export const routes: Routes = [
     PopupAddCardTransComponent,
     CardTransComponent,
     PopupDriverAssignComponent,
+    EPDashboardComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

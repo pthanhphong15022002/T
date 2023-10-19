@@ -115,8 +115,8 @@ export class DashboardComponent extends UIComponent {
   onInit(): void {
     this.user = this.auth.userValue;
     this.dataValueCoins = this.user.userID;
-    this.getTop5Radio();
     this.initDate();
+    this.getTop5Radio();
     this.getDataAmountCard();
     this.getCardType();
   }
@@ -183,62 +183,68 @@ export class DashboardComponent extends UIComponent {
 
   lstTopRadio: any[] = [];
   getTop5Radio() {
-    const model: DataRequest = {
-      page: 1,
-      pageLoading: true,
-      pageSize: 5,
-      funcID: 'FDT08',
-      entityName: 'FD_Cards',
-      entityPermission: 'FD_Cards_Radio',
-      gridViewName: 'grvRadio',
-      favoriteID: 'c052aa8c-0937-ed11-9460-00155d035517',
-      sort: [{ field: 'CreatedOn', dir: 'desc' }],
-    };
-    this.fdService.getListCard(model).subscribe((res) => {
-      if (res) this.lstTopRadio = res[0];
-      this.lstTopRadio.forEach((item) => {
-        let listShare = item.permissions.filter(
-          (x) => x.memberType == '3' && x.objectType != '7'
-        );
-        if (listShare && listShare.length > 0) {
-          let fItem = listShare[0];
-          if (listShare.length == 1) {
-            if (fItem.objectName) {
-              item.type = 2;
-              item.objectName = fItem.objectName;
-              item.objectID = fItem.objectID;
+    this.fdService
+      .getFavorite('FD_Cards_Radio', '1', null, true)
+      .subscribe((res: any) => {
+        const lstfav = res.favs;
+        const favSender = lstfav.find(x => x.paraValues == 'Sender');
+        const model: DataRequest = {
+          page: 1,
+          pageLoading: true,
+          pageSize: 5,
+          funcID: 'FDT08',
+          entityName: 'FD_Cards',
+          entityPermission: 'FD_Cards_Radio',
+          gridViewName: 'grvRadio',
+          favoriteID: favSender?.recID,
+          sort: [{ field: 'CreatedOn', dir: 'desc' }],
+        };
+        this.fdService.getListCard(model).subscribe((res) => {
+          if (res) this.lstTopRadio = res[0];
+          this.lstTopRadio.forEach((item) => {
+            let listShare = item.permissions.filter(
+              (x) => x.memberType == '3' && x.objectType != '7'
+            );
+            if (listShare && listShare.length > 0) {
+              let fItem = listShare[0];
+              if (listShare.length == 1) {
+                if (fItem.objectName) {
+                  item.type = 2;
+                  item.objectName = fItem.objectName;
+                  item.objectID = fItem.objectID;
+                } else {
+                  item.type = 1;
+                  this.cache.valueList('L1901').subscribe((res) => {
+                    let datas = res.datas;
+                    if (datas && datas.length > 0) {
+                      let parent = datas.find((x) => x.value == fItem.objectType);
+                      if (parent) {
+                        item.objectName = parent.text;
+                        item.icon = parent.icon;
+                      }
+                    }
+                  });
+                }
+              } else {
+                item.type = 1;
+                this.cache.valueList('L1901').subscribe((res) => {
+                  let datas = res.datas;
+                  if (datas && datas.length > 0) {
+                    let parent = datas.find((x) => x.value == fItem.objectType);
+                    if (parent) {
+                      item.objectName = parent.text;
+                      item.icon = parent.icon;
+                    }
+                  }
+                });
+              }
             } else {
               item.type = 1;
-              this.cache.valueList('L1901').subscribe((res) => {
-                let datas = res.datas;
-                if (datas && datas.length > 0) {
-                  let parent = datas.find((x) => x.value == fItem.objectType);
-                  if (parent) {
-                    item.objectName = parent.text;
-                    item.icon = parent.icon;
-                  }
-                }
-              });
+              item.icon = 'share_owner.svg';
             }
-          } else {
-            item.type = 1;
-            this.cache.valueList('L1901').subscribe((res) => {
-              let datas = res.datas;
-              if (datas && datas.length > 0) {
-                let parent = datas.find((x) => x.value == fItem.objectType);
-                if (parent) {
-                  item.objectName = parent.text;
-                  item.icon = parent.icon;
-                }
-              }
-            });
-          }
-        } else {
-          item.type = 1;
-          item.icon = 'share_owner.svg';
-        }
+          });
+        });
       });
-    });
   }
 
   setPredicateCountCard() {
@@ -267,9 +273,9 @@ export class DashboardComponent extends UIComponent {
   }
 
   setPredicates() {
-    this.cache.functionList(this.functionID).subscribe((res) => {
-      this.predicateWP = res?.predicate;
-      this.dataValueWP = res?.dataValue;
+    // this.cache.functionList(this.functionID).subscribe((res) => {
+    //   this.predicateWP = res?.predicate;
+    //   this.dataValueWP = res?.dataValue;
 
       this.predicatesWP = '';
       this.dataValuesWP = '';
@@ -292,7 +298,7 @@ export class DashboardComponent extends UIComponent {
           }
           break;
       }
-    });
+    // });
   }
 
   lstTagUser: any[] = [];
@@ -303,9 +309,17 @@ export class DashboardComponent extends UIComponent {
   }
 
   clickCardType(item) {
-    this.entityName = item.entityName;
+    // this.entityName = item.entityName;
     this.functionID = item.functionID;
-    this.setPredicates();
+    // this.setPredicates();
+    this.refreshListPost();
+  }
+
+  refreshListPost() {
+    this.showPosts = false;
+    this.dt.detectChanges();
+    this.showPosts = true;
+    this.dt.detectChanges();
   }
 
   clickFavorite(item) {

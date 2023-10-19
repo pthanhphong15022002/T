@@ -77,6 +77,7 @@ export class DealsComponent
   @ViewChild('templateSteps') templateSteps: TemplateRef<any>;
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
   @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
+  @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -1742,7 +1743,9 @@ export class DealsComponent
           case 'ExpectedClosed':
             template = this.templateExpectedClosed;
             break;
-
+          case 'Note':
+            template = this.templateNote;
+            break;
           default:
             break;
         }
