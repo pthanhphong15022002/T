@@ -265,7 +265,7 @@ export const routes: Routes = [
     component: LayoutOnlyHeaderComponent,
     children: [
       {
-        path: 'MACContent', //  /:funcID',
+        path: 'maccontent/:funcID',
         component: MACContentComponent,
       },
     ],

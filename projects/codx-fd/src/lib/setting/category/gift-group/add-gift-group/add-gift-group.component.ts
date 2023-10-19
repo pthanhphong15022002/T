@@ -118,8 +118,9 @@ export class AddGiftGroupComponent extends UIComponent implements OnInit {
         this.dialog.dataService
         .save((option: any) => this.beforeEdit(option))
         .subscribe((res) => {
-          if (res && res.update[2]) this.dialog.close(res.update[2]);
-            else this.notification.notifyCode('SYS007');
+          if (res){
+            this.dialog.close(res.update);
+          }
         });
       }
     } else this.fdSV.notifyInvalid(this.form.formGroup, this.formModel);

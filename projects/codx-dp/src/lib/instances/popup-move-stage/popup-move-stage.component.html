@@ -68,13 +68,21 @@
           >
           </codx-label>
           <div>
-            <codx-popup-participants
+            <ejs-combobox
+            [dataSource]="lstParticipants"
+            (valueChange)="eventUser($event)"
+            [fields]="fieldCbxParticipants"
+            [placeholder]="gridViewInstanceStep?.Owner?.description"
+            [allowFiltering]="true"
+            [value]="owner"
+          ></ejs-combobox>
+            <!-- <codx-popup-participants
               [lstParticipants]="lstParticipants"
               [dialog]="dialog"
               [isType]="'I'"
               [owner]="owner"
               (eventUser)="eventUser($event)"
-            ></codx-popup-participants>
+            ></codx-popup-participants> -->
           </div>
         </div>
       </div>

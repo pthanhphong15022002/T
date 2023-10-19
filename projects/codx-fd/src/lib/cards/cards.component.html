@@ -16,8 +16,7 @@
     <codx-temp-full [dataItem]="data" [typeMF]="'hover'" [formModel]="view.formModel" imgCss="me-3"
         (clickMF)="clickMF($event,data)" [imageId]="data.sender" imageObjType="AD_Users" (changeDataMF)="changeDataMF($event)"
         cardCss="card-template border-bottom p-3" [title]="data.senderName" [titleCss]="'fs-6'" [subTitle]="data.situation" [subTitleCss]="'my-1 text-gray-600 line-clamp-2'"
-        [date]="data.createdOn" [status]="funcID == funcIDApproval ? data.approveStatus : data.status" [statusVll]="funcID == funcIDApproval ? 'L1425' :'L1420'" [bookmark]="false" 
-        [hideMF]="funcID == funcIDApproval && data.approveStatus != '0'">
+        [date]="data.createdOn" [status]="data.status" [statusVll]="'L1420'" [bookmark]="false">
     </codx-temp-full>
 </ng-template>
 
