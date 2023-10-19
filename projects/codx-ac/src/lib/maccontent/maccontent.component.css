@@ -1,0 +1,28 @@
+.divControl {
+  padding: 10px 5px 10px 5px;
+}
+
+.divControl .divOptions .lv-radio {
+  padding: 3px 8px;
+}
+
+/* .divControl .divOptions > div {
+  border: 1px solid #cdcdcd;
+  border-radius: 3px;
+  display: inline-block;
+} */
+
+.divControl .divParams > div {
+  display: inline-block;
+}
+
+.divOptions {
+  padding: 0;
+}
+
+.dateType,
+.periodType,
+.quaterType {
+  width: 120px;
+  padding-right: 2px !important;
+}

@@ -1,1 +1,99 @@
-<p>maccontent works!</p>
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  (viewChanged)="viewChanged($event, view)"
+>
+</codx-views>
+
+<ng-template #template>
+  <div class="divControl">
+    <table>
+      <tr>
+        <td class="divOptions">
+          <div>
+            <codx-input
+              *ngFor="let item of VllOption; let i = index"
+              [field]="item.value"
+              [checked]="i == 0"
+              [crrValue]="item.text"
+              [label]="item.text"
+              type="radio"
+              name="options"
+              class="pe-2"
+              (valueChange)="changeType($event)"
+            ></codx-input>
+          </div>
+        </td>
+        <td class="divParams">
+          <div
+            class="periodType"
+            *ngIf="type === 'P' || type === 'Q' || type === 'Y'"
+          >
+            <codx-input
+              field="periodID"
+              type="combobox"
+              [refValue]="refValue"
+              [crrValue]="periodID"
+              (valueChange)="valueChange($event)"
+              placeholder="Kỳ"
+            ></codx-input>
+          </div>
+          <div class="quaterType" *ngIf="type === 'Q'">
+            <ejs-combobox
+              #valuelist
+              [dataSource]="Quater"
+              [fields]="{ text: 'text', value: 'value' }"
+              placeholder="Quý"
+              (select)="select($event)"
+              width="100%"
+              popupWidth="100%"
+            >
+              <ng-template #itemTemplate let-data>
+                <div class="item-display ps-2 d-flex align-items-center">
+                  <span
+                    *ngIf="data.icon"
+                    class="p-1 rounded-1"
+                    style="text-indent: 0"
+                    [ngStyle]="{
+                      color: data.textColor,
+                      'background-color': data.color
+                    }"
+                    [class]="data.icon"
+                  ></span>
+                  <span class="ms-1" [title]="data.text">{{ data.text }}</span>
+                </div>
+              </ng-template>
+            </ejs-combobox>
+          </div>
+          <div *ngIf="type === 'D'" class="d-flex">
+            <div class="dateType">
+              <codx-input
+                type="datetime"
+                field="fromdate"
+                placeholder="Từ ngày"
+                dataformat="d"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
+            </div>
+            <div class="dateType">
+              <codx-input
+                type="datetime"
+                field="todate"
+                placeholder="Đến ngày"
+                dataformat="d"
+                (valueChange)="valueChange($event)"
+              ></codx-input>
+            </div>
+          </div>
+        </td>
+        <td style="padding-left: 21px">
+          <button type="button" (click)="refreshData()" class="btn btn-primary">
+            Cập nhật
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="divContent"></div>
+</ng-template>

@@ -18,12 +18,12 @@
         <div class="d-flex flex-column w-100 py-4 border-bottom">
            <div class="d-flex align-items-center justify-content-between py-2">
                 <codx-label [default]="label.titleAccSercurity" [formName]="'fmWSAccSecurity'" [fiedName]="'lblWSAccSecurity'" class="fw-bold fs-5-sm"></codx-label>
-                <button type="button" class="p-5px btn btn-outline-dark"><i class="icon-i-arrow-repeat"></i><codx-label [default]="label.titleChangePassword" [formName]="'fmWSChangePassword'" [fiedName]="'lblWSChangePassword'"></codx-label></button>
+                <button type="button" class="p-5px btn btn-outline-dark" (click)="changePW()"><i class="icon-i-arrow-repeat"></i><codx-label [default]="label.titleChangePassword" [formName]="'fmWSChangePassword'" [fiedName]="'lblWSChangePassword'" ></codx-label></button>
             </div>
             <div class="d-flex align-items-center py-5">
                 <codx-label [default]="label.title2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'"></codx-label>
                 <codx-input type="valuelist" [refValue]="'SYS060'" [crrValue]="user?.extends?.TwoFA" ngClass="mx-2" (valueChange)="change2FA($event)"></codx-input>
-                <i class="icon-dialpad mx-2"></i>
+                <i class="icon-dialpad mx-2" [class.opacity-50]="user?.extends?.TwoFA != '1' && user?.extends?.TwoFA != '4'"></i>
             </div>
             <div class="d-flex flex-column py-2">
                 <codx-label [default]="label.titleDis2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'" class="opacity-50"></codx-label>
