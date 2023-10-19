@@ -696,6 +696,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           this.objDashboard?.element?.childElementCount > 0
         ) {
           clearInterval(iGenPanels);
+
           this.panels.forEach((ele: any) => {
             let idx = this.objDashboard.panels.findIndex(
               (x: any) => x.id == ele.id
