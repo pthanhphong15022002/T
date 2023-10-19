@@ -40,7 +40,7 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
   
   user: any;
   dataValue = '';
-  predicate = 'CreatedBy = @0';
+  predicate = 'CreatedBy=@0';
   data: any;
   recID: any;
   checkFormComment = false;
@@ -214,7 +214,6 @@ export class StorageComponent extends UIComponent implements OnInit, AfterViewIn
 
   storageSelected: any = [];
   openStorageDetail(data:any) {
-    debugger;
     this.storageSelected = data;
     this.dataSort = [];
     this.checkFormComment = true;

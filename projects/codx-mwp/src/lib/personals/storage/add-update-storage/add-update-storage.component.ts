@@ -106,14 +106,14 @@ export class AddUpdateStorageComponent implements OnInit {
   addStorage() {
     if(this.data){
       this.api.execSv("WP","ERM.Business.WP","StoragesBusiness","InsertAsync",[this.data])
-      .subscribe((res:boolean) => {
+      .subscribe((res:any) => {
         if(res)
         {
           this.imageUpload
-          .updateFileDirectReload(this.data.recID)
+          .updateFileDirectReload(res.recID)
           .subscribe(item=>{
             this.notifySV.notifyCode(res ? "SYS006" : "SYS023");
-            this.dialogRef.close(res ? this.data : null);
+            this.dialogRef.close(res);
           });
         }
       });
