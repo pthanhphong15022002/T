@@ -867,67 +867,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm lưu và thêm chứng từ
-   * @returns
-   */
-  onSaveAddVoucher() {
-    // let isFirstSave = false;
-    // if(!this.formCashPayment?.data?._isEdit && this.formCashPayment?.data?.coppyForm) isFirstSave = true;
-    this.formCashPayment.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res) {
-        if ((this.eleGridCashPayment || this.eleGridCashPayment?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-          this.eleGridCashPayment.saveRow((res:any)=>{ //? save lưới trước 
-            if(res){
-              this.saveAddVoucher();
-            }
-          })
-          return;
-        }
-        if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
-          this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước 
-            if(res){
-              this.saveAddVoucher();
-            }
-          })
-          return;
-        }
-        if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '2') { //? nếu lưới VatInvoices có active hoặc đang edit
-          this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-            if(res){
-              this.saveAddVoucher();
-            }
-          })
-          return;
-        }
-      
-      }
-    });
-  }
-
-  /**
-   * lưu & thêm chứng từ
-   */
-  saveAddVoucher(){
-    this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
-        this.formCashPayment.data,
-        this.journal,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dialog.dataService.update(res.data).subscribe();
-          
-        }
-        if(this.eleGridCashPayment && this.eleGridCashPayment?.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
-        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
-        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
-      });
-  }
-
-  /**
    * *Hàm hủy bỏ chứng từ
    */
   onDiscardVoucher() {
