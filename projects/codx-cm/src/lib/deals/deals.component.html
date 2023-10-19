@@ -735,6 +735,11 @@
     "
   ></span>
 </ng-template>
+<ng-template #templateNote let-data>
+  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.note" [text]="'note'">
+  </codx-show-more-less>
+</ng-template>
+
 
 <ng-template #dashBoard>
   <codx-instance-dashboard
