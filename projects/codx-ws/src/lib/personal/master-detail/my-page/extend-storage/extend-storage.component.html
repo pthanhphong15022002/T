@@ -36,9 +36,13 @@
         [desc2]="item.memo"
         [imageObjName]="item.title"
         [imageId]="item.recID"
+        [imageReferType]="'image'"
         [imageObjType]="'WP_Storages'" 
         imgCss="h-150px w-100 mb-2" 
         [imageWidth]="200"
+        [formModel]="formModel"
+        [typeMF]="'hover'"
+        (clickMF)="clickMFStorage($event,item)"
     >
     </codx-card-img>
 </ng-template>
