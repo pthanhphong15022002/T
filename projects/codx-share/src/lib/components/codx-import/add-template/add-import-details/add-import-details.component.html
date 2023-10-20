@@ -16,6 +16,7 @@
   </div>
   <div class="h-feildImport">
     <codx-gridview-v2
+      #gridView2
       [formName]="formModels.formName"
       [gridViewName]="formModels.gridViewName"
       [autoFitColumns]="false"
@@ -33,10 +34,15 @@
   </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <!-- <button type="button" class="btn btn-outline-primary me-2" (click)="onSaveTemplate()">
-        <codx-label [formModel]="formModel" [fiedName]="'saveTemplate'" [default]="'Lưu làm template'"></codx-label>
-      </button> -->
+    <div class="d-flex align-items-center justify-content-between ">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-light-primary" (click)="mapField()">
+          <codx-label [formModel]="formModel" [fiedName]="'mapping'" [default]="'Gợi ý điền trường'"></codx-label>
+        </button>
+        <button class="btn btn-light-danger ms-2" (click)="refeshField()">
+          <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Refesh'"></codx-label>
+        </button>
+      </div>
       <button class="btn btn-primary" (click)="onSave()">
         <codx-label [formModel]="formModel" [fiedName]="'save'" [default]="'Lưu'"></codx-label>
       </button>
