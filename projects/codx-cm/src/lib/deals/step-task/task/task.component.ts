@@ -427,6 +427,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
+      type:"activitie",
       action,
       titleName: this.titleName,
       taskType: this.taskType,
