@@ -224,7 +224,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
           )
         );
 
-        if (json != null && json.trim() != '') {
+        if (json != null && json.trim() != '' && json != "null") {
           let lstDis = JSON.parse(json);
           this.data.province = lstDis?.ProvinceID;
           this.data.district = lstDis?.DistrictID;
