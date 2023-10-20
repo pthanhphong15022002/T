@@ -765,13 +765,10 @@
 </ng-template>
 <ng-template #taskTemplate let-data>
   <step-task
-    [typeTask]="2"
-    [customerID]="dataSelected?.recID"
-    [owner]="dataSelected?.owner"
+    [entityName]="entityName"
     [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false"
     [isPause]="dataSelected?.status == '99'"
-    [entityName]="entityName"
+    [dataCM]="dataSelected"
     [customerName]="dataSelected?.customerName"
-    [ownerInstance]="dataSelected?.owner"
   ></step-task>
 </ng-template>

@@ -41,7 +41,7 @@ export class CodxAddTaskComponent implements OnInit {
   action = 'add';
   vllShare = 'BP021';
   linkQuesiton = 'http://';
-  type: "calendar" | "step" | "activitie";
+  type: 'calendar' | 'step' | 'activitie';
   typeTask;
   listGroup = [];
   recIdEmail = '';
@@ -74,7 +74,6 @@ export class CodxAddTaskComponent implements OnInit {
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   isEditTimeDefault = false;
-  isTaskFromStep = true;
   isShowCbxStep = true;
   isShowCbxGroup = true;
 
@@ -110,21 +109,21 @@ export class CodxAddTaskComponent implements OnInit {
   participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
   refValue = {
-    "1":"CMCustomersOfCalendar", 
-    "3":"CMLeadsOfCalendar",
-    "5":"CMDealsOfCalendar",
-    "7":"CMContractsOfCalendar",
-    "9":"CMCasesOfCalendar",
-  }
+    '1': 'CMCustomersOfCalendar',
+    '3': 'CMLeadsOfCalendar',
+    '5': 'CMDealsOfCalendar',
+    '7': 'CMContractsOfCalendar',
+    '9': 'CMCasesOfCalendar',
+  };
   refValueType = '';
   listTypeCM = '';
   typeCM = '';
   dataCM = {
-    deals:"",
-    leads:"",
-    cases:"",
-    customers:"",
-    contracts:""
+    deals: '',
+    leads: '',
+    cases: '',
+    customers: '',
+    contracts: '',
   };
   constructor(
     private cache: CacheService,
@@ -139,7 +138,6 @@ export class CodxAddTaskComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
-
     this.type = dt?.data?.type;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.taskType;
@@ -150,52 +148,48 @@ export class CodxAddTaskComponent implements OnInit {
     this.instanceStep = dt?.data?.instanceStep;
     this.titleName = dt?.data?.titleName || '';
     this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
+    this.isStart = !!this.instanceStep?.startDate;
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
-    this.isTaskFromStep =  undefined ? this.isTaskFromStep : dt?.data?.isTaskFromStep;;
+    this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
     this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    // this.isStart = dt?.data?.isStart;
-    this.isStart = !this.instanceStep ||(this.instanceStep && this.instanceStep?.startDate && this.instanceStep?.startDate) ? true : false;
-    if (dt?.data?.listGroup) {
-      // remove group task recID null
-      this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
-      let index = this.listGroup?.findIndex((group) => !group.recID);
-      if (index >= 0) {this.listGroup?.splice(index, 1);}
-    } else {
-      this.listGroup = JSON.parse(
-        JSON.stringify(this.instanceStep?.taskGroups || [])
-      );
-    }
-    this.cache.valueList('CRM060').subscribe((res) => {
-      if (res?.datas) {
-        this.listTypeCM = res?.datas?.map((data) => {
-          return {...data,refValue: this.refValue[data?.value]}
-        })
-        console.log(this.listTypeCM);
-        
-      }
-    });
-    this.api
-    .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
-    .subscribe((res) => {
-      this.isAdmin = res ? true : false;
-    });
+    this.setValueList();
+    this.checkAdminCM();
   }
 
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
-    this.roles = this.stepsTasks['roles'] || [];
-    if(this.type == 'activitie' || this.type == 'calendar'){
-      this.isActivitie = true;
-      this.isShowCbxStep = false;
-      this.isShowCbxGroup = false;
+    this.setTimePeriod();
+    this.setFirstDataTask();
+    this.setFieldTask();
+    this.checkStatusShowForm();
+    if (this.isBoughtTM == undefined) {
+      this.getBoughtTM();
     }
-    if (!this.listInsStep?.length) {
-      this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
-    } else {
-      this.disableStep = true;
-    }
-    
+    this.getFormModel();
+   
+  }
+
+  //#region setting popup task
+  setValueList() {
+    this.cache.valueList('CRM060').subscribe((res) => {
+      if (res?.datas) {
+        this.listTypeCM = res?.datas?.map((data) => {
+          return { ...data, refValue: this.refValue[data?.value] };
+        });
+      }
+    });
+  }
+
+  checkAdminCM() {
+    this.api
+      .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
+      .subscribe((res) => {
+        this.isAdmin = res ? true : false;
+      });
+  }
+
+  setTimePeriod() {
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(
         this.instanceStep?.startDate || new Date()
@@ -210,17 +204,37 @@ export class CodxAddTaskComponent implements OnInit {
       this.startDateParent = new Date(this.groupTask['startDate']);
       this.endDateParent = new Date(this.groupTask['endDate']);
     }
+  }
 
-    this.getFormModel();
+  setFirstDataTask() {
+    if (this.type == 'activitie' || this.type == 'calendar') {
+      this.isActivitie = true;
+      this.isShowCbxStep = false;
+      this.isShowCbxGroup = false;
+    }
+    if(!this.isStart){
+      this.isStart = this.isActivitie = true ? true : this.isActivitie;
+    }
+    if (!this.listInsStep?.length) {
+      this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
+    } else {
+      this.disableStep = true;
+    }
     if (this.stepsTasks?.parentID) {
       this.litsParentID = this.stepsTasks?.parentID.split(';');
     }
-
+    if (this.listGroup?.length > 0) {
+      // remove group task recID null
+      let index = this.listGroup?.findIndex((group) => !group.recID);
+      index >= 0 && this.listGroup?.splice(index, 1);
+    }
+    this.roles = this.stepsTasks['roles'] || [];
     this.owner = this.roles?.filter(
       (role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U'
     );
     this.participant = this.roles?.filter((role) => role.roleType == 'P');
     this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'O');
+
     if (this.action == 'add') {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
@@ -234,6 +248,9 @@ export class CodxAddTaskComponent implements OnInit {
       startDays.setDate(startDays?.getDate() + 1);
       this.stepsTasks.endDate = startDays;
     }
+  }
+
+  setFieldTask() {
     if (this.instanceStep?.fields?.length > 0 && this.stepsTasks?.fieldID) {
       let fieldID = this.stepsTasks?.fieldID;
       this.listFieldCopy = JSON.parse(
@@ -243,36 +260,32 @@ export class CodxAddTaskComponent implements OnInit {
         fieldID?.includes(field?.recID)
       );
     }
-    this.checkStatusShowForm();
-    if (this.isBoughtTM == undefined) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'UsersBusiness',
-          'GetListBoughtModuleAsync',
-          ''
-        )
-        .subscribe((res: Array<TN_OrderModule>) => {
-          if (res) {
-            let lstModule = res;
-            this.isBoughtTM = lstModule?.some(
-              (md) =>
-                !md?.boughtModule?.refID &&
-                md.bought &&
-                md.boughtModule?.moduleID == 'TM1'
-            );
-            this.stepsTasks.createTask =
-              this.action == 'add'
-                ? this.isBoughtTM
-                : this.stepsTasks?.createTask;
-          }
-        });
-    }
   }
 
-  setDataTask(){
-
+  getBoughtTM() {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GetListBoughtModuleAsync',
+        ''
+      )
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          let lstModule = res;
+          this.isBoughtTM = lstModule?.some(
+            (md) =>
+              !md?.boughtModule?.refID &&
+              md.bought &&
+              md.boughtModule?.moduleID == 'TM1'
+          );
+          this.stepsTasks.createTask =
+            this.action == 'add'
+              ? this.isBoughtTM
+              : this.stepsTasks?.createTask;
+        }
+      });
   }
 
   setRole<T>(role: T) {
@@ -298,7 +311,8 @@ export class CodxAddTaskComponent implements OnInit {
         }
       });
   }
-
+  //#endregion
+  
   valueChangeText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
@@ -828,60 +842,56 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
 
-  changeTypeCM(event){
+  changeTypeCM(event) {
     console.log(event);
-    if(event?.data){
-      if(this.typeCM != event?.data){
+    if (event?.data) {
+      if (this.typeCM != event?.data) {
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
         // if(this.typeCM == "1"){
         //   this.isActivitie = true;
         //   this.isShowCbxStep = false;
         //   this.isShowCbxGroup = false;
-          
+
         // }else if(this.typeCM == "5"){
         //   this.isActivitie =false;
         // }
       }
     }
   }
-  changeDataCM(event){
-    console.log(event?.component?.itemsSelected[0]      );
-    let data =event?.component?.itemsSelected[0];
-    if(data){
-      if(this.typeCM == "1"){
+  changeDataCM(event) {
+    console.log(event?.component?.itemsSelected[0]);
+    let data = event?.component?.itemsSelected[0];
+    if (data) {
+      if (this.typeCM == '1') {
         this.isActivitie = true;
         this.isShowCbxStep = false;
         this.isShowCbxGroup = false;
         this.stepsTasks.objectID = data?.RecID;
-        this.stepsTasks.objectType = "CM_Customers";
-      }else if(this.typeCM == "5"){
-        this.isActivitie =false;
+        this.stepsTasks.objectType = 'CM_Customers';
+      } else if (this.typeCM == '5') {
+        this.isActivitie = false;
         this.getListInstanceStep(data.RefID, true);
-      }else{
-
+      } else {
       }
-    } 
+    }
     this.dataCM = event?.data;
-    
   }
 
-  getListInstanceStep(instanceID, isRoleFull){
-      this.api
-        .exec<any>(
-          'DP',
-          'InstancesStepsBusiness',
-          'GetInscestepCalendarAsync',
-          [instanceID, isRoleFull]
-        )
-        .subscribe((res) => {
-          if (res) {
-           this.listInsStep = res;
-           this.isShowCbxStep = true;
-           this.disableStep = true;
-          }
-        });
-    }
+  getListInstanceStep(instanceID, isRoleFull) {
+    this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'GetInscestepCalendarAsync', [
+        instanceID,
+        isRoleFull,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.listInsStep = res;
+          this.isShowCbxStep = true;
+          this.disableStep = true;
+        }
+      });
+  }
 
   changeStep(event) {
     let data = event?.value;
