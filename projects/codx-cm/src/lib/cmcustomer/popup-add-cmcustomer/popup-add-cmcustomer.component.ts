@@ -427,7 +427,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           [name, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         if (this.data.provinceID != lstDis?.ProvinceID)
           this.data.provinceID = lstDis?.ProvinceID;

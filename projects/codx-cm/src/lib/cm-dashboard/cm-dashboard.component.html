@@ -834,17 +834,20 @@
         <ejs-bulletchart
           valueField="value"
           targetField="target"
-          title="2023"
-          width="1000px"
-          height="80%"
+          [title]="titleQ0"
+          width="800px"
+          height="70%"
           [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
+          [maximum]="maximumBulletQ0"
+          [interval]="intervalQ0"
+          [dataSource]="dataBulletQ0s"
         >
           <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            <e-bullet-range
+              [end]="dealValueWonQ0"
+              color="##FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
@@ -853,17 +856,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q1"
-            width="500px"
-            height="80%"
+            [title]="titleQ1"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ1"
+            [interval]="intervalQ1"
+            [dataSource]="dataBulletQ1s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ1"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -871,17 +877,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q2"
-            width="500px"
-            height="80%"
+            [title]="titleQ2"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ2"
+            [interval]="intervalQ2"
+            [dataSource]="dataBulletQ2s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ2"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -891,17 +900,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q3"
-            width="500"
-            height="80%"
+            [title]="titleQ3"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ3"
+            [interval]="intervalQ3"
+            [dataSource]="dataBulletQ3s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ3"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -909,17 +921,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q4"
-            width="500"
-            height="80%"
+            [title]="titleQ4"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ4"
+            [interval]="intervalQ4"
+            [dataSource]="dataBulletQ4s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ4"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>

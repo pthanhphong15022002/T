@@ -1011,7 +1011,7 @@ export class LeadsComponent
           [item?.address, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         if (item.provinceID != lstDis?.ProvinceID)
           item.provinceID = lstDis?.ProvinceID;

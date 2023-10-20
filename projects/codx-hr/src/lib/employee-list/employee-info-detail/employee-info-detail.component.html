@@ -2425,7 +2425,9 @@
                       <div class="timeline-exper-nav w-100 d-flex pb-5">
                         <div class="timeline-media w-125px min-w-125px">
                           <span class="stepper-number fw-bold">
-                            {{ item.fromDate | date : "MM/y" }}
+                            <span *ngIf="item.fromDate">
+                              {{ item.fromDate | date : "MM/y" }}
+                            </span>
                             <span *ngIf="item.toDate">
                               -
                               {{ item.toDate | date : "MM/y" }}
