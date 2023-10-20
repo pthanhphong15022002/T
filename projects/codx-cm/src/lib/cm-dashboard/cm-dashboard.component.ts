@@ -951,7 +951,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
             switch (this.funcID) {
               case 'CMD001':
-                this.changeMySales(res[0]);
                 this.piedata = this.getDashBoardTargetSales(res[1], parameters);
                 this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
