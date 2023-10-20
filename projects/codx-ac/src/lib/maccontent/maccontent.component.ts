@@ -152,10 +152,22 @@ export class MACContentComponent extends UIComponent {
   }
 
   refreshData() {
-    let period = this.periodID;
-    if (this.type == 'D') {
-      period = this.fromDate + '' + '-' + this.toDate + '';
-    } else if (this.type == 'Q')
-      period = this.periodID + '' + '/' + this.quaterID + '';
+    // let period = this.periodID;
+    // if (this.type == 'D') {
+    //   period = this.fromDate + '' + '-' + this.toDate + '';
+    // } else if (this.type == 'Q')
+    //   period = this.periodID + '' + '/' + this.quaterID + '';
+    this.api
+      .execSv('AC', 'ERM.Business.AC', 'MACBusiness', 'GetDataAsync', [
+        this.view.funcID,
+        this.type,
+        this.fromDate,
+        this.toDate,
+        this.periodID,
+        this.quaterID,
+      ])
+      .subscribe((res: any) => {
+        console.log(res);
+      });
   }
 }

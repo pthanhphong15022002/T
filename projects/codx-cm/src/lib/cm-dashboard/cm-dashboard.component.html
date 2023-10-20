@@ -46,60 +46,72 @@
 <!-- cơ hội mới -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="1" [title]="getTitle('1')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
-      "
-      [title]="getNameStatus('1')"
-      [value]="countNew ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-secondary rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
+        "
+        [title]="getNameStatus('1')"
+        [value]="countNew ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội đang thực hiện -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="2" [title]="getTitle('2')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
-      "
-      [title]="getNameStatus('2')"
-      [value]="countProcessing ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-warning rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
+        "
+        [title]="getNameStatus('2')"
+        [value]="countProcessing ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội thành công  -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="3" [title]="getTitle('3')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
-      "
-      [title]="getNameStatus('3')"
-      [value]="countSuccess ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-success rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
+        "
+        [title]="getNameStatus('3')"
+        [value]="countSuccess ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội thất bại  -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="4" [title]="getTitle('5')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
-      "
-      [title]="getNameStatus('5')"
-      [value]="countFail ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-danger rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
+        "
+        [title]="getNameStatus('5')"
+        [value]="countFail ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
@@ -115,79 +127,88 @@
       ></codx-label>
     </div>
     <div id="chartPercentageOfDeals" class="mt-3">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isBussinessLine ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btBussinessLine"
-            formModel="CMMyDashboard"
-            default="Dòng sản phẩm"
-            (click)="clickButton('btBussinessLine')"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="
-            !isBussinessLine ? 'button-selected' : 'button-no-selected'
-          "
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btIndustries"
-            formModel="CMMyDashboard"
-            default="Lĩnh vực hoạt động"
-            (click)="clickButton('btIndustries')"
-          ></codx-label>
+      <div class="d-flex justify-content-center h-10">
+        <div id="group1" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btBussinessLine"
+            name="align1"
+            #ele1
+            checked
+            (change)="
+              changeBusIns(ele1, {
+                chart1: { pie1 },
+                chart2: { pie2 }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btBussinessLine"
+            ><codx-label
+              name="btBussinessLine"
+              formModel="CMMyDashboard"
+              default="Dòng sản phẩm"
+            ></codx-label
+          ></label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btIndustries"
+            name="align1"
+            #ele2
+            (change)="
+              changeBusIns(ele2, {
+                chart1: { pie1 },
+                chart2: { pie2 }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btIndustries">
+            <codx-label
+              name="btIndustries"
+              formModel="CMMyDashboard"
+              default="Lĩnh vực hoạt động"
+            ></codx-label
+          ></label>
         </div>
       </div>
     </div>
     <div class="w-100">
-      <ng-container *ngIf="isBussinessLine">
-        <ng-container
-          *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
-        >
-          <ejs-treemap
-            class="w-100"
-            [dataSource]="dataSourceBussnessLine ?? []"
-            weightValuePath="quantity"
-            rangeColorValuePath="quantity"
-            [palette]="palette"
-            [leafItemSettings]="leafItemSettings"
-            [tooltipSettings]="{
-              visible: true,
-              format:
-                '${businessLineName}<br>${quantity} ' +
-                this.titLeModule +
-                '-(${percentage} %)'
-            }"
-          >
-          </ejs-treemap>
-        </ng-container>
-      </ng-container>
+      <ejs-treemap
+        #pie1
+        class="w-100"
+        [dataSource]="dataSourceBussnessLine ?? []"
+        weightValuePath="quantity"
+        rangeColorValuePath="quantity"
+        [palette]="palette"
+        [leafItemSettings]="leafItemSettings"
+        [tooltipSettings]="{
+          visible: true,
+          format:
+            '${businessLineName}<br>${quantity} ' +
+            this.titLeModule +
+            '-(${percentage} %)'
+        }"
+      >
+      </ejs-treemap>
 
-      <ng-container *ngIf="!isBussinessLine">
-        <ng-container
-          *ngIf="dataDashBoard?.countsIndustries?.length > 0; else noData"
-        >
-          <ejs-treemap
-            class="w-100"
-            [dataSource]="dataSourceIndustry ?? []"
-            weightValuePath="quantity"
-            rangeColorValuePath="quantity"
-            [palette]="paletteIndustry"
-            [leafItemSettings]="leafItemSettingsIns"
-            [tooltipSettings]="{
-              visible: true,
-              format:
-                '${industryName}<br>${quantity} ' +
-                this.titLeModule +
-                '-(${percentage} %)'
-            }"
-          >
-          </ejs-treemap>
-        </ng-container>
-      </ng-container>
+      <ejs-treemap
+        #pie2
+        class="w-100"
+        [dataSource]="dataSourceIndustry ?? []"
+        weightValuePath="quantity"
+        rangeColorValuePath="quantity"
+        [palette]="paletteIndustry"
+        [leafItemSettings]="leafItemSettingsIns"
+        [tooltipSettings]="{
+          visible: true,
+          format:
+            '${industryName}<br>${quantity} ' +
+            this.titLeModule +
+            '-(${percentage} %)'
+        }"
+      >
+      </ejs-treemap>
     </div>
   </div>
 </ng-template>
@@ -778,31 +799,13 @@
       gridViewName="grvCMMyDashboard"
       default="Sales targets"
     ></codx-label>
-    <div class="w-100 d-flex justify-content-center">
-      <ejs-bulletchart
-        valueField="value"
-        targetField="target"
-        title="2023"
-        width="1000px"
-        height="80%"
-        [minimum]="minimumBullet"
-        [maximum]="maximumBullet"
-        [interval]="interval"
-        [dataSource]="dataBullet"
-      >
-        <e-bullet-range-collection>
-          <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-          <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-        </e-bullet-range-collection>
-      </ejs-bulletchart>
-    </div>
-    <div class="row">
-      <div class="col-6 d-flex justify-content-center">
+    <ng-container *ngIf="lstQuarters?.length > 0; else noData">
+      <div class="w-100 d-flex justify-content-center">
         <ejs-bulletchart
           valueField="value"
           targetField="target"
-          title="Q1"
-          width="500px"
+          title="2023"
+          width="1000px"
           height="80%"
           [minimum]="minimumBullet"
           [maximum]="maximumBullet"
@@ -815,63 +818,83 @@
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q2"
-          width="500px"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q1"
+            width="500px"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q2"
+            width="500px"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q3"
-          width="500"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q3"
+            width="500"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q4"
+            width="500"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
       </div>
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q4"
-          width="500"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -930,54 +953,56 @@
       gridViewName="grvCMMyDashboard"
       default="Top sales performance"
     ></codx-label>
-    <div class="table-container border" style="overflow-x: auto">
-      <table class="table">
-        <thead class="thead-light">
-          <tr>
-            <th
-              style="width: 300px !important"
-              style="border-bottom: 1px var(--gray-100) solid !important"
-            ></th>
-            <ng-container *ngFor="let item of lstUsers">
+    <ng-container *ngIf="lstUsers?.length > 0; else noData">
+      <div class="table-container border" style="overflow-x: auto">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
               <th
-                class="w-50px"
+                style="width: 300px !important"
                 style="border-bottom: 1px var(--gray-100) solid !important"
-              >
-                <div class="d-flex justify-content-center">
-                  <codx-imgs
-                    [width]="30"
-                    [objectId]="item?.userID"
-                    [objectName]="item?.userName"
-                    objectType="AD_Users"
-                    [numberImages]="5"
-                    class=""
-                  >
-                  </codx-imgs>
-                </div>
-                <div class="mt-1">{{ item?.userName }}</div>
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody *ngFor="let item of lstTitlePerformance">
-          <tr>
-            <td style="border-bottom: 1px var(--gray-100) solid !important">
-              <span class="fw-bold">{{ item.text }}</span>
-            </td>
-            <ng-container *ngFor="let user of lstUsers">
-              <td
-                *ngIf="findItemUser(item.value, user.lstTitlePerformance)"
-                style="border-bottom: 1px var(--gray-100) solid !important"
-              >
-                <div class="text-gray-800 d-flex justify-content-center">
-                  {{ findItemUser(item.value, user.lstTitlePerformance)?.text }}
-                </div>
+              ></th>
+              <ng-container *ngFor="let item of lstUsers">
+                <th
+                  class="w-50px"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="d-flex justify-content-center">
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="item?.userID"
+                      [objectName]="item?.userName"
+                      objectType="AD_Users"
+                      [numberImages]="1"
+                      class=""
+                    >
+                    </codx-imgs>
+                  </div>
+                  <div class="mt-1">{{ item?.userName }}</div>
+                </th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody *ngFor="let item of lstVllTopSales">
+            <tr>
+              <td style="border-bottom: 1px var(--gray-100) solid !important">
+                <span class="fw-bold">{{ item.text }}</span>
               </td>
-            </ng-container>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <ng-container *ngFor="let user of lstUsers">
+                <td
+                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="text-gray-800 d-flex justify-content-center">
+                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 <!-- END  -->

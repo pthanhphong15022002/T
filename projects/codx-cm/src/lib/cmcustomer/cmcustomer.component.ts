@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
+  AuthStore,
   ButtonModel,
   CacheService,
   DialogModel,
@@ -96,6 +97,8 @@ export class CmCustomerComponent
   queryParams: any;
   status = '';
   leverSetting = 0;
+  user: any;
+  isAdmin: boolean = false;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -104,12 +107,14 @@ export class CmCustomerComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private authstore: AuthStore
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
+    this.user = this.authstore.get();
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.loaded = false;
@@ -169,6 +174,7 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
+    this.checkAdmin();
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -213,6 +219,16 @@ export class CmCustomerComponent
     this.view.dataService.methodDelete = 'DeleteCmAsync';
     this.cmSv.initCache().subscribe((res) => {});
     this.detectorRef.detectChanges();
+  }
+
+  async checkAdmin() {
+    let data = await firstValueFrom(this.cmSv.getAdminRolesByModule());
+    let isAdmin = false;
+    if (data) {
+      let lstId = data.split(';');
+      isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
+    }
+    this.isAdmin = isAdmin || this.user.administrator;
   }
 
   onLoading(e) {
@@ -318,6 +334,7 @@ export class CmCustomerComponent
         this.convertCustomerToLeads(data);
         break;
       case 'CM0101_4':
+      case 'CM0105_4':
         this.popupPermissions(data);
         break;
       default: {
@@ -397,7 +414,14 @@ export class CmCustomerComponent
                 res.disabled = true;
               break;
             case 'CM0101_4':
-              if (!data.assign && !data.allowPermit) res.disabled = true;
+            case 'CM0105_4':
+              if (
+                data?.owner != this.user?.userID &&
+                !data.assign &&
+                !data.allowPermit &&
+                !this.isAdmin
+              )
+                res.disabled = true;
               break;
             default:
               break;
@@ -409,7 +433,13 @@ export class CmCustomerComponent
               res.disabled = false;
               break;
             case 'CM0101_4':
-              if (!data.assign && !data.allowPermit) res.disabled = true;
+              if (
+                data?.owner != this.user?.userID &&
+                !data.assign &&
+                !data.allowPermit &&
+                !this.isAdmin
+              )
+                res.disabled = true;
               break;
             default:
               res.disabled = true;
