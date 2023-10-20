@@ -386,6 +386,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               //dashboard moi
               // this.getDashBoardTargets();
               this.isLoaded = true;
+              this.getDataset('GetDashBoardTargetAsync', null, null, null);
               break;
             // nhom chua co tam
             case 'CMD002':
@@ -428,7 +429,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       case 'CMD001':
         //dashboard moi
         // this.getDashBoardTargets();
-        this.isLoaded = true;
+        method = 'GetDashBoardTargetAsync'
+        this.getDataset(method, null, null, null);
         break;
       // nhom chua co tam
       case 'CMD002':
@@ -845,10 +847,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     //dashboard moi
                     // this.getDashBoardTargets();
                     this.getDataset(
-                      'GetReportSourceAsync',
+                      'GetDashBoardTargetAsync',
                       null,
-                      '@0.Contains(Owner)',
-                      this.user.userID
+                      null,
+                      null
                     );
                     break;
                   // nhom chua co tam
@@ -954,16 +956,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
               case 'CMD002':
-                this.changeMySales(res[0]);
-                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
-                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
               case 'CMD003':
-                this.changeMySales(res[0]);
-                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
-                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
-                break;
-              case 'CMD001':
                 break;
             }
           }
@@ -1018,6 +1012,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = deals.filter((x) => x.status == '3')?.length;
     this.countFail = deals.filter((x) => x.status == '5')?.length;
   }
+
+  //sales target
+
+  //end
 
   //get sales 4 quarter
   getDashBoardTargetSales(lstTargetLines = [], param) {
