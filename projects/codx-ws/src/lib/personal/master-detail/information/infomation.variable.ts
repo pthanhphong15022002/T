@@ -1,5 +1,6 @@
 export var label = 
 {
+    titleSignatures: 'Chữ ký số',
     titleDisplay: 'Giao diện',
     titleGeneralInfor: 'Thông tin chung',
     title2FA: 'Xác thực 2 yếu tố',

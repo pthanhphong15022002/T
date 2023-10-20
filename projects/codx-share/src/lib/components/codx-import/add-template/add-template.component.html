@@ -130,7 +130,7 @@
                                     </td>
                                     <td class="w-100 p-3 d-flex align-items-center">
                                       <!-- <span class="d-block text-truncate">{{data?.mappingTemplate}}</span> -->
-                                        <codx-input field="mappingTemplate" [crrValue]="data?.mappingTemplate" [refValue]="columnsGrid[3]?.referedValue" [refType]="columnsGrid[3]?.referedType" [datatype]="columnsGrid[3]?.controlType" [multiple]="columnsGrid[3]?.multiSelect" style="width: 100%"
+                                        <codx-input field="mappingTemplate" [model]="data" [crrValue]="data?.mappingTemplate" [refValue]="columnsGrid[3]?.referedValue" [refType]="columnsGrid[3]?.referedType" [datatype]="columnsGrid[3]?.controlType" [multiple]="columnsGrid[3]?.multiSelect" style="width: 100%"
                                         (valueChange)="valueChangeMappingTemplate($event , data)"
                                         >
                                         </codx-input>

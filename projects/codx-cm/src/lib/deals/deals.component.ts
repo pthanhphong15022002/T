@@ -77,6 +77,7 @@ export class DealsComponent
   @ViewChild('templateSteps') templateSteps: TemplateRef<any>;
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
   @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
+  @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -128,7 +129,6 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
-
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -362,7 +362,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            ['1', '0','15'].includes(data?.status) ||
+            ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -384,7 +384,7 @@ export class DealsComponent
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0','15'].includes(data.status)
+          ? data.closed || ['1', '0', '15'].includes(data.status)
           : true;
     };
     let isOpened = (eventItem, data) => {
@@ -401,14 +401,14 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2','15'].includes(data.status) ||
+        ? !['1', '2', '15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status)  : true;
+      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -435,25 +435,14 @@ export class DealsComponent
       // Phân quyền
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
-    let isUpload = (eventItem, data) => {
-      // ĐÍnh kèm file, nhập khẩu dữ liệu
-      eventItem.disabled = !data.upload ? true : false;
-    };
-    let isEmail = (eventItem, data) => {
-      // Gửi mail
-      eventItem.disabled = !data.write ? true : false;
-    };
-    let isDownload = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
-      eventItem.disabled = !data.download ? true : false;
-    };
 
     let isDisCRd = (eventItem, data) => {
       // Nhập khẩu dữ liệu
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled =  data.full ||  data?.alloweStatus == '1' ? false: true;
+      eventItem.disabled =
+        data.full || data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -484,10 +473,6 @@ export class DealsComponent
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
-      SYS004: isEmail,
-      SYS002: isDownload,
-      SYS003: isUpload,
-      SYS001: isUpload,
     };
 
     return functionMappings[type];
@@ -1742,7 +1727,9 @@ export class DealsComponent
           case 'ExpectedClosed':
             template = this.templateExpectedClosed;
             break;
-
+          case 'Note':
+            template = this.templateNote;
+            break;
           default:
             break;
         }
@@ -1910,18 +1897,18 @@ export class DealsComponent
     this.statusDefault = data?.statusCodeID;
     this.statusCodecmt = data?.statusCodeCmt;
     var obj = {
-      statusDefault:this.dataSelected?.statusCodeID,
-      statusCodecmt:this.dataSelected?.statusCodeCmt,
-      applyProcess:true,
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: true,
       title: this.titleAction,
       recID: this.dataSelected.recID,
-      valueListStatusCode:this.valueListStatusCode,
-      gridViewSetup:this.gridViewSetup
+      valueListStatusCode: this.valueListStatusCode,
+      gridViewSetup: this.gridViewSetup,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
       '',
-       500,
+      500,
       400,
       '',
       obj,

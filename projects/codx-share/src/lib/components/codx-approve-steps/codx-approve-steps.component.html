@@ -1,5 +1,5 @@
 
-<template>
+
   <div [ngClass]="type == '0'? 'card-body p-0 codx-card-custom' : ''" *ngIf="isAfterRender">
     <div [ngClass]="type == '0'? 'codx-stepper stepper stepper-pills' : ''">
       <!-- Header -->
@@ -82,9 +82,12 @@
                                       <span class="fw-bold"> {{ approver?.stepType ?? item?.stepType | vll : "ES002" :
                                         "text" | async }}</span>
                                     </div>
-                                    <codx-vll [value]="approver?.signatureType ?? item?.signatureType" [name]="'ES001'"
-                                      [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
-                                    </codx-vll>
+                                    <div *ngIf="eSign">
+                                      <codx-vll [value]="approver?.signatureType ?? item?.signatureType" [name]="'ES001'"
+                                        [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+                                      </codx-vll>
+                                    </div>
+                                    
                                   </div>
                                   <codx-temp-full cardCss="card-template p-3"
                                     [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userID"
@@ -99,7 +102,7 @@
                                 </div>
   
                                 <ng-template #footer1 let-data>
-                                  <div class="d-flex flex-column w-100 justify-content-end ps-45px">
+                                  <div class="d-flex flex-column w-100 justify-content-end ps-45px"  *ngIf="eSign">
                                     <div class="d-flex w-80 align-items-center justify-content-between w-100">
                                       <div class="d-flex align-items-center ">
                                         <codx-input type="checkbox" field="allowEditAreas" [label]="lblAllowEditAreas"
@@ -149,11 +152,10 @@
       </div>
     </div>
   </div>
-</template>
 
 
 
-<div class="card-body p-0 codx-card-custom" *ngIf="type == '0' && isAfterRender">
+<!-- <div class="card-body p-0 codx-card-custom" *ngIf="type == '0' && isAfterRender">
   <div class="codx-stepper stepper stepper-pills">
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
@@ -351,4 +353,4 @@
       </div>
     </div>
   </div>
-</ng-container> 
+</ng-container>  -->

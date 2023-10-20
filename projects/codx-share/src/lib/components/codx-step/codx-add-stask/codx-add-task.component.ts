@@ -37,11 +37,11 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
-  @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
   linkQuesiton = 'http://';
+  type: "calendar" | "step" | "activitie";
   typeTask;
   listGroup = [];
   recIdEmail = '';
@@ -75,6 +75,8 @@ export class CodxAddTaskComponent implements OnInit {
   isSaveTimeGroup = true;
   isEditTimeDefault = false;
   isTaskFromStep = true;
+  isShowCbxStep = true;
+  isShowCbxGroup = true;
 
   folderID = '';
   titleName = '';
@@ -137,35 +139,28 @@ export class CodxAddTaskComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.instanceStep = dt?.data?.instanceStep;
+
+    this.type = dt?.data?.type;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.taskType;
-    this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
-    this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
     this.stepsTasks = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
     this.groupTaskID = dt?.data?.groupTaskID;
-    this.titleName = dt?.data?.titleName || '';
-    this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
     this.listInsStep = dt?.data?.listInsStep;
+    this.instanceStep = dt?.data?.instanceStep;
+    this.titleName = dt?.data?.titleName || '';
+    this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
+    this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
+    this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
     this.isTaskFromStep =  undefined ? this.isTaskFromStep : dt?.data?.isTaskFromStep;;
-    this.isSave =
-      dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     // this.isStart = dt?.data?.isStart;
-    this.isStart =
-      !this.instanceStep ||
-      (this.instanceStep &&
-        this.instanceStep?.startDate &&
-        this.instanceStep?.startDate)
-        ? true
-        : false;
+    this.isStart = !this.instanceStep ||(this.instanceStep && this.instanceStep?.startDate && this.instanceStep?.startDate) ? true : false;
     if (dt?.data?.listGroup) {
       // remove group task recID null
       this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
       let index = this.listGroup?.findIndex((group) => !group.recID);
-      if (index >= 0) {
-        this.listGroup?.splice(index, 1);
-      }
+      if (index >= 0) {this.listGroup?.splice(index, 1);}
     } else {
       this.listGroup = JSON.parse(
         JSON.stringify(this.instanceStep?.taskGroups || [])
@@ -190,18 +185,17 @@ export class CodxAddTaskComponent implements OnInit {
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
     this.roles = this.stepsTasks['roles'] || [];
-
-    if (
-      (!this.listInsStep || this.listInsStep?.length <= 0) &&
-      this.instanceStep
-    ) {
-      this.listInsStep = [this.instanceStep];
+    if(this.type == 'activitie' || this.type == 'calendar'){
+      this.isActivitie = true;
+      this.isShowCbxStep = false;
+      this.isShowCbxGroup = false;
+    }
+    if (!this.listInsStep?.length) {
+      this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
     } else {
       this.disableStep = true;
     }
-
-    this.isActivitie = !this.instanceStep && !this.listInsStep ? true : false;
-
+    
     if (!this.stepsTasks?.taskGroupID) {
       this.startDateParent = new Date(
         this.instanceStep?.startDate || new Date()
@@ -275,6 +269,10 @@ export class CodxAddTaskComponent implements OnInit {
           }
         });
     }
+  }
+
+  setDataTask(){
+
   }
 
   setRole<T>(role: T) {
@@ -830,39 +828,40 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
 
-  changeStep(event) {
-    let data = event?.value;
-    if (data) {
-      this.stepsTasks.stepID = data;
-      let stepFind = this.listInsStep?.find((x) => x.recID == data);
-      if (stepFind) {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = stepFind?.taskGroups;
-      } else {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = [];
-      }
-    }
-  }
-
-  changeType(event){
+  changeTypeCM(event){
     console.log(event);
     if(event?.data){
       if(this.typeCM != event?.data){
-        let listDeal = this.inputDeal?.ComponentCurrent?.dataService?.data;
-        if(listDeal){
-          this.inputDeal.ComponentCurrent.dataService.data = [];
-          this.inputDeal.ComponentCurrent.dataService.crrValue = null;
-          this.dataCM = null;
-        }
-        
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
+        // if(this.typeCM == "1"){
+        //   this.isActivitie = true;
+        //   this.isShowCbxStep = false;
+        //   this.isShowCbxGroup = false;
+          
+        // }else if(this.typeCM == "5"){
+        //   this.isActivitie =false;
+        // }
       }
     }
   }
   changeDataCM(event){
     console.log(event?.component?.itemsSelected[0]      );
+    let data =event?.component?.itemsSelected[0];
+    if(data){
+      if(this.typeCM == "1"){
+        this.isActivitie = true;
+        this.isShowCbxStep = false;
+        this.isShowCbxGroup = false;
+        this.stepsTasks.objectID = data?.RecID;
+        this.stepsTasks.objectType = "CM_Customers";
+      }else if(this.typeCM == "5"){
+        this.isActivitie =false;
+        this.getListInstanceStep(data.RefID, true);
+      }else{
+
+      }
+    } 
     this.dataCM = event?.data;
     
   }
@@ -878,7 +877,26 @@ export class CodxAddTaskComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
            this.listInsStep = res;
+           this.isShowCbxStep = true;
+           this.disableStep = true;
           }
         });
     }
+
+  changeStep(event) {
+    let data = event?.value;
+    if (data) {
+      this.stepsTasks.stepID = data;
+      let stepFind = this.listInsStep?.find((x) => x.recID == data);
+      if (stepFind) {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = stepFind?.taskGroups;
+        this.isShowCbxGroup = true;
+      } else {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = [];
+        this.isShowCbxGroup = false;
+      }
+    }
+  }
 }

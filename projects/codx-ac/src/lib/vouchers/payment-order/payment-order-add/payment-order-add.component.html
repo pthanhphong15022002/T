@@ -1,0 +1,293 @@
+<codx-form #formPaymentOrder [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
+    [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" class="ac-dialog">
+</codx-form>
+<!-- Start: Sub toolbar -->
+
+<ng-template #TmpSubToolbar>
+    <div *ngIf="formPaymentOrder" class="w-100">
+        <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+            <div class="d-flex align-items-center me-2">
+                <div style="background-color: var(--primary-dark)"
+                    class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+                    <i *ngIf="formPaymentOrder.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
+                    <i *ngIf="formPaymentOrder.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
+                    <i *ngIf="formPaymentOrder.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
+                </div>
+                <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+                    {{ headerText }}
+                </div>
+                <div class="input-circle input-sm" *ngIf="formPaymentOrder?.formGroup">
+                    <span class="me-2">
+                        <codx-vll [name]="'AC040'" [formModel]="formPaymentOrder.formModel" [field]="'Status'"
+                            [value]="formPaymentOrder.data?.status" [showText]="true" [showBgColor]="true"
+                            class="badge badge-light badge-sm">
+                        </codx-vll>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center me-3">
+                <div class="ms-2">
+                    <div class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
+                        <i class="icon-close icon-18"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- End: Sub toolbar -->
+
+<!-- Start: TmpBody -->
+<ng-template #TmpBody>
+    <!-- Start: Tab General -->
+    <div style="height: 250px !important">
+        <ejs-tab>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-info icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <!-- End: Tab General -->
+
+    <!-- Start: Tab Detail -->
+    <div style="height: calc(100vh - 445px) !important">
+        <ejs-tab #elementTabDetail>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-format_list_numbered icon-18 me-2"></i>
+                            <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
+                                [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <div class="row ac-empty-record"></div>
+    <!-- End: Tab Detail -->
+</ng-template>
+<!-- End: TmpBody -->
+
+<!-- Start: Footer -->
+<ng-template #TmpFooter>
+    <div style="display: grid !important" ngClass="collape"
+        class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formPaymentOrder.data">
+        <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
+                *ngIf="formPaymentOrder.data?.status == '7'" style="border: 1px solid" type="button"
+                class="btn btn-md btn-light-danger me-2 rounded-15"
+                (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
+                <div class="d-flex align-items-center">
+                    <i class="icon-cancel icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+                </div>
+            </button>
+            <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
+                style="border: 1px solid var(--primary-dark) !important" type="button"
+                class="btn btn-md btn-light-primary me-2 rounded-15"
+                (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()" (click)="onSaveVoucher('saveadd')">
+                <div class="d-flex align-items-center">
+                    <i class="icon-add_to_photos icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+                </div>
+            </button>
+            <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+                class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+                (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
+                <div class="d-flex align-items-center">
+                    <i class="icon-save_alt icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+                </div>
+            </button>
+        </div>
+        <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
+            [objectID]="formPaymentOrder.data?.recID" [funcID]="dialog.formModel.funcID"
+            [TabControl]="tabInfo"></codx-tabs>
+    </div>
+</ng-template>
+<!-- End: Footer -->
+
+<!-- Start: TmpTabGeneral -->
+<ng-template #TmpTabGeneral>
+    <ng-container *ngIf="formPaymentOrder.formGroup">
+        <div class="p-3 tab-basic ac-form-master">
+            <div class="row">
+                <div class="col-7 ac-left">
+                    <div style="max-width: 750px !important">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <codx-label #elelblObjectID style="white-space: nowrap !important"
+                                        fiedName="ObjectID" [formModel]="formPaymentOrder.formModel"
+                                        default="Đối tượng">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #eleCbxObjectID [Group]="formPaymentOrder.formGroup"
+                                            [formModel]="formPaymentOrder.formModel" field="objectID" (valueChange)="valueChangeMaster($event)">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="TotalAmt"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup"
+                                            [formModel]="formPaymentOrder.formModel" field="totalAmt"
+                                            [min]="0"></codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="PmtMethodID"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup" field="pmtMethodID"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #eleCbxReasonID [Group]="formPaymentOrder.formGroup"
+                                            field="reasonID" [formModel]="formPaymentOrder.formModel" (valueChange)="valueChangeMaster($event)">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-0">
+                                    <codx-label style="white-space: nowrap !important" fiedName="Memo"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #tMemo [Group]="formPaymentOrder.formGroup" field="memo"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 ac-right d-flex justify-content-end">
+                    <div class="d-flex flex-column mw-350px w-100">
+                        <div class="row justify-content-end">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup" field="voucherDate"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup" field="postedDate"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup" field="currencyID"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
+                                        [formModel]="formPaymentOrder.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formPaymentOrder.formGroup" field="voucherNo"
+                                            [formModel]="formPaymentOrder.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+<!-- End: TmpTabGeneral -->
+
+<!-- Start: Grid PaymentOrder -->
+<ng-template #TmpTabLine>
+    <div id="gridcash" class="tabadvance-content header-table-ac position-relative">
+        <codx-gridview-v2 #eleGridAdvancePayment class="tabLine" [showEmptyRecord]="false" gridLines="Both"
+            [autoFitColumns]="false" [formName]="fmPaymentOrder.formName" rowNoField="rowNo" [templateMore]="templateMore"
+            (eventAction)="onActionGridPaymentOrder($event)" (actionCompleted)="onActionGridPaymentOrder($event)"
+            [gridViewName]="fmPaymentOrder.gridViewName" [entityName]="fmPaymentOrder.entityName" predicates="TransID=@0"
+            [dataValues]="formPaymentOrder?.data?.recID" service="AC" [editOnClick]="true"></codx-gridview-v2>
+        <div #btnRef class="btn-addline">
+            <div class="d-flex align-items-center">
+                <div>
+                    <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
+                        class="btn btn-sm btn-light-primary rounded-15 btnAddCash" (keydown.enter)="
+                onAddLine(); $event.preventDefault()
+                " (click)="onAddLine()">
+                        <i class="icon-playlist_add icon-16"></i>
+                        <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- End: Grid PaymentOrder -->
+
+<ng-template #templateMore let-data>
+    <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+    type="view"></codx-mfunc>
+</ng-template>
