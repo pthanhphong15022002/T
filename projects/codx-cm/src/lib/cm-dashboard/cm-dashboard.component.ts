@@ -106,7 +106,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   colorReasonSuscess = '';
   colorReasonFails = '';
+
   isMax = true;
+  tabActiveMaxMin = 'btnMax';
+
   maxOwners = [];
   minOwners = [];
 
@@ -748,17 +751,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     });
 
-    // this.cache.valueList('CRM057').subscribe((vl) => {
-    //   if (vl) {
-    //     this.vllData = vl.datas;
-    //     this.filterData = this.vllData.map((x) => {
-    //       return {
-    //         title: x.text,
-    //         path: 'cm/dashboard/CMD01?reportID=' + x.value,
-    //       };
-    //     });
-    //   }
-    // });
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
         this.vllStatus = grv['Status'].referedValue;
@@ -862,7 +854,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               }
 
               this.isLoaded = false;
-
+              this.pageTitle.setBreadcrumbs([]);
               if (!this.reportItem) {
                 if (this.reportID) {
                   let idx = this.arrReport.findIndex(
@@ -1099,7 +1091,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let quantity = businesLine[key].length;
         let obj = {
           businessLineID: key,
-          businessLineName: businesLine[key][0].businessLineName ?? key,
+          businessLineName: businesLine[key][0].industriesName ?? key,
           quantity: quantity,
           percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
           color: color,
@@ -1120,10 +1112,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           industryID: key,
           industryName:
             listIndustries[key][0].industriesName ??
-            key ??
-            this.user.language.toUpperCase() == 'VN'
+            (key != 'null'
+              ? key
+              : this.user.language.toUpperCase() == 'VN'
               ? 'Chưa có'
-              : 'Not yet',
+              : 'Not yet'),
           quantity: quantity,
           percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
           color: color,
@@ -1176,6 +1169,25 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       obj.chart2.pie2.element.classList.contains('d-none') &&
         obj.chart2.pie2.element.classList.remove('d-none');
       obj.chart2.pie2.refresh();
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  changeMaxMin(ele: any, obj: any) {
+    if (ele.id == this.tabActiveMaxMin) return;
+    this.tabActiveMaxMin = ele.id;
+    if (ele.id == 'btnMax') {
+      !obj.chart2.minView.classList.contains('d-none') &&
+        obj.chart2.minView.classList.add('d-none');
+      obj.chart1.maxView.classList.contains('d-none') &&
+        obj.chart1.maxView.classList.remove('d-none');
+    }
+    if (ele.id == 'btnMin') {
+      !obj.chart1.maxView.classList.contains('d-none') &&
+        obj.chart1.maxView.classList.add('d-none');
+
+      obj.chart2.minView.classList.contains('d-none') &&
+        obj.chart2.minView.classList.remove('d-none');
     }
     this.detectorRef.detectChanges();
   }

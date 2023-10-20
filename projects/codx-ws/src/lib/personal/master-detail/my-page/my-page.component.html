@@ -96,6 +96,10 @@
                     gridViewName="grvNoteBooks"
                     [predicate]="predicateNoteBook"
                     [dataValue]="dataValueNoteBook"
+                    [service]="'WP'"
+                    [assemblyName]="'WP'"
+                    [className]="'NoteBooksBusiness'"
+                    [method]="'GetListNoteBookAsync'"
                     [itemTemplate]="tmpNoteBook"
                     type="cardView"
                     formName="NoteBooks"
@@ -130,7 +134,8 @@
                     [dataValue]="dataValueNoteBook" 
                     [itemTemplate]="tmpStorage" 
                     type="cardView" 
-                    [funcId]="'MWP009'">
+                    [funcId]="'MWP009'"
+                >
                 </codx-listview>
             </div>
         </div>
@@ -139,10 +144,14 @@
 
  <ng-template #tmpNoteBook let-data>
     <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="openDetailPage(data?.recID)">
-        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'" [isDefaulImg]="true" [imgSource]="'./assets/themes/ws/default/img/NoteBooks.svg'"></codx-img>
         <div class="d-flex flex-column ms-2 w-100">
             <span class="w-190px">{{data.title}}</span>
-            <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
+            <div class="d-flex align-items-center fs-8 text-gray-500">
+                <span>{{data?.unbounds?.count}} Items</span>
+                <span class="mx-1">|</span>
+                <span>{{data.createdOn | date:'dd/MM/yyyy' }}</span>
+            </div>
         </div>
         <div class="has-action-menu w-100">
             <codx-mfunc 
@@ -158,7 +167,7 @@
 
  <ng-template #tmpStorage let-data>
     <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="detailStorage(data?.recID)">
-        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'" [isDefaulImg]="true" [imgSource]="'./assets/themes/ws/default/img/Archive.svg'"></codx-img>
         <div class="d-flex flex-column ms-2 w-100">
             <span class="w-190px">{{data.title}}</span>
             <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
