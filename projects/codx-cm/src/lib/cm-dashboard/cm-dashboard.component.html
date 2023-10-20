@@ -176,6 +176,7 @@
     <div class="w-100">
       <ejs-treemap
         #pie1
+        [style]="'width:100% !important'"
         class="w-100"
         [dataSource]="dataSourceBussnessLine ?? []"
         weightValuePath="quantity"
@@ -194,7 +195,7 @@
 
       <ejs-treemap
         #pie2
-        class="w-100"
+        class="w-100 d-none"
         [dataSource]="dataSourceIndustry ?? []"
         weightValuePath="quantity"
         rangeColorValuePath="quantity"
@@ -310,71 +311,96 @@
       default="Top nhân viên có nhiều cơ hội thành công nhất"
     ></codx-label>
     <div class="mt-5" style="overflow-y: auto; max-height: 85%">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isMax ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMax')"
-        >
-          <codx-label
-            name="btnMax"
-            formModel=""
-            default="Cao nhất"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="!isMax ? 'button-selected' : 'button-no-selected'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMin')"
-        >
-          <codx-label
-            name="btnMin"
-            formModel=""
-            default="Thấp nhất"
-          ></codx-label>
+      <div class="d-flex justify-content-center h-10">
+        <div id="group2" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btnMax"
+            name="alignMaxMin"
+            #eleMax
+            checked
+            (change)="
+              changeMaxMin(eleMax, {
+                chart1: { maxView },
+                chart2: { minView }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btnMax">
+            <codx-label
+              name="btnMax"
+              formModel=""
+              default="Cao nhất"
+            ></codx-label>
+          </label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btnMin"
+            name="alignMaxMin"
+            #eleMin
+            (change)="
+              changeMaxMin(eleMin, {
+                chart1: { maxView },
+                chart2: { minView }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btnMin">
+            <codx-label
+              name="btnMin"
+              formModel=""
+              default="Thấp nhất"
+            ></codx-label>
+          </label>
         </div>
       </div>
     </div>
 
     <div class="mt-3">
-      <ng-container *ngIf="isMax">
-        <ng-container *ngIf="maxOwners?.length > 0; else noData">
+      <!-- <ng-container *ngIf="isMax">
+        <ng-container *ngIf="maxOwners?.length > 0; else noData"> -->
+      <div #maxView class="">
+        <div
+          *ngFor="let ownerCount of maxOwners; let i = index"
+          class="d-flex align-items-center justify-content-end cursor-pointer"
+          [title]="ownerCount.objectName"
+        >
+          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
           <div
-            *ngFor="let ownerCount of maxOwners; let i = index"
-            class="d-flex align-items-center justify-content-end cursor-pointer"
-            [title]="ownerCount.objectName"
+            class="owners-top"
+            style="color: #000000"
+            [style.background-color]="ownerCount?.color"
+            [style.width]="ownerCount.percentage + '%'"
           >
-            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
-            <div
-              class="owners-top"
-              style="color: #000000"
-              [style.background-color]="ownerCount?.color"
-              [style.width]="ownerCount.percentage + '%'"
-            >
-              <span class="">{{ ownerCount.objectName }}</span>
-            </div>
+            <span class="">{{ ownerCount.objectName }}</span>
           </div>
-        </ng-container>
-      </ng-container>
+        </div>
+      </div>
+      <!-- </ng-container> -->
+      <!-- </ng-container>
       <ng-container *ngIf="!isMax">
-        <ng-container *ngIf="minOwners?.length > 0; else noData">
+        <ng-container *ngIf="minOwners?.length > 0; else noData"> -->
+      <div #minView class="d-none">
+        <div
+          *ngFor="let ownerCount of minOwners; let i = index"
+          class="d-flex align-items-center justify-content-end cursor-pointer"
+          [title]="ownerCount.objectName"
+        >
+          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
           <div
-            *ngFor="let ownerCount of minOwners; let i = index"
-            class="d-flex align-items-center justify-content-end cursor-pointer"
-            [title]="ownerCount.objectName"
+            class="owners-top"
+            style="color: #000000; background-color: aqua"
+            [style.background-color]="ownerCount?.color"
+            [style.width]="ownerCount.percentage + '%'"
           >
-            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
-            <div
-              class="owners-top"
-              style="color: #000000; background-color: aqua"
-              [style.background-color]="ownerCount?.color"
-              [style.width]="ownerCount.percentage + '%'"
-            >
-              <span class="">{{ ownerCount.objectName }}</span>
-            </div>
+            <span class="">{{ ownerCount.objectName }}</span>
           </div>
-        </ng-container>
-      </ng-container>
+        </div>
+      </div>
+      <!-- </ng-container>
+      </ng-container> -->
     </div>
   </div>
 </ng-template>
@@ -804,17 +830,20 @@
         <ejs-bulletchart
           valueField="value"
           targetField="target"
-          title="2023"
-          width="1000px"
-          height="80%"
+          [title]="titleQ0"
+          width="800px"
+          height="70%"
           [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
+          [maximum]="maximumBulletQ0"
+          [interval]="intervalQ0"
+          [dataSource]="dataBulletQ0s"
         >
           <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            <e-bullet-range
+              [end]="dealValueWonQ0"
+              color="##FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
@@ -823,17 +852,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q1"
-            width="500px"
-            height="80%"
+            [title]="titleQ1"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ1"
+            [interval]="intervalQ1"
+            [dataSource]="dataBulletQ1s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ1"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -841,17 +873,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q2"
-            width="500px"
-            height="80%"
+            [title]="titleQ2"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ2"
+            [interval]="intervalQ2"
+            [dataSource]="dataBulletQ2s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ2"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -861,17 +896,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q3"
-            width="500"
-            height="80%"
+            [title]="titleQ3"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ3"
+            [interval]="intervalQ3"
+            [dataSource]="dataBulletQ3s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ3"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>
@@ -879,17 +917,20 @@
           <ejs-bulletchart
             valueField="value"
             targetField="target"
-            title="Q4"
-            width="500"
-            height="80%"
+            [title]="titleQ4"
+            width="400px"
+            height="70%"
             [minimum]="minimumBullet"
-            [maximum]="maximumBullet"
-            [interval]="interval"
-            [dataSource]="dataBullet"
+            [maximum]="maximumBulletQ4"
+            [interval]="intervalQ4"
+            [dataSource]="dataBulletQ4s"
           >
             <e-bullet-range-collection>
-              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+              <e-bullet-range
+                [end]="dealValueWonQ4"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
             </e-bullet-range-collection>
           </ejs-bulletchart>
         </div>

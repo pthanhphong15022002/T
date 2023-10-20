@@ -1,3 +1,5 @@
+import { FuncID } from './../../../../../codx-ep/src/lib/models/enum/enum';
+import { EntityName } from './../../../../../codx-ac/src/lib/settings/items/utils/unknown.util';
 import { map } from 'rxjs';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
@@ -38,6 +40,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxFormDynamicComponent,
   CodxGridviewComponent,
   CodxGridviewV2Component,
   CRUDService,
@@ -50,6 +53,7 @@ import {
   LayoutService,
   NotificationsService,
   PageTitleService,
+  RequestModel,
   SidebarModel,
   SortModel,
   UIComponent,
@@ -4153,6 +4157,43 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  //   editEmployeeTimeCardInfo(actionHeaderText) {
+  //     var dataService = new DataService(this.inject);
+  //     dataService.dataSelected = this.infoPersonal;
+  //     // (dataService as CRUDService).edit(dataService.dataSelected).subscribe(() => {
+  //       let option = new SidebarModel();
+  //       option.FormModel = this.eInfoFormModel;
+  //       option.DataService = dataService;
+  //       option.Width = '550px';
+  //       let dialogEdit = this.callfunc.openSide(
+  //         CodxFormDynamicComponent,
+  //         {
+  //           formModel: option.FormModel,
+  //           data: this.infoPersonal,
+  //           function: null,
+  //           dataService: dataService,
+  //           // titleMore: 'Thêm',
+  //           // funcID: this.eTimeCardFuncID,
+  //           // headerText:
+  //           //   actionHeaderText + ' ' + this.getFormHeader2(this.eTimeCardFuncID, this.lstFuncJobInfo),
+  //         },
+  //         option
+  //       );
+
+  //       dialogEdit.closed.subscribe((item) => {
+  //         debugger
+  //       })
+  //     // })
+
+  //   // dialogEdit.closed.subscribe((res) => {
+  //   //   if (!res?.event) this.view.dataService.clear();
+  //   //   else {
+  //   //     this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+  //   //     this.df.detectChanges();
+  //   //   }
+  //   // });
+  // }
+
   editEmployeeTimeCardInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
@@ -4250,6 +4291,83 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eExperienceFunc?.formName,this.eExperienceFunc?.gridViewName,this.eExperienceFunc?.entityName);
+  //   request.funcID = this.eExperienceFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eExperienceFormModel.funcID,
+  //       this.eExperienceFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEExperience(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eExperienceFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         let temp3 = res.event.save.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.save.data.fromDate = temp3ISO;
+  //         this.lstExperiences.push(res.event.save.data);
+
+  //       } else if (actionType == 'edit') {
+  //         let temp3 = res.event.update.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.update.data.fromDate = temp3ISO;
+  //         // res.event.update.data.fromDate = res.event.update.data.fromDate.toISOString();
+  //         let index = this.lstExperiences.indexOf(data);
+  //         this.lstExperiences[index] = res.event.update.data;
+  //       }
+  //       let sortedList = this.hrService.sortAscByProperty(
+  //         this.lstExperiences,
+  //         'fromDate'
+  //       );
+  //       this.lstExperiences = sortedList;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+  // Hàm handle không sử dụng form động, bây giờ chỉ có chức năng xem chi tiết
   handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.FormModel = this.eExperienceFormModel;

@@ -106,7 +106,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   colorReasonSuscess = '';
   colorReasonFails = '';
+
   isMax = true;
+  tabActiveMaxMin = 'btnMax';
+
   maxOwners = [];
   minOwners = [];
 
@@ -264,10 +267,42 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   valueFormat: any;
 
   //bulletchart
+  //Year
   minimumBullet: number = 0;
-  maximumBullet: number = 600;
-  interval: number = 100;
-  dataBullet: Object[] = [{ value: 270, target: 250 }];
+  maximumBulletQ0: number = 1000;
+  titleQ0 = '';
+  intervalQ0: number = 100;
+  dataBulletQ0s = [];
+  dealValueWonQ0: string = '0';
+  targetQ0: string = '0';
+  //Q1
+  maximumBulletQ1: number = 600;
+  titleQ1 = '';
+  intervalQ1: number = 100;
+  dataBulletQ1s: Object[] = [];
+  dealValueWonQ1: string = '0';
+  targetQ1: string = '0';
+  //Q2
+  maximumBulletQ2: number = 600;
+  titleQ2 = '';
+  intervalQ2: number = 100;
+  dataBulletQ2s = [];
+  dealValueWonQ2: string = '0';
+  targetQ2: string = '0';
+  //Q3
+  maximumBulletQ3: number = 600;
+  titleQ3 = '';
+  intervalQ3: number = 100;
+  dataBulletQ3s = [];
+  dealValueWonQ3: string = '0';
+  targetQ3: string = '0';
+  //Q4
+  maximumBulletQ4: number = 600;
+  titleQ4 = '';
+  intervalQ4: number = 100;
+  dataBulletQ4s = [];
+  dealValueWonQ4: string = '0';
+  targetQ4: string = '0';
   lstQuarters = [];
   //end
 
@@ -716,17 +751,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     });
 
-    // this.cache.valueList('CRM057').subscribe((vl) => {
-    //   if (vl) {
-    //     this.vllData = vl.datas;
-    //     this.filterData = this.vllData.map((x) => {
-    //       return {
-    //         title: x.text,
-    //         path: 'cm/dashboard/CMD01?reportID=' + x.value,
-    //       };
-    //     });
-    //   }
-    // });
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
         this.vllStatus = grv['Status'].referedValue;
@@ -830,7 +854,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               }
 
               this.isLoaded = false;
-
+              this.pageTitle.setBreadcrumbs([]);
               if (!this.reportItem) {
                 if (this.reportID) {
                   let idx = this.arrReport.findIndex(
@@ -1067,7 +1091,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let quantity = businesLine[key].length;
         let obj = {
           businessLineID: key,
-          businessLineName: businesLine[key][0].businessLineName ?? key,
+          businessLineName: businesLine[key][0].industriesName ?? key,
           quantity: quantity,
           percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
           color: color,
@@ -1088,10 +1112,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           industryID: key,
           industryName:
             listIndustries[key][0].industriesName ??
-            key ??
-            this.user.language.toUpperCase() == 'VN'
+            (key != 'null'
+              ? key
+              : this.user.language.toUpperCase() == 'VN'
               ? 'Chưa có'
-              : 'Not yet',
+              : 'Not yet'),
           quantity: quantity,
           percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
           color: color,
@@ -1144,6 +1169,25 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       obj.chart2.pie2.element.classList.contains('d-none') &&
         obj.chart2.pie2.element.classList.remove('d-none');
       obj.chart2.pie2.refresh();
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  changeMaxMin(ele: any, obj: any) {
+    if (ele.id == this.tabActiveMaxMin) return;
+    this.tabActiveMaxMin = ele.id;
+    if (ele.id == 'btnMax') {
+      !obj.chart2.minView.classList.contains('d-none') &&
+        obj.chart2.minView.classList.add('d-none');
+      obj.chart1.maxView.classList.contains('d-none') &&
+        obj.chart1.maxView.classList.remove('d-none');
+    }
+    if (ele.id == 'btnMin') {
+      !obj.chart1.maxView.classList.contains('d-none') &&
+        obj.chart1.maxView.classList.add('d-none');
+
+      obj.chart2.minView.classList.contains('d-none') &&
+        obj.chart2.minView.classList.remove('d-none');
     }
     this.detectorRef.detectChanges();
   }
@@ -1216,11 +1260,62 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-
   // get sales target
-  getDashBoardSales(deals, lstTargetLines, lstQuarters, param = null){
-    this.lstQuarters = lstQuarters;
+  getDashBoardSales(deals, targetLines, lstQuarters, param = null) {
+    if (lstQuarters != null) {
+      let now = new Date();
+      for (var i = 0; i < lstQuarters.length; i++) {
+        let data = lstQuarters[i];
+        const lstBusinessIds = targetLines
+          ?.map((x) => x.businessLineID)
+          .filter((value, index, self) => self.indexOf(value) === index);
+        let dealWons = deals.filter(
+          (y) =>
+            lstBusinessIds.some((q) => q == y.businessLineID) &&
+            y.status == '3' &&
+            y.actualEnd != null &&
+            new Date(y.actualEnd)?.getFullYear() == now.getFullYear()
+        );
 
+        let target = 0;
+        let dealValueWon = 0;
+        let targetLineQuarters = targetLines?.filter(
+          (x) => new Date(x.startDate)?.getFullYear() == now.getFullYear()
+        );
+        if (parseInt(data.quarter) > 0) {
+          const { min, max } = this.getQuarterMonthRange(
+            parseInt(data.quarter)
+          );
+          targetLineQuarters = targetLineQuarters.filter(
+            (x) =>
+              new Date(x.startDate)?.getMonth() + 1 >= min &&
+              new Date(x.startDate)?.getMonth() + 1 <= max
+          );
+          dealWons = dealWons.filter(
+            (x) =>
+              new Date(x.actualEnd)?.getMonth() + 1 >= min &&
+              new Date(x.actualEnd)?.getMonth() + 1 <= max
+          );
+        }
+        target = Math.round(
+          targetLineQuarters.reduce(
+            (sum, x) => sum + (x.target / this.exchangeRate) * x.exchangeRate,
+            0
+          )
+        );
+        dealValueWon = Math.round(
+          dealWons.reduce(
+            (sum, x) =>
+              sum + (x.dealValue / this.exchangeRate) * x.exchangeRate,
+            0
+          )
+        );
+        lstQuarters[i].target = target;
+        lstQuarters[i].dealValueWon = dealValueWon;
+        this.showValueToChartBullets(lstQuarters[i]);
+      }
+      this.lstQuarters = lstQuarters;
+    }
   }
   //end
 
@@ -1263,6 +1358,64 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
 
     return { min, max };
+  }
+
+  //Set chart bullets
+  showValueToChartBullets(data) {
+    let obj = {};
+    if (data) {
+      let i = data?.quarter.toString();
+      this[`dataBulletQ${i}s`] = [];
+      this[`titleQ${i}`] = data?.nameQuarter;
+      let maxinum =
+        parseFloat(data?.target) + (parseFloat(data?.target) * 30) / 100;
+      this[`maximumBulletQ${i}`] = Math.round(this.formatMaxValue(maxinum));
+      this[`intervalQ${i}`] = Math.round(
+        this.calculateInterval(this[`maximumBulletQ${i}`])
+      );
+      var tmp = {};
+      tmp['value'] = Math.round(
+        this.formatMaxValue(parseFloat(data.dealValueWon))
+      );
+      tmp['target'] = Math.round(this.formatMaxValue(parseFloat(data?.target)));
+
+      this[`dataBulletQ${i}s`].push(tmp);
+      this[`dealValueWonQ${i}`] = Math.round(this.formatMaxValue(
+        parseFloat(data?.dealValueWon)
+      )).toString();
+      this[`targetQ${i}`] = Math.round(
+        this.formatMaxValue(
+          parseFloat(data?.target) +
+            (parseFloat(data?.target) * 30) / 100 -
+            parseFloat(data.dealValueWon)
+        )
+      ).toString();
+    }
+    console.log('title: ', this.titleQ0);
+    console.log('maximumBulletQ0: ', this.maximumBulletQ0);
+    console.log('dataBulletQ0s: ', this.dataBulletQ0s);
+    console.log('dealValueWonQ0: ', this.dealValueWonQ0);
+    console.log('targetQ0: ', this.targetQ0);
+  }
+
+  formatMaxValue(value: number) {
+    if (value >= 1000000) {
+      return value / 1000000;
+    } else if (value >= 1000) {
+      return value / 1000;
+    } else {
+      return value;
+    }
+  }
+
+  calculateInterval(value: number): number {
+    if (value >= 100) {
+      return value / 10;
+    } else if (value >= 10) {
+      return value;
+    } else {
+      return 1;
+    }
   }
   //end
 }
