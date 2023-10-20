@@ -358,6 +358,7 @@ export class StepService {
   }
 
   async addTask(
+    type,
     action,
     titleName,
     taskData,
@@ -380,6 +381,7 @@ export class StepService {
     task['dependRule'] = '0';
     task['isTaskDefault'] = false;
     let taskOutput = await this.openPopupTask(
+      type,
       action,
       titleName,
       taskType,
@@ -395,6 +397,7 @@ export class StepService {
   }
 
   async openPopupTask(
+    type,
     action,
     titleName,
     taskType,
@@ -407,6 +410,7 @@ export class StepService {
     location
   ) {
     let dataInput = {
+      type,
       action,
       titleName: titleName,
       taskType: taskType,

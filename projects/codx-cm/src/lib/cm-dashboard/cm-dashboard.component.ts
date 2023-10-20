@@ -27,6 +27,8 @@ import {
   IBulletLoadedEventArgs,
   IPointRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
+import { firstValueFrom } from 'rxjs';
+import { CodxCmService } from '../codx-cm.service';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -252,8 +254,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //business line or linh vuc hoac dong
-  isBussinessLine = false;
-
+  isBussinessLine = true;
+  tabActiveBusIns: string = 'btBussinessLine';
   //status or
   isStatus = false;
 
@@ -269,181 +271,37 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //accumulation chart
-  public piedata: Object[] = [];
-  public datalabelAc: Object = {
+  piedata: Object[] = [];
+  datalabelAc: Object = {
     visible: true,
     position: 'Inside',
     enableRotation: false,
     connectorStyle: { type: 'Curve', length: '10%' },
     font: { color: 'white', fontWeight: '600' },
   };
-  public startAngle: number = 0;
-  public explodeIndex: number = 2;
-  public endAngle: number = 360;
-  public legendSettings: Object = {
+  startAngle: number = 0;
+  explodeIndex: number = 2;
+  endAngle: number = 360;
+  legendSettings: Object = {
     visible: true,
   };
-
+  vllQuaters = [];
   //end
 
   //top sales performance
   lstUsers = [
-    {
-      userID: 'ADMIN',
-      userName: 'Lê Phạm Hoài Thương',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'U-0646',
-      userName: 'Nguyễn Thị Bích Vân',
-      lstTitlePerformance: [
-        { value: '1', text: '666' },
-        { value: '2', text: '777' },
-        { value: '3', text: '645000000' },
-        { value: '4', text: '13300000' },
-        { value: '5', text: '131 ngày' },
-      ],
-    },
-    //   {
-    //     userID: 'MINHDE',
-    //     userName: 'Huỳnh Minh Đệ',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '11111' },
-    //       { value: '2', text: '124444' },
-    //       { value: '3', text: '4332000000' },
-    //       { value: '4', text: '143300000' },
-    //       { value: '5', text: '7 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'U-0892',
-    //     userName: 'Trần Thị Thùy Nhiên',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'NTTDUNG',
-    //     userName: 'Nguyễn Thị Thanh Dung',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'NTLOI',
-    //     userName: 'Nguyễn Thị Lợi',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'ANHQUOC',
-    //     userName: 'Lê Anh Quốc',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
+    // {
+    //   userID: 'ADMIN',
+    //   userName: 'Lê Phạm Hoài Thương',
+    //   lstTitlePerformance: [
+    //     { value: '1', text: '124' },
+    //     { value: '2', text: '124' },
+    //     { value: '3', text: '4000000' },
+    //     { value: '4', text: '100000' },
+    //     { value: '5', text: '4 ngày' },
+    //   ],
+    // },
   ];
-
   lstTitlePerformance = [
     { value: '1', text: 'Khách hàng tiềm năng đã tạo' },
     { value: '2', text: 'Cơ hội đã tạo' },
@@ -451,7 +309,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     { value: '4', text: 'Doanh tu đã mất' },
     { value: '5', text: 'Trung bình chu kỳ bán hàng' },
   ];
-
+  currencyID: any;
+  exchangeRate: number;
   //new
   arrReport: any = [];
   viewCategory: any;
@@ -462,6 +321,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   countProcessing = 0;
   countSuccess = 0;
   countFail = 0;
+  dataSet: any[] = [];
 
   //end
   constructor(
@@ -469,7 +329,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     private layout: LayoutComponent,
     private auth: AuthService,
     private pageTitle: PageTitleService,
-    private authstore: AuthStore
+    private authstore: AuthStore,
+    private cmSv: CodxCmService
   ) {
     super(inject);
     this.user = this.authstore.get();
@@ -481,7 +342,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals1 = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":10,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":20,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":30,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":40,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":34,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":50,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":9,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":18,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":27,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":36,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":48,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals1 = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.21519762020964252_layout","data":"8"},{"panelId":"91.21519762020964252_layout","data":"9"},{"panelId":"101.21519762020964252_layout","data":"10"}]'
@@ -493,7 +354,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.datasDeals2 = JSON.parse(
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
-
   }
 
   ngAfterViewInit() {
@@ -527,6 +387,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               //dashboard moi
               // this.getDashBoardTargets();
               this.isLoaded = true;
+              this.getDataset('GetDashBoardTargetAsync', null, null, null);
               break;
             // nhom chua co tam
             case 'CMD002':
@@ -569,7 +430,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       case 'CMD001':
         //dashboard moi
         // this.getDashBoardTargets();
-        this.isLoaded = true;
+        method = 'GetDashBoardTargetAsync'
+        this.getDataset(method, null, null, null);
         break;
       // nhom chua co tam
       case 'CMD002':
@@ -577,11 +439,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
-        // let lenght = dataValues.split(';')?.length ?? 0;
+        // let length = dataValues.split(';')?.length ?? 0;
 
         // let predicate =
-        //   lenght == 0 ? 'Owner =@' + lenght : ' and ' + 'Owner =@' + lenght;
-        // let dataValue = lenght == 0 ? this.user.userID : ';' + this.user.userID;
+        //   length == 0 ? 'Owner =@' + length : ' and ' + 'Owner =@' + length;
+        // let dataValue = length == 0 ? this.user.userID : ';' + this.user.userID;
 
         // predicates += predicate;
         // dataValues += dataValue;
@@ -814,6 +676,32 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
       }
     });
+    this.cache.valueList('CRM046').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllQuaters = ele?.datas;
+      }
+    });
+
+    this.cache.viewSettingValues('CMParameters').subscribe(async (param) => {
+      if (param?.length > 0) {
+        let dataParam = param.filter(
+          (x) => x.category == '1' && !x.transType
+        )[0];
+        if (dataParam) {
+          let paramDefault = JSON.parse(dataParam.dataValue);
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          let exchangeRateCurrent = await firstValueFrom(
+            this.cmSv.getExchangeRate(this.currencyID, new Date())
+          );
+          if (exchangeRateCurrent?.exchRate > 0) {
+            this.exchangeRate = exchangeRateCurrent?.exchRate;
+          } else {
+            this.exchangeRate = 1;
+            this.currencyID = 'VND';
+          }
+        }
+      }
+    });
 
     // this.cache.valueList('CRM057').subscribe((vl) => {
     //   if (vl) {
@@ -959,7 +847,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   case 'CMD001':
                     //dashboard moi
                     // this.getDashBoardTargets();
-                    this.isLoaded = true;
+                    this.getDataset(
+                      'GetDashBoardTargetAsync',
+                      null,
+                      null,
+                      null
+                    );
                     break;
                   // nhom chua co tam
                   case 'CMD002':
@@ -1047,7 +940,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.resetData();
     if (method) {
       this.subscription = this.api
-        .execSv(
+        .execSv<any[]>(
           'rptcm',
           'Codx.RptBusiness.CM',
           'SalesDataSetBusiness',
@@ -1057,10 +950,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             //xu ly nv
+
             switch (this.funcID) {
               case 'CMD001':
+                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
+                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
               case 'CMD002':
+                this.changeMySales(res);
                 break;
               case 'CMD003':
                 this.changeMySales(res);
@@ -1069,7 +966,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 break;
             }
           }
-          this.isLoaded = true;
+          setTimeout(() => {
+            this.isLoaded = true;
+          }, 500);
         });
 
       this.detectorRef.detectChanges();
@@ -1091,8 +990,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = 0;
     this.countFail = 0;
     this.countProcessing = 0;
+    this.dataSet = [];
   }
-
+  // ---------------------------FUNC ----------------------------//
   //sort lấy top
   sortByProp(arr: any[], property: string, dir: string = 'asc') {
     if (arr.length && property) {
@@ -1109,18 +1009,227 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return [];
   }
 
+  random_bg_color() {
+    let x = Math.floor(Math.random() * 230);
+    let y = Math.floor(Math.random() * 255);
+    let z = Math.floor(Math.random() * 255);
+    return 'rgb(' + x + ',' + y + ',' + z + ')';
+  }
+
+  groupBy(arr: any, key: any) {
+    return arr.reduce(function (r: any, a: any) {
+      r[a[key]] = r[a[key]] || [];
+      r[a[key]].push(a);
+      return r;
+    }, Object.create(null));
+  }
+  // ---------------------------FUNC ----------------------------//
+
   // --------------------------------------------//
-  //Get DATA Ca nhan
+  //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
-  changeMySales(deals) {
-    this.countNew = deals.filter(
+  changeMySales(dataSet) {
+    if (dataSet?.lenght == 0) return;
+    this.countNew = dataSet.filter(
       (x) => x.status == '1' || x.status == '0'
     )?.length;
-    this.countProcessing = deals.filter((x) => x.status == '2')?.length;
-    this.countSuccess = deals.filter((x) => x.status == '3')?.length;
-    this.countFail = deals.filter((x) => x.status == '5')?.length;
+    this.countProcessing = dataSet.filter((x) => x.status == '2')?.length;
+    let dataSuccess = dataSet.filter((x) => x.status == '3');
+    this.countSuccess = dataSuccess?.length;
+    let dataFails = dataSet.filter((x) => x.status == '5');
+    this.countFail = dataFails?.length;
+
+    this.getBusinessLine(dataSet);
+    this.getIndustries(dataSet);
+    this.getOwnerTop(dataSuccess);
   }
+
+  getBusinessLine(dataSet) {
+    let businesLine = this.groupBy(dataSet, 'businessLineID');
+    if (businesLine) {
+      for (let key in businesLine) {
+        let color = this.random_bg_color();
+
+        let quantity = businesLine[key].length;
+        let obj = {
+          businessLineID: key,
+          businessLineName: businesLine[key][0].businessLineName ?? key,
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        this.dataSourceBussnessLine.push(obj);
+        this.palette.push(color);
+      }
+    }
+  }
+
+  getIndustries(dataSet) {
+    let listIndustries = this.groupBy(dataSet, 'industries');
+    if (listIndustries) {
+      for (let key in listIndustries) {
+        let color = this.random_bg_color();
+        let quantity = listIndustries[key].length;
+        let obj = {
+          industryID: key,
+          industryName:
+            listIndustries[key][0].industriesName ??
+            key ??
+            this.user.language.toUpperCase() == 'VN'
+              ? 'Chưa có'
+              : 'Not yet',
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        this.dataSourceIndustry.push(obj);
+        this.paletteIndustry.push(color);
+      }
+    }
+  }
+
+  getOwnerTop(dataSet) {
+    let listOwner = this.groupBy(dataSet, 'owner');
+    if (listOwner) {
+      let owner = [];
+      for (let key in listOwner) {
+        let color = this.random_bg_color();
+        let quantity = listOwner[key].length;
+        let obj = {
+          objectID: key,
+          objectName: listOwner[key][0].ownerName ?? key,
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        owner.push(obj);
+      }
+      this.maxOwners = owner.sort((a, b) => {
+        return a.quantity - b.quantity;
+      });
+      this.minOwners = owner.sort((a, b) => {
+        return b.quantity - a.quantity;
+      });
+    }
+  }
+
+  changeBusIns(ele: any, obj: any) {
+    if (ele.id == this.tabActiveBusIns) return;
+    this.tabActiveBusIns = ele.id;
+    if (ele.id == 'btBussinessLine' && Object.keys(obj).length) {
+      !obj.chart2.pie2.element.classList.contains('d-none') &&
+        obj.chart2.pie2.element.classList.add('d-none');
+      obj.chart1.pie1.element.classList.contains('d-none') &&
+        obj.chart1.pie1.element.classList.remove('d-none');
+      obj.chart1.pie1.refresh();
+    }
+    if (ele.id == 'btIndustries' && Object.keys(obj).length) {
+      !obj.chart1.pie1.element.classList.contains('d-none') &&
+        obj.chart1.pie1.element.classList.add('d-none');
+
+      obj.chart2.pie2.element.classList.contains('d-none') &&
+        obj.chart2.pie2.element.classList.remove('d-none');
+      obj.chart2.pie2.refresh();
+    }
+    this.detectorRef.detectChanges();
+  }
+
   // --------------------------------------------//
   //End Ca nhan
   // --------------------------------------------//
+
+  // --------------------------------------------//
+  // DASHBOAD SALES TAGET                     //
+  // --------------------------------------------//
+  //get sales 4 quarter
+  getDashBoardTargetSales(lstTargetLines = [], param) {
+    let lstPiaData = [];
+    const currencyID = this.currencyID;
+    const exchRate = this.exchangeRate;
+    if (lstTargetLines != null && lstTargetLines.length > 0) {
+      let now = new Date();
+      if (param) {
+        // làm sau
+      }
+      let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
+      let sumTarget = 0;
+      for (let i = 0; i < 4; i++) {
+        const { min, max } = this.getQuarterMonthRange(quarter);
+        let year = now.getFullYear();
+        var tmp = {};
+        if (quarter === 1) {
+          quarter = 4;
+          year--;
+        } else {
+          quarter--;
+        }
+
+        const targetLineQuarters = lstTargetLines.filter(
+          (x) =>
+            new Date(x.startDate)?.getFullYear() === year &&
+            new Date(x.startDate)?.getMonth() + 1 >= min &&
+            new Date(x.startDate)?.getMonth() + 1 <= max
+        );
+
+        tmp['year'] = year;
+        tmp['quarter'] = quarter;
+        let target = targetLineQuarters.reduce(
+          (acc, x) =>
+            acc +
+            (currencyID !== x.currencyID
+              ? (x.target / exchRate) * x.exchangeRate
+              : x.target),
+          0
+        );
+        tmp['text'] = Math.round(target * 100) / 100;
+        sumTarget += tmp['text'];
+        const first = this.vllQuaters?.find(
+          (x) => x.value === quarter.toString()
+        );
+        if (first) {
+          tmp['x'] = `${first.text}/${year}`;
+        }
+        tmp['y'] = 0;
+
+        lstPiaData.push(tmp);
+      }
+      lstPiaData.forEach((item) => {
+        item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
+      });
+    }
+    return lstPiaData;
+  }
+
+  getQuarterMonthRange(quarter: number): { min: number; max: number } {
+    let min = 1;
+    let max = 1;
+
+    switch (quarter) {
+      case 1:
+        min = 1;
+        max = 3;
+        break;
+      case 2:
+        min = 4;
+        max = 6;
+        break;
+      case 3:
+        min = 7;
+        max = 9;
+        break;
+      case 4:
+        min = 10;
+        max = 12;
+        break;
+    }
+
+    return { min, max };
+  }
+  //end
+
+  //get top sales
+  getTopSalesDashBoards(lstUsers = [], param) {
+    return lstUsers;
+  }
+  //end
 }
