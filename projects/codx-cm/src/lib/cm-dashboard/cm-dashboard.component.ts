@@ -845,12 +845,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   case 'CMD001':
                     //dashboard moi
                     // this.getDashBoardTargets();
-                    this.getDataset(
-                      'GetReportSourceAsync',
-                      null,
-                      '@0.Contains(Owner)',
-                      this.user.userID
-                    );
+                    // this.getDataset(
+                    //   'GetReportSourceAsync',
+                    //   null,
+                    //   '@0.Contains(Owner)',
+                    //   this.user.userID
+                    // );
                     break;
                   // nhom chua co tam
                   case 'CMD002':
