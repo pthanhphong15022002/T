@@ -264,10 +264,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   valueFormat: any;
 
   //bulletchart
-  public minimumBullet: number = 0;
-  public maximumBullet: number = 600;
-  public interval: number = 100;
-  public dataBullet: Object[] = [{ value: 270, target: 250 }];
+  minimumBullet: number = 0;
+  maximumBullet: number = 600;
+  interval: number = 100;
+  dataBullet: Object[] = [{ value: 270, target: 250 }];
+  lstQuarters = [];
   //end
 
   //accumulation chart
@@ -289,26 +290,34 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //top sales performance
-  lstUsers = [
-    // {
-    //   userID: 'ADMIN',
-    //   userName: 'Lê Phạm Hoài Thương',
-    //   lstTitlePerformance: [
-    //     { value: '1', text: '124' },
-    //     { value: '2', text: '124' },
-    //     { value: '3', text: '4000000' },
-    //     { value: '4', text: '100000' },
-    //     { value: '5', text: '4 ngày' },
-    //   ],
-    // },
-  ];
-  lstTitlePerformance = [
-    { value: '1', text: 'Khách hàng tiềm năng đã tạo' },
-    { value: '2', text: 'Cơ hội đã tạo' },
-    { value: '3', text: 'Doanh thu đạt được' },
-    { value: '4', text: 'Doanh tu đã mất' },
-    { value: '5', text: 'Trung bình chu kỳ bán hàng' },
-  ];
+  lstUsers: {
+    userID: string;
+    userName: string;
+    lstVllTopSales: {
+      value: string;
+      text: string;
+      count: string;
+      isAsc: boolean;
+    }[];
+  }[];
+  // {
+  //   userID: 'ADMIN',
+  //   userName: 'Lê Phạm Hoài Thương',
+  //   lstTitlePerformance: [
+  //     { value: '1', text: '124' },
+  //     { value: '2', text: '124' },
+  //     { value: '3', text: '4000000' },
+  //     { value: '4', text: '100000' },
+  //     { value: '5', text: '4 ngày' },
+  //   ],
+  // },
+
+  lstVllTopSales: {
+    value: string;
+    text: string;
+    count: string;
+    isAsc: boolean;
+  }[];
   currencyID: any;
   exchangeRate: number;
   //new
@@ -430,7 +439,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       case 'CMD001':
         //dashboard moi
         // this.getDashBoardTargets();
-        method = 'GetDashBoardTargetAsync'
+        method = 'GetDashBoardTargetAsync';
         this.getDataset(method, null, null, null);
         break;
       // nhom chua co tam
@@ -681,7 +690,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.vllQuaters = ele?.datas;
       }
     });
-
+    this.cache.valueList('CRM068').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.lstVllTopSales = ele?.datas;
+      }
+    });
     this.cache.viewSettingValues('CMParameters').subscribe(async (param) => {
       if (param?.length > 0) {
         let dataParam = param.filter(
@@ -953,7 +966,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
             switch (this.funcID) {
               case 'CMD001':
-                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
+                this.getDashBoardTargetSales(res[1], parameters);
+                this.getDashBoardSales(res[0], res[1], res[3], parameters);
                 this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
               case 'CMD002':
@@ -1141,7 +1155,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // --------------------------------------------//
   // DASHBOAD SALES TAGET                     //
   // --------------------------------------------//
-  //get sales 4 quarter
+
+  //get sales last 4 quarter
   getDashBoardTargetSales(lstTargetLines = [], param) {
     let lstPiaData = [];
     const currencyID = this.currencyID;
@@ -1163,7 +1178,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         } else {
           quarter--;
         }
-
         const targetLineQuarters = lstTargetLines.filter(
           (x) =>
             new Date(x.startDate)?.getFullYear() === year &&
@@ -1197,8 +1211,33 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
       });
     }
-    return lstPiaData;
+    this.piedata = lstPiaData.sort((a, b) => {
+      return a.year - b.year;
+    });
   }
+
+
+  // get sales target
+  getDashBoardSales(deals, lstTargetLines, lstQuarters, param = null){
+    this.lstQuarters = lstQuarters;
+
+  }
+  //end
+
+  //get top sales
+  getTopSalesDashBoards(lstUsers = [], param) {
+    let list = [];
+    if (lstUsers?.length > 0) {
+      lstUsers.forEach((item) => {
+        var tmp = {};
+        tmp = item;
+        tmp['lstVllTopSales'] = this.lstVllTopSales;
+        list.push(tmp);
+      });
+    }
+    return list;
+  }
+  //end
 
   getQuarterMonthRange(quarter: number): { min: number; max: number } {
     let min = 1;
@@ -1224,12 +1263,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
 
     return { min, max };
-  }
-  //end
-
-  //get top sales
-  getTopSalesDashBoards(lstUsers = [], param) {
-    return lstUsers;
   }
   //end
 }
