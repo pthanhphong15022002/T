@@ -1009,8 +1009,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   random_bg_color() {
     let x = Math.floor(Math.random() * 230);
-    let y = Math.floor(Math.random() * 256);
-    let z = Math.floor(Math.random() * 256);
+    let y = Math.floor(Math.random() * 255);
+    let z = Math.floor(Math.random() * 255);
     return 'rgb(' + x + ',' + y + ',' + z + ')';
   }
 
@@ -1047,6 +1047,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (businesLine) {
       for (let key in businesLine) {
         let color = this.random_bg_color();
+
         let quantity = businesLine[key].length;
         let obj = {
           businessLineID: key,
@@ -1056,6 +1057,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           color: color,
         };
         this.dataSourceBussnessLine.push(obj);
+        this.palette.push(color);
       }
     }
   }
@@ -1079,6 +1081,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           color: color,
         };
         this.dataSourceIndustry.push(obj);
+        this.paletteIndustry.push(color);
       }
     }
   }
