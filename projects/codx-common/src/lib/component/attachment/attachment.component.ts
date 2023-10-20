@@ -787,7 +787,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         );
                       } else {
                         this.notificationsService.notify(
-                          'Đăng ký tenant không thành công'
+                          'Không tìm thấy thông tin tenant'
                         );
                         return [];
                       }
@@ -846,7 +846,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     );
                   } else {
                     this.notificationsService.notify(
-                      'Đăng ký tenant không thành công'
+                      'Không tìm thấy thông tin tenant'
                     );
                     return [];
                   }
@@ -1001,7 +1001,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (typeof regs == 'object' && 'Data' in regs && regs?.Data?.AppId)
         await this.onMultiSaveAfterTenant();
       else {
-        this.notificationsService.notify('Đăng ký tenant không thành công');
+        this.notificationsService.notify('Không tìm thấy thông tin tenant');
         this.closeBtnUp = false;
       }
     }

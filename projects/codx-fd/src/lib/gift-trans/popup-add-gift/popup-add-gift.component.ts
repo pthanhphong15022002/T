@@ -136,13 +136,12 @@ export class PopupAddGiftComponent implements OnInit {
           this.form.patchValue({ receiver: this.userReciver });
         }
         break;
-
-      case 'transType3':
-        this.giftTrans.TransType = "3";
-        break;
-
       case 'transType4':
-        this.giftTrans.TransType = "4";
+        if(data){
+          this.giftTrans.TransType = "4";
+        } else {
+          this.giftTrans.TransType = "3";
+        }
         break;
 
       case 'itemID':

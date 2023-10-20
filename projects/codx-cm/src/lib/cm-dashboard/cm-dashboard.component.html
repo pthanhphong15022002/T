@@ -825,31 +825,13 @@
       gridViewName="grvCMMyDashboard"
       default="Sales targets"
     ></codx-label>
-    <div class="w-100 d-flex justify-content-center">
-      <ejs-bulletchart
-        valueField="value"
-        targetField="target"
-        title="2023"
-        width="1000px"
-        height="80%"
-        [minimum]="minimumBullet"
-        [maximum]="maximumBullet"
-        [interval]="interval"
-        [dataSource]="dataBullet"
-      >
-        <e-bullet-range-collection>
-          <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-          <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-        </e-bullet-range-collection>
-      </ejs-bulletchart>
-    </div>
-    <div class="row">
-      <div class="col-6 d-flex justify-content-center">
+    <ng-container *ngIf="lstQuarters?.length > 0; else noData">
+      <div class="w-100 d-flex justify-content-center">
         <ejs-bulletchart
           valueField="value"
           targetField="target"
-          title="Q1"
-          width="500px"
+          title="2023"
+          width="1000px"
           height="80%"
           [minimum]="minimumBullet"
           [maximum]="maximumBullet"
@@ -862,63 +844,83 @@
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q2"
-          width="500px"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q1"
+            width="500px"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q2"
+            width="500px"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q3"
-          width="500"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q3"
+            width="500"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            title="Q4"
+            width="500"
+            height="80%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBullet"
+            [interval]="interval"
+            [dataSource]="dataBullet"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
+              <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
       </div>
-      <div class="col-6 d-flex justify-content-center">
-        <ejs-bulletchart
-          valueField="value"
-          targetField="target"
-          title="Q4"
-          width="500"
-          height="80%"
-          [minimum]="minimumBullet"
-          [maximum]="maximumBullet"
-          [interval]="interval"
-          [dataSource]="dataBullet"
-        >
-          <e-bullet-range-collection>
-            <e-bullet-range end="400" color="#ebebeb"></e-bullet-range>
-            <e-bullet-range end="600" color="#d8d8d8"></e-bullet-range>
-          </e-bullet-range-collection>
-        </ejs-bulletchart>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -977,54 +979,56 @@
       gridViewName="grvCMMyDashboard"
       default="Top sales performance"
     ></codx-label>
-    <div class="table-container border" style="overflow-x: auto">
-      <table class="table">
-        <thead class="thead-light">
-          <tr>
-            <th
-              style="width: 300px !important"
-              style="border-bottom: 1px var(--gray-100) solid !important"
-            ></th>
-            <ng-container *ngFor="let item of lstUsers">
+    <ng-container *ngIf="lstUsers?.length > 0; else noData">
+      <div class="table-container border" style="overflow-x: auto">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
               <th
-                class="w-50px"
+                style="width: 300px !important"
                 style="border-bottom: 1px var(--gray-100) solid !important"
-              >
-                <div class="d-flex justify-content-center">
-                  <codx-imgs
-                    [width]="30"
-                    [objectId]="item?.userID"
-                    [objectName]="item?.userName"
-                    objectType="AD_Users"
-                    [numberImages]="5"
-                    class=""
-                  >
-                  </codx-imgs>
-                </div>
-                <div class="mt-1">{{ item?.userName }}</div>
-              </th>
-            </ng-container>
-          </tr>
-        </thead>
-        <tbody *ngFor="let item of lstTitlePerformance">
-          <tr>
-            <td style="border-bottom: 1px var(--gray-100) solid !important">
-              <span class="fw-bold">{{ item.text }}</span>
-            </td>
-            <ng-container *ngFor="let user of lstUsers">
-              <td
-                *ngIf="findItemUser(item.value, user.lstTitlePerformance)"
-                style="border-bottom: 1px var(--gray-100) solid !important"
-              >
-                <div class="text-gray-800 d-flex justify-content-center">
-                  {{ findItemUser(item.value, user.lstTitlePerformance)?.text }}
-                </div>
+              ></th>
+              <ng-container *ngFor="let item of lstUsers">
+                <th
+                  class="w-50px"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="d-flex justify-content-center">
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="item?.userID"
+                      [objectName]="item?.userName"
+                      objectType="AD_Users"
+                      [numberImages]="1"
+                      class=""
+                    >
+                    </codx-imgs>
+                  </div>
+                  <div class="mt-1">{{ item?.userName }}</div>
+                </th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody *ngFor="let item of lstVllTopSales">
+            <tr>
+              <td style="border-bottom: 1px var(--gray-100) solid !important">
+                <span class="fw-bold">{{ item.text }}</span>
               </td>
-            </ng-container>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <ng-container *ngFor="let user of lstUsers">
+                <td
+                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="text-gray-800 d-flex justify-content-center">
+                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 <!-- END  -->

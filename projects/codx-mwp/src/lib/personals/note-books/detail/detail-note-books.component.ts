@@ -109,7 +109,6 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    debugger
     // this.columnsGrid = [
     //   {
     //     field: 'title',

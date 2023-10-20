@@ -26,9 +26,13 @@ codx-view-list-detail .codx-detail-footer {
             padding: 0 13px 0 0 !important;
         }
     }
+   
 }
 .ws-body{
     height: calc(100vh - 55px);
+    .toolbar {
+        padding: 0.2rem!important;
+    }
     co-calendar>codx-views>.container-fluid
     {
         padding: 15px 15px 0px 15px !important;
@@ -43,4 +47,5 @@ codx-view-list-detail .codx-detail-footer {
         margin-top:0!important;
         margin-bottom:0!important;
     }
+
 }
