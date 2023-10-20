@@ -956,14 +956,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
                 break;
               case 'CMD002':
-                this.changeMySales(res[0]);
-                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
-                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
+                this.changeMySales(res);
                 break;
               case 'CMD003':
-                this.changeMySales(res[0]);
-                this.piedata = this.getDashBoardTargetSales(res[1], parameters);
-                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
+                this.changeMySales(res);
                 break;
               case 'CMD001':
                 break;
