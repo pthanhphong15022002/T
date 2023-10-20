@@ -1,6 +1,6 @@
 <codx-layout-add *ngIf="isAfterRender" [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel"
   [subHeader]="subHeader" [dialog]="dialog" [openMore]="true"
-  [tabContent]="this.hideTabQuery? [tabInfo0, tabEmail, tabAnother] : [tabInfo0, tabQuery, tabEmail, tabAnother]"
+  [tabContent]="this.hideTabQuery? [tabInfo00, tabEmail, tabAnother] : [tabInfo00, tabQuery, tabEmail, tabAnother]"
   (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false" [data]="data"
   (tabChange)="buttonClick($event)">
 </codx-layout-add>
@@ -61,11 +61,11 @@
                 [formModel]="formModel"></codx-label></th>
             <th scope="col"><codx-label name="lblStepType" default="Hành động" [formModel]="formModel"></codx-label>
             </th>
-            <th scope="col"><codx-label name="lblSignatureType" default="Loại chữ ký" [formModel]="formModel"></codx-label>
+            <th *ngIf="eSign" scope="col"><codx-label name="lblSignatureType" default="Loại chữ ký" [formModel]="formModel"></codx-label>
             </th>
-            <th scope="col"><codx-label name="lblAllowEditAreas" default="Chỉnh sửa vùng ký"
+            <th *ngIf="eSign" scope="col"><codx-label name="lblAllowEditAreas" default="Chỉnh sửa vùng ký"
                 [formModel]="formModel"></codx-label></th>
-            <th scope="col"><codx-label name="lblC" default="Xác nhận xem" [formModel]="formModel"></codx-label>
+            <th *ngIf="eSign" scope="col"><codx-label name="lblC" default="Xác nhận xem" [formModel]="formModel"></codx-label>
             </th>
           </tr>
         </thead>
@@ -115,21 +115,21 @@
                 <span class="fw-bold"> {{ item?.stepType !=null ? (item?.stepType| vll : "ES002" : "text" | async) : (data?.stepType | vll : "ES002" : "text" | async) }}</span>
               </div>
             </td>
-            <td class="">            
+            <td  *ngIf="eSign" class="">            
               <div class=" w-100 d-flex align-items-center justify-content-center">
                 <codx-vll [value]=" item?.signatureType ?? data?.signatureType" [name]="'ES001'" [showIcon]="true" [showText]="true"
                   [showBgColor]="true" class="badge">
                 </codx-vll>
               </div>
             </td>
-            <td class="">
+            <td  *ngIf="eSign" class="">
               <div class=" w-100 d-flex align-items-center justify-content-center">
                 <codx-input type="checkbox" field="allowEditAreas" 
                   [checked]="item?.allowEditAreas ? true : false" [disabled]="true">
                 </codx-input>
               </div>
             </td>
-            <td class="">
+            <td  *ngIf="eSign" class="">
               <div class=" w-100 d-flex align-items-center justify-content-center">
                 <codx-input type="checkbox" field="confirmControl" 
                   [checked]="item?.confirmControl =='1' ? true : false" [disabled]="true">
@@ -193,7 +193,7 @@
               </codx-input>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-6" *ngIf="eSign">
             <div class="form-group">
               <codx-label fiedName="SignatureType" [formModel]="formModel">
               </codx-label>
@@ -203,13 +203,13 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <codx-input type="checkbox" field="allowEditAreas" [label]="lblAllowEditAreas" [checked]="true"
+        <div class="form-group" *ngIf="eSign">
+          <codx-input type="checkbox" field="allowEditAreas" [label]="lblAllowEditAreas" [checked]="newAppr?.allowEditAreas"
             (valueChange)="valueApprChange($event)">
           </codx-input>
         </div>
-        <div class="form-group">
-          <codx-input type="checkbox" field="confirmControl" [label]="lblConfirmControl" [checked]="false"
+        <div class="form-group" *ngIf="eSign">
+          <codx-input type="checkbox" field="confirmControl" [label]="lblConfirmControl" [checked]="newAppr?.confirmControl"
             (valueChange)="valueApprChange($event)">
           </codx-input>
         </div>
@@ -452,7 +452,7 @@
       </codx-input>
     </div>
   </div>
-  <!-- <div class="d-flex flex-column mb-4">
+  <div class="d-flex flex-column mb-4">
     <div class="fw-bold fs-6 d-block mb-2">
       <codx-label class="text-primary" name="lblTitleComment" default="Đóng góp ý kiến" [formModel]="formModel">
       </codx-label>
@@ -485,7 +485,7 @@
         </codx-input>
       </div>
     </div>
-  </div> -->
+  </div>
   <!-- <div class="row">
     <div class="form-group col-7">
       <codx-label fiedName="AlterApprovers" [formModel]="formModel">
