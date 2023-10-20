@@ -1,0 +1,72 @@
+.ws-ejstab.e-tab
+{
+    .e-toolbar-items
+    {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: white;
+        padding: 8px 20px;
+    }
+    .e-tab-header:not(.e-vertical)::before
+    {
+        border-width: 0 !important;
+    }
+    .e-toolbar-item.e-active
+    {
+        border:none !important;
+        img
+        {
+            filter: invert(20%) sepia(71%) saturate(3517%) hue-rotate(202deg) brightness(95%) contrast(101%);
+        }
+        codx-label
+        {
+            color: #005DC7 !important;
+        }
+       
+    }
+    #newfeed
+    {
+        height: calc(100vh - 223px);
+        overflow: auto;
+    }
+}
+.h-100vh
+{
+    height: 100vh;
+}
+.ws-notebook 
+{
+    .container-fluid
+    {
+        padding: 0 !important;
+        .card-item
+        {
+            width: 100%;
+        }
+    }
+    .has-action-menu codx-mfunc
+    {
+        top: -16px;
+        right: -26px;
+        .dropdown
+        {
+            height: 25px !important;
+        }
+        .icon-16
+        {
+            font-size: 14px !important;
+        }
+    }
+}
+.ws-notebook-icon
+{
+    i:hover
+    {
+        color: var(--text-primary);
+    }
+}
+.w-190px
+{
+    width: 190px;
+}

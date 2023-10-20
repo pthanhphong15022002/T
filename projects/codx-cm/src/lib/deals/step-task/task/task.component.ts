@@ -39,7 +39,7 @@ import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/co
   styleUrls: ['./task.component.scss'],
 })
 export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
-  @Input() customerID: string;
+  @Input() objectID: string;
   @Input() isPause = false;
   @Input() isAdmin = false;
   @Input() entityName = '';
@@ -113,7 +113,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   getActivities(): void {
     this.api
       .exec<any>('DP', 'ActivitiesBusiness', 'GetActivitiesAsync', [
-        this.customerID,
+        this.objectID,
       ])
       .subscribe((res) => {
         if (res?.length > 0) {
@@ -299,7 +299,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         });
       }
       this.activitie.roles = roles;
-      this.activitie.objectID = this.customerID;
+      this.activitie.objectID = this.objectID;
       this.activitie.objectType = this.entityName;
       this.api
         .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
@@ -323,7 +323,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     let taskOutput = await this.openPopupTask('edit', taskEdit);
     if (taskOutput?.event) {
       if (!taskOutput?.event?.objectID) {
-        task['objectID'] = this.customerID;
+        task['objectID'] = this.objectID;
       }
       this.api
         .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
@@ -392,7 +392,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         });
       }
       this.activitie.roles = roles;
-      this.activitie.objectID = this.customerID;
+      this.activitie.objectID = this.objectID;
       this.api
         .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
@@ -427,6 +427,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
+      type:"activitie",
       action,
       titleName: this.titleName,
       taskType: this.taskType,
@@ -639,7 +640,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     task.refID = data?.recID;
     task.refType = 'DP_Instances_Steps_Tasks';
     task.dueDate = data?.endDate;
-    task.sessionID = this.customerID;
+    task.sessionID = this.objectID;
     let dataReferences = [
       {
         recIDReferences: data.recID,
