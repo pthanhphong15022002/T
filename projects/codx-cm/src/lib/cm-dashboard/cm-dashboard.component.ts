@@ -1216,11 +1216,27 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-
   // get sales target
-  getDashBoardSales(deals, lstTargetLines, lstQuarters, param = null){
-    this.lstQuarters = lstQuarters;
-
+  getDashBoardSales(deals, targetLines, lstQuarters, param = null) {
+    if (lstQuarters != null) {
+      let now = new Date();
+      for (var i = 0; lstQuarters.length > 0; i++) {
+        let data = lstQuarters[i];
+        const lstBusinessIds = targetLines
+          ?.map((x) => x.businessLineID)
+          .filter((value, index, self) => self.indexOf(value) === index);
+        let dealWons = deals
+          .Where(
+            (y) =>
+              lstBusinessIds.Contains(y.businessLineID) &&
+              y.status == '3' &&
+              y.actualEnd != null &&
+              new Date(y.actualEnd)?.getFullYear() == now.getFullYear()
+          )
+          .ToList();
+          let targetLineQuarters = targetLines?.Where(x => new Date(x.startDate)?.getFullYear() == now.getFullYear()).ToList();
+      }
+    }
   }
   //end
 
