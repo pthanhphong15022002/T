@@ -828,21 +828,6 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
 
-  changeStep(event) {
-    let data = event?.value;
-    if (data) {
-      this.stepsTasks.stepID = data;
-      let stepFind = this.listInsStep?.find((x) => x.recID == data);
-      if (stepFind) {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = stepFind?.taskGroups;
-      } else {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = [];
-      }
-    }
-  }
-
   changeTypeCM(event){
     console.log(event);
     if(event?.data){
@@ -893,7 +878,25 @@ export class CodxAddTaskComponent implements OnInit {
           if (res) {
            this.listInsStep = res;
            this.isShowCbxStep = true;
+           this.disableStep = true;
           }
         });
     }
+
+  changeStep(event) {
+    let data = event?.value;
+    if (data) {
+      this.stepsTasks.stepID = data;
+      let stepFind = this.listInsStep?.find((x) => x.recID == data);
+      if (stepFind) {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = stepFind?.taskGroups;
+        this.isShowCbxGroup = true;
+      } else {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = [];
+        this.isShowCbxGroup = false;
+      }
+    }
+  }
 }

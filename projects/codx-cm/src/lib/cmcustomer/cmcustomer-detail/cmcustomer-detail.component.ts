@@ -47,6 +47,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() entityName = '';
   @Input() gridViewSetup: any;
   @Input() lstCustGroups = [];
+  @Input() isAdmin: boolean = false;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -70,7 +71,6 @@ export class CmCustomerDetailComponent implements OnInit {
   loaded: boolean;
   addressNameCM: any;
   category = '';
-  isAdmin = false;
   user: any;
   isShow = false;
   constructor(
@@ -88,7 +88,7 @@ export class CmCustomerDetailComponent implements OnInit {
   async ngOnInit() {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
-    this.checkAdmin();
+    // this.checkAdmin();
     this.getFormModelAddress();
   }
 
