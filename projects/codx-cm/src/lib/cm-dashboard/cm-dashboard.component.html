@@ -17,6 +17,7 @@
         [datas]="datasDeals1"
         [isEditMode]="isEditMode"
         [cellSpacing]="[10, 10]"
+        [columns]="50"
       ></codx-dashboard>
     </ng-container>
 
@@ -176,7 +177,6 @@
     <div class="w-100">
       <ejs-treemap
         #pie1
-        [style]="'width:100% !important'"
         class="w-100"
         [dataSource]="dataSourceBussnessLine ?? []"
         weightValuePath="quantity"
@@ -367,7 +367,9 @@
           class="d-flex align-items-center justify-content-end cursor-pointer"
           [title]="ownerCount.objectName"
         >
-          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
+          </div>
           <div
             class="owners-top"
             style="color: #000000"
@@ -388,7 +390,9 @@
           class="d-flex align-items-center justify-content-end cursor-pointer"
           [title]="ownerCount.objectName"
         >
-          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
+          </div>
           <div
             class="owners-top"
             style="color: #000000; background-color: aqua"

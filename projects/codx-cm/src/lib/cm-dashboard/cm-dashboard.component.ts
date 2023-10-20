@@ -354,7 +354,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals1 = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":9,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":18,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":27,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":36,"sizeX":9,"sizeY":3,"minSizeX":9,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":48,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":10,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":20,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":30,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":40,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":34,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":50,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals1 = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.21519762020964252_layout","data":"8"},{"panelId":"91.21519762020964252_layout","data":"9"},{"panelId":"101.21519762020964252_layout","data":"10"}]'
@@ -1228,11 +1228,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-
   // get sales target
-  getDashBoardSales(deals, lstTargetLines, lstQuarters, param = null){
+  getDashBoardSales(deals, lstTargetLines, lstQuarters, param = null) {
     this.lstQuarters = lstQuarters;
-
   }
   //end
 
