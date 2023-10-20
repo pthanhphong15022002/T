@@ -1,11 +1,21 @@
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import { UIComponent, ViewsComponent } from 'codx-core';
+import { DomSanitizer } from '@angular/platform-browser';
+import {
+  ApiHttpService,
+  FormModel,
+  UIComponent,
+  ViewsComponent,
+} from 'codx-core';
+import moment from 'moment';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-view-detail-ot',
@@ -15,14 +25,28 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 export class ViewDetailOtComponent {
   tabControl: TabModel[] = [];
 
-  constructor(private df: ChangeDetectorRef) {}
-
   @Input() recID;
   @Input() view: ViewsComponent;
   @Input() itemDetail: any;
   @Input() grvSetup;
   @Input() hideMF = false;
   @Input() hideFooter = false;
+  @Input() formModel?: FormModel;
+  @Input() showMoreFunc?: any;
+  @Input() itemSelected?: any;
+
+  @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() changeMF = new EventEmitter<any>();
+
+  formName = 'TimeKeepingRequestOT';
+  entityName = 'PR_TimeKeepingRequest';
+  gridViewName = 'grvTimeKeepingRequestOT';
+  private destroy$ = new Subject<void>();
+
+  constructor(private df: ChangeDetectorRef, 
+    private api: ApiHttpService,
+    public sanitizer: DomSanitizer
+    ) {}
 
   ngOnInit(): void {
     this.tabControl = [
@@ -32,8 +56,6 @@ export class ViewDetailOtComponent {
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
 
-    console.log(this.recID);
-
     // this.hrService.getFormModel('HRT03a1').then((res) => {
     //   if (res) {
     //     this.formModelEmployee = res;
@@ -41,8 +63,14 @@ export class ViewDetailOtComponent {
     // });
   }
 
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit', this.recID);
+  }
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
+    console.log('ngOnChanges', this.recID);
+    // if (this.recID && !this.itemSelected) {
+    //   this.loadData();
+    // }
   }
 
   // changeDataMF(e: any, data: any) {
@@ -64,7 +92,25 @@ export class ViewDetailOtComponent {
   //   }
   // }
 
-  // clickMF(evt: any, data: any = null) {
-  //   this.clickMFunction.emit({ event: evt, data: data });
-  // }
+  loadData() {
+    this.api
+      .exec<any>('PR', 'TimeKeepingRequest', 'GetByRecIDAsync', this.recID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+  clickMF(evt: any, data: any = null) {
+    this.clickMoreFunction.emit({ event: evt, data: data });
+  }
+  changeDataMF(e, data) {
+    this.changeMF.emit({ e: e, data: data });
+  }
+  getHour(data) {
+    if (data) {
+      return moment(data).format('HH : mm');
+    } else {
+      return null;
+    }
+  }
 }

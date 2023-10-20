@@ -18,6 +18,7 @@ import { ViewDetailOtComponent } from './view-detail-over-time/view-detail-ot.co
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
+import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-over-time',
@@ -42,7 +43,8 @@ export class OverTimeComponent extends UIComponent {
   runModeCheck: boolean = false;
   flagChangeMF: boolean = false;
   recID = null;
-
+  itemSelected: any;
+  registerForm = ['1', '2'];
   //View schedule
   requestSchedule: ResourceModel;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
@@ -55,15 +57,17 @@ export class OverTimeComponent extends UIComponent {
     subject: { name: 'employeeID' },
     startTime: { name: 'fromDate' },
     endTime: { name: 'toDate' },
-    resourceId: { name: 'recID' }, //trung voi idField của resourceModel
+    resourceId: { name: 'employeeID' }, //trung voi idField của resourceModel
   };
   resourceModel = {
     Name: 'employeeID',
     Field: 'employeeID',
-    IdField: 'recID',
+    IdField: 'employeeID',
     TextField: 'employeeID',
     Title: 'employeeID',
   };
+  lblAdd: any;
+  status: any;
 
   //#endregion
 
@@ -138,6 +142,11 @@ export class OverTimeComponent extends UIComponent {
     this.buttons = {
       id: 'btnAdd',
     };
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
     this.getUserLogin();
     this.getSchedule();
 
@@ -161,6 +170,7 @@ export class OverTimeComponent extends UIComponent {
     this.modelResource.className = 'TimeKeepingRequest';
     this.modelResource.service = 'PR';
     this.modelResource.method = 'GetEmployeeAsync';
+    // this.modelResource.method = 'GetEmployeeResourceAsync';
 
     this.requestSchedule = new ResourceModel();
     this.requestSchedule.service = 'PR';
@@ -203,7 +213,38 @@ export class OverTimeComponent extends UIComponent {
 
   //#endregion
 
-  clickMF(e, data) {}
+  clickMF(e, data) {
+    switch (e.functionID) {
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'SYS03':
+        this.edit(e, data);
+        break;
+      case 'SYS04':
+        this.copy(e, data);
+        break;
+      case 'HRTPro11A00':
+      case 'HRTPro11A03':
+      case 'HRTPro11AU0':
+      case 'HRTPro11AU3':
+      case 'HRTPro11AU5':
+        this.updateStatus(e, data);
+        break;
+      // case 'HRTPro11A03':
+      //   this.submit(e, data);
+      //   break;
+      // case 'HRTPro11AU0':
+      //   this.updateCancel(e, data);
+      //   break;
+      // case 'HRTPro11AU3':
+      //   this.updateInProgress(e, data);
+      //   break;
+      // case 'HRTPro11AU5':
+      //   this.updateApproved(e, data);
+      //   break;
+    }
+  }
 
   changeDataMF(e, data) {
     var funcList = this.codxODService.loadFunctionList(
@@ -238,13 +279,9 @@ export class OverTimeComponent extends UIComponent {
   }
 
   onActionClick(event?) {
-    console.log(event);
     if (event.type == 'add') {
       this.addNew(event.data);
     }
-    // if (event.type == 'doubleClick' || event.type == 'edit') {
-    //   this.viewDetail(event.data);
-    // }
   }
 
   addNew(evt?) {
@@ -259,48 +296,141 @@ export class OverTimeComponent extends UIComponent {
       if (evt?.endDate) {
         res.toDate = evt.endDate;
       }
+      this.popupTitle = this.lblAdd + ' ' + this.funcIDName;
       let dialogAdd = this.callfc.openSide(
         PopupOverTimeComponent,
         [res, 'add', this.popupTitle, evt ? evt : null, this.userLogin],
         option
       );
-      dialogAdd.closed.subscribe((res) => {
-        if (res?.event) {
-          // let data = {};
-          // data['recID'] = res.event.recID;
-          // data['value'] = res.event.recID;
-          // data['employeeID'] = res.event.employeeID;
-          // data['ClassName'] = 'e-child-node';
-          // data['fromDate'] = res.event.fromDate;
-          // data['toDate'] = res.event.toDate;
-          // data['fromTime'] = res.event.fromTime;
-          // data['toTime'] = res.event.toTime;
-          // data['emp'] = res.event.emp;
-
-          // this.view.currentView['schedule'].resourceDataSource.push(data);
-          // this.view.currentView['schedule'].dataSource.push(data);
-          // this.view.currentView['schedule'].displayResource.push(data);
-
-          // this.view.currentView.refesh();
-          // this.view.currentView['schedule'].refresh();
-
-          // this.detectorRef.detectChanges();
-
-          // this.view.currentView.dataService.load().subscribe();
-
-          console.log(this.view.currentView['schedule'].resourceDataSource);
-        } else {
-          this.view.dataService.clear();
-        }
-      });
+      // dialogAdd.closed.subscribe((res) => {
+      //   if (res?.event) {
+      //     // let data = {};
+      //     // data['recID'] = res.event.recID;
+      //     // data['value'] = res.event.recID;
+      //     // data['employeeID'] = res.event.employeeID;
+      //     // data['ClassName'] = 'e-child-node';
+      //     // data['fromDate'] = res.event.fromDate;
+      //     // data['toDate'] = res.event.toDate;
+      //     // data['fromTime'] = res.event.fromTime;
+      //     // data['toTime'] = res.event.toTime;
+      //     // data['emp'] = res.event.emp;
+      //     // this.view.currentView['schedule'].resourceDataSource.push(data);
+      //     // this.view.currentView['schedule'].dataSource.push(data);
+      //     // this.view.currentView['schedule'].displayResource.push(data);
+      //     // this.view.currentView.refesh();
+      //     // this.view.currentView['schedule'].refresh();
+      //     // this.detectorRef.detectChanges();
+      //     // this.view.currentView.dataService.load().subscribe();
+      //   } else {
+      //     this.view.dataService.clear();
+      //   }
+      // });
     });
   }
 
+  delete(data) {
+    console.log('delete');
+  }
+  edit(evt, data) {
+    this.view.dataService.edit(data).subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.popupTitle = evt.text + ' ' + this.funcIDName;
+      let dialogAdd = this.callfc.openSide(
+        PopupOverTimeComponent,
+        [data, 'edit', this.popupTitle, null, this.userLogin],
+        option
+      );
+      // dialogAdd.closed.subscribe((res) => {
+      //   if (!res?.event) {
+      //     this.view.dataService.clear();
+      //   }
+      // });
+    });
+  }
+  copy(evt, data) {
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.popupTitle = evt.text + ' ' + this.funcIDName;
+      let dialogAdd = this.callfc.openSide(
+        PopupOverTimeComponent,
+        [data, 'edit', this.popupTitle, null, this.userLogin],
+        option
+      );
+      // dialogAdd.closed.subscribe((res) => {
+      //   if (!res?.event) {
+      //     this.view.dataService.clear();
+      //   }
+      // });
+    });
+  }
+  // cancelSubmit(e, data) {
+  //   this.updateStatus(data.recID, e.functionID);
+  // }
+  // submit(e, data) {
+  //   this.updateStatus(data.recID, e.functionID);
+  // }
+  // updateCancel(e, data) {
+  //   this.updateStatus(data.recID, e.functionID);
+  // }
+  // updateInProgress(e, data) {
+  //   this.updateStatus(data.recID, e.functionID);
+  // }
+  // updateApproved(e, data) {
+  //   this.updateStatus(data.recID, e.functionID);
+  // }
+
+  updateStatus(e, data) {
+    switch(e.functionID){
+      case 'HRTPro11A00':
+        this.status = '' 
+        break;
+      case 'HRTPro11A03':
+        this.status = '3' 
+        break;
+      case 'HRTPro11AU0':
+        this.status = '' 
+        break;
+      case 'HRTPro11AU3':
+        this.status = '' 
+        break;
+      case 'HRTPro11AU5':
+        this.status = '' 
+        break;
+    }
+    let obj = {
+      funcID: e.functionID,
+      status: this.status,
+      statusName: e.text,
+      recID: data.recID,
+      title: e.text,
+    };
+    let dialogUpdateStatus = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      '',
+      500,
+      350,
+      '',
+      obj
+    );
+  }
   //#endregion
 
   //#region selectedChange
   selectedChange(e) {
-    this.recID = e.data.recID;
+    if (e?.data) {
+      this.itemSelected = e.data;
+      this.recID = e.data.recID;
+    }
   }
   //#endregion
+
+  receiveMF(e: any) {
+    this.clickMF(e.e, e?.data);
+  }
 }

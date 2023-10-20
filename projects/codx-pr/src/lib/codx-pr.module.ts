@@ -19,6 +19,8 @@ import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { OverTimeComponent } from './over-time/over-time.component';
 import { PopupOverTimeComponent } from './over-time/popup-over-time/popup-over-time.component';
+import { ViewDetailOtComponent } from './over-time/view-detail-over-time/view-detail-ot.component';
+import { PopupUpdateStatusComponent } from './over-time/popup-update-status/popup-update-status.component';
 
 export const routes: Routes = [
   {
@@ -37,6 +39,7 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   OverTimeComponent,
   PopupOverTimeComponent,
+  ViewDetailOtComponent
 ];
 
 @NgModule({
@@ -55,7 +58,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [T_Component],
+  declarations: [T_Component, PopupUpdateStatusComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxPrModule {
