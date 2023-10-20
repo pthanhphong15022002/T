@@ -38,7 +38,7 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
     title: '',
     memo: '',
   };
-
+  isChangeData = false;
   noteBooks: NoteBooks = new NoteBooks();
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -94,11 +94,15 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
       .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {
         if (res.save) {
-          this.imageUpload
+          if(this.isChangeData)
+          {
+            this.imageUpload
             .updateFileDirectReload(res.save.recID)
             .subscribe((result) => {
               this.dialog.close(res.save);
             });
+          }
+          else this.dialog.close(res.save);
         }
       });
     }
@@ -109,11 +113,15 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
       this.api.execSv("WP","WP","NoteBooksBusiness",methodName,this.noteBooks).subscribe((item:any)=>{
         if(item)
         {
-          this.imageUpload
-          .updateFileDirectReload(item.recID)
-          .subscribe((result) => {
-            this.dialog.close(item);
-          });
+          if(this.isChangeData)
+          {
+            this.imageUpload
+            .updateFileDirectReload(item.recID)
+            .subscribe((result) => {
+              this.dialog.close(item);
+            });
+          }
+          else this.dialog.close(item);
         }
       })
     }
@@ -124,11 +132,15 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
     this.api.execSv("WP","WP","NoteBooksBusiness","UpdateNoteBookAsync",this.noteBooks).subscribe((item:any)=>{
       if(item)
       {
-        this.imageUpload
-        .updateFileDirectReload(item.recID)
-        .subscribe((result) => {
-          this.dialog.close(item);
-        });
+        if(this.isChangeData)
+        {
+          this.imageUpload
+          .updateFileDirectReload(item.recID)
+          .subscribe((result) => {
+            this.dialog.close(item);
+          });
+        }
+        else this.dialog.close(item);
       }
     })
   }
@@ -148,5 +160,10 @@ export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
     }
     op.data = data;
     return true;
+  }
+
+  handleInput()
+  {
+    this.isChangeData = true;
   }
 }

@@ -139,9 +139,9 @@
 
  <ng-template #tmpNoteBook let-data>
     <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="openDetailPage(data?.recID)">
-        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
         <div class="d-flex flex-column ms-2 w-100">
-            <span>{{data.title}}</span>
+            <span class="w-190px">{{data.title}}</span>
             <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
         </div>
         <div class="has-action-menu w-100">
@@ -158,9 +158,9 @@
 
  <ng-template #tmpStorage let-data>
     <div class="d-flex align-items-center cursor-pointer has-action-menu px-4" (click)="detailStorage(data?.recID)">
-        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [referType]="'image'" [imageType]="'square'"></codx-img>
+        <codx-img [objectId]="data.recID" [objectType]="'WP_NoteBooks'" [objectName]="data?.title" [referType]="'image'" [imageType]="'square'"></codx-img>
         <div class="d-flex flex-column ms-2 w-100">
-            <span>{{data.title}}</span>
+            <span class="w-190px">{{data.title}}</span>
             <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
         </div>
         <div class="has-action-menu w-100">

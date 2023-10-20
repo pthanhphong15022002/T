@@ -12,18 +12,20 @@
     </div>
 </div>
 <ng-template #body>
-    <codx-view2
-        #codxview2
-        service="WP"
-        entityName="WP_NoteBooks"
-        gridViewName="grvStorages" 
-        formName="NoteBooks"
-        [predicate]="'CreatedBy=@0'"
-        [dataValue]="user?.userID"
-        [tmpItem]="tmp"
-        (btnClick)="addClick($event)"
-    >
-    </codx-view2>
+    <ng-container *ngIf="formModel">
+        <codx-view2
+            #codxview2
+            service="WP"
+            [entityName]="formModel?.entityName"
+            [gridViewName]="formModel?.gridViewName" 
+            [formName]="formModel?.formName"
+            [predicate]="'CreatedBy=@0'"
+            [dataValue]="user?.userID"
+            [tmpItem]="tmp"
+            (btnClick)="addClick($event)"
+        >
+        </codx-view2>
+    </ng-container>
 </ng-template>
 
 <ng-template #tmp let-item>
@@ -36,11 +38,13 @@
         [desc2]="item.memo"
         [imageObjName]="item.title"
         [imageId]="item.recID"
-        [imageObjType]="'WP_Storages'" 
+        [imageReferType]="'image'"
+        [imageObjType]="'WP_NoteBooks'" 
         imgCss="h-150px w-100 mb-2" 
         [imageWidth]="200"
         [formModel]="formModel"
-        [typeMF]="'hover'"  
+        [typeMF]="'hover'"
+        (clickMF)="clickMFNoteBook($event,item)"
     >
     </codx-card-img>
 </ng-template>

@@ -23,6 +23,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   @Input() entityName: string = '';
   @Input() formName: string = '';
   @Input() gridViewName: string = '';
+  @Input() idFeild = 'recID';
   @Input() dataSource:any;
   @Input() bodyCss:any;
   
@@ -169,10 +170,26 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.btnClick.emit()
   }
 
-  updateDataSource(data:any)
+  addDataSource(data:any)
   {
     if(!this.dataSource) this.dataSource = [];
     this.dataSource.push(data);
+    this.ref.detectChanges();
+  }
+
+  updateDataSource(data:any)
+  {
+    if(data[this.idFeild])
+    {
+      var index = this.dataSource.filter(x=>x[this.idFeild] == data[this.idFeild]);
+      if(index >=0) this.dataSource[index] = data;
+    }
+    this.ref.detectChanges();
+  }
+
+  deleteDataSource(data:any)
+  {
+    if(data[this.idFeild]) this.dataSource = this.dataSource.filter(x=>x[this.idFeild] != data[this.idFeild]);
     this.ref.detectChanges();
   }
 }
