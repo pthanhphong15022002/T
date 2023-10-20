@@ -1254,6 +1254,7 @@ export class LeadsComponent
                 data.processID = res[0].processID;
                 data.datas = res[0].datas;
                 data.status = res[0].status;
+                data.owner = res[0]?.owner; /// check dụm bao
                 this.addPermission(res[0].permissions ,data);
                 let datas= [data ,isCheck];
                 this.getApiUpdateProcess(datas, res[1]);
