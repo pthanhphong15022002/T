@@ -139,8 +139,8 @@
             checked
             (change)="
               changeBusIns(ele1, {
-                chart1: { pie1 },
-                chart2: { pie2 }
+                chart1: { pie1, viewBus },
+                chart2: { pie2, viewIndus }
               })
             "
           />
@@ -159,8 +159,8 @@
             #ele2
             (change)="
               changeBusIns(ele2, {
-                chart1: { pie1 },
-                chart2: { pie2 }
+                chart1: { pie1, viewBus },
+                chart2: { pie2, viewIndus }
               })
             "
           />
@@ -175,41 +175,44 @@
       </div>
     </div>
     <div class="w-100">
-      <ejs-treemap
-        #pie1
-        class="w-100"
-        [dataSource]="dataSourceBussnessLine ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="palette"
-        [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${businessLineName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
-
-      <ejs-treemap
-        #pie2
-        class="w-100 d-none"
-        [dataSource]="dataSourceIndustry ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="paletteIndustry"
-        [leafItemSettings]="leafItemSettingsIns"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${industryName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
+      <div #viewBus>
+        <ejs-treemap
+          #pie1
+          class="w-100"
+          [dataSource]="dataSourceBussnessLine ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="palette"
+          [leafItemSettings]="leafItemSettings"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${businessLineName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
+        >
+        </ejs-treemap>
+      </div>
+      <div #viewIndus class="'d-none">
+        <ejs-treemap
+          #pie2
+          class="w-100"
+          [dataSource]="dataSourceIndustry ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="paletteIndustry"
+          [leafItemSettings]="leafItemSettingsIns"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${industryName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
+        >
+        </ejs-treemap>
+      </div>
     </div>
   </div>
 </ng-template>
