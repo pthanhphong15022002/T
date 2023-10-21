@@ -29,6 +29,8 @@ import {
 } from '@syncfusion/ej2-angular-charts';
 import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
+import { Variant } from '@syncfusion/ej2-notifications';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -108,7 +110,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   colorReasonFails = '';
 
   isMax = true;
-  tabActiveMaxMin = 'btnMax';
+  tabActiveMaxMin = 'btMax';
 
   maxOwners = [];
   minOwners = [];
@@ -188,11 +190,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   marker = { visible: true };
   isSuccess = true;
+  tabActiveLineSucFail ='btSuccess'
 
   //nang suat nhan viên
   productivityOwner = [];
   language = 'vn';
-  currencyIDDefault: any = 'VND';
 
   //pyramidcontainer
   legendSettingsPy = {
@@ -200,26 +202,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     toggleVisibility: false,
   };
   dataSourcePyStatus = [
-    // {
-    //   name: 'Milk, Youghnut, Cheese',
-    //   quantity: 435,
-    // },
-    // {
-    //   name: 'Vegetables',
-    //   quantity: 470,
-    // },
-    // {
-    //   name: 'Meat, Poultry, Fish',
-    //   quantity: 475,
-    // },
-    // {
-    //   name: 'Rice, Pasta',
-    //   quantity: 930,
-    // },
-    // {
-    //   name: 'Fruits',
-    //   quantity: 520,
-    // },
   ];
   dataSourcePyStage = [];
   neckWidth = '0%';
@@ -335,17 +317,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       isAsc: boolean;
     }[];
   }[];
-  // {
-  //   userID: 'ADMIN',
-  //   userName: 'Lê Phạm Hoài Thương',
-  //   lstTitlePerformance: [
-  //     { value: '1', text: '124' },
-  //     { value: '2', text: '124' },
-  //     { value: '3', text: '4000000' },
-  //     { value: '4', text: '100000' },
-  //     { value: '5', text: '4 ngày' },
-  //   ],
-  // },
 
   lstVllTopSales: {
     value: string;
@@ -353,6 +324,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     count: string;
     isAsc: boolean;
   }[];
+
   currencyID: any;
   exchangeRate: number;
   //new
@@ -365,7 +337,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   countProcessing = 0;
   countSuccess = 0;
   countFail = 0;
-  dataSet: any[] = [];
+  chartBussnessLine: any;
 
   //end
   constructor(
@@ -436,7 +408,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
             // nhom chua co tam
             case 'CMD002':
               // code cũ chạy tạm
-              this.getDataDashboard();
+              //this.getDataDashboard();
+              this.getDataset(
+                'GetReportSourceAsync',
+                null,
+                null,
+               null
+              );
               break;
             //ca nhan chua co ne de vay
             case 'CMD003':
@@ -479,7 +457,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         break;
       // nhom chua co tam
       case 'CMD002':
-        this.getDataDashboard(predicates, dataValues, param);
+        //this.getDataDashboard(predicates, dataValues, param);
+        this.getDataset(
+          'GetReportSourceAsync',
+          param,
+          null,
+          null
+        );
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
@@ -543,6 +527,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 return data;
               });
             //chart
+            this.chartBussnessLine = this.dataDashBoard.countsBussinessLines
           }
           this.dataStatisticTarget =
             this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
@@ -703,7 +688,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   //load default
-  loadChangeDefault() {
+   loadChangeDefault() {
     this.cache.valueList('DP036').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.colorReasonSuscess = vll?.datas.filter(
@@ -730,26 +715,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.lstVllTopSales = ele?.datas;
       }
     });
-    this.cache.viewSettingValues('CMParameters').subscribe(async (param) => {
-      if (param?.length > 0) {
-        let dataParam = param.filter(
-          (x) => x.category == '1' && !x.transType
-        )[0];
-        if (dataParam) {
-          let paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-          let exchangeRateCurrent = await firstValueFrom(
-            this.cmSv.getExchangeRate(this.currencyID, new Date())
-          );
-          if (exchangeRateCurrent?.exchRate > 0) {
-            this.exchangeRate = exchangeRateCurrent?.exchRate;
-          } else {
-            this.exchangeRate = 1;
-            this.currencyID = 'VND';
-          }
-        }
-      }
-    });
+    
 
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
@@ -775,40 +741,56 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.primaryXAxis.title = 'Deployment month';
       this.primaryYAxis.title = 'Ratio(%)';
     }
-    this.cache.viewSettingValues('CMParameters').subscribe((res) => {
+   this.cache.viewSettingValues('CMParameters').subscribe((res) => {
       if (res?.length > 0) {
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
         if (dataParam) {
           let paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
-          if (this.language == 'vn') {
-            this.primaryXAxisRatio.title =
-              'Tổng doanh số dự kiến ( ' + this.currencyIDDefault + ')';
-            this.primaryYAxisRatio.title =
-              'Tổng mục tiêu ( ' + this.currencyIDDefault + ')';
-
-            this.tooltip.format =
-              'Tổng doanh số dự kiến : <b>${point.x} ' +
-              this.currencyIDDefault +
-              '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
-              this.currencyIDDefault +
-              '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
-          } else {
-            this.primaryXAxisRatio.title =
-              'Total expected sales ( ' + this.currencyIDDefault + ')';
-            this.primaryYAxisRatio.title =
-              'Total target ( ' + this.currencyIDDefault + ')';
-
-            this.tooltip.format =
-              'Total expected sales : <b>${point.x} ' +
-              this.currencyIDDefault +
-              '</b> <br/>Total target : <b>${point.y} ' +
-              this.currencyIDDefault +
-              '</b><br/>Quantity of deals : <b>${point.size}</b>';
-          }
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          this.cmSv.getExchangeRate(this.currencyID, new Date()).subscribe(res=>{
+            if(res && res?.exchRate > 0){
+              this.exchangeRate = res?.exchRate;
+            }else {
+              this.exchangeRate = 1;
+              this.currencyID = 'VND';
+            }
+            this.formatSetting();
+          })
+        }else{
+          this.exchangeRate = 1;
+          this.currencyID = 'VND';
+          this.formatSetting();
         }
       }
     });
+  }
+
+  formatSetting(){
+    if (this.language == 'vn') {
+      this.primaryXAxisRatio.title =
+        'Tổng doanh số dự kiến ( ' + this.currencyID + ')';
+      this.primaryYAxisRatio.title =
+        'Tổng mục tiêu ( ' + this.currencyID + ')';
+
+      this.tooltip.format =
+        'Tổng doanh số dự kiến : <b>${point.x} ' +
+        this.currencyID +
+        '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
+        this.currencyID +
+        '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
+    } else {
+      this.primaryXAxisRatio.title =
+        'Total expected sales ( ' + this.currencyID + ')';
+      this.primaryYAxisRatio.title =
+        'Total target ( ' + this.currencyID + ')';
+
+      this.tooltip.format =
+        'Total expected sales : <b>${point.x} ' +
+        this.currencyID +
+        '</b> <br/>Total target : <b>${point.y} ' +
+        this.currencyID +
+        '</b><br/>Quantity of deals : <b>${point.size}</b>';
+    }
   }
 
   onActions(e) {
@@ -893,7 +875,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     break;
                   // nhom chua co tam
                   case 'CMD002':
-                    this.getDataDashboard();
+                    // cu
+                    // this.getDataDashboard();
+                    this.getDataset(
+                      'GetReportSourceAsync',
+                      null,
+                     null,
+                      null
+                    );
                     break;
                   //ca nhan chua co ne de vay
                   case 'CMD003':
@@ -1028,7 +1017,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = 0;
     this.countFail = 0;
     this.countProcessing = 0;
-    this.dataSet = [];
+    this.chartBussnessLine = []
   }
   // ---------------------------FUNC ----------------------------//
   //sort lấy top
@@ -1091,15 +1080,87 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let quantity = businesLine[key].length;
         let obj = {
           businessLineID: key,
-          businessLineName: businesLine[key][0].industriesName ?? key,
+          businessLineName: businesLine[key][0].businessLineName ?? key,
           quantity: quantity,
           percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
           color: color,
         };
         this.dataSourceBussnessLine.push(obj);
+        this.chartBussnessLine.push({...obj,...this.getChartBussinessLine(businesLine[key])})
+        this.dataStatisticTarget.push({...obj,...this.getDataStatisticTarget(businesLine[key])})    
         this.palette.push(color);
       }
+
+      if (this.dataStatisticTarget.length > 0) {
+        let maxTarget = Math.max(
+          ...this.dataStatisticTarget.map((o) => o.totalTarget)
+        );
+        this.primaryXAxisRatio.maximum =
+          maxTarget + 2 * Math.floor(maxTarget / 10);
+        this.primaryXAxisRatio.interval = Math.floor(
+          this.primaryXAxisRatio.maximum / 10
+        );
+
+        let maxDealValue = Math.max(
+          ...this.dataStatisticTarget.map((o) => o.totalDealValue)
+        );
+
+        this.primaryYAxisRatio.maximum =
+          maxDealValue + 2 * Math.floor(maxDealValue / 10);
+        this.primaryYAxisRatio.interval = Math.floor(
+          this.primaryYAxisRatio.maximum / 10
+        );
+      }
     }
+  }
+  getChartBussinessLine(dataSet){
+    let monthGroup = this.groupBy(dataSet, 'moY');
+    let  chartDataSuscess  = []
+    let  chartDataFail  = [];
+    for(let i =1 ;i<=12 ;i++){
+      chartDataSuscess.push({
+        month :i,
+        quantity : 0,
+        percentage :0,
+      })
+      chartDataFail.push({
+        month :i,
+        quantity : 0,
+        percentage :0,
+      })
+    }
+    if (monthGroup) {
+      for (let key in monthGroup) { 
+        var idxSuc =  chartDataSuscess.findIndex(x=>x.month==key);
+        if(idxSuc!=-1){
+          chartDataSuscess[idxSuc].quantity = monthGroup[key].filter(x=>x.status=='3')?.length ??0;
+          chartDataSuscess[idxSuc].percentage =monthGroup[key]?.length >0 ? chartDataSuscess[idxSuc].quantity/monthGroup[key]?.length*100 : 0
+        }
+
+        var idxFail =  chartDataFail.findIndex(x=>x.month==key);
+        if(idxFail!=-1){
+          chartDataFail[idxFail].quantity = monthGroup[key].filter(x=>x.status=='5')?.length ??0;
+          chartDataFail[idxFail].percentage =monthGroup[key]?.length >0 ? chartDataFail[idxFail].quantity/monthGroup[key]?.length*100 : 0
+        }
+       
+        
+      }
+    } 
+    return {chartDataSuscess :chartDataSuscess,chartDataFail :chartDataFail} 
+  }
+
+  getDataStatisticTarget(dataSet){
+    let totalTarget = 0 ;
+    let totalDealValue = 0 ;
+    if(Array.isArray(dataSet)){
+      dataSet.forEach(x=>{
+        console.log(x.dealValue + "  " + x.exchangeRate)
+        totalDealValue +=  x.dealValue * x.exchangeRate
+       ///target line ?? targer hoi Khanh
+       totalTarget += Math.random()*10000000 //tesst
+      })
+    }
+    return {totalTarget : totalTarget/this.exchangeRate,totalDealValue :totalDealValue/this.exchangeRate} 
   }
 
   getIndustries(dataSet) {
@@ -1143,12 +1204,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         };
         owner.push(obj);
       }
-      this.maxOwners = owner.sort((a, b) => {
-        return a.quantity - b.quantity;
-      });
-      this.minOwners = owner.sort((a, b) => {
-        return b.quantity - a.quantity;
-      });
+      this.maxOwners = JSON.parse(JSON.stringify(owner)).sort((a, b) =>
+         b.quantity - a.quantity
+      );
+      this.minOwners = JSON.parse(JSON.stringify(owner)).sort((a, b) => 
+         a.quantity - b.quantity
+      );
     }
   }
 
@@ -1187,18 +1248,51 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   changeMaxMin(ele: any, obj: any) {
     if (ele.id == this.tabActiveMaxMin) return;
     this.tabActiveMaxMin = ele.id;
-    if (ele.id == 'btnMax') {
+    if (ele.id == 'btMax') {
       !obj.chart2.minView.classList.contains('d-none') &&
         obj.chart2.minView.classList.add('d-none');
       obj.chart1.maxView.classList.contains('d-none') &&
         obj.chart1.maxView.classList.remove('d-none');
     }
-    if (ele.id == 'btnMin') {
+    if (ele.id == 'btMin') {
       !obj.chart1.maxView.classList.contains('d-none') &&
         obj.chart1.maxView.classList.add('d-none');
 
       obj.chart2.minView.classList.contains('d-none') &&
         obj.chart2.minView.classList.remove('d-none');
+    }
+    this.detectorRef.detectChanges();
+  }
+  changeChartLine(ele: any, obj: any){
+    if (ele.id == this.tabActiveLineSucFail) return;
+    this.tabActiveLineSucFail = ele.id;
+    // chart1: { viewLineSuc,lineSuc },
+    // chart2: { viewLineFail,lineFail }
+    if (ele.id == 'btSuccess' && Object.keys(obj).length) {
+      !obj.chart2.viewLineFail.classList.contains('d-none') &&
+      obj.chart2.viewLineFail.classList.add('d-none');
+    obj.chart1.viewLineSuc.classList.contains('d-none') &&
+      obj.chart1.viewLineSuc.classList.remove('d-none');
+
+      !obj.chart2.lineFail.element.classList.contains('d-none') &&
+        obj.chart2.lineFail.element.classList.add('d-none');
+      obj.chart1.lineSuc.element.classList.contains('d-none') &&
+        obj.chart1.lineSuc.element.classList.remove('d-none');
+      obj.chart1.lineSuc.refresh();
+    }
+    if (ele.id == 'btFail' && Object.keys(obj).length) {
+      !obj.chart1.viewLineSuc.classList.contains('d-none') &&
+      obj.chart1.viewLineSuc.classList.add('d-none');
+
+    obj.chart2.viewLineFail.classList.contains('d-none') &&
+      obj.chart2.viewLineFail.classList.remove('d-none');
+
+      !obj.chart1.lineSuc.element.classList.contains('d-none') &&
+        obj.chart1.lineSuc.element.classList.add('d-none');
+
+      obj.chart2.lineFail.element.classList.contains('d-none') &&
+        obj.chart2.lineFail.element.classList.remove('d-none');
+      obj.chart2.lineFail.refresh();
     }
     this.detectorRef.detectChanges();
   }
