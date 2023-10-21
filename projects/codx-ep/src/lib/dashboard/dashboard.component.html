@@ -75,36 +75,44 @@
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="5">
     <ejs-chart
-      style="display: block"
-      [width]="width"
-      align="center"
-      [tooltip]="tooltip"
-      [legendSettings]="{visible:false}"
-      [primaryXAxis]=" {
-        valueType: 'Category',
-        majorGridLines: { width: 0},
-    } "
-      [primaryYAxis]="{
-        majorTickLines: { width: 0 }, lineStyle: { width: 0}, majorGridLines:{width:0}
-    }"
-    [palettes]="['#0080ff']"
-    [border]="{ width: 0, color: '#FF0000'}"
-    >
-      <e-series-collection>
-        <e-series
-          [dataSource]="[]"
-          type="Column"
-          [xName]="'key'"
-          [yName]="'value'"
-          columnSpacing="0.1"
-          columnWidth="0.25"
-          name="số lượng"
-          [columnFacet]= "'Cylinder'"
-          [marker]="{ dataLabel: { visible: true }}"
-        >
-        </e-series>
-      </e-series-collection>
-    </ejs-chart>
+    style="display: block"
+    align="center"
+    width="100%"
+    height="100%"
+    [tooltip]="{ enable: true }"
+    [primaryXAxis]=" {
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+  } "
+    [primaryYAxis]="{
+      majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+  }"
+  [palettes]="palettes"
+  >
+    <e-series-collection>
+      <e-series
+        [dataSource]="statByRes"
+        type="Line"
+        [xName]="'resourceName'"
+        [yName]="'usedHours'"
+        name="Thời gian sử dụng"
+        columnSpacing="0.1"
+        columnWidth="0.25"
+        [marker]="circleMarker"
+      >
+      </e-series>
+      <e-series
+        [dataSource]="statByRes"
+        type="Column"
+        [xName]="'resourceName'"
+        [yName]="'quantity'"
+        name="số lượt đặt phòng"
+        columnSpacing="0.1"
+        columnWidth="0.25"
+      >
+      </e-series>
+    </e-series-collection>
+  </ejs-chart>
   </div>
 </ng-template>
 <ng-template #template let-data>
@@ -148,7 +156,7 @@
           </div> -->
         </div>
       </div>
-      <div class="container p-0" style="height: 90%" *ngIf="[].length">
+      <div class="container p-0" style="height: 90%" *ngIf="statByEmp.length">
         <div
           class="overflow-scroll overflow-x-hidden"
           style="max-height: 95%; width: 100%"
@@ -156,7 +164,7 @@
         >
           <div
             class="mx-2 my-4"
-            *ngFor="let data of sortByProp([],'quantity','desc',5)"
+            *ngFor="let data of sortByProp(statByEmp,'quantity','desc',5)"
           >
             <div class="row w-100">
               <div class="col-1 d-flex align-items-center">
@@ -168,7 +176,7 @@
               </div>
               <div class="col-11">
                 <div class="w-100 text-start fs-6">
-                  <span class="fw-bold">{{ data.username}}</span>
+                  <span class="fw-bold">{{ data.userName}}</span>
                 </div>
                 <div class="w-100 text-start fs-7">
                   <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
@@ -245,14 +253,14 @@
 
           [centerLabel]="{
             text:
-            [].length + '<br>Phiếu'
+            dataset.length + '<br>Lượt'
           }"
           [legendSettings]="{ visible: false }"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="[]"
-              xName="behaviorID"
+              [dataSource]="statByRes"
+              xName="resourceID"
               yName="quantity"
               startAngle="0"
               innerRadius="80%"
@@ -272,22 +280,14 @@
           style="max-height: 100%; width: 100%"
         >
           <div
-            *ngFor="let ref of []"
+            *ngFor="let ref of statByRes"
             class="mx-2 my-5"
           >
             <div class="d-flex justify-content-between">
-              <span>{{ ref.behaviorName }} ({{ ref.quantity }})</span>
+              <span>{{ ref.resourceName }} ({{ ref.quantity }})</span>
               <span>
-                {{
-                  ((ref.quantity / [].length) * 100) %
-                    1 ===
-                  0
-                    ? (ref.quantity / [].length) * 100
-                    : (
-                        (ref.quantity / [].length) *
-                        100
-                      ).toFixed(1)
-                }}%
+                  {{ref.percentage}} %
+
               </span>
             </div>
             <div class="d-flex align-items-center min-w-200px">
@@ -296,7 +296,7 @@
                   class="rounded-4 h-5px"
                   role="progressbar"
                   [style.width]="
-                    (ref.quantity / [].length) * 100 +
+                     ref.percentage +
                     '%'
                   "
                   [style.background-color]="'#3699ff'"
@@ -313,70 +313,44 @@
 </ng-template>
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="8">
-    <div class="row" style="height:50px">
-      <div class="col-3">
-
-      </div>
-      <div class="col-6 text-center">
-        <div class="d-flex w-100 h-100">
-          <div class="float-start w-60 d-flex align-items-center">
-            <span class="text-dark fw-bold fs-6">% Tỉ lệ số phiếu nhận/tổng số nhân viên</span>
-          </div>
-          <div class="float-end d-flex align-items-center">
-            <i class="icon-i-box-arrow-in-right icon-16"></i> &nbsp;&nbsp; <span class="text-dark fw-bold fs-6">Phiếu nhận</span>
-          </div>
-        </div>
-
-
-      </div>
-      <div class="col-3 text-center">
-         <div class="my-1 h-10 d-flex align-items-center">
-        <div class="d-flex justify-content-center align-items-center">
-          <div
-            class="btn-group"
-            role="group"
-            aria-label="Basic radio toggle button group"
-          >
-            <input
-              type="radio"
-              class="btn-check"
-              name="btnradio1"
-              id="btnQuantityRadio"
-              autocomplete="off"
-              checked
-            />
-            <codx-label
-              class="btn btn-outline-primary"
-              for="btnQuantityRadio"
-              default="Phòng ban"
-            ></codx-label>
-
-            <input
-              type="radio"
-              class="btn-check"
-              name="btnradio1"
-              id="btnTimeRadio"
-              autocomplete="off"
-            />
-            <codx-label
-              class="btn btn-outline-primary"
-              for="btnTimeRadio"
-              default="Bộ phận"
-            ></codx-label>
-          </div>
-        </div>
-      </div>
-      </div>
-
-    </div>
-    <div class="row" style="height:calc( 100% - 50px)">
-      <div class="col h-100">
-        <div class="border w-100 h-100">
-
-        </div>
-      </div>
-
-    </div>
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]=" {
+        valueType: 'Category',
+        majorGridLines: { width: 0 },
+    } "
+      [primaryYAxis]="{
+        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
+    }"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="statByRes"
+          type="Column"
+          [xName]="'resourceName'"
+          [yName]="'totalHours'"
+          name="Thời gian làm việc"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="statByRes"
+          type="Column"
+          [xName]="'resourceName'"
+          [yName]="'usedHours'"
+          name="Thời gian sử dụng"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
   </div>
 
 </ng-template>

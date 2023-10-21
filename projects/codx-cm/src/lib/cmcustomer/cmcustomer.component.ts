@@ -423,13 +423,21 @@ export class CmCustomerComponent
               )
                 res.disabled = true;
               break;
-            default:
+            case 'SYS003':
+            case 'SYS004':
+            case 'SYS001':
+            case 'SYS002':
+              res.disabled = false;
               break;
           }
         } else {
           switch (res.functionID) {
             case 'CM0105_6':
             case 'CM0101_6':
+            case 'SYS003':
+            case 'SYS004':
+            case 'SYS001':
+            case 'SYS002':
               res.disabled = false;
               break;
             case 'CM0101_4':
@@ -759,7 +767,7 @@ export class CmCustomerComponent
           [item?.address, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         if (item.provinceID != lstDis?.ProvinceID)
           item.provinceID = lstDis?.ProvinceID;

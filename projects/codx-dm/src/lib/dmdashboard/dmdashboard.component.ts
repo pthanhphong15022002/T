@@ -268,6 +268,9 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
 
       }
     }
+    if(e.type == 'reportItem'){
+      this.reportItem = e.data;
+    }
     // if (e.type == 'reportLoaded') {
     //   this.arrReport = e.data;
     //   if (this.arrReport.length) {
