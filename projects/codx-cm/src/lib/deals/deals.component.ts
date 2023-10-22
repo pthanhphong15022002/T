@@ -437,7 +437,6 @@ export class DealsComponent
     };
 
     let isDisCRd = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
@@ -457,10 +456,7 @@ export class DealsComponent
         (acc, code) => ({ ...acc, [code]: isDisCRd }),
         {}
       ),
-      ...['SYS003', 'SYS001'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
-        {}
-      ),
+
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
