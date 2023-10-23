@@ -414,8 +414,6 @@ export class ViewCalendarComponent
     }
   }
 
-
-
   async getTask(data, action = null) {
     let task;
     if (data) {
