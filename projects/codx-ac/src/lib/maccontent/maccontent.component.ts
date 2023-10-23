@@ -157,15 +157,26 @@ export class MACContentComponent extends UIComponent {
     //   period = this.fromDate + '' + '-' + this.toDate + '';
     // } else if (this.type == 'Q')
     //   period = this.periodID + '' + '/' + this.quaterID + '';
+    let obj: any = {};
+    obj['procName'] = '';
+    obj['dataValue'] = [];
+    obj['params'] = {
+      sFunctionID: this.view.funcID,
+      sType: this.type,
+      sFromDate: this.fromDate,
+      sToDate: this.toDate,
+      sPeriodID: this.periodID,
+      sQuaterID: this.quaterID,
+    };
+
     this.api
-      .execSv('AC', 'ERM.Business.AC', 'MACBusiness', 'GetDataAsync', [
-        this.view.funcID,
-        this.type,
-        this.fromDate,
-        this.toDate,
-        this.periodID,
-        this.quaterID,
-      ])
+      .execSv(
+        'rptac',
+        'Codx.RptBusiness.AC',
+        'MACBusiness',
+        'GetReportSourceAsync',
+        [obj]
+      )
       .subscribe((res: any) => {
         console.log(res);
       });
