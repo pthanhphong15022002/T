@@ -148,7 +148,7 @@
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
         (isSuccessStep)="susscessStepEnd($event, step)"
-        [sessionID]="dataCM.recID"
+        [sessionID]="dataCM?.recID"
         [formModelAssign]="formModel"
         [isChangeOwner]="isChangeOwner"
         [leadName]="leadName"
