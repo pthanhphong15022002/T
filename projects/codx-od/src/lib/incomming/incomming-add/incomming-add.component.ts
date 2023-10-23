@@ -582,7 +582,7 @@ export class IncommingAddComponent implements OnInit {
       var data = this.dispatch[field];
       if (
         !data &&
-        ((this.defaultValue == '1' && field != 'agencies') ||
+        (((this.defaultValue == '1' || this.defaultValue == '3' || this.defaultValue == '4') && field != 'agencies') ||
           (this.defaultValue == '2' && field != 'agencyName'))
       )
         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);

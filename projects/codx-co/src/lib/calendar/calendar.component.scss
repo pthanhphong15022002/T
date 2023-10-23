@@ -40,9 +40,9 @@ body.highcontrast #selected {
   margin-bottom: 3px;
 }
 
-.e-selected span.e-icons.highlight:before {
-  color: #fff;
-}
+// .e-selected span.e-icons.highlight:before {
+//   color: #fff;
+// }
 
 body.highcontrast #selected {
   color: white;
@@ -52,10 +52,10 @@ body.tailwind #selected {
   width: 265px;
 }
 
-.e-customStyle span.e-icons.highlight,
-.e-customStyle span.e-icons.highlight:before {
-  color: rgb(0, 0, 255);
-}
+// .e-customStyle span.e-icons.highlight,
+// .e-customStyle span.e-icons.highlight:before {
+//   color: rgb(0, 0, 255);
+// }
 
 .highcontrast .e-customStyle span.e-icons.highlight,
 .highcontrast .e-customStyle span.e-icons.highlight:before,
@@ -88,15 +88,15 @@ body.tailwind #selected {
   font-weight: normal;
 }
 
-.e-customStyle .e-selected span.e-icons.highlight:before {
-  color: #fff;
-}
+// .e-customStyle .e-selected span.e-icons.highlight:before {
+//   color: #fff;
+// }
 
-.e-customStyle span.e-icons.highlight {
-  margin-top: -11px;
-  display: block;
-  margin-left: 4px;
-}
+// .e-customStyle span.e-icons.highlight {
+//   margin-top: -11px;
+//   display: block;
+//   margin-left: 4px;
+// }
 
 .e-customStyle .e-calendar .e-content span.special,
 .e-customStyle .e-calendar .e-content span.daycell {
@@ -107,10 +107,10 @@ body.tailwind #selected {
   border-radius: 50%;
 }
 
-.e-customStyle span.e-icons.highlight,
-.e-customStyle span.e-icons.highlight:before {
-  color: var(--primary);
-}
+// .e-customStyle span.e-icons.highlight,
+// .e-customStyle span.e-icons.highlight:before {
+//   color: var(--primary);
+// }
 
 /* custom generated icons styles */
 
@@ -220,4 +220,7 @@ body.tailwind #selected {
 .max-h-50{
   height: auto;
   max-height: 50%;
+}
+.e-cell{
+  vertical-align: sub;
 }

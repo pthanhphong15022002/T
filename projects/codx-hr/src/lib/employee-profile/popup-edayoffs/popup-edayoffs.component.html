@@ -285,7 +285,7 @@
 
     <div
       id="groupA"
-      *ngIf="groupKowTypeView['groupA'].isShow"
+      *ngIf="groupKowTypeView['groupA'] && groupKowTypeView['groupA'].isShow"
       class="form-group row"
     >
       <div class="col-6">
@@ -313,7 +313,7 @@
 
     <div
       id="groupB"
-      *ngIf="groupKowTypeView['groupB'].isShow"
+      *ngIf="groupKowTypeView['groupB'] && groupKowTypeView['groupB'].isShow"
       class="form-group row"
     >
       <div class="col-6">
@@ -341,7 +341,7 @@
 
     <div
       id="groupC"
-      *ngIf="groupKowTypeView['groupC'].isShow"
+      *ngIf="groupKowTypeView['groupC'] && groupKowTypeView['groupC'].isShow"
       class="form-group row"
     >
       <div class="col-6">
@@ -378,7 +378,7 @@
       </div>
     </div>
 
-    <div id="groupD" *ngIf="groupKowTypeView['groupD'].isShow">
+    <div id="groupD" *ngIf="groupKowTypeView['groupD'] && groupKowTypeView['groupD'].isShow">
       <div class="form-group row">
         <div class="col-6">
           <codx-label

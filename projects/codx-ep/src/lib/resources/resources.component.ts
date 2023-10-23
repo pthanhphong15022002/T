@@ -26,6 +26,7 @@ import { PopupAddQuotaComponent } from './popup-add-quota/popup-add-quota.compon
 import { PopupUpdateQuantityComponent } from './popup-update-quantity/popup-update-quantity.component';
 import { PopupAddStationeryComponent } from './popup-add-stationery/popup-add-stationery.component';
 import { PopupAddCardTransComponent } from '../booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'resources-category',
@@ -88,6 +89,7 @@ export class ResourcesComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private codxShareService: CodxShareService,
     private notificationsService: NotificationsService
   ) {
     super(injector);
@@ -208,6 +210,24 @@ export class ResourcesComponent extends UIComponent {
       case EPCONST.MFUNCID.S_Quota:
         this.addQuota(data);
         break;
+        default:
+          //Biến động , tự custom
+          var customData = {
+            refID: '',
+            refType: this.formModel?.entityName,
+            dataSource: data,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.formModel,
+            this.view?.dataService,
+            this,
+            customData
+          );
+          break;
     }
   }
   click(evt: ButtonModel) {
@@ -215,6 +235,19 @@ export class ResourcesComponent extends UIComponent {
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
+        break;
+        default:
+        let event = evt?.data;
+        let data = evt?.model;
+        if (!data) data = this.view?.dataService?.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view?.formModel,
+          this.view?.dataService,
+          this
+        );
         break;
     }
   }

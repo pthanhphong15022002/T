@@ -130,7 +130,6 @@ export class DealsComponent
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
-
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   hideMoreFC = false;
@@ -363,7 +362,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            ['1', '0','15'].includes(data?.status) ||
+            ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -385,7 +384,7 @@ export class DealsComponent
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0','15'].includes(data.status)
+          ? data.closed || ['1', '0', '15'].includes(data.status)
           : true;
     };
     let isOpened = (eventItem, data) => {
@@ -402,14 +401,14 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2','15'].includes(data.status) ||
+        ? !['1', '2', '15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status)  : true;
+      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -436,25 +435,13 @@ export class DealsComponent
       // Phân quyền
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
-    let isUpload = (eventItem, data) => {
-      // ĐÍnh kèm file, nhập khẩu dữ liệu
-      eventItem.disabled = !data.upload ? true : false;
-    };
-    let isEmail = (eventItem, data) => {
-      // Gửi mail
-      eventItem.disabled = !data.write ? true : false;
-    };
-    let isDownload = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
-      eventItem.disabled = !data.download ? true : false;
-    };
 
     let isDisCRd = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled =  data.full ||  data?.alloweStatus == '1' ? false: true;
+      eventItem.disabled =
+        data.full || data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -469,10 +456,7 @@ export class DealsComponent
         (acc, code) => ({ ...acc, [code]: isDisCRd }),
         {}
       ),
-      ...['SYS003', 'SYS001'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
-        {}
-      ),
+
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -485,10 +469,6 @@ export class DealsComponent
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
-      SYS004: isEmail,
-      SYS002: isDownload,
-      SYS003: isUpload,
-      SYS001: isUpload,
     };
 
     return functionMappings[type];
@@ -1913,18 +1893,18 @@ export class DealsComponent
     this.statusDefault = data?.statusCodeID;
     this.statusCodecmt = data?.statusCodeCmt;
     var obj = {
-      statusDefault:this.dataSelected?.statusCodeID,
-      statusCodecmt:this.dataSelected?.statusCodeCmt,
-      applyProcess:true,
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: true,
       title: this.titleAction,
       recID: this.dataSelected.recID,
-      valueListStatusCode:this.valueListStatusCode,
-      gridViewSetup:this.gridViewSetup
+      valueListStatusCode: this.valueListStatusCode,
+      gridViewSetup: this.gridViewSetup,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
       '',
-       500,
+      500,
       400,
       '',
       obj,

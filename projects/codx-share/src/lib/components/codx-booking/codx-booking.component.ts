@@ -244,17 +244,17 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     sameData: false,
                     type: ViewType.schedule,
                     active: true,
-                    request2: this.scheduleHeader,//request lấy data cho resource schedule
-                    request: this.scheduleEvent,//request lấy data cho event schedule
+                    request2: this.scheduleHeader, //request lấy data cho resource schedule
+                    request: this.scheduleEvent, //request lấy data cho event schedule
                     toolbarTemplate: this.footerButton,
                     showSearchBar: false,
                     showFilter: false,
                     model: {
                       //panelLeftRef:this.panelLeft,
-                      eventModel: this.scheduleEvtModel,// mapping của event schedule
+                      eventModel: this.scheduleEvtModel, // mapping của event schedule
                       resourceModel: this.scheduleHeaderModel, // mapping của resource schedule
-                      template: this.cardTemplate,//template của event schedule
-                      template4: this.resourceHeader,//template của resource schedule
+                      template: this.cardTemplate, //template của event schedule
+                      template4: this.resourceHeader, //template của resource schedule
                       //template5: this.resourceTootip,//tooltip
                       template6: this.mfButton, //header
                       template8: this.contentTmp, //content
@@ -347,7 +347,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.isAllocateStationery = true;
         break;
     }
-    this.cache.viewSettingValues('EPParameters').subscribe((res) => {
+    this.codxShareService.getSettingValueWithOption('F','EPParameters').subscribe((res) => {
       if (res) {
         let listSetting = res;
         let stationerySetting_1 = listSetting.filter(
@@ -366,7 +366,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         let epSetting_4 = listSetting.filter(
           (x) => x.category == '4' && x.tranType == null
         );
-        if (epSetting_4?.length>0) {
+        if (epSetting_4?.length > 0) {
           let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
           let roomSetting_4 = listEPSetting.filter(
             (x) => x.FieldName == EPCONST.ES_CategoryID.Room
@@ -449,14 +449,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
-      resourceId: { name: 'resourceID' },// field mapping vs resource Schedule
+      resourceId: { name: 'resourceID' }, // field mapping vs resource Schedule
       status: 'approveStatus',
     };
 
     this.scheduleHeaderModel = {
       Name: 'Resources',
       Field: 'resourceID',
-      IdField: 'resourceID',// field mapping vs event Schedule
+      IdField: 'resourceID', // field mapping vs event Schedule
       TextField: 'resourceName',
       Title: 'Resources',
     };
@@ -484,6 +484,19 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
+        break;
+        default:
+        let event = evt?.data;
+        let data = evt?.model;
+        if (!data) data = this.view?.dataService?.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view?.formModel,
+          this.view?.dataService,
+          this
+        );
         break;
     }
   }
@@ -555,6 +568,24 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.allocateStatus = '4';
         this.allocate(data);
         break;
+        default:
+          //Biến động , tự custom
+          var customData = {
+            refID: '',
+            refType: this.formModel?.entityName,
+            dataSource: data,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.formModel,
+            this.view?.dataService,
+            this,
+            customData
+          );
+          break;
     }
   }
 

@@ -352,7 +352,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-    this.cacheService.viewSettingValues(_EPParameters).subscribe((sv) => {
+    this.codxShareService.getSettingValueWithOption('F',_EPParameters).subscribe((sv:any) => {
       if (sv) {
         let roomSetting_1 = this.codxBookingService.getCacheSettingValue(
           sv,
@@ -429,6 +429,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
           });
           this.curUser = tmpResource;
           this.resources.push(tmpResource);
+          this.data.attendees =  this.resources?.length;
+          this.attendeesNumber = this.data.attendees;
           this.changeDetectorRef.detectChanges();
         } else {
           //lấy ds người tham gia khi sửa
