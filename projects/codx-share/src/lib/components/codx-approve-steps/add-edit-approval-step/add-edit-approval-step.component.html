@@ -209,7 +209,7 @@
           </codx-input>
         </div>
         <div class="form-group" *ngIf="eSign">
-          <codx-input type="checkbox" field="confirmControl" [label]="lblConfirmControl" [checked]="newAppr?.confirmControl"
+          <codx-input type="checkbox" field="confirmControl" [label]="lblConfirmControl" [checked]="newAppr?.confirmControl == '1'"
             (valueChange)="valueApprChange($event)">
           </codx-input>
         </div>

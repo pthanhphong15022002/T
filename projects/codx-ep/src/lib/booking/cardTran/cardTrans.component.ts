@@ -4,6 +4,7 @@ import { UIComponent, FormModel, ViewType, ButtonModel, AuthService, SidebarMode
 import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCardTransComponent } from './popup-add-cardTrans/popup-add-cardTrans.component';
 import { ResourceTrans } from '../../models/resource.model';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'booking-cardTran',
@@ -40,6 +41,7 @@ export class CardTransComponent
     private codxEpService: CodxEpService,
     private authService: AuthService,
     private callFuncService: CallFuncService,
+    private codxShareService: CodxShareService,
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -138,11 +140,23 @@ export class CardTransComponent
   }
   click(evt: ButtonModel) {
     //this.popupTitle = evt?.text + ' ' + this.funcIDName;
-    switch (evt.id) {
+    switch (evt?.id) {
       case 'btnAdd':
         this.addNew()
         break;
-
+        default:
+        let event = evt?.data;
+        let data = evt?.model;
+        if (!data) data = this.view?.dataService?.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view?.formModel,
+          this.view?.dataService,
+          this
+        );
+        break;
     }
   }
   addNew() {
