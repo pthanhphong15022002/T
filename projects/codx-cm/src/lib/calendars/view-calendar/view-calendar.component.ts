@@ -376,7 +376,7 @@ export class ViewCalendarComponent
     this.titleAction = evt.text;
     switch (evt.id) {
       case 'btnAdd':
-        // this.beforeAddTask1();
+        this.chooseTask();
         break;
     }
   }
@@ -414,6 +414,8 @@ export class ViewCalendarComponent
     }
   }
 
+
+
   async getTask(data, action = null) {
     let task;
     if (data) {
@@ -443,6 +445,14 @@ export class ViewCalendarComponent
       }
     }
     return task;
+  }
+
+   async chooseTask(){
+    let typeTask = await this.stepService.chooseTypeTask(false);
+    console.log(typeTask);
+    if(typeTask){
+      this.beforeAddTask(typeTask);
+    }
   }
 
   async beforeAddTask(taskType) {
@@ -512,7 +522,8 @@ export class ViewCalendarComponent
       null,
       'right'
     );
-    let task = taskOutput;
+    let task = taskOutput?.task;
+    this.isActivitie = taskOutput?.isActivitie;
     if (task && action == 'add') {
       this.isActivitie && this.addActivitie(task);
       this.isStepTask && this.addStepTask(task);
@@ -523,7 +534,6 @@ export class ViewCalendarComponent
     task['progress'] = 0;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
-    task['taskType'] = this.taskType?.value;
     task['objectID'] = this.objectID;
     task['objectType'] = this.entityName;
     this.api
