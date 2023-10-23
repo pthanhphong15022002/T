@@ -192,7 +192,6 @@ export class DealsComponent
       this.executeApiCallFunctionID(f.formName, f.gridViewName);
     });
     this.getColorReason();
-
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     this.getListStatusCode();
@@ -1952,4 +1951,13 @@ export class DealsComponent
   //     }
   //   });
   // }
+  getStatusCode(status) {
+    if(status) {
+      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+      if(result) {
+        return result?.text;
+      }
+    }
+    return '';
+  }
 }
