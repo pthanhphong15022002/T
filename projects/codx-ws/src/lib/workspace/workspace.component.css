@@ -6,7 +6,7 @@
 
 .wsp-bg-primary:hover{
     border-color:var(--primary-light)!important;
-    transition: all .05s;
+    transition: all .15s;
 }
 .icon-30px
 {
