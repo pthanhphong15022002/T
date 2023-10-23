@@ -1170,7 +1170,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             null,
             {
               data: datas,
-              headerText: 'Trả lại',
+              headerText: val?.data?.customName,
               status: '4',
               funcID: this.formModel.funcID,
             },
@@ -1178,7 +1178,12 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe();
+            if (x.event) {
+              this.view.dataService.update(x.event).subscribe(item=>{
+                this.data.status = "4";
+                this.data = [...this.data];
+              });
+            }
           });
         // this.refuse(datas);
         break;
@@ -1197,7 +1202,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             null,
             {
               data: datas,
-              headerText: 'Chuyển lại',
+              headerText: val?.data?.customName,
               status: '3',
               funcID: this.formModel.funcID,
             },
@@ -1205,7 +1210,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe();
+            if (x.event) this.view.dataService.update(x.event).subscribe(item=>{
+              this.data.status = "3";
+              this.data = [...this.data];
+            });
           });
         // this.refuse(datas);
         break;
@@ -1271,6 +1279,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         dialog.closed.subscribe((e) => {
           if (e?.event && e?.event[0]) {
             datas.status = '3';
+            datas.approveStatus = '3';
             that.odService
               .updateDispatch(
                 datas,
@@ -1282,8 +1291,11 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               .subscribe((item) => {
                 if (item.status == 0) {
                   this.data.tasks = e?.event[1];
-                  this.data.status = "3";
+                  this.data.status = '3';
+                  this.data.approveStatus = '3';
                   e.data.tasks = e?.event[1];
+                  this.data = [...this.data];
+                  this.detectorRef.detectChanges();
                   that.view.dataService.update(e.data).subscribe();
                 } else that.notifySvr.notify(item.message);
               });
@@ -1705,6 +1717,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
+     
           this.odService
             .updateDispatch(
               data,
@@ -1716,6 +1729,9 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             .subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
+                this.data.status = item?.data?.status;
+                this.data.approveStatus = '3';
+                this.data = [...this.data];
               } else this.notifySvr.notify(item.message);
             });
           //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
@@ -1801,6 +1817,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             if (res.event && res.event?.approved == true) {
               datas.status = '3';
               datas.approveStatus = '3';
+              this.data.status = '3';
+              this.data.approveStatus = '3';
               this.odService
                 .updateDispatch(
                   datas,

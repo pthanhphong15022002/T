@@ -172,3 +172,14 @@ th {
 .user-nav-item:hover {
   background-color: var(--primary-lighter);
 }
+/* Thiết lập max-width cho biểu đồ */
+ejs-bulletchart {
+  max-width: 100%;
+}
+
+/* Sử dụng Media Queries để điều chỉnh kích thước của biểu đồ cho từng điểm cắt */
+@media (max-width: 768px) {
+  ejs-bulletchart {
+    width: 100%;
+  }
+}

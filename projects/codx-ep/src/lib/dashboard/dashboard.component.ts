@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 })
 export class EPDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('template') templates: QueryList<any>;
+  @ViewChildren('templateCar') templatesCar: QueryList<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
 
 
@@ -19,6 +20,12 @@ export class EPDashboardComponent extends UIComponent implements AfterViewInit {
   );
   datas:any = JSON.parse(
     '[{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.21519762020962552_layout","data":"7"}]'
+  );
+  panelCar:any = JSON.parse(
+    '[{"header":"Đi công tác nhiều nhất","id":"0.4199281088325755_layout","row":0,"col":36,"sizeX":12,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"header":"Thống kê đặt xe theo lý do","id":"0.4592017601751599_layout","row":0,"col":24,"sizeX":12,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","row":10,"col":12,"sizeX":36,"sizeY":13,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"header":"Thống kê đặt xe theo phòng ban","id":"0.21519762020962552_layout","row":0,"col":0,"sizeX":12,"sizeY":23,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"header":"Tỉ lệ sử dụng nguồn xe","id":"0.4905937674104959_layout","row":0,"col":12,"sizeX":12,"sizeY":10,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+  );
+  dataCar:any = JSON.parse(
+    '[{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"1"},{"panelId":"0.06496875406606994_layout","data":"2"},{"panelId":"0.21519762020962552_layout","data":"3"},{"panelId":"0.4905937674104959_layout","data":"4"}]'
   );
   dataLabel: Object = {
     visible: true,
@@ -49,9 +56,9 @@ export class EPDashboardComponent extends UIComponent implements AfterViewInit {
     private routerActive: ActivatedRoute,
   ){
     super(injector);
-    this.router.params.subscribe((param) => {
-      if (param) this.funcID = param['funcID'];
-    });
+    //this.router.params.subscribe((param) => {
+      //if (param) this.funcID = param['funcID'];
+    //});
 
     this.pageTitle.setBreadcrumbs([]);
   }
@@ -87,13 +94,14 @@ export class EPDashboardComponent extends UIComponent implements AfterViewInit {
     this.pageTitle.setBreadcrumbs([]);
     this.routerActive.params.subscribe((res) => {
       if (res.funcID) {
-        this.funcID = res.funcID;
+        //this.funcID = res.funcID;
         this.isLoaded = false;
         this.reportID=res.funcID;
         if(this.arrReport && this.arrReport.length){
           let idx =this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
           if(idx >-1){
             this.reportItem = this.arrReport[idx];
+            this.funcID = this.reportItem.reportID;
             this.getDataset();
           }
 
@@ -114,11 +122,8 @@ export class EPDashboardComponent extends UIComponent implements AfterViewInit {
   statByRes:any=[];
   statByEmp:any=[];
   subscription:Subscription;
-getDataset(params?:any){
-    this.isLoaded = false;
-    this.statByRes = [];
-    if(params) this.objParams = params;
-    else params = this.objParams
+
+  getBookingRoom(params?:any){
     this.subscription  && this.subscription.unsubscribe();
     this.subscription = this.api.execSv('rptep','Codx.RptBusiness.EP','BookingRoomsBusiness','GetDatasetAsync', params ? [params] : [{}])
                         .subscribe((res:any)=>{
@@ -152,7 +157,100 @@ getDataset(params?:any){
 
                           }
                         })
+  }
 
+  statByReason:any=[];
+  statByCard:any=[];
+  lstResources:any=[];
+  lstBookingPerAttendee:any=[];
+  statByAttendees:any=[];
+  getBookingCar(params?:any){
+    this.subscription  && this.subscription.unsubscribe();
+    this.subscription = this.api.execSv('rptep','Codx.RptBusiness.EP','BookingCarsBusiness','GetDatasetAsync', params ? [params] : [{}])
+                        .subscribe((res:any)=>{
+                          if(res && res.length){
+                            this.dataset = res;
+                            let objRes = this.groupBy(this.dataset.filter((x:any)=>x.resourceID),"resourceID");
+                            for(let key in objRes){
+                              let obj:any={};
+                              obj.resourceID = key;
+                              obj.resourceName = objRes[key][0].resourceName;
+                              obj.quantity = objRes[key].length;
+                              obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100);
+                              obj.usedHours = this.sumByProp(objRes[key],'hours');
+                              obj.departmentName = objRes[key][0].departmentName,
+                              obj[key] =  objRes[key].length
+                              let oKey:any={};
+                              oKey.resourceID=key;
+                              oKey.resourceName = obj.resourceName;
+                              this.lstResources.push(oKey);
+                              this.statByRes.push(obj);
+                            }
+                            let objEmp = this.groupBy(this.dataset,"createdBy");
+                            for(let key in objEmp){
+                              let obj:any={};
+                              obj.userID = key,
+                              obj.userName = objEmp[key][0].userName,
+                              obj.positionName = objEmp[key][0].positionName,
+                              obj.departmentName = objEmp[key][0].departmentName,
+                              obj.quantity = objEmp[key].length;
+                              obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100)
+                              this.statByEmp.push(obj);
+                            }
+                            let objReasons = this.groupBy(this.dataset,'reason');
+                            for(let key in objReasons){
+                              let obj:any={};
+                              obj.reason = key !='null' ? key : 'Lí do khác',
+                              obj.quantity = objReasons[key].length;
+                              obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100)
+                              this.statByReason.push(obj);
+                            }
+                            let objCards = this.groupBy(this.dataset,'useCard');
+                            for(let key in objCards){
+                              let obj:any={};
+                              obj.resourceName = key =='true' ? 'Xe nội bộ' : 'Xe ngoài',
+                              obj.quantity = objCards[key].length;
+                              obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100)
+                              this.statByCard.push(obj);
+                            }
+                            this.dataset.map((x:any)=>{
+                              if(x.attendees && x.attendees.length){
+                                for(let i =0;i<x.attendees.length;i++){
+                                  let objNew = JSON.parse(JSON.stringify(x));
+                                  objNew.attendeeName = x.attendees[i].userName;
+                                  objNew.attendeeID= x.attendees[i].userName
+                                  this.lstBookingPerAttendee.push(objNew);
+                                }
+                              }
+                              return x;
+                            })
+                            let objAttendee = this.groupBy(this.lstBookingPerAttendee,'attendeeName');
+                            for(let key in objAttendee){
+                              let obj:any={};
+                              obj.username = key,
+                              obj.userID=objAttendee[key][0].attendeeID;
+                              obj.quantity = objAttendee[key].length;
+                              obj.percentage = this.toFixed((obj.quantity/this.lstBookingPerAttendee.length)*100)
+                              this.statByAttendees.push(obj);
+                            }
+                            console.log(this.lstBookingPerAttendee   );
+
+                            this.isLoaded = true;
+
+                          }
+                        })
+  }
+  getDataset(params?:any){
+    this.isLoaded = false;
+    this.statByRes = [];
+    if(params) this.objParams = params;
+    else params = this.objParams
+    if(this.funcID == "EPD001"){
+      this.getBookingRoom(params);
+    }
+    if(this.funcID == 'EPD002'){
+      this.getBookingCar(params);
+    }
    }
 
   onActions(e:any){
@@ -263,5 +361,12 @@ getDataset(params?:any){
       }, 0);
     }
     return 0;
+  }
+
+  random_bg_color() {
+    let x = Math.floor(Math.random() * 256);
+    let y = Math.floor(Math.random() * 256);
+    let z = Math.floor(Math.random() * 256);
+    return "rgb(" + x + "," + y + "," + z + ")";
   }
 }

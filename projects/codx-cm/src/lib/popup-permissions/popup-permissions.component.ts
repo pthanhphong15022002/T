@@ -3,6 +3,7 @@ import { Component, OnInit, Optional } from '@angular/core';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   CacheService,
   DialogData,
   DialogRef,
@@ -41,17 +42,21 @@ export class PopupPermissionsComponent implements OnInit {
   isAdd = true;
   popover: any;
   objectIDSelect: any;
+  user: any;
+  isAdmin: boolean = false;
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private auth: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.title = dt?.data?.title;
+    this.user = this.auth.get();
     this.entityName = dt?.data?.entityName;
     if (this.data?.permissions != null && this.data?.permissions?.length > 0) {
       this.lstPermissions = this.sortOrGroup(this.data?.permissions);
@@ -74,6 +79,20 @@ export class PopupPermissionsComponent implements OnInit {
         (inline) => inline.memberType === '1'
       );
       this.changePermissions(this.currentPemission);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.isAdmin = !this.user?.administrator;
+    if (!this.user?.administrator) {
+      this.api
+        .execSv<any>('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
+          this.user?.userID,
+          'CM',
+        ])
+        .subscribe((res) => {
+          this.isAdmin = res;
+        });
     }
   }
 
@@ -285,15 +304,17 @@ export class PopupPermissionsComponent implements OnInit {
 
   //#region  check Permission
   checkAdminUpdate() {
-    if (this.lstPermissions != null && this.lstPermissions.length > 0) {
-      if (
-        (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
-          this.lstPermissions[this.currentPemission]?.objectID ==
-            this.data?.owner) ||
-        (!this.data?.allowPermit && this.entityName != 'CM_Customers') ||
-        this.lstPermissions[this.currentPemission]?.memberType == '0'
-      ){
-        return true;
+    if (!this.isAdmin && this.user?.userID != this.data.owner) {
+      if (this.lstPermissions != null && this.lstPermissions.length > 0) {
+        if (
+          (this.lstPermissions[this.currentPemission]?.roleType == 'O' &&
+            this.lstPermissions[this.currentPemission]?.objectID ==
+              this.data?.owner) ||
+          (!this.data?.allowPermit && this.entityName != 'CM_Customers') ||
+          this.lstPermissions[this.currentPemission]?.memberType == '0'
+        ) {
+          return true;
+        }
       }
     }
 
@@ -301,7 +322,11 @@ export class PopupPermissionsComponent implements OnInit {
   }
 
   checkAddUser() {
-    if (this.data?.assign) {
+    if (
+      this.data?.assign ||
+      this.isAdmin ||
+      this.user?.userID == this.data?.owner
+    ) {
       this.isAdd = true;
     } else {
       this.isAdd = false;
@@ -309,15 +334,17 @@ export class PopupPermissionsComponent implements OnInit {
   }
 
   checkRemove(index) {
-    if (this.lstPermissions != null && this.lstPermissions.length > 0) {
-      if (
-        (this.lstPermissions[index]?.roleType == 'O' &&
-          this.lstPermissions[index]?.objectID == this.data?.owner) ||
-        !this.data?.assign ||
-        this.lstPermissions[index]?.memberType == '0' ||
-        this.lstPermissions[index]?.memberType == '2'
-      )
-        return true;
+    if (!this.isAdmin && this.user?.userID != this.data.owner) {
+      if (this.lstPermissions != null && this.lstPermissions.length > 0) {
+        if (
+          (this.lstPermissions[index]?.roleType == 'O' &&
+            this.lstPermissions[index]?.objectID == this.data?.owner) ||
+          !this.data?.assign ||
+          this.lstPermissions[index]?.memberType == '0' ||
+          this.lstPermissions[index]?.memberType == '2'
+        )
+          return true;
+      }
     }
     return false;
   }
