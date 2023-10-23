@@ -17,7 +17,7 @@ import {
   ViewType,
   ViewsComponent,
 } from 'codx-core';
-import { PopupInputPointsComponent } from './popup-input-points/popup-input-points.component';
+import { PopupApprovalComponent } from './popup-approval/popup-approval.component';
 import { PopupAddCardsComponent } from '../cards/popup-add-cards/popup-add-cards.component';
 
 @Component({
@@ -126,9 +126,10 @@ export class ApprovalsComponent extends UIComponent {
   }
 
   accept(item) {
-    if (this.activeCoins == '1' || this.activeKudos == '1') {
-      this.openPopupInputPoints(item);
-    } else this.update(item, 1);
+    // if (this.activeCoins == '1' || this.activeKudos == '1') {
+    //   this.openPopupApproval(item);
+    // } else this.update(item, 1);
+    this.openPopupApproval(item);
   }
 
   notAccept(item) {
@@ -158,8 +159,8 @@ export class ApprovalsComponent extends UIComponent {
     this.viewComponent.dataService.update(item).subscribe();
   }
 
-  // popup chọn điểm
-  openPopupInputPoints(item) {
+  // popup chọn điểm và ý kiến
+  openPopupApproval(item) {
     var obj = {
       recID: item.recID,
       activeCoins: this.activeCoins,
@@ -168,10 +169,10 @@ export class ApprovalsComponent extends UIComponent {
     };
 
     let popup = this.callFC.openForm(
-      PopupInputPointsComponent,
+      PopupApprovalComponent,
       '',
       200,
-      300,
+      350,
       '',
       obj,
       ''
