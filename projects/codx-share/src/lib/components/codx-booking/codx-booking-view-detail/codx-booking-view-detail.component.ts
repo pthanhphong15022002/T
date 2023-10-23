@@ -24,6 +24,7 @@ import { Permission } from '@shared/models/file.model';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import moment from 'moment';
+import { CodxShareService } from '../../../codx-share.service';
 //import { CodxBookingComponent } from '../codx-booking.component';
 @Component({
   selector: 'codx-booking-view-detail',
@@ -65,7 +66,8 @@ export class CodxBookingViewDetailComponent
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('cancel') cancel: EventEmitter<any> = new EventEmitter();
   @Output('allocate') allocate: EventEmitter<any> = new EventEmitter();
-  @Output('setAllocateStatus') setAllocateStatus: EventEmitter<any> = new EventEmitter();
+  @Output('setAllocateStatus') setAllocateStatus: EventEmitter<any> =
+    new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
@@ -84,8 +86,8 @@ export class CodxBookingViewDetailComponent
   listFilePermission = [];
   allowUploadFile = false;
   grView: any;
-  loadedData:boolean;
-  tabControl: TabModel[]= [
+  loadedData: boolean;
+  tabControl: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
@@ -95,19 +97,20 @@ export class CodxBookingViewDetailComponent
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
+    private codxShareService: CodxShareService,
     private callFuncService: CallFuncService,
     private authService: AuthService,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     super(injector);
     // this.routerRecID = this.router.snapshot.params['id'];
     // if (this.routerRecID != null) {
     //   //this.hideFooter = true;
     // }
-    
-    this.curUser =this.authStore.get();
-    if(this.curUser==null){
-      this.curUser= this.authService?.userValue;
+
+    this.curUser = this.authStore.get();
+    if (this.curUser == null) {
+      this.curUser = this.authService?.userValue;
     }
   }
 
@@ -131,24 +134,28 @@ export class CodxBookingViewDetailComponent
     this.detectorRef.detectChanges();
     this.setHeight();
   }
-  ngAfterViewInit(): void {
-    
-  }
+  ngAfterViewInit(): void {}
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.itemDetail) {
-      this.loadedData=false;
-      if (this.viewMode == '1' && changes.itemDetail?.currentValue?.recID!=null) {
+      this.loadedData = false;
+      if (
+        this.viewMode == '1' &&
+        changes.itemDetail?.currentValue?.recID != null
+      ) {
         this.codxEpService
           .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
           .subscribe((res) => {
             if (res) {
               this.itemDetail = res;
               this.refeshData(this.itemDetail);
-              this.loadedData=true;
+              this.loadedData = true;
               this.detectorRef.detectChanges();
             }
           });
-      } else if (this.viewMode == '2' && changes.itemDetail?.currentValue?.approvalTransRecID!=null) {
+      } else if (
+        this.viewMode == '2' &&
+        changes.itemDetail?.currentValue?.approvalTransRecID != null
+      ) {
         this.codxEpService
           .getApproveByRecID(
             changes.itemDetail?.currentValue?.approvalTransRecID
@@ -157,7 +164,7 @@ export class CodxBookingViewDetailComponent
             if (res) {
               this.itemDetail = res;
               this.refeshData(this.itemDetail);
-              this.loadedData=true;
+              this.loadedData = true;
               this.detectorRef.detectChanges();
             }
           });
@@ -210,7 +217,7 @@ export class CodxBookingViewDetailComponent
           break;
 
         //Room
-        case EPCONST.MFUNCID.R_Reschedule: //Dời  
+        case EPCONST.MFUNCID.R_Reschedule: //Dời
           this.setPopupTitleOption.emit(event?.text);
           this.reschedule.emit(data);
           break;
@@ -220,7 +227,7 @@ export class CodxBookingViewDetailComponent
           break;
 
         //Car
-       
+
         //Stationery
         case EPCONST.MFUNCID.S_Allocate:
           this.setAllocateStatus.emit(EPCONST.A_STATUS.Approved);
@@ -229,6 +236,24 @@ export class CodxBookingViewDetailComponent
         case EPCONST.MFUNCID.S_Allocate:
           this.setAllocateStatus.emit(EPCONST.A_STATUS.Rejected);
           this.allocate.emit(data);
+          break;
+        default:
+          //Biến động , tự custom
+          var customData = {
+            refID: '',
+            refType: this.formModel?.entityName,
+            dataSource: data,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.formModel,
+            this.view?.dataService,
+            this,
+            customData
+          );
           break;
       }
     } else if (this.viewMode == '2') {
@@ -316,7 +341,7 @@ export class CodxBookingViewDetailComponent
             }
             if (
               //Ẩn: sửa - xóa - gửi duyệt
-  
+
               func.functionID == EPCONST.MFUNCID.Delete ||
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
@@ -358,7 +383,7 @@ export class CodxBookingViewDetailComponent
               // Hiện: Mời - dời - Chép
               func.functionID == EPCONST.MFUNCID.Copy ||
               func.functionID == EPCONST.MFUNCID.R_Invite ||
-              func.functionID == EPCONST.MFUNCID.R_Reschedule||
+              func.functionID == EPCONST.MFUNCID.R_Reschedule ||
               func.functionID == EPCONST.MFUNCID.R_Cancel ||
               func.functionID == EPCONST.MFUNCID.C_Cancel ||
               func.functionID == EPCONST.MFUNCID.S_Cancel
@@ -371,7 +396,7 @@ export class CodxBookingViewDetailComponent
               func.functionID == EPCONST.MFUNCID.Edit ||
               func.functionID == EPCONST.MFUNCID.R_Release ||
               func.functionID == EPCONST.MFUNCID.C_Release ||
-              func.functionID == EPCONST.MFUNCID.S_Release 
+              func.functionID == EPCONST.MFUNCID.S_Release
             ) {
               func.disabled = true;
             }
@@ -544,7 +569,11 @@ export class CodxBookingViewDetailComponent
             func.disabled = true;
           }
         });
-      } else if (data?.stepType == 'I' && (data?.approveStatus == '5' &&  data?.issueStatus != '1') || (data?.approveStatus == '4') 
+      } else if (
+        (data?.stepType == 'I' &&
+          data?.approveStatus == '5' &&
+          data?.issueStatus != '1') ||
+        data?.approveStatus == '4'
       ) {
         //Đã cấp phát
         event.forEach((func) => {
@@ -649,9 +678,13 @@ export class CodxBookingViewDetailComponent
     return time;
   }
 
-  meetingNow(){
-    if(this.itemDetail?.onlineUrl !=null){
-      let url = this.curUser?.userID == this.itemDetail?.createdBy || this.curUser?.userID == this.itemDetail?.owner ? this.itemDetail?.onlineUrl2 :this.itemDetail?.onlineUrl;
+  meetingNow() {
+    if (this.itemDetail?.onlineUrl != null) {
+      let url =
+        this.curUser?.userID == this.itemDetail?.createdBy ||
+        this.curUser?.userID == this.itemDetail?.owner
+          ? this.itemDetail?.onlineUrl2
+          : this.itemDetail?.onlineUrl;
       window.open(url, '_blank');
     }
   }

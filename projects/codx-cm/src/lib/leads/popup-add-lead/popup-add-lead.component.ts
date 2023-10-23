@@ -378,7 +378,7 @@ export class PopupAddLeadComponent
           [this.lead.address, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         this.lead.provinceID = lstDis?.ProvinceID;
         this.lead.districtID = lstDis?.DistrictID;

@@ -98,7 +98,7 @@ implements OnInit, AfterViewInit {
   getColorStepName(status: string) {
     if (status == '1') {
       return 'step current ';
-    } else if (status == '3' || status == '4' || status == '5' || !status) {
+    } else if (status == '3' || status == '4' || status == '5' || status == '6'|| !status) {
       return 'step old ';
     }
     return 'step';

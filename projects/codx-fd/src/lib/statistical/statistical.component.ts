@@ -391,7 +391,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             if(this.reportItem.reportID == 'FDD002'){
               this.typeBallot='1';
             }
-            this.reloadAllChart();
+            this.getDataChartB();
           }
 
         }
@@ -547,7 +547,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dataset=res.lstCards;
-          this.listBehaviors=res.lstBehaivor;
+          this.listBehaviors=res.lstBehaivor || [];
           this.mappingData()
           this.cardsByRatingType = this.groupBy(this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName),'ratingName');
           for(let key in this.cardsByRatingType){
@@ -988,7 +988,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
                   if(this.reportItem.reportID == 'FDD002'){
                     this.typeBallot='1';
                   }
-                  this.reloadAllChart();
+                  //this.getDataChartB();
                   //this.reloadAllChart();
                   //this.isLoaded = true
                 }
@@ -996,10 +996,15 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
       }
     }
+    if(e.type == 'reportItem'){
+      this.reportItem = e.data;
+    }
   }
 
+  objParams:any;
   filterChange(e:any){
-    debugger
+    this.objParams=e[1];
+    this.reportItem &&  this.getDataChartB();
   }
 
   private groupBy(arr: any, key: any) {

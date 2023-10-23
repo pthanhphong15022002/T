@@ -15,7 +15,7 @@
                 <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>
             </div>
         </ng-container>
-        <div class="d-flex align-items-center justify-content-end">
+        <div class="d-flex align-items-center justify-content-end w-100">
             <codx-searchbar
                 class="mt-1"
                 [type]="'slide'"
@@ -28,6 +28,18 @@
                 (sortChange)="sortChanged($event)"
             >
             </codx-toolbar-choose>
+            <button
+                type="button"
+                class="btn btn-sm btn-primary mt-2 mx-2"
+                (click)="addClick()"
+                *ngIf="isAdd"
+            >
+                <codx-label
+                    fiedName="lblSave"
+                    default="Thêm"
+                >
+                </codx-label>
+            </button>
             <codx-toolbar-more
                 class="mt-2 me-2"
                 [buttons]="fMoreFuncs"

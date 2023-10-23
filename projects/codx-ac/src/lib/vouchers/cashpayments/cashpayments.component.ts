@@ -90,7 +90,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.journalNo = params?.journalNo; //? get số journal từ router
       });
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit(): void {
@@ -162,7 +162,7 @@ export class CashPaymentsComponent extends UIComponent {
     this.destroy$.complete();
   }
 
-  //#endregion
+  //#endregion Init
 
   //#region Event
 
@@ -243,7 +243,7 @@ export class CashPaymentsComponent extends UIComponent {
     }
   }
 
-  //#endregion
+  //#endregion Event
 
   //#region Function
 
