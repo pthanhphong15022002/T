@@ -82,12 +82,6 @@ export class ContractsViewDetailComponent
       isActive: false,
       template: null,
     },
-    // {
-    //   name: 'References',
-    //   textDefault: 'Liên kết',
-    //   isActive: false,
-    //   template: null,
-    // },
   ];
   fmQuotationLines: FormModel = {
     funcID: 'CM02021',
@@ -111,7 +105,6 @@ export class ContractsViewDetailComponent
   ) {
     super(inject);
     this.dialog = dialog;
-    this.listTypeContract = [];
     if (!this.formModel) {
       this.formModel = dt?.data?.formModel;
     }
@@ -128,6 +121,7 @@ export class ContractsViewDetailComponent
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
     }
+    this.listTypeContract = this.contractService.listTypeContractTask;
   }
   async onInit() {
     this.grvSetup = await firstValueFrom(
@@ -146,10 +140,7 @@ export class ContractsViewDetailComponent
     this.getPayMentByContractID(this.contract?.recID);
     if (this.contract?.applyProcess) {
       this.getListInstanceStep(this.contract);
-      this.listTypeContract = this.contractService.listTypeContract;
-    } else {
-      this.listTypeContract = this.contractService.listTypeContractNoTask;
-    }
+    } 
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
   }
