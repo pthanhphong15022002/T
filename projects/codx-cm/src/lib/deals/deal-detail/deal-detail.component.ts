@@ -782,7 +782,6 @@ export class DealDetailComponent implements OnInit {
         return result?.text;
       }
     }
-
     return '';
   }
 }
