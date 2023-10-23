@@ -25,6 +25,7 @@ import { StepService } from '../step.service';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
   selector: 'codx-add-stask',
@@ -33,6 +34,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 })
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('comboboxStep', { static: false }) comboboxStep: ComboBoxComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
@@ -879,6 +881,8 @@ export class CodxAddTaskComponent implements OnInit {
         this.isActivitie = false;
         this.stepsTasks.objectID = null;
         this.stepsTasks.objectType = null;
+        this.stepsTasks.stepID = null;
+        this.stepsTasks.taskGroupID = null;   
         this.getListInstanceStep(this.dataTypeCM.RefID, true);
       } else {
         this.isActivitie = !(!!this.dataTypeCM.RefID);
@@ -893,6 +897,7 @@ export class CodxAddTaskComponent implements OnInit {
           this.isShowCbxGroup = false;
           this.disableStep = false;
         }
+        this.comboboxStep.refresh();
       }
     }
     this.dataCM = event?.data;
