@@ -556,7 +556,7 @@ export class InstancesComponent
             }
             // else if (this.process.applyFor == '4') {
             //   this.openPopupContract('add', formMD);
-            // } 
+            // }
             else {
               this.openPopUpAdd(
                 applyFor,
@@ -598,7 +598,7 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-            
+
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -659,7 +659,6 @@ export class InstancesComponent
             this.kanban.refresh();
           }
         }
-
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected
           this.detailViewInstance.getStageByStep()
@@ -669,8 +668,6 @@ export class InstancesComponent
           this.detailViewPopup.dataSelect = this.dataSelected;
           this.detailViewPopup.loadChangeData()
         }
-
-     
         this.detectorRef.detectChanges();
       }
     });
@@ -703,9 +700,9 @@ export class InstancesComponent
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }else  this.kanban.updateCard(this.dataSelected); 
+          }else  this.kanban.updateCard(this.dataSelected);
         }
-      
+
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.loadChangeData();
@@ -1692,13 +1689,13 @@ export class InstancesComponent
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.detailViewInstance.loadChangeData();
               }
-           
+
               if (this.detailViewPopup) {
                 this.detailViewPopup.dataSelect = this.dataSelected;
                 this.detailViewPopup.listSteps = this.listStepInstances;
                 this.detailViewPopup.loadChangeData()
               }
-      
+
               this.detectorRef.detectChanges();
             }
           });
@@ -1785,11 +1782,9 @@ export class InstancesComponent
       isReason: isMoveSuccess,
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
-      listProccessCbx: this.listProccessCbx,
-      listParticipantReason: await this.codxDpService.getListUserByOrg(
-        listParticipantReason
-      ),
+      processID: this.processID,
       applyFor: '0',
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1836,7 +1831,14 @@ export class InstancesComponent
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
-      }
+      // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
+      //   e.event?.ownerMove,
+      //   e.event?.instance,
+      //   'testttt'
+      //   );
+
+       }
+
     });
   }
 
@@ -2662,4 +2664,83 @@ export class InstancesComponent
       return `rgb(${r}, ${g}, ${b})`;
     }
   }
+
+  addMoveProcess(processMove,applyForMove,ownerMove,instance,titleAction) {
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          const funcIDApplyFor = this.checkFunctionID(applyForMove);
+          const applyFor = applyForMove;
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+            if (this.addFieldsControl == '2') {
+              let customName = fun.customName || fun.description;
+              if (this.autoName) customName = this.autoName;
+              titleAction =
+                titleAction +
+                ' ' +
+                customName.charAt(0).toLocaleLowerCase() +
+                customName.slice(1);
+            }
+            let instanceReason = {
+              applyForMove: applyForMove,
+              processMove:processMove,
+              ownerMove:ownerMove,
+              instance:instance
+            };
+            this.cache
+              .gridViewSetup(fun.formName, fun.gridViewName)
+              .subscribe((grvSt) => {
+                var formMD = new FormModel();
+                formMD.funcID = funcIDApplyFor;
+                formMD.entityName = fun.entityName;
+                formMD.formName = fun.formName;
+                formMD.gridViewName = fun.gridViewName;
+                option.Width =
+                  this.addFieldsControl == '1' || applyFor != '0'
+                    ? '800px'
+                    : '550px';
+                option.zIndex = 1001;
+                if (applyFor != '0') {
+                  this.openPopupMove(
+                    applyFor,
+                    formMD,
+                    option,
+                    'add',
+                    instanceReason
+                  );
+                }
+              });
+          });
+        });
+    }
+    openPopupMove(applyFor,formMD,option,action,instanceReason) {
+        var obj = {
+          action: action === 'add' ? 'add' : 'copy',
+          applyFor: applyFor,
+          titleAction: this.titleAction,
+          formMD: formMD,
+          endDate: this.HandleEndDate(this.listStepsCbx, action, null),
+          lstParticipants: this.lstOrg,
+          oldIdInstance: this.oldIdInstance,
+          autoName: this.autoName,
+          isAdminRoles: this.isAdminRoles,
+          addFieldsControl: this.addFieldsControl,
+          isLoad: applyFor != '0',
+          processID: this.processID,
+          instanceNoSetting: this.process.instanceNoSetting,
+          dataCM: this.dataCM,
+          categoryCustomer: this.categoryCustomer,
+          instanceReason:instanceReason
+        };
+        this.detailViewInstance
+        let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
+        dialogCustomField.closed.subscribe((e) => {
+          if (e && e.event != null) {
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
 }

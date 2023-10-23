@@ -85,7 +85,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.customerID) {
+    if (changes?.objectID) {
       this.isLoad = true;
       this.isNoData = false;
       this.listActivitie = [];
@@ -287,7 +287,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
     let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {
-      let data = taskOutput?.event;
+      let data = taskOutput?.event?.task;
       this.copyData(data, this.activitie);
       let rolesTask = data?.roles;
       let roles: DP_Activities_Roles[] = [];

@@ -13,6 +13,7 @@ import {
   AccumulationTooltipService,
   BubbleSeriesService,
   BulletChartModule,
+  BulletTooltipService,
   ChartAllModule,
   ChartModule,
   PieSeriesService,
@@ -305,7 +306,8 @@ const T_Component: Type<any>[] = [
     LineSeriesService,
     BubbleSeriesService,
     PieSeriesService,
-    AccumulationDataLabelService
+    AccumulationDataLabelService,
+    BulletTooltipService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
