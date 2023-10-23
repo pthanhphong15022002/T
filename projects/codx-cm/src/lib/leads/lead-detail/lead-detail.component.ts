@@ -209,8 +209,8 @@ export class LeadDetailComponent implements OnInit {
     const mappings = {
       '5': 'companyNo',
       '6': 'customerNo',
-      '3': 'companyName',
-      '4': 'customerName',
+      '7': 'companyName',
+      '8': 'customerName',
     };
     for (const key in mappings) {
       const value = mappings[key];

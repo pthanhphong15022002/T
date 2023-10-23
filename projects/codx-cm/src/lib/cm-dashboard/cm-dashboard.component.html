@@ -867,114 +867,160 @@
       default="Sales targets"
     ></codx-label>
     <ng-container *ngIf="lstQuarters?.length > 0; else noData">
-      <div class="w-100 d-flex justify-content-center">
+      <ejs-bulletchart
+        align="center"
+        id="revenue"
+        width="800px"
+        height="70%"
+        style="display: block; text-align: center"
+        valueField="value"
+        targetField="target"
+        [minimum]="minimumBullet"
+        [maximum]="maximumBulletQ0"
+        [interval]="intervalQ0"
+        [width]="'800px'"
+        height="70%"
+        [title]="titleQ0"
+        (tooltipRender)="tooltipRender($event, '0')"
+        [dataSource]="dataBulletQ0s"
+        [animation]="{ enable: false }"
+        [labelFormat]="labelFormatQ0"
+        (load)="load($event)"
+        [tooltip]="tooltipBullet0"
+        valueFill="#FF4500"
+        [dataLabel]="dataLabelBuleet"
+      >
+        <e-bullet-range-collection>
+          <e-bullet-range
+            [end]="dealValueWonQ0"
+            color="#FF4500"
+          ></e-bullet-range>
+          <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
+        </e-bullet-range-collection>
+      </ejs-bulletchart>
+      <div class="row">
         <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
           valueField="value"
           targetField="target"
-          [title]="titleQ0"
-          width="800px"
-          height="70%"
           [minimum]="minimumBullet"
-          [maximum]="maximumBulletQ0"
-          [interval]="intervalQ0"
-          [dataSource]="dataBulletQ0s"
+          [maximum]="maximumBulletQ1"
+          [interval]="intervalQ1"
+          [title]="titleQ1"
+          (tooltipRender)="tooltipRender($event, '1')"
+          [dataSource]="dataBulletQ1s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ1"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet1"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
         >
           <e-bullet-range-collection>
             <e-bullet-range
-              [end]="dealValueWonQ0"
-              color="##FF4500"
+              [end]="dealValueWonQ1"
+              color="#FF4500"
             ></e-bullet-range>
-            <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
+            <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ2"
+          [interval]="intervalQ2"
+          [title]="titleQ2"
+          (tooltipRender)="tooltipRender($event, '2')"
+          [dataSource]="dataBulletQ2s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ2"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet2"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ2"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
       <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ1"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ1"
-            [interval]="intervalQ1"
-            [dataSource]="dataBulletQ1s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ1"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ2"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ2"
-            [interval]="intervalQ2"
-            [dataSource]="dataBulletQ2s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ2"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ3"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ3"
-            [interval]="intervalQ3"
-            [dataSource]="dataBulletQ3s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ3"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ4"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ4"
-            [interval]="intervalQ4"
-            [dataSource]="dataBulletQ4s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ4"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ3"
+          [interval]="intervalQ3"
+          [title]="titleQ3"
+          (tooltipRender)="tooltipRender($event, '3')"
+          [dataSource]="dataBulletQ3s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ3"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet3"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ3"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ4"
+          [interval]="intervalQ4"
+          [title]="titleQ4"
+          (tooltipRender)="tooltipRender($event, '4')"
+          [dataSource]="dataBulletQ4s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ4"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet4"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ4"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
       </div>
     </ng-container>
   </div>
@@ -1072,11 +1118,21 @@
               </td>
               <ng-container *ngFor="let user of lstUsers">
                 <td
-                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  *ngIf="findItemUser(item.value, user?.performances)"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
                   <div class="text-gray-800 d-flex justify-content-center">
-                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                    <div class="d-flex justify-content-start me-1">
+                      {{ findItemUser(item.value, user?.performances)?.count }}
+                    </div>
+                    <div
+                      class="d-flex justify-content-end"
+                      *ngIf="item.value != '7' && item.value != '9'"
+                    >
+                      {{
+                        findItemUser(item.value, user?.performances)?.valueAsc
+                      }}
+                    </div>
                   </div>
                 </td>
               </ng-container>
