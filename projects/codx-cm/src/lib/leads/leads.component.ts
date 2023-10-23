@@ -1458,6 +1458,7 @@ export class LeadsComponent
       applyFor: this.applyForLead,
       dataCM: dataCM,
       stepName: data.currentStepName,
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(

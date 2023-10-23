@@ -821,17 +821,17 @@ export class PopupAddLeadComponent
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
-          this.lead.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
           this.lead.leadID = res[2];
         }
+        this.lead.endDate = this.HandleEndDate(
+          this.listInstanceSteps,
+          this.action,
+          this.action !== this.actionEdit || this.action === this.actionEdit && (this.lead.status == '1' || this.lead.status == '15' ) ? null : this.lead.createdOn
+        );
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action !== this.actionEdit ? null : this.lead.createdOn
+          this.action != this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
 
@@ -840,11 +840,28 @@ export class PopupAddLeadComponent
     });
   }
 
+  // HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+  //   var dateNow =
+  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+  //   var endDate =
+  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+  //   for (let i = 0; i < listSteps.length; i++) {
+  //     endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+  //     endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+  //     endDate = this.setTimeHoliday(
+  //       dateNow,
+  //       endDate,
+  //       listSteps[i]?.excludeDayoff
+  //     );
+  //     dateNow = endDate;
+  //   }
+  //   return endDate;
+  // }
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-    var dateNow =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-    var endDate =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    endDateValue = action === this.actionAdd || action === this.actionCopy || (this.action === this.actionEdit && (this.lead.status == '1' ||
+   this.lead.status == '15' ))? new Date() : new Date(endDateValue);
+    let dateNow = endDateValue;
+    let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours(endDate.getHours() + listSteps[i].durationHour);

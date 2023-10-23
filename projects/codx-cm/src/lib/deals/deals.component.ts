@@ -978,6 +978,7 @@ export class DealsComponent
       applyFor: '1',
       dataCM: dataCM,
       stepName: data.currentStepName,
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(
