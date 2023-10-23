@@ -34,7 +34,6 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 })
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
-  @ViewChild('comboboxStep', { static: false }) comboboxStep: ComboBoxComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
@@ -897,7 +896,6 @@ export class CodxAddTaskComponent implements OnInit {
           this.isShowCbxGroup = false;
           this.disableStep = false;
         }
-        this.comboboxStep.refresh();
       }
     }
     this.dataCM = event?.data;
