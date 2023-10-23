@@ -48,7 +48,7 @@ export class CatagoryComponent implements OnInit {
     PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
-  title = '';
+  title: string[] = [];
   //listName = 'SYS001';
   settingFull = [];
   setting = [];
@@ -133,7 +133,7 @@ export class CatagoryComponent implements OnInit {
         const ds = (this.valuelist.datas as any[]).find(
           (item) => item.value == this.category
         );
-        this.title = ds.text;
+        this.title.push(ds.text);
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
         //else if (this.category === '4') this.getCategories();
@@ -417,6 +417,8 @@ export class CatagoryComponent implements OnInit {
   }
 
   openSub(evt: any, data: any, dataValue: any) {
+    this.title.push(data.tilte);
+    this.lineType = +this.lineType + 1 + '';
     let recID = data.recID;
     this.isOpenSub = true;
     if (!this.oldSettingFull || Object.keys(this.oldSettingFull).length === 0)
@@ -428,9 +430,9 @@ export class CatagoryComponent implements OnInit {
       this.componentSub = data.reference;
 
       this.dataValue = dataValue || {};
-      this.groupSetting = this.setting = this.settingFull = [data];
+      this.groupSetting = this.settingFull = [];
+      this.setting = [data];
     } else {
-      this.lineType = +this.lineType + 1 + '';
       this.settingFull =
         this.settingFull.filter(
           (x) => x.refLineID === recID && x.lineType === this.lineType
@@ -471,6 +473,15 @@ export class CatagoryComponent implements OnInit {
   }
 
   backSub(evt: any) {
+    this.title = this.title.slice(0, -1);
+    if (this.lineType == '1') {
+      this.oldSettingFull = [];
+      this.oldDataValue = {};
+    } else {
+      if (this.lineType == '2') this.isOpenSub = false;
+      this.lineType = +this.lineType - 1 + '';
+    }
+
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
@@ -480,11 +491,7 @@ export class CatagoryComponent implements OnInit {
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
-    if (this.lineType == '1') {
-      this.isOpenSub = false;
-      this.oldSettingFull = [];
-      this.oldDataValue = {};
-    } else this.lineType = +this.lineType - 1 + '';
+
     if (this.componentSub) {
       this.componentSub = '';
     } else {
