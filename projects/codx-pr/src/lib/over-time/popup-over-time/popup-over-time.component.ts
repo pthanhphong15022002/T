@@ -242,6 +242,10 @@ export class PopupOverTimeComponent extends UIComponent {
       );
       return false;
     }
+    if (this.data.fromDate > this.data.toDate) {
+      this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
+      return false;
+    }
     if (!this.data.employeeID) {
       console.log(this.grView['employeeID']);
       this.notificationsService.notifyCode(
@@ -270,7 +274,7 @@ export class PopupOverTimeComponent extends UIComponent {
 
   onSaveForm() {
     if (this.validateForm() === true) {
-      this.dialogRef.dataService
+      this.form
         .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, true)
         .pipe(takeUntil(this.destroy$))
         .subscribe(async (res) => {

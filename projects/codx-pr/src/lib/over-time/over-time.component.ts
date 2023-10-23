@@ -1,8 +1,16 @@
-import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import {
   AuthStore,
   ButtonModel,
   CacheService,
+  DialogRef,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -18,7 +26,8 @@ import { ViewDetailOtComponent } from './view-detail-over-time/view-detail-ot.co
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
-import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { CodxPrService } from '../codx-pr.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-over-time',
@@ -31,6 +40,12 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
   @ViewChild('viewdetail') viewdetail: ViewDetailOtComponent;
+  @ViewChild('templateUpdateStatus', { static: true })
+  templateUpdateStatus: TemplateRef<any>;
+
+  formGroup: FormGroup;
+
+  cmtStatus: string = '';
   views: Array<ViewModel> = [];
   buttons: ButtonModel;
   popupTitle;
@@ -45,6 +60,14 @@ export class OverTimeComponent extends UIComponent {
   recID = null;
   itemSelected: any;
   registerForm = ['1', '2'];
+
+  //#region more functions
+  actionCancelSubmit = 'HRTPro11A00';
+  actionSubmit = 'HRTPro11A03';
+  actionUpdateCanceled = 'HRTPro11AU0';
+  actionUpdateInProgress = 'HRTPro11AU3';
+  actionUpdateApproved = 'HRTPro11AU5';
+
   //View schedule
   requestSchedule: ResourceModel;
   @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
@@ -68,6 +91,11 @@ export class OverTimeComponent extends UIComponent {
   };
   lblAdd: any;
   status: any;
+  itemDetail: any;
+  editStatusObj: any;
+  currentEmpObj: any = null;
+  dialogEditStatus: DialogRef;
+  crrStatus: string = '';
 
   //#endregion
 
@@ -77,7 +105,10 @@ export class OverTimeComponent extends UIComponent {
     private cacheService: CacheService,
     private codxODService: CodxOdService,
     private codxShareService: CodxShareService,
-    private hrService: CodxHrService
+    private hrService: CodxHrService,
+    private prService: CodxPrService,
+    private notify: NotificationsService,
+    private df: ChangeDetectorRef
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -86,6 +117,7 @@ export class OverTimeComponent extends UIComponent {
         this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
       }
     });
+
   }
 
   //Get user default login
@@ -130,6 +162,20 @@ export class OverTimeComponent extends UIComponent {
         });
     });
   }
+  //Set form group data when open Modal dialog
+  ngAfterViewChecked() {
+    if (!this.formGroup?.value) {
+      this.hrService
+        .getFormGroup(
+          this.view?.formModel?.formName,
+          this.view?.formModel?.gridViewName,
+          this.view?.formModel
+        )
+        .then((res) => {
+          this.formGroup = res;
+        });
+    }
+  }
 
   //#region Init components
   onInit() {
@@ -156,6 +202,14 @@ export class OverTimeComponent extends UIComponent {
   getSchedule() {
     //let resourceType = '1';
   }
+
+  CloseStatus(dialog: DialogRef) {
+    dialog.close();
+  }
+  ValueChangeComment(evt) {
+    this.cmtStatus = evt.data;
+  }
+
   requestDetail: any = null;
 
   ngAfterViewInit() {
@@ -183,7 +237,7 @@ export class OverTimeComponent extends UIComponent {
       {
         type: ViewType.listdetail,
         active: false,
-        sameData: false,
+        sameData: true,
         request: this.requestDetail,
         model: {
           template: this.itemTemplateListDetail,
@@ -214,38 +268,136 @@ export class OverTimeComponent extends UIComponent {
   //#endregion
 
   clickMF(e, data) {
+    this.itemDetail = data;
     switch (e.functionID) {
       case 'SYS02':
         this.delete(data);
         break;
+      //Edit
       case 'SYS03':
         this.edit(e, data);
         break;
+      //Copy
       case 'SYS04':
         this.copy(e, data);
         break;
-      case 'HRTPro11A00':
-      case 'HRTPro11A03':
-      case 'HRTPro11AU0':
-      case 'HRTPro11AU3':
-      case 'HRTPro11AU5':
-        this.updateStatus(e, data);
+      case this.actionSubmit:
+        // gui xet duyet
+        this.beforeRelease();
         break;
-      // case 'HRTPro11A03':
-      //   this.submit(e, data);
-      //   break;
-      // case 'HRTPro11AU0':
-      //   this.updateCancel(e, data);
-      //   break;
-      // case 'HRTPro11AU3':
-      //   this.updateInProgress(e, data);
-      //   break;
-      // case 'HRTPro11AU5':
-      //   this.updateApproved(e, data);
-      //   break;
+      case this.actionCancelSubmit:
+      case this.actionUpdateCanceled:
+      case this.actionUpdateInProgress:
+      case this.actionUpdateApproved:
+        // cap nhat trang thai
+        let oUpdate = JSON.parse(JSON.stringify(data));
+        this.openPopupUpdateStatus(e.functionID, oUpdate);
+        break;
+      //Delete
+
+      default: {
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.view.formModel,
+          this.view.dataService,
+          this
+        );
+        break;
+      }
     }
   }
 
+  beforeRelease() {
+    this.prService
+      .validateBeforeReleaseTimeKeepingRequest(this.itemDetail.recID)
+      .subscribe((res: any) => {
+        if (res.result) {
+          let category = '4'; //xet duyen
+          let formName = 'PRParameters';
+          this.hrService
+            .getSettingValue(formName, category)
+            .subscribe((res) => {
+              if (res) {
+                let parsedJSON = JSON.parse(res?.dataValue);
+                let index = parsedJSON.findIndex(
+                  (p) => p.Category == this.view.formModel.entityName
+                );
+                if (index > -1) {
+                  let eJobSalaryObj = parsedJSON[index];
+                  if (eJobSalaryObj['ApprovalRule'] == '1') {
+                    this.release();
+                  }
+                }
+              }
+            });
+        }
+      });
+  }
+
+  release() {
+    this.hrService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .subscribe((res) => {
+        if (res) {
+          this.codxShareService.codxReleaseDynamic(
+            'PR',
+            this.itemDetail,
+            res,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            this.view.function.description +
+              ' - ' +
+              this.itemDetail.decisionNo +
+              ' - ' +
+              this.itemDetail.employeeID,
+            (res: any) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.itemDetail.status = '3';
+                this.itemDetail.approveStatus = '3';
+                this.prService
+                  .UpdateStatus(this.itemDetail)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.notify.notifyCode('ES007');
+
+                      this.view?.dataService
+                        ?.update(this.itemDetail)
+                        .subscribe();
+                    }
+                  });
+              } else this.notify.notifyCode(res?.msgCodeError);
+            }
+          );
+        }
+      });
+  }
+
+  onSaveUpdateForm() {
+    this.prService.UpdateStatus(this.editStatusObj).subscribe((res) => {
+      if (res != null) {
+        this.notify.notifyCode('SYS007');
+        let data = {
+          ...res,
+          emp: this.currentEmpObj,
+        };
+        // this.hrService
+        //   .addBGTrackLog(
+        //     res.recID,
+        //     this.cmtStatus,
+        //     this.view.formModel.entityName,
+        //     'C1',
+        //     null,
+        //     'EAppointionsBusiness'
+        //   )
+        //   .subscribe();
+        this.view.dataService.update(this.editStatusObj).subscribe();
+        this.detectorRef.detectChanges();
+        this.dialogEditStatus && this.dialogEditStatus.close(data);
+      }
+    });
+  }
   changeDataMF(e, data) {
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
@@ -329,7 +481,9 @@ export class OverTimeComponent extends UIComponent {
   }
 
   delete(data) {
-    console.log('delete');
+    this.view.dataService.delete([data]).subscribe((res) => {
+      // after delete
+    });
   }
   edit(evt, data) {
     this.view.dataService.edit(data).subscribe((res) => {
@@ -369,55 +523,45 @@ export class OverTimeComponent extends UIComponent {
       // });
     });
   }
-  // cancelSubmit(e, data) {
-  //   this.updateStatus(data.recID, e.functionID);
-  // }
-  // submit(e, data) {
-  //   this.updateStatus(data.recID, e.functionID);
-  // }
-  // updateCancel(e, data) {
-  //   this.updateStatus(data.recID, e.functionID);
-  // }
-  // updateInProgress(e, data) {
-  //   this.updateStatus(data.recID, e.functionID);
-  // }
-  // updateApproved(e, data) {
-  //   this.updateStatus(data.recID, e.functionID);
-  // }
 
-  updateStatus(e, data) {
-    switch(e.functionID){
-      case 'HRTPro11A00':
-        this.status = '' 
-        break;
-      case 'HRTPro11A03':
-        this.status = '3' 
-        break;
-      case 'HRTPro11AU0':
-        this.status = '' 
-        break;
-      case 'HRTPro11AU3':
-        this.status = '' 
-        break;
-      case 'HRTPro11AU5':
-        this.status = '' 
-        break;
-    }
-    let obj = {
-      funcID: e.functionID,
-      status: this.status,
-      statusName: e.text,
-      recID: data.recID,
-      title: e.text,
-    };
-    let dialogUpdateStatus = this.callfc.openForm(
-      PopupUpdateStatusComponent,
-      '',
+  openPopupUpdateStatus(functionID, data) {
+    this.hrService.handleUpdateRecordStatus(functionID, data);
+    this.editStatusObj = data;
+    this.currentEmpObj = data.emp;
+    this.crrStatus = data.status;
+    this.formGroup.patchValue(this.editStatusObj);
+
+    this.dialogEditStatus = this.callfc.openForm(
+      this.templateUpdateStatus,
+      null,
       500,
       350,
-      '',
-      obj
+      null,
+      null
     );
+    this.dialogEditStatus.closed.subscribe((res) => {
+      if (res?.event) {
+        this.view.dataService.update(res.event).subscribe();
+
+        //Gọi hàm hủy yêu cầu duyệt bên core
+        if (
+          functionID === this.actionUpdateCanceled ||
+          functionID === this.actionCancelSubmit
+        ) {
+          this.codxShareService
+            .codxCancel(
+              'PR',
+              this.itemDetail.recID,
+              this.view.formModel.entityName,
+              '',
+              ''
+            )
+            .subscribe();
+        }
+      }
+      //Render new data when update new status on view detail
+      this.df.detectChanges();
+    });
   }
   //#endregion
 
