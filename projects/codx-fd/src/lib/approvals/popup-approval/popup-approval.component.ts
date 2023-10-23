@@ -1,5 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, Util } from 'codx-core';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'lib-popup-approval',
@@ -24,6 +25,7 @@ export class PopupApprovalComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
+    private fdService: CodxFdService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -66,13 +68,15 @@ export class PopupApprovalComponent implements OnInit {
   }
 
   submit() {
-    if(this.activeCoins == "1" || this.activeKudos == '1') {
+    if (this.activeCoins == '1' || this.activeKudos == '1') {
       this.api
-        .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'HandleKudosPolicyAsync', [
-          this.recID,
-          this.coins,
-          this.kudos,
-        ])
+        .execSv<any>(
+          'FD',
+          'FD',
+          'KudosTransBusiness',
+          'HandleKudosPolicyAsync',
+          [this.recID, this.coins, this.kudos]
+        )
         .subscribe((res) => {
           if (res) {
             this.dialogRef.close(res);
@@ -81,25 +85,14 @@ export class PopupApprovalComponent implements OnInit {
     }
 
     if (this.comment) {
-      const obj = {
-        comment: this.comment,
-        functionID: 'FDT10',
-        objectID: this.recID,
-        objecttype: 'FD_Cards',
-        recID: Util.uid(),
-      };
-      this.api
-        .execSv<any>('BG', 'BG', 'CommentLogsBusiness', 'InsertCommentAsync', [
-          obj,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.dialogRef.close(res);
-          }
-        });
+      this.fdService.addComment(this.recID, this.comment).subscribe((res) => {
+        if (res) {
+          this.dialogRef.close(res);
+        }
+      });
     }
 
-    if(!this.comment && this.activeCoins == "0" && this.activeKudos == '0') {
+    if (!this.comment && this.activeCoins == '0' && this.activeKudos == '0') {
       this.dialogRef.close(true);
     }
   }

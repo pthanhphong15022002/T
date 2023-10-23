@@ -26,6 +26,7 @@
             <div class="container p-5">
                 <div class="d-flex">
                     <ng-container>
+                        
                         <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail" id="pattern-img"
                             [style.background]="data.backgroundColor?data.backgroundColor:'url('+backgroundImg+')'" >
                             <h2 class="card-title fw-bolderer mb-5 mt-8 text-center" [style.color]="data.headerColor">
@@ -163,6 +164,13 @@
                             <ng-container *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
                         </ng-container>
                     </ng-container>
+                </div>
+                <div *ngIf="data.comment" class="mt-6">
+                    <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblComment"
+                            default="Ý kiến xác nhận"></codx-label></div>
+                    <div class="modal-card-sms mb-5 text-gray-700">
+                        <span>{{data.comment}}</span>
+                    </div>
                 </div>
                 <ng-container *ngIf="data.hasGift">
                     <div class="mt-6">
