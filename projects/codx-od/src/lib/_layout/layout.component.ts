@@ -10,6 +10,7 @@ import {
 import { CallFuncConfig } from 'codx-core/lib/services/callFunc/call-func.config';
 
 import { CodxOdService } from '../codx-od.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'codx-layout',
@@ -23,14 +24,21 @@ export class LayoutComponent extends LayoutBaseComponent {
   constructor(
     inject: Injector,
     private hideToolbar: CodxOdService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private router: Router,
   ) {
     super(inject);
-    this.module = 'OD';
+    //this.module = 'OD';
+    this.getModule();
   }
 
   onInit() {}
 
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
+  }
+  
   onAfterViewInit() {
     this.hideToolbar.SetLayout.subscribe((res) => {
       if (res != null) this.setToolbar(res);
