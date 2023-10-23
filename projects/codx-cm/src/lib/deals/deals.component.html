@@ -538,6 +538,7 @@
   <codx-deal-detail
     #detailViewDeal
     [formModel]="view.formModel"
+    [formModelCustomer]="formModelCustomer"
     [dataSelected]="dataSelected"
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
@@ -679,15 +680,23 @@
 </ng-template>
 
 <ng-template #templateOwner let-data>
-  <div class="">
-    <codx-imgs
+
+  <div class="d-flex align-items-center" data-example="alignSelf">
+    <div class="align-self-center pe-2"> <codx-imgs
       [isToolTip]="true"
       [width]="25"
       [objectId]="data?.owner"
       objectType="AD_Users"
       [numberImages]="1"
     >
-    </codx-imgs>
+    </codx-imgs></div>
+    <span
+      [innerHTML]="
+        data.owner
+          | formatvalue : view.formModel : 'owner'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -747,10 +756,50 @@
   ></span>
 </ng-template>
 <ng-template #templateNote let-data>
-  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.note" [text]="'note'">
-  </codx-show-more-less>
+  <ng-template #tooltipNote>
+    <div class="text-end text-sm-start">
+      <strong class="label-colon">{{
+        gridViewSetup?.Note?.headerText
+      }}</strong>
+      {{ data?.note }}
+    </div>
+  </ng-template>
+  <span
+  class="text-gray-600 fs-7 line-clamp line-clamp-2"
+  #note
+  [ngbTooltip]="tooltipNote"
+  [innerHTML]="
+    data?.note
+      | formatvalue : formModel : 'note' : note
+      | async
+  "
+></span>
+
 </ng-template>
 
+<ng-template #templateStatusCode let-data>
+  <div
+  *ngIf="data?.statusCodeID"
+  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+>
+  <span
+    class="text-ellipsis line-clamp line-clamp-2"
+    [ngbTooltip]="getStatusCode(data?.statusCodeID)"
+    > {{getStatusCode(data?.statusCodeID)}}</span
+  >
+</div>
+</ng-template>
+<ng-template #templateIndustries let-data>
+  <span
+  class="text-gray-600 fs-7 "
+  #industries
+  [innerHTML]="
+    data?.industries
+      | formatvalue : formModelCustomer : 'industries' : industries
+      | async
+  "
+></span>
+</ng-template>
 
 <ng-template #dashBoard>
   <codx-instance-dashboard

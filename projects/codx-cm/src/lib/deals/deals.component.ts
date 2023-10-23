@@ -78,6 +78,8 @@ export class DealsComponent
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
   @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
+  @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
+  @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -89,6 +91,7 @@ export class DealsComponent
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   formModel: FormModel;
+  formModelCustomer: FormModel;
 
   // type any for view detail
   @Input() dataObj?: any;
@@ -189,8 +192,9 @@ export class DealsComponent
       this.funcIDCrr = f;
       this.functionModule = f.module;
       this.nameModule = f.customName;
-      this.executeApiCallFunctionID(f.formName, f.gridViewName);
+
     });
+
     this.getColorReason();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
@@ -203,7 +207,8 @@ export class DealsComponent
     });
   }
 
-  onInit(): void {
+  async onInit(): Promise<void> {
+    this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
     this.afterLoad();
     this.button = {
       id: this.btnAdd,
@@ -509,24 +514,24 @@ export class DealsComponent
       }
     });
   }
-  getGridViewSetup(formName, gridViewName) {
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-        this.vllStatus = this.gridViewSetup['Status'].referedValue;
-        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
-        //lay grid view
-        let arrField = Object.values(this.gridViewSetup).filter(
-          (x: any) => x.isVisible
-        );
-        if (Array.isArray(arrField)) {
-          this.arrFieldIsVisible = arrField
-            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-            .map((x: any) => x.fieldName);
-          // this.getColumsGrid(this.gridViewSetup);
-        }
-      }
-    });
+  async getGridViewSetup(formName, gridViewName) {
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup(formName, gridViewName)
+    );
+    this.vllStatus = this.gridViewSetup['Status'].referedValue;
+    this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+    //lay grid view
+    let arrField = Object.values(this.gridViewSetup).filter(
+      (x: any) => x.isVisible
+    );
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+
+    }
+    this.getColumsGrid(this.gridViewSetup);
+
   }
 
   getColorReason() {
@@ -1560,10 +1565,8 @@ export class DealsComponent
   }
 
   onLoading(e) {
-    if (!this.funCrr) {
-      this.getColumsGrid(this.gridViewSetup);
-      return;
-    }
+    this.executeApiCallFunctionID(this.view?.formModel?.formName,
+      this.view?.formModel?.gridViewName);
 
     //reload filter
 
@@ -1726,6 +1729,13 @@ export class DealsComponent
           case 'Note':
             template = this.templateNote;
             break;
+          case 'StatusCodeID':
+            template = this.templateStatusCode;
+            break;
+          case 'Industries':
+            template = this.templateIndustries;
+            break;
+
           default:
             break;
         }
