@@ -1571,10 +1571,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let titleDealValue =
       this.language == 'vn' ? 'Doanh thu thực tế' : 'DealValue';
     if (index != -1) {
-      target = this.lstQuarters[index]?.target;
-      dealValue = this.lstQuarters[index]?.dealValueWon;
+      target = this.lstQuarters[index]?.target > 0 ? this.lstQuarters[index].target.toLocaleString() : 0;
+      dealValue = this.lstQuarters[index]?.dealValueWon ? this.lstQuarters[index].dealValueWon.toLocaleString() : 0;
     }
-    let template = `${titleTarger} : <b>${target}</b> ${this.currencyID}<br/>${titleDealValue} : <b>${dealValue}</b>${this.currencyID}`;
+    let template = `${titleTarger} : <b>${target}</b> ${this.currencyID}<br/>${titleDealValue} : <b>${dealValue}</b> ${this.currencyID}`;
     e.template = template;
     e.text = template;
   }
