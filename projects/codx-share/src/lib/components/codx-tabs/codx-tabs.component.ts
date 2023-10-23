@@ -122,7 +122,7 @@ export class CodxTabsComponent implements OnInit {
   }
 
   loadingCount: boolean = false;
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (this.objectID && !this.loadingCount) {
       this.loadingCount = true;
       this.api
@@ -145,6 +145,13 @@ export class CodxTabsComponent implements OnInit {
           if (res) this.oCountFooter['comment'] = res;
           this.loadingCount = false;
         });
+    }
+    debugger
+    if (
+      changes['dataTree'] &&
+      changes['dataTree']?.currentValue != changes['dataTree']?.previousValue
+    ) {
+      this.dataTree = changes['dataTree']?.currentValue
     }
     this.CheckTabControlApproval();
     this.changeDetectorRef.detectChanges();
