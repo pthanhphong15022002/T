@@ -116,6 +116,8 @@ export class CodxAddTaskComponent implements OnInit {
   refValueType = '';
   listTypeCM = '';
   typeCM = '';
+  typeCMName = '';
+  dataTypeCM;
   dataCM = {
     deals: '',
     leads: '',
@@ -637,6 +639,20 @@ export class CodxAddTaskComponent implements OnInit {
       return;
     }
 
+    if(this.type == 'calendar'){
+      if(!this.typeCM){
+        message.push('Danh mục cần thêm');
+      }else{
+        if(!this.dataTypeCM){
+          message.push(this.typeCMName);
+        }else{
+          if(!this.stepsTasks?.stepID && !this.isActivitie){
+            message.push(this.view['stepID']);
+          }
+        }
+      }
+    }
+
     if (!this.stepsTasks['taskName']?.trim()) {
       message.push(this.view['taskName']);
     }
@@ -843,6 +859,7 @@ export class CodxAddTaskComponent implements OnInit {
   changeTypeCM(event) {
     if (event?.data) {
       if (this.typeCM != event?.data) {
+        this.typeCMName = event?.component?.itemsSelected?.pop()?.text;
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
       }
@@ -850,18 +867,32 @@ export class CodxAddTaskComponent implements OnInit {
   }
   changeDataCM(event) {
     console.log(event?.component?.itemsSelected[0]);
-    let data = event?.component?.itemsSelected[0];
-    if (data) {
+    this.dataTypeCM = event?.component?.itemsSelected[0];
+    if (this.dataTypeCM) {
       if (this.typeCM == '1') {
         this.isActivitie = true;
         this.isShowCbxStep = false;
         this.isShowCbxGroup = false;
-        this.stepsTasks.objectID = data?.RecID;
+        this.stepsTasks.objectID = this.dataTypeCM?.RecID;
         this.stepsTasks.objectType = 'CM_Customers';
       } else if (this.typeCM == '5') {
         this.isActivitie = false;
-        this.getListInstanceStep(data.RefID, true);
+        this.stepsTasks.objectID = null;
+        this.stepsTasks.objectType = null;
+        this.getListInstanceStep(this.dataTypeCM.RefID, true);
       } else {
+        this.isActivitie = !(!!this.dataTypeCM.RefID);
+        if(!this.isActivitie){
+          this.stepsTasks.objectID = null;
+          this.stepsTasks.objectType = null;
+          this.getListInstanceStep(this.dataTypeCM.RefID, true);
+        }else{
+          this.stepsTasks.stepID = null;
+          this.stepsTasks.taskGroupID = null;          
+          this.isShowCbxStep = false;
+          this.isShowCbxGroup = false;
+          this.disableStep = false;
+        }
       }
     }
     this.dataCM = event?.data;

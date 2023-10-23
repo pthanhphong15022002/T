@@ -271,7 +271,7 @@
 <ng-template #addTaskInCM>
   <div class="form-group" *ngIf="true">
     <div class="mb-1 line-clamp line-clamp-1">
-      <codx-label class="text-primary" fiedName="" [formModel]="form?.formModel" default="Danh mục cần thêm">
+      <codx-label class="text-primary required" name="lblListTypeCm" [formModel]="form?.formModel" default="Danh mục cần thêm">
       </codx-label>
     </div>
     <div>
@@ -284,7 +284,7 @@
   <div class="form-group" *ngFor="let item of listTypeCM">
     <div [ngClass]="item?.value == typeCM ? 'd-inline' : 'd-none'">
       <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
-        <codx-label class="text-primary" fiedName="" [formModel]="form?.formModel" [default]="item?.text">
+        <codx-label class="text-primary required" name="lblTypeCm" [formModel]="form?.formModel" [default]="item?.text">
         </codx-label>
       </div>
       <codx-input #inputDeal [field]="'deals'" type="combobox" [refValue]="item?.refValue"
