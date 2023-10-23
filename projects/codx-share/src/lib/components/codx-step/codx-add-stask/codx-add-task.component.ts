@@ -1,5 +1,3 @@
-import { change } from '@syncfusion/ej2-grids';
-import { group } from 'console';
 import {
   OnInit,
   Optional,
@@ -12,12 +10,11 @@ import {
   AuthStore,
   DialogRef,
   DialogData,
+  DialogModel,
   CacheService,
   ApiHttpService,
   CallFuncService,
   NotificationsService,
-  DialogModel,
-  CodxInputComponent,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -25,8 +22,8 @@ import {
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { StepService } from '../step.service';
-import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
@@ -35,13 +32,14 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   styleUrls: ['./codx-add-task.component.scss'],
 })
 export class CodxAddTaskComponent implements OnInit {
-  @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
+  @ViewChild('attachment') attachment: AttachmentComponent;
   REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   type: 'calendar' | 'step' | 'activitie';
+
   typeTask;
   listGroup = [];
   recIdEmail = '';
@@ -53,6 +51,10 @@ export class CodxAddTaskComponent implements OnInit {
   listInsStep: DP_Instances_Steps[];
   stepsTasks: DP_Instances_Steps_Tasks;
   listTask: DP_Instances_Steps_Tasks[] = [];
+  owner: DP_Instances_Steps_Tasks_Roles[] = [];
+  roles: DP_Instances_Steps_Tasks_Roles[] = [];
+  ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
+  participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
   fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
@@ -70,30 +72,30 @@ export class CodxAddTaskComponent implements OnInit {
   isShowTime = false;
   isActivitie = false;
   disableStep = false;
+  isShowCbxStep = true;
+  isShowCbxGroup = true;
   isTaskDefault = false;
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   isEditTimeDefault = false;
-  isShowCbxStep = true;
-  isShowCbxGroup = true;
 
   folderID = '';
   titleName = '';
   valueInput = '';
-  view = [];
-  dataCombobox = [];
-  litsParentID = [];
+  
   user;
-  ownerParent; //
+  endDayOld;
   groupTask;
+  ownerParent;
+  startDayOld;
   groupTaskID = null;
   showLabelAttachment = false;
 
-  listFieldCopy = [];
+  view = [];
   listField = [];
-
-  startDayOld;
-  endDayOld;
+  dataCombobox = [];
+  litsParentID = [];
+  listFieldCopy = [];
 
   dialogPopupLink: DialogRef;
   listCombobox = {
@@ -103,10 +105,6 @@ export class CodxAddTaskComponent implements OnInit {
     D: 'Share_Departments_Sgl',
     O: 'Share_OrgUnits_Sgl',
   };
-  owner: DP_Instances_Steps_Tasks_Roles[] = [];
-  ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
-  roles: DP_Instances_Steps_Tasks_Roles[] = [];
-  participant: DP_Instances_Steps_Tasks_Roles[] = [];
 
   refValue = {
     '1': 'CMCustomersOfCalendar',
@@ -126,13 +124,13 @@ export class CodxAddTaskComponent implements OnInit {
     contracts: '',
   };
   constructor(
-    private cache: CacheService,
     private api: ApiHttpService,
+    private cache: CacheService,
     private authStore: AuthStore,
+    private callfc: CallFuncService,
     private stepService: StepService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
-    private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -706,7 +704,7 @@ export class CodxAddTaskComponent implements OnInit {
           }
         });
     } else {
-      this.dialog.close(task);
+      this.dialog.close({task,isActivitie: this.isActivitie});
     }
   }
   editTask(task) {
@@ -843,19 +841,10 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   changeTypeCM(event) {
-    console.log(event);
     if (event?.data) {
       if (this.typeCM != event?.data) {
         this.typeCM = event?.data;
         this.refValueType = this.refValue[this.typeCM];
-        // if(this.typeCM == "1"){
-        //   this.isActivitie = true;
-        //   this.isShowCbxStep = false;
-        //   this.isShowCbxGroup = false;
-
-        // }else if(this.typeCM == "5"){
-        //   this.isActivitie =false;
-        // }
       }
     }
   }
@@ -902,6 +891,9 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.taskGroupID = null;
         this.listGroup = stepFind?.taskGroups;
         this.isShowCbxGroup = true;
+        this.stepsTasks.startDate = stepFind?.startDate || new Date();
+        this.stepsTasks.endDate.setDate(this.stepsTasks.startDate.getDate() + 1);
+       
       } else {
         this.stepsTasks.taskGroupID = null;
         this.listGroup = [];

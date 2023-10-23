@@ -195,6 +195,7 @@ export class CM_Deals {
   expectedFrom: Date;
   expectedTo: Date;
   datas: string;
+  industries: string;
 }
 
 export class CM_Permissions {

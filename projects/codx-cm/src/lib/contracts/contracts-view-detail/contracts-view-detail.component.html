@@ -290,10 +290,6 @@
           *ngSwitchCase="'task'"
           [ngTemplateOutlet]="task"
         ></some-element>
-        <some-element
-          *ngSwitchCase="'steps'"
-          [ngTemplateOutlet]="steps"
-        ></some-element>
         <some-element *ngSwitchDefault></some-element>
       </container-element>
     </div>
@@ -834,22 +830,15 @@
     ></step-task>
   </div>
 </ng-template>
+
 <ng-template #task let-data="value">
   <step-task
-    [typeTask]="2"
-    [customerID]="contract?.recID"
     [entityName]="'CM_Contracts'"
-    [owner]="contract?.owner"
+    [dataCM]="contract" 
+    [applyFor]="'4'"
     (saveAssignTask)="saveAssign($event)"
-    [ownerInstance]="contract?.owner"
   ></step-task>
-  <!-- <div>
-    <task
-      [customerID]="contract?.recID"
-      [owner]="contract?.owner"
-      [entityName]="'CM_Contracts'"
-    ></task>
-  </div> -->
+ 
 </ng-template>
 
 <!-- báo giá -->
