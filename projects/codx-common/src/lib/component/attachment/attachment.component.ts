@@ -1818,7 +1818,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var permissions = this.dataFolder?.permissions.filter(
       (x) => x.objectType != '1' && x.objectType != '7'
     );
-    newF.permissions = file.permissions.concat(permissions);
+    if(permissions) newF.permissions = file.permissions.concat(permissions);
     newF.assign = true;
     let dialogs = this.callfc.openForm(
       EditFileComponent,

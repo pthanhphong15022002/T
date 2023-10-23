@@ -44,6 +44,7 @@ import { AngularDeviceInformationService } from 'angular-device-information';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { env } from 'process';
 
 @Component({
   selector: 'app-login',
@@ -411,6 +412,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   //#region Login
   private login(type: string) {
     //nho xoa
+    debugger
     const loginSubscr = this.authService
       .login(
         this.f.email.value,
