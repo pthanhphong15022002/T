@@ -167,10 +167,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         this.applyProcess = false;
       }else if(this.entityName == 'CM_Deals'){
         this.applyProcess = true;
-        this.isAdmin = !!this.dataCM?.full;
       }else{
         this.applyProcess = this.dataCM?.applyProcess;
-        this.isAdmin = !!this.dataCM?.full;
       }
       this.owner = this.dataCM?.owner;
   
