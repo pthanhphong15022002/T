@@ -13,8 +13,16 @@
         <codx-label name="lblKudos" default="Điểm cống hiến">
         </codx-label>
         <div class="d-flex">
-            <codx-input style="width: 100vh;" type="number" label="Điểm công hiến" [crrValue]="kudos" [step]="1"
+            <codx-input style="width: 100vh;" type="number" [crrValue]="kudos" [step]="1"
                 [min]="min" [max]="max" (valueChange)="changeKudos($event)"></codx-input>
+        </div>
+    </div>
+    <div class="mt-5">
+        <codx-label name="lblComment" default="Ý kiến người xét duyệt">
+        </codx-label>
+        <div class="d-flex">
+            <codx-input style="width: 100vh;" type="text" [crrValue]="comment"
+                (valueChange)="changeComment($event)"></codx-input>
         </div>
     </div>
 
