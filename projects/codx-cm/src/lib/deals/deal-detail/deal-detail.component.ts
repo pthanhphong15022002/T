@@ -377,6 +377,8 @@ export class DealDetailComponent implements OnInit {
     if ($event) {
       this.contactPerson = $event?.isDefault ? $event : null;
       this.changeDetectorRef.detectChanges();
+    }else{
+      this.contactPerson = null;
     }
   }
 
@@ -605,7 +607,6 @@ export class DealDetailComponent implements OnInit {
             }
           }
         }
-        this.getContactPerson(data);
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -613,6 +614,13 @@ export class DealDetailComponent implements OnInit {
 
   lstContactEmit(e) {
     this.lstContacts = e ?? [];
+    let index = this.lstContacts.findIndex(x => x.isDefault);
+    if(index != -1){
+      this.getContactPerson(this.lstContacts[index]);
+    }else{
+      this.getContactPerson(null);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   async promiseAll(listInstanceStep) {
