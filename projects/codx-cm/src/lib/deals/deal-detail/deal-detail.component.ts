@@ -41,6 +41,8 @@ export class DealDetailComponent implements OnInit {
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
+  @Input() formModelCustomer: any;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
@@ -54,7 +56,7 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('loadContactDeal')
   loadContactDeal: CodxListContactsComponent;
   @ViewChild('tabObj') tabObj: TabComponent;
-  formModelCustomer: FormModel;
+
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -92,7 +94,7 @@ export class DealDetailComponent implements OnInit {
   listStepsProcess = [];
   listContract: CM_Contracts[];
   mergedList: any[] = [];
-  listCategory = [];
+  // listCategory = [];
   listRoles = [];
   lstContacts = [];
   lstStepsOld = [];
@@ -262,11 +264,11 @@ export class DealDetailComponent implements OnInit {
   }
   async executeApiCalls() {
     try {
-      this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
+
       await this.getGridViewQuotation();
       await this.getGridViewContract();
       await this.getGridViewLead();
-      await this.getValueList();
+    //  await this.getValueList();
       await this.getValueListRole();
     //  await this.getListStatusCode();
     } catch (error) {}
@@ -278,13 +280,13 @@ export class DealDetailComponent implements OnInit {
       }
     });
   }
-  async getValueList() {
-    this.cache.valueList('CRM010').subscribe((res) => {
-      if (res.datas) {
-        this.listCategory = res?.datas;
-      }
-    });
-  }
+  // async getValueList() {
+  //   this.cache.valueList('CRM010').subscribe((res) => {
+  //     if (res.datas) {
+  //       this.listCategory = res?.datas;
+  //     }
+  //   });
+  // }
   async getGridViewQuotation() {
     this.grvSetupQuotation = await firstValueFrom(
       this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
@@ -377,6 +379,8 @@ export class DealDetailComponent implements OnInit {
     if ($event) {
       this.contactPerson = $event?.isDefault ? $event : null;
       this.changeDetectorRef.detectChanges();
+    }else{
+      this.contactPerson = null;
     }
   }
 
@@ -605,7 +609,6 @@ export class DealDetailComponent implements OnInit {
             }
           }
         }
-        this.getContactPerson(data);
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -613,6 +616,13 @@ export class DealDetailComponent implements OnInit {
 
   lstContactEmit(e) {
     this.lstContacts = e ?? [];
+    let index = this.lstContacts.findIndex(x => x.isDefault);
+    if(index != -1){
+      this.getContactPerson(this.lstContacts[index]);
+    }else{
+      this.getContactPerson(null);
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   async promiseAll(listInstanceStep) {
@@ -740,9 +750,9 @@ export class DealDetailComponent implements OnInit {
     // if (e) this.saveAssign.emit(e);
     if (e) this.getTree();
   }
-  getNameCategory(categoryId: string) {
-    return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
-  }
+  // getNameCategory(categoryId: string) {
+  //   return this.listCategory.filter((x) => x.value == categoryId)[0]?.text;
+  // }
   getIcon($event) {
     if ($event == '1') {
       return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
@@ -774,7 +784,6 @@ export class DealDetailComponent implements OnInit {
         return result?.text;
       }
     }
-
     return '';
   }
 }

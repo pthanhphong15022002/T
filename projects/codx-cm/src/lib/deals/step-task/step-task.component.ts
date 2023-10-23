@@ -116,18 +116,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
-
-    if(this.entityName == 'CM_Customers'){
-      this.applyProcess = false;
-    }else if(this.entityName == 'CM_Deals'){
-      this.applyProcess = true;
-      this.isAdmin = !!this.dataCM?.full;
-    }else{
-      this.applyProcess = this.dataCM?.applyProcess;
-      this.isAdmin = !!this.dataCM?.full;
-    }
-    this.owner = this.dataCM?.owner;
-
     this.cache.valueList('DP032').subscribe((res) => {
       if (res?.datas) {
         this.status = res?.datas?.filter(
@@ -168,14 +156,22 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
 
-    if (changes.dataSelected) {
-      this.dataCM = changes.dataSelected?.currentValue;
+    if (changes.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
       if (!this.isAdmin) {
         this.isAdmin =
           this.dataCM?.full ||
           this.dataCM?.owner == this.user?.userID;
       }
+      if(this.entityName == 'CM_Customers'){
+        this.applyProcess = false;
+      }else if(this.entityName == 'CM_Deals'){
+        this.applyProcess = true;
+      }else{
+        this.applyProcess = this.dataCM?.applyProcess;
+      }
+      this.owner = this.dataCM?.owner;
+  
     }
   }
 

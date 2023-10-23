@@ -703,17 +703,7 @@
                           </ng-template>
                         </div>
                         <div class="text-dark fw-bold codx-textcontent">
-                          <span
-                            #companyPhone
-                            [innerHTML]="
-                              dataSelected?.companyPhone
-                                | formatvalue
-                                  : formModel
-                                  : 'companyPhone'
-                                  : companyPhone
-                                | async
-                            "
-                          ></span>
+                          {{dataSelected?.companyPhone}}
                         </div>
                       </div>
                     </div>
