@@ -817,26 +817,15 @@
   ></codx-tabs>
 </ng-template>
 <!-- nvthuan công việc -->
-<ng-template #steps let-data="value">
-  <div *ngIf="listInsStep?.length > 0">
-    <step-task
-      [entityName]="'CM_Contracts'"
-      [dataSelected]="contract"
-      [listInstanceStep]="listInsStep"
-      (changeProgress)="autoStart($event)"
-      (isSusscess)="checkSusscess($event)"
-      (saveAssignTask)="saveAssign($event)"
-      [owner]="contract?.owner"
-    ></step-task>
-  </div>
-</ng-template>
-
 <ng-template #task let-data="value">
   <step-task
     [entityName]="'CM_Contracts'"
+    [listInstanceStep]="listInsStep"
     [dataCM]="contract" 
     [applyFor]="'4'"
     (saveAssignTask)="saveAssign($event)"
+    (changeProgress)="autoStart($event)"
+    (isSusscess)="checkSusscess($event)"
   ></step-task>
  
 </ng-template>
