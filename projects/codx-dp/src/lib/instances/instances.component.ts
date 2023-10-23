@@ -553,9 +553,11 @@ export class InstancesComponent
                     }
                   });
               }
-            } else if (this.process.applyFor == '4') {
-              this.openPopupContract('add', formMD);
-            } else {
+            }
+            // else if (this.process.applyFor == '4') {
+            //   this.openPopupContract('add', formMD);
+            // } 
+            else {
               this.openPopUpAdd(
                 applyFor,
                 formMD,
@@ -575,8 +577,9 @@ export class InstancesComponent
       this.view.dataService.dataSelected.reCID = Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
-      const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      // const funcIDApplyFor =
+      //   this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      const funcIDApplyFor = this.checkFunctionID(this.process.applyFor);
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -595,7 +598,7 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-              this.listStepInstances = JSON.parse(JSON.stringify(res));
+            
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -644,28 +647,36 @@ export class InstancesComponent
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
     };
+    this.detailViewInstance
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        let data = e.event;
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
           }
         }
-        this.dataSelected = data;
+
         if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.dataSelect = this.dataSelected
+          this.detailViewInstance.getStageByStep()
         }
-        this.view?.dataService.update(this.dataSelected);
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
+     
         this.detectorRef.detectChanges();
       }
     });
   }
 
-  openPopupEdit(applyFor, formMD, option, titleAction) {
+  async openPopupEdit(applyFor, formMD, option, titleAction) {
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -682,21 +693,29 @@ export class InstancesComponent
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
+      processID: this.processID,
     };
-    let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
+    let dialogEditInstance = await this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
+        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
         this.view.dataService.update(e.event).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          }else  this.kanban.updateCard(this.dataSelected); 
         }
-        this.dataSelected = e.event;
+      
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
-          this.detailViewInstance.listSteps = this.listStepInstances;
+          this.detailViewInstance.loadChangeData();
         }
+
+        if (this.detailViewPopup) {
+          this.detailViewPopup.dataSelect = this.dataSelected;
+          this.detailViewPopup.loadChangeData()
+        }
+
         this.detectorRef.detectChanges();
       }
     });
@@ -705,6 +724,7 @@ export class InstancesComponent
   edit(data, titleAction) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      this.oldIdInstance = data.recID;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -1670,8 +1690,15 @@ export class InstancesComponent
               if (this.detailViewInstance) {
                 this.detailViewInstance.dataSelect = this.dataSelected;
                 this.detailViewInstance.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData();
+                this.detailViewInstance.loadChangeData();
               }
+           
+              if (this.detailViewPopup) {
+                this.detailViewPopup.dataSelect = this.dataSelected;
+                this.detailViewPopup.listSteps = this.listStepInstances;
+                this.detailViewPopup.loadChangeData()
+              }
+      
               this.detectorRef.detectChanges();
             }
           });
@@ -2565,6 +2592,11 @@ export class InstancesComponent
       return this.callfc.openSide(PopupAddDealComponent, obj, option);
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
+    }else if (applyFor == '4') {
+      option.isFull = true;
+      option.FormModel = obj?.formMD;
+      obj = {...obj, type: 'DP', contractRefID: this.oldIdInstance}
+      return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
   }
@@ -2629,29 +2661,5 @@ export class InstancesComponent
     } else {
       return `rgb(${r}, ${g}, ${b})`;
     }
-  }
-
-  async openPopupContract(action, formModel: FormModel, contract?) {
-    let data = {
-      action,
-      contract: contract || null,
-      type: 'view',
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1010;
-    option.FormModel = formModel;
-    let popupContract = this.callfc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    return dataPopupOutput;
   }
 }

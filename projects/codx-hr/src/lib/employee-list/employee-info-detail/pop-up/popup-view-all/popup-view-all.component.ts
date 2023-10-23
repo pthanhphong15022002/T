@@ -55,14 +55,25 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   infoPersonal: any;
   //#endregion
 
+  empQuitJobStatus: any;
+
   //#region funcID
-  ePassportFuncID = 'HRTEM0202';
-  eVisaFuncID = 'HRTEM0203';
-  eWorkPermitFuncID = 'HRTEM0204';
-  eBasicSalaryFuncID = 'HRTEM0401';
-  ebenefitFuncID = 'HRTEM0403';
-  eContractFuncID = 'HRTEM0501';
+  ePassportFuncID = null;
+  eVisaFuncID = null;
+  eWorkPermitFuncID = null;
+  eBasicSalaryFuncID = null;
+  ebenefitFuncID = null;
+  eContractFuncID = null;
   //#endregion
+
+    //#region url
+    ePassportURL = 'hreprofile01cv-passport';
+    eVisaURL = 'hreprofile01cv-visa';
+    eWorkPermitURL = 'hreprofile01cv-workpermit';
+    eBasicSalaryURL = 'hreprofile03salary-esalary';
+    ebenefitURL = 'hreprofile03salary-ebenefit';
+    eContractURL = 'hreprofile04process-econtract';
+    //#endregion
 
   //#region columnGrid
   passportColumnGrid: any;
@@ -91,6 +102,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   endDateEBenefitFilterValue;
   eContractHeaderText: any;
   //#endregion
+
+  fromWS = false;
+  func: any;
 
   ops = ['y'];
 
@@ -182,11 +196,36 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialogRef = dataRef;
     this.funcID = data?.data?.funcID;
+    this.func = data?.data?.func;
+    this.fromWS = data?.data?.fromWS;
     this.employeeId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
+    this.empQuitJobStatus = data?.data?.quitjobStatus;
     this.sortModel = data?.data?.sortModel;
     this.formModel = data?.data?.formModel;
     this.hasFilter = data?.data?.hasFilter;
+    let funcURL = data?.data?.funcUrl;
+
+    switch(funcURL){
+      case this.ePassportURL:
+        this.ePassportFuncID = this.funcID;
+        break;
+      case this.eVisaURL:
+        this.eVisaFuncID = this.funcID;
+        break;
+      case this.eWorkPermitURL:
+        this.eWorkPermitFuncID = this.funcID;
+        break;
+      case this.eBasicSalaryURL:
+        this.eBasicSalaryFuncID = this.funcID;
+        break;
+      case this.ebenefitURL:
+        this.ebenefitFuncID = this.funcID;
+        break;
+      case this.eContractURL:
+        this.eContractFuncID = this.funcID;
+        break;
+    }
     // console.log('sortModel nhan vao', this.sortModel);
   }
 
@@ -256,8 +295,9 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   // }
 
   onInit(): void {
+    debugger
     //#region columnGrid EPassport - Hộ chiếu
-    if (!this.passportColumnGrid) {
+    if (!this.passportColumnGrid && this.ePassportFuncID) {
       this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
         this.passportHeaderText = res;
         this.passportColumnGrid = [
@@ -290,7 +330,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#endregion
 
     //#region get columnGrid EVisa - Thị thực
-    if (!this.visaColumnGrid) {
+    if (!this.visaColumnGrid && this.eVisaFuncID) {
       this.hrService.getHeaderText(this.eVisaFuncID).then((res) => {
         this.visaHeaderText = res;
         this.visaColumnGrid = [
@@ -317,7 +357,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#endregion
 
     //#region get columnGrid EWorkPermit - Giấy phép lao động
-    if (!this.workPermitColumnGrid) {
+    if (!this.workPermitColumnGrid && this.eWorkPermitFuncID) {
       this.hrService.getHeaderText(this.eWorkPermitFuncID).then((res) => {
         this.workHeaderText = res;
         this.workPermitColumnGrid = [
@@ -349,7 +389,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#endregion
 
     //#region get columnGrid EBasicSalary - Lương cơ bản
-    if (!this.basicSalaryColumnGrid) {
+    if (!this.basicSalaryColumnGrid && this.eBasicSalaryFuncID) {
       this.hrService.getHeaderText(this.funcID).then((res) => {
         this.basicSalaryHeaderText = res;
         this.basicSalaryColumnGrid = [
@@ -387,7 +427,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       });
     }
 
-    if (!this.eContractColumnGrid) {
+    if (!this.eContractColumnGrid && this.eContractFuncID) {
       this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
         this.eContractHeaderText = res;
         this.eContractColumnGrid = [
@@ -428,82 +468,82 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#endregion
 
     //#region get columnGrid EBasicSalary - Lương cơ bản
-    if (!this.basicSalaryColumnGrid) {
-      this.hrService.getHeaderText(this.funcID).then((res) => {
-        let basicSalaryHeaderText = res;
-        this.basicSalaryColumnGrid = [
-          {
-            headerText: basicSalaryHeaderText['BSalary'],
-            template: this.basicSalaryCol1,
-            width: '150',
-          },
-          {
-            headerText: basicSalaryHeaderText['SISalary'],
-            template: this.basicSalaryCol2,
-            width: '150',
-          },
-          {
-            headerText: basicSalaryHeaderText['JSalary'],
-            template: this.basicSalaryCol3,
-            width: '150',
-          },
-          {
-            headerText: basicSalaryHeaderText['EffectedDate'],
-            template: this.basicSalaryCol4,
-            width: '150',
-          },
-        ];
-        if (this.funcID == this.eBasicSalaryFuncID) {
-          this.columnGrid = this.basicSalaryColumnGrid;
-          this.filter = null;
-          //Get row count
-          this.getRowCount();
-        }
-      });
-    }
+    // if (!this.basicSalaryColumnGrid && this.eBasicSalaryFuncID) {
+    //   this.hrService.getHeaderText(this.funcID).then((res) => {
+    //     let basicSalaryHeaderText = res;
+    //     this.basicSalaryColumnGrid = [
+    //       {
+    //         headerText: basicSalaryHeaderText['BSalary'],
+    //         template: this.basicSalaryCol1,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText: basicSalaryHeaderText['SISalary'],
+    //         template: this.basicSalaryCol2,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText: basicSalaryHeaderText['JSalary'],
+    //         template: this.basicSalaryCol3,
+    //         width: '150',
+    //       },
+    //       {
+    //         headerText: basicSalaryHeaderText['EffectedDate'],
+    //         template: this.basicSalaryCol4,
+    //         width: '150',
+    //       },
+    //     ];
+    //     if (this.funcID == this.eBasicSalaryFuncID) {
+    //       this.columnGrid = this.basicSalaryColumnGrid;
+    //       this.filter = null;
+    //       //Get row count
+    //       this.getRowCount();
+    //     }
+    //   });
+    // }
 
-    if (!this.eContractColumnGrid) {
-      this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
-        this.eContractHeaderText = res;
-        this.eContractColumnGrid = [
-          {
-            // headerText:
-            //   this.eContractHeaderText['ContractTypeID'] +
-            //   ' | ' +
-            //   this.eContractHeaderText['EffectedDate'],
-            headerTemplate: this.headTempContracts1,
-            template: this.eContractCol1,
-            width: '250',
-          },
-          {
-            // headerText: this.eContractHeaderText['ContractNo'] +
-            // ' - ' +
-            // this.eContractHeaderText['SignedDate'],
-            // headerText: 'Hợp đồng',
-            headerTemplate: this.headTempContracts2,
-            template: this.eContractCol2,
-            width: '150',
-          },
-          {
-            // headerText: this.eContractHeaderText['Note'],
-            headerTemplate: this.headTempContracts3,
-            template: this.eContractCol3,
-            width: '150',
-          },
-        ];
-        if (this.funcID == this.eContractFuncID) {
-          this.columnGrid = this.eContractColumnGrid;
-          this.filter = null;
-          this.getEmpInfo();
-          //Get row count
-          this.getRowCount();
-        }
-      });
-    }
+    // if (!this.eContractColumnGrid && this.eContractFuncID) {
+    //   this.hrService.getHeaderText(this.eContractFuncID).then((res) => {
+    //     this.eContractHeaderText = res;
+    //     this.eContractColumnGrid = [
+    //       {
+    //         // headerText:
+    //         //   this.eContractHeaderText['ContractTypeID'] +
+    //         //   ' | ' +
+    //         //   this.eContractHeaderText['EffectedDate'],
+    //         headerTemplate: this.headTempContracts1,
+    //         template: this.eContractCol1,
+    //         width: '250',
+    //       },
+    //       {
+    //         // headerText: this.eContractHeaderText['ContractNo'] +
+    //         // ' - ' +
+    //         // this.eContractHeaderText['SignedDate'],
+    //         // headerText: 'Hợp đồng',
+    //         headerTemplate: this.headTempContracts2,
+    //         template: this.eContractCol2,
+    //         width: '150',
+    //       },
+    //       {
+    //         // headerText: this.eContractHeaderText['Note'],
+    //         headerTemplate: this.headTempContracts3,
+    //         template: this.eContractCol3,
+    //         width: '150',
+    //       },
+    //     ];
+    //     if (this.funcID == this.eContractFuncID) {
+    //       this.columnGrid = this.eContractColumnGrid;
+    //       this.filter = null;
+    //       this.getEmpInfo();
+    //       //Get row count
+    //       this.getRowCount();
+    //     }
+    //   });
+    // }
     //#endregion
 
     //#region get columnGrid EBenefit - Phụ cấp
-    if (!this.benefitColumnGrid) {
+    if (!this.benefitColumnGrid && this.ebenefitFuncID) {
       this.hrService.getHeaderText(this.funcID).then((res) => {
         this.benefitHeaderText = res;
         this.benefitColumnGrid = [
@@ -536,6 +576,26 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       });
     }
     //#endregion
+  }
+
+  handleShowHideMfWs(evt, func){
+    if(func.isPortal == false){
+      //Được add/edit, ko delete
+      for(let i = 0; i < evt.length; i++){
+        if(evt[i].functionID == "SYS02"){
+          evt[i].disabled = true;
+        }
+      }
+    }
+
+    if(func.isPortal == true || this.empQuitJobStatus == '90'){
+      //Hide edit/copy/delete more func
+      for(let i = 0; i < evt.length; i++){
+        if(evt[i].functionID == "SYS02" || evt[i].functionID == "SYS03" || evt[i].functionID == "SYS01" || evt[i].functionID == "SYS04"){
+          evt[i].disabled = true;
+        }
+      }
+    }
   }
 
   getRowCount() {

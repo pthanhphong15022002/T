@@ -26,15 +26,10 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {}
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void {
+  }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
-  }
-
-  childMenuClick(e) {
-    if (e && e?.recID) {
-      this.codxAC.childMenuClick.next(e.recID);
-    }
   }
 }

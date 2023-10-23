@@ -421,7 +421,7 @@ export class PopupConvertLeadComponent implements OnInit {
             [this.customer.address, this.leverSetting]
           )
         );
-        if (json != null && json.trim() != '') {
+        if (json != null && json.trim() != '' && json != "null") {
           let lstDis = JSON.parse(json);
           this.customer.provinceID = lstDis?.ProvinceID;
           this.customer.districtID = lstDis?.DistrictID;

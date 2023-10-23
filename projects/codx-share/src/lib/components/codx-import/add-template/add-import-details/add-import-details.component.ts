@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, SimpleChanges, ViewChild } from '@angular/core';
 import { Column, EditService, FreezeService, GridComponent, SelectionService, SelectionSettingsModel, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CodxGridviewV2Component, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DropDownList } from '@syncfusion/ej2-angular-dropdowns';
 @Component({
@@ -48,7 +48,7 @@ export class AddImportDetailsComponent implements OnInit{
   public rowIndex: number;
   public cellIndex: number;
   public isDropdown = true;
-  @ViewChild('gridView') gridView: CodxGridviewComponent;
+  @ViewChild('gridView2') gridView2: CodxGridviewV2Component;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -413,5 +413,22 @@ export class AddImportDetailsComponent implements OnInit{
   {
     // var a = this.dataImport2
     // debugger
+  }
+
+  mapField()
+  {
+    this.dataCbb['SourceField'].forEach(elm => {
+      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value);
+      if(index >= 0) this.dataImport2[index].sourceField = elm.value
+    });
+    this.gridView2.refresh();
+  }
+
+  refeshField()
+  {
+    this.dataImport2.forEach(elm=>{
+      elm.sourceField = "";
+    })
+    this.gridView2.refresh();
   }
 }

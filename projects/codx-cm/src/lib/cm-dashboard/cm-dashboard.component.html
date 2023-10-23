@@ -9,86 +9,115 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100" *ngIf="isLoaded && reportID != '5'">
-    <codx-dashboard
-      [templates]="dashBoardDeals"
-      [panels]="panelsDeals"
-      [datas]="datasDeals"
-      [isEditMode]="isEditMode"
-      [cellSpacing]="[20, 20]"
-    ></codx-dashboard>
+  <div class="w-100 h-100" *ngIf="isLoaded">
+    <ng-container *ngIf="funcID == 'CMD001'">
+      <codx-dashboard
+        [templates]="dashBoardTaget"
+        [panels]="panelsDeals1"
+        [datas]="datasDeals1"
+        [isEditMode]="isEditMode"
+        [cellSpacing]="[10, 10]"
+        [columns]="60"
+      ></codx-dashboard>
+    </ng-container>
+
+    <ng-container *ngIf="funcID == 'CMD002' || funcID == 'CMD003'">
+      <codx-dashboard
+        [templates]="dashBoardDeals"
+        [panels]="panelsDeals2"
+        [datas]="datasDeals2"
+        [isEditMode]="isEditMode"
+        [cellSpacing]="[10, 10]"
+        [columns]="60"
+      ></codx-dashboard>
+    </ng-container>
+
+    <ng-container *ngIf="funcID == 'CMD004'">
+      <cm-targets [viewDashboard]="true"></cm-targets>
+    </ng-container>
   </div>
+
   <div class="w-100 h-100" *ngIf="!isLoaded">
     <div id="loader"></div>
   </div>
-
-  <div class="w-100 h-100" *ngIf="isLoaded && reportID == '5'">
-    <cm-targets [viewDashboard]="true"></cm-targets>
-  </div>
 </ng-template>
 
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
 <!-- cơ hội mới -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="1" [title]="getTitle('1')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
-      "
-      [title]="getNameStatus('1')"
-      [value]="dataDashBoard?.counts?.countNew ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-secondary rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-new-i-clipboard-plus.svg'
+        "
+        [title]="getNameStatus('1')"
+        [value]="countNew ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội đang thực hiện -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="2" [title]="getTitle('2')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
-      "
-      [title]="getNameStatus('2')"
-      [value]="dataDashBoard?.counts?.countProcessing ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-warning rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-inprogress-i-clipboard-data.svg'
+        "
+        [title]="getNameStatus('2')"
+        [value]="countProcessing ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội thành công  -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="3" [title]="getTitle('3')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
-      "
-      [title]="getNameStatus('3')"
-      [value]="dataDashBoard?.counts?.countSuccess ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-success rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-win-i-clipboard-check.svg'
+        "
+        [title]="getNameStatus('3')"
+        [value]="countSuccess ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- cơ hội thất bại  -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="4" [title]="getTitle('5')">
-    <count-chart
-      class="w-100 h-100"
-      [hasIcon]="true"
-      [iconUrl]="
-        'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
-      "
-      [title]="getNameStatus('5')"
-      [value]="dataDashBoard?.counts?.countFail ?? 0"
-    ></count-chart>
+    <div class="w-100 h-100 border border-danger rounded border-2">
+      <count-chart
+        class="w-100 h-100"
+        [height]="'75%'"
+        [hasIcon]="true"
+        [iconUrl]="
+          'assets/themes/cm/default/img/dashboard-status-fail-i-clipboard-minus.svg'
+        "
+        [title]="getNameStatus('5')"
+        [value]="countFail ?? 0"
+      ></count-chart>
+    </div>
   </div>
 </ng-template>
 
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
-<!-- title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm" -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="5" style="overflow: hidden">
     <div>
@@ -99,87 +128,104 @@
       ></codx-label>
     </div>
     <div id="chartPercentageOfDeals" class="mt-3">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isBussinessLine ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btBussinessLine"
-            formModel="CMMyDashboard"
-            default="Dòng sản phẩm"
-            (click)="clickButton('btBussinessLine')"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="
-            !isBussinessLine ? 'button-selected' : 'button-no-selected'
-          "
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btIndustries"
-            formModel="CMMyDashboard"
-            default="Lĩnh vực hoạt động"
-            (click)="clickButton('btIndustries')"
-          ></codx-label>
+      <div class="d-flex justify-content-center h-10">
+        <div id="group1" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btBussinessLine"
+            name="align1"
+            #ele1
+            checked
+            (change)="
+              changeBusIns(ele1, {
+                chart1: { pie1, viewBus },
+                chart2: { pie2, viewIndus }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btBussinessLine"
+            ><codx-label
+              name="btBussinessLine"
+              formModel="CMMyDashboard"
+              default="Dòng sản phẩm"
+            ></codx-label
+          ></label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btIndustries"
+            name="align1"
+            #ele2
+            (change)="
+              changeBusIns(ele2, {
+                chart1: { pie1, viewBus },
+                chart2: { pie2, viewIndus }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btIndustries">
+            <codx-label
+              name="btIndustries"
+              formModel="CMMyDashboard"
+              default="Lĩnh vực hoạt động"
+            ></codx-label
+          ></label>
         </div>
       </div>
     </div>
     <div class="w-100">
-      <ng-container *ngIf="isBussinessLine">
-        <ng-container
-          *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
+      <div #viewBus>
+        <ejs-treemap
+          #pie1
+          class="w-100"
+          style="height: 90% !important; width: 100% !important"
+          [dataSource]="dataSourceBussnessLine ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="palette"
+          [leafItemSettings]="leafItemSettings"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${businessLineName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
         >
-          <ejs-treemap
-            class="w-100"
-            [dataSource]="dataSourceBussnessLine ?? []"
-            weightValuePath="quantity"
-            rangeColorValuePath="quantity"
-            [palette]="palette"
-            [leafItemSettings]="leafItemSettings"
-            [tooltipSettings]="{
-              visible: true,
-              format:
-                '${businessLineName}<br>${quantity} ' +
-                this.titLeModule +
-                '-(${percentage} %)'
-            }"
-          >
-          </ejs-treemap>
-        </ng-container>
-      </ng-container>
-
-      <ng-container *ngIf="!isBussinessLine">
-        <ng-container
-          *ngIf="dataDashBoard?.countsIndustries?.length > 0; else noData"
+        </ejs-treemap>
+      </div>
+      <div #viewIndus class="d-none">
+        <ejs-treemap
+          #pie2
+          class="w-100"
+          style="height: 90% !important; width: 100% !important"
+          [dataSource]="dataSourceIndustry ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="paletteIndustry"
+          [leafItemSettings]="leafItemSettingsIns"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${industryName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
         >
-          <ejs-treemap
-            class="w-100"
-            [dataSource]="dataSourceIndustry ?? []"
-            weightValuePath="quantity"
-            rangeColorValuePath="quantity"
-            [palette]="paletteIndustry"
-            [leafItemSettings]="leafItemSettingsIns"
-            [tooltipSettings]="{
-              visible: true,
-              format:
-                '${industryName}<br>${quantity} ' +
-                this.titLeModule +
-                '-(${percentage} %)'
-            }"
-          >
-          </ejs-treemap>
-        </ng-container>
-      </ng-container>
+        </ejs-treemap>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
-<!-- title="Thống kê tỷ lệ thành công ,thất bại trong năm theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div class="chartBusinessLines w-100 h-100" id="6" style="overflow: hidden">
+  <div
+    class="chartBusinessLines w-100 h-100 position-relative"
+    id="6"
+    style="overflow: hidden"
+  >
     <codx-label
       id="chartBusinessLinesHeader"
       class="fs-5 fw-bold"
@@ -189,80 +235,114 @@
       default="Thống kê tỷ lệ thành công, thất bại trong năm theo dòng sản phẩm"
     ></codx-label>
     <div id="chartBusinessLinesButton" class="mt-3">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isSuccess ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btSuccess"
-            formModel=""
-            default="Thành công"
-            (click)="clickButton('btSuccess')"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="!isSuccess ? 'button-selected' : 'button-no-selected'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btFail"
-            formModel=""
-            default="Thất bại"
-            (click)="clickButton('btFail')"
-          ></codx-label>
+      <div class="d-flex justify-content-center h-5">
+        <div id="group3" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btSuccess"
+            name="lineSelect"
+            #btSuccess
+            checked
+            (change)="
+              changeChartLine(btSuccess, {
+                chart1: { viewLineSuc, lineSuc },
+                chart2: { viewLineFail, lineFail }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btSuccess"
+            ><codx-label
+              name="btSuccess"
+              formModel=""
+              default="Thành công"
+            ></codx-label
+          ></label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btFail"
+            name="lineSelect"
+            #btFail
+            (change)="
+              changeChartLine(btFail, {
+                chart1: { viewLineSuc, lineSuc },
+                chart2: { viewLineFail, lineFail }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btFail">
+            <codx-label
+              name="btFail"
+              formModel=""
+              default="Thất bại"
+            ></codx-label
+          ></label>
         </div>
       </div>
     </div>
 
-    <ng-container
-      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
-    >
-      <div class="w-100" style="height: 90%">
-        <ejs-chart
-          id="chart-container"
-          class="w-100"
-          [primaryXAxis]="primaryXAxis"
-          [primaryYAxis]="primaryYAxis"
-          [title]=""
-          [tooltip]="tooltipChartLine"
-        >
-          <e-series-collection>
-            <ng-container
-              *ngFor="let item of dataDashBoard?.countsBussinessLines"
-            >
-              <e-series
-                [dataSource]="
-                  isSuccess ? item?.chartDataSuscess : item?.chartDataFail ?? []
-                "
-                type="Line"
-                xName="month"
-                yName="percentage"
-                [name]="item.businessLineName"
-                width="3"
-                [fillColor]="item.color"
-              ></e-series>
-
-              <!-- <e-series
-                *ngIf="!isSuccess"
-                [dataSource]="item?.chartDataFail ?? []"
-                type="Line"
-                xName="month"
-                yName="percentage"
-                [name]="item.businessLineName"
-                width="3"
-                [fillColor]="item.color"
-              ></e-series> -->
-            </ng-container>
-          </e-series-collection>
-        </ejs-chart>
+    <ng-container>
+      <div class="w-100 position-absolute" style="bottom: 0 px">
+        <div #viewLineSuc>
+          <ejs-chart
+            #lineSuc
+            id="chart-container"
+            style="height: 90% !important; width: 100% !important"
+            class="w-100"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [title]=""
+            [tooltip]="tooltipChartLine"
+          >
+            <e-series-collection>
+              <ng-container *ngFor="let item of chartBussnessLine">
+                <e-series
+                  [dataSource]="item?.chartDataSuscess"
+                  type="Line"
+                  xName="month"
+                  yName="percentage"
+                  [name]="item.businessLineName"
+                  width="3"
+                  [fillColor]="item.color"
+                ></e-series>
+              </ng-container>
+            </e-series-collection>
+          </ejs-chart>
+        </div>
+        <div #viewLineFail class="d-none">
+          <ejs-chart
+            #lineFail
+            id="chart-container"
+            style="height: 90% !important; width: 100% !important"
+            class="w-100"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [title]=""
+            [tooltip]="tooltipChartLine"
+          >
+            <e-series-collection>
+              <ng-container *ngFor="let item of chartBussnessLine">
+                <e-series
+                  #lineFail
+                  [dataSource]="item?.chartDataFail"
+                  type="Line"
+                  xName="month"
+                  yName="percentage"
+                  [name]="item.businessLineName"
+                  width="3"
+                  [fillColor]="item.color"
+                ></e-series>
+              </ng-container>
+            </e-series-collection>
+          </ejs-chart>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
-<!-- title="Top nhân viên có nhiều cơ hội thành công nhất" -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="7" style="overflow-y: hiden">
     <codx-label
@@ -272,72 +352,96 @@
       gridViewName="grvCMMyDashboard"
       default="Top nhân viên có nhiều cơ hội thành công nhất"
     ></codx-label>
-    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isMax ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMax')"
-        >
-          <codx-label
-            name="btnMax"
-            formModel=""
-            default="Cao nhất"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="!isMax ? 'button-selected' : 'button-no-selected'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMin')"
-        >
-          <codx-label
-            name="btnMin"
-            formModel=""
-            default="Thấp nhất"
-          ></codx-label>
+    <div class="mt-5" style="overflow-y: auto; max-height: 70%">
+      <div class="d-flex justify-content-center h-10">
+        <div id="group2" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btMax"
+            name="alignMaxMin"
+            #eleMax
+            checked
+            (change)="
+              changeMaxMin(eleMax, {
+                chart1: { maxView },
+                chart2: { minView }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btMax">
+            <codx-label
+              name="btMax"
+              formModel=""
+              default="Cao nhất"
+            ></codx-label>
+          </label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btMin"
+            name="alignMaxMin"
+            #eleMin
+            (change)="
+              changeMaxMin(eleMin, {
+                chart1: { maxView },
+                chart2: { minView }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btMin">
+            <codx-label
+              name="btMin"
+              formModel=""
+              default="Thấp nhất"
+            ></codx-label>
+          </label>
         </div>
       </div>
     </div>
 
     <div class="mt-3">
-      <ng-container *ngIf="isMax">
-        <ng-container *ngIf="maxOwners?.length > 0; else noData">
-          <div
-            *ngFor="let ownerCount of maxOwners; let i = index"
-            class="d-flex align-items-center justify-content-end cursor-pointer"
-            [title]="ownerCount.objectName"
-          >
-            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
-            <div
-              class="owners-top"
-              style="color: #000000"
-              [style.background-color]="ownerCount?.color"
-              [style.width]="ownerCount.percentage + '%'"
-            >
-              <span class="">{{ ownerCount.objectName }}</span>
-            </div>
+      <div #maxView class="">
+        <div
+          *ngFor="let ownerCount of maxOwners; let i = index"
+          class="d-flex align-items-center justify-content-end cursor-pointer"
+          [title]="ownerCount.objectName"
+        >
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
           </div>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="!isMax">
-        <ng-container *ngIf="minOwners?.length > 0; else noData">
           <div
-            *ngFor="let ownerCount of minOwners; let i = index"
-            class="d-flex align-items-center justify-content-end cursor-pointer"
-            [title]="ownerCount.objectName"
+            class="owners-top"
+            style="color: #000000"
+            [style.background-color]="ownerCount?.color"
+            [style.width]="ownerCount.percentage + '%'"
           >
-            <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
-            <div
-              class="owners-top"
-              style="color: #000000; background-color: aqua"
-              [style.background-color]="ownerCount?.color"
-              [style.width]="ownerCount.percentage + '%'"
-            >
-              <span class="">{{ ownerCount.objectName }}</span>
-            </div>
+            <span class="">{{ ownerCount.objectName }}</span>
           </div>
-        </ng-container>
-      </ng-container>
+        </div>
+      </div>
+
+      <div #minView class="d-none">
+        <div
+          *ngFor="let ownerCount of minOwners; let i = index"
+          class="d-flex align-items-center justify-content-end cursor-pointer"
+          [title]="ownerCount.objectName"
+        >
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
+          </div>
+          <div
+            class="owners-top"
+            style="color: #000000; background-color: aqua"
+            [style.background-color]="ownerCount?.color"
+            [style.width]="ownerCount.percentage + '%'"
+          >
+            <span class="">{{ ownerCount.objectName }}</span>
+          </div>
+        </div>
+      </div>
+      <!-- </ng-container>
+      </ng-container> -->
     </div>
   </div>
 </ng-template>
@@ -725,66 +829,268 @@
     </ng-container>
   </div>
 </ng-template>
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
 
+<!-- SALE TAGET =>CMD001  templateTarget-->
 <!-- Tem TOp sale Tager -->
-<ng-template #templateDeals>
-  <div class="w-100 h-100" id="12" title="">
-    <ejs-bulletchart
-      valueName="value"
-      targetName="target"
-      title="Revenue"
-      [minimum]="minimum"
-      [maximum]="maximum"
-      [interval]="interval"
-      [dataSource]="dataBullet"
-      [tooltip]="tooltipBullet"
-    >
-      <e-bullet-range-collection>
-        <e-bullet-range end="100" color="#ebebeb"></e-bullet-range>
-        <e-bullet-range end="200" color="#d8d8d8"></e-bullet-range>
-        <e-bullet-range end="300" color="#7f7f7f"></e-bullet-range>
-      </e-bullet-range-collection>
-    </ejs-bulletchart>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="1" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="2" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="3" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="4" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="5" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="6" title=""></div>
+</ng-template>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="7" title=""></div>
+</ng-template>
+
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="8" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesTargets"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales targets"
+    ></codx-label>
+    <ng-container *ngIf="lstQuarters?.length > 0; else noData">
+      <div class="w-100 d-flex justify-content-center">
+        <ejs-bulletchart
+          valueField="value"
+          targetField="target"
+          [title]="titleQ0"
+          width="800px"
+          height="70%"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ0"
+          [interval]="intervalQ0"
+          [dataSource]="dataBulletQ0s"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ0"
+              color="##FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+      </div>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            [title]="titleQ1"
+            width="400px"
+            height="70%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBulletQ1"
+            [interval]="intervalQ1"
+            [dataSource]="dataBulletQ1s"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range
+                [end]="dealValueWonQ1"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            [title]="titleQ2"
+            width="400px"
+            height="70%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBulletQ2"
+            [interval]="intervalQ2"
+            [dataSource]="dataBulletQ2s"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range
+                [end]="dealValueWonQ2"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            [title]="titleQ3"
+            width="400px"
+            height="70%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBulletQ3"
+            [interval]="intervalQ3"
+            [dataSource]="dataBulletQ3s"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range
+                [end]="dealValueWonQ3"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+          <ejs-bulletchart
+            valueField="value"
+            targetField="target"
+            [title]="titleQ4"
+            width="400px"
+            height="70%"
+            [minimum]="minimumBullet"
+            [maximum]="maximumBulletQ4"
+            [interval]="intervalQ4"
+            [dataSource]="dataBulletQ4s"
+          >
+            <e-bullet-range-collection>
+              <e-bullet-range
+                [end]="dealValueWonQ4"
+                color="##FF4500"
+              ></e-bullet-range>
+              <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
+            </e-bullet-range-collection>
+          </ejs-bulletchart>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </ng-template>
 
 <!-- Tem templateSaker -->
-<ng-template #templateDeals>
-  <div class="w-100 h-100" id="13" title="">
-    <ejs-accumulationchart
-      id="container"
-      #pie
-      style="display: block; width: 92%"
-      [legendSettings]="legendSettings"
-      [enableSmartLabels]="false"
-      [title]="title"
-      (textRender)="onTextRender($event)"
-      [enableBorderOnMouseMove]="false"
-    >
-      <e-accumulation-series-collection>
-        <e-accumulation-series
-          [dataSource]="piedata"
-          xName="x"
-          yName="y"
-          [startAngle]="startAngle"
-          [endAngle]="endAngle"
-          innerRadius="0%"
-          radius="70%"
-          [dataLabel]="dataLabel"
-          [explode]="false"
-          explodeOffset="10%"
-          [explodeIndex]="explodeIndex"
-        >
-        </e-accumulation-series>
-      </e-accumulation-series-collection>
-    </ejs-accumulationchart>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="9" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSakerQuarters"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales last 4 quarters"
+    ></codx-label>
+    <ng-container *ngIf="piedata?.length > 0; else noData">
+      <ejs-accumulationchart
+        id="container"
+        #pie
+        style="display: block; width: 92%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        (textRender)="onTextRender($event)"
+        [enableBorderOnMouseMove]="false"
+        [tooltip]="{
+        enable: true,
+        format: '${point.y}%',
+      }"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="piedata"
+            xName="x"
+            yName="y"
+            [startAngle]="startAngle"
+            [endAngle]="endAngle"
+            innerRadius="0%"
+            radius="70%"
+            [dataLabel]="dataLabel"
+            [explode]="false"
+            explodeOffset="10%"
+            [explodeIndex]="explodeIndex"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </ng-container>
   </div>
 </ng-template>
 
 <!-- Tem TOp sale performan -->
-<ng-template #templateDeals>
-  <div class="w-100 h-100" id="14" title="">ccc</div>
+<ng-template #templateTarget>
+  <div class="w-100 h-100" id="10" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalePerformance"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Top sales performance"
+    ></codx-label>
+    <ng-container *ngIf="lstUsers?.length > 0; else noData">
+      <div class="table-container border" style="overflow-x: auto">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th
+                style="width: 300px !important"
+                style="border-bottom: 1px var(--gray-100) solid !important"
+              ></th>
+              <ng-container *ngFor="let item of lstUsers">
+                <th
+                  class="w-50px"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="d-flex justify-content-center">
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="item?.userID"
+                      [objectName]="item?.userName"
+                      objectType="AD_Users"
+                      [numberImages]="1"
+                      class=""
+                    >
+                    </codx-imgs>
+                  </div>
+                  <div class="mt-1">{{ item?.userName }}</div>
+                </th>
+              </ng-container>
+            </tr>
+          </thead>
+          <tbody *ngFor="let item of lstVllTopSales">
+            <tr>
+              <td style="border-bottom: 1px var(--gray-100) solid !important">
+                <span class="fw-bold">{{ item.text }}</span>
+              </td>
+              <ng-container *ngFor="let user of lstUsers">
+                <td
+                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  style="border-bottom: 1px var(--gray-100) solid !important"
+                >
+                  <div class="text-gray-800 d-flex justify-content-center">
+                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>
+<!-- END  -->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
 
 <ng-template #noData>
   <codx-no-data [size]="150"></codx-no-data>

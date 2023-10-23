@@ -28,7 +28,7 @@ export class PopupCustomFieldComponent implements OnInit {
   customerID: any; //Khách hàng cơ hội
 
   constructor(
-    private changeDetec: ChangeDetectorRef,
+    private changeDetectorRef : ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -135,6 +135,7 @@ export class PopupCustomFieldComponent implements OnInit {
         if (res) {
           this.dialog.close(this.fields);
           this.notiService.notifyCode('SYS007');
+          this.changeDetectorRef.detectChanges();
         } else this.dialog.close();
       });
   }

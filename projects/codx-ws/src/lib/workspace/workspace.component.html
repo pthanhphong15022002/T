@@ -15,7 +15,7 @@
               </div>
               <div class="mx-7"><span class="fs-6 text-gray-800">{{md.countsNote}}</span></div>
               <div class="d-flex flex-wrap mx-4">
-                <div class="d-flex flex-column w-200px h-150px wsp-rounder-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
+                <div class="d-flex flex-column w-200px h-150px rounded-1 wsp-bg-primary m-2 text-white p-3 cursor-pointer" 
                   *ngFor="let c of md.childs" (click)="selectedChange(c)"
                   [style.backgroundColor]="c?.color"
                 >
@@ -144,7 +144,7 @@
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Soạn thảo Email" [body]="EmailBody" [footer]="EmailFooter" >
   </codx-form>
   <ng-template #EmailBody>
-    <div class="px-4 py-3 overflow-auto">
+    <div class="py-3 overflow-auto">
       <!-- <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Ngôn ngữ</label>
         <select class="form-select" id="exampleFormControlInput1" (change)="valueChange($event)">
@@ -166,13 +166,15 @@
       <!-- <ng-container *ngIf="emailModel.result">
         <div [innerHTML]="emailModel.result" class="border border-secondary p-4"></div>
       </ng-container> -->
-      <codx-input 
-        field="result" 
-        format="ed" 
-        type="textarea" 
-        [crrValue]="emailModel.result" 
-        (valueChange)="valueChange($event,'email')">
-      </codx-input>
+      <div class="textarea-keyresult">
+        <codx-input 
+          field="result" 
+          format="ed" 
+          type="textarea" 
+          [crrValue]="emailModel.result" 
+          (valueChange)="valueChange($event,'email')">
+        </codx-input>
+      </div>
     </div>
   </ng-template>
   <ng-template #EmailFooter>
@@ -187,7 +189,7 @@
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo nội dung" [body]="SocialBody" [footer]="SocialFooter" >
   </codx-form>
   <ng-template #SocialBody>
-    <div class="px-4 py-3 h-100">
+    <div class="y-3 h-100">
       <!-- <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Ngôn ngữ</label>
         <select class="form-select" id="exampleFormControlInput1" (change)="valueChange($event)">
@@ -216,12 +218,14 @@
       <!-- <ng-container *ngIf="socialMediaModel.result">
         <div [innerHTML]="socialMediaModel.result" class="border border-secondary p-4"></div>
       </ng-container> -->
-      <codx-input 
-        field="result" 
-        format="ed" 
-        type="textarea" 
-        [crrValue]="socialMediaModel.result">
-      </codx-input>
+      <div class="textarea-keyresult">
+        <codx-input 
+          field="result" 
+          format="ed" 
+          type="textarea" 
+          [crrValue]="socialMediaModel.result">
+        </codx-input>
+      </div>
     </div>
   </ng-template>
   <ng-template #SocialFooter>
@@ -237,7 +241,7 @@
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo Key Result" [body]="OKRBody" [footer]="OKRFooter" >
   </codx-form>
   <ng-template #OKRBody>
-    <div class="px-4 py-3 h-100">
+    <div class="py-3 h-100">
       <!-- <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Ngôn ngữ</label>
         <select class="form-select" id="exampleFormControlInput1" (change)="valueChange($event)">
@@ -256,7 +260,7 @@
         <codx-input type="text" className="form-control" field="num_KPI" [crrValue]="okrModel.num_KPI" (valueChange)="valueChange($event,'okr')">
         </codx-input>
       </div>
-      <div class="mb-3">
+      <div class="mb-3 textarea-keyresult">
         <codx-input 
           field="result" 
           format="ed" 

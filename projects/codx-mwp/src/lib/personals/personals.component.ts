@@ -45,7 +45,7 @@ export class PersonalsComponent extends UIComponent  implements AfterViewInit{
     STORAGE: false,
     INFORMATION: false,
   };
-  predicatePortal = '@CreatedBy=@0 && (Category="1" || Category="3" || Category="4") && Stop=false';
+  predicatePortal = 'CreatedBy=@0 && (Category="1" || Category="3" || Category="4") && Stop=false';
   dataValuePortal = "";
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;

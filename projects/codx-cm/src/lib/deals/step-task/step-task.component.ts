@@ -25,6 +25,8 @@ import {
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstancesStepsReasons } from '../../models/tmpModel';
+import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
+import { CM_Deals } from '../../models/cm_model';
 
 @Component({
   selector: 'step-task',
@@ -34,23 +36,24 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task: CodxStepTaskComponent;
   @ViewChild('popupGuide') popupGuide;
-  @Input() typeTask = 1; // 2 = hợp đồng
-  @Input() customerID = '';
-  @Input() isPause = false;
+  applyProcess = false; // 2 = hợp đồng
+  @Input() dataCM; // CM_Customers, CM_Deal, CM_Lead, CM_Case, CM_Contracts
+  @Input() isAdmin = false;
   @Input() applyFor;
+  @Input() owner = '';
+
+  @Input() isPause = false;
   @Input() isDataLoading: any;
-  @Input() dataSelected: any;
+  // @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
   @Input() entityName = '';
-  @Input() isAdmin = false;
   @Input() isChangeOwner: string;
 
   @Input() customerName: string;
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
-  @Input() ownerInstance: string;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -113,7 +116,18 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.dataSelected;
+
+    if(this.entityName == 'CM_Customers'){
+      this.applyProcess = false;
+    }else if(this.entityName == 'CM_Deals'){
+      this.applyProcess = true;
+      this.isAdmin = !!this.dataCM?.full;
+    }else{
+      this.applyProcess = this.dataCM?.applyProcess;
+      this.isAdmin = !!this.dataCM?.full;
+    }
+    this.owner = this.dataCM?.owner;
+
     this.cache.valueList('DP032').subscribe((res) => {
       if (res?.datas) {
         this.status = res?.datas?.filter(
@@ -134,7 +148,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.listInstanceStep) {
       this.listInstanceStepShow = this.listInstanceStep;
-      if (!['0', '1', '2'].includes(this.dataSelected.status)) {
+      if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
         this.stepIdReason =
           this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
         this.listStepReasonValue =
@@ -155,12 +169,12 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     if (changes.dataSelected) {
-      this.dataSelected = changes.dataSelected?.currentValue;
-      this.type = this.dataSelected.viewModeDetail || 'S';
+      this.dataCM = changes.dataSelected?.currentValue;
+      this.type = this.dataCM.viewModeDetail || 'S';
       if (!this.isAdmin) {
         this.isAdmin =
-          this.dataSelected?.full ||
-          this.dataSelected?.owner == this.user?.userID;
+          this.dataCM?.full ||
+          this.dataCM?.owner == this.user?.userID;
       }
     }
   }
@@ -244,7 +258,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       if (res) {
         this.listStepSuccess = this.convertStepsReason(res[0]);
         this.listStepFail = this.convertStepsReason(res[1]);
-        this.listStepReason = this.getReasonByStepId(this.dataSelected.status);
+        this.listStepReason = this.getReasonByStepId(this.dataCM.status);
       }
     });
   }
@@ -253,9 +267,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     var listReasonInstance = [];
     for (let item of reasons) {
       var reasonInstance = new tmpInstancesStepsReasons();
-      reasonInstance.processID = this.dataSelected.processID;
+      reasonInstance.processID = this.dataCM.processID;
       reasonInstance.stepID = item.stepID;
-      reasonInstance.instanceID = this.dataSelected.refID;
+      reasonInstance.instanceID = this.dataCM.refID;
       reasonInstance.reasonName = item.reasonName;
       reasonInstance.reasonType = item.reasonType;
       reasonInstance.createdBy = item.createdBy;
@@ -289,7 +303,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   async openPopupReason() {
     this.listReasonsClick = [];
-    await this.getListReason(this.dataSelected.processID, this.applyFor);
+    await this.getListReason(this.dataCM.processID, this.applyFor);
     this.dialogPopupReason = this.callfc.openForm(
       this.viewReason,
       '',
@@ -315,7 +329,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   onSaveReason() {
     if (this.listReasonsClick.length > 0 && this.listReasonsClick) {
       var data = [
-        this.dataSelected.refID,
+        this.dataCM.refID,
         this.stepIdReason,
         this.listReasonsClick,
       ];
@@ -337,7 +351,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         switch (res.functionID) {
           case 'SYS02':
           case 'SYS102':
-            if (this.dataSelected.closed) {
+            if (this.dataCM.closed) {
               res.disabled = true;
             }
             break;
@@ -368,8 +382,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   onDeleteReason(dataReason) {
     var data = [
-      this.dataSelected.refID,
-      this.dataSelected.stepID,
+      this.dataCM.refID,
+      this.dataCM.stepID,
       dataReason.recID,
     ];
     this.codxCmService.deleteListReason(data).subscribe((res) => {

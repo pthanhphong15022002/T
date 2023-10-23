@@ -120,19 +120,17 @@ export class ListPostComponent implements OnInit, AfterViewInit,OnChanges {
     if(!changes.favoriteID?.firstChange && changes.favoriteID?.previousValue != changes.favoriteID?.currentValue)
     {
       this.dataService.favoriteID = changes.favoriteID?.currentValue;
+      this.dataService.page = 0;
       this.dataService.setPredicates([this.predicates],[this.dataValues]);
     }
-    if(changes.entityName && !changes.entityName.firstChange && changes.entityName.previousValue != changes.entityName.currentValue)
+    if((!changes.predicate?.firstChange && changes.predicate?.previousValue !=  changes.predicate?.currentValue) || (!changes.dataValue?.firstChange && changes.dataValue?.previousValue !=  changes.dataValue?.currentValue))
     {
-      this.dataService.favoriteID = changes.favoriteID?.currentValue;
-      this.dataService.setPredicates([this.predicates],[this.dataValues]);
-    }
-    if(changes.predicate && (!changes.predicate.firstChange && changes.predicate.previousValue !=  changes.predicate.currentValue) && (!changes.dataValue.firstChange && changes.dataValue.previousValue !=  changes.dataValue.currentValue))
-    {
+      this.dataService.page = 0;
       this.dataService.setPredicate(changes.predicate?.currentValue || this.predicate, [changes.dataValue?.currentValue || this.dataValue]);
     }
-    if(changes.predicates && (!changes.predicates.firstChange && changes.predicates.previousValue !=  changes.predicates.currentValue) && (!changes.dataValues.firstChange && changes.dataValues.previousValue !=  changes.dataValues.currentValue))
+    if((!changes.predicates?.firstChange && changes.predicates?.previousValue !=  changes.predicates?.currentValue) || (!changes.dataValues?.firstChange && changes.dataValues?.previousValue !=  changes.dataValues?.currentValue))
     {
+      this.dataService.page = 0;
       this.dataService.setPredicates([changes.predicates?.currentValue || this.predicates],[changes.dataValues?.currentValue || this.dataValues]);
     }
   }

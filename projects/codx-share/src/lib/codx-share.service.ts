@@ -1375,6 +1375,21 @@ export class CodxShareService {
       [transID, isSettingMode, dynamicApprovers]
     );
   }
+  
+  getSettingValueWithOption(option, formName, transType=null, category=null) {
+    //option: Filter With 
+    //"F": FormName 
+    //"FT" FormName && TransType
+    //"FC" FormName && Category
+    //"FTC" FormName && TransType && Category
+    return this.api.execSv<any>(
+      'SYS',
+      'SYS',
+      'SettingValuesBusiness',
+      'GetListAsync',
+      [option, formName, transType, category]
+    );
+  }
   //#region Codx Quy trình duyệt
   //-------------------------------------------Gửi duyệt--------------------------------------------//
 

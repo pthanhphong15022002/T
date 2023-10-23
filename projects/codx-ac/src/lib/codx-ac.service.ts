@@ -24,6 +24,55 @@ export const fmVATInvoices: FormModel = {
   entityPer: 'AC_VATInvoices',
 };
 
+export const fmCashPaymentsLines: FormModel = {
+  formName: 'CashPaymentsLines',
+  gridViewName: 'grvCashPaymentsLines',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmCashPaymentsLinesOneAccount: FormModel = {
+  formName: 'CashPaymentsLinesOneAccount',
+  gridViewName: 'grvCashPaymentsLinesOneAccount',
+  entityName: 'AC_CashPaymentsLines',
+  entityPer: 'AC_CashPaymentsLines',
+};
+
+export const fmAdvancePayment: FormModel = {
+  formName: 'AdvancedPaymentLines',
+  gridViewName: 'grvAdvancedPaymentLines',
+  entityName: 'AC_AdvancedPaymentLines',
+  entityPer: 'AC_AdvancedPaymentLines',
+};
+
+export const fmPaymentOrder: FormModel = {
+  formName: 'PaymentOrder',
+  gridViewName: 'grvPaymentOrder',
+  entityName: 'AC_PaymentOrder',
+  entityPer: 'AC_PaymentOrder',
+};
+
+export const fmAcctTrans: FormModel = {
+  formName: 'AcctTrans',
+  gridViewName: 'grvAcctTrans',
+  entityName: 'AC_AcctTrans',
+  entityPer: 'AC_AcctTrans',
+};
+
+export const fmSettledInvoices: FormModel = {
+  formName: 'SettledInvoices',
+  gridViewName: 'grvSettledInvoices',
+  entityName: 'AC_SettledInvoices',
+  entityPer: 'AC_SettledInvoices',
+};
+
+export const fmSalesInvoicesLines: FormModel = {
+  entityName: 'AC_SalesInvoicesLines',
+  formName: 'SalesInvoicesLines',
+  gridViewName: 'grvSalesInvoicesLines',
+  entityPer: 'AC_SalesInvoicesLines',
+};
+
 @Injectable({
   providedIn: 'root',
 })

@@ -1,14 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AuthStore, CacheService } from 'codx-core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService } from 'codx-core';
 import { CodxWsService } from '../../../codx-ws.service';
 import { isObservable } from 'rxjs';
 import { label } from './infomation.variable';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { LoginSercurityComponent } from './login-sercurity/login-sercurity.component';
+import { SercurityTOTPComponent } from './sercurity-totp/sercurity-totp.component';
+import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 
 @Component({
   selector: 'lib-information',
   templateUrl:'./information.component.html',
-  styleUrls: ['./information.component.scss']
+  styleUrls: ['./information.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class InformationComponent implements OnInit{
   @Input() menuFunctionID:any;
@@ -18,19 +22,25 @@ export class InformationComponent implements OnInit{
   label = label;
   language
   themes = themeDatas;
+  hasES = false;
+  dataSignatures:any;
+  formModelES:any;
+  isModeAddES = true;
 
   constructor(
+    private api: ApiHttpService,
     private authstore: AuthStore,
     private wsService: CodxWsService,
     private codxCmService: CodxCommonService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private callFunc: CallFuncService,
+    private codxService : CodxService,
+    private mwpService: CodxMwpService
   ) 
   {
     this.user = this.authstore.get();
     this.user.positionName = "Thông tin chức vụ"
     this.user.departmentName = "Thông tin phòng ban";
-    debugger
-    var a = this.user.extends.TwoFA
   }
   ngOnInit(): void {
     //Lấy thông tin nhân viên
@@ -41,6 +51,8 @@ export class InformationComponent implements OnInit{
     this.getThemes();
     //Lấy thông tin ngôn ngữ
     this.getLanguage();
+    //Kiểm tra func có ES k
+    this.getFunc();
   }
 
   getThemes()
@@ -65,16 +77,64 @@ export class InformationComponent implements OnInit{
       info.subscribe((item:any)=>{
         if(item)
         {
-          this.user.positionName = item?.positionName
-          this.user.departmentName = item?.departmentName
+          this.user.positionName = item?.positionName || "Thông tin chức vụ"
+          this.user.departmentName = item?.departmentName || "Thông tin phòng ban"
         }
       })
     }
     else
     {
-      this.user.positionName = info?.positionName
-      this.user.departmentName = info?.departmentName
+      this.user.positionName = info?.positionName || "Thông tin chức vụ"
+      this.user.departmentName = info?.departmentName || "Thông tin phòng ban"
     }
+  }
+
+  getFunc()
+  {
+    let paras = ["VN","ES"];
+    let keyRoot = "WSFuncIDCheckES";
+    var ws = this.wsService.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetAsync") as any;
+    if(isObservable(ws))
+    {
+      ws.subscribe((item:any)=>{
+        if(item) {
+         this.hasES = true;
+         this.getCacheSig();
+        }
+      })
+    }
+    else if(ws) {
+      this.hasES = true;
+      this.getCacheSig();
+    }
+  }
+
+  getCacheSig()
+  {
+    this.cacheService.functionList('ESS21').subscribe((x) => {
+      if (x)
+        this.formModelES = {
+          entityName: x.entityName,
+          entityPer: x.entityName,
+          formName: x.formName,
+          gridViewName: x.gridViewName,
+          funcID: 'ESS21',
+        };
+        this.getSignature();
+    });
+  }
+  getSignature() {
+    this.api
+      .execSv('ES', 'ES', 'SignaturesBusiness', 'GetByUserIDAsync', [
+        this.user?.userID,
+        '2',
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.dataSignatures= res[0];
+          this.isModeAddES = res[1];
+        }
+      });
   }
 
   getADUser()
@@ -103,7 +163,90 @@ export class InformationComponent implements OnInit{
 
   change2FA(e:any)
   {
+    this.openFormSercurityLogin(e?.data);
+    //this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync","").subscribe(item=>{})
+  }
 
+  openFormSercurityLogin(id:any)
+  {
+    let popup = this.callFunc.openForm(LoginSercurityComponent,"",500,400);
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        if(id == "1" || id == "4")
+        {
+          let popup2 = this.callFunc.openForm(SercurityTOTPComponent,"",500,700,"",id);
+          popup2.closed.subscribe(res=>{
+            if(res?.event)
+            {
+              this.user.extends.TwoFA = id;
+              this.authstore.set(this.user);
+            }
+          })
+        }
+        else
+        {
+          this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync",id).subscribe(item=>{
+            if(item)
+            {
+              this.user.extends.TwoFA = id;
+              this.authstore.set(this.user);
+            }
+          })
+        }
+      }
+    })
+  }
+  
+  changePW() {
+    var url = `auth/login`;
+    this.codxService.navigate(null, url, { id: 'changePass' });
+  }
+
+  expend()
+  {
+    if(this.user?.extends?.TwoFA != '1' && this.user?.extends?.TwoFA != '4') return;
+    this.openFormSercurityLogin(this.user?.extends?.TwoFA);
+  }
+
+  dataImageChanged(event:any,type:any)
+  {
+    if (event) {
+      switch (type) {
+        case 'S1': {
+          if (event && this.dataSignatures.signature1 == null) {
+            this.dataSignatures.signature1 = (event[0] as any).recID;
+          }
+          break;
+        }
+        case 'S2': {
+          if (event && this.dataSignatures.signature2 == null) {
+            this.dataSignatures.signature2 = (event[0] as any).recID;
+          }
+          break;
+        }
+        case 'S3': {
+          if (event && this.dataSignatures.stamp == null) {
+            this.dataSignatures.stamp = (event[0] as any).recID;
+          }
+          break;
+        }
+      }
+    }
+    if (this.isModeAddES)
+      this.mwpService.addNewSignature(this.dataSignatures).subscribe((res) => {
+        if (res) {
+          this.dataSignatures = res;
+          this.isModeAddES = false;
+        }
+      });
+    else
+      this.mwpService.editSignature(this.dataSignatures).subscribe((res) => {
+        if (res) {
+          this.dataSignatures = res;
+          this.isModeAddES = false;
+        }
+      });
   }
 }
 const themeDatas: ThemeFlag[] = [

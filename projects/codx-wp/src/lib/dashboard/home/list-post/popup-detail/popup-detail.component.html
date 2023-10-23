@@ -1,56 +1,49 @@
 <div class="row mx-0 h-100">
     <!-- file -->
     <div class="col-8 px-0 bg-gray-200 position-relative d-flex felx-columns flex-wrap align-items-center">
-        <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative">
-            <ng-container *ngIf="fileSelected">
-                <codx-image-viewer #codxImageViewer [idContainer]="'idOnHTML'" [objectID]="parentID"
-                    [dialog]="dialogRef" [fileID]="fileSelected.recID" (onPrevious)="changeImage($event)"
-                    (onNext)="changeImage($event)">
-                </codx-image-viewer>
-            </ng-container>
+        <div class="d-flex flex-columns flex-wap align-items-center w-100 h-100 view-imgfull position-relative" *ngIf="fileSelected">
+            <codx-image-viewer #codxImageViewer [idContainer]="'idOnHTML'" [objectID]="parentID"
+                [dialog]="dialogRef" [fileID]="fileSelected.recID" (onPrevious)="changeImage($event)"
+                (onNext)="changeImage($event)">
+            </codx-image-viewer>
         </div>
     </div>
     <!-- post -->
     <div class="col-4 mt-5 ps-6">
-        <ng-container *ngIf="parentPost">
-            <div class="d-flex">
-                <div class="me-2">
-                    <codx-img [objectId]="parentPost.createdBy" [objectName]="parentPost.createdName"
-                        [imageType]="'circle'" objectType="AD_Users" [width]="40">
-                    </codx-img>
-                </div>
-                <div class="text-info-date ms-2">
-                    <div class="">
-                        <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
-                        <ng-container *ngIf="parentPost.tagName">
-                            <span [innerHTML]="parentPost.tagName"></span>
-                        </ng-container>
-                    </div>
-                    <div class="mt-2">
-                        <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | pTimeFrom}}</span>
-                        <span *ngIf="parentPost.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
-                            <codx-vll [name]="'WP001'" [value]="parentPost.shareControl" [showText]="true"
-                                [showIcon]="true" [path]="'assets/themes/sys/default/img/'"
-                                [icoCss]="'symbol-12px symbol-circle'" [showBgColor]="true">
-                            </codx-vll>
-                        </span>
-                        <ng-container *ngIf="parentPost.shareName">
-                            <span [innerHTML]="parentPost.shareName"></span>
-                        </ng-container>
-                    </div>
-                    <!-- <div class="mt-2" *ngIf="parentPost.contents" [innerHTML]="parentPost.contents | safe: 'html'">
-                    </div> -->
-                </div>
+        <div class="d-flex" *ngIf="parentPost">
+            <div class="me-2">
+                <codx-img [objectId]="parentPost.createdBy" [objectName]="parentPost.createdName"
+                    [imageType]="'circle'" objectType="AD_Users" [width]="40">
+                </codx-img>
             </div>
-
-        </ng-container>
+            <div class="text-info-date ms-2">
+                <div class="">
+                    <span class="fw-bolder fs-7 me-2">{{parentPost.createdName}}</span>
+                    <ng-container *ngIf="parentPost.tagName">
+                        <span [innerHTML]="parentPost.tagName"></span>
+                    </ng-container>
+                </div>
+                <div class="mt-2">
+                    <span class="text-gray-600 fs-7 me-2">{{parentPost.createdOn | pTimeFrom}}</span>
+                    <span *ngIf="parentPost.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
+                        <codx-vll [name]="'WP001'" [value]="parentPost.shareControl" [showText]="true"
+                            [showIcon]="true" [path]="'assets/themes/sys/default/img/'"
+                            [icoCss]="'symbol-12px symbol-circle'" [showBgColor]="true">
+                        </codx-vll>
+                    </span>
+                    <ng-container *ngIf="parentPost.shareName">
+                        <span [innerHTML]="parentPost.shareName"></span>
+                    </ng-container>
+                </div>
+                <!-- <div class="mt-2" *ngIf="parentPost.contents" [innerHTML]="parentPost.contents | safe: 'html'">
+                </div> -->
+            </div>
+        </div>
         <!-- comment -->
-        <ng-container *ngIf="childPost">
-            <div>
-                <treeview-comment #codxTreeComment [funcID]="'WP'" [fromModel]="dialogRef.formModel"
-                    [objectType]="'WP_Comments'" [data]="childPost" [objectID]="childPost.recID" [showComment]="true">
-                </treeview-comment>
-            </div>
-        </ng-container>
+        <div *ngIf="childPost">
+            <treeview-comment #codxTreeComment [funcID]="'WP'" [fromModel]="dialogRef.formModel"
+                [objectType]="'WP_Comments'" [data]="childPost" [objectID]="childPost.recID" [showComment]="true">
+            </treeview-comment>
+        </div>
     </div>
 </div>

@@ -28,13 +28,11 @@ import { EmployeeDayOffComponent } from 'projects/codx-hr/src/lib/employee-day-o
 import { TargetsComponent } from 'projects/codx-cm/src/lib/targets/targets.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { RequestReviewComponent } from './approvals/request-review/request-review.component';
-import { AdvancePaymentComponent } from 'projects/codx-ac/src/lib/advance-payment/advance-payment.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { ODDashboardComponent } from 'projects/codx-od/src/lib/oddashboard/oddashboard.component';
 import { DMDashboardComponent } from 'projects/codx-dm/src/lib/dmdashboard/dmdashboard.component';
 import { TMDashboardComponent } from 'projects/codx-tm/src/lib/tmdashboard/tmdashboard.component';
-import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/payment-order/payment-order.component';
 import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/employee-quit.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
@@ -45,7 +43,25 @@ import { InformationComponent } from './personal/master-detail/information/infor
 import { CashPaymentsComponent } from 'projects/codx-ac/src/lib/vouchers/cashpayments/cashpayments.component';
 import { EmployeeInfoDetailComponent } from 'projects/codx-hr/src/lib/employee-list/employee-info-detail/employee-info-detail.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { LoginSercurityComponent } from './personal/master-detail/information/login-sercurity/login-sercurity.component';
+import { SercurityTOTPComponent } from './personal/master-detail/information/sercurity-totp/sercurity-totp.component';
+import { AdvancePaymentRequestComponent } from 'projects/codx-ac/src/lib/vouchers/advance-payment-request/advance-payment-request.component';
+import { LayoutNoasideAcComponent } from 'projects/codx-ac/src/lib/_layout-noaside-ac/layout-noaside-ac.component';
+import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
+import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/vouchers/payment-order/payment-order.component';
 
+import { MyPageComponent } from './personal/master-detail/my-page/my-page.component';
+import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
+import { ImgComponent } from './personal/master-detail/my-page/img/img.component';
+import { VideoComponent } from './personal/master-detail/my-page/video/video.component';
+import { AddUpdateNoteBookComponent } from './personal/master-detail/my-page/add-update-note-book/add-update-note-book.component';
+import { AddUpdateStorageComponent } from './personal/master-detail/my-page/add-update-storage/add-update-storage.component';
+import { DetailStorageComponent } from './personal/master-detail/my-page/detail-storage/detail-storage.component';
+import { ExtendStorageComponent } from './personal/master-detail/my-page/extend-storage/extend-storage.component';
+import { ExtendNoteBookComponent } from './personal/master-detail/my-page/extend-note-book/extend-note-book.component';
+import { CommonModule } from '@angular/common';
+import { PopupAddPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-add/popup-add-post.component';
+import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 const routes: Routes = [
   {
     path: '',
@@ -65,6 +81,7 @@ const routes: Routes = [
         component: PersonalComponent,
         //component: PersonalComponent,
       },
+      
       {
         path: 'approvals/:funcID',
         component: ApprovalsComponent,
@@ -144,18 +161,36 @@ const routes: Routes = [
         // data: { noReuse: true },
       },
       {
-        path: 'requestsforadvances/:funcID',
-        component: AdvancePaymentComponent,
+        path: '',
+        component: LayoutNoasideAcComponent,
+        children: [
+          {
+            path: 'requestsforadvances/:funcID',
+            component: AdvancePaymentRequestComponent,
+            data: { noReuse: true },
+          },
+        ],
+      },
+      {
+        path: '',
+        component: LayoutNoasideAcComponent,
+        children: [
+          {
+            path: 'paymentorders/:funcID',
+            component: PaymentOrderComponent,
+            data: { noReuse: true },
+          },
+        ],
       },
       // Phiếu chi
-      {
-        path: 'cashpayments/:funcID',
-        component: CashPaymentsComponent,
-      },
-      {
-        path: 'paymentorders/:funcID',
-        component: PaymentOrderComponent,
-      },
+      // {
+      //   path: 'cashpayments/:funcID',
+      //   component: CashPaymentsComponent,
+      // },
+      // {
+      //   path: 'paymentorders/:funcID',
+      //   component: PaymentOrderComponent,
+      // },
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
       {
@@ -190,7 +225,16 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
+    
   },
+  {
+    path: 'storage',
+    component: ExtendStorageComponent,
+  },
+  {
+    path: 'notebook',
+    component: ExtendNoteBookComponent,
+  }
 ];
 
 @NgModule({
@@ -210,16 +254,28 @@ const routes: Routes = [
     ReportComponent,
     RequestReviewComponent,
     BookmarkComponent,
-    InformationComponent
+    InformationComponent,
+    LoginSercurityComponent,
+    SercurityTOTPComponent,
+    AddUpdateNoteBookComponent,
+    AddUpdateStorageComponent,
+    DetailStorageComponent,
+    ExtendStorageComponent,
+    ExtendNoteBookComponent,
+    MyPageComponent,
+    ImgComponent,
+    VideoComponent,
   ],
   imports: [
+    CommonModule,
     RouterModule.forChild(routes),
     CodxCoreModule.forRoot({ environment }),
     CodxShareModule,
     AccordionModule,
     NgbDropdownModule,
     SpeedDialModule,
-    TooltipModule
+    TooltipModule,
+    TabAllModule,
   ],
   exports: [RouterModule],
 })

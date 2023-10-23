@@ -110,7 +110,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             [params.sk]
           )
           .subscribe((res) => {
-            debugger;
             if (res) {
               this.sessionID = params.sk;
               this.email = res[0];

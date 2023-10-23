@@ -254,12 +254,12 @@ export class PopupAddDealComponent
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.deal.owner
-        )[0].userName;
+          (x) => x.userID === this.deal?.owner
+        )[0]?.userName;
       }
-      this.searchOwner('1', 'O', '0', this.deal.owner, ownerName);
+      this.searchOwner('1', 'O', '0', this.deal?.owner, ownerName);
     }
-    else if ($event === null || $event === '') {
+    else if ($event == null || $event == '') {
       this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
     }
   }
@@ -631,7 +631,7 @@ export class PopupAddDealComponent
               this.deal.endDate = this.HandleEndDate(
                 this.listInstanceSteps,
                 this.action,
-                this.action !== this.actionEdit || this.action === this.actionEdit && this.deal.status == '1'  ? null : this.deal.createdOn
+                this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
               );
               this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
               if (this.listParticipants.length > 0 && this.listParticipants) {
@@ -755,11 +755,11 @@ export class PopupAddDealComponent
                 this.listInstanceSteps = result?.steps;
                 this.listParticipants = result?.permissions;
                 this.deal.dealID = result?.dealId;
-                this.deal.endDate = this.HandleEndDate(
-                  this.listInstanceSteps,
-                  this.action,
-                  this.action !== this.actionEdit ? null : this.deal.createdOn
-                );
+                  this.deal.endDate = this.HandleEndDate(
+                this.listInstanceSteps,
+                this.action,
+                this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
+              );
                 this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
                 this.changeDetectorRef.detectChanges();
               } else {
@@ -794,7 +794,7 @@ export class PopupAddDealComponent
           this.deal.endDate = this.HandleEndDate(
             this.listInstanceSteps,
             this.action,
-            this.action != this.actionEdit ? null : this.deal.createdOn
+            this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
           );
           if (this.listParticipants.length > 0 && this.listParticipants) {
             let index = this.listParticipants.findIndex(
@@ -832,6 +832,7 @@ export class PopupAddDealComponent
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
         this.instanceRes = instance;
+        this.deal.status = instance.status;
         this.deal.datas = instance.datas;
         !this.isLoading && this.onEdit();
         this.isLoading && this.editDealForDP();

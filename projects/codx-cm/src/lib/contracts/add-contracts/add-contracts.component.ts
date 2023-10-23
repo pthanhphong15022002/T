@@ -87,7 +87,6 @@ export class AddContractsComponent implements OnInit {
   instance: tmpInstances = new tmpInstances();
 
   view = [];
-
   isLoadDate = true;
   checkPhone = true;
   isErorrDate = true;
@@ -95,16 +94,18 @@ export class AddContractsComponent implements OnInit {
   disabledDelActualDate = false;
 
   user;
+  contractRefID = '';
   action = 'add';
   tabClicked = '';
   customerID = {};
   headerTest = '';
   listTypeContract = [];
-  type: 'view' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'view'| 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   listCustomFile: any[] = [];
   listField = [];
+  processID = '';
 
   listParticipants;
   objPermissions = {};
@@ -164,8 +165,9 @@ export class AddContractsComponent implements OnInit {
     this.account = dt?.data?.account;
     this.projectID = dt?.data?.projectID;
     this.headerTest = dt?.data?.actionName;
-    this.contractsInput = dt?.data?.contract;
-
+    this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
+    this.processID = dt?.data?.processID;
+    this.contractRefID = dt?.data?.contractRefID;
     this.getFormModel();
 
     this.user = this.authStore.get();
@@ -203,7 +205,7 @@ export class AddContractsComponent implements OnInit {
 
     this.action !== 'add' &&
       this.contracts.applyProcess &&
-      this.getListInstanceSteps(this.contracts?.processID);
+      this.getListInstanceSteps(this.contracts?.processID,this.contracts.refID);
   }
 
   //#region setData
@@ -222,6 +224,9 @@ export class AddContractsComponent implements OnInit {
         this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
+        if(this.processID){
+          this.cbxProcessChange({data:this.processID})
+        }
         this.contracts.pmtStatus = this.contracts.pmtStatus
           ? this.contracts.pmtStatus
           : '0';
@@ -238,7 +243,14 @@ export class AddContractsComponent implements OnInit {
         }
         break;
       case 'edit':
-        this.contracts = data;
+        if(data){
+          this.contracts = data;
+        }else if(this.contractRefID){
+          let dataEdit = await firstValueFrom(this.contractService.getContractByRefID(this.contractRefID));
+          if(dataEdit){
+            this.contracts = dataEdit;
+          }
+        }
         this.getQuotationsLinesInContract(
           this.contracts?.recID,
           this.contracts?.quotationID
@@ -247,7 +259,14 @@ export class AddContractsComponent implements OnInit {
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
       case 'copy':
-        this.contracts = data;
+        if(data){
+          this.contracts = data;
+        }else if(this.contractRefID){
+          let dataCopy = await firstValueFrom(this.contractService.getContractByRefID(this.contractRefID));
+          if(dataCopy){
+            this.contracts = dataCopy;
+          }
+        }
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
         this.getQuotationsLinesInContract(
@@ -260,6 +279,7 @@ export class AddContractsComponent implements OnInit {
         } else {
           this.disabledShowInput = true;
         }
+        this.getListInstanceSteps(this.contracts?.processID,this.contractRefID);
         break;
       default:
     }
@@ -440,6 +460,18 @@ export class AddContractsComponent implements OnInit {
     return true;
   }
 
+  beforeSaveInstance(option: RequestOption) {
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, null];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
+
+    return true;
+  }
+
   async addContracts() {
     if (this.type == 'view') {
       if (this.contracts?.applyProcess) {
@@ -459,7 +491,17 @@ export class AddContractsComponent implements OnInit {
           }
           // this.changeDetector.detectChanges();
         });
-    } else {
+    }else if(this.type == 'DP'){
+      this.setDataInstance(this.contracts, this.instance);
+      let instance = await this.addInstance();
+      this.cmService
+        .addContracts([this.contracts, this.listPaymentAdd])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({ instance: instance});
+          }
+        });
+    }else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
         .subscribe((res) => {
@@ -540,15 +582,16 @@ export class AddContractsComponent implements OnInit {
     instance.instanceNo = contract?.contractID;
     instance.owner = contract.owner;
     instance.processID = contract?.processID;
+    instance.status = "1";
     contract.refID = instance?.recID;
-    contract.stepID = this.listInstanceSteps[0].stepID;
+    contract.stepID = this.listInstanceSteps ? this.listInstanceSteps[0]?.stepID : contract.stepID;
+    contract.status = this.action == 'add' ? '1' : contract.status;
   }
 
   async addInstance() {
-    var data = [this.instance, this.listInstanceSteps, null];
+    var data = [this.instance, this.listInstanceSteps, this.contractRefID];
     let instance = await firstValueFrom(this.cmService.addInstance(data));
     if (instance) {
-      console.log(instance);
       let listPermissions = instance?.permissions;
       if(listPermissions?.length > 0){
         let listPermission = [];
@@ -575,6 +618,9 @@ export class AddContractsComponent implements OnInit {
         })
         this.contracts.permissions = listPermission;
       }
+      return instance;
+    }else{
+      return null;
     }
   }
   //#endregion
@@ -939,12 +985,10 @@ export class AddContractsComponent implements OnInit {
       let exchangeRateNew = res?.exchRate ?? 0;
       if (exchangeRateNew == 0) {
         this.notiService.notify(
-          'Tỷ giá tiền tệ "' +
-            this.quotations?.currencyID +
-            '" chưa thiết lập xin hay chọn lại !',
-          '3'
+          'Tỷ giá "' + this.contracts?.currencyID + '" chưa thiết lập  !','3'
         );
-
+        this.contracts.currencyID = "VND";
+        this.contracts.exchangeRate = 1;
         return;
       } else {
         this.contracts.exchangeRate = exchangeRateNew;
@@ -953,25 +997,25 @@ export class AddContractsComponent implements OnInit {
   }
   //#endregion
   //#region proress
-  cbxProcessChange($event) {
-    if ($event?.data) {
-      this.contracts['processID'] = $event.data;
-      if ($event) {
-        var result = this.checkProcessInList($event); // lấy về thì giữ lại để check đỡ gọi API
+  cbxProcessChange(event) {
+    if (event?.data) {
+      this.contracts['processID'] = event.data;
+      if (event) {
+        var result = this.checkProcessInList(event); // lấy về thì giữ lại để check đỡ gọi API
         if (result) {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
           this.contracts.contractID = result?.dealId;
           this.changeDetectorRef.detectChanges();
         } else {
-          this.getListInstanceSteps(this.contracts?.processID);
+          this.getListInstanceSteps(this.contracts?.processID,this.contracts.refID);
         }
       }
     }
   }
 
-  getListInstanceSteps(processID) {
-    var data = [processID, this.contracts?.refID, this.action, '4'];
+  getListInstanceSteps(processID, instanceID) {
+    var data = [processID, instanceID, this.action, '4'];
     this.cmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         var obj = {
@@ -1070,8 +1114,8 @@ export class AddContractsComponent implements OnInit {
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.contracts.currencyID = dataValue?.DefaultCurrency;
-      this.contracts.applyProcess = dataValue?.ProcessContract == '1';
+      this.contracts.currencyID = dataValue?.DefaultCurrency || 'VND';
+      this.contracts.applyProcess = this.type == 'DP' ? true : dataValue?.ProcessContract == '1';
     }
   }
 

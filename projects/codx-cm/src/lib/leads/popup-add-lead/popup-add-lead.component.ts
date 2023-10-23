@@ -276,11 +276,7 @@ export class PopupAddLeadComponent
   }
   valueChangePermission($event) {
     if ($event.data === null || $event.data === '') {
-      this.deleteOwner(
-        'U',
-        $event.field === 'salespersonID' ? 'S' : 'C',
-        '0', $event.field
-      );
+      this.deleteOwner( 'U', $event.field === 'salespersonID' ? 'S' : 'C', '0', $event.field === 'salespersonID' ? this.lead.salespersonID: this.lead.consultantID ,$event.field );
     } else {
       this.searchOwner(
         'U',
@@ -382,7 +378,7 @@ export class PopupAddLeadComponent
           [this.lead.address, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         this.lead.provinceID = lstDis?.ProvinceID;
         this.lead.districtID = lstDis?.DistrictID;
@@ -413,22 +409,31 @@ export class PopupAddLeadComponent
     }
   }
   valueChangeOwner($event, view) {
-    if ($event && view === this.viewOwnerDefault) {
-      let ownerName = '';
-      this.owner = $event?.data;
-      ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if ($event && view === this.viewOwnerProcess) {
-      this.owner = $event;
-      let ownerName = '';
-      this.owner;
-      if (this.listParticipants.length > 0 && this.listParticipants) {
-        ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0].userName;
+      if (view === this.viewOwnerDefault) {
+        if($event.data) {
+          let ownerName = '';
+          this.owner = $event?.data;
+          ownerName = $event?.component?.itemsSelected[0]?.UserName;
+          this.searchOwner('1', 'O', '0', this.owner, ownerName);
+        }
+        else if ($event === null || $event === '') {
+          this.deleteOwner('1', 'O', '0', this.lead.owner,'owner');
+        }
+      } else if (view === this.viewOwnerProcess) {
+        if($event) {
+          this.owner = $event;
+          let ownerName = '';
+          if (this.listParticipants.length > 0 && this.listParticipants) {
+            ownerName = this.listParticipants.filter(
+              (x) => x.userID === this.owner
+            )[0].userName;
+          }
+          this.searchOwner('1', 'O', '0', this.owner, ownerName);
+        }
+        else if ($event === null || $event === '') {
+          this.deleteOwner('1', 'O', '0', this.lead.owner,'owner');
+        }
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    }
   }
   searchOwner(
     objectType: any,
@@ -458,30 +463,28 @@ export class PopupAddLeadComponent
       if (index == -1) {
         this.addOwner(owner, ownerName, roleType, objectType);
       }
-    } else {
+      this.lead.owner = owner;
     }
   }
-  deleteOwner(
-    objectType: any,
-    roleType: any,
-    memberType: any,
-    field: any
-  ) {
+
+  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
     let index = this.lead?.permissions.findIndex(
-      (x) =>
-        x.objectType == objectType &&
-        x.roleType === roleType &&
-        x.memberType == memberType
-    );
-    if (index != -1) {
-      if (field === 'salespersonID') {
+      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+    if(index != -1) {
+      if(field === 'owner' ){
+        this.lead.owner = null;
+        this.owner= null;
         this.lead.salespersonID = null;
-      } else if (field === 'consultantID') {
+      }
+      else if (field === 'salespersonID') {
+        this.lead.salespersonID = null;
+      }else if (field === 'consultantID') {
         this.lead.consultantID = null;
       }
       this.lead.permissions.splice(index, 1);
     }
   }
+
   addOwner(owner, ownerName, roleType, objectType) {
     var permission = new CM_Permissions();
     permission.objectID = owner;
@@ -493,8 +496,7 @@ export class PopupAddLeadComponent
     permission.update = true;
     permission.upload = true;
     permission.download = true;
-    permission.allowUpdateStatus =
-      roleType === 'O' || roleType === 'S' ? '1' : '0';
+    permission.allowUpdateStatus =roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
@@ -703,6 +705,7 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.lead.status = instance.status;
         this.addPermission(instance.permissions);
         this.onAdd();
         this.isLoading && this.dialog.close(instance);
@@ -713,6 +716,7 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.lead.status = instance.status;
         this.isLoading && this.dialog.close(instance);
         this.onEdit();
       }

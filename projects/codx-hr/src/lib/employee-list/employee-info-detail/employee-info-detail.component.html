@@ -519,6 +519,7 @@
           <div class="tab-content">
             <!-- Pane 1: Sơ yếu lí lịch -->
             <div
+              *ngIf="curriculumVitaeFunc && curriculumVitaeFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_1"
               [class]="crrFuncTab == curriculumVitaeFuncID ? 'active' : ''"
@@ -527,6 +528,7 @@
             </div>
             <!-- Pane 2: Thông tin công việc-->
             <div
+            *ngIf="jobInfoFunc && jobInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_2"
               [class]="crrFuncTab == jobInfoFuncID ? 'active' : ''"
@@ -535,6 +537,7 @@
             </div>
             <!-- Pane 3: Lương phúc lợi-->
             <div
+            *ngIf="salaryBenefitInfoFunc && salaryBenefitInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_3"
               [class]="crrFuncTab == salaryBenefitInfoFuncID ? 'active' : ''"
@@ -543,6 +546,7 @@
             </div>
             <!-- Pane 4: Quá trình làm việc-->
             <div
+            *ngIf="workingProcessInfoFunc && workingProcessInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_4"
               [class]="crrFuncTab == workingProcessInfoFuncID ? 'active' : ''"
@@ -551,6 +555,7 @@
             </div>
             <!-- Pane 5: Kiến thức-->
             <div
+            *ngIf="knowledgeInfoFunc && knowledgeInfoFunc.isActive == true"
               class="tab-pane fade show"
               id="pane_5"
               [class]="crrFuncTab == knowledgeInfoFuncID ? 'active' : ''"
@@ -559,6 +564,7 @@
             </div>
             <!-- Pane 6: Sức khỏe-->
             <div
+            *ngIf="healthInfoFunc && healthInfoFunc.isActive == true "
               class="tab-pane fade show"
               id="pane_6"
               [class]="crrFuncTab == healthInfoFuncID ? 'active' : ''"
@@ -567,6 +573,7 @@
             </div>
             <!-- Pane 7: Nghỉ việc -->
             <div
+            *ngIf="quitJobInfoFunc && quitJobInfoFunc.isActive == true "
               class="tab-pane fade show"
               id="pane_7"
               [class]="crrFuncTab == quitJobInfoFuncID ? 'active' : ''"
@@ -580,12 +587,13 @@
     <div
       ngbDropdown
       class="emp-check-add rounded-circle"
-      *ngIf="lstBtnAdd && lstBtnAdd.length > 0"
+      *ngIf="lstBtnAdd && lstBtnAdd.length > 0 && infoPersonal.status != '90'"
     >
       <span
         ngbDropdownToggle
         class="btn btn-icon btn-primary rounded-circle fs-1 icon-add icon-22"
       >
+
       </span>
       <div ngbDropdownMenu class="min-w-200px">
         <div class="card card-flush">
@@ -675,7 +683,7 @@
                 {{ getFormHeader2(eInfoFuncID, lstFuncCurriculumVitae) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.eInfoFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.eInfoFuncID.write == true && eInfoFunc.isPortal == false && infoPersonal.status != '90'">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -1223,7 +1231,7 @@
                 {{ getFormHeader2(legalInfoFuncID, lstFuncCurriculumVitae) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.legalInfoFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.legalInfoFuncID.write == true && legalInfoFunc.isPortal == false && infoPersonal.status != '90'">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -1648,10 +1656,20 @@
                     </span> -->
                   </div>
                   <codx-mfunc
-                    *ngIf="crrPassport"
+                    *ngIf="crrPassport && fromWS == false && infoPersonal.status != '90'"
                     [formModel]="ePassportFormModel"
                     (clickMF)="clickMF($event, crrPassport, 'passport')"
                     type="hover"
+                    [dataItem]="crrPassport"
+                  >
+                  </codx-mfunc>
+
+                  <codx-mfunc
+                    *ngIf="(crrPassport && fromWS == true) || infoPersonal.status == '90'"
+                    [formModel]="ePassportFormModel"
+                    (clickMF)="clickMF($event, crrPassport, 'passport')"
+                    type="hover"
+                    (changeDataMF)="handleShowHideMfWs($event, ePassportFunc)"
                     [dataItem]="crrPassport"
                   >
                   </codx-mfunc>
@@ -1770,13 +1788,23 @@
                       ></span>
                     </div>
                     <codx-mfunc
-                      *ngIf="crrVisa"
+                      *ngIf="crrVisa && fromWS == false && infoPersonal.status != '90'"
                       [formModel]="eVisaFormModel"
                       (clickMF)="clickMF($event, crrVisa, 'visa')"
                       type="hover"
                       [dataItem]="crrVisa"
                     >
                     </codx-mfunc>
+
+                    <codx-mfunc
+                    *ngIf="(crrVisa && fromWS == true) || infoPersonal.status == '90'"
+                    [formModel]="eVisaFormModel"
+                    (clickMF)="clickMF($event, crrVisa, 'visa')"
+                    type="hover"
+                    [dataItem]="crrVisa"
+                    (changeDataMF)="handleShowHideMfWs($event, eVisaFunc)"
+                  >
+                  </codx-mfunc>
                   </div>
                 </div>
 
@@ -1858,7 +1886,7 @@
                 {{ getFormHeader2(foreignWorkerFuncID, lstFuncCurriculumVitae) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.foreignWorkerFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.foreignWorkerFuncID.write == true && foreignWorkerFunc.isPortal == false && infoPersonal.status != '90'">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -2023,11 +2051,21 @@
                     ></span>
                   </div>
                   <codx-mfunc
-                    *ngIf="crrWorkpermit"
+                    *ngIf="crrWorkpermit && fromWS == false && infoPersonal.status != '90'"
                     [formModel]="eWorkPermitFormModel"
                     (clickMF)="clickMF($event, crrWorkpermit, 'workpermit')"
                     type="hover"
                     [dataItem]="crrWorkpermit"
+                  >
+                  </codx-mfunc>
+
+                  <codx-mfunc
+                    *ngIf="(crrWorkpermit && fromWS == true) || infoPersonal.status == '90'"
+                    [formModel]="eWorkPermitFormModel"
+                    (clickMF)="clickMF($event, crrWorkpermit, 'workpermit')"
+                    type="hover"
+                    [dataItem]="crrWorkpermit"
+                    (changeDataMF)="handleShowHideMfWs($event, eWorkPermitFunc)"
                   >
                   </codx-mfunc>
                 </div>
@@ -2082,7 +2120,7 @@
                 {{ getFormHeader2(ePartyFuncID, lstFuncCurriculumVitae) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.ePartyFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="curriculumVitaePermission.ePartyFuncID.write == true  && ePartyFunc.isPortal == false && infoPersonal.status != '90'">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -2208,7 +2246,7 @@
                 <div class="col-6 mb-5 ps-9 ">
                   <div class="rounded rounded-2 border border-gray-150 w-325px mw-325px">
                     <codx-temp-full
-                    
+                    *ngIf="fromWS == false && infoPersonal.status != '90'"
                       (clickMF)="clickMF($event, item, 'family')"
                       cardCss="card-template p-3 w-325px mw-325px h-100 mb-2 py-2 hover-active bg-hover cursor-pointer"
                       [moreFuncCss]="'me-10'"
@@ -2229,6 +2267,28 @@
                     [titleCss]="'fs-6 mb-1 item-active'" -->
                     </codx-temp-full>
 
+                    <codx-temp-full
+                    *ngIf="fromWS == true || infoPersonal.status == '90'"
+                      (clickMF)="clickMF($event, item, 'family')"
+                      cardCss="card-template p-3 w-325px mw-325px h-100 mb-2 py-2 hover-active bg-hover cursor-pointer"
+                      [moreFuncCss]="'me-10'"
+                      [imageId]="item.recID"
+                      [imageObjType]="'HR_EFamilies'"
+                      [imageWidth]="35"
+                      [imgCss]="'me-3 '"
+
+                      [titleTmp]="titleTmp"
+                      [subTitleTmp]="subtitleTmp"
+                      [formModel]="eFamilyFormModel"
+                      [dataItem]="item"
+                      [imgOn]="item?.modifiedOn"
+                      [typeMF]="'hover'"
+                      [baseHeaderRightTmp]="baseHeaderRightTmp"
+                    (changeDataMF)="handleShowHideMfWs($event, eFamiliesFunc)"
+                    >
+                    <!-- [title]="item?.relationName"
+                    [titleCss]="'fs-6 mb-1 item-active'" -->
+                    </codx-temp-full>
                     <ng-template #titleTmp let-data>
                       <div class="fs-6 mb-1 item-active" (click)="clickViewDetail(data, eFamiliesFuncID)">
                         {{data?.relationName}}
@@ -2365,7 +2425,9 @@
                       <div class="timeline-exper-nav w-100 d-flex pb-5">
                         <div class="timeline-media w-125px min-w-125px">
                           <span class="stepper-number fw-bold">
-                            {{ item.fromDate | date : "MM/y" }}
+                            <span *ngIf="item.fromDate">
+                              {{ item.fromDate | date : "MM/y" }}
+                            </span>
                             <span *ngIf="item.toDate">
                               -
                               {{ item.toDate | date : "MM/y" }}
@@ -2394,10 +2456,21 @@
                           </div>
 
                           <codx-mfunc
+                          *ngIf="fromWS == false && infoPersonal.status != '90'"
                             [formModel]="eExperienceFormModel"
                             (clickMF)="clickMF($event, item, 'eExperiences')"
                             type="hover"
                             [dataItem]="item"
+                          >
+                          </codx-mfunc>
+
+                          <codx-mfunc
+                          *ngIf="fromWS == true || infoPersonal.status == '90'"
+                            [formModel]="eExperienceFormModel"
+                            (clickMF)="clickMF($event, item, 'eExperiences')"
+                            type="hover"
+                            [dataItem]="item"
+                    (changeDataMF)="handleShowHideMfWs($event, eExperienceFunc)"
                           >
                           </codx-mfunc>
                         </div>
@@ -2531,7 +2604,7 @@
                 {{ getFormHeader2(jobGeneralFuncID, lstFuncJobInfo) }}
               </div>
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.jobGeneralFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.jobGeneralFuncID.write == true && jobGeneralFunc.isPortal == false && infoPersonal.status != '90'">
               <a class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -2988,7 +3061,7 @@
               </div>
             </div>
 
-            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.eTimeCardFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.eTimeCardFuncID.write == true && eTimeCardFunc.isPortal == false && infoPersonal.status != '90'">
               <a class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -3161,7 +3234,7 @@
               </div>
             </div>
 
-            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.eCalSalaryFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="jobInfoPer.eCalSalaryFuncID.write == true && eCalSalaryFunc.isPortal == false && infoPersonal.status != '90'">
               <a class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -3367,9 +3440,10 @@
                     (clickMF)="clickMF($event, doc, 'eDocument')"
                     type="hover"
                     [dataItem]="doc"
-                      (changeDataMF)="handleShowHideMF($event)"
+                      (changeDataMF)="handleShowHideMF($event, eNeedToSubmitProfileFunc)"
                     >
                   </codx-mfunc>
+
                 </div>
               </div>
             </div>
@@ -3486,12 +3560,25 @@
           
             <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer" *ngIf="crrEBSalary; else emptyDataTemplate">
               <codx-temp-full
+              *ngIf="fromWS == false && infoPersonal.status != '90'"
                 (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
                 [dataItem]="crrEBSalary"
                 [formModel]="eBasicSalaryFormmodel"
                 [footer]="footerEBSalaries"
                 cardCss="ms-8 mt-3"
                 [typeMF]="'hover'"
+              >
+              </codx-temp-full>
+
+              <codx-temp-full
+              *ngIf="fromWS == true || infoPersonal.status == '90'"
+                (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
+                [dataItem]="crrEBSalary"
+                [formModel]="eBasicSalaryFormmodel"
+                [footer]="footerEBSalaries"
+                cardCss="ms-8 mt-3"
+                [typeMF]="'hover'"
+      (changeDataMF)="handleShowHideMfWs($event, eBasicSalaryFunc)"
               >
               </codx-temp-full>
               <ng-template #footerEBSalaries let-data>
@@ -3776,6 +3863,7 @@
             <ng-container *ngFor="let benefit of listCrrBenefit">
               <div class="ps-8 w-100">
                 <codx-temp-full
+              *ngIf="fromWS == false && infoPersonal.status != '90'"
                   (clickMF)="clickMF($event, benefit, 'eBenefit')"
                   [dataItem]="benefit"
                   [formModel]="benefitFormodel"
@@ -3784,6 +3872,18 @@
                   [typeMF]="'hover'"
                 >
                 </codx-temp-full>
+
+                <codx-temp-full
+              *ngIf="fromWS == true || infoPersonal.status == '90'"
+                (clickMF)="clickMF($event, benefit, 'eBenefit')"
+                [dataItem]="benefit"
+                [formModel]="benefitFormodel"
+                [footer]="footerBenefit"
+                cardCss="hover-active bg-hover cursor-pointer"
+                [typeMF]="'hover'"
+      (changeDataMF)="handleShowHideMfWs($event, benefitFunc)"
+              >
+              </codx-temp-full>
                 <ng-template #footerBenefit let-data>
                   <div class="d-flex align-items-center py-1 rounded-1 min-h-30px">
                     <div class="w-150px min-w-150px" >
@@ -4003,12 +4103,25 @@
             *ngIf="crrEContract && eContractFormModel; else emptyDataTemplate"
           >
             <codx-temp-full
+            *ngIf="fromWS == false && infoPersonal.status != '90'"
               (clickMF)="clickMF($event, crrEContract, 'eContract')"
               [dataItem]="crrEContract"
               [formModel]="eContractFormModel"
               [footer]="footerEContract"
               cardCss="px-2 pt-4 pb-2"
               [typeMF]="'hover'"
+            >
+            </codx-temp-full>
+
+            <codx-temp-full
+            *ngIf="fromWS == true || infoPersonal.status == '90'"
+              (clickMF)="clickMF($event, crrEContract, 'eContract')"
+              [dataItem]="crrEContract"
+              [formModel]="eContractFormModel"
+              [footer]="footerEContract"
+              cardCss="px-2 pt-4 pb-2"
+              [typeMF]="'hover'"
+              (changeDataMF)="handleShowHideMfWs($event, eContractFunc)"
             >
             </codx-temp-full>
             <ng-template #footerEContract let-data>
@@ -5577,7 +5690,7 @@
                 <span>({{ eDiseasesRowCount }})</span>
               </span> -->
             </div>
-            <div class="d-flex align-items-center ms-5" *ngIf="quitjobInfoPer.eQuitJobFuncID.write == true">
+            <div class="d-flex align-items-center ms-5" *ngIf="quitjobInfoPer.eQuitJobFuncID.write == true && eQuitJobFunc.isPortal == false">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-edit icon-18"
@@ -5965,9 +6078,19 @@
 
 <ng-template #itemAction let-data>
   <codx-mfunc
+  *ngIf="fromWS == false && infoPersonal.status != '90'"
     [formModel]="eInfoFormModel"
     (clickMF)="clickMF($event, data)"
     [dataItem]="data"
+  >
+  </codx-mfunc>
+
+    <codx-mfunc
+  *ngIf="fromWS == true || infoPersonal.status == '90'"
+    [formModel]="eInfoFormModel"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+    (changeDataMF)="handleShowHideMfWs($event, eInfoFunc)"
   >
   </codx-mfunc>
 </ng-template>
@@ -6034,10 +6157,21 @@
       "
     ></span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="benefitFormodel"
       (clickMF)="clickMF($event, data, 'eBenefit')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="benefitFormodel"
+      (clickMF)="clickMF($event, data, 'eBenefit')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, benefitFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6152,10 +6286,21 @@
     </div>
 
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eDegreeFormModel"
       (clickMF)="clickMF($event, data, 'eDegrees')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eDegreeFormModel"
+      (clickMF)="clickMF($event, data, 'eDegrees')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eDegreeFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6296,10 +6441,21 @@
     </div>
 
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eCertificateFormModel"
       (clickMF)="clickMF($event, data, 'eCertificate')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eCertificateFormModel"
+      (clickMF)="clickMF($event, data, 'eCertificate')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eCertificateFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6472,10 +6628,21 @@
       </span>
     </div>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eSkillFormmodel"
       (clickMF)="clickMF($event, data, 'eSkill')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eSkillFormmodel"
+      (clickMF)="clickMF($event, data, 'eSkill')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eSkillFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6485,10 +6652,21 @@
   <div class="has-action-menu h-40px">
     {{ data?.position }}
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eExperienceFormModel"
       (clickMF)="clickMF($event, data, 'eExperiences')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eExperienceFormModel"
+      (clickMF)="clickMF($event, data, 'eExperiences')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eExperienceFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6551,10 +6729,21 @@
       </div>
     </div>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eAssetFormModel"
       (clickMF)="clickMF($event, data, 'Assets')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eAssetFormModel"
+      (clickMF)="clickMF($event, data, 'Assets')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eAssetFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6661,10 +6850,21 @@
       </div>
     </div>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eBasicSalaryFormmodel"
       (clickMF)="clickMF($event, data, 'basicSalary')"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eBasicSalaryFormmodel"
+      (clickMF)="clickMF($event, data, 'basicSalary')"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, eBasicSalaryFunc)"
     >
     </codx-mfunc>
   </div>
@@ -6752,10 +6952,21 @@
         </div>
       </div>
       <codx-mfunc
+      *ngIf="fromWS == false && infoPersonal.status != '90'"
         [formModel]="eBasicSalaryFormmodel"
         (clickMF)="clickMF($event, data, 'jobSalary')"
         type="hover"
         [dataItem]="data"
+      >
+      </codx-mfunc>
+
+      <codx-mfunc
+      *ngIf="fromWS == true || infoPersonal.status == '90'"
+        [formModel]="eBasicSalaryFormmodel"
+        (clickMF)="clickMF($event, data, 'jobSalary')"
+        type="hover"
+        [dataItem]="data"
+        (changeDataMF)="handleShowHideMfWs($event, eBasicSalaryFunc)"
       >
       </codx-mfunc>
     </div>
@@ -6870,12 +7081,23 @@
   
     </div>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
     [formModel]="eTrainCourseFormModel"
     (clickMF)="clickMF($event, data, 'eTrainCourses')"
     type="hover"
     [dataItem]="data"
   >
   </codx-mfunc>
+
+  <codx-mfunc
+  *ngIf="fromWS == true || infoPersonal.status == '90'"
+  [formModel]="eTrainCourseFormModel"
+  (clickMF)="clickMF($event, data, 'eTrainCourses')"
+  type="hover"
+  [dataItem]="data"
+  (changeDataMF)="handleShowHideMfWs($event, eTrainCourseFunc)"
+>
+</codx-mfunc>
   </div>
 
 </ng-template>
@@ -7022,10 +7244,21 @@
       </div>
     </ng-container>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="appointionFormModel"
       (clickMF)="clickMF($event, data, 'eAppointions')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="appointionFormModel"
+      (clickMF)="clickMF($event, data, 'eAppointions')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, appointionFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7095,10 +7328,21 @@
       {{ data?.reason }}
     </span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="dayoffFormModel"
       (clickMF)="clickMF($event, data, 'eDayoff')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="dayoffFormModel"
+      (clickMF)="clickMF($event, data, 'eDayoff')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, dayoffFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7181,10 +7425,22 @@
       {{ data?.businessPurpose }}
     </span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="EBusinessTravelFormodel"
       (clickMF)="clickMF($event, data, 'eBusinessTravels')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="EBusinessTravelFormodel"
+      (clickMF)="clickMF($event, data, 'eBusinessTravels')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eBusinessTravelFunc)"
+
     >
     </codx-mfunc>
   </div>
@@ -7274,12 +7530,24 @@
       "
     ></div>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="awardFormModel"
       (clickMF)="clickMF($event, data, 'eAwards')"
       type="hover"
       [dataItem]="data"
     >
     </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="awardFormModel"
+      (clickMF)="clickMF($event, data, 'eAwards')"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, awardFunc)"
+    >
+    </codx-mfunc>
+
   </div>
 </ng-template>
 <!--#end region-->
@@ -7344,10 +7612,21 @@
   >
     {{ data?.reason }}
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eDisciplineFormModel"
       (clickMF)="clickMF($event, data, 'eDisciplines')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eDisciplineFormModel"
+      (clickMF)="clickMF($event, data, 'eDisciplines')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eDisciplineFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7421,10 +7700,22 @@
       "
     ></span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eDiseasesFormModel"
       (clickMF)="clickMF($event, data, 'eDiseases')"
       [dataItem]="data"
       type="hover"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eDiseasesFormModel"
+      (clickMF)="clickMF($event, data, 'eDiseases')"
+      [dataItem]="data"
+      type="hover"
+      (changeDataMF)="handleShowHideMfWs($event, eDiseasesFunc)"
+
     >
     </codx-mfunc>
   </div>
@@ -7498,10 +7789,21 @@
       "
     ></span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eAccidentsFormModel"
       (clickMF)="clickMF($event, data, 'eAccidents')"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eAccidentsFormModel"
+      (clickMF)="clickMF($event, data, 'eAccidents')"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, eAccidentsFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7586,10 +7888,21 @@
     >
     </span>
     <codx-mfunc
+      *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eHealthFormModel"
       (clickMF)="clickMF($event, data, 'eHealth')"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+        <codx-mfunc
+      *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eHealthFormModel"
+      (clickMF)="clickMF($event, data, 'eHealth')"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, eHealthFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7675,10 +7988,21 @@
       "
     ></span>
     <codx-mfunc
+    *ngIf="fromWS == false && infoPersonal.status != '90'"
       [formModel]="eVaccineFormModel"
       (clickMF)="clickMF($event, data, 'eVaccine')"
       type="hover"
       [dataItem]="data"
+    >
+    </codx-mfunc>
+
+    <codx-mfunc
+    *ngIf="fromWS == true || infoPersonal.status == '90'"
+      [formModel]="eVaccineFormModel"
+      (clickMF)="clickMF($event, data, 'eVaccine')"
+      type="hover"
+      [dataItem]="data"
+      (changeDataMF)="handleShowHideMfWs($event, eVaccinesFunc)"
     >
     </codx-mfunc>
   </div>
@@ -7816,10 +8140,21 @@
         </span>
       </div>
       <codx-mfunc
+      *ngIf="fromWS == false && infoPersonal.status != '90'"
         [formModel]="eAccidentsFormModel"
         (clickMF)="clickMF($event, data, 'eContract')"
         type="hover"
         [dataItem]="data"
+      >
+      </codx-mfunc>
+
+      <codx-mfunc
+      *ngIf="fromWS == true || infoPersonal.status == '90'"
+        [formModel]="eAccidentsFormModel"
+        (clickMF)="clickMF($event, data, 'eContract')"
+        type="hover"
+        [dataItem]="data"
+        (changeDataMF)="handleShowHideMfWs($event, eAccidentsFunc)"
       >
       </codx-mfunc>
     </div>

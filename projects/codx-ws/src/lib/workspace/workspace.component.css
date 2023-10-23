@@ -1,10 +1,12 @@
 .wsp-bg-primary
 {
     background-color: var(--primary-darker);
+    border:2px transparent solid;
 }
-.wsp-rounder-1
-{
-    border-radius: 3px;
+
+.wsp-bg-primary:hover{
+    border-color:var(--primary-light)!important;
+    transition: all .15s;
 }
 .icon-30px
 {
@@ -240,3 +242,17 @@ body[class*="high"] .speeddial-form {
       transform: scale(1.2, 1);
     }
   }
+  .spinner_panel{
+    position: fixed;
+    text-align: center;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #e2e1e1;
+    opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
