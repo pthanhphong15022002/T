@@ -1372,7 +1372,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //Sales trend - last 12 months
   getDashBoardSalesTrends(deals = [], param) {
     let listMonths = [];
-    let now = new Date(new Date().setMonth(9));
+    let now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
     let max = 0;
@@ -1397,7 +1397,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
     this.settingChart(max);
-    this.lstMonthsSeries = listMonths;
+    this.lstMonthsSeries = listMonths.reverse();
   }
 
   settingChart(max) {
@@ -1425,7 +1425,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       majorGridLines: { width: 1 },
       minorGridLines: { width: 1 },
       minorTickLines: { width: 0 },
-      labelFormat: '{value}',
+      labelFormat: `{value}`,
     };
 
     this.toolTipSeri = {
@@ -1435,8 +1435,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     };
   }
 
-  pointSeriRender(e){
-    console.log(e);
+  textSeriRender(args: IAccTextRenderEventArgs){
+    console.log(args);
   }
   //end
 

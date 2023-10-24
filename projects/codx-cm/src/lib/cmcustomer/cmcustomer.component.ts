@@ -978,7 +978,7 @@ export class CmCustomerComponent
   }
 
   addressNameCMEmit(e) {
-    this.dataSelected.address = e ? e?.adressName : null;
+    this.dataSelected.address = e ? e?.address : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
     this.dataSelected.wardID = e ? e?.wardID : null;
