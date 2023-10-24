@@ -173,7 +173,7 @@ export class PopupAddWarrantyComponent implements OnInit {
 
       tmp['recID'] = Util.uid();
       tmp['adressType'] = '0';
-      tmp['adressName'] = this.data.address;
+      tmp['address'] = this.data.address;
       tmp['isDefault'] = true;
       tmp['provinceID'] = this.data?.province;
       tmp['districtID'] = this.data?.district;

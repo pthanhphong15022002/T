@@ -12,11 +12,13 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { CRUDService, FormModel, UIComponent } from 'codx-core';
+import { AlertConfirmInputConfig, CRUDService, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
 import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CasesComponent } from '../cases.component';
 
 @Component({
   selector: 'codx-cases-detail',
@@ -35,10 +37,9 @@ export class CasesDetailComponent
   @Input() listInsStepStart = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @ViewChild('tabDetailView', { static: true })
-  tabDetailView: TemplateRef<any>;
-  @ViewChild('tabCaseDetailComponent')
-  tabCaseDetailComponent: TabCasesDetailComponent;
+
+  @ViewChild('loadContactDeal')
+  loadContactDeal: CodxListContactsComponent;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -80,6 +81,9 @@ export class CasesDetailComponent
   listStepsProcess = [];
   listSteps = [];
 
+  lstContacts = [];
+  lstStepsOld = [];
+
   caseId: string = '';
 
   vllPriority = 'TM005';
@@ -92,7 +96,9 @@ export class CasesDetailComponent
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private caseComponent: CasesComponent,
+    private notificationsService: NotificationsService,
   ) {
     super(inject);
     this.executeApiCalls();
@@ -123,12 +129,12 @@ export class CasesDetailComponent
         //   : this.dataSelected?.recID;
         //da doi
         this.sessionID = this.dataSelected?.recID;
-        this.loadTree(this.sessionID);
+       // this.loadTree(this.sessionID);
       }
     }
-    if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
-      this.listSteps = this.listInsStepStart;
-    }
+    // if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
+    //   this.listSteps = this.listInsStepStart;
+    // }
   }
   async promiseAllAsync() {
     this.isDataLoading = true;
@@ -194,8 +200,8 @@ export class CasesDetailComponent
     console.log(e);
   }
   //get tree giao viec theo quy trinh
-  getTree() {
-    let seesionID = this.dataSelected.refID;
+  async getTree() {
+    let seesionID = this.dataSelected.recID; ///da doi lai lay theo recID của doi tuong
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
     });
@@ -241,17 +247,77 @@ export class CasesDetailComponent
     let isContinueTaskAll = this.checkContinueStep(false, step);
     let isShowFromTaskAll = !isContinueTaskAll;
 
-    // if (transferControl == '1' && isContinueTaskAll) {
-    //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskAll &&
-    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    // }
+    if (transferControl == '1' && isContinueTaskAll) {
+      isShowFromTaskAll && this.caseComponent.moveStage(this.dataSelected);
+      !isShowFromTaskAll &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
 
-    // if (transferControl == '2' && isContinueTaskEnd) {
-    //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskEnd &&
-    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    // }
+    if (transferControl == '2' && isContinueTaskEnd) {
+      isShowFromTaskEnd && this.caseComponent.moveStage(this.dataSelected);
+      !isShowFromTaskEnd &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
+  }
+  completedAllTasks(instanceSteps): boolean {
+    var isCheckOnwer = instanceSteps?.owner ? false : true;
+    if (isCheckOnwer) {
+      return false;
+    }
+    var isCheckFields = this.checkFieldsIEmpty(instanceSteps.fields);
+    if (isCheckFields) {
+      return false;
+    }
+    return true;
+  }
+  checkFieldsIEmpty(fields) {
+    return fields.some((x) => !x.dataValue && x.isRequired);
+  }
+  handleMoveStage(isStopAuto, stepID) {
+    if (!isStopAuto) {
+      this.caseComponent.moveStage(this.dataSelected);
+    } else {
+      let index = this.listSteps.findIndex((x) => x.stepID === stepID);
+      let isUpdate = false;
+      let nextStep;
+      if (index != -1) {
+        nextStep = this.listSteps.findIndex(
+          (x) => x.stepID == this.listSteps[index + 1].stepID
+        );
+        if (nextStep != -1) {
+          isUpdate = true;
+        }
+      }
+      if (isUpdate) {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.listSteps[nextStep].stepStatus = '1';
+            this.listSteps[nextStep].actualStart = new Date();
+            this.listSteps[index].stepStatus = '3';
+            if (this.listSteps[index].actualEnd !== null) {
+              this.listSteps[index].actualEnd = new Date();
+            }
+
+            var listInstanceStep = [];
+            listInstanceStep.push(this.listSteps[index]);
+            listInstanceStep.push(this.listSteps[nextStep]);
+            var nextStepDeal = this.listSteps.find(
+              (x) => x.stepID == this.listSteps[nextStep + 1].stepID
+            );
+            this.dataSelected.stepID = this.listSteps[nextStep].stepID;
+            if (nextStepDeal) {
+              this.dataSelected.nextStep = nextStepDeal.stepID;
+            } else {
+              this.dataSelected.nextStep = null;
+            }
+
+         //   this.promiseAll(listInstanceStep);
+          }
+        });
+      }
+    }
   }
   checkContinueStep(isDefault, step) {
     let check = true;
@@ -270,20 +336,81 @@ export class CasesDetailComponent
     return check;
   }
   saveAssign(e) {
-    if (e) {
-      this.loadTree(this.sessionID);
-    }
+    if (e) this.getTree();
   }
 
-  loadTree(recID) {
-    if (!recID) {
-      this.treeTask = [];
-      return;
+
+  saveDataStep(e) {
+    if (e) {
+      if (e?.fields != null && e?.fields?.length > 0) {
+        var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
+        let lstOlds = [];
+        if (lstStepsOld != null && lstStepsOld.length > 0) {
+          for (var step of lstStepsOld) {
+            if (step?.fields != null && step?.fields?.length > 0) {
+              let js = step?.fields?.find(
+                (x) =>
+                  x?.dataType == 'C' &&
+                  x?.dataValue != null &&
+                  x?.dataValue?.trim() != ''
+              );
+              if (js != null && js?.dataValue != null) {
+                let lsJs = JSON.parse(js?.dataValue);
+                lsJs.forEach((element) => {
+                  if (!lstOlds.some((x) => x.recID == element?.recID)) {
+                    lstOlds.push(element);
+                  }
+                });
+              }
+            }
+          }
+        }
+        for (var item of e?.fields) {
+          if (
+            item?.dataType == 'C' &&
+            item?.dataValue != null &&
+            item?.dataValue?.trim() != ''
+          ) {
+            var lst = JSON.parse(item?.dataValue);
+            if (lstOlds != null && lstOlds.length > 0) {
+              let lstDelete = [];
+              if (lst != null && lst.length > 0) {
+                lstOlds.forEach((ele) => {
+                  let isCheck = lst.some((x) => x.recID == ele?.recID);
+                  if (!isCheck) lstDelete.push(ele);
+                });
+              } else {
+                lstDelete = lstOlds;
+              }
+              for (let i = 0; i < lstDelete.length; i++) {
+                let recID = lstDelete[i]?.recID;
+                var indx = this.lstContacts.findIndex((x) => x.recID == recID);
+                if (indx != -1) {
+                  this.lstContacts.splice(indx, 1);
+                }
+              }
+            }
+            for (var contact of lst) {
+              let idx = this.lstContacts?.findIndex(
+                (x) => x.recID == contact?.recID
+              );
+              if (idx != -1) {
+                this.lstContacts[idx] = contact;
+              } else {
+                this.lstContacts.push(Object.assign({}, contact));
+              }
+            }
+          }
+        }
+        this.lstStepsOld = this.listSteps;
+        if (this.loadContactDeal) {
+          this.loadContactDeal.loadListContact(this.lstContacts);
+        }
+      }
+      this.changeDetectorRef.detectChanges();
     }
-    this.api
-      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
-      .subscribe((res) => {
-        this.treeTask = res ? res : [];
-      });
+
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
   }
 }

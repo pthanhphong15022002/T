@@ -87,7 +87,7 @@ export class PopupAddressComponent implements OnInit {
     }
     if (this.action == 'edit') {
       this.setNameAdress();
-      this.checkAddressName = !!this.data.adressName;
+      this.checkAddressName = !!this.data.address;
     }
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
@@ -159,11 +159,11 @@ export class PopupAddressComponent implements OnInit {
     if (this.count > 0) return;
     if (
       !this.cmSv.checkValidateSetting(
-        this.data.adressName,
+        this.data.address,
         this.data,
         this.leverSetting,
         this.gridViewSetup,
-        this.gridViewSetup?.AdressName?.headerText
+        this.gridViewSetup?.Address?.headerText
       )
     ) {
       return;
@@ -173,7 +173,7 @@ export class PopupAddressComponent implements OnInit {
       var checkCoincide = this.lstAddress.some(
         (x) =>
           x.recID != this.data.recID &&
-          x.adressName == this.data.adressName &&
+          x.address == this.data.address &&
           x.adressType == this.data.adressType &&
           x.street == this.data.street &&
           x.countryID == this.data.countryID &&
@@ -255,7 +255,7 @@ export class PopupAddressComponent implements OnInit {
       this.nameProvince == null &&
       this.nameCountry == null
     ) {
-      this.data.adressName = null;
+      this.data.address = null;
     } else {
       var street =
         this.data?.street != null && this.data?.street?.trim()
@@ -277,12 +277,12 @@ export class PopupAddressComponent implements OnInit {
         this.nameCountry != null && this.nameCountry.trim()
           ? ' ' + this.nameCountry
           : '';
-      var adressName = street + ward + district + province + country;
-      if (adressName != null && adressName.trim() != '') {
-        if (adressName.endsWith(',')) {
-          adressName = adressName.slice(0, -1);
+      var address = street + ward + district + province + country;
+      if (address != null && address.trim() != '') {
+        if (address.endsWith(',')) {
+          address = address.slice(0, -1);
         }
-        this.data.adressName = adressName;
+        this.data.address = address;
       }
     }
   }
@@ -294,10 +294,10 @@ export class PopupAddressComponent implements OnInit {
     this.data[e.field] = e?.data?.trim();
     if (e.data) {
       switch (e.field) {
-        case 'adressName':
+        case 'address':
           // this.checkEventListen();
 
-          this.checkAddressName = !!this.data.adressName;
+          this.checkAddressName = !!this.data.address;
           break;
         case 'countryID':
           this.model = { CountryID: JSON.parse(JSON.stringify(e?.data)) };
@@ -342,7 +342,7 @@ export class PopupAddressComponent implements OnInit {
   }
 
   async checkAdressName() {
-    this.checkAddressName = !!this.data.adressName;
+    this.checkAddressName = !!this.data.address;
 
     let json = await firstValueFrom(
       this.api.execSv<any>(
@@ -350,7 +350,7 @@ export class PopupAddressComponent implements OnInit {
         'ERM.Business.BS',
         'ProvincesBusiness',
         'GetLocationAsync',
-        [this.data.adressName, this.leverSetting]
+        [this.data.address, this.leverSetting]
       )
     );
     if (json != null && json.trim() != '' && json != "null") {

@@ -52,7 +52,7 @@ export class PopupMergeLeadsComponent implements OnInit {
   lstAddressTwo = [];
   lstAddressThree = [];
   fieldContacts = { text: 'contactName', value: 'recID' };
-  fieldAddress = { text: 'adressName', value: 'recID' };
+  fieldAddress = { text: 'address', value: 'recID' };
   addressDefault: any;
   contactDefault: any;
   popoverCrr: any;
