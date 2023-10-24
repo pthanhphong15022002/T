@@ -834,25 +834,62 @@
 <!-- SALE TAGET =>CMD001  templateTarget-->
 <!-- Tem TOp sale Tager -->
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="1" title=""></div>
+  <div class="w-100 h-100" id="1" title="">111</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="2" title=""></div>
+  <div class="w-100 h-100" id="2" title="">222</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="3" title=""></div>
+  <div class="w-100 h-100" id="3" title="">333</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="4" title=""></div>
+  <div class="w-100 h-100" id="4" title="">444</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="5" title=""></div>
+  <div class="w-100 h-100" id="5" title="">555</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="6" title=""></div>
+  <div class="w-100 h-100" id="6" title="">666</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="7" title=""></div>
+  <div class="w-100 h-100" id="7" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesTrend"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales trend - Last 12 months"
+    ></codx-label>
+    <ng-container *ngIf="lstMonthsSeries?.length > 0; else noData">
+      <ejs-chart
+        style="display: block"
+        [chartArea]="chartArea"
+        [width]="'50%'"
+        id="chartcontainer"
+        [primaryXAxis]="primaryXAxisY"
+        [primaryYAxis]="primaryYAxisY"
+        [legendSettings]="legendSeri"
+        [tooltip]="toolTipSeri"
+        (textRender)="textSeriRender($event)"
+      >
+        <e-series-collection>
+          <e-series
+            [dataSource]="lstMonthsSeries"
+            type="StackingColumn"
+            xName="month"
+            yName="expected"
+            name="Doanh thu dự kiến"
+            opacity="0.75"
+            [cornerRadius]="cornerRadius"
+            columnWidth="0.4"
+            [paretoOptions]="paretoOptions"
+            width="2"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #templateTarget>
@@ -1085,15 +1122,15 @@
           <thead class="thead-light">
             <tr>
               <th
-                style="width: 300px !important"
+                class="min-w-200px w-200px"
                 style="border-bottom: 1px var(--gray-100) solid !important"
               ></th>
               <ng-container *ngFor="let item of lstUsers">
                 <th
-                  class="w-50px"
+                  class="min-w-50px w-50px"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
-                  <div class="d-flex justify-content-center">
+                  <div class="d-flex flex-column justify-content-center">
                     <codx-imgs
                       [width]="30"
                       [objectId]="item?.userID"
@@ -1103,8 +1140,8 @@
                       class=""
                     >
                     </codx-imgs>
+                    <div class="mt-1">{{ item?.userName }}</div>
                   </div>
-                  <div class="mt-1">{{ item?.userName }}</div>
                 </th>
               </ng-container>
             </tr>
@@ -1116,20 +1153,43 @@
               </td>
               <ng-container *ngFor="let user of lstUsers">
                 <td
+                  class="min-w-50px w-50px"
                   *ngIf="findItemUser(item.value, user?.performances)"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
-                  <div class="text-gray-800 d-flex justify-content-center">
-                    <div class="d-flex justify-content-start me-1">
-                      {{ findItemUser(item.value, user?.performances)?.count }}
+                  <div class="text-gray-800 d-flex justify-content-between">
+                    <div class="w-80">
+                      <span class="d-flex justify-content-end">
+                        {{
+                          findItemUser(item.value, user?.performances)?.count
+                        }}
+                      </span>
                     </div>
                     <div
-                      class="d-flex justify-content-end"
+                      class="w-20 d-flex justify-content-end"
+                      [ngStyle]="{
+                        color: getIcon(
+                          findItemUser(item.value, user?.performances)?.isAsc,
+                          'color'
+                        )
+                      }"
                       *ngIf="item.value != '7' && item.value != '9'"
                     >
-                      {{
-                        findItemUser(item.value, user?.performances)?.valueAsc
-                      }}
+                      <span
+                        class="me-1 icon-14"
+                        [ngClass]="
+                          getIcon(
+                            findItemUser(item.value, user?.performances)?.isAsc,
+                            'icon'
+                          )
+                        "
+                      >
+                      </span>
+                      <span>
+                        {{
+                          findItemUser(item.value, user?.performances)?.valueAsc
+                        }}</span
+                      >
                     </div>
                   </div>
                 </td>

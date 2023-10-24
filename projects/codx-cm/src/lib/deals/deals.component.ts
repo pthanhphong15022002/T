@@ -244,7 +244,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          resources: this.columnGrids,
+          //resources: this.columnGrids,
           // frozenColumns: 1,
         },
       },

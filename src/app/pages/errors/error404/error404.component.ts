@@ -7,7 +7,7 @@ import { CacheService } from 'codx-core';
   styleUrls: ['./error404.component.scss'],
 })
 export class Error404Component implements OnInit {
-  mssgCode = 'SYS032';
+  mssgCode = 'SYS013';
   mssgCode1 = 'SYS032';
   mssgCode2 = 'SYS032';
   mssgCode3 = 'SYS032';
