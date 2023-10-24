@@ -1,0 +1,32 @@
+<codx-form
+    headerText="Đánh giá hồ sơ"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column w-100">
+        <codx-label default="Yêu cầu lọc hồ sơ" class="fw-bold"></codx-label>
+        <codx-input type="textarea" format="ed2" (valueChange)="changeValue($event)" crrValue="" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-end">
+      <div class="d-flex justify-content-end">
+        <div class="ms-2">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSave()"
+          >
+            <codx-label
+              class="fs-6 fw-normal"
+              default="Lọc"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
