@@ -7,6 +7,22 @@
 </codx-form>
 <ng-template #body>
     <div class="d-flex flex-column w-100">
+        <ng-container *ngIf="listBreadCrumb && listBreadCrumb.length>0">
+            <div class="d-flex align-items-center">
+                <codx-label default="Lọc theo" class="ms-2 fw-bold"></codx-label>
+                <span class="me-2">:</span>
+                <div *ngIf="listBreadCrumb && listBreadCrumb.length>0">
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item" *ngFor="let item of listBreadCrumb">
+                            {{item}}
+                          </li>
+                        </ol>
+                      </nav>
+                </div>
+            </div>
+            
+        </ng-container>
         <codx-label default="Yêu cầu lọc hồ sơ" class="fw-bold"></codx-label>
         <codx-input type="textarea" format="ed2" (valueChange)="changeValue($event)" crrValue="" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
     </div>

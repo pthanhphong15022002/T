@@ -10,12 +10,14 @@ import { DialogData, DialogRef } from 'codx-core';
 export class CvEvaluateComponent {
   dialog:any;
   data:any;
+  listBreadCrumb = []
   constructor(
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
   {
     this.dialog = dialog
+    this.listBreadCrumb = dt?.data
   }
 
   changeValue(e:any)
