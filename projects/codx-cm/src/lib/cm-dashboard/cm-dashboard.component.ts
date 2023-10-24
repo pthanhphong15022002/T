@@ -390,6 +390,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   countFail = 0;
   chartBussnessLine: any;
   vllPy: any;
+  dataReasonsSuscess = [];
+  dataReasonsFails = [];
 
   //end
   constructor(
@@ -1064,6 +1066,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countFail = 0;
     this.countProcessing = 0;
     this.chartBussnessLine = [];
+    this.dataReasonsSuscess = [];
+    this.dataReasonsFails = [];
   }
   // ---------------------------FUNC ----------------------------//
   //sort lấy top
@@ -1102,9 +1106,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
   changeMySales(datas) {
-    //datas[0] : Cơ hôi //data[1] : Leads
+    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai
     let dataSetDeals = datas[0];
     let dataSetLead = datas[1];
+    let dataReason = datas[2];
     if (dataSetDeals?.lenght == 0) return;
     this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
@@ -1118,9 +1123,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getBusinessLine(dataSetDeals);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
+    this.getReasonChart(dataReason);
   }
 
   getBusinessLine(dataSet) {
+    if (!dataSet || dataSet?.length == 0) return;
     let businesLine = this.groupBy(dataSet, 'businessLineID');
     if (businesLine) {
       for (let key in businesLine) {
@@ -1230,6 +1237,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   getIndustries(dataSet) {
+    this.dataSourceIndustry = [];
+    this.paletteIndustry = [];
+    if (!dataSet || dataSet?.length == 0) return;
     let listIndustries = this.groupBy(dataSet, 'industries');
     if (listIndustries) {
       for (let key in listIndustries) {
@@ -1255,6 +1265,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   getOwnerTop(dataSet) {
+    this.minOwners = [];
+    this.maxOwners = [];
+    if (!dataSet || dataSet?.length == 0) return;
     let listOwner = this.groupBy(dataSet, 'owner');
     if (listOwner) {
       let owner = [];
@@ -1276,6 +1289,46 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.minOwners = JSON.parse(JSON.stringify(owner)).sort(
         (a, b) => a.quantity - b.quantity
       );
+    }
+  }
+
+  getReasonChart(dataReason) {
+    this.dataReasonsSuscess = [];
+    this.dataReasonsFails = [];
+    if (!dataReason || dataReason?.length == 0) return;
+    let listRsSuscess = dataReason.filter((x) => x.reasonType == '1');
+    if (listRsSuscess?.length > 0) {
+      let reasonsSuscessGroup = this.groupBy(listRsSuscess, 'reasonName');
+      if (reasonsSuscessGroup) {
+        for (let key in reasonsSuscessGroup) {
+          let rsSucess = {
+            reasonName: key,
+            quantity: reasonsSuscessGroup[key]?.length,
+            percentage: (
+              (reasonsSuscessGroup[key]?.length / listRsSuscess.length) *
+              100
+            ).toFixed(2),
+          };
+          this.dataReasonsSuscess.push(rsSucess);
+        }
+      }
+    }
+    let listRsFails = dataReason.filter((x) => x.reasonType == '2');
+    if (listRsFails?.length > 0) {
+      let reasonsFails = this.groupBy(listRsFails, 'reasonName');
+      if (reasonsFails) {
+        for (let key in reasonsFails) {
+          let rsSucess = {
+            reasonName: key,
+            quantity: reasonsFails[key]?.length,
+            percentage: (
+              (reasonsFails[key]?.length / listRsFails.length) *
+              100
+            ).toFixed(2),
+          };
+          this.dataReasonsFails.push(rsSucess);
+        }
+      }
     }
   }
   //Loi cai chuyen doi ko nằm trong khoảng time tìm kiếm
