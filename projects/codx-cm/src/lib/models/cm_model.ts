@@ -359,7 +359,7 @@ export class CM_Contacts {
 export class BS_AddressBook {
   recID: string;
   adressType: string;
-  adressName: string;
+  address: string;
   objectType: string;
   objectID: string;
   street: string;

@@ -444,7 +444,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         if (this.listAddress != null && this.listAddress.length > 0) {
           var index = this.listAddress.findIndex((x) => x.isDefault == true);
           if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].address = name?.trim();
             this.listAddress[index].isDefault = true;
             this.listAddress[index].provinceID = this.data.provinceID;
             this.listAddress[index].districtID = this.data.districtID;
@@ -452,7 +452,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           } else {
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
+            tmp.address = this.data.address;
             tmp.provinceID = this.data.provinceID;
             tmp.districtID = this.data.districtID;
             tmp.wardID = this.data.wardID;
@@ -463,7 +463,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         } else {
           tmp.recID = Util.uid();
           tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
+          tmp.address = this.data.address;
           tmp.isDefault = true;
           tmp.provinceID = this.data.provinceID;
           tmp.districtID = this.data.districtID;
@@ -477,14 +477,14 @@ export class PopupAddCmCustomerComponent implements OnInit {
             (x) => x.recID == this.tmpAddress?.recID && x.isDefault == true
           );
           if (index != -1) {
-            this.listAddress[index].adressName = name?.trim();
+            this.listAddress[index].address = name?.trim();
             this.listAddress[index].provinceID = this.data.provinceID;
             this.listAddress[index].districtID = this.data.districtID;
             this.listAddress[index].wardID = this.data.wardID;
           } else {
             tmp.recID = Util.uid();
             tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-            tmp.adressName = this.data.address;
+            tmp.address = this.data.address;
             tmp.isDefault = true;
             tmp.provinceID = this.data.provinceID;
             tmp.districtID = this.data.districtID;
@@ -495,7 +495,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
         } else {
           tmp.recID = Util.uid();
           tmp.adressType = this.funcID == 'CM0102' ? '5' : '6';
-          tmp.adressName = this.data.address;
+          tmp.address = this.data.address;
           tmp.isDefault = true;
           tmp.provinceID = this.data.provinceID;
           tmp.districtID = this.data.districtID;
@@ -880,7 +880,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
       var index = this.listAddress.findIndex((x) => x.isDefault == true);
       if (index != -1) {
         this.tmpAddress = this.listAddress[index];
-        this.data.address = this.listAddress[index].adressName;
+        this.data.address = this.listAddress[index].address;
       } else {
         this.data.address = null;
       }
