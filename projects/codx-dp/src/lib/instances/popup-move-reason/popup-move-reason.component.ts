@@ -4,6 +4,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { CodxDpService } from '../../codx-dp.service';
@@ -40,6 +41,7 @@ export class PopupMoveReasonComponent implements OnInit {
   stepName: string = '';
   moveProccess: string = '';
   memoStep: string = '';
+  processNameEmpty: string ='';
 
   lstParticipants = [];
   listParticipantReason = [];
@@ -55,6 +57,7 @@ export class PopupMoveReasonComponent implements OnInit {
   instanceStep = new DP_Instances_Steps();
 
   isReason: boolean = true;
+  isMoveProcess: boolean = false;
   applyFor: string = '0';
 
   dataCM: any;
@@ -62,9 +65,15 @@ export class PopupMoveReasonComponent implements OnInit {
   nextStep: string = '';
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
+  readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
   gridViewSetup: any;
   stepNameSuccess: any;
+  formModelProcess: FormModel = {
+    formName: 'DPProcesses',
+    gridViewName: 'grvDPProcesses',
+    entityName: 'DP_Processes',
+  };
 
   constructor(
     private cache: CacheService,
@@ -81,18 +90,18 @@ export class PopupMoveReasonComponent implements OnInit {
     this.stepName = dt?.data?.stepName;
     this.isReason = dt?.data?.isReason;
     this.headerText = dt?.data?.headerTitle;
-
+    this.processID =  dt?.data?.processID;
+    this.isMoveProcess = dt?.data?.isMoveProcess;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
-    if (this.applyFor != '0') {
-      this.executeApiCalls();
-    } else {
+    if (this.applyFor == '0') {
+
       this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
       this.viewClick = this.viewKanban;
       this.reasonStep = dt?.data?.objReason;
       this.listReason = this.reasonStep?.reasons;
-      this.listCbxProccess = dt?.data?.listProccessCbx;
-      this.listParticipantReason = dt?.data?.listParticipantReason;
+  //    this.listCbxProccess = dt?.data?.listProccessCbx;
+   //   this.listParticipantReason = dt?.data?.listParticipantReason;
       this.moveProccess =
         this?.listCbxProccess?.filter(
           (x) => x.recID === this.reasonStep?.newProcessID
@@ -102,7 +111,10 @@ export class PopupMoveReasonComponent implements OnInit {
     }
     this.dataCM = dt?.data?.dataCM;
     this.recID = this.dataCM ? this.dataCM?.refID : this.instances?.recID;
+    this.applyFor != '0' && this.executeApiCalls();
     this.getValueListReason();
+   this.isMoveProcess && this.getValueListMoveProcess();
+   this.isMoveProcess && this.getListProcesByApplyFor(this.applyFor);
   }
 
   ngOnInit(): void {}
@@ -131,7 +143,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   beforeSave() {
     this.reasonStep.reasons = this.listReasonClick;
-    var data = [
+    let data = [
       this.recID,
       this.moveProccess,
       this.reasonStep,
@@ -139,12 +151,21 @@ export class PopupMoveReasonComponent implements OnInit {
       this.ownerMove,
       this.applyFor,
     ];
+    // let obj = {
+    //           listStep: this.listStep,
+    //           instance: this.instances,
+    //           processMove: this.moveProcess,
+    //           applyForMove: this.applyFor,
+    //           ownerMove: this.ownerMove,
+    //           comment: this.reasonStep.memo,
+    //         };
+    //         this.dialog.close(obj);
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instances = res[0];
         this.listStep = res[1];
         if (this.applyFor != '0') {
-          var objApplyFor = {
+          let objApplyFor = {
             listStep: this.listStep,
             instance: this.instances,
             instanceMove: res[2],
@@ -152,9 +173,12 @@ export class PopupMoveReasonComponent implements OnInit {
           };
           this.dialog.close(objApplyFor);
         } else {
-          var obj = {
+          let obj = {
             listStep: this.listStep,
             instance: this.instances,
+            // processMove: this.moveProcess,
+            // applyForMove: this.applyFor,
+            // ownerMove: this.ownerMove,
             comment: this.reasonStep.memo,
           };
           this.dialog.close(obj);
@@ -167,7 +191,6 @@ export class PopupMoveReasonComponent implements OnInit {
 
   async executeApiCalls() {
     try {
-      await this.getValueListMoveProcess();
       await this.getListMoveReason(this.dataCM);
       await this.getValueFormModel();
     } catch (error) {}
@@ -200,8 +223,7 @@ export class PopupMoveReasonComponent implements OnInit {
             };
             this.nextStep = res[4];
             this.listCbxProccess.push(obj);
-            this.listParticipantReason =
-              await this.codxDpService.getListUserByOrg(res[2]);
+            this.listParticipantReason =  await this.codxDpService.getListUserByOrg(res[2]);
           }
           this.moveProccess = res[1];
           this.listReason = res[3];
@@ -212,10 +234,11 @@ export class PopupMoveReasonComponent implements OnInit {
 
   async getValueListMoveProcess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      var obj = {
+      let obj = {
         recID: this.guidEmpty,
         processName: data.datas[0].default,
       };
+      this.processNameEmpty = data.datas[0].default,
       this.listCbxProccess.unshift(obj);
     });
   }
@@ -236,6 +259,25 @@ export class PopupMoveReasonComponent implements OnInit {
       this.reasonStep[$event.field] = $event.data;
     }
   }
+  valueChangeAppylyFor($event) {
+    if ($event) {
+      this.applyFor = $event.data;
+      this.getListProcesByApplyFor(this.applyFor);
+
+    }
+  }
+  getListProcesByApplyFor(applyFor) {
+    this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
+      if( res != null &&res.length > 0) {
+        this.getListProceseEmpty(res[0]);
+      }
+      else {
+      this.getListProceseEmpty([]);
+      }
+    });
+  }
+
+
 
   handleReason(stepReason: any) {
     var reason = new DP_Instances_Steps_Reasons();
@@ -250,9 +292,10 @@ export class PopupMoveReasonComponent implements OnInit {
 
   changeTime($event) {}
 
-  cbxChange($event) {
+  async cbxChange($event) {
     if ($event) {
       this.moveProccess = $event;
+      await this.getListPermission(this.listCbxProccess.filter(x=>x.recID === this.moveProccess)[0].permissions);
     }
   }
 
@@ -294,5 +337,42 @@ export class PopupMoveReasonComponent implements OnInit {
   LowercaseFirstPipe(value) {
     if (!value) return '';
     return value.charAt(0).toLowerCase() + value.slice(1);
+  }
+  getListProceseEmpty(listProcess) {
+    this.listCbxProccess = [];
+    this.moveProccess = null;
+    this.ownerMove = null;
+    if(listProcess != null && listProcess.length > 0) {
+      this.listCbxProccess = listProcess;
+      this.listCbxProccess = this.listCbxProccess.filter(
+        (x) => x.recID !== this.processID
+      );
+    }
+    let obj = {
+      recID: this.guidEmpty,
+      processName: this.processNameEmpty,
+      permissions: []
+    };
+    this.processNameEmpty = this.processNameEmpty,
+    this.listCbxProccess.unshift(obj);
+    this.moveProccess = this.guidEmpty;
+  }
+  async getListPermission(permissions) {
+    if(permissions != null && permissions.length > 0) {
+      this.listParticipantReason = await this.codxDpService.getListUserByOrg(
+        permissions
+        );
+    }
+    else {
+      this.listParticipantReason = [];
+    }
+  }
+  valueChangeOwner($event) {
+    if($event  ){
+      this.ownerMove = $event;
+    }
+    else if($event === null || $event === '') {
+      this.ownerMove = null;
+    }
   }
 }
