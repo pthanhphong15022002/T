@@ -66,6 +66,7 @@ export class CatagoryComponent implements OnInit {
   dialog?: DialogRef;
   oldSettingFull = [];
   oldDataValue: any = {};
+  idOld: string[] = [];
   //labels
   labels = [];
   lineType = '1';
@@ -420,6 +421,7 @@ export class CatagoryComponent implements OnInit {
     this.title.push(data.tilte);
     this.lineType = +this.lineType + 1 + '';
     let recID = data.recID;
+    this.idOld.push(data.recID);
     this.isOpenSub = true;
     if (!this.oldSettingFull || Object.keys(this.oldSettingFull).length === 0)
       this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
@@ -430,15 +432,18 @@ export class CatagoryComponent implements OnInit {
       this.componentSub = data.reference;
 
       this.dataValue = dataValue || {};
-      this.groupSetting = this.settingFull = [];
+      this.groupSetting = [];
       this.setting = [data];
     } else {
-      this.settingFull =
-        this.settingFull.filter(
-          (x) => x.refLineID === recID && x.lineType === this.lineType
-        ) || [];
       this.setting =
-        this.settingFull.filter((res) => res.isVisible == true) || [];
+        this.settingFull.filter(
+          (x) =>
+            x.refLineID === recID &&
+            x.lineType === this.lineType &&
+            x.isVisible == true
+        ) || [];
+      // this.setting =
+      // this.setting.filter((res) => res.isVisible == true) || [];
       //this.dataValue = dataValue;
       this.groupSetting = this.setting.filter((x) => {
         return x.lineType === this.lineType;
@@ -474,6 +479,7 @@ export class CatagoryComponent implements OnInit {
 
   backSub(evt: any) {
     this.title = this.title.slice(0, -1);
+    this.idOld = this.idOld.slice(0, -1);
     if (this.lineType == '1') {
       this.oldSettingFull = [];
       this.oldDataValue = {};
@@ -485,9 +491,16 @@ export class CatagoryComponent implements OnInit {
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
-
+    let a = this.idOld;
+    let recID = this.idOld[this.idOld.length - 1];
     this.setting =
-      this.settingFull.filter((res) => res.isVisible == true) || [];
+      this.settingFull.filter(
+        (x) => x.lineType === this.lineType && x.isVisible == true
+      ) || [];
+    if (recID)
+      this.setting = this.setting.filter((x) => x.refLineID === recID) || [];
+    // this.setting =
+    //   this.settingFull.filter((res) =>) || [];
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
