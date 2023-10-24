@@ -222,7 +222,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   titlePy: string = 'Food Comparison Chart';
 
-  pyramid: AccumulationChartComponent | AccumulationChart;
+  pyramidStatus: AccumulationChartComponent | AccumulationChart;
+  pyramidStages: AccumulationChartComponent | AccumulationChart;
   dataLabel: Object = {
     name: 'name',
     visible: true,
@@ -243,6 +244,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   tabActiveBusIns: string = 'btBussinessLine';
   //status or
   isStatus = true;
+  tabActivePy = 'btStatus';
 
   //ReasonSuscess
   isReasonSuscess = true;
@@ -1428,6 +1430,48 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       obj.chart2.lineFail.element.classList.contains('d-none') &&
         obj.chart2.lineFail.element.classList.remove('d-none');
       obj.chart2.lineFail.refresh();
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  changeChart(ele: any, obj: any) {
+    if (ele.id == this.tabActivePy) return;
+    let viewCrr = '1';
+    switch (ele.id) {
+      case 'btStatus':
+        this.tabActivePy = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btStages':
+        this.tabActivePy = ele.id;
+        viewCrr = '2';
+        break;
+    }
+    if (viewCrr == '1') {
+      !obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.add('d-none');
+
+      obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.remove('d-none');
+
+      !obj.chart2.temp.element.classList.contains('d-none') &&
+        obj.chart2.temp.element.classList.add('d-none');
+      obj.chart1.temp.element.classList.contains('d-none') &&
+        obj.chart1.temp.element.classList.remove('d-none');
+      obj.chart1.temp.refresh();
+    } else {
+      !obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.add('d-none');
+
+      obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.remove('d-none');
+
+      !obj.chart1.temp.element.classList.contains('d-none') &&
+        obj.chart1.temp.element.classList.add('d-none');
+
+      obj.chart2.temp.element.classList.contains('d-none') &&
+        obj.chart2.temp.element.classList.remove('d-none');
+      obj.chart2.temp.refresh();
     }
     this.detectorRef.detectChanges();
   }
