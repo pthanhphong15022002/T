@@ -126,11 +126,11 @@
                             <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Trình độ"></codx-label>:</span>
                             <ng-container *ngIf="item?.degreeName , else emptyLabel"><span>{{item.degreeName}}</span></ng-container>
                         </div>
-                        <div class="d-flex align-items-center">
-                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Kỹ năng"></codx-label>:</span>
+                        <div class="d-flex flex-column">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Kỹ năng"></codx-label></span>
                             <div class="flex flex-wrap">
                                 <ng-container *ngIf="item.skills?.length > 0">
-                                    <span *ngFor="let skill of item.skills"  class="badge rounded-pill bg-success m-1">{{skill}}</span>
+                                    <span *ngFor="let skill of item.skills"  class="badge rounded-pill bg-success text-truncate mw-200px me-1" [title]="skill">{{skill}}</span>
                                   </ng-container>
                             </div>
                         </div>
@@ -146,17 +146,17 @@
                   </td>
                   <td class="w-40" *ngIf="item.result">
                     <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center">
-                            <codx-label default="Kết quả" class="fw-bold text-nowrap"></codx-label>: 
-                            <span class="text-start ms-2">{{item.result.evaluate}}</span>
+                        <div class="d-flex flex-column">
+                            <codx-label default="Kết quả" class="fw-bold text-nowrap"></codx-label> 
+                            <span class="text-start">{{item.result.evaluate}}</span>
                         </div>
-                        <div class="d-flex align-items-center border-top">
-                            <codx-label default="Điểm mạnh" class="fw-bold text-nowrap"></codx-label>: 
-                            <span class="text-start ms-2">{{item.result.advantage}}</span>
+                        <div class="d-flex flex-column border-top">
+                            <codx-label default="Điểm mạnh" class="fw-bold text-nowrap"></codx-label> 
+                            <span class="text-start">{{item.result.advantage}}</span>
                         </div>
-                        <div class="d-flex align-items-center border-top">
-                            <codx-label default="Điểm yếu" class="fw-bold text-nowrap"></codx-label>: 
-                            <span class="text-start ms-2">{{item.result.weakness}}</span>
+                        <div class="d-flex flex-column border-top">
+                            <codx-label default="Điểm yếu" class="fw-bold text-nowrap"></codx-label> 
+                            <ng-container *ngIf="item.result.weakness , else emptyLabel"><span>{{item.result.weakness}}</span></ng-container>
                         </div>
                     </div>
                   </td>
