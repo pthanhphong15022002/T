@@ -157,6 +157,7 @@ export class WorkspaceComponent extends WSUIComponent{
     if(this.popupUploads)
     {
       let option = new DialogModel();
+      option.IsFull = true;
       this.request = "";
       this.jsonExports = [];
       this.cellExvalueate = false;
