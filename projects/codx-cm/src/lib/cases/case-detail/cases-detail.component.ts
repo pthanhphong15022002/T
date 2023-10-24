@@ -12,12 +12,13 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { CRUDService, FormModel, UIComponent } from 'codx-core';
+import { AlertConfirmInputConfig, CRUDService, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
 import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { CasesComponent } from '../cases.component';
 
 @Component({
   selector: 'codx-cases-detail',
@@ -95,7 +96,9 @@ export class CasesDetailComponent
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxCmService: CodxCmService
+    private codxCmService: CodxCmService,
+    private caseComponent: CasesComponent,
+    private notificationsService: NotificationsService,
   ) {
     super(inject);
     this.executeApiCalls();
@@ -244,17 +247,77 @@ export class CasesDetailComponent
     let isContinueTaskAll = this.checkContinueStep(false, step);
     let isShowFromTaskAll = !isContinueTaskAll;
 
-    // if (transferControl == '1' && isContinueTaskAll) {
-    //   isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskAll &&
-    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    // }
+    if (transferControl == '1' && isContinueTaskAll) {
+      isShowFromTaskAll && this.caseComponent.moveStage(this.dataSelected);
+      !isShowFromTaskAll &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
 
-    // if (transferControl == '2' && isContinueTaskEnd) {
-    //   isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
-    //   !isShowFromTaskEnd &&
-    //     this.handleMoveStage(this.completedAllTasks(step), step.stepID);
-    // }
+    if (transferControl == '2' && isContinueTaskEnd) {
+      isShowFromTaskEnd && this.caseComponent.moveStage(this.dataSelected);
+      !isShowFromTaskEnd &&
+        this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+    }
+  }
+  completedAllTasks(instanceSteps): boolean {
+    var isCheckOnwer = instanceSteps?.owner ? false : true;
+    if (isCheckOnwer) {
+      return false;
+    }
+    var isCheckFields = this.checkFieldsIEmpty(instanceSteps.fields);
+    if (isCheckFields) {
+      return false;
+    }
+    return true;
+  }
+  checkFieldsIEmpty(fields) {
+    return fields.some((x) => !x.dataValue && x.isRequired);
+  }
+  handleMoveStage(isStopAuto, stepID) {
+    if (!isStopAuto) {
+      this.caseComponent.moveStage(this.dataSelected);
+    } else {
+      let index = this.listSteps.findIndex((x) => x.stepID === stepID);
+      let isUpdate = false;
+      let nextStep;
+      if (index != -1) {
+        nextStep = this.listSteps.findIndex(
+          (x) => x.stepID == this.listSteps[index + 1].stepID
+        );
+        if (nextStep != -1) {
+          isUpdate = true;
+        }
+      }
+      if (isUpdate) {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.listSteps[nextStep].stepStatus = '1';
+            this.listSteps[nextStep].actualStart = new Date();
+            this.listSteps[index].stepStatus = '3';
+            if (this.listSteps[index].actualEnd !== null) {
+              this.listSteps[index].actualEnd = new Date();
+            }
+
+            var listInstanceStep = [];
+            listInstanceStep.push(this.listSteps[index]);
+            listInstanceStep.push(this.listSteps[nextStep]);
+            var nextStepDeal = this.listSteps.find(
+              (x) => x.stepID == this.listSteps[nextStep + 1].stepID
+            );
+            this.dataSelected.stepID = this.listSteps[nextStep].stepID;
+            if (nextStepDeal) {
+              this.dataSelected.nextStep = nextStepDeal.stepID;
+            } else {
+              this.dataSelected.nextStep = null;
+            }
+
+         //   this.promiseAll(listInstanceStep);
+          }
+        });
+      }
+    }
   }
   checkContinueStep(isDefault, step) {
     let check = true;
