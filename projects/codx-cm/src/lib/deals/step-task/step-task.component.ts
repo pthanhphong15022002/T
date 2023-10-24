@@ -89,6 +89,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   isZoomIn = false;
   isZoomOut = false;
   isShow = false;
+  isShowSuccess = false;
+  isShowFail = false;
   moreDefaut = {
     share: true,
     write: true,
