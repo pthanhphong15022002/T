@@ -260,7 +260,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   targetQ0: string = '0';
   labelFormatQ0: string = '${value}';
   tooltipBullet0 = {
-    enable: true
+    enable: true,
   };
   //Q1
   maximumBulletQ1: number = 600;
@@ -271,7 +271,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   targetQ1: string = '0';
   labelFormatQ1: string = '0';
   tooltipBullet1 = {
-    enable: true
+    enable: true,
   };
   //Q2
   maximumBulletQ2: number = 600;
@@ -282,7 +282,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   targetQ2: string = '0';
   labelFormatQ2: string = '0';
   tooltipBullet2 = {
-    enable: true
+    enable: true,
   };
   //Q3
   maximumBulletQ3: number = 600;
@@ -293,7 +293,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   targetQ3: string = '0';
   labelFormatQ3: string = '0';
   tooltipBullet3 = {
-    enable: true
+    enable: true,
   };
   //Q4
   maximumBulletQ4: number = 600;
@@ -310,7 +310,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     enable: true,
     template: '',
   };
-  dataLabelBuleet: Object = { enable: true, labelStyle:{ color: '#ffffff', size: '13'} };
+  dataLabelBuleet: Object = {
+    enable: true,
+    labelStyle: { color: '#ffffff', size: '13' },
+  };
   //end
 
   //accumulation chart
@@ -1226,19 +1229,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   changeBusIns(ele: any, obj: any) {
     if (ele.id == this.tabActiveBusIns) return;
     this.tabActiveBusIns = ele.id;
-    if (ele.id == 'btBussinessLine' && Object.keys(obj).length) {
+    if (ele.id == 'btBussinessLine') {
       !obj.chart2.viewIndus.classList.contains('d-none') &&
         obj.chart2.viewIndus.classList.add('d-none');
+
       obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.remove('d-none');
 
       !obj.chart2.pie2.element.classList.contains('d-none') &&
         obj.chart2.pie2.element.classList.add('d-none');
+
       obj.chart1.pie1.element.classList.contains('d-none') &&
         obj.chart1.pie1.element.classList.remove('d-none');
       obj.chart1.pie1.refresh();
     }
-    if (ele.id == 'btIndustries' && Object.keys(obj).length) {
+    // && Object.keys(obj).length
+    if (ele.id == 'btIndustries') {
       !obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.add('d-none');
 
@@ -1555,9 +1561,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
 
     if (value >= 1000000) {
-      retrn = (value / 1000000) + 'M';
+      retrn = value / 1000000 + 'M';
     } else if (value >= 1000) {
-      retrn = (value / 1000) + 'K';
+      retrn = value / 1000 + 'K';
     }
     args.text = retrn;
   }
@@ -1571,8 +1577,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let titleDealValue =
       this.language == 'vn' ? 'Doanh thu thực tế' : 'DealValue';
     if (index != -1) {
-      target = this.lstQuarters[index]?.target > 0 ? this.lstQuarters[index].target.toLocaleString() : 0;
-      dealValue = this.lstQuarters[index]?.dealValueWon ? this.lstQuarters[index].dealValueWon.toLocaleString() : 0;
+      target =
+        this.lstQuarters[index]?.target > 0
+          ? this.lstQuarters[index].target.toLocaleString()
+          : 0;
+      dealValue = this.lstQuarters[index]?.dealValueWon
+        ? this.lstQuarters[index].dealValueWon.toLocaleString()
+        : 0;
     }
     let template = `${titleTarger} : <b>${target}</b> ${this.currencyID}<br/>${titleDealValue} : <b>${dealValue}</b> ${this.currencyID}`;
     e.template = template;
