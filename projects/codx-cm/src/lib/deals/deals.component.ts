@@ -91,7 +91,6 @@ export class DealsComponent
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   formModel: FormModel;
-  formModelCustomer: FormModel;
 
   // type any for view detail
   @Input() dataObj?: any;
@@ -208,7 +207,6 @@ export class DealsComponent
   }
 
   async onInit(): Promise<void> {
-    this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
     this.afterLoad();
     this.button = {
       id: this.btnAdd,
@@ -246,7 +244,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          resources: this.columnGrids,
+          //resources: this.columnGrids,
           // frozenColumns: 1,
         },
       },

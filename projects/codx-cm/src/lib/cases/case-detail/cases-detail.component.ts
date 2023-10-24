@@ -17,6 +17,7 @@ import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-cus
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
 import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'codx-cases-detail',
@@ -35,10 +36,9 @@ export class CasesDetailComponent
   @Input() listInsStepStart = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @ViewChild('tabDetailView', { static: true })
-  tabDetailView: TemplateRef<any>;
-  @ViewChild('tabCaseDetailComponent')
-  tabCaseDetailComponent: TabCasesDetailComponent;
+
+  @ViewChild('loadContactDeal')
+  loadContactDeal: CodxListContactsComponent;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -79,6 +79,9 @@ export class CasesDetailComponent
   listCategory = [];
   listStepsProcess = [];
   listSteps = [];
+
+  lstContacts = [];
+  lstStepsOld = [];
 
   caseId: string = '';
 
@@ -123,12 +126,12 @@ export class CasesDetailComponent
         //   : this.dataSelected?.recID;
         //da doi
         this.sessionID = this.dataSelected?.recID;
-        this.loadTree(this.sessionID);
+       // this.loadTree(this.sessionID);
       }
     }
-    if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
-      this.listSteps = this.listInsStepStart;
-    }
+    // if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
+    //   this.listSteps = this.listInsStepStart;
+    // }
   }
   async promiseAllAsync() {
     this.isDataLoading = true;
@@ -194,8 +197,8 @@ export class CasesDetailComponent
     console.log(e);
   }
   //get tree giao viec theo quy trinh
-  getTree() {
-    let seesionID = this.dataSelected.refID;
+  async getTree() {
+    let seesionID = this.dataSelected.recID; ///da doi lai lay theo recID của doi tuong
     this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
       this.treeTask = tree || [];
     });
@@ -270,20 +273,81 @@ export class CasesDetailComponent
     return check;
   }
   saveAssign(e) {
-    if (e) {
-      this.loadTree(this.sessionID);
-    }
+    if (e) this.getTree();
   }
 
-  loadTree(recID) {
-    if (!recID) {
-      this.treeTask = [];
-      return;
+
+  saveDataStep(e) {
+    if (e) {
+      if (e?.fields != null && e?.fields?.length > 0) {
+        var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
+        let lstOlds = [];
+        if (lstStepsOld != null && lstStepsOld.length > 0) {
+          for (var step of lstStepsOld) {
+            if (step?.fields != null && step?.fields?.length > 0) {
+              let js = step?.fields?.find(
+                (x) =>
+                  x?.dataType == 'C' &&
+                  x?.dataValue != null &&
+                  x?.dataValue?.trim() != ''
+              );
+              if (js != null && js?.dataValue != null) {
+                let lsJs = JSON.parse(js?.dataValue);
+                lsJs.forEach((element) => {
+                  if (!lstOlds.some((x) => x.recID == element?.recID)) {
+                    lstOlds.push(element);
+                  }
+                });
+              }
+            }
+          }
+        }
+        for (var item of e?.fields) {
+          if (
+            item?.dataType == 'C' &&
+            item?.dataValue != null &&
+            item?.dataValue?.trim() != ''
+          ) {
+            var lst = JSON.parse(item?.dataValue);
+            if (lstOlds != null && lstOlds.length > 0) {
+              let lstDelete = [];
+              if (lst != null && lst.length > 0) {
+                lstOlds.forEach((ele) => {
+                  let isCheck = lst.some((x) => x.recID == ele?.recID);
+                  if (!isCheck) lstDelete.push(ele);
+                });
+              } else {
+                lstDelete = lstOlds;
+              }
+              for (let i = 0; i < lstDelete.length; i++) {
+                let recID = lstDelete[i]?.recID;
+                var indx = this.lstContacts.findIndex((x) => x.recID == recID);
+                if (indx != -1) {
+                  this.lstContacts.splice(indx, 1);
+                }
+              }
+            }
+            for (var contact of lst) {
+              let idx = this.lstContacts?.findIndex(
+                (x) => x.recID == contact?.recID
+              );
+              if (idx != -1) {
+                this.lstContacts[idx] = contact;
+              } else {
+                this.lstContacts.push(Object.assign({}, contact));
+              }
+            }
+          }
+        }
+        this.lstStepsOld = this.listSteps;
+        if (this.loadContactDeal) {
+          this.loadContactDeal.loadListContact(this.lstContacts);
+        }
+      }
+      this.changeDetectorRef.detectChanges();
     }
-    this.api
-      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
-      .subscribe((res) => {
-        this.treeTask = res ? res : [];
-      });
+
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
   }
 }

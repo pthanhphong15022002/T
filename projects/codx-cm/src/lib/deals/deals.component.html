@@ -538,7 +538,6 @@
   <codx-deal-detail
     #detailViewDeal
     [formModel]="view.formModel"
-    [formModelCustomer]="formModelCustomer"
     [dataSelected]="dataSelected"
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
@@ -795,7 +794,7 @@
   #industries
   [innerHTML]="
     data?.industries
-      | formatvalue : formModelCustomer : 'industries' : industries
+      | formatvalue : view.formModel : 'industries' : industries
       | async
   "
 ></span>

@@ -615,16 +615,16 @@ export class PopupMoveStageComponent implements OnInit {
   checkSpaceInStep(stepClick, stepOld) {
     let indexClick = this.listStepsCbx.findIndex((x) => x.stepID == stepClick);
     let indexOld = this.listStepsCbx.findIndex((x) => x.stepID == stepOld);
-    //let space = indexClick - indexOld;
+    let space = indexClick - indexOld;
     if (
       this.listStepsCbx[indexClick].isSuccessStep ||
       this.listStepsCbx[indexClick].isFailStep
     ) {
       return false;
     }
-    // else if (space > 0) {
-    //   return true;
-    // }
+    else if (space < 0) {
+      return false;
+    }
     return true;
   }
 
