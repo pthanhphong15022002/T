@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -13,6 +13,9 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   @Input() cardType: string = "";
   @Input() formModel: FormModel;
   @Input() ratingVLL: string = "";
+
+  @Output() approve = new EventEmitter();
+  @Output() reject = new EventEmitter();
 
   isShowCard: boolean = true;
 

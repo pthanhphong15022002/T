@@ -182,7 +182,7 @@
                     fiedName="Industries"
                     class="text-dark fw-bold me-2"
                     [setRequire]="false"
-                    [formModel]="formModelCustomer"
+                    [formModel]="formModel"
                     default="Lĩnh vực hoạt động"
                   ></codx-label>
                   <span
@@ -191,7 +191,7 @@
                     [innerHTML]="
                       dataSelected?.industries
                         | formatvalue
-                          : formModelCustomer
+                          : formModel
                           : 'industries'
                           : industries
                         | async

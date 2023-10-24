@@ -227,4 +227,14 @@ export class CodxFdService {
       [predicatesReceive, dataValueReceive, predicatesSend, dataValueSend]
     );
   }
+
+  addComment(recID: string, comment: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'AddCommentAsync',
+      [recID, comment]
+    );
+  }
 }
