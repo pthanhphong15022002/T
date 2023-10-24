@@ -1332,7 +1332,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
       leadToDeals.items = items;
     }
-    this.dataSourcePyStatus.push(leadToDeals);
+    this.dataSourcePyStatus.unshift(leadToDeals);
     //da thanh cong
     let dealsSuc = {
       value: '4',
@@ -1847,7 +1847,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   ),
                   item?.deals.filter(
                     (x) =>
-                      new Date(x.createdOn).getFullYear() == now.getFullYear() && x.status == '3'
+                      new Date(x.createdOn).getFullYear() ==
+                        now.getFullYear() && x.status == '3'
                   )
                 );
                 break;
@@ -1877,11 +1878,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return list;
   }
 
-  getCountDate(leads, deals){
+  getCountDate(leads, deals) {
     let count = 0;
-    if(deals != null){
-      for(var item of deals){
-
+    if (deals != null) {
+      for (var item of deals) {
       }
     }
 
