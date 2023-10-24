@@ -849,7 +849,82 @@
   <div class="w-100 h-100" id="5" title="">555</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="6" title="">666</div>
+  <div class="w-100 h-100" id="6" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesPipeline"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales pipline"
+    ></codx-label>
+    <div class="d-flex justify-content-center align-items-center mb-3">
+      <div class="d-flex flex-row">
+        <div
+          *ngFor="let item of vllSalesPiplines"
+          class="w-130px text-center"
+          [ngClass]="
+            item.value == '1'
+              ? 'cm-rounded-pill-left'
+              : item.value == '3'
+              ? 'cm-rounded-pill-right'
+              : 'cm-rounded-pill-center'
+          "
+          (click)="viewPips(item.value)"
+        >
+          <div
+            [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
+          >
+            <button
+              class="btn btn-32px min-w-60px"
+              type="button"
+              aria-expanded="false"
+            >
+              <span class="me-1">{{ item.text }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="lstAlls?.length > 0; else noData">
+      <ejs-accumulationchart
+        id="pyramidcontainer1"
+        #pyramid
+        style="height: 100%; display: block; width: 100%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstAlls"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="80%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            [palettes]="
+              statusPip == '1'
+                ? palettePipsStages
+                : statusPip == '2'
+                ? palettePipsStatus
+                : palettePipsStatusCodes
+            "
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </ng-container>
+  </div>
 </ng-template>
 <ng-template #templateTarget>
   <div class="w-100 h-100" id="7" title="">
@@ -904,7 +979,7 @@
     <ng-container *ngIf="lstQuarters?.length > 0; else noData">
       <ejs-bulletchart
         align="center"
-        id="revenue"
+        id="revenue0"
         width="800px"
         height="70%"
         style="display: block; text-align: center"
@@ -937,7 +1012,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue1"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -967,7 +1042,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue2"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -999,7 +1074,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue3"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -1029,7 +1104,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue4"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
