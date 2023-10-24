@@ -28,7 +28,7 @@ import {
   IBulletLoadedEventArgs,
   IPointRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
-import { firstValueFrom } from 'rxjs';
+import { filter } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { Variant } from '@syncfusion/ej2-notifications';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
@@ -222,7 +222,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   titlePy: string = 'Food Comparison Chart';
 
-  pyramid: AccumulationChartComponent | AccumulationChart;
+  pyramidStatus: AccumulationChartComponent | AccumulationChart;
+  pyramidStages: AccumulationChartComponent | AccumulationChart;
   dataLabel: Object = {
     name: 'name',
     visible: true,
@@ -243,6 +244,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   tabActiveBusIns: string = 'btBussinessLine';
   //status or
   isStatus = true;
+  tabActivePy = 'btStatus';
 
   //ReasonSuscess
   isReasonSuscess = true;
@@ -1024,10 +1026,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
             switch (this.funcID) {
               case 'CMD001':
-                this.getDashBoardSalesTrends(res[0], parameters);
-                this.getDashBoardTargetSales(res[1], parameters);
-                this.getDashBoardSales(res[0], res[1], res[3], parameters);
-                this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
+                this.getSalesDashBoards(res);
+
                 break;
               case 'CMD002':
                 this.changeMySales(res);
@@ -1114,7 +1114,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = dataSuccess?.length;
     let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
-
+    this.getChartConversionRate(dataSetLead, dataSetDeals);
     this.getBusinessLine(dataSetDeals);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
@@ -1290,8 +1290,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       name: this.getNamePy('1'),
       quantity: dataLeads?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(objectLead);
-    this.dataSourcePyStage.push(objectLead);
+    this.dataSourcePyStatus.unshift(objectLead);
+    this.dataSourcePyStage.unshift(objectLead);
     //du dieu kien
     let leadStatus311 = {
       value: '1',
@@ -1300,10 +1300,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         dataLeads?.filter((x) => x.status == '3' || x.status == '11').length ??
         0,
     };
-    this.dataSourcePyStatus.push(leadStatus311);
-    this.dataSourcePyStage.push(leadStatus311);
+    this.dataSourcePyStatus.unshift(leadStatus311);
+    this.dataSourcePyStage.unshift(leadStatus311);
     //da chuyen thanh co hoi
-    let dealIDs = dataLeads.map((x) => x.dealID);
+    let dealIDs = [];
+    dataLeads.forEach((x) => {
+      if (x.dealID) dealIDs.push(x.dealID);
+    });
     let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
     let leadToDeals = {
       value: '3',
@@ -1331,102 +1334,91 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
       leadToDeals.items = items;
     }
-    this.dataSourcePyStatus.push(leadToDeals);
+    this.dataSourcePyStatus.unshift(leadToDeals);
     //da thanh cong
     let dealsSuc = {
       value: '4',
       name: this.getNamePy('4'),
       quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(dealsSuc);
+    this.dataSourcePyStatus.unshift(dealsSuc);
   }
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
   }
 
-  changeBusIns(ele: any, obj: any) {
-    if (ele.id == this.tabActiveBusIns) return;
-    this.tabActiveBusIns = ele.id;
-    if (ele.id == 'btBussinessLine') {
-      !obj.chart2.viewIndus.classList.contains('d-none') &&
-        obj.chart2.viewIndus.classList.add('d-none');
-
-      obj.chart1.viewBus.classList.contains('d-none') &&
-        obj.chart1.viewBus.classList.remove('d-none');
-
-      !obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.add('d-none');
-
-      obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.remove('d-none');
-      obj.chart1.pie1.refresh();
+  changeChart(ele: any, obj: any) {
+    let viewCrr = '1';
+    switch (ele.id) {
+      case 'btBussinessLine':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btIndustries':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btMax':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btMin':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btSuccess':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btFail':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btStatus':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btStages':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '2';
+        break;
     }
-    // && Object.keys(obj).length
-    if (ele.id == 'btIndustries') {
-      !obj.chart1.viewBus.classList.contains('d-none') &&
-        obj.chart1.viewBus.classList.add('d-none');
+    if (viewCrr == '1') {
+      !obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.add('d-none');
 
-      obj.chart2.viewIndus.classList.contains('d-none') &&
-        obj.chart2.viewIndus.classList.remove('d-none');
+      obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.remove('d-none');
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.add('d-none');
+        obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.remove('d-none');
+        obj.chart1.temp.refresh();
+      }
+    } else {
+      !obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.add('d-none');
 
-      !obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.add('d-none');
+      obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.remove('d-none');
 
-      obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.remove('d-none');
-      obj.chart2.pie2.refresh();
-    }
-    this.detectorRef.detectChanges();
-  }
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.add('d-none');
 
-  changeMaxMin(ele: any, obj: any) {
-    if (ele.id == this.tabActiveMaxMin) return;
-    this.tabActiveMaxMin = ele.id;
-    if (ele.id == 'btMax') {
-      !obj.chart2.minView.classList.contains('d-none') &&
-        obj.chart2.minView.classList.add('d-none');
-      obj.chart1.maxView.classList.contains('d-none') &&
-        obj.chart1.maxView.classList.remove('d-none');
-    }
-    if (ele.id == 'btMin') {
-      !obj.chart1.maxView.classList.contains('d-none') &&
-        obj.chart1.maxView.classList.add('d-none');
-
-      obj.chart2.minView.classList.contains('d-none') &&
-        obj.chart2.minView.classList.remove('d-none');
-    }
-    this.detectorRef.detectChanges();
-  }
-  changeChartLine(ele: any, obj: any) {
-    if (ele.id == this.tabActiveLineSucFail) return;
-    this.tabActiveLineSucFail = ele.id;
-    // chart1: { viewLineSuc,lineSuc },
-    // chart2: { viewLineFail,lineFail }
-    if (ele.id == 'btSuccess' && Object.keys(obj).length) {
-      !obj.chart2.viewLineFail.classList.contains('d-none') &&
-        obj.chart2.viewLineFail.classList.add('d-none');
-      obj.chart1.viewLineSuc.classList.contains('d-none') &&
-        obj.chart1.viewLineSuc.classList.remove('d-none');
-
-      !obj.chart2.lineFail.element.classList.contains('d-none') &&
-        obj.chart2.lineFail.element.classList.add('d-none');
-      obj.chart1.lineSuc.element.classList.contains('d-none') &&
-        obj.chart1.lineSuc.element.classList.remove('d-none');
-      obj.chart1.lineSuc.refresh();
-    }
-    if (ele.id == 'btFail' && Object.keys(obj).length) {
-      !obj.chart1.viewLineSuc.classList.contains('d-none') &&
-        obj.chart1.viewLineSuc.classList.add('d-none');
-
-      obj.chart2.viewLineFail.classList.contains('d-none') &&
-        obj.chart2.viewLineFail.classList.remove('d-none');
-
-      !obj.chart1.lineSuc.element.classList.contains('d-none') &&
-        obj.chart1.lineSuc.element.classList.add('d-none');
-
-      obj.chart2.lineFail.element.classList.contains('d-none') &&
-        obj.chart2.lineFail.element.classList.remove('d-none');
-      obj.chart2.lineFail.refresh();
+        obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.remove('d-none');
+      }
+      obj.chart2.temp.refresh();
     }
     this.detectorRef.detectChanges();
   }
@@ -1439,10 +1431,93 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // DASHBOAD SALES TAGET                     //
   // --------------------------------------------//
 
+  getSalesDashBoards(data, parameters = null) {
+    let currentDate = new Date(data?.currentDate);
+    let deals = data?.deals;
+    let leads = data?.leads;
+    let targetLines = data?.targetsLines;
+    let lstQuarters = [];
+    let lstUsers = [];
+
+    //get lstQuarters
+    let tmpQuarter = {};
+    tmpQuarter['year'] = currentDate.getFullYear();
+    tmpQuarter['quarter'] = 0;
+    tmpQuarter['target'] = 0;
+    tmpQuarter['dealValueWon'] = 0;
+    tmpQuarter['nameQuarter'] = tmpQuarter['year'].toString();
+    lstQuarters.push(tmpQuarter);
+    if (this.vllQuaters != null) {
+      for (let item of this.vllQuaters) {
+        tmpQuarter = {};
+        tmpQuarter['year'] = currentDate.getFullYear();
+        tmpQuarter['quarter'] = parseInt(item.value);
+        tmpQuarter['target'] = 0;
+        tmpQuarter['dealValueWon'] = 0;
+        tmpQuarter['nameQuarter'] =
+          item.text + '/' + tmpQuarter['year'].toString();
+        lstQuarters.push(tmpQuarter);
+      }
+    }
+    //end
+
+    //get lstUsers
+    const lstOwnersLeads: string[] = leads
+      .filter((x) => x.owner && x.owner.trim() !== '')
+      .map((q) => q.owner)
+      .filter((value, index, self) => self.indexOf(value) === index);
+    const lstDealsOwnerDeals = deals
+      .filter((x) => x.owner && x.owner.trim() !== '')
+      .map((q) => q.owner)
+      .filter((value, index, self) => self.indexOf(value) === index);
+    const lstOwnerAlls = [...lstOwnersLeads, ...lstDealsOwnerDeals].filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
+    const lstDealOwners: string[] = Array.from(new Set(lstOwnerAlls));
+    if (lstDealOwners != null && lstDealOwners.length > 0) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.AD',
+          'UsersBusiness',
+          'GetUserByIDAsync',
+          [lstDealOwners]
+        )
+        .subscribe((res) => {
+          if (res != null && res.length > 0) {
+            for (var item of res) {
+              var tmpUsers = {};
+              tmpUsers['userID'] = item?.userID;
+              tmpUsers['userName'] = item?.userName;
+              tmpUsers['leads'] = leads.filter((x) => x.owner == item.userID);
+              tmpUsers['deals'] = deals.filter((x) => x.owner == item.userID);
+              lstUsers.push(tmpUsers);
+            }
+            this.lstUsers = this.getTopSalesDashBoards(
+              lstUsers,
+              parameters,
+              currentDate
+            );
+          }
+        });
+    }
+    //end
+    this.getDashBoardSalesTrends(deals, parameters, currentDate);
+    this.getDashBoardTargetSales(targetLines, parameters, currentDate);
+    this.getDashBoardSales(
+      deals,
+      targetLines,
+      lstQuarters,
+      parameters,
+      currentDate
+    );
+    this.detectorRef.detectChanges();
+  }
+
   //Sales trend - last 12 months
-  getDashBoardSalesTrends(deals = [], param) {
+  getDashBoardSalesTrends(deals = [], param, currentDate) {
     let listMonths = [];
-    let now = new Date();
+    let now = new Date(currentDate);
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
     let max = 0;
@@ -1454,8 +1529,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       ) {
         let dealMonths = deals?.find(
           (x) =>
-            (new Date(x.createdOn).getFullYear() == y &&
-            new Date(x.createdOn).getMonth() + 1 == m) && x.status == '3'
+            new Date(x.createdOn).getFullYear() == y &&
+            new Date(x.createdOn).getMonth() + 1 == m &&
+            x.status == '3'
         ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
         let tmp = {};
         tmp['month'] = m + '/' + y;
@@ -1505,18 +1581,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     };
   }
 
-  textSeriRender(args: IAccTextRenderEventArgs){
+  textSeriRender(args: IAccTextRenderEventArgs) {
     console.log(args);
   }
   //end
 
   //get sales last 4 quarter
-  getDashBoardTargetSales(lstTargetLines = [], param) {
+  getDashBoardTargetSales(lstTargetLines = [], param, currentDate) {
     let lstPiaData = [];
     const currencyID = this.currencyID;
     const exchRate = this.exchangeRate;
     if (lstTargetLines != null && lstTargetLines.length > 0) {
-      let now = new Date();
+      let now = new Date(currentDate);
       if (param) {
         // làm sau
       }
@@ -1571,9 +1647,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   // get sales target
-  getDashBoardSales(deals, targetLines, lstQuarters, param = null) {
+  getDashBoardSales(
+    deals,
+    targetLines,
+    lstQuarters,
+    param = null,
+    currentDate
+  ) {
     if (lstQuarters != null) {
-      let now = new Date();
+      let now = new Date(currentDate);
       for (var i = 0; i < lstQuarters.length; i++) {
         let data = lstQuarters[i];
         const lstBusinessIds = targetLines
@@ -1630,25 +1712,38 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //get top sales
-  getTopSalesDashBoards(lstUsers = [], param) {
+  getTopSalesDashBoards(lstUsers = [], param, currentDate) {
     let list = [];
+    let now = new Date(currentDate);
     if (lstUsers?.length > 0) {
       lstUsers.sort((a, b) => {
-        const dealValueA = a?.deals.reduce(
-          (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
-          0
-        );
-        const dealValueB = b?.deals.reduce(
-          (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
-          0
-        );
+        const dealValueA = a?.deals
+          .filter(
+            (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+          )
+          .reduce(
+            (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+            0
+          );
+        const dealValueB = b?.deals
+          .filter(
+            (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+          )
+          .reduce(
+            (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+            0
+          );
         if (dealValueA === 0 && dealValueB === 0) {
-          const numDealsA = a?.deals.filter(
-            (deal) => deal.status === '3'
-          ).length;
-          const numDealsB = b?.deals.filter(
-            (deal) => deal.status === '3'
-          ).length;
+          const numDealsA = a?.deals
+            .filter(
+              (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            )
+            .filter((deal) => deal.status === '3').length;
+          const numDealsB = b?.deals
+            .filter(
+              (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            )
+            .filter((deal) => deal.status === '3').length;
           return numDealsB - numDealsA;
         }
         return dealValueB - dealValueA;
@@ -1663,35 +1758,90 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let performances = [];
         if (this.lstVllTopSales != null && this.lstVllTopSales.length > 0) {
           for (var vll of this.lstVllTopSales) {
+            // let leadNows = item?.leads.filter(
+            //   (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            // );
+            // let leadOlds = item?.leads.filter(
+            //   (x) =>
+            //     new Date(x.createdOn).getFullYear() - 1 == now.getFullYear() - 1
+            // );
+            // let dealNows = item?.deals.filter(
+            //   (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            // );
+            // let dealOlds = item?.deals.filter(
+            //   (x) =>
+            //     new Date(x.createdOn).getFullYear() - 1 == now.getFullYear() - 1
+            // );
+
             var tmpPerform = {};
             tmpPerform['value'] = vll.value;
             tmpPerform['text'] = vll.text;
+
             let count = 0;
             let countOlds = 0;
             switch (vll?.value) {
               case '1': // lead đã tạo
-                count = item?.leads?.length ?? 0;
-                countOlds = item?.leadOlds?.length ?? 0;
+                count =
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  ).length ?? 0;
+                countOlds =
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() - 1 ==
+                      now.getFullYear() - 1
+                  ).length ?? 0;
                 break;
               case '3': // cơ hội đã tạo
-                count = item?.deals?.length ?? 0;
-                countOlds = item?.dealOlds?.length ?? 0;
+                count =
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )?.length ?? 0;
+                countOlds =
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() - 1 ==
+                      now.getFullYear() - 1
+                  )?.length ?? 0;
                 break;
               case '5': // doanh thu đạt được
-                item?.deals?.forEach((ele) => {
-                  if (ele.status == '3') {
-                    count += ele?.dealValue;
-                  }
-                });
+                item?.deals
+                  .filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )
+                  ?.forEach((ele) => {
+                    if (ele.status == '3') {
+                      count += ele?.dealValue;
+                    }
+                  }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
                 break;
               case '7': //doanh thu đã mất
-                item?.deals?.forEach((ele) => {
-                  if (ele.status == '5') {
-                    count += ele?.dealValue;
-                  }
-                });
+                item?.deals
+                  .filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )
+                  ?.forEach((ele) => {
+                    if (ele.status == '5') {
+                      count += ele?.dealValue;
+                    }
+                  }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
                 break;
               case '9': //trung bình chu kỳ bán hàng
+                count = this.getCountDate(
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  ),
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() ==
+                        now.getFullYear() && x.status == '3'
+                  )
+                );
                 break;
             }
 
@@ -1717,6 +1867,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
     }
     return list;
+  }
+
+  getCountDate(leads, deals) {
+    let count = 0;
+    if (deals != null) {
+      for (var item of deals) {
+      }
+    }
+
+    return count;
   }
 
   findItemUser(value, performances) {
