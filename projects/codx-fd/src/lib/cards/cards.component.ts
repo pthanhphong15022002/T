@@ -36,7 +36,7 @@ import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
-import { PopupInputPointsComponent } from '../approvals/popup-input-points/popup-input-points.component';
+import { PopupApprovalComponent } from '../approvals/popup-approval/popup-approval.component';
 
 @Component({
   selector: 'lib-cards',
