@@ -1114,7 +1114,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = dataSuccess?.length;
     let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
-
+    this.getChartConversionRate(dataSetLead, dataSetDeals);
     this.getBusinessLine(dataSetDeals);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
@@ -1290,8 +1290,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       name: this.getNamePy('1'),
       quantity: dataLeads?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(objectLead);
-    this.dataSourcePyStage.push(objectLead);
+    this.dataSourcePyStatus.unshift(objectLead);
+    this.dataSourcePyStage.unshift(objectLead);
     //du dieu kien
     let leadStatus311 = {
       value: '1',
@@ -1300,10 +1300,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         dataLeads?.filter((x) => x.status == '3' || x.status == '11').length ??
         0,
     };
-    this.dataSourcePyStatus.push(leadStatus311);
-    this.dataSourcePyStage.push(leadStatus311);
+    this.dataSourcePyStatus.unshift(leadStatus311);
+    this.dataSourcePyStage.unshift(leadStatus311);
     //da chuyen thanh co hoi
-    let dealIDs = dataLeads.map((x) => x.dealID);
+    let dealIDs = [];
+    dataLeads.forEach((x) => {
+      if (x.dealID) dealIDs.push(x.dealID);
+    });
     let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
     let leadToDeals = {
       value: '3',
@@ -1338,7 +1341,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       name: this.getNamePy('4'),
       quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(dealsSuc);
+    this.dataSourcePyStatus.unshift(dealsSuc);
   }
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
@@ -1454,8 +1457,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       ) {
         let dealMonths = deals?.find(
           (x) =>
-            (new Date(x.createdOn).getFullYear() == y &&
-            new Date(x.createdOn).getMonth() + 1 == m) && x.status == '3'
+            new Date(x.createdOn).getFullYear() == y &&
+            new Date(x.createdOn).getMonth() + 1 == m &&
+            x.status == '3'
         ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
         let tmp = {};
         tmp['month'] = m + '/' + y;
@@ -1505,7 +1509,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     };
   }
 
-  textSeriRender(args: IAccTextRenderEventArgs){
+  textSeriRender(args: IAccTextRenderEventArgs) {
     console.log(args);
   }
   //end
