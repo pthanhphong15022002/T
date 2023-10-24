@@ -223,7 +223,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   titlePy: string = 'Food Comparison Chart';
 
-  pyramid: AccumulationChartComponent | AccumulationChart;
+  pyramidStatus: AccumulationChartComponent | AccumulationChart;
+  pyramidStages: AccumulationChartComponent | AccumulationChart;
   dataLabel: Object = {
     name: 'name',
     visible: true,
@@ -244,6 +245,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   tabActiveBusIns: string = 'btBussinessLine';
   //status or
   isStatus = true;
+  tabActivePy = 'btStatus';
 
   //ReasonSuscess
   isReasonSuscess = true;
@@ -1159,7 +1161,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = dataSuccess?.length;
     let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
-
+    this.getChartConversionRate(dataSetLead, dataSetDeals);
     this.getBusinessLine(dataSetDeals);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
@@ -1335,8 +1337,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       name: this.getNamePy('1'),
       quantity: dataLeads?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(objectLead);
-    this.dataSourcePyStage.push(objectLead);
+    this.dataSourcePyStatus.unshift(objectLead);
+    this.dataSourcePyStage.unshift(objectLead);
     //du dieu kien
     let leadStatus311 = {
       value: '1',
@@ -1345,10 +1347,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         dataLeads?.filter((x) => x.status == '3' || x.status == '11').length ??
         0,
     };
-    this.dataSourcePyStatus.push(leadStatus311);
-    this.dataSourcePyStage.push(leadStatus311);
+    this.dataSourcePyStatus.unshift(leadStatus311);
+    this.dataSourcePyStage.unshift(leadStatus311);
     //da chuyen thanh co hoi
-    let dealIDs = dataLeads.map((x) => x.dealID);
+    let dealIDs = [];
+    dataLeads.forEach((x) => {
+      if (x.dealID) dealIDs.push(x.dealID);
+    });
     let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
     let leadToDeals = {
       value: '3',
@@ -1376,102 +1381,91 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
       leadToDeals.items = items;
     }
-    this.dataSourcePyStatus.push(leadToDeals);
+    this.dataSourcePyStatus.unshift(leadToDeals);
     //da thanh cong
     let dealsSuc = {
       value: '4',
       name: this.getNamePy('4'),
       quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
     };
-    this.dataSourcePyStatus.push(dealsSuc);
+    this.dataSourcePyStatus.unshift(dealsSuc);
   }
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
   }
 
-  changeBusIns(ele: any, obj: any) {
-    if (ele.id == this.tabActiveBusIns) return;
-    this.tabActiveBusIns = ele.id;
-    if (ele.id == 'btBussinessLine') {
-      !obj.chart2.viewIndus.classList.contains('d-none') &&
-        obj.chart2.viewIndus.classList.add('d-none');
-
-      obj.chart1.viewBus.classList.contains('d-none') &&
-        obj.chart1.viewBus.classList.remove('d-none');
-
-      !obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.add('d-none');
-
-      obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.remove('d-none');
-      obj.chart1.pie1.refresh();
+  changeChart(ele: any, obj: any) {
+    let viewCrr = '1';
+    switch (ele.id) {
+      case 'btBussinessLine':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btIndustries':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btMax':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btMin':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btSuccess':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btFail':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btStatus':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btStages':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '2';
+        break;
     }
-    // && Object.keys(obj).length
-    if (ele.id == 'btIndustries') {
-      !obj.chart1.viewBus.classList.contains('d-none') &&
-        obj.chart1.viewBus.classList.add('d-none');
+    if (viewCrr == '1') {
+      !obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.add('d-none');
 
-      obj.chart2.viewIndus.classList.contains('d-none') &&
-        obj.chart2.viewIndus.classList.remove('d-none');
+      obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.remove('d-none');
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.add('d-none');
+        obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.remove('d-none');
+        obj.chart1.temp.refresh();
+      }
+    } else {
+      !obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.add('d-none');
 
-      !obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.add('d-none');
+      obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.remove('d-none');
 
-      obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.remove('d-none');
-      obj.chart2.pie2.refresh();
-    }
-    this.detectorRef.detectChanges();
-  }
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.add('d-none');
 
-  changeMaxMin(ele: any, obj: any) {
-    if (ele.id == this.tabActiveMaxMin) return;
-    this.tabActiveMaxMin = ele.id;
-    if (ele.id == 'btMax') {
-      !obj.chart2.minView.classList.contains('d-none') &&
-        obj.chart2.minView.classList.add('d-none');
-      obj.chart1.maxView.classList.contains('d-none') &&
-        obj.chart1.maxView.classList.remove('d-none');
-    }
-    if (ele.id == 'btMin') {
-      !obj.chart1.maxView.classList.contains('d-none') &&
-        obj.chart1.maxView.classList.add('d-none');
-
-      obj.chart2.minView.classList.contains('d-none') &&
-        obj.chart2.minView.classList.remove('d-none');
-    }
-    this.detectorRef.detectChanges();
-  }
-  changeChartLine(ele: any, obj: any) {
-    if (ele.id == this.tabActiveLineSucFail) return;
-    this.tabActiveLineSucFail = ele.id;
-    // chart1: { viewLineSuc,lineSuc },
-    // chart2: { viewLineFail,lineFail }
-    if (ele.id == 'btSuccess' && Object.keys(obj).length) {
-      !obj.chart2.viewLineFail.classList.contains('d-none') &&
-        obj.chart2.viewLineFail.classList.add('d-none');
-      obj.chart1.viewLineSuc.classList.contains('d-none') &&
-        obj.chart1.viewLineSuc.classList.remove('d-none');
-
-      !obj.chart2.lineFail.element.classList.contains('d-none') &&
-        obj.chart2.lineFail.element.classList.add('d-none');
-      obj.chart1.lineSuc.element.classList.contains('d-none') &&
-        obj.chart1.lineSuc.element.classList.remove('d-none');
-      obj.chart1.lineSuc.refresh();
-    }
-    if (ele.id == 'btFail' && Object.keys(obj).length) {
-      !obj.chart1.viewLineSuc.classList.contains('d-none') &&
-        obj.chart1.viewLineSuc.classList.add('d-none');
-
-      obj.chart2.viewLineFail.classList.contains('d-none') &&
-        obj.chart2.viewLineFail.classList.remove('d-none');
-
-      !obj.chart1.lineSuc.element.classList.contains('d-none') &&
-        obj.chart1.lineSuc.element.classList.add('d-none');
-
-      obj.chart2.lineFail.element.classList.contains('d-none') &&
-        obj.chart2.lineFail.element.classList.remove('d-none');
-      obj.chart2.lineFail.refresh();
+        obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.remove('d-none');
+      }
+      obj.chart2.temp.refresh();
     }
     this.detectorRef.detectChanges();
   }
@@ -1985,7 +1979,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return list;
   }
 
-  getCountDate(leads, deals) {
+  getCountDate(leads, deals)  {
     let count = 0;
     if (deals != null && deals.length > 0) {
       for (var item of deals) {

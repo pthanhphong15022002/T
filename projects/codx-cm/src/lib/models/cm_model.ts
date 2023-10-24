@@ -608,6 +608,8 @@ export class CM_Cases {
   modifiedOn: Date;
   modifiedBy: string;
   applyProcess: boolean;
+  permissions: CM_Permissions[];
+  datas: string;
 }
 
 export class CM_Partners {
