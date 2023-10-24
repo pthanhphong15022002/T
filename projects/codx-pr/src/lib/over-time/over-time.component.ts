@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  Input,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -43,6 +44,8 @@ export class OverTimeComponent extends UIComponent {
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
 
+  @Input() showMoreFunc = true;
+
   formGroup: FormGroup;
 
   cmtStatus: string = '';
@@ -60,6 +63,14 @@ export class OverTimeComponent extends UIComponent {
   recID = null;
   itemSelected: any;
   registerForm = ['1', '2'];
+  lblAdd: any;
+  status: any;
+  itemDetail: any;
+  editStatusObj: any;
+  currentEmpObj: any = null;
+  dialogEditStatus: DialogRef;
+  crrStatus: string = '';
+  requestDetail: any = null;
 
   //#region more functions
   actionCancelSubmit = 'HRTPro11A00';
@@ -67,13 +78,10 @@ export class OverTimeComponent extends UIComponent {
   actionUpdateCanceled = 'HRTPro11AU0';
   actionUpdateInProgress = 'HRTPro11AU3';
   actionUpdateApproved = 'HRTPro11AU5';
+  //#endregion
 
-  //View schedule
+  //#region View schedule
   requestSchedule: ResourceModel;
-  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   modelResource: ResourceModel;
   eventModel = {
     id: 'recID',
@@ -89,13 +97,12 @@ export class OverTimeComponent extends UIComponent {
     TextField: 'employeeID',
     Title: 'employeeID',
   };
-  lblAdd: any;
-  status: any;
-  itemDetail: any;
-  editStatusObj: any;
-  currentEmpObj: any = null;
-  dialogEditStatus: DialogRef;
-  crrStatus: string = '';
+
+  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  //#endregion
 
   //#endregion
 
@@ -117,7 +124,6 @@ export class OverTimeComponent extends UIComponent {
         this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
       }
     });
-
   }
 
   //Get user default login
@@ -178,50 +184,16 @@ export class OverTimeComponent extends UIComponent {
   }
 
   //#region Init components
-  onInit() {
-    this.cacheService.valueList(this.vllStatus).subscribe((res) => {
-      if (res) {
-        this.dataVll = res.datas;
-      }
-    });
-
-    this.buttons = {
-      id: 'btnAdd',
-    };
-    this.cache.message('AC0033').subscribe((res) => {
-      if (res) {
-        this.lblAdd = res?.customName;
-      }
-    });
-    this.getUserLogin();
-    this.getSchedule();
-
-    this.GetGvSetup();
-  }
-
-  getSchedule() {
-    //let resourceType = '1';
-  }
-
-  CloseStatus(dialog: DialogRef) {
-    dialog.close();
-  }
-  ValueChangeComment(evt) {
-    this.cmtStatus = evt.data;
-  }
-
-  requestDetail: any = null;
-
   ngAfterViewInit() {
     this.requestDetail = new ResourceModel();
     this.requestDetail.assemblyName = 'PR';
-    this.requestDetail.className = 'TimeKeepingRequest';
+    this.requestDetail.className = 'TimeKeepingRequestBusiness';
     this.requestDetail.service = 'PR';
     this.requestDetail.method = 'GetListAsync';
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'PR';
-    this.modelResource.className = 'TimeKeepingRequest';
+    this.modelResource.className = 'TimeKeepingRequestBusiness';
     this.modelResource.service = 'PR';
     this.modelResource.method = 'GetEmployeeAsync';
     // this.modelResource.method = 'GetEmployeeResourceAsync';
@@ -229,7 +201,7 @@ export class OverTimeComponent extends UIComponent {
     this.requestSchedule = new ResourceModel();
     this.requestSchedule.service = 'PR';
     this.requestSchedule.assemblyName = 'ERM.Business.PR';
-    this.requestSchedule.className = 'TimeKeepingRequest';
+    this.requestSchedule.className = 'TimeKeepingRequestBusiness';
     this.requestSchedule.method = 'GetListAsync';
     // this.requestSchedule.idField = 'recID';
 
@@ -265,6 +237,36 @@ export class OverTimeComponent extends UIComponent {
     ];
   }
 
+  onInit() {
+    this.cacheService.valueList(this.vllStatus).subscribe((res) => {
+      if (res) {
+        this.dataVll = res.datas;
+      }
+    });
+
+    this.buttons = {
+      id: 'btnAdd',
+    };
+    this.cache.message('AC0033').subscribe((res) => {
+      if (res) {
+        this.lblAdd = res?.customName;
+      }
+    });
+    this.getUserLogin();
+    // this.getSchedule();
+    this.GetGvSetup();
+  }
+
+  getSchedule() {
+    //let resourceType = '1';
+  }
+
+  CloseStatus(dialog: DialogRef) {
+    dialog.close();
+  }
+  ValueChangeComment(evt) {
+    this.cmtStatus = evt.data;
+  }
   //#endregion
 
   clickMF(e, data) {
@@ -422,6 +424,7 @@ export class OverTimeComponent extends UIComponent {
 
   //#region CRUD
   click(evt: ButtonModel) {
+    // add by button
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
@@ -431,6 +434,7 @@ export class OverTimeComponent extends UIComponent {
   }
 
   onActionClick(event?) {
+    //add by schedule
     if (event.type == 'add') {
       this.addNew(event.data);
     }
@@ -454,29 +458,43 @@ export class OverTimeComponent extends UIComponent {
         [res, 'add', this.popupTitle, evt ? evt : null, this.userLogin],
         option
       );
-      // dialogAdd.closed.subscribe((res) => {
-      //   if (res?.event) {
-      //     // let data = {};
-      //     // data['recID'] = res.event.recID;
-      //     // data['value'] = res.event.recID;
-      //     // data['employeeID'] = res.event.employeeID;
-      //     // data['ClassName'] = 'e-child-node';
-      //     // data['fromDate'] = res.event.fromDate;
-      //     // data['toDate'] = res.event.toDate;
-      //     // data['fromTime'] = res.event.fromTime;
-      //     // data['toTime'] = res.event.toTime;
-      //     // data['emp'] = res.event.emp;
-      //     // this.view.currentView['schedule'].resourceDataSource.push(data);
-      //     // this.view.currentView['schedule'].dataSource.push(data);
-      //     // this.view.currentView['schedule'].displayResource.push(data);
-      //     // this.view.currentView.refesh();
-      //     // this.view.currentView['schedule'].refresh();
-      //     // this.detectorRef.detectChanges();
-      //     // this.view.currentView.dataService.load().subscribe();
-      //   } else {
-      //     this.view.dataService.clear();
-      //   }
-      // });
+      dialogAdd.closed.subscribe((res) => {
+        if (res?.event) {
+          // let data = {};
+          // data['recID'] = res.event.recID;
+          // data['value'] = res.event.recID;
+          // data['employeeID'] = res.event.employeeID;
+          // data['ClassName'] = 'e-child-node';
+          // data['fromDate'] = res.event.fromDate;
+          // data['toDate'] = res.event.toDate;
+          // data['fromTime'] = res.event.fromTime;
+          // data['toTime'] = res.event.toTime;
+          // data['emp'] = res.event.emp;
+          // this.view.currentView['schedule'].resourceDataSource.push(data);
+          // this.view.currentView['schedule'].dataSource.push(data);
+          // this.view.currentView['schedule'].displayResource.push(data);
+          // this.view.currentView.refesh();
+          // this.view.currentView['schedule'].refresh();
+          // this.detectorRef.detectChanges();
+          // this.view.currentView.dataService.load().subscribe();
+          let resources = {};
+          
+          resources['value'] = res?.event.employeeID;
+          resources['text'] = res?.event.employeeID;
+          resources['positionName'] = res?.event.emp.positionName;
+          // resourceHeader.events
+          resources['employeeName'] = res?.event.emp.employeeName;
+          resources['employeeID'] = res?.event.employeeID;
+          // resourceHeader.Count
+          resources['ClassName'] = 'e-child-node';
+          (this.view.currentView as any).schedule.setEventSettings();
+          (this.view.currentView as any).schedule.resourceDataSource.push(resources);
+          (this.view.currentView as any).schedule.displayResource.push(resources);
+          (this.view.currentView as any).schedule.setEventSettings();
+        } else {
+          this.view.dataService.clear();
+        }
+      });
     });
   }
 
@@ -488,20 +506,29 @@ export class OverTimeComponent extends UIComponent {
   edit(evt, data) {
     this.view.dataService.edit(data).subscribe((res) => {
       let option = new SidebarModel();
+      this.view.dataService.dataSelected = data;
       option.DataService = this.view?.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
       this.popupTitle = evt.text + ' ' + this.funcIDName;
       let dialogAdd = this.callfc.openSide(
         PopupOverTimeComponent,
-        [data, 'edit', this.popupTitle, null, this.userLogin],
+        [
+          this.view.dataService.dataSelected,
+          'edit',
+          this.popupTitle,
+          null,
+          this.userLogin,
+        ],
         option
       );
-      // dialogAdd.closed.subscribe((res) => {
-      //   if (!res?.event) {
-      //     this.view.dataService.clear();
-      //   }
-      // });
+      dialogAdd.closed.subscribe((res) => {
+        if (res?.event) {
+          this.itemSelected = res.event;
+        } else {
+          this.view.dataService.clear();
+        }
+      });
     });
   }
   copy(evt, data) {
@@ -575,6 +602,6 @@ export class OverTimeComponent extends UIComponent {
   //#endregion
 
   receiveMF(e: any) {
-    this.clickMF(e.e, e?.data);
+    this.clickMF(e?.event, e?.data);
   }
 }

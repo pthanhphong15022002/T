@@ -9,13 +9,17 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import {
   ApiHttpService,
+  CRUDService,
   FormModel,
   UIComponent,
   ViewsComponent,
 } from 'codx-core';
 import moment from 'moment';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
+import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Subject, takeUntil } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Subject, isObservable, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-view-detail-ot',
@@ -34,6 +38,7 @@ export class ViewDetailOtComponent {
   @Input() formModel?: FormModel;
   @Input() showMoreFunc?: any;
   @Input() itemSelected?: any;
+  @Input() dataService: CRUDService;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -42,11 +47,17 @@ export class ViewDetailOtComponent {
   entityName = 'PR_TimeKeepingRequest';
   gridViewName = 'grvTimeKeepingRequestOT';
   private destroy$ = new Subject<void>();
+  flagChangeMF: boolean = false;
+  runModeCheck: boolean = false;
 
-  constructor(private df: ChangeDetectorRef, 
+  constructor(
+    private df: ChangeDetectorRef,
     private api: ApiHttpService,
-    public sanitizer: DomSanitizer
-    ) {}
+    public sanitizer: DomSanitizer,
+    private codxODService: CodxOdService,
+    private codxShareService: CodxShareService,
+    private hrService: CodxHrService
+  ) {}
 
   ngOnInit(): void {
     this.tabControl = [
@@ -73,28 +84,14 @@ export class ViewDetailOtComponent {
     // }
   }
 
-  // changeDataMF(e: any, data: any) {
-  //   this.hrService.handleShowHideMF(e, data, this.formModel);
-
-  //   var funcList = this.codxODService.loadFunctionList(
-  //     this.view.formModel.funcID
-  //   );
-  //   if (isObservable(funcList)) {
-  //     funcList.subscribe((fc) => {
-  //       this.changeDataMFBefore(e, data, fc);
-  //     });
-  //   } else this.changeDataMFBefore(e, data, funcList);
-  // }
-
-  // changeDataMFBefore(e: any, data: any, fc: any) {
-  //   if (fc.runMode == '1') {
-  //     this.shareService.changeMFApproval(e, data?.unbounds);
-  //   }
-  // }
-
   loadData() {
     this.api
-      .exec<any>('PR', 'TimeKeepingRequest', 'GetByRecIDAsync', this.recID)
+      .exec<any>(
+        'PR',
+        'TimeKeepingRequestBusiness',
+        'GetByRecIDAsync',
+        this.recID
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         console.log(res);
@@ -104,7 +101,26 @@ export class ViewDetailOtComponent {
     this.clickMoreFunction.emit({ event: evt, data: data });
   }
   changeDataMF(e, data) {
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBefore(e, data, fc);
+      });
+    } else this.changeDataMFBefore(e, data, funcList);
     this.changeMF.emit({ e: e, data: data });
+  }
+
+  changeDataMFBefore(e: any, data: any, fc: any) {
+    this.flagChangeMF = true;
+
+    if (fc.runMode == '1') {
+      this.runModeCheck = true;
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    } else {
+      this.hrService.handleShowHideMF(e, data, this.view.formModel);
+    }
   }
   getHour(data) {
     if (data) {

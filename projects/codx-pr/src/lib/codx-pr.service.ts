@@ -23,7 +23,7 @@ export class CodxPrService {
     return this.api.execSv(
       'PR',
       'ERM.Business.PR',
-      'TimeKeepingRequest',
+      'TimeKeepingRequestBusiness',
       'ValidateBeforeReleaseAsync',
       recID
     );
@@ -35,7 +35,7 @@ export class CodxPrService {
     return this.api.execSv<any>(
       'PR',
       'PR',
-      'TimeKeepingRequest',
+      'TimeKeepingRequestBusiness',
       'UpdateStatusAsync',
       data
     );

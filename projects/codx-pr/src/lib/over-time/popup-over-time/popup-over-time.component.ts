@@ -186,10 +186,10 @@ export class PopupOverTimeComponent extends UIComponent {
     }
   }
   validateFromToTime(fromTime: any, toTime: any) {
-    if (fromTime != null && toTime != null) {
+    let tmpDay = new Date(this.data.createdOn);
+
+    if (fromTime != null) {
       let tempFromTime = fromTime.split(':');
-      let tempToTime = toTime.split(':');
-      let tmpDay = new Date(this.data.createdOn);
 
       this.data.fromTime = new Date(
         tmpDay.getFullYear(),
@@ -199,6 +199,9 @@ export class PopupOverTimeComponent extends UIComponent {
         tempFromTime[1],
         0
       );
+    }
+    if (toTime != null) {
+      let tempToTime = toTime.split(':');
 
       this.data.toTime = new Date(
         tmpDay.getFullYear(),
@@ -226,6 +229,16 @@ export class PopupOverTimeComponent extends UIComponent {
   // }
 
   validateForm() {
+    if (!this.data.employeeID) {
+      console.log(this.grView['employeeID']);
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + 'Nhân viên' + '"'
+      );
+      return false;
+    }
+
     if (!this.data.fromDate) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -246,15 +259,42 @@ export class PopupOverTimeComponent extends UIComponent {
       this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
       return false;
     }
-    if (!this.data.employeeID) {
-      console.log(this.grView['employeeID']);
+    if (this.registerForm == '1') {
+      if (!this.data.fromTime) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['fromTime']['headerText'] + '"'
+        );
+        return false;
+      }
+      if (!this.data.toTime) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['toTime']['headerText'] + '"'
+        );
+        return false;
+      }
+    } else {
+      if (!this.data.hours) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['hours']['headerText'] + '"'
+        );
+        return false;
+      }
+    }
+    if (!this.data.reason) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
-        '"' + 'Nhân viên' + '"'
+        '"' + this.grView['reason']['headerText'] + '"'
       );
       return false;
-    } else return true;
+    }
+    return true;
   }
 
   beforeSave(option: RequestOption) {
@@ -265,7 +305,7 @@ export class PopupOverTimeComponent extends UIComponent {
     } else {
       option.methodName = 'EditAsync';
     }
-    option.className = 'TimeKeepingRequest';
+    option.className = 'TimeKeepingRequestBusiness';
     option.assemblyName = 'PR';
     option.service = 'PR';
     option.data = this.data;
@@ -273,11 +313,20 @@ export class PopupOverTimeComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.validateForm() === true) {
-      this.form
+    // if (this.data.fromDate > this.data.toDate) {
+    //   this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
+    //   return;
+    // }
+    // this.form?.formGroup.patchValue(this.data);
+    // if (this.form?.formGroup.invalid == true) {
+    //   this.hrService.notifyInvalid(this.form?.formGroup, this.formModel);
+    //   return;
+    // }
+    if (this.validateForm()) {
+      this.dialogRef.dataService
         .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, true)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(async (res) => {
+        .subscribe((res) => {
           this.dialogRef && this.dialogRef.close(res.save);
         });
     }
