@@ -543,7 +543,7 @@ export class CM_DealsCompetitors {
 }
 
 export class CM_Cases {
-  recID: string;
+  recID: string = Util.uid();
   caseNo: string;
   caseName: string;
   caseType: string = '2';

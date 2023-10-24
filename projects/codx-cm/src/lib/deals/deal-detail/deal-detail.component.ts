@@ -41,7 +41,6 @@ export class DealDetailComponent implements OnInit {
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
-  @Input() formModelCustomer: any;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();

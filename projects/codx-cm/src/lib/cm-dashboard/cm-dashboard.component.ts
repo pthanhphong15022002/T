@@ -1277,19 +1277,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   changeBusIns(ele: any, obj: any) {
     if (ele.id == this.tabActiveBusIns) return;
     this.tabActiveBusIns = ele.id;
-    if (ele.id == 'btBussinessLine' && Object.keys(obj).length) {
+    if (ele.id == 'btBussinessLine') {
       !obj.chart2.viewIndus.classList.contains('d-none') &&
         obj.chart2.viewIndus.classList.add('d-none');
+
       obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.remove('d-none');
 
       !obj.chart2.pie2.element.classList.contains('d-none') &&
         obj.chart2.pie2.element.classList.add('d-none');
+
       obj.chart1.pie1.element.classList.contains('d-none') &&
         obj.chart1.pie1.element.classList.remove('d-none');
       obj.chart1.pie1.refresh();
     }
-    if (ele.id == 'btIndustries' && Object.keys(obj).length) {
+    // && Object.keys(obj).length
+    if (ele.id == 'btIndustries') {
       !obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.add('d-none');
 

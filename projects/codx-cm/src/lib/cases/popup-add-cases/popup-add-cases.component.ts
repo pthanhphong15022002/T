@@ -271,7 +271,20 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
-    this.executeSaveData();
+   this.actionSaveBeforeSaveAttachment();
+  }
+  async actionSaveBeforeSaveAttachment() {
+    if (this.attachment?.fileUploadList?.length > 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          var countAttack = 0;
+          countAttack = Array.isArray(res) ? res.length : 1;
+          this.executeSaveData();
+        }
+      });
+    } else {
+      this.executeSaveData();
+    }
   }
   cbxChange($event, field) {
     if ($event) {
@@ -662,34 +675,6 @@ export class PopupAddCasesComponent
     return date1 < date2;
   }
 
-  // //#endregion
-
-  // isRequired(field:string){
-  //   return this.gridViewSetup[field]?.h
-  // }
-
-  // setTitle(e: any) {
-  //     // if (this.autoName) {
-  //     //   this.title = this.titleAction + ' ' + this.autoName;
-  //     // } else {
-  //     //   this.title = this.titleAction + ' ' + e;
-  //     //   this.autoName = e;
-  //     // }
-  //     this.title = this.titleAction;
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // setTitle(e: any) {
-  //     // if (this.autoName) {
-  //     //   this.title = this.titleAction + ' ' + this.autoName;
-  //     // } else {
-  //     //   this.title = this.titleAction + ' ' + e;
-  //     //   this.autoName = e;
-  //     // }
-  //     this.title = this.titleAction;
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
   addFile(e) {
     this.attachment.uploadFile();
   }
@@ -699,6 +684,8 @@ export class PopupAddCasesComponent
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
+
+
   // onSave(){
 
   // }

@@ -119,7 +119,7 @@
 
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="5" style="overflow: hidden">
+  <div class="w-100 h-100 position-relative" id="5" style="overflow: hidden">
     <div>
       <codx-label
         class="fs-5 fw-bold"
@@ -174,11 +174,11 @@
         </div>
       </div>
     </div>
-    <div class="w-100">
+    <div class="w-100 position-absolute" style="bottom: 0 px">
       <div #viewBus>
         <ejs-treemap
           #pie1
-          class="w-100"
+          class="h-100 w-100"
           style="height: 90% !important; width: 100% !important"
           [dataSource]="dataSourceBussnessLine ?? []"
           weightValuePath="quantity"
@@ -198,7 +198,7 @@
       <div #viewIndus class="d-none">
         <ejs-treemap
           #pie2
-          class="w-100"
+          class="h-100 w-100"
           style="height: 90% !important; width: 100% !important"
           [dataSource]="dataSourceIndustry ?? []"
           weightValuePath="quantity"
@@ -288,7 +288,6 @@
           <ejs-chart
             #lineSuc
             id="chart-container"
-            style="height: 90% !important; width: 100% !important"
             class="w-100"
             [primaryXAxis]="primaryXAxis"
             [primaryYAxis]="primaryYAxis"
@@ -314,7 +313,6 @@
           <ejs-chart
             #lineFail
             id="chart-container"
-            style="height: 90% !important; width: 100% !important"
             class="w-100"
             [primaryXAxis]="primaryXAxis"
             [primaryYAxis]="primaryYAxis"
