@@ -242,7 +242,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isBussinessLine = true;
   tabActiveBusIns: string = 'btBussinessLine';
   //status or
-  isStatus = false;
+  isStatus = true;
 
   //ReasonSuscess
   isReasonSuscess = true;
@@ -387,6 +387,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   countSuccess = 0;
   countFail = 0;
   chartBussnessLine: any;
+  vllPy: any;
 
   //end
   constructor(
@@ -763,6 +764,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     this.cache.valueList('CRM049').subscribe((vl) => {
       if (vl) {
+        this.vllPy = vl.datas;
         this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
       }
     });
@@ -1099,19 +1101,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // --------------------------------------------//
   //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
-  changeMySales(dataSet) {
-    if (dataSet?.lenght == 0) return;
-    this.countNew = dataSet.filter(
+  changeMySales(datas) {
+    //datas[0] : Cơ hôi //data[1] : Leads
+    let dataSetDeals = datas[0];
+    let dataSetLead = datas[1];
+    if (dataSetDeals?.lenght == 0) return;
+    this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
     )?.length;
-    this.countProcessing = dataSet.filter((x) => x.status == '2')?.length;
-    let dataSuccess = dataSet.filter((x) => x.status == '3');
+    this.countProcessing = dataSetDeals.filter((x) => x.status == '2')?.length;
+    let dataSuccess = dataSetDeals.filter((x) => x.status == '3');
     this.countSuccess = dataSuccess?.length;
-    let dataFails = dataSet.filter((x) => x.status == '5');
+    let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
 
-    this.getBusinessLine(dataSet);
-    this.getIndustries(dataSet);
+    this.getBusinessLine(dataSetDeals);
+    this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
   }
 
@@ -1272,6 +1277,71 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         (a, b) => a.quantity - b.quantity
       );
     }
+  }
+  //Loi cai chuyen doi ko nằm trong khoảng time tìm kiếm
+  getChartConversionRate(dataLeads, dataDeals) {
+    // EntityName = "CM_Deals",
+    // Value = "4",
+    // Type = "Status",
+    // Name = vllListData?.FirstOrDefault(x => x.Value == "4")?.Text,
+    // Quantity = quatityDealsCVSuc
+    let objectLead = {
+      value: '1',
+      name: this.getNamePy('1'),
+      quantity: dataLeads?.length ?? 0,
+    };
+    this.dataSourcePyStatus.push(objectLead);
+    this.dataSourcePyStage.push(objectLead);
+    //du dieu kien
+    let leadStatus311 = {
+      value: '1',
+      name: this.getNamePy('2'),
+      quantity:
+        dataLeads?.filter((x) => x.status == '3' || x.status == '11').length ??
+        0,
+    };
+    this.dataSourcePyStatus.push(leadStatus311);
+    this.dataSourcePyStage.push(leadStatus311);
+    //da chuyen thanh co hoi
+    let dealIDs = dataLeads.map((x) => x.dealID);
+    let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
+    let leadToDeals = {
+      value: '3',
+      name: this.getNamePy('3'),
+      quantity: dealsOfLead?.length ?? 0,
+      items: [],
+    };
+    let items = [];
+    //theo status Code
+    let statusCode = this.groupBy(dealsOfLead, 'statusCodeID');
+    if (statusCode) {
+      for (let key in statusCode) {
+        let item = {
+          value: '',
+          name: statusCode[key][0].statusCodeName,
+          quantity: statusCode[key].length ?? 0,
+        };
+        items.push(item);
+      }
+    }
+    if (items?.length > 0) {
+      items = items.sort((a, b) => b.quantity - a.quantity);
+      items.forEach((x, idx) => {
+        x.value = (idx + 1).toString();
+      });
+      leadToDeals.items = items;
+    }
+    this.dataSourcePyStatus.push(leadToDeals);
+    //da thanh cong
+    let dealsSuc = {
+      value: '4',
+      name: this.getNamePy('4'),
+      quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
+    };
+    this.dataSourcePyStatus.push(dealsSuc);
+  }
+  getNamePy(value) {
+    return this.vllPy.find((x) => x.value == value)?.text;
   }
 
   changeBusIns(ele: any, obj: any) {
