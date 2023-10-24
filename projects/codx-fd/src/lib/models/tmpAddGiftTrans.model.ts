@@ -16,6 +16,7 @@ export class tmpAddGiftTrans{
     public FunctionID:string ;
     public EntityName:string ;
     public EntityPer:string ;
+    public ItemType: string;
 
 
     public constructor(){
@@ -24,6 +25,7 @@ export class tmpAddGiftTrans{
         this.UserID = "";
         this.Situation = "";
         this.Status = "1";
+        this.ItemType = "1";
     }
 
 }

@@ -129,15 +129,26 @@ export class EPApprovalComponent extends UIComponent {
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   getBaseVariable() {
-    if (this.funcID == null) {
+    
       this.funcID = this.activatedRoute.snapshot.params['funcID'];
       this.cache.functionList(this.funcID).subscribe(funcList=>{
         if(funcList){
           this.crrEntityName= funcList?.entityName;
+          switch (this.crrEntityName) {
+            case EPCONST.ENTITY.R_Approval:
+              this.resourceType = EPCONST.VLL.ResourceType.Room;
+              break;
+            case EPCONST.ENTITY.C_Approval:
+              this.resourceType = EPCONST.VLL.ResourceType.Car;
+              break;
+            case EPCONST.ENTITY.S_Approval:
+              this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+              break;
+          }
           this.detectorRef.detectChanges();
         }
       });
-    }
+    
     if (this.queryParams == null) {
       this.queryParams = this.router.snapshot.queryParams;
     }
@@ -148,17 +159,7 @@ export class EPApprovalComponent extends UIComponent {
       }
     });
 
-    switch (this.crrEntityName) {
-      case EPCONST.ENTITY.R_Approval:
-        this.resourceType = EPCONST.VLL.ResourceType.Room;
-        break;
-      case EPCONST.ENTITY.C_Approval:
-        this.resourceType = EPCONST.VLL.ResourceType.Car;
-        break;
-      case EPCONST.ENTITY.S_Approval:
-        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
-        break;
-    }
+    
   }
   getCacheData(): void {
     this.cache
@@ -265,14 +266,26 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
+  click(evt: ButtonModel) {
+    //this.popupTitle = evt?.text + ' ' + this.funcIDName;
+    switch (evt?.id) {
+      default:
+        let event = evt?.data;
+        let data = evt?.model;
+        if (!data) data = this.view?.dataService?.dataSelected;
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.view?.formModel,
+          this.view?.dataService,
+          this
+        );
+        break;
+    }
+  }
   viewChanged(evt: any) {
-    this.funcID = this.activatedRoute.snapshot.params['funcID'];
-    this.cache.functionList(this.funcID).subscribe(funcList=>{
-      if(funcList){
-        this.crrEntityName= funcList?.entityName;
-        this.detectorRef.detectChanges();
-      }
-    });
+    
     this.getBaseVariable();
     this.getView();
   }
@@ -457,6 +470,24 @@ export class EPApprovalComponent extends UIComponent {
           this.assignDriver(data);
         }
         break;
+        default:
+          //Biến động , tự custom
+          var customData = {
+            refID: '',
+            refType: this.formModel?.entityName,
+            dataSource: data,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            evt,
+            data,
+            null,
+            this.formModel,
+            this.view?.dataService,
+            this,
+            customData
+          );
+          break;
     }
   }
 
@@ -488,12 +519,13 @@ export class EPApprovalComponent extends UIComponent {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
           this.notificationsService.notifyCode('SYS034'); //đã duyệt          
           //nếu bước duyệt VPP hiện tại là Cấp phát thì đổi IssueStatus
-          if (data?.stepType != 'I') {
-            data.approveStatus = '5';
-          }
-          else{
-            data.issueStatus = '3';            
-          }
+            data.approveStatus = res?.returnStatus ?? '5';
+          // if (data?.stepType != 'I') {
+          //   data.approveStatus = '5';
+          // }
+          // else{
+          //   data.issueStatus = '3';            
+          // }
           this.view.dataService.update(data).subscribe();
         } else {
           this.notificationsService.notifyCode(res?.msgCodeError);

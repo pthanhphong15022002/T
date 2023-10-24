@@ -17,6 +17,7 @@
         [datas]="datasDeals1"
         [isEditMode]="isEditMode"
         [cellSpacing]="[10, 10]"
+        [columns]="60"
       ></codx-dashboard>
     </ng-container>
 
@@ -27,6 +28,7 @@
         [datas]="datasDeals2"
         [isEditMode]="isEditMode"
         [cellSpacing]="[10, 10]"
+        [columns]="60"
       ></codx-dashboard>
     </ng-container>
 
@@ -116,9 +118,8 @@
 </ng-template>
 
 <!-- Tỷ lệ phân bổ cơ hội theo dòng sản phẩm -->
-<!-- title="Tỷ lệ phân bổ cơ hội theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div class="w-100 h-100" id="5" style="overflow: hidden">
+  <div class="w-100 h-100 position-relative" id="5" style="overflow: hidden">
     <div>
       <codx-label
         class="fs-5 fw-bold"
@@ -137,9 +138,9 @@
             #ele1
             checked
             (change)="
-              changeBusIns(ele1, {
-                chart1: { pie1 },
-                chart2: { pie2 }
+              changeChart(ele1, {
+                chart1: { view: viewBus, temp: pie1 },
+                chart2: { view: viewIndus, temp: pie2 }
               })
             "
           />
@@ -157,9 +158,9 @@
             name="align1"
             #ele2
             (change)="
-              changeBusIns(ele2, {
-                chart1: { pie1 },
-                chart2: { pie2 }
+              changeChart(ele2, {
+                chart1: { view: viewBus, temp: pie1 },
+                chart2: { view: viewIndus, temp: pie2 }
               })
             "
           />
@@ -173,51 +174,58 @@
         </div>
       </div>
     </div>
-    <div class="w-100">
-      <ejs-treemap
-        #pie1
-        [style]="'width:100% !important'"
-        class="w-100"
-        [dataSource]="dataSourceBussnessLine ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="palette"
-        [leafItemSettings]="leafItemSettings"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${businessLineName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
-
-      <ejs-treemap
-        #pie2
-        class="w-100 d-none"
-        [dataSource]="dataSourceIndustry ?? []"
-        weightValuePath="quantity"
-        rangeColorValuePath="quantity"
-        [palette]="paletteIndustry"
-        [leafItemSettings]="leafItemSettingsIns"
-        [tooltipSettings]="{
-          visible: true,
-          format:
-            '${industryName}<br>${quantity} ' +
-            this.titLeModule +
-            '-(${percentage} %)'
-        }"
-      >
-      </ejs-treemap>
+    <div class="w-100 position-absolute" style="bottom: 0 px">
+      <div #viewBus>
+        <ejs-treemap
+          #pie1
+          class="h-100 w-100"
+          style="height: 90% !important; width: 100% !important"
+          [dataSource]="dataSourceBussnessLine ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="palette"
+          [leafItemSettings]="leafItemSettings"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${businessLineName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
+        >
+        </ejs-treemap>
+      </div>
+      <div #viewIndus class="d-none">
+        <ejs-treemap
+          #pie2
+          class="h-100 w-100"
+          style="height: 90% !important; width: 100% !important"
+          [dataSource]="dataSourceIndustry ?? []"
+          weightValuePath="quantity"
+          rangeColorValuePath="quantity"
+          [palette]="paletteIndustry"
+          [leafItemSettings]="leafItemSettingsIns"
+          [tooltipSettings]="{
+            visible: true,
+            format:
+              '${industryName}<br>${quantity} ' +
+              this.titLeModule +
+              '-(${percentage} %)'
+          }"
+        >
+        </ejs-treemap>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <!-- Thống kê tỷ lệ thành công thất bại trong năm theo dòng sản phẩm -->
-<!-- title="Thống kê tỷ lệ thành công ,thất bại trong năm theo dòng sản phẩm" -->
 <ng-template #templateDeals>
-  <div class="chartBusinessLines w-100 h-100" id="6" style="overflow: hidden">
+  <div
+    class="chartBusinessLines w-100 h-100 position-relative"
+    id="6"
+    style="overflow: hidden"
+  >
     <codx-label
       id="chartBusinessLinesHeader"
       class="fs-5 fw-bold"
@@ -227,80 +235,112 @@
       default="Thống kê tỷ lệ thành công, thất bại trong năm theo dòng sản phẩm"
     ></codx-label>
     <div id="chartBusinessLinesButton" class="mt-3">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isSuccess ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btSuccess"
-            formModel=""
-            default="Thành công"
-            (click)="clickButton('btSuccess')"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="!isSuccess ? 'button-selected' : 'button-no-selected'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btFail"
-            formModel=""
-            default="Thất bại"
-            (click)="clickButton('btFail')"
-          ></codx-label>
+      <div class="d-flex justify-content-center h-5">
+        <div id="group3" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btSuccess"
+            name="lineSelect"
+            #btSuccess
+            checked
+            (change)="
+              changeChart(btSuccess, {
+                chart1: { view: viewLineSuc, temp: lineSuc },
+                chart2: { view: viewLineFail, temp: lineFail }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btSuccess"
+            ><codx-label
+              name="btSuccess"
+              formModel=""
+              default="Thành công"
+            ></codx-label
+          ></label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btFail"
+            name="lineSelect"
+            #btFail
+            (change)="
+              changeChart(btFail, {
+                chart1: { view: viewLineSuc, temp: lineSuc },
+                chart2: { view: viewLineFail, temp: lineFail }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btFail">
+            <codx-label
+              name="btFail"
+              formModel=""
+              default="Thất bại"
+            ></codx-label
+          ></label>
         </div>
       </div>
     </div>
 
-    <ng-container
-      *ngIf="dataDashBoard?.countsBussinessLines?.length > 0; else noData"
-    >
-      <div class="w-100" style="height: 90%">
-        <ejs-chart
-          id="chart-container"
-          class="w-100"
-          [primaryXAxis]="primaryXAxis"
-          [primaryYAxis]="primaryYAxis"
-          [title]=""
-          [tooltip]="tooltipChartLine"
-        >
-          <e-series-collection>
-            <ng-container
-              *ngFor="let item of dataDashBoard?.countsBussinessLines"
-            >
-              <e-series
-                [dataSource]="
-                  isSuccess ? item?.chartDataSuscess : item?.chartDataFail ?? []
-                "
-                type="Line"
-                xName="month"
-                yName="percentage"
-                [name]="item.businessLineName"
-                width="3"
-                [fillColor]="item.color"
-              ></e-series>
-
-              <!-- <e-series
-                *ngIf="!isSuccess"
-                [dataSource]="item?.chartDataFail ?? []"
-                type="Line"
-                xName="month"
-                yName="percentage"
-                [name]="item.businessLineName"
-                width="3"
-                [fillColor]="item.color"
-              ></e-series> -->
-            </ng-container>
-          </e-series-collection>
-        </ejs-chart>
+    <ng-container>
+      <div class="w-100 position-absolute" style="bottom: 0 px">
+        <div #viewLineSuc>
+          <ejs-chart
+            #lineSuc
+            id="chart-container"
+            class="w-100"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [title]=""
+            [tooltip]="tooltipChartLine"
+          >
+            <e-series-collection>
+              <ng-container *ngFor="let item of chartBussnessLine">
+                <e-series
+                  [dataSource]="item?.chartDataSuscess"
+                  type="Line"
+                  xName="month"
+                  yName="percentage"
+                  [name]="item.businessLineName"
+                  width="3"
+                  [fillColor]="item.color"
+                ></e-series>
+              </ng-container>
+            </e-series-collection>
+          </ejs-chart>
+        </div>
+        <div #viewLineFail class="d-none">
+          <ejs-chart
+            #lineFail
+            id="chart-container"
+            class="w-100"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [title]=""
+            [tooltip]="tooltipChartLine"
+          >
+            <e-series-collection>
+              <ng-container *ngFor="let item of chartBussnessLine">
+                <e-series
+                  #lineFail
+                  [dataSource]="item?.chartDataFail"
+                  type="Line"
+                  xName="month"
+                  yName="percentage"
+                  [name]="item.businessLineName"
+                  width="3"
+                  [fillColor]="item.color"
+                ></e-series>
+              </ng-container>
+            </e-series-collection>
+          </ejs-chart>
+        </div>
       </div>
     </ng-container>
   </div>
 </ng-template>
 
 <!-- Top nhân viên có nhiều cơ hội thành công nhất -->
-<!-- title="Top nhân viên có nhiều cơ hội thành công nhất" -->
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="7" style="overflow-y: hiden">
     <codx-label
@@ -310,26 +350,26 @@
       gridViewName="grvCMMyDashboard"
       default="Top nhân viên có nhiều cơ hội thành công nhất"
     ></codx-label>
-    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
+    <div class="mt-5">
       <div class="d-flex justify-content-center h-10">
         <div id="group2" class="btn-group">
           <input
             class="btn-check"
             type="radio"
-            id="btnMax"
+            id="btMax"
             name="alignMaxMin"
             #eleMax
             checked
             (change)="
-              changeMaxMin(eleMax, {
-                chart1: { maxView },
-                chart2: { minView }
+              changeChart(eleMax, {
+                chart1: { view: maxView },
+                chart2: { view: minView }
               })
             "
           />
-          <label class="btn btn-outline-primary" for="btnMax">
+          <label class="btn btn-outline-primary" for="btMax">
             <codx-label
-              name="btnMax"
+              name="btMax"
               formModel=""
               default="Cao nhất"
             ></codx-label>
@@ -337,19 +377,19 @@
           <input
             class="btn-check"
             type="radio"
-            id="btnMin"
+            id="btMin"
             name="alignMaxMin"
             #eleMin
             (change)="
-              changeMaxMin(eleMin, {
-                chart1: { maxView },
-                chart2: { minView }
+              changeChart(eleMin, {
+                chart1: { view: maxView },
+                chart2: { view: minView }
               })
             "
           />
-          <label class="btn btn-outline-primary" for="btnMin">
+          <label class="btn btn-outline-primary" for="btMin">
             <codx-label
-              name="btnMin"
+              name="btMin"
               formModel=""
               default="Thấp nhất"
             ></codx-label>
@@ -358,16 +398,16 @@
       </div>
     </div>
 
-    <div class="mt-3">
-      <!-- <ng-container *ngIf="isMax">
-        <ng-container *ngIf="maxOwners?.length > 0; else noData"> -->
+    <div class="mt-3" style="overflow-y: auto; max-height: 70%">
       <div #maxView class="">
         <div
           *ngFor="let ownerCount of maxOwners; let i = index"
           class="d-flex align-items-center justify-content-end cursor-pointer"
           [title]="ownerCount.objectName"
         >
-          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
+          </div>
           <div
             class="owners-top"
             style="color: #000000"
@@ -378,17 +418,16 @@
           </div>
         </div>
       </div>
-      <!-- </ng-container> -->
-      <!-- </ng-container>
-      <ng-container *ngIf="!isMax">
-        <ng-container *ngIf="minOwners?.length > 0; else noData"> -->
+
       <div #minView class="d-none">
         <div
           *ngFor="let ownerCount of minOwners; let i = index"
           class="d-flex align-items-center justify-content-end cursor-pointer"
           [title]="ownerCount.objectName"
         >
-          <div class="fw-bold me-2">{{ ownerCount?.quantity }}</div>
+          <div class="fw-bold me-2">
+            {{ ownerCount?.quantity }}
+          </div>
           <div
             class="owners-top"
             style="color: #000000; background-color: aqua"
@@ -591,74 +630,121 @@
 
     <div id="chartCoverionButton" class="mt-3">
       <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isStatus ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btStatus"
-            formModel=""
-            default="Status"
-            (click)="clickButton('btStatus')"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="!isStatus ? 'button-selected' : 'button-no-selected'"
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-        >
-          <codx-label
-            name="btStage"
-            formModel=""
-            default="Stage"
-            (click)="clickButton('btStage')"
-          ></codx-label>
+        <div class="d-flex justify-content-center">
+          <div id="group4" class="btn-group">
+            <input
+              class="btn-check"
+              type="radio"
+              id="btStatus"
+              name="chartPy"
+              #btStatus
+              checked
+              (change)="
+                changeChart(btStatus, {
+                  chart1: { view: viewStatus, temp: pyramidStatus },
+                  chart2: { view: viewStages, temp: pyramidStages }
+                })
+              "
+            />
+            <label class="btn btn-outline-primary" for="btStatus"
+              ><codx-label
+                name="btStatus"
+                formModel=""
+                default="Status"
+              ></codx-label
+            ></label>
+            <input
+              class="btn-check"
+              type="radio"
+              id="btStages"
+              name="chartPy"
+              #btStages
+              (change)="
+                changeChart(btStages, {
+                  chart1: { view: viewStatus, temp: pyramidStatus },
+                  chart2: { view: viewStages, temp: pyramidStages }
+                })
+              "
+            />
+            <label class="btn btn-outline-primary" for="btStages">
+              <codx-label
+                name="btStages"
+                formModel=""
+                default="Stages"
+              ></codx-label
+            ></label>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      style="height: 100% !important"
-      *ngIf="
-        isStatus
-          ? dataSourcePyStatus?.length > 0
-          : dataSourcePyStage?.length > 0;
-        else noData
-      "
-    >
-      <!-- <div class="control-section">
-        <div> tooltipPy -->
-      <ejs-accumulationchart
-        id="pyramidcontainer"
-        #pyramid
-        style="height: 100%"
-        [legendSettings]="legendSettingsPy"
-        [tooltip]="{
-          header: '',
-          enable: true,
-          format: '${point.tooltip}'
-        }"
-        (pointRender)="formatCrrView($event)"
-      >
-        <e-accumulation-series-collection>
-          <e-accumulation-series
-            name="ConversionRate"
-            [dataSource]="isStatus ? dataSourcePyStatus : dataSourcePyStage"
-            xName="name"
-            yName="quantity"
-            [neckWidth]="neckWidth"
-            [neckHeight]="neckHeight"
-            [gapRatio]="gapRatio"
-            [emptyPointSettings]="emptyPointSettings"
-            width="60%"
-            height="100%"
-            [explode]="explode"
-            [dataLabel]="dataLabel"
-            type="Funnel"
+      <div style="height: 100% !important">
+        <div #viewStatus>
+          <ejs-accumulationchart
+            id="pyramidcontainer"
+            #pyramidStatus
+            style="height: 90%"
+            [legendSettings]="legendSettingsPy"
+            [tooltip]="{
+              header: '',
+              enable: true,
+              format: '${point.tooltip}'
+            }"
+            (pointRender)="formatCrrView($event)"
           >
-          </e-accumulation-series>
-        </e-accumulation-series-collection>
-      </ejs-accumulationchart>
-      <!-- </div>
-      </div> -->
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="ConversionRate"
+                [dataSource]="dataSourcePyStatus"
+                xName="name"
+                yName="quantity"
+                [neckWidth]="neckWidth"
+                [neckHeight]="neckHeight"
+                [gapRatio]="gapRatio"
+                [emptyPointSettings]="emptyPointSettings"
+                width="60%"
+                height="100%"
+                [explode]="explode"
+                [dataLabel]="dataLabel"
+                type="Funnel"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+        </div>
+
+        <div #viewStages class="d-none">
+          <ejs-accumulationchart
+            id="pyramidcontainer"
+            #pyramidStages
+            style="height: 90%"
+            [legendSettings]="legendSettingsPy"
+            [tooltip]="{
+              header: '',
+              enable: true,
+              format: '${point.tooltip}'
+            }"
+            (pointRender)="formatCrrView($event)"
+          >
+            <e-accumulation-series-collection>
+              <e-accumulation-series
+                name="ConversionRate"
+                [dataSource]="dataSourcePyStage"
+                xName="name"
+                yName="quantity"
+                [neckWidth]="neckWidth"
+                [neckHeight]="neckHeight"
+                [gapRatio]="gapRatio"
+                [emptyPointSettings]="emptyPointSettings"
+                width="60%"
+                height="100%"
+                [explode]="explode"
+                [dataLabel]="dataLabel"
+                type="Funnel"
+              >
+              </e-accumulation-series>
+            </e-accumulation-series-collection>
+          </ejs-accumulationchart>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -795,25 +881,62 @@
 <!-- SALE TAGET =>CMD001  templateTarget-->
 <!-- Tem TOp sale Tager -->
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="1" title=""></div>
+  <div class="w-100 h-100" id="1" title="">111</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="2" title=""></div>
+  <div class="w-100 h-100" id="2" title="">222</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="3" title=""></div>
+  <div class="w-100 h-100" id="3" title="">333</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="4" title=""></div>
+  <div class="w-100 h-100" id="4" title="">444</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="5" title=""></div>
+  <div class="w-100 h-100" id="5" title="">555</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="6" title=""></div>
+  <div class="w-100 h-100" id="6" title="">666</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="7" title=""></div>
+  <div class="w-100 h-100" id="7" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesTrend"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales trend - Last 12 months"
+    ></codx-label>
+    <ng-container *ngIf="lstMonthsSeries?.length > 0; else noData">
+      <ejs-chart
+        style="display: block"
+        [chartArea]="chartArea"
+        [width]="'50%'"
+        id="chartcontainer"
+        [primaryXAxis]="primaryXAxisY"
+        [primaryYAxis]="primaryYAxisY"
+        [legendSettings]="legendSeri"
+        [tooltip]="toolTipSeri"
+        (textRender)="textSeriRender($event)"
+      >
+        <e-series-collection>
+          <e-series
+            [dataSource]="lstMonthsSeries"
+            type="StackingColumn"
+            xName="month"
+            yName="expected"
+            name="Doanh thu dự kiến"
+            opacity="0.75"
+            [cornerRadius]="cornerRadius"
+            columnWidth="0.4"
+            [paretoOptions]="paretoOptions"
+            width="2"
+          >
+          </e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #templateTarget>
@@ -826,114 +949,160 @@
       default="Sales targets"
     ></codx-label>
     <ng-container *ngIf="lstQuarters?.length > 0; else noData">
-      <div class="w-100 d-flex justify-content-center">
+      <ejs-bulletchart
+        align="center"
+        id="revenue"
+        width="800px"
+        height="70%"
+        style="display: block; text-align: center"
+        valueField="value"
+        targetField="target"
+        [minimum]="minimumBullet"
+        [maximum]="maximumBulletQ0"
+        [interval]="intervalQ0"
+        [width]="'800px'"
+        height="70%"
+        [title]="titleQ0"
+        (tooltipRender)="tooltipRender($event, '0')"
+        [dataSource]="dataBulletQ0s"
+        [animation]="{ enable: false }"
+        [labelFormat]="labelFormatQ0"
+        (load)="load($event)"
+        [tooltip]="tooltipBullet0"
+        valueFill="#FF4500"
+        [dataLabel]="dataLabelBuleet"
+      >
+        <e-bullet-range-collection>
+          <e-bullet-range
+            [end]="dealValueWonQ0"
+            color="#FF4500"
+          ></e-bullet-range>
+          <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
+        </e-bullet-range-collection>
+      </ejs-bulletchart>
+      <div class="row">
         <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
           valueField="value"
           targetField="target"
-          [title]="titleQ0"
-          width="800px"
-          height="70%"
           [minimum]="minimumBullet"
-          [maximum]="maximumBulletQ0"
-          [interval]="intervalQ0"
-          [dataSource]="dataBulletQ0s"
+          [maximum]="maximumBulletQ1"
+          [interval]="intervalQ1"
+          [title]="titleQ1"
+          (tooltipRender)="tooltipRender($event, '1')"
+          [dataSource]="dataBulletQ1s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ1"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet1"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
         >
           <e-bullet-range-collection>
             <e-bullet-range
-              [end]="dealValueWonQ0"
-              color="##FF4500"
+              [end]="dealValueWonQ1"
+              color="#FF4500"
             ></e-bullet-range>
-            <e-bullet-range [end]="targetQ0" color="#d8d8d8"></e-bullet-range>
+            <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ2"
+          [interval]="intervalQ2"
+          [title]="titleQ2"
+          (tooltipRender)="tooltipRender($event, '2')"
+          [dataSource]="dataBulletQ2s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ2"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet2"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ2"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
           </e-bullet-range-collection>
         </ejs-bulletchart>
       </div>
       <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ1"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ1"
-            [interval]="intervalQ1"
-            [dataSource]="dataBulletQ1s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ1"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ1" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ2"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ2"
-            [interval]="intervalQ2"
-            [dataSource]="dataBulletQ2s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ2"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ2" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ3"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ3"
-            [interval]="intervalQ3"
-            [dataSource]="dataBulletQ3s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ3"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-          <ejs-bulletchart
-            valueField="value"
-            targetField="target"
-            [title]="titleQ4"
-            width="400px"
-            height="70%"
-            [minimum]="minimumBullet"
-            [maximum]="maximumBulletQ4"
-            [interval]="intervalQ4"
-            [dataSource]="dataBulletQ4s"
-          >
-            <e-bullet-range-collection>
-              <e-bullet-range
-                [end]="dealValueWonQ4"
-                color="##FF4500"
-              ></e-bullet-range>
-              <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
-            </e-bullet-range-collection>
-          </ejs-bulletchart>
-        </div>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ3"
+          [interval]="intervalQ3"
+          [title]="titleQ3"
+          (tooltipRender)="tooltipRender($event, '3')"
+          [dataSource]="dataBulletQ3s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ3"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet3"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ3"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ3" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
+        <ejs-bulletchart
+          class="col-6"
+          align="center"
+          id="revenue"
+          width="500px"
+          height="70%"
+          style="display: block; text-align: center"
+          valueField="value"
+          targetField="target"
+          [minimum]="minimumBullet"
+          [maximum]="maximumBulletQ4"
+          [interval]="intervalQ4"
+          [title]="titleQ4"
+          (tooltipRender)="tooltipRender($event, '4')"
+          [dataSource]="dataBulletQ4s"
+          [animation]="{ enable: false }"
+          [labelFormat]="labelFormatQ4"
+          (load)="load($event)"
+          [tooltip]="tooltipBullet4"
+          valueFill="#FF4500"
+          [dataLabel]="dataLabelBuleet"
+        >
+          <e-bullet-range-collection>
+            <e-bullet-range
+              [end]="dealValueWonQ4"
+              color="#FF4500"
+            ></e-bullet-range>
+            <e-bullet-range [end]="targetQ4" color="#d8d8d8"></e-bullet-range>
+          </e-bullet-range-collection>
+        </ejs-bulletchart>
       </div>
     </ng-container>
   </div>
@@ -1000,15 +1169,15 @@
           <thead class="thead-light">
             <tr>
               <th
-                style="width: 300px !important"
+                class="min-w-200px w-200px"
                 style="border-bottom: 1px var(--gray-100) solid !important"
               ></th>
               <ng-container *ngFor="let item of lstUsers">
                 <th
-                  class="w-50px"
+                  class="min-w-50px w-50px"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
-                  <div class="d-flex justify-content-center">
+                  <div class="d-flex flex-column justify-content-center">
                     <codx-imgs
                       [width]="30"
                       [objectId]="item?.userID"
@@ -1018,8 +1187,8 @@
                       class=""
                     >
                     </codx-imgs>
+                    <div class="mt-1">{{ item?.userName }}</div>
                   </div>
-                  <div class="mt-1">{{ item?.userName }}</div>
                 </th>
               </ng-container>
             </tr>
@@ -1031,11 +1200,44 @@
               </td>
               <ng-container *ngFor="let user of lstUsers">
                 <td
-                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  class="min-w-50px w-50px"
+                  *ngIf="findItemUser(item.value, user?.performances)"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
-                  <div class="text-gray-800 d-flex justify-content-center">
-                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                  <div class="text-gray-800 d-flex justify-content-between">
+                    <div class="w-80">
+                      <span class="d-flex justify-content-end">
+                        {{
+                          findItemUser(item.value, user?.performances)?.count
+                        }}
+                      </span>
+                    </div>
+                    <div
+                      class="w-20 d-flex justify-content-end"
+                      [ngStyle]="{
+                        color: getIcon(
+                          findItemUser(item.value, user?.performances)?.isAsc,
+                          'color'
+                        )
+                      }"
+                      *ngIf="item.value != '7' && item.value != '9'"
+                    >
+                      <span
+                        class="me-1 icon-14"
+                        [ngClass]="
+                          getIcon(
+                            findItemUser(item.value, user?.performances)?.isAsc,
+                            'icon'
+                          )
+                        "
+                      >
+                      </span>
+                      <span>
+                        {{
+                          findItemUser(item.value, user?.performances)?.valueAsc
+                        }}</span
+                      >
+                    </div>
                   </div>
                 </td>
               </ng-container>

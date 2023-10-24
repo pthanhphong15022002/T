@@ -110,10 +110,10 @@
             container="body"
           ></span>
           <span
-            *ngIf="data?.adressName"
+            *ngIf="data?.address"
             [innerHTML]="
-              data?.adressName
-                | formatvalue : formModelAddress : 'AdressName'
+              data?.address
+                | formatvalue : formModelAddress : 'address'
                 | async
             "
           ></span>

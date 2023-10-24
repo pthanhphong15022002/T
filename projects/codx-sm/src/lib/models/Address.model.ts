@@ -1,5 +1,5 @@
 export class Address {
-    adressName: any
+    address: any
     adressType: any
     buid: any
     calendarID: any
@@ -31,30 +31,30 @@ export class Address {
     phone: any
     phoneExt: any
     positionID: any
-    postalCode: any 
+    postalCode: any
     primaryContact: any
     provinceID: any
     recID: any
     regionID: any
 secondContact
-: 
+:
 any
 sms
-: 
+:
 any
 stop
-: 
+:
 any
 street
-: 
+:
 any
 timeZone
-: 
+:
 any
 updateColumn
-: 
+:
 any
 webPage
-: 
+:
 any
 }

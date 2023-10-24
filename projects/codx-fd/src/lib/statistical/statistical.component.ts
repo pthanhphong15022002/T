@@ -988,13 +988,16 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
                   if(this.reportItem.reportID == 'FDD002'){
                     this.typeBallot='1';
                   }
-                  this.getDataChartB();
+                  //this.getDataChartB();
                   //this.reloadAllChart();
                   //this.isLoaded = true
                 }
               });
 
       }
+    }
+    if(e.type == 'reportItem'){
+      this.reportItem = e.data;
     }
   }
 

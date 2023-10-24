@@ -1,6 +1,6 @@
 import { Component, Injector, ViewEncapsulation } from '@angular/core';
 import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxTMService } from '../codx-tm.service';
 
 @Component({
@@ -17,10 +17,17 @@ export class LayoutComponent extends LayoutBaseComponent {
     inject: Injector,
     private route: ActivatedRoute,
     private tmService: CodxTMService,
-    private callfc: CallFuncService
+    private callfc: CallFuncService,
+    private router: Router,
   ) {
     super(inject);
-    this.module = 'TM';
+    //this.module = 'TM';
+    this.getModule();
+  }
+
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
   }
 
   onInit(): void {}

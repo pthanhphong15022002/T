@@ -25,9 +25,15 @@
             </div>
             <div class="form-group">
                 <div class="d-flex">
+                    <div>
+                        <codx-input class="rounded-circle" [crrValue]="'3'" [checked]="true" [label]="'Quỹ công ty'"
+                            type="radio" field="transType3" name="radio" (valueChange)="valueChange($event)"
+                            ngDefaultControl>
+                        </codx-input>
+                    </div>
                     <div class="ms-6">
-                        <codx-input class="rounded-circle" [crrValue]="'4'" [label]="'Quỹ cá nhân'" type="checkbox"
-                            field="transType4" name="checkbox" (valueChange)="valueChange($event)" ngDefaultControl>
+                        <codx-input class="rounded-circle" [crrValue]="'4'" [label]="'Quỹ cá nhân'" type="radio"
+                            field="transType4" name="radio" (valueChange)="valueChange($event)" ngDefaultControl>
                         </codx-input>
                     </div>
                 </div>

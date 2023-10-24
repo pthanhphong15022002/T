@@ -3,7 +3,7 @@
 </div>
 
 <ng-template #general>
-    <div class="d-flex flex-column w-100">
+    <div class="d-flex flex-column w-100 ws-per-infor">
         <div class="d-flex flex-column w-100 py-4 border-bottom">
             <codx-label [default]="label.titleGeneralInfor" [formName]="'fmWSGeneralInfor'" [fiedName]="'lblWSGeneralInfor'" class="fw-bold fs-5-sm"></codx-label>
             <div class="d-flex align-items-center mt-4">
@@ -22,7 +22,7 @@
             </div>
             <div class="d-flex align-items-center py-5">
                 <codx-label [default]="label.title2FA" [formName]="'fmWSAccSecurity2FA'" [fiedName]="'lblWSAccSecurity2FA'"></codx-label>
-                <codx-input type="valuelist" [refValue]="'SYS060'" [crrValue]="user?.extends?.TwoFA" ngClass="mx-2" (valueChange)="change2FA($event)"></codx-input>
+                <codx-input type="valuelist" [refValue]="'SYS060'" [crrValue]="user?.extends?.TwoFA ? user?.extends?.TwoFA : '0'" ngClass="mx-2" (valueChange)="change2FA($event)"></codx-input>
                 <i class="icon-dialpad mx-2 cursor-pointer" [class.opacity-50]="user?.extends?.TwoFA != '1' && user?.extends?.TwoFA != '4'" (click)="expend()"></i>
             </div>
             <div class="d-flex flex-column py-2">

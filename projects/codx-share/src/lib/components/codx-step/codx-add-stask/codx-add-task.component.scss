@@ -77,6 +77,16 @@
       }
     }
   }
+
+  .required:after {
+    content: "*";
+    position: relative;
+    font-size: inherit;
+    color: #F1416C;
+    padding-left: 0.25rem;
+    font-weight: bold;
+}
+  
   ::ng-deep span.e-icons.e-frame{
     border-radius: 50%;
   }

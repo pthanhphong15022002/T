@@ -19,7 +19,7 @@ import {
   RequestOption,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
-import { CM_Cases, CM_Deals } from '../../models/cm_model';
+import { CM_Cases, CM_Deals, CM_Permissions } from '../../models/cm_model';
 import { tmpInstances } from '../../models/tmpModel';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
@@ -104,7 +104,11 @@ export class PopupAddCasesComponent
   owner: any;
   dateMessage: any;
   dateMax: any;
+  user:any;
+  instanceRes: any;
+
   contactID: string = '';
+  oldIdInstance: string = '';
 
   // model of DP
   instance: tmpInstances = new tmpInstances();
@@ -130,10 +134,12 @@ export class PopupAddCasesComponent
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxCmService: CodxCmService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
+    this.user = this.authStore.get();
     this.dialog = dialog;
     this.formModel = dialog.formModel;
     this.titleAction = dt?.data?.titleAction;
@@ -159,6 +165,7 @@ export class PopupAddCasesComponent
     }
 
     if (this.action != this.actionAdd) {
+      this.applyProcess = this.cases.applyProcess;
       this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
     } else {
@@ -167,11 +174,16 @@ export class PopupAddCasesComponent
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
     }
+    if (this.action === this.actionCopy) {
+      this.cases.owner = null;
+      // this.cases.salespersonID = null;
+      this.oldIdInstance = this.cases.refID;
+    }
     // this.executeApiCalls();
   }
 
   async onInit(): Promise<void> {
-    await this.getCurrentSetting();
+   this.action != this.actionEdit && await this.getCurrentSetting();
     // this.tabInfo = this.applyProcess
     //   ? [this.menuGeneralInfo, this.menuInputInfo]
     //   : [this.menuGeneralInfo];
@@ -217,7 +229,7 @@ export class PopupAddCasesComponent
       );
       return;
     }
-    if (!this.cases?.owner && this.applyProcess) {
+    if (!this.owner && this.applyProcess) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -261,6 +273,7 @@ export class PopupAddCasesComponent
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
     }
+    this.cases.owner = this.owner;
     if (this.applyProcess) {
       this.updateDataCases(this.instance, this.cases);
       this.convertDataInstance(this.cases, this.instance);
@@ -271,7 +284,20 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
-    this.executeSaveData();
+   this.actionSaveBeforeSaveAttachment();
+  }
+  async actionSaveBeforeSaveAttachment() {
+    if (this.attachment?.fileUploadList?.length > 0) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          var countAttack = 0;
+          countAttack = Array.isArray(res) ? res.length : 1;
+          this.executeSaveData();
+        }
+      });
+    } else {
+      this.executeSaveData();
+    }
   }
   cbxChange($event, field) {
     if ($event) {
@@ -344,9 +370,83 @@ export class PopupAddCasesComponent
     }
   }
   valueChangeOwner($event) {
+    // if ($event) {
+    //   this.owner = this.cases.applyProcess ? $event : $event.data;
+    //   this.cases.owner = this.owner;
+    // }
     if ($event) {
       this.owner = this.cases.applyProcess ? $event : $event.data;
-      this.cases.owner = this.owner;
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.owner
+        )[0]?.userName;
+      }
+      this.searchOwner('1', 'O', '0',this.owner, ownerName);
+    }
+    else if ($event == null || $event == '') {
+      this.deleteOwner('1', 'O', '0', this.owner,'owner');
+    }
+  }
+  searchOwner(
+    objectType: any,
+    roleType: any,
+    memberType: any,
+    owner: any,
+    ownerName: any
+  ) {
+    let index = -1;
+    if (this.cases?.permissions?.length > 0 && this.cases?.permissions) {
+      index = this.cases?.permissions.findIndex(
+        (x) =>
+          x.objectType == objectType &&
+          x.roleType === roleType &&
+          x.memberType == memberType
+      );
+      if (index != -1) {
+        this.cases.permissions[index].objectID = owner;
+        this.cases.permissions[index].objectName = ownerName;
+        if (this.action == this.actionEdit) {
+          this.cases.permissions[index].modifiedBy = this.user.userID;
+          this.cases.permissions[index].modifiedOn = new Date();
+        }
+      }
+    }
+    if (index == -1) {
+      if(owner) {
+        this.addOwner(owner, ownerName, roleType, objectType);
+      }
+    }
+  }
+  addOwner(owner, ownerName, roleType, objectType) {
+    let permission = new CM_Permissions();
+    permission.objectID = owner;
+    permission.objectName = ownerName;
+    permission.objectType = objectType;
+    permission.roleType = roleType;
+    permission.memberType = '0';
+    permission.full = true;
+    permission.read = true;
+    permission.update = true;
+    permission.upload = true;
+    permission.download = true;
+    permission.allowUpdateStatus = '1';
+    permission.full = roleType === 'O';
+    permission.assign = roleType === 'O';
+    permission.delete = roleType === 'O';
+    permission.allowPermit = roleType === 'O';
+    this.cases.permissions = this.cases?.permissions ? this.cases.permissions : [];
+    this.cases.permissions.push(permission);
+  }
+  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
+    let index = this.cases?.permissions.findIndex(
+      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+    if(index != -1) {
+      if(field === 'owner' ){
+        this.cases.owner = null;
+        this.owner= null;
+      }
+      this.cases.permissions.splice(index, 1);
     }
   }
   valueChangeCustomer($event) {
@@ -364,9 +464,9 @@ export class PopupAddCasesComponent
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
-        this.attachment?.clearData();
         if (res) {
-          this.dialog.close(res.save[0]);
+          this.attachment?.clearData();
+          this.dialog.close(res.save);
         } else this.dialog.close();
       });
   }
@@ -375,7 +475,39 @@ export class PopupAddCasesComponent
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.dialog.close(res.update[0]);
+          this.dialog.close(res.update);
+        }
+      });
+  }
+  onAddInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+      .subscribe((res) => {
+        if (res && res.save) {
+          this.cases.status = res.save.status;
+          this.cases.datas = res.save.datas;
+          this.addPermission(res.save.permissions);
+          this.codxCmService.addCases(this.cases).subscribe((res) => {
+            if (res) {
+            }
+          });
+          this.dialog.close(res.save);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+  onUpdateInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.cases.status = res.update?.status;
+          this.cases.datas = res.update?.datas;
+          this.codxCmService.editCases(this.cases).subscribe((res) => {
+            if (res) {
+            }
+          });
+          this.dialog.close(res.update);
         }
       });
   }
@@ -385,6 +517,21 @@ export class PopupAddCasesComponent
       this.action !== this.actionEdit ? 'AddCasesAsync' : 'EditCasesAsync';
     option.className = 'CasesBusiness';
     option.data = data;
+    option.service = 'CM';
+    return true;
+
+  }
+  beforeSaveInstance(option: RequestOption) {
+    option.service ='DP';
+    option.className = 'InstancesBusiness';
+    option.assemblyName = 'ERM.Business.DP';
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
     return true;
   }
 
@@ -415,33 +562,13 @@ export class PopupAddCasesComponent
   }
 
   async executeSaveData() {
-    try {
-      if (this.isLoading) {
-        if (this.action !== this.actionEdit) {
-          await this.addCasesForDP();
-          this.applyProcess && (await this.insertInstance());
-        } else {
-          //    await this.editDealForDP();
-          this.applyProcess && (await this.editInstance());
-        }
-      } else {
-        if (this.action !== this.actionEdit) {
-          this.applyProcess && (await this.insertInstance());
-          await this.onAdd();
-        } else {
-          this.applyProcess && (await this.editInstance());
-          await this.onEdit();
-        }
-      }
-    } catch (error) {}
-  }
-
-  async addCasesForDP() {
-    var datas = [this.cases];
-    this.codxCmService.addCases(datas).subscribe((cases) => {
-      if (cases) {
-      }
-    });
+    if (this.action !== this.actionEdit) {
+      this.cases.applyProcess && await this.insertInstance();
+      !this.cases.applyProcess && this.onAdd();
+    } else {
+      this.cases.applyProcess &&  await this.editInstance();
+      !this.cases.applyProcess && this.onEdit();
+    }
   }
 
   async getGridView(formModel) {
@@ -517,21 +644,69 @@ export class PopupAddCasesComponent
   }
 
   insertInstance() {
-    var data = [this.instance, this.listInstanceSteps, null];
-    this.codxCmService.addInstance(data).subscribe((instance) => {
-      if (instance) {
-        this.isLoading && this.dialog.close(instance);
-      }
-    });
+
+    if(!this.isLoading) {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.codxCmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.cases.status = instance.status;
+          this.cases.datas = instance.datas;
+          this.addPermission(instance.permissions);
+          this.onAdd();
+        }
+      });
+    }
+    else {
+      this.onAddInstance();
+    }
   }
-  editInstance() {
-    var data = [this.instance, this.listCustomFile];
-    this.codxCmService.editInstance(data).subscribe((instance) => {
-      if (instance) {
-        ///this.onEdit();
-        this.isLoading && this.dialog.close(instance);
+  async editInstance() {
+    if(!this.isLoading) {
+      let data = [this.instance, this.listCustomFile];
+      this.codxCmService.editInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.cases.status = instance.status;
+          this.cases.datas = instance.datas;
+          this.onEdit();
+        }
+      });
+
+    }
+    else {
+      this.onUpdateInstance();
+    }
+  }
+  addPermission(permissionDP) {
+    if ( permissionDP && permissionDP?.length > 0) {
+      this.cases.permissions = this.cases?.permissions ? this.cases.permissions : [];
+      for (let item of permissionDP) {
+        this.cases.permissions.push(this.copyPermission(item));
       }
-    });
+    }
+  }
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = permissionDP.isActive;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
+    return permission;
   }
 
   // check valid
@@ -556,8 +731,12 @@ export class PopupAddCasesComponent
     if (this.action === this.actionEdit) {
       instance.recID = cases.refID;
     }
-    instance.title = cases.caseName;
-    instance.memo = cases.memo;
+    if (this.action !== this.actionEdit) {
+      instance.startDate = null;
+      instance.status = '1';
+    }
+    instance.title = cases?.caseName?.trim();
+    instance.memo = cases?.memo?.trim();
     instance.endDate = cases.endDate;
     instance.instanceNo = cases.caseNo;
     instance.owner = this.owner;
@@ -570,11 +749,13 @@ export class PopupAddCasesComponent
       cases.nextStep = this.listInstanceSteps[1].stepID;
       cases.status = '1';
       cases.refID = instance.recID;
+      cases.startDate = null;
     }
     if (this.action === this.actionAdd) {
       cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
     cases.owner = this.owner;
+  //  cases.salespersonID = this.owner;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {
@@ -662,34 +843,6 @@ export class PopupAddCasesComponent
     return date1 < date2;
   }
 
-  // //#endregion
-
-  // isRequired(field:string){
-  //   return this.gridViewSetup[field]?.h
-  // }
-
-  // setTitle(e: any) {
-  //     // if (this.autoName) {
-  //     //   this.title = this.titleAction + ' ' + this.autoName;
-  //     // } else {
-  //     //   this.title = this.titleAction + ' ' + e;
-  //     //   this.autoName = e;
-  //     // }
-  //     this.title = this.titleAction;
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // setTitle(e: any) {
-  //     // if (this.autoName) {
-  //     //   this.title = this.titleAction + ' ' + this.autoName;
-  //     // } else {
-  //     //   this.title = this.titleAction + ' ' + e;
-  //     //   this.autoName = e;
-  //     // }
-  //     this.title = this.titleAction;
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
   addFile(e) {
     this.attachment.uploadFile();
   }
@@ -699,6 +852,8 @@ export class PopupAddCasesComponent
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
+
+
   // onSave(){
 
   // }
@@ -728,13 +883,8 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      if (this.funcID == 'CM0401') {
-        this.applyProcess = dataValue?.ProcessCase == '1';
-        this.cases.applyProcess = this.applyProcess;
-      } else if (this.funcID == 'CM0402') {
-        this.applyProcess = dataValue?.ProcessRequest == '1';
-        this.cases.applyProcess = this.applyProcess;
-      }
+      this.applyProcess = this.funcID == 'CM0401' ? dataValue?.ProcessCase == '1':dataValue?.ProcessRequest == '1';
+      this.cases.applyProcess = this.applyProcess;
     }
   }
 
