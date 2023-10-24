@@ -1116,11 +1116,21 @@
               </td>
               <ng-container *ngFor="let user of lstUsers">
                 <td
-                  *ngIf="findItemUser(item.value, user?.lstVllTopSales)"
+                  *ngIf="findItemUser(item.value, user?.performances)"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
                   <div class="text-gray-800 d-flex justify-content-center">
-                    {{ findItemUser(item.value, user?.lstVllTopSales)?.count }}
+                    <div class="d-flex justify-content-start me-1">
+                      {{ findItemUser(item.value, user?.performances)?.count }}
+                    </div>
+                    <div
+                      class="d-flex justify-content-end"
+                      *ngIf="item.value != '7' && item.value != '9'"
+                    >
+                      {{
+                        findItemUser(item.value, user?.performances)?.valueAsc
+                      }}
+                    </div>
                   </div>
                 </td>
               </ng-container>

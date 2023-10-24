@@ -338,21 +338,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   lstUsers: {
     userID: string;
     userName: string;
-    lstVllTopSales: {
+    performances: {
       value: string;
       text: string;
       count: string;
-      isAsc: boolean;
+      isAsc: string; // 0 - hòa, 1 - tăng, 2 - giảm
+      valueAsc: string;
     }[];
   }[];
 
-  lstVllTopSales: {
-    value: string;
-    text: string;
-    count: string;
-    isAsc: boolean;
-  }[];
-
+  lstVllTopSales = [];
+  vllUpDowns = [];
   currencyID: any;
   exchangeRate: number;
   //new
@@ -733,7 +729,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.lstVllTopSales = ele?.datas;
       }
     });
-
+    this.cache.valueList('CRM069').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllUpDowns = ele?.datas;
+      }
+    });
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
         this.vllStatus = grv['Status'].referedValue;
@@ -944,11 +944,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
     e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
-  }
-
-  findItemUser(value, lstTitlePerformance) {
-    let title = lstTitlePerformance.find((x) => x.value == value);
-    return title;
   }
 
   ///-------------------------Get DATASET---------------------------------------------//
@@ -1447,11 +1442,70 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       lstUsers.forEach((item) => {
         var tmp = {};
         tmp = item;
-        tmp['lstVllTopSales'] = this.lstVllTopSales;
+        let performances = [];
+        if (this.lstVllTopSales != null && this.lstVllTopSales.length > 0) {
+          for (var vll of this.lstVllTopSales) {
+            var tmpPerform = {};
+            tmpPerform['value'] = vll.value;
+            tmpPerform['text'] = vll.text;
+            let count = 0;
+            let countOlds = 0;
+            switch (vll?.value) {
+              case '1': // lead đã tạo
+                count = item?.leads?.length ?? 0;
+                countOlds = item?.leadOlds?.length ?? 0;
+                break;
+              case '3': // cơ hội đã tạo
+                count = item?.deals?.length ?? 0;
+                countOlds = item?.dealOlds?.length ?? 0;
+                break;
+              case '5': // doanh thu đạt được
+                item?.deals?.forEach((ele) => {
+                  if (ele.status == '3') {
+                    count += ele?.dealValue;
+                  }
+                });
+                break;
+              case '7': //doanh thu đã mất
+                item?.deals?.forEach((ele) => {
+                  if (ele.status == '5') {
+                    count += ele?.dealValue;
+                  }
+                });
+                break;
+              case '9': //trung bình chu kỳ bán hàng
+                break;
+            }
+
+            tmpPerform['count'] = count;
+            let valueAsc = '0';
+            if (count > 0 && countOlds > 0) {
+              valueAsc = Math.round(count / countOlds) * 100 + '%';
+            } else {
+              if (count > 0 && countOlds < 0) {
+                valueAsc = 100 + '%';
+              } else if (count < 0 && countOlds > 0) {
+                valueAsc = Math.round(countOlds / count) * 100 + '%';
+              } else {
+                valueAsc = 0 + '%';
+              }
+            }
+            tmpPerform['valueAsc'] = valueAsc;
+            tmpPerform['isAsc'] =
+              count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+            performances.push(tmpPerform);
+          }
+        }
+        tmp['performances'] = performances;
         list.push(tmp);
       });
     }
     return list;
+  }
+
+  findItemUser(value, performances) {
+    let title = performances.find((x) => x.value == value);
+    return title;
   }
   //end
 

@@ -414,8 +414,6 @@ export class ViewCalendarComponent
     }
   }
 
-
-
   async getTask(data, action = null) {
     let task;
     if (data) {
@@ -458,55 +456,6 @@ export class ViewCalendarComponent
   async beforeAddTask(taskType) {
     this.handleTask('calendar',taskType, "add");
   }
-
-  // async beforeAddTask(taskType) {
-  //   let option = new DialogModel();
-  //   let data = {
-  //     taskType,
-  //     isAdmin: this.isAdmin,
-  //   };
-  //   option.zIndex = 1001;
-  //   this.popupTypeCM = this.callfc.openForm(
-  //     PopupAddTaskCalendarComponent,
-  //     '',
-  //     650,
-  //     500,
-  //     '',
-  //     data,
-  //     '',
-  //     option
-  //   );
-  //   let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
-  //   if (dataOuput?.event) {
-  //     let taskType = dataOuput?.event?.taskType;
-  //     let dataTypeCM = dataOuput?.event?.dataCheck;
-  //     let listInsStep = [];
-  //     if (dataTypeCM && taskType) {
-  //       this.isStepTask = dataTypeCM?.applyProcess;
-  //       this.isActivitie = !this.isStepTask;
-  //       if (this.isStepTask) {
-  //         this.api
-  //           .exec<any>(
-  //             'DP',
-  //             'InstancesStepsBusiness',
-  //             'GetInscestepCalendarAsync',
-  //             [dataTypeCM?.refID, dataTypeCM?.full]
-  //           )
-  //           .subscribe((res) => {
-  //             if (res) {
-  //               if (res?.length > 0) {
-  //                 this.handleTask(taskType, 'add', null, res);
-  //               }
-  //             }
-  //           });
-  //       } else {
-  //         this.entityName = dataTypeCM?.entityName;
-  //         this.objectID = dataTypeCM?.recID;
-  //         this.handleTask(taskType, 'add', null);
-  //       }
-  //     }
-  //   }
-  // }
 
   async handleTask(type, dataType, action, taskData = null, listInsStep = null) {
     let taskOutput = await this.stepService.addTask(
@@ -587,7 +536,7 @@ export class ViewCalendarComponent
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
       let task = await this.getTask(data);
       if (task) {
-        let dataEdit = await this.handleTask(type, 'edit', task);
+        let dataEdit = await this.handleTask('calendar',type, 'edit', task);
         let taskEdit = dataEdit?.task;
         let fields = taskEdit.fields;
         if (this.isStepTask) {
@@ -635,7 +584,7 @@ export class ViewCalendarComponent
       let task = await this.getTask(data, 'copy');
       if (task) {
         delete task?.id;
-        await this.handleTask(type, 'add', task);
+        await this.handleTask('calendar',type, 'add', task);
       } else {
         this.notiService.notifyCode('Bạn không có quyền thêm công việc');
       }
@@ -692,3 +641,51 @@ export class ViewCalendarComponent
   }
   //#endregion
 }
+// async beforeAddTask(taskType) {
+  //   let option = new DialogModel();
+  //   let data = {
+  //     taskType,
+  //     isAdmin: this.isAdmin,
+  //   };
+  //   option.zIndex = 1001;
+  //   this.popupTypeCM = this.callfc.openForm(
+  //     PopupAddTaskCalendarComponent,
+  //     '',
+  //     650,
+  //     500,
+  //     '',
+  //     data,
+  //     '',
+  //     option
+  //   );
+  //   let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
+  //   if (dataOuput?.event) {
+  //     let taskType = dataOuput?.event?.taskType;
+  //     let dataTypeCM = dataOuput?.event?.dataCheck;
+  //     let listInsStep = [];
+  //     if (dataTypeCM && taskType) {
+  //       this.isStepTask = dataTypeCM?.applyProcess;
+  //       this.isActivitie = !this.isStepTask;
+  //       if (this.isStepTask) {
+  //         this.api
+  //           .exec<any>(
+  //             'DP',
+  //             'InstancesStepsBusiness',
+  //             'GetInscestepCalendarAsync',
+  //             [dataTypeCM?.refID, dataTypeCM?.full]
+  //           )
+  //           .subscribe((res) => {
+  //             if (res) {
+  //               if (res?.length > 0) {
+  //                 this.handleTask(taskType, 'add', null, res);
+  //               }
+  //             }
+  //           });
+  //       } else {
+  //         this.entityName = dataTypeCM?.entityName;
+  //         this.objectID = dataTypeCM?.recID;
+  //         this.handleTask(taskType, 'add', null);
+  //       }
+  //     }
+  //   }
+  // }

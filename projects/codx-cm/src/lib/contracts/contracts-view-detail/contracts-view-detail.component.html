@@ -290,10 +290,6 @@
           *ngSwitchCase="'task'"
           [ngTemplateOutlet]="task"
         ></some-element>
-        <some-element
-          *ngSwitchCase="'steps'"
-          [ngTemplateOutlet]="steps"
-        ></some-element>
         <some-element *ngSwitchDefault></some-element>
       </container-element>
     </div>
@@ -821,34 +817,17 @@
   ></codx-tabs>
 </ng-template>
 <!-- nvthuan công việc -->
-<ng-template #steps let-data="value">
-  <div *ngIf="listInsStep?.length > 0">
-    <step-task
-      [entityName]="'CM_Contracts'"
-      [dataSelected]="contract"
-      [listInstanceStep]="listInsStep"
-      (changeProgress)="autoStart($event)"
-      (isSusscess)="checkSusscess($event)"
-      (saveAssignTask)="saveAssign($event)"
-      [owner]="contract?.owner"
-    ></step-task>
-  </div>
-</ng-template>
 <ng-template #task let-data="value">
   <step-task
-    [customerID]="contract?.recID"
     [entityName]="'CM_Contracts'"
-    [owner]="contract?.owner"
+    [listInstanceStep]="listInsStep"
+    [dataCM]="contract" 
+    [applyFor]="'4'"
     (saveAssignTask)="saveAssign($event)"
-    [ownerInstance]="contract?.owner"
+    (changeProgress)="autoStart($event)"
+    (isSusscess)="checkSusscess($event)"
   ></step-task>
-  <!-- <div>
-    <task
-      [customerID]="contract?.recID"
-      [owner]="contract?.owner"
-      [entityName]="'CM_Contracts'"
-    ></task>
-  </div> -->
+ 
 </ng-template>
 
 <!-- báo giá -->

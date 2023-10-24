@@ -41,6 +41,7 @@ export class DealDetailComponent implements OnInit {
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
+
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
@@ -54,7 +55,7 @@ export class DealDetailComponent implements OnInit {
   @ViewChild('loadContactDeal')
   loadContactDeal: CodxListContactsComponent;
   @ViewChild('tabObj') tabObj: TabComponent;
-  formModelCustomer: FormModel;
+
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -262,7 +263,7 @@ export class DealDetailComponent implements OnInit {
   }
   async executeApiCalls() {
     try {
-      this.formModelCustomer = await this.codxCmService.getFormModel('CM0101');
+
       await this.getGridViewQuotation();
       await this.getGridViewContract();
       await this.getGridViewLead();
@@ -782,7 +783,6 @@ export class DealDetailComponent implements OnInit {
         return result?.text;
       }
     }
-
     return '';
   }
 }
