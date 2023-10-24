@@ -591,14 +591,16 @@
           <ng-template #content let-data="value">
             <div class="mt-4">
               <step-task
-                [entityName]="'CM_Leads'"
-                [dataCM]="dataSelected"
-                [formModel]="formModel"
-                [applyFor]="'5'"
-                [isDataLoading]="isDataLoading"
-                (saveAssignTask)="saveAssign($event)"
-                (continueStep)="continueStep($event)"
-              ></step-task>
+              [listInstanceStep]="listSteps"
+              [entityName]="'CM_Leads'"
+              [dataCM]="dataSelected"
+              [formModel]="formModel"
+              [applyFor]="'5'"
+              [isDataLoading]="isDataLoading"
+              (saveAssignTask)="saveAssign($event)"
+              (continueStep)="continueStep($event)"
+              (saveAssignTask)="saveAssign($event)"
+            ></step-task>
             </div>
           </ng-template>
         </e-tabitem>
