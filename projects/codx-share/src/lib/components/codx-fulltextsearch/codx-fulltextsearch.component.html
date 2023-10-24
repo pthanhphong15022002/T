@@ -1,5 +1,4 @@
-<div class="h-100vh w-100 d-flex">
-  
+<div class="h-92vh w-100 d-flex">
   <div class="d-flex flex-column scroll-y h-100 p-5 rounded-2 bg-white" [style.width.px]="widthLeft">
     <ng-template [ngTemplateOutlet]="tempMenu"></ng-template>
     <ng-container *ngIf="gridViewSetup">
@@ -86,7 +85,7 @@
         </ng-container>
         <codx-searchbar (searchEvent)="changeSearch($event)" class="text w-300px"></codx-searchbar>
       </div>
-      <div class="overflow-auto pe-5 h-searchtmp">
+      <div class="overflow-auto pe-5 h-searchtmp" >
         <!-- <div class="ps-5" [style.maxWidth.px]="widthItemTmp"> </div> -->
         <ng-container *ngIf="searchData ; else defaulEmpt">
           <ng-container *ngFor="let data of searchData">

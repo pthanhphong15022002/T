@@ -754,49 +754,43 @@ export class CmCustomerComponent
 
   //auto update address
   async updateAutoAddress(datas = []) {
-    let lsts = datas.filter(
-      (x) => x.address != null && x.address?.trim() != ''
-    );
-    for (var item of lsts) {
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [item?.address, this.leverSetting]
-        )
-      );
-      if (json != null && json.trim() != '' && json != "null") {
-        let lstDis = JSON.parse(json);
-        if (item.provinceID != lstDis?.ProvinceID)
-          item.provinceID = lstDis?.ProvinceID;
-        if (item.districtID != lstDis?.DistrictID)
-          item.districtID = lstDis?.DistrictID;
-        if (item.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
-      } else {
-        item.provinceID = null;
-        item.districtID = null;
-        item.wardID = null;
-      }
-    }
+    // let lsts = datas.filter(
+    //   (x) => x.address != null && x.address?.trim() != ''
+    // );
+    // for (var item of lsts) {
+    //   let json = await firstValueFrom(
+    //     this.api.execSv<any>(
+    //       'BS',
+    //       'ERM.Business.BS',
+    //       'ProvincesBusiness',
+    //       'GetLocationAsync',
+    //       [item?.address, this.leverSetting]
+    //     )
+    //   );
+    //   if (json != null && json.trim() != '' && json != "null") {
+    //     let lstDis = JSON.parse(json);
+    //     if (item.provinceID != lstDis?.ProvinceID)
+    //       item.provinceID = lstDis?.ProvinceID;
+    //     if (item.districtID != lstDis?.DistrictID)
+    //       item.districtID = lstDis?.DistrictID;
+    //     if (item.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+    //   } else {
+    //     item.provinceID = null;
+    //     item.districtID = null;
+    //     item.wardID = null;
+    //   }
+    // }
 
     this.api
       .execSv<any>(
         'CM',
         'ERM.Business.CM',
         'CustomersBusiness',
-        'UpdateAutoAddressAsync',
-        [lsts, null]
+        'RPAUpdateAddresscAsync',
+        ['CM_Customers']
       )
       .subscribe((res) => {
-        if (res) {
-          lsts.forEach((ele) => {
-            this.view.dataService.update(ele).subscribe();
-          });
-          this.notiService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
+        this.notiService.notifyCode('SYS007');
       });
   }
 

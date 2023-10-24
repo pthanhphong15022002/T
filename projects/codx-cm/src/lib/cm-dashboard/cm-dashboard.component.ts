@@ -248,6 +248,41 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isReasonSuscess = true;
   valueFormat: any;
 
+  //chart series
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+  primaryXAxisY;
+  primaryYAxisY;
+
+  productivityYear = [];
+  cornerRadius: Object = {
+    topLeft: 6,
+    topRight: 6,
+  };
+
+  paretoOptions: Object = {
+    marker: {
+      visible: true,
+      isFilled: true,
+      width: 7,
+      height: 7,
+    },
+    dashArray: '3,2',
+    width: 2,
+  };
+
+  legendSeri: Object = {
+    visible: true,
+    enableHighlight: true,
+  };
+
+  toolTipSeri;
+  vllMonths = [];
+  lstMonthsSeries = [];
+  //end
   //bulletchart
   //Year
   minimumBullet: number = 0;
@@ -335,17 +370,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //top sales performance
-  lstUsers: {
-    userID: string;
-    userName: string;
-    performances: {
-      value: string;
-      text: string;
-      count: string;
-      isAsc: string; // 0 - hòa, 1 - tăng, 2 - giảm
-      valueAsc: string;
-    }[];
-  }[];
+  lstUsers = [];
 
   lstVllTopSales = [];
   vllUpDowns = [];
@@ -394,6 +419,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.datasDeals2 = JSON.parse(
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
+    this.primaryXAxisY = {
+      title: this.language == 'VN' ? 'Tháng' : 'Mothn',
+    };
+    // this.primaryXAxisY = {
+    //   title: null,
+    //   interval: Browser.isDevice ? 2 : 1,
+    //   labelIntersectAction: 'Rotate45',
+    //   valueType: 'Category',
+    //   majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
+    //   majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+    //   lineStyle: { width: 0 },
+    // };
+    // this.primaryYAxisY = {
+    //   title: this.currencyID,
+    //   minimum: 0,
+    //   maximum: maximum,
+    //   interval: interval,
+    //   lineStyle: { width: 0 },
+    //   majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
+    //   minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
+    //   labelFormat: '{value}',
+    // };
   }
 
   ngAfterViewInit() {
@@ -724,6 +771,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.vllQuaters = ele?.datas;
       }
     });
+    this.cache.valueList('CRM048').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllMonths = ele?.datas;
+      }
+    });
     this.cache.valueList('CRM068').subscribe((ele) => {
       if (ele && ele?.datas) {
         this.lstVllTopSales = ele?.datas;
@@ -970,6 +1022,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
             switch (this.funcID) {
               case 'CMD001':
+                this.getDashBoardSalesTrends(res[0], parameters);
                 this.getDashBoardTargetSales(res[1], parameters);
                 this.getDashBoardSales(res[0], res[1], res[3], parameters);
                 this.lstUsers = this.getTopSalesDashBoards(res[2], parameters);
@@ -1224,19 +1277,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   changeBusIns(ele: any, obj: any) {
     if (ele.id == this.tabActiveBusIns) return;
     this.tabActiveBusIns = ele.id;
-    if (ele.id == 'btBussinessLine' && Object.keys(obj).length) {
+    if (ele.id == 'btBussinessLine') {
       !obj.chart2.viewIndus.classList.contains('d-none') &&
         obj.chart2.viewIndus.classList.add('d-none');
+
       obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.remove('d-none');
 
       !obj.chart2.pie2.element.classList.contains('d-none') &&
         obj.chart2.pie2.element.classList.add('d-none');
+
       obj.chart1.pie1.element.classList.contains('d-none') &&
         obj.chart1.pie1.element.classList.remove('d-none');
       obj.chart1.pie1.refresh();
     }
-    if (ele.id == 'btIndustries' && Object.keys(obj).length) {
+    // && Object.keys(obj).length
+    if (ele.id == 'btIndustries') {
       !obj.chart1.viewBus.classList.contains('d-none') &&
         obj.chart1.viewBus.classList.add('d-none');
 
@@ -1312,6 +1368,77 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // --------------------------------------------//
   // DASHBOAD SALES TAGET                     //
   // --------------------------------------------//
+
+  //Sales trend - last 12 months
+  getDashBoardSalesTrends(deals = [], param) {
+    let listMonths = [];
+    let now = new Date(new Date().setMonth(9));
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    let max = 0;
+    for (let y = year; y >= year - 1; y--) {
+      for (
+        let m = y === year ? month - 1 : 12;
+        m >= (y === year - 1 ? month : 1);
+        m--
+      ) {
+        let dealMonths = deals?.find(
+          (x) =>
+            (new Date(x.createdOn).getFullYear() == y &&
+            new Date(x.createdOn).getMonth() + 1 == m) && x.status == '3'
+        ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
+        let tmp = {};
+        tmp['month'] = m + '/' + y;
+        tmp['year'] = y;
+        let maxProductivity = dealMonths ? dealMonths?.dealValue : 0;
+        tmp['expected'] = maxProductivity;
+        max = maxProductivity > max ? maxProductivity : max;
+        listMonths.push(tmp);
+      }
+    }
+    this.settingChart(max);
+    this.lstMonthsSeries = listMonths;
+  }
+
+  settingChart(max) {
+    let interval = Math.ceil(max / 10);
+    let maximum = interval * 10;
+
+    this.primaryXAxisY = {
+      title: null,
+      interval: Browser.isDevice ? 2 : 1,
+      labelIntersectAction: 'Rotate45',
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+      minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+    };
+    this.primaryYAxisY = {
+      title: this.currencyID,
+      minimum: 0,
+      maximum: maximum,
+      interval: interval,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 },
+      majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 },
+      minorTickLines: { width: 0 },
+      labelFormat: '{value}',
+    };
+
+    this.toolTipSeri = {
+      enable: true,
+      shared: true,
+      format: '${series.name} : <b>${point.y}</b>',
+    };
+  }
+
+  pointSeriRender(e){
+    console.log(e);
+  }
+  //end
 
   //get sales last 4 quarter
   getDashBoardTargetSales(lstTargetLines = [], param) {
@@ -1436,6 +1563,30 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   getTopSalesDashBoards(lstUsers = [], param) {
     let list = [];
     if (lstUsers?.length > 0) {
+      lstUsers.sort((a, b) => {
+        const dealValueA = a?.deals.reduce(
+          (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+          0
+        );
+        const dealValueB = b?.deals.reduce(
+          (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+          0
+        );
+        if (dealValueA === 0 && dealValueB === 0) {
+          const numDealsA = a?.deals.filter(
+            (deal) => deal.status === '3'
+          ).length;
+          const numDealsB = b?.deals.filter(
+            (deal) => deal.status === '3'
+          ).length;
+          return numDealsB - numDealsA;
+        }
+        return dealValueB - dealValueA;
+      });
+
+      // Giới hạn danh sách tối đa 5 đối tượng
+      lstUsers = lstUsers.slice(0, 10); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+
       lstUsers.forEach((item) => {
         var tmp = {};
         tmp = item;
@@ -1474,20 +1625,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 break;
             }
 
-            tmpPerform['count'] = count;
+            tmpPerform['count'] = count.toLocaleString();
             let valueAsc = '0';
             if (count > 0 && countOlds > 0) {
               valueAsc = Math.round(count / countOlds) * 100 + '%';
             } else {
-              if (count > 0 && countOlds < 0) {
-                valueAsc = 100 + '%';
-              } else if (count < 0 && countOlds > 0) {
-                valueAsc = Math.round(countOlds / count) * 100 + '%';
-              } else {
+              if (count == countOlds) {
                 valueAsc = 0 + '%';
+              } else {
+                valueAsc = 100 + '%';
               }
             }
-            tmpPerform['valueAsc'] = valueAsc;
+            tmpPerform['valueAsc'] = valueAsc.toLocaleString();
             tmpPerform['isAsc'] =
               count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
             performances.push(tmpPerform);
@@ -1503,6 +1652,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   findItemUser(value, performances) {
     let title = performances.find((x) => x.value == value);
     return title;
+  }
+
+  getIcon(value, type) {
+    let ind = value == '2' ? value : '1';
+    let data = this.vllUpDowns.find((x) => x.value == ind);
+    return data[type];
   }
   //end
 
@@ -1539,12 +1694,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let i = data?.quarter.toString();
       this[`dataBulletQ${i}s`] = [];
       this[`titleQ${i}`] = data?.nameQuarter;
-      let maxinum =
-        parseFloat(data?.target) + (parseFloat(data?.target) * 30) / 100;
-      this[`maximumBulletQ${i}`] = Math.round(this.formatMaxValue(maxinum));
-      this[`intervalQ${i}`] = Math.round(
-        this.calculateInterval(this[`maximumBulletQ${i}`])
-      );
       var tmp = {};
       tmp['value'] = Math.round(
         this.formatMaxValue(parseFloat(data.dealValueWon))
@@ -1554,6 +1703,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this[`dataBulletQ${i}s`].push(tmp);
       this[`dealValueWonQ${i}`] = Math.round(
         this.formatMaxValue(parseFloat(data?.dealValueWon))
+      );
+      let maxinum =
+        parseFloat(data?.target) > parseFloat(data?.dealValueWon)
+          ? parseFloat(data?.target) + (parseFloat(data?.target) * 30) / 100
+          : parseFloat(data?.dealValueWon) +
+            (parseFloat(data?.dealValueWon) * 30) / 100;
+      this[`maximumBulletQ${i}`] = Math.round(this.formatMaxValue(maxinum));
+
+      this[`intervalQ${i}`] = Math.round(
+        this.calculateInterval(this[`maximumBulletQ${i}`])
       );
       this[`targetQ${i}`] = Math.round(this.formatMaxValue(maxinum)).toString();
       this[`labelFormatQ${i}`] = this.labelFormat(maxinum);
