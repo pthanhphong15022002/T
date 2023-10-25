@@ -1070,8 +1070,10 @@ export class DealsComponent
     );
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
-        this.detailViewDeal.promiseAllAsync();
+        this.dataSelected = e?.event
         this.view.dataService.update(e?.event).subscribe();
+        this.detailViewDeal.promiseAllAsync();
+        if (this.kanban) this.kanban.updateCard(this.dataSelected);
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
       }

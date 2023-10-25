@@ -233,6 +233,7 @@ export class PopupAddDealComponent
           this.deal.customerID = this.customerID;
           this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
+          this.deal.shortName = $event.component?.itemsSelected[0]?.ShortName;
           if (!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerName;
           }
@@ -270,23 +271,26 @@ export class PopupAddDealComponent
       this.searchOwner('1', 'O', '0',this.owner, ownerName);
     }
     else if ($event == null || $event == '') {
-      this.deleteOwner('1', 'O', '0', this.owner,'owner');
+      this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
     }
   }
   deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
-    let index = this.deal?.permissions.findIndex(
-      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
-    if(index != -1) {
-      if(field === 'owner' ){
-        this.deal.owner = null;
-        this.owner= null;
-        this.deal.salespersonID = null;
+    if(this.deal?.permissions && this.deal?.permissions.length > 0) {
+      let index = this.deal?.permissions.findIndex(
+        (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+      if(index != -1) {
+        if(field === 'owner' ){
+          this.deal.owner = null;
+          this.owner= null;
+          this.deal.salespersonID = null;
+        }
+        else if(field === 'consultantID') {
+          this.deal.consultantID = null;
+        }
+        this.deal.permissions.splice(index, 1);
       }
-      else if(field === 'consultantID') {
-        this.deal.consultantID = null;
-      }
-      this.deal.permissions.splice(index, 1);
     }
+
   }
   searchOwner(
     objectType: any,
@@ -677,7 +681,7 @@ export class PopupAddDealComponent
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close(res.save[0]);
+          this.dialog.close(res.save);
         } else this.dialog.close();
       });
   }
@@ -704,8 +708,10 @@ export class PopupAddDealComponent
       .save((option: any) => this.beforeSaveInstance(option))
       .subscribe((res) => {
         if (res.update) {
-          this.deal.status = res.update?.status;
-          this.deal.datas = res.update?.datas;
+          this.deal.status = res?.update?.status;
+          this.deal.datas = res?.update?.datas;
+          this.deal.permissions = this.deal.permissions.filter(x=>x.memberType != '2');
+          this.addPermission(res?.update?.permissions);
           let datas = [
             this.deal,
             this.customerIDOld,
@@ -739,7 +745,7 @@ export class PopupAddDealComponent
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.dialog.close(res.update[0]);
+          this.dialog.close(res.update);
         } else {
           this.dialog.close();
         }
@@ -907,6 +913,8 @@ export class PopupAddDealComponent
           this.instanceRes = instance;
           this.deal.status = instance.status;
           this.deal.datas = instance.datas;
+          this.deal.permissions = this.deal.permissions.filter(x=>x.memberType != '2');
+          this.addPermission(instance.permissions);
           this.onEdit();
         }
       });
