@@ -25,22 +25,23 @@ export class CalendarCenterComponent
   @ViewChild('contentTmp') contentTmp: TemplateRef<any>;
   // @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
 
   @Input() resources: any;
   @Input() eventData: any;
-  @Input() resourceModel!: any;
+  @Input() eventModel:any;
+  @Input() resourceModel: any;
   @Input() isOutSource:boolean = false;
   @Input() statusColor:any;
-  @Input() selectDate:any;
+  @Input() selectedDate:any;
   @Input() eventTemplate:TemplateRef<any>;
   @Input() resourceTemplate:TemplateRef<any>;
 
   @Output() evtResourceClick = new EventEmitter();
   @Output() evtAction = new EventEmitter();
   @Output() evtDateSelectChange = new EventEmitter();
+
 
   views: Array<ViewModel> | any = [];
   
@@ -53,27 +54,7 @@ export class CalendarCenterComponent
   codxSchedule: any;
   dayoff: any;
   calendarID = 'STD';
-
-
-  scheduleHeader?: ResourceModel;
-  scheduleHeaderModel:any = {
-    Name: 'EmployeeName',
-    Field: 'EmployeeID',
-    IdField: 'EmployeeID',// field mapping vs event Schedule
-    TextField: 'EmployeeName',
-    Title: 'EmployeeName',
-  };
-
-  scheduleEvent?: ResourceModel;
-  scheduleEvtModel:any = {
-    id: 'recID',
-    subject: { name: 'title' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    resourceId: { name: 'recID' },// field mapping vs resource Schedule
-    status: 'transType',
-  };
-  resourceDataSource:any = [];
+  
 
 
   constructor(injector: Injector, private coService: CodxCoService) {
@@ -103,16 +84,16 @@ export class CalendarCenterComponent
     {
       if((this.view?.currentView as any)?.schedule)
       {
-        (this.view.currentView as any).schedule.resourceDataSource = this.resourceDataSource;
+        (this.view.currentView as any).schedule.resourceDataSource = [...this.resources];
         (this.view.currentView as any).schedule.setEventSettings();
         this.detectorRef.detectChanges();
       }
     }
-    if(changes["selectDate"] && changes["selectDate"].currentValue != changes["selectDate"].previousValue )
+    if(changes["selectedDate"])
     {
       if((this.view?.currentView as any)?.schedule)
       {
-        (this.view.currentView as any).schedule.selectedDate = this.selectDate;
+        (this.view.currentView as any).schedule.selectedDate = this.selectedDate;
         (this.view.currentView as any).schedule.setEventSettings();
         this.detectorRef.detectChanges();
       }
@@ -130,10 +111,11 @@ export class CalendarCenterComponent
         showSearchBar: false,
         showFilter: true,
         model: {
-          eventModel: this.scheduleEvtModel,// mapping của event schedule
-          resourceModel: this.scheduleHeaderModel, // mapping của resource schedule
+          eventModel: this.eventModel,// mapping của event schedule
+          resourceModel: this.resourceModel, // mapping của resource schedule
+          // template: , //template popup event
           template3: this.cellTemplate,
-          template4: this.resourceHeader,//template của resource schedule
+          template4: this.resourceTemplate,//template của resource schedule
           template6: this.mfButton,
         },
       },
@@ -336,4 +318,5 @@ export class CalendarCenterComponent
       ])
       .subscribe();
   }
+
 }

@@ -35,6 +35,7 @@ import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components/codx-view-content/codx-view-content.component';
 import { EPDashboardComponent } from './dashboard/dashboard.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 export const routes: Routes = [
   {
@@ -101,6 +102,10 @@ export const routes: Routes = [
       {
         path: 'dialog/:funcID',
         component: CodxViewContentComponent,
+      },      
+      {
+        path: 'dashboard/:funcID',
+        component: EPDashboardComponent,
       },
     ],
   },
@@ -111,10 +116,6 @@ export const routes: Routes = [
       {
         path: 'stationery/:funcID',
         component: ResourcesComponent,
-      },
-      {
-        path: 'dashboard/:funcID',
-        component: EPDashboardComponent,
       },
       {
         path: 'rooms/:funcID',
@@ -156,6 +157,7 @@ export const routes: Routes = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
+    TreeMapModule,
   ],
   exports: [RouterModule],
   declarations: [

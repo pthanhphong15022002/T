@@ -143,6 +143,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+          this.isShowSuccess =  true;
       }
       if (this.listInstanceStep?.length > 0) {
         this.stepViews = [];
@@ -199,11 +200,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     } else {
       this.isShowElement = true;
     }
+    this.isShowSuccess = this.isShowElement;
   }
 
   handelToggleStep() {
     this.isShow = !this.isShow;
     this.isShowElement = this.isShow;
+    this.isShowSuccess = this.isShowElement;
   }
 
   handelContinueStep(event, step) {
@@ -498,6 +501,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
   toggleReason() {
-    this.isShowElement = !this.isShowElement;
+    this.isShowSuccess = !this.isShowSuccess;
   }
 }

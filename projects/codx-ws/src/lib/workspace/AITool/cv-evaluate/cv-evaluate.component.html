@@ -9,7 +9,7 @@
     <div class="d-flex flex-column w-100">
         <ng-container *ngIf="listBreadCrumb && listBreadCrumb.length>0">
             <div class="d-flex align-items-center">
-                <codx-label default="Lọc theo" class="ms-2 fw-bold"></codx-label>
+                <codx-label default="Lọc theo" class="fw-bold"></codx-label>
                 <span class="me-2">:</span>
                 <div *ngIf="listBreadCrumb && listBreadCrumb.length>0">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -24,7 +24,7 @@
             
         </ng-container>
         <codx-label default="Yêu cầu lọc hồ sơ" class="fw-bold"></codx-label>
-        <codx-input type="textarea" format="ed2" (valueChange)="changeValue($event)" crrValue="" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
+        <codx-input type="textarea"  format="ed2" (valueChange)="changeValue($event)" [crrValue]="data" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
     </div>
 </ng-template>
 <ng-template #footer>

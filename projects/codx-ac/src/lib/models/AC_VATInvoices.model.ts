@@ -99,4 +99,6 @@ export class AC_VATInvoices {
   modifiedOn: Date | string | null;
 
   modifiedBy: string;
+
+  journalNo : string;
 }

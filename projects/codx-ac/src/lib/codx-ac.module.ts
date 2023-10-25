@@ -43,7 +43,6 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
-import { ReceiptTransactionsLineAddComponent } from './vouchers/receipt-transactions/receipt-transactions-line-add/receipt-transactions-line-add.component';
 import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
 import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { TableLineDetailStaticComponent } from './vouchers/salesinvoices/components/table-line-detail-static/table-line-detail-static.component';
@@ -106,6 +105,7 @@ import { LayoutNoasideAcComponent } from './_layout-noaside-ac/layout-noaside-ac
 import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advance-payment-request-table/advance-payment-request-table.component';
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
+import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -331,7 +331,6 @@ export const routes: Routes = [
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
     ReportsComponent,
-    ReceiptTransactionsLineAddComponent,
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
@@ -391,6 +390,7 @@ export const routes: Routes = [
     AdvancePaymentRequestTableComponent,
     PaymentOrderComponent,
     PaymentOrderAddComponent,
+    ReceiptTransactionsTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

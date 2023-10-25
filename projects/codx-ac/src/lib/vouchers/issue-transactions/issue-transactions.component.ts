@@ -30,12 +30,10 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { ActivatedRoute } from '@angular/router';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
-import { VouchersLines } from '../../models/VouchersLines.model';
 import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
-import { Vouchers } from '../../models/Vouchers.model';
 import { IssueTransactionsUpdateParasComponent } from './issue-transactions-update-paras/issue-transactions-update-paras.component';
 
 @Component({
@@ -85,7 +83,7 @@ export class IssueTransactionsComponent extends UIComponent {
   loadingAcct: any = false;
   journal: IJournal;
   dataDefault: any;
-  voucherCopy: Vouchers = new Vouchers();
+  voucherCopy: any;
   hideFields: Array<any> = [];
   fmVouchers: FormModel = {
     formName: 'VouchersIssues',
@@ -97,7 +95,7 @@ export class IssueTransactionsComponent extends UIComponent {
     gridViewName: 'grvVouchersLinesIssues',
     entityName: 'IV_VouchersLines',
   };
-  vouchersLines: Array<VouchersLines> = [];
+  vouchersLines: Array<any> = [];
   fmAccTrans: FormModel = {
     formName: 'AcctTrans',
     gridViewName: 'grvAcctTrans',

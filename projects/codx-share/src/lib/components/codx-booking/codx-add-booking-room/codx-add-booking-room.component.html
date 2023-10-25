@@ -1,13 +1,7 @@
 
-<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" 
+<codx-layout-add #form [title]="title" [tabInfo]="haveEP ? tabInfo :tabInfoLite" [formModel]="formModel" 
   [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="false" [templateExtend]="expand"
-  [tabContent]="[
-    tabGeneralInfo,
-    tabPeopleInfo,
-    tabStationery,
-    tabMoreInfo,
-    tabReminder
-  ]" [data]="data">
+  [tabContent]=" haveEP ? [ tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder ] : [ tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder ] " [data]="data">
   
 </codx-layout-add>
 
@@ -51,9 +45,9 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="grView?.resourceID?.allowPopup">
+    <div class="form-group" *ngIf="grView?.resourceID?.allowPopup && haveEP" >
       <div class="d-flex justify-content-between align-items-center">
-        <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+        <codx-label fiedName="ResourceID" class="required" [formModel]="form.formModel">
         </codx-label>
       </div>
       <codx-input *ngIf="viewOnly" [disabled]="viewOnly" ControlName="resourceID" [formModel]="form.formModel"
@@ -97,6 +91,14 @@
         </div>
       </div>
     </div>
+
+    <div class="form-group" *ngIf="!haveEP" >      
+      <codx-label fiedName="resourceName" class="required" [formModel]="form.formModel">
+      </codx-label>      
+      <codx-input field="resourceName" [crrValue]="data?.resourceName" (valueChange)="valueChange($event)" type="text"  [placeholder]="grView?.resourceID?.description" 
+        [disabled]="viewOnly">
+      </codx-input>
+    </div>
     <div class="form-group" *ngIf="grView?.agencyName?.allowPopup">
       <codx-label fiedName="agencyName" [formModel]="form.formModel">
       </codx-label>
@@ -105,11 +107,12 @@
       </codx-input>
     </div>
 
-    <div class="form-group" *ngIf="grView?.reasonID?.allowPopup">
-      <codx-label fiedName="ReasonID" [formModel]="form.formModel">
+    <div class="form-group" *ngIf="grView?.reasonName?.allowPopup">
+      <codx-label fiedName="ReasonName" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="reasonID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
-      </codx-input>
+      
+        <codx-input field="reasonName" (valueChange)="valueChange($event)" ControlName="reasonName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
+        </codx-input>
     </div>
 
     <div class="form-group" *ngIf="grView?.title?.allowPopup">

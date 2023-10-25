@@ -499,6 +499,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.listPermissions = JSON.parse(
           JSON.stringify(this.process.permissions)
         );
+        this.process.instanceNoSetting = '';
         this.process.permissions = [];
         this.instanceNoSetting = this.process.instanceNoSetting;
         let valueListStr = this.listValueCopy.join(';');
