@@ -1,7 +1,6 @@
 import { Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
 import { CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { Vouchers } from '../../../models/Vouchers.model';
-import { VouchersLines } from '../../../models/VouchersLines.model';
+import { AnyARecord } from 'dns';
 
 @Component({
   selector: 'lib-issue-transactions-line-add',
@@ -30,9 +29,9 @@ export class IssueTransactionsLineAddComponent extends UIComponent implements On
   objectIdim: any;
   hideFields: any;
   itemName: any;
-  vouchersLine: VouchersLines;
-  vouchers: Vouchers;
-  objectVouchersLines: Array<VouchersLines> = [];
+  vouchersLine: any;
+  vouchers: any;
+  objectVouchersLines: Array<any> = [];
   fmVouchersLines: FormModel = {
     formName: '',
     gridViewName: '',
@@ -298,7 +297,7 @@ export class IssueTransactionsLineAddComponent extends UIComponent implements On
 
   clearVouchersLines() {
     let idx = this.objectVouchersLines.length;
-    let data = new VouchersLines();
+    let data:any;
     this.api
       .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
         this.vouchers,

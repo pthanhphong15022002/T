@@ -1,8 +1,6 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { extend } from '@syncfusion/ej2-angular-grids';
 import { CallFuncService, DataRequest, DialogModel, FormModel, RequestOption, SidebarModel, TenantStore, UIComponent } from 'codx-core';
-import { VouchersLines } from '../../../models/VouchersLines.model';
-import { Vouchers } from '../../../models/Vouchers.model';
 import { Subject, takeUntil } from 'rxjs';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -28,8 +26,8 @@ export class IssueTransactionsDetailComponent extends UIComponent {
   memoContent: ElementRef<HTMLElement>;
   public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
   public animationAcctTrans: AnimationModel = { enable: true, duration: 500, delay: 0 };
-  vouchersLines: Array<VouchersLines> = [];
-  voucher: Vouchers;
+  vouchersLines: Array<any> = [];
+  voucher: any;
   loading: any = false;
   loadingAcct: any = false;
   isLoadDataAcct: any = true;
@@ -40,7 +38,7 @@ export class IssueTransactionsDetailComponent extends UIComponent {
   totalAmt: any = 0;
   expanding: boolean = false;
   overflowed: boolean = false;
-  voucherCopy: Vouchers = new Vouchers();
+  voucherCopy: any
   private destroy$ = new Subject<void>();
   fmVouchers: FormModel = {
     formName: 'VouchersIssues',
