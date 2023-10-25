@@ -121,6 +121,7 @@ export class CodxAddBookingCarComponent
   categoryID: any;
   isEP = true;
   customAttendees = [];
+  haveEP: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -141,6 +142,7 @@ export class CodxAddBookingCarComponent
     }
     this.isEP = dialogData?.data[5] == false ? dialogData?.data[5] : true;
     this.customAttendees = dialogData?.data[6];
+    this.haveEP = dialogData?.data[7] == false ? dialogData?.data[7] : true;
     this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
@@ -354,10 +356,10 @@ export class CodxAddBookingCarComponent
 
                 this.getResourceForCurrentTime();
                 if (this.funcType == _addMF && this.optionalData) {
-                  this.driverChangeWithCar(this.optionalData.resourceId);
+                  this.driverChangeWithCar(this.optionalData?.resourceId);
                 }
                 if (this.funcType == _copyMF) {
-                  this.driverChangeWithCar(this.data.resourceID);
+                  this.driverChangeWithCar(this.data?.resourceID);
                 }
                 this.detectorRef.detectChanges();
               });
@@ -527,6 +529,7 @@ export class CodxAddBookingCarComponent
   }
 
   driverChangeWithCar(carID: string) {
+    if(!this.haveEP) return;
     this.codxBookingService.getGetDriverByCar(carID).subscribe((res: any) => {
       if (res && res?.resourceID != null) {
         this.tempAtender = {
@@ -572,6 +575,9 @@ export class CodxAddBookingCarComponent
         this.data[event.field] = event.data.value;
       } else {
         this.data[event?.field] = event.data;
+      }
+      if(event?.field=='reasonName' && event?.components?.itemsSelected?.length>0){
+        this.data.reasonID = event?.components?.itemsSelected[0]?.ReasonID;
       }
     }
   }
@@ -856,6 +862,7 @@ export class CodxAddBookingCarComponent
       if (this.data.startDate < new Date()) {
         if (this.dueDateControl != true || this.dueDateControl != '1') {
           this.notificationsService.notifyCode('TM036');
+          this.onSaving = false;
           return;
         }
       }
@@ -950,7 +957,7 @@ export class CodxAddBookingCarComponent
     }
   }
   capacityCheck(approval) {
-    if (this.data.attendees > this.carCapacity) {
+    if (this.data.attendees > this.carCapacity && this.data.resourceID!=null) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {
         if (x.event?.status == 'Y') {
           this.attendeesValidateStep(approval);
@@ -1070,6 +1077,7 @@ export class CodxAddBookingCarComponent
                   this.dialogRef && this.dialogRef.close(this.returnData);
                 }
                 else{
+                  this.onSaving = false;
                   return;
                 }
               });

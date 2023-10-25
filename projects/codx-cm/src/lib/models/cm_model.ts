@@ -195,6 +195,7 @@ export class CM_Deals {
   expectedFrom: Date;
   expectedTo: Date;
   datas: string;
+  industries: string;
 }
 
 export class CM_Permissions {
@@ -358,7 +359,7 @@ export class CM_Contacts {
 export class BS_AddressBook {
   recID: string;
   adressType: string;
-  adressName: string;
+  address: string;
   objectType: string;
   objectID: string;
   street: string;
@@ -542,7 +543,7 @@ export class CM_DealsCompetitors {
 }
 
 export class CM_Cases {
-  recID: string;
+  recID: string = Util.uid();
   caseNo: string;
   caseName: string;
   caseType: string = '2';
@@ -607,6 +608,8 @@ export class CM_Cases {
   modifiedOn: Date;
   modifiedBy: string;
   applyProcess: boolean;
+  permissions: CM_Permissions[];
+  datas: string;
 }
 
 export class CM_Partners {

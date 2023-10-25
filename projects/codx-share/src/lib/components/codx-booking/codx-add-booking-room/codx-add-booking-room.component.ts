@@ -1,3 +1,4 @@
+import { components } from './../../../../../../codx-ws/src/lib/approvals/routing';
 import { filter } from 'rxjs';
 import { Permission } from '../../../../../../../src/shared/models/file.model';
 import {
@@ -107,6 +108,28 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       name: 'tabReminder',
     },
   ];
+  tabInfoLite = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabGeneralInfo',
+    },
+    {
+      icon: 'icon-person_outline',
+      text: 'Người tham dự',
+      name: 'tabPeopleInfo',
+    },
+    {
+      icon: 'icon-tune',
+      text: 'Thông tin khác',
+      name: 'tabMoreInfo',
+    },
+    {
+      icon: 'icon-playlist_add_check',
+      text: 'Mở rộng',
+      name: 'tabReminder',
+    },
+  ];
   approvalRule = '1';
   categoryID = EPCONST.ES_CategoryID.Room;
   listRoles = [];
@@ -144,6 +167,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   resourceOwner = null;
   autoApproveItem: any;
   approvalRuleSta: any;
+  haveEP = true;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -158,6 +182,13 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
+    // this.data = { ...dialogData?.data?.data };
+    // this.funcType = dialogData?.data?.funcType ;
+    // this.tmpTitle = dialogData?.data?.popupTitle;
+    // this.optionalData = dialogData?.data?.optionalData;
+    // this.viewOnly = dialogData?.data?.viewOnly ?? false;    
+    // this.isEP = dialogData?.data?.isEP ?? true;
+    // this.haveEP = dialogData?.data?.haveEP ?? true;
     this.data = { ...dialogData?.data[0] };
     this.funcType = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
@@ -166,6 +197,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.viewOnly = true;
     }
     this.isEP = dialogData?.data[5] == false ? dialogData?.data[5] : true;
+    this.haveEP = dialogData?.data[6] ?? true;
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
@@ -349,7 +381,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
         if (grv) {
-          this.grView = Util.camelizekeyObj(grv);
+          this.grView = Util.camelizekeyObj(grv);          
         }
       });
     this.codxShareService.getSettingValueWithOption('F',_EPParameters).subscribe((sv:any) => {
@@ -550,6 +582,9 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         this.data[event.field] = event.data.value;
       } else {
         this.data[event.field] = event.data;
+      }
+      if(event?.field=='reasonName' && event?.components?.itemsSelected?.length>0){
+        this.data.reasonID = event?.components?.itemsSelected[0]?.ReasonID;
       }
     }
     this.changeDetectorRef.detectChanges();
@@ -802,7 +837,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
             }
           }
           this.resources.forEach((item) => {
-            if (item.userID != this.curUser.userID) {
+            if (item.userID != this.curUser?.userID) {
               this.resources.push(item);
             }
           });
@@ -926,10 +961,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
 
   selectRoseType(idUserSelected, value) {
     if (value == '1') {
-      if (this.curUser.roleType == '1') {
+      if (this.curUser?.roleType == '1') {
         this.curUser.roleType = '3';
         this.listRoles.forEach((role) => {
-          if (this.curUser.roleType == role.value) {
+          if (this.curUser?.roleType == role.value) {
             this.curUser.icon = role.icon;
           }
         });
@@ -949,10 +984,10 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       }
     }
 
-    if (idUserSelected == this.curUser.userID) {
+    if (idUserSelected == this.curUser?.userID) {
       this.curUser.roleType = value;
       this.listRoles.forEach((role) => {
-        if (this.curUser.roleType == role.value) {
+        if (this.curUser?.roleType == role.value) {
           this.curUser.icon = role.icon;
         }
       });
@@ -1029,6 +1064,15 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         this.onSaving = false;
         return;
       }
+      if(this.data.resourceID ==null || this.data.resourceID == ""){
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView?.resourceName?.headerText + '"'
+        );
+        this.onSaving = false;
+        return;
+      }
       this.form?.formGroup.patchValue(this.data);
       if (this.form?.formGroup.invalid == true) {
         this.codxBookingService.notifyInvalid(
@@ -1085,7 +1129,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
 
       this.data.resourceType = this.data.resourceType ?? '1';
       this.data.approval = this.approvalRule;
-      this.data.requester = this.curUser.userName;
+      this.data.requester = this.curUser?.userName;
       this.data.attendees = this.resources.length + this.guestNumber;
       this.data.attachments = this.attachment.fileUploadList.length;
       //check
@@ -1128,7 +1172,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     ) {
       this.notificationsService.alertCode('EP012').subscribe((x) => {
         if (x.event?.status == 'Y') {
-          if (this.attendeesNumber > this.roomCapacity) {
+          if (this.attendeesNumber > this.roomCapacity && this.data.resourceID!=null) {
             this.notificationsService.alertCode('EP004').subscribe((x) => {
               if (x.event?.status == 'Y') {
                 this.attendeesValidateStep(approval);
@@ -1146,7 +1190,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         }
       });
     } else {
-      if (this.attendeesNumber > this.roomCapacity) {
+      if (this.attendeesNumber > this.roomCapacity  && this.data.resourceID!=null) {
         this.notificationsService.alertCode('EP004').subscribe((x) => {
           if (x.event?.status == 'Y') {
             this.attendeesValidateStep(approval);
@@ -1324,6 +1368,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
         tempApprover.approver = selectResource[0]?.owner;
         this.resourceOwner = [tempApprover];
         this.data.resourceID = evt;
+        this.data.resourceName = selectResource[0]?.resourceName;;
         this.tmplstDevice = [];
         if (
           selectResource[0]?.equipments &&
@@ -1563,6 +1608,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
 
   getResourceForCurrentTime() {
+    if(!this.haveEP) return;//Ko mua EP => ko cần lấy phòng khả dụng mà cho nhập dịa điểm
     this.codxBookingService
       .getAvailableResources(
         '1',

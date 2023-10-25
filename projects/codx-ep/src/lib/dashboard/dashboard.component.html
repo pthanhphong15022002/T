@@ -8,18 +8,46 @@
 ></codx-views>
 
 <ng-template #panelLeft>
-  <div class="container-fluid p-0" *ngIf="isLoaded">
-    <ng-container *ngTemplateOutlet="dashboard"> </ng-container>
+  <div class="container-fluid h-100 p-0" *ngIf="isLoaded && funcID=='EPD001'">
+    <ng-container *ngTemplateOutlet="dashboardRoom"> </ng-container>
+  </div>
+  <div class="container-fluid h-100 p-0" *ngIf="isLoaded && funcID=='EPD002'">
+    <ng-container *ngTemplateOutlet="dashboardCar"> </ng-container>
+  </div>
+  <div class="container-fluid h-100 p-0" *ngIf="isLoaded && funcID=='EPD003'">
+    <ng-container *ngTemplateOutlet="dashboardStationery"> </ng-container>
   </div>
 
 </ng-template>
 
-<ng-template #dashboard>
+<ng-template #dashboardRoom>
   <codx-dashboard
     #dashboardObj
     [templates]="templates"
     [panels]="panels"
     [datas]="datas"
+    [isEditMode]="false"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboardCar>
+  <codx-dashboard
+    #dashboardObj
+    [templates]="templatesCar"
+    [panels]="panelCar"
+    [datas]="dataCar"
+    [isEditMode]="false"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+
+<ng-template #dashboardStationery>
+  <codx-dashboard
+    #dashboardObj
+    [templates]="templatesStationery"
+    [panels]="panelStationery"
+    [datas]="dataStationery"
     [isEditMode]="false"
     [cellSpacing]="[10, 10]"
   ></codx-dashboard>
@@ -80,13 +108,9 @@
     width="100%"
     height="100%"
     [tooltip]="{ enable: true }"
-    [primaryXAxis]=" {
-      valueType: 'Category',
-      majorGridLines: { width: 0 },
-  } "
-    [primaryYAxis]="{
-      majorTickLines: { width: 0 }, lineStyle: { width: 0 }
-  }"
+    [primaryXAxis]=" primaryXAxis"
+    [primaryYAxis]="primaryYAxis"
+    [chartArea]="chartArea"
   [palettes]="palettes"
   >
     <e-series-collection>
@@ -118,9 +142,9 @@
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="6">
     <div class="w-100 h-100">
-      <div class="my-5 h-10">
+      <!-- <div class="my-5 h-10">
         <div class="d-flex justify-content-center align-items-center">
-          <!-- <div
+          <div
             class="btn-group"
             role="group"
             aria-label="Basic radio toggle button group"
@@ -153,18 +177,18 @@
               for="btnHighestRadio"
               default="Cao nhất"
             ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
-          </div> -->
+          </div>
         </div>
-      </div>
-      <div class="container p-0" style="height: 90%" *ngIf="statByEmp.length">
+      </div>-->
+      <div class="container p-0 h-100"  *ngIf="statByEmp.length">
         <div
-          class="overflow-scroll overflow-x-hidden"
+          class="overflow-x-hidden scroll-hover"
           style="max-height: 95%; width: 100%"
 
         >
           <div
             class="mx-2 my-4"
-            *ngFor="let data of sortByProp(statByEmp,'quantity','desc',5)"
+            *ngFor="let data of sortByProp(statByEmp,'quantity','desc',10)"
           >
             <div class="row w-100">
               <div class="col-1 d-flex align-items-center">
@@ -182,9 +206,9 @@
                   <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
                 </div>
                 <div class="w-100">
-                  <div class="h-15px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
                     <div
-                      class="h-15px rounded-4 float-start "
+                      class="h-10px rounded-4 float-start "
                       role="progressbar"
                       [style.width]="data.percentage + '%'"
                       [style.background-color]="'#00cc99'"
@@ -207,7 +231,7 @@
 </ng-template>
 <ng-template #template let-data>
   <div class="container h-100 p-0" id="7">
-    <div class="w-100 h-100 overflow-scroll">
+    <div class="w-100 h-100 scroll-hover">
       <!-- <div class="my-5 h-10">
         <div class="d-flex justify-content-center align-items-center">
           <div
@@ -319,13 +343,9 @@
       width="100%"
       height="100%"
       [tooltip]="{ enable: true }"
-      [primaryXAxis]=" {
-        valueType: 'Category',
-        majorGridLines: { width: 0 },
-    } "
-      [primaryYAxis]="{
-        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
-    }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
     [palettes]="palettes"
     >
       <e-series-collection>
@@ -359,4 +379,712 @@
 </ng-template>
 <ng-template #template let-data>
   <h2 id="10">Hé lô 9</h2>
+</ng-template>
+<ng-template #templateCar let-data>
+  <div class="w-100 h-100" id="1">
+    <div class="container h-100 p-0  overflow-x-hidden scroll-hover">
+      <div
+      *ngFor="let data of sortByProp(statByReason,'quantity','desc',10)"
+      class="topchart-item d-flex align-items-center justify-content-end container"
+    >
+      <div *ngIf="+data?.percentage > 0" class="float-end row w-100">
+        <div class="fw-bold  col-4  my-auto">
+         {{data.reason}}
+        </div>
+        <div class="col-8" [title]="data.reason+ ' | ' + data.quantity ">
+            <div
+            class="topchart-user"
+            style="color: #fff;float:right"
+            [style.width]="data.percentage+'%'"
+            [style.backgroundColor]="random_bg_color()"
+
+          >
+            <span>{{ data.quantity }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateCar let-data>
+  <div class="container p-0 h-100" id="2">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          *ngFor="let item of lstResources"
+          [dataSource]="statByRes"
+          type="StackingColumn"
+          [xName]="'departmentName'"
+          [yName]="item.resourceID"
+          [name]="item.resourceName"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="statByRes"
+          type="Column"
+          [xName]="'resourceName'"
+          [yName]="'usedHours'"
+          name="Thời gian sử dụng"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #templateCar let-data>
+  <div class="container h-100 p-0" id="3">
+    <div class="w-100 h-100 scroll-hover">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRadio"
+              autocomplete="off"
+              checked
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnQuantityRadio"
+              default="Số lượng"
+            ></codx-label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnTimeRadio"
+              autocomplete="off"
+            />
+            <codx-label
+              class="btn btn-outline-primary"
+              for="btnTimeRadio"
+              default="Thời gian"
+            ></codx-label>
+          </div>
+        </div>
+      </div> -->
+      <div class="my-4" style="height: 45%">
+        <ejs-accumulationchart
+          #pie1
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [centerLabel]="{
+            text:
+            dataset.length + '<br>Lượt'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByRes"
+              xName="resourceID"
+              yName="quantity"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="h-50 container p-0">
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of statByRes"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.resourceName }} ({{ ref.quantity }})</span>
+              <span>
+                  {{ref.percentage}} %
+
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                     ref.percentage +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateCar let-data>
+  <div class="container p-0 h-100" id="4">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
+      [chartArea]="chartArea"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="statByCard"
+          type="Bar"
+          [xName]="'resourceName'"
+          [yName]="'quantity'"
+          name="Lượt sử dụng xe"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="statByRes"
+          type="Column"
+          [xName]="'resourceName'"
+          [yName]="'usedHours'"
+          name="Thời gian sử dụng"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #templateCar let-data>
+  <div class="container p-0 h-100" id="5">
+    <div class="w-100 h-100">
+       <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+         <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div>
+        </div>
+      </div> -->
+      <div class="container p-0 h-100"  *ngIf="statByAttendees.length">
+        <div
+          class="overflow-x-hidden scroll-hover"
+          style="max-height: 95%; width: 100%"
+
+        >
+          <div
+            class="mx-2 my-4"
+            *ngFor="let data of sortByProp(statByAttendees,'quantity','desc',5)"
+          >
+            <div class="row w-100">
+              <div class="col-1 ms-1 d-flex align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+              </div>
+              <div class="col-10 ms-5">
+                <div class="w-100 text-start fs-6">
+                  <span class="fw-bold">{{ data.username}}</span>
+                </div>
+                <!-- <div class="w-100 text-start fs-7">
+                  <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
+                </div> -->
+                <div class="w-100">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentage + '%'"
+                      [style.background-color]="'#00cc99'"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-7 float-end "  [style.width]="(100-data.percentage) + '%'">
+                      <span>{{data.quantity}}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateStationery let-data>
+  <div class="w-100 h-100" id="1">
+    <div class="container h-100 p-0  overflow-x-hidden scroll-hover">
+      <ejs-accumulationchart
+          #pie1
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [centerLabel]="{
+            text:
+            sumByProp(statByReason,'quantity') + '<br>Lượt'
+          }"
+          [legendSettings]="{ visible: true }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByReason"
+              xName="reason"
+              yName="quantity"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabelStationery"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateStationery let-data>
+  <div class="container p-0 h-100" id="2">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      width="100%"
+      height="100%"
+      [tooltip]="{ enable: true }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
+    [palettes]="palettes"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="statByItems"
+          type="Column"
+          [xName]="'departmentName'"
+          [yName]="'quantity'"
+          [name]="'số lượng văn phòng phẩm được đặt'"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="statByRes"
+          type="Column"
+          [xName]="'resourceName'"
+          [yName]="'usedHours'"
+          name="Thời gian sử dụng"
+          columnSpacing="0.1"
+          columnWidth="0.25"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #templateStationery let-data>
+  <div class="container h-100 p-0" id="3">
+    <div class="w-100 h-100 scroll-hover">
+      <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              #input1
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityBooking"
+              autocomplete="off"
+              checked
+              (change)="changeDir(input1,{chart1:{pie1,elePane1},chart2:{pie2,elePane2}})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnQuantityBooking"
+
+            >Theo yêu cầu</label>
+
+            <input
+              #input2
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnQuantityRoomBooking"
+              autocomplete="off"
+              (change)="changeDir(input2,{chart1:{pie1,elePane1},chart2:{pie2,elePane2}})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnQuantityRoomBooking"
+            >Theo đặt phòng</label>
+          </div>
+        </div>
+      </div>
+      <div class="my-4" style="height: 45%">
+        <ejs-accumulationchart
+          #pie1
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+
+          [legendSettings]="{ visible: false }"
+          [ngClass]="activePane=='btnQuantityBooking' ? '' : 'd-none'"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByItems"
+              xName="itemName"
+              yName="itemBooking"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel1"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+        <ejs-accumulationchart
+          #pie2
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+          [legendSettings]="{ visible: false }"
+          [ngClass]="activePane=='btnQuantityRoomBooking' ? '' : 'd-none'"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="statByItems"
+              xName="itemName"
+              yName="itemRoomBooking"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabel1"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+      <div class="h-45 container p-0">
+        <div
+          #elePane1
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+          [ngClass]="activePane=='btnQuantityBooking' ? '' : 'd-none'"
+        >
+          <div
+            *ngFor="let ref of statByItems"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.itemName }} ({{ ref.itemBooking }})</span>
+              <span>
+                  {{ref.percentageBooking}} %
+
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                     ref.percentageBooking +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          #elePane2
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+          [ngClass]="activePane=='btnQuantityRoomBooking' ? '' : 'd-none'"
+        >
+          <div
+            *ngFor="let ref of statByItems"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.itemName }} ({{ ref.itemRoomBooking }})</span>
+              <span>
+                  {{ref.percentageRoom}} %
+
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                     ref.percentageRoom +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateStationery let-data>
+  <div class="w-100 h-100" id="4">
+    <ejs-treemap
+      align="center"
+      style="display: block"
+      [dataSource]="statByItems"
+      [weightValuePath]="'quantity'"
+      [palette]="palettes"
+      [leafItemSettings]="{
+        labelPath: 'itemName'
+      }"
+      [tooltipSettings]="{
+        visible: true,
+        template:
+          '<div><span >${itemName}: </span><span >${quantity}</span></div>'
+      }"
+      enableDrillDown="false"
+    >
+    </ejs-treemap>
+    <!-- <img
+      style="width: 100%; height: 100%"
+      src="assets/themes/sys/default/img/Empty_TreeMaps.svg"
+    /> -->
+  </div>
+</ng-template>
+<ng-template #templateStationery let-data>
+  <div class="container p-2 h-100" id="5">
+    <div class="w-100 h-100">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div>
+        </div>
+      </div> -->
+      <div class="container p-0" style="height: 100%" *ngIf="statByItems.length">
+        <div
+          class=" overflow-x-hidden scroll-hover"
+          style="max-height: 95%; width: 100%"
+
+        >
+          <div
+            class="mx-2 my-4"
+            *ngFor="let data of sortByProp(statByItems,'quantity','desc',5)"
+          >
+            <div class="row w-100">
+              <div class="col-1 d-flex align-items-center"  *ngIf="data.userID">
+                <codx-img
+
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+              </div>
+              <div class="col-11">
+                <div class="w-100 text-start fs-6">
+                  <span class="fw-bold">{{ data.itemName}}</span>
+                </div>
+                <!-- <div class="w-100 text-start fs-7">
+                  <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
+                </div> -->
+                <div class="w-100" *ngIf="data.itemRoomBooking">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentageRoom + '%'"
+                      [style.background-color]="'#00cc99'"
+                      title="số lượng {{data.itemName}} được đặt"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageRoom) + '%'">
+                      <span>{{data.itemRoomBooking}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100  py-1" *ngIf="data.itemBooking">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentageBooking + '%'"
+                      [style.background-color]="'#1BA3C6'"
+                      title="số lượng {{data.itemName}} theo đặt phòng"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageBooking) + '%'">
+                      <span>{{data.itemBooking}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!-- <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark">{{ data.username }}</div>
+                  <div>{{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-container-align position-relative">
+                  <div
+                    class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                  >
+                    <span class="fw-bold" style="font-size: 0.4vw"
+                      >{{data.percentage }}%</span
+                    >
+                  </div>
+                  <ejs-progressbar
+                    #annotation1
+                    [id]="newGuid()"
+                    [type]="'Circular'"
+                    [maximum]="100"
+                    [minimum]="0"
+                    [value]="data.percentage"
+                    [width]="'65'"
+                    [height]="'65'"
+                    [trackThickness]="10"
+                    [progressThickness]="10"
+                    [progressColor]="'#FF4500'"
+                    [animation]="animation"
+                  >
+                  </ejs-progressbar>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>

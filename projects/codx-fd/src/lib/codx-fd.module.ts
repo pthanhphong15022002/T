@@ -65,7 +65,7 @@ import { PositionPipe } from 'projects/codx-share/src/lib/components/dynamic-set
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldown.component';
-import { PopupInputPointsComponent } from './approvals/popup-input-points/popup-input-points.component';
+import { PopupApprovalComponent } from './approvals/popup-approval/popup-approval.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { EVouchersComponent } from './evouchers/evouchers.component';
 
@@ -221,7 +221,7 @@ const Component: Type<any>[] = [
   AddDedicationRankComponent,
   SettingContentComponent,
   DrilldownComponent,
-  PopupInputPointsComponent,
+  PopupApprovalComponent,
   ApprovalsComponent,
   EVouchersComponent,
 ];
@@ -247,7 +247,7 @@ const T_Pipe: Type<any>[] = [];
   declarations: [
     Component,
     T_Pipe,
-    PopupInputPointsComponent,
+    PopupApprovalComponent,
     ApprovalsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
