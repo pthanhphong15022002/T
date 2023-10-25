@@ -74,7 +74,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
   ) {
     super(inject);
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit(): void {}
@@ -98,7 +98,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
   createTab(e: any, ele: TabComponent) {
     this.showHideTab(this.itemSelected?.subType, ele);
   }
-  //#endregion
+  //#endregion Init
 
   //#region Event
 

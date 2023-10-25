@@ -9,15 +9,15 @@ export class AC_PurchaseInvoicesLines {
 
   lineType: string;
 
-  lineStatus: string;
+  lineStatus: string = '60';
 
-  lotID: string = Util.uid();;
+  lotID: string = Util.uid();
 
   itemID: string;
 
   itemName: string;
 
-  IDIMID: string = Util.uid();;
+  IDIMID: string = Util.uid();
 
   IDIM0: string;
 
@@ -39,7 +39,7 @@ export class AC_PurchaseInvoicesLines {
 
   IDIM9: string;
 
-  fixedDIMs: string;
+  fixedDIMs: string = '0000000000';
 
   CWUM: string;
 
