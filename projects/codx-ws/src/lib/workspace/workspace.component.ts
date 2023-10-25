@@ -4,6 +4,7 @@ import { from, isObservable, of } from 'rxjs';
 import { SpeedDialItemModel } from '@syncfusion/ej2-angular-buttons';
 import axios from 'axios';
 import { DialogModel, Util } from 'codx-core';
+import { CvInformationComponent } from './AITool/cv-information/cv-information.component';
 
 @Component({
   selector: 'lib-workspace',
@@ -154,18 +155,12 @@ export class WorkspaceComponent extends WSUIComponent{
 
   //open popup upload files
   openPopupUploadFile(){
-    if(this.popupUploads)
-    {
-      let option = new DialogModel();
-      option.IsFull = true;
-      this.request = "";
-      this.jsonExports = [];
-      this.cellExvalueate = false;
-      this.callFunc.openForm(this.popupUploads,"",1000,900,"",null,"",option).closed.subscribe((res) => {
-        this.disabledSpeedDial = false; 
-        this.changeDetectorRef.detectChanges()
-      });
-    }
+    let option = new DialogModel();
+    option.IsFull = true;
+    this.callFunc.openForm(CvInformationComponent,"",1000,900,"",null,"",option).closed.subscribe((res) => {
+      this.disabledSpeedDial = false; 
+      this.changeDetectorRef.detectChanges()
+    });
   }
 
   // value change
@@ -269,6 +264,7 @@ export class WorkspaceComponent extends WSUIComponent{
     }
         
   }
+  
   //
   exportFileCV(file){
     if(file)
@@ -469,7 +465,7 @@ class CVModel{
     this.result = "";
   }
 }
-class EmailModel{
+export class EmailModel{
   // language:any;
   subject:string;
   contents:string;
@@ -491,7 +487,7 @@ class EmailModel{
     this.result = null;
   }
 }
-class SocialMediaModel{
+export class SocialMediaModel{
   // language:any;
   socialMedias:any[];
   type:string;
@@ -536,7 +532,7 @@ class SocialMediaModel{
     this.result = null;
   }
 }
-class OKRModel
+export class OKRModel
 {
   target:string;
   num_KPI:number;

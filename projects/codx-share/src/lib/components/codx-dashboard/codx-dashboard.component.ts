@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
   Input,
   OnInit,
@@ -135,6 +136,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       }, 100);
     }
   }
+  @HostBinding('class') class = 'd-block h-100';
 
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;

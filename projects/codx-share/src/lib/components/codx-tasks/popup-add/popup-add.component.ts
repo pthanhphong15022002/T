@@ -411,6 +411,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //#endregion
 
   openTask(): void {
+    this.task.priority = this.task.priority ?? '2';
     this.task.estimated = 0;
     this.readOnly = false;
     this.listTodo = [];
