@@ -1,3 +1,14 @@
+
+export class EP_BookingInputParam {
+  data: any;
+  funcType: string;
+  popupTitle: string;
+  optionalData: any;
+  viewOnly: boolean=false;
+  isEP: boolean=true;//Function hiện tại đang thuộc module EP (Tích hợp)
+  haveEP: boolean=true;//Người dùng có quyền module EP hay ko (Tích hợp)
+  customAttendees: any;
+}
 export class Equipments {
     equipmentID:string;
     createdBy: string;

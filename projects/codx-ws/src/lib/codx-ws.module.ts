@@ -62,6 +62,8 @@ import { ExtendNoteBookComponent } from './personal/master-detail/my-page/extend
 import { CommonModule } from '@angular/common';
 import { PopupAddPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
+import { CvInformationComponent } from './workspace/AITool/cv-information/cv-information.component';
+import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
 const routes: Routes = [
   {
     path: '',
@@ -265,6 +267,8 @@ const routes: Routes = [
     MyPageComponent,
     ImgComponent,
     VideoComponent,
+    CvInformationComponent,
+    CvEvaluateComponent
   ],
   imports: [
     CommonModule,

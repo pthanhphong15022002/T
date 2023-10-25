@@ -436,26 +436,35 @@
       </div>
     </div>
     <div>
+<!--
       <codx-attachment
-        #attachment
-        [objectId]="cases?.recID"
-        [objectType]="dialog.formModel.entityName"
-        [referType]="'source'"
-        hideFolder="1"
-        hideImageUpload="0"
-        hideImageThumb="0"
-        hideUploadBtn="1"
-        hideDes="1"
-        type="inline"
-        allowMultiFile="1"
-        [formModel]="dialog.formModel"
-        (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)"
-        displayThumb="full"
-        showMessage="0"
-        [dataSelected]="cases"
-      >
-      </codx-attachment>
+      #attachment
+      [objectId]="cases?.recID"
+      [objectType]="form.formModel.entityName"
+      [referType]="'source'"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      [formModel]="dialog.formModel"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+      displayThumb="full"
+      showMessage="0"
+      [dataSelected]="cases"
+    >
+    </codx-attachment> -->
+
+    <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="cases?.recID"
+    hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1"
+    type="inline" allowMultiFile="1" referType="source" [formModel]="dialog.formModel"
+    (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
+  </codx-attachment>
+
+
     </div>
   </ng-container>
 </ng-template>

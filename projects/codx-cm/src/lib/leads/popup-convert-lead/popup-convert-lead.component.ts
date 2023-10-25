@@ -234,8 +234,7 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.businessLineID = this.lead?.businessLineID;
     this.deal.consultantID = this.lead?.consultantID;
     this.deal.campaignID = this.lead?.campaignID;
-    // this.deal.salespersonID = this.lead?.salespersonID;
-    // this.deal.owner = this.lead?.salespersonID;
+
     this.deal.note = this.lead?.note;
     this.deal.memo = this.lead?.memo;
     this.changeDetectorRef.detectChanges();
@@ -347,6 +346,20 @@ export class PopupConvertLeadComponent implements OnInit {
         };
         this.listInstanceSteps = res[0];
         this.listParticipants = obj.permissions;
+        let find = this.listParticipants.some(
+          (x) => x.userID == this.lead?.salespersonID
+        );
+        if (find) {
+          this.deal.salespersonID = this.lead?.salespersonID;
+          this.deal.owner = this.lead?.salespersonID;
+          this.setPermissions(
+            this.listParticipants.find((x) => x.userID == this.lead?.salespersonID),
+            'O'
+          );
+          if(!this.radioChecked){
+            this.customer.owner = this.deal.salespersonID;
+          }
+        }
         this.deal.dealID = res[2];
         this.dateMax = this.HandleEndDate(this.listInstanceSteps, 'add', null);
         this.deal.endDate = this.dateMax;
@@ -421,7 +434,7 @@ export class PopupConvertLeadComponent implements OnInit {
             [this.customer.address, this.leverSetting]
           )
         );
-        if (json != null && json.trim() != '' && json != "null") {
+        if (json != null && json.trim() != '' && json != 'null') {
           let lstDis = JSON.parse(json);
           this.customer.provinceID = lstDis?.ProvinceID;
           this.customer.districtID = lstDis?.DistrictID;
@@ -549,7 +562,6 @@ export class PopupConvertLeadComponent implements OnInit {
           : '',
         this.transIDCamp,
       ];
-
 
       await this.api
         .execSv<any>(

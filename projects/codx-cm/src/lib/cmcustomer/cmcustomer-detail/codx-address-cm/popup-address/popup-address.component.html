@@ -27,7 +27,7 @@
     <div class="form-group mt-4">
       <div class="d-flex justify-content-between">
         <codx-label
-          fiedName="AdressName"
+          fiedName="Address"
           [formModel]="form.formModel"
         ></codx-label>
         <span
@@ -36,20 +36,11 @@
         >
         </span>
       </div>
-      <!-- <codx-input
-      id="inputAddress"
-      (ngModelChange)="checkAdressName()"
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-      [crrValue]="data?.adressName"
-      field="adressName"
-    >
-    </codx-input> -->
       <input
         class="input w-100"
         type="text"
-        [placeholder]="gridViewSetup?.AdressName?.description"
-        [(ngModel)]="data.adressName"
+        [placeholder]="gridViewSetup?.Address?.description"
+        [(ngModel)]="data.address"
         (change)="checkAdressName()"
       />
     </div>

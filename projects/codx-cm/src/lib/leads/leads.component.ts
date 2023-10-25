@@ -177,15 +177,6 @@ export class LeadsComponent
     }
     this.executeApiCalls();
     this.loadParam();
-    this.api
-      .execSv<any>(
-        'CM',
-        'ERM.Business.CM',
-        'CustomersBusiness',
-        'RPAUpdateAddresscAsync',
-        ['CM_Leads']
-      )
-      .subscribe((res) => {});
   }
 
   onInit(): void {
@@ -998,49 +989,60 @@ export class LeadsComponent
 
   //auto update address
   async updateAutoAddress(datas = []) {
-    let lsts = datas.filter(
-      (x) => x.address != null && x.address?.trim() != ''
-    );
-    for (var item of lsts) {
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [item?.address, this.leverSetting]
-        )
-      );
-      if (json != null && json.trim() != '' && json != "null") {
-        let lstDis = JSON.parse(json);
-        if (item.provinceID != lstDis?.ProvinceID)
-          item.provinceID = lstDis?.ProvinceID;
-        if (item.districtID != lstDis?.DistrictID)
-          item.districtID = lstDis?.DistrictID;
-        // if (item?.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
-      } else {
-        item.provinceID = null;
-        item.districtID = null;
-        item.wardID = null;
-      }
-    }
+    // let lsts = datas.filter(
+    //   (x) => x.address != null && x.address?.trim() != ''
+    // );
+    // for (var item of lsts) {
+    //   let json = await firstValueFrom(
+    //     this.api.execSv<any>(
+    //       'BS',
+    //       'ERM.Business.BS',
+    //       'ProvincesBusiness',
+    //       'GetLocationAsync',
+    //       [item?.address, this.leverSetting]
+    //     )
+    //   );
+    //   if (json != null && json.trim() != '' && json != "null") {
+    //     let lstDis = JSON.parse(json);
+    //     if (item.provinceID != lstDis?.ProvinceID)
+    //       item.provinceID = lstDis?.ProvinceID;
+    //     if (item.districtID != lstDis?.DistrictID)
+    //       item.districtID = lstDis?.DistrictID;
+    //     // if (item?.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+    //   } else {
+    //     item.provinceID = null;
+    //     item.districtID = null;
+    //     item.wardID = null;
+    //   }
+    // }
 
+    // this.api
+    //   .execSv<any>(
+    //     'CM',
+    //     'ERM.Business.CM',
+    //     'CustomersBusiness',
+    //     'UpdateAutoAddressAsync',
+    //     [null, lsts]
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       lsts.forEach((ele) => {
+    //         this.view.dataService.update(ele).subscribe();
+    //       });
+    //       this.notificationsService.notifyCode('SYS007');
+    //       this.detectorRef.detectChanges();
+    //     }
+    //   });
     this.api
       .execSv<any>(
         'CM',
         'ERM.Business.CM',
         'CustomersBusiness',
-        'UpdateAutoAddressAsync',
-        [null, lsts]
+        'RPAUpdateAddresscAsync',
+        ['CM_Leads']
       )
       .subscribe((res) => {
-        if (res) {
-          lsts.forEach((ele) => {
-            this.view.dataService.update(ele).subscribe();
-          });
-          this.notificationsService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
+        this.notificationsService.notifyCode('SYS007');
       });
   }
 
@@ -1482,7 +1484,7 @@ export class LeadsComponent
   }
 
   popupOwnerRoles(data) {
-    this.dataSelected = data;
+    this.dataSelected =  JSON.parse(JSON.stringify(data)) ;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.funcIDCrr.functionID;

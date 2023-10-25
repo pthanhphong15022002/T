@@ -380,8 +380,8 @@ export class PopupAddCampaignContactComponent implements OnInit {
       .subscribe((res) => {
         let lstAllSearchs = [];
         if (res) {
-          lstAllSearchs = res[0];
-          this.countLeadCus = res[1];
+          lstAllSearchs = res;
+          this.countLeadCus = lstAllSearchs.length;
         } else {
           lstAllSearchs = [];
           this.countLeadCus = 0;

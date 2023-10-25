@@ -137,8 +137,29 @@
           <span>{{ data.orgUnitName }}</span>
         </div>
 
-        <div class="text-gray-700">
+        <!-- <div class="text-gray-700">
           <span
+          *ngIf="data.companyID"
+          [innerHTML]="
+            data.companyID
+              | formatvalue : view.formModel : 'companyID'
+              | async
+          "
+        ></span> -->
+
+        <div class="text-gray-700">
+          <span *ngIf="data.departmentID">
+            {{data.departmentName? data.departmentName :data.departmentID}}</span>
+          <span *ngIf="data.divisionID">
+            <span class="text-gray-400 mx-1">|</span>
+            {{data.divisionName? data.divisionName: data.divisionID }}</span>
+
+          <!-- <span *ngIf="data.departmentID != data.orgUnitID">
+            {{data.departmentName? data.departmentName :data.departmentID}}</span>
+          <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">|</span>
+          <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span> -->
+
+          <!-- <span
             *ngIf="
               data.departmentName && data.orgUnitID != data.departmentID;
               else elseCompany
@@ -148,7 +169,7 @@
           <ng-container *ngIf="data.divisionName">
             <span class="text-gray-300 mx-2">|</span>
             <span>{{ data.divisionName }}</span>
-          </ng-container>
+          </ng-container> -->
         </div>
 
         <ng-template #elseCompany>

@@ -106,12 +106,19 @@
             {{ data.tilte }}
           </div>
           <div class="text-gray-500 pt-1">
-            {{ data.description }}
+            {{ data | formatDescription : oldDataValue }}
           </div>
         </div>
         <div
           *ngIf="!isGroup"
-          class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
+          class="d-flex align-items-center ms-4 justify-content-end category-control w-300px min-w-300px"
+          [ngClass]="
+            data.controlType &&
+            data.controlType != 'GroupControl' &&
+            data.category
+              ? 'min-w-300px'
+              : ''
+          "
         >
           <!-- <ng-container
           *ngIf="data.controlType && data.controlType != 'GroupControl'"

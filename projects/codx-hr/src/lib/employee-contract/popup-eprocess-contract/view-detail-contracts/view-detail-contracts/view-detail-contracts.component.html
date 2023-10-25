@@ -13,82 +13,86 @@
   <ng-template #titleTmp>
     <div class="d-flex flex-column ms-1 w-100">
       <div class="mb-1 d-flex align-items-center">
-        <span class="text-dark fs-5-sm fw-bold me-3">
+        
+        <div class="text-dark fs-5-sm fw-bold me-3 w-100">
           {{ itemDetail?.inforEmployee?.employeeName }}
-        </span>
+        </div>
+        <div class="d-flex align-item-center">
+          <span
+            *ngIf="
+              itemDetail?.status === '5' &&
+              dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
+              (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
+                itemDetail.expiredDate === null)
+            "
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+            [ngbPopover]="popIsNewest"
+            [style.color]="'#0078FF'"
+            class="icon-bookmark icon-18 ms-auto"
+          ></span>
 
-        <span
-          *ngIf="
-            itemDetail?.status === '5' &&
-            dateNow >= moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
-            (dateNow <= moment(itemDetail.expiredDate).format('YYYY-MM-DD') ||
-              itemDetail.expiredDate === null)
-          "
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-          [ngbPopover]="popIsNewest"
-          [style.color]="'#0078FF'"
-          class="icon-bookmark icon-18 ms-auto"
-        ></span>
+          <span
+            *ngIf="
+              itemDetail?.isCurrent &&
+              dateNow > moment(itemDetail.expiredDate).format('YYYY-MM-DD')
+            "
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+            [ngbPopover]="popOverDue"
+            [style.color]="'#F64E60'"
+            class="icon-notifications icon-18 ms-auto"
+          ></span>
 
-        <span
-          *ngIf="
-            itemDetail?.isCurrent &&
-            dateNow > moment(itemDetail.expiredDate).format('YYYY-MM-DD')
-          "
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-          [ngbPopover]="popOverDue"
-          [style.color]="'#F64E60'"
-          class="icon-notifications icon-18 ms-auto"
-        ></span>
+          <span
+            *ngIf="
+              itemDetail?.isCurrent &&
+              dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
+              itemDetail?.status === '5'
+            "
+            #popOver="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="popOver.open()"
+            (mouseleave)="popOver.close()"
+            placement="left"
+            [ngbPopover]="popIsNotNewsest"
+            [style.color]="'#FFA800'"
+            class="icon-queue_play_next icon-18 ms-auto"
+          ></span>
 
-        <span
-          *ngIf="
-            itemDetail?.isCurrent &&
-            dateNow < moment(itemDetail.effectedDate).format('YYYY-MM-DD') &&
-            itemDetail?.status === '5'
-          "
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="left"
-          [ngbPopover]="popIsNotNewsest"
-          [style.color]="'#FFA800'"
-          class="icon-queue_play_next icon-18 ms-auto"
-        ></span>
-
-        <codx-vll
-          *ngIf="
-            itemDetail?.resignStatus &&
-            !itemDetail.RenewStatus &&
-            itemDetail.isCurrent &&
-            itemDetail?.status === '5'
-          "
-          [formModel]="formModel"
-          [field]="'ResignStatus'"
-          [value]="itemDetail?.resignStatus"
-          [showText]="true"
-          [showIcon]="true"
-          [showBgColor]="false"
-          ngClass="badge badge-sm"
-          class="d-flex align-items-center gap-2"
-        >
-        </codx-vll>
+          <codx-vll
+            *ngIf="
+              itemDetail?.resignStatus &&
+              !itemDetail.RenewStatus &&
+              itemDetail.isCurrent &&
+              itemDetail?.status === '5'
+            "
+            [formModel]="formModel"
+            [field]="'ResignStatus'"
+            [value]="itemDetail?.resignStatus"
+            [showText]="true"
+            [showIcon]="true"
+            [showBgColor]="false"
+            ngClass="badge badge-sm"
+            class="d-flex align-items-center gap-2"
+          >
+          </codx-vll>
+        </div>
       </div>
 
       <!-- 1 -->
-      <div class="d-flex align-items-center text-gray-600">
-        <span class="me-4 fw-bold text-dark">{{
+      <div class="d-flex align-items-center flex-wrap">
+        <div class="me-4 fw-bold text-dark">{{
           itemDetail?.inforEmployee?.positionName
-        }}</span>
+        }}</div>
+
+        <div class="d-flex align-item-center">
         <span
           [innerHTML]="
             itemDetail?.inforEmployee?.email ?? itemDetail?.inforEmployee.email
@@ -105,6 +109,7 @@
           "
         ></span>
       </div>
+    </div>
       <!-- 2 -->
       <div class="text-gray-600 fs-7">
         <span

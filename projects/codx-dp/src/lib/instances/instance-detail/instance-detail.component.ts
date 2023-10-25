@@ -432,7 +432,7 @@ export class InstanceDetailComponent implements OnInit {
   getInvolved(roles) {
     var id = '';
     if (roles != null && roles.length > 0) {
-      var lstRole = roles.filter((x) => x.roleType == 'R');
+      var lstRole = roles.filter((x) => x.roleType == 'R' && x.objectType == 'U');
       lstRole.forEach((element) => {
         if (!id.split(';').includes(element.objectID)) {
           id = id + ';' + element.objectID;

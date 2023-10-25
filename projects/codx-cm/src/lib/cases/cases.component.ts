@@ -317,80 +317,112 @@ export class CasesComponent
     }
   }
   getRoleMoreFunction(type) {
-    var functionMappings;
-    var isDisabled = (eventItem, data) => {
-      if ((data.closed && data.status != '1') || data.status == '1') {
-        eventItem.disabled = true;
-      }
+    let functionMappings;
+    let isDisabled = (eventItem, data) => {
+      // Mặc định
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? (data.closed && !['15', '1'].includes(data.status)) ||
+            ['15', '1'].includes(data.status) ||
+            this.checkMoreReason(data) ||
+            !data.applyProcess
+          : true;
     };
-    var isDelete = (eventItem, data) => {
-      if (data.closed) {
-        eventItem.disabled = true;
-      }
+    let isCopy = (eventItem, data) => {
+      // Thêm, xóa, copy
+      eventItem.disabled = data.write
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
+        : true;
+      // eventItem.disabled  = false;
     };
-    var isCopy = (eventItem, data) => {
-      if (data.closed) {
-        eventItem.disabled = true;
-      }
+    let isEdit = (eventItem, data) => {
+      // Chỉnh sửa
+      eventItem.disabled = data.write
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
+        : true;
     };
-    var isEdit = (eventItem, data) => {
-      if (data.closed) {
-        eventItem.disabled = true;
-      }
+    let isDelete = (eventItem, data) => {
+      // Chỉnh sửa
+      eventItem.disabled = data.delete
+        ? data.closed ||
+          (data.status != '13' && this.checkMoreReason(data)) ||
+          (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
+        : true;
     };
-    var isClosed = (eventItem, data) => {
-      eventItem.disabled = data.closed || data.status == '1';
+    let isClosed = (eventItem, data) => {
+      //Đóng tiềm năng
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? data.closed : true;
     };
-    var isOpened = (eventItem, data) => {
-      eventItem.disabled = !data.closed || data.status == '1';
+    let isOpened = (eventItem, data) => {
+      // Mở tiềm năng
+      eventItem.disabled =
+        data?.alloweStatus == '1' && data?.read ? !data.closed : true;
     };
-    var isStartDay = (eventItem, data) => {
-      eventItem.disabled = data.status != '1';
+    let isStartDay = (eventItem, data) => {
+      // Bắt đầu ngay
+      eventItem.disabled =
+        data?.alloweStatus == '1'
+          ? !['1'].includes(data.status) || data.closed || !data.applyProcess
+          : true;
     };
 
     let isApprover = (eventItem, data) => {
-      eventItem.disabled = eventItem.disabled =
+      eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
         (data.applyProcess && data?.approveRule != '1') ||
-        data?.approveStatus >= '3' ||
-        this.checkMoreReason(data);
+        data?.approveStatus >= '3';
+      // || this.checkMoreReason(data);
     };
 
     let isRejectApprover = (eventItem, data) => {
+      // Gửi duyệt của a thảo
       eventItem.disabled =
         (data.closed && data.status != '1') ||
-        data.status == '0' ||
+        data.status == '15' ||
         data.approveStatus != '3';
       eventItem.isblur = false;
     };
+    let isDisabledDefault = (eventItem, data) => {
+      eventItem.disabled = true;
+    };
 
-    if (this.caseType === '1') {
-      functionMappings = {
-        CM0401_1: isDisabled,
-        CM0401_3: isDisabled,
-        CM0401_4: isDisabled,
+
+    functionMappings = {
+      ...['CM0401_1', 'CM0401_3', 'CM0401_4','CM0401_7','SYS101',
+      'CM0402_1', 'CM0402_3', 'CM0402_4'
+    ].reduce(
+        (fundID, more) => ({ ...fundID, [more]: isDisabled }),
+        {}
+      ),
+      ...['SYS101', 'SYS102', 'SYS103', 'SYS104'].reduce(
+        (fundID, more) => ({ ...fundID, [more]: isDisabledDefault }),
+        {}
+      ),
         CM0401_2: isStartDay,
-        CM0401_7: isDisabled,
         CM0401_8: isClosed,
         CM0401_9: isOpened,
-        SYS101: isDisabled,
-        SYS103: isEdit,
+        CM0402_2: isStartDay,
+        CM0402_8: isClosed,
+        CM0402_9: isOpened,
         SYS03: isEdit,
-        SYS104: isCopy,
         SYS04: isCopy,
-        SYS102: isDelete,
         SYS02: isDelete,
         CM0401_6: isApprover,
         CM0402_6: isApprover,
         CM0401_11: isRejectApprover,
         CM0402_11: isRejectApprover,
       };
-    } else {
-    }
-
     return functionMappings[type];
+  }
+  checkApplyProcess(data) {
+    return data?.applyProcess;
   }
 
   changeMF(e) {
