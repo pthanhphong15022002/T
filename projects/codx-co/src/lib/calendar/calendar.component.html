@@ -2,9 +2,9 @@
 </codx-views>
 <ng-template #templateLeft>
   <div class="rounded-3 p-0 position-relative h-100">
-    <div class="row w-100 h-100">
+    <div class="d-flex w-100 h-100">
       <!-- template left -->
-      <div class="col-2 h-100">
+      <div class="w-350px min-w-350px h-100">
         <div class="calendar-left">
           <div ngbAccordion class="w-100 h-100">
             <ng-container *ngIf="calendarID == 'COT03'">
@@ -156,7 +156,7 @@
         </div>
       </div>
       <!-- template right -->
-      <div class="col-10 bg-white h-100">
+      <div class="w-100 bg-white h-100">
         <co-calendar-center #calendarCenter 
           [isOutSource]="true" 
           [eventData]="lstEvents" 

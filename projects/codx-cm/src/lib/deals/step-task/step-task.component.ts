@@ -196,14 +196,17 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (e.field == 'show' && e.data?.length > 0) {
       this.isShowElement = e.data[0] == '1' ? true : false;
+      this.isShowSuccess = this.isShowElement;
     } else {
       this.isShowElement = true;
+      this.isShowSuccess = this.isShowElement;
     }
   }
 
   handelToggleStep() {
     this.isShow = !this.isShow;
     this.isShowElement = this.isShow;
+    this.isShowSuccess = this.isShowElement;
   }
 
   handelContinueStep(event, step) {
@@ -498,6 +501,6 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
   toggleReason() {
-    this.isShowElement = !this.isShowElement;
+    this.isShowSuccess = !this.isShowSuccess;
   }
 }

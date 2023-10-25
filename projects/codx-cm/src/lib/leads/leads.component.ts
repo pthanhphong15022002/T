@@ -1484,7 +1484,7 @@ export class LeadsComponent
   }
 
   popupOwnerRoles(data) {
-    this.dataSelected = data;
+    this.dataSelected =  JSON.parse(JSON.stringify(data)) ;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.funcIDCrr.functionID;
