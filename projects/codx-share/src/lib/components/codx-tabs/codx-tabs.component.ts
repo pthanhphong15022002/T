@@ -38,6 +38,8 @@ export class CodxTabsComponent implements OnInit {
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
   @Input() isEdit = true; //mac dinh bằng true - Thao them sua ngay 23/2/2023
+  @Input() showFileApprove = false; //truyền bằng true sẽ hiện file gửi kí duyệt - Thao them sua ngay 25/10/2023
+  @Input() listIDTransApprove = []; //truyền danh sach file kí duyệt - Thao them sua ngay 25/10/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';

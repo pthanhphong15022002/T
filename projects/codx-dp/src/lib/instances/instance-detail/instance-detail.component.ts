@@ -269,7 +269,8 @@ export class InstanceDetailComponent implements OnInit {
   //approver
   active = 1;
   approveStatus = '0';
-  stepInsCrr: any;
+  aproveTranID = ''; //instance CRR
+  listIDTransApprove = [];
 
   constructor(
     private callfc: CallFuncService,
@@ -362,6 +363,7 @@ export class InstanceDetailComponent implements OnInit {
         this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
+        this.getViewApprove();
         this.loadTree(this.id);
         this.handleProgressInstance();
         if (this.runMode != '1') {
@@ -376,6 +378,12 @@ export class InstanceDetailComponent implements OnInit {
       //  this.getListStepsStatus();
       // this.loaded = true;
     });
+  }
+  getViewApprove() {
+    this.listIDTransApprove = this.listStepInstance.map((x) => x.recID);
+    this.aproveTranID = this.listStepInstance.find(
+      (x) => x.stepID == this.dataSelect.stepID
+    )?.recID;
   }
   saveDataStep(e) {
     let stepInsIdx = this.listSteps.findIndex((x) => {
@@ -405,7 +413,9 @@ export class InstanceDetailComponent implements OnInit {
 
   getStageByStep() {
     this.isStart =
-      this.listSteps?.length > 0 && this.listSteps[0]['startDate'] ? true : false;
+      this.listSteps?.length > 0 && this.listSteps[0]['startDate']
+        ? true
+        : false;
     for (var i = 0; i < this.listSteps.length; i++) {
       var stepNo = i;
       var data = this.listSteps[i];
@@ -414,7 +424,7 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpDataSteps = JSON.parse(JSON.stringify(data)) ;
+        this.tmpDataSteps = JSON.parse(JSON.stringify(data));
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
@@ -432,7 +442,9 @@ export class InstanceDetailComponent implements OnInit {
   getInvolved(roles) {
     var id = '';
     if (roles != null && roles.length > 0) {
-      var lstRole = roles.filter((x) => x.roleType == 'R' && x.objectType == 'U');
+      var lstRole = roles.filter(
+        (x) => x.roleType == 'R' && x.objectType == 'U'
+      );
       lstRole.forEach((element) => {
         if (!id.split(';').includes(element.objectID)) {
           id = id + ';' + element.objectID;

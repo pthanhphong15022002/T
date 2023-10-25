@@ -520,7 +520,7 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   async Save() {
-    if (!this.form.controls['receiver'].value) {
+    if (!this.form.controls['receiver'].value && this.cardType != this.CARDTYPE_EMNUM.Radio) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Người nhận');
       this.notifySV.notify(mssg);
       return;

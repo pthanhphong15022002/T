@@ -24,7 +24,7 @@
             
         </ng-container>
         <codx-label default="Yêu cầu lọc hồ sơ" class="fw-bold"></codx-label>
-        <codx-input type="textarea" format="ed2" (valueChange)="changeValue($event)" crrValue="" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
+        <codx-input type="textarea"  format="ed2" (valueChange)="changeValue($event)" [crrValue]="data" [height]="150" ngClass="ws-cv-eva-ip"></codx-input>
     </div>
 </ng-template>
 <ng-template #footer>

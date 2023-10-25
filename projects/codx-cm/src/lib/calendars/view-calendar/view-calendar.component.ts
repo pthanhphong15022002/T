@@ -407,11 +407,28 @@ export class ViewCalendarComponent
   onAction(e) {
     console.log(e);
     if (e?.type == 'doubleClick' && e?.data) {
+      console.log(e?.data);
+      
       this.viewTask(e?.data);
     }
     if (e?.type == 'fav' && e?.data) {
       this.beforeAddTask(e?.data);
     }
+  }
+
+  getParentTask(task){
+    let entityName = task?.entityName;
+    let taskGroupID = task?.taskGroupID;
+    let stepID = task?.stepID;
+    let instanceID = task?.instanceID;
+    let objectID = task?.objectID;
+    let objectType = task?.objectType;
+    this.api.exec<any>(
+      'DP',
+      'ActivitiesBusiness',
+      'GetParentOfTaskAsync',
+      [taskGroupID, stepID, instanceID , objectID, objectType]
+    )
   }
 
   async getTask(data, action = null) {
