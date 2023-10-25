@@ -1,6 +1,6 @@
 <div class="f-flex flex-column w-100 h-100">
     <div class="spinner_panel" *ngIf="loading">
-      <div class="spinner"></div>
+      <div class="loader"></div>
     </div>
     <!-- <div #header class="my-3">
         <lib-header [funcID]="funcID"></lib-header>
@@ -38,7 +38,7 @@
     <div class="speedial">
       <ejs-tooltip id="details" target=".tooltip-speeddial .e-speeddial-li" position="LeftCenter">
         <div id="target" class="speeddial-appearence-target custom-index">
-            <button ejs-speeddial id="speeddial1" 
+            <button ejs-speeddial id="speeddial1" [disabled]="disabledSpeedDial"
               target="#target" 
               position="BottomRight" 
               content="AI Tool"
@@ -57,7 +57,6 @@
 </div>
 
 
-<!-- Popup -->
 <!-- CV -->
 <ng-template #popupCV let-dialog>
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="UPload CV" [subHeader]="CVSubHeader" [body]="CVBody" [footer]="CVFooter" >
@@ -237,7 +236,7 @@
 
 </ng-template>
 
-<!-- Key Result OKR -->
+<!-- OKR -->
 <ng-template #popupOKR let-dialog>
   <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo Key Result" [body]="OKRBody" [footer]="OKRFooter" >
   </codx-form>
@@ -277,3 +276,4 @@
     </div>
   </ng-template>
 </ng-template>
+

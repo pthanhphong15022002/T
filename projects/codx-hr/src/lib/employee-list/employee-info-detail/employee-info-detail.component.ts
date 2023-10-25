@@ -1,3 +1,5 @@
+import { FuncID } from './../../../../../codx-ep/src/lib/models/enum/enum';
+import { EntityName } from './../../../../../codx-ac/src/lib/settings/items/utils/unknown.util';
 import { map } from 'rxjs';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
@@ -38,6 +40,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxFormDynamicComponent,
   CodxGridviewComponent,
   CodxGridviewV2Component,
   CRUDService,
@@ -50,6 +53,7 @@ import {
   LayoutService,
   NotificationsService,
   PageTitleService,
+  RequestModel,
   SidebarModel,
   SortModel,
   UIComponent,
@@ -74,6 +78,7 @@ import { environment } from 'src/environments/environment';
 import { log } from 'console';
 import { PopupEdocumentsComponent } from '../../employee-profile/popup-edocuments/popup-edocuments.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Data } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -4019,10 +4024,51 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+      // Chỉ có mode edit, form động
+  //   editEmployeePartyInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
+  //   request.funcID = this.eInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormeParty(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormeParty(actionHeaderText, actionType, dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       let temp3 = res.event.update.data;
+  //       this.infoPersonal = temp3;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+  //form tự vẽ
   editEmployeePartyInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
-    console.log('model truyen vaoooo', this.eInfoFormModel);
     
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -4043,6 +4089,47 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     });
   }
+
+    // Chỉ có mode edit, form động
+  //   editEmployeeForeignWorkerInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
+  //   request.funcID = this.eInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormForeignWorker(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormForeignWorker(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       let temp3 = res.event.update.data;
+  //       this.infoPersonal = temp3;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
 
   editEmployeeForeignWorkerInfo(actionHeaderText) {
     let option = new SidebarModel();
@@ -4067,6 +4154,48 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+    // Chỉ có mode edit, form động
+  //   editAssuranceTaxBankAccountInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
+  //   request.funcID = this.eInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEditAssure(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormEditAssure(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       let temp3 = res.event.update.data;
+  //       this.infoPersonal = temp3;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+  // Mở form tự vẽ edit thông tin bảo hiêm mã số thuế, tk cá nhân
   editAssuranceTaxBankAccountInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
@@ -4090,6 +4219,48 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // Chỉ có mode edit, form động
+  //   editEmployeeSelfInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
+  //   request.funcID = this.eInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormSelfInfo(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormSelfInfo(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       let temp3 = res.event.update.data;
+  //       this.infoPersonal = temp3;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+  // Mở form tự vẽ edit thông tin bản thân
   editEmployeeSelfInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
@@ -4113,6 +4284,61 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+    // form động 
+  //   HandleEmployeeJobGeneralInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
+  //   request.funcID = this.eInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormJobInfo(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormJobInfo(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let oldManagerID = this.infoPersonal.lineManager
+  //   let indirectManagerID = this.infoPersonal.indirectManager
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event) this.view.dataService.clear();
+  //     else {
+  //       if (res.event.orgUnitID != this.infoPersonal.orgUnitID) {
+  //         this.hrService
+  //           .getOrgTreeByOrgID(res.event.orgUnitID, 3)
+  //           .subscribe((res) => {
+  //             if (res) {
+  //               this.lstOrg = res;
+  //             }
+  //           });
+  //       }
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+  //       this.eInfoFormGroup.patchValue(this.infoPersonal);
+  //       this.eInfoFormModel.currentData = this.infoPersonal;
+  //       if(oldManagerID != res.event.lineManager || indirectManagerID != res.event.indirectManager){
+  //         this.getManagerEmployeeInfoById();
+  //       }
+  //       this.df.detectChanges();
+  //     }
+  //   });
+  // }
+
+  //form tự vẽ
   HandleEmployeeJobGeneralInfo(actionHeaderText, actionType: string) {
     this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
@@ -4153,6 +4379,45 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // Chỉ có mode edit, form động
+  //   editEmployeeTimeCardInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eTimeCardFunc?.formName,this.eTimeCardFunc?.gridViewName,this.eTimeCardFunc?.entityName);
+  //   request.funcID = this.eTimeCardFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormSelfInfo(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormSelfInfo(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res.event.update.data) this.view.dataService.clear();
+  //     else {
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
+  //       this.df.detectChanges();
+  //     }
+  //   });
+  // }
+
   editEmployeeTimeCardInfo(actionHeaderText) {
     let option = new SidebarModel();
     option.FormModel = this.eInfoFormModel;
@@ -4175,6 +4440,45 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     });
   }
+
+    // Chỉ có mode edit, form động
+  //   editEmployeeCaculateSalaryInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eCalSalaryFunc?.formName,this.eCalSalaryFunc?.gridViewName,this.eCalSalaryFunc?.entityName);
+  //   request.funcID = this.eCalSalaryFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormCalculateSalary(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormCalculateSalary(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res.event.update.data) this.view.dataService.clear();
+  //     else {
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
+  //       this.df.detectChanges();
+  //     }
+  //   });
+  // }
 
   editEmployeeCaculateSalaryInfo(actionHeaderText) {
     let option = new SidebarModel();
@@ -4250,6 +4554,83 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eExperienceFunc?.formName,this.eExperienceFunc?.gridViewName,this.eExperienceFunc?.entityName);
+  //   request.funcID = this.eExperienceFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eExperienceFormModel.funcID,
+  //       this.eExperienceFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEExperience(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eExperienceFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         let temp3 = res.event.save.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.save.data.fromDate = temp3ISO;
+  //         this.lstExperiences.push(res.event.save.data);
+
+  //       } else if (actionType == 'edit') {
+  //         let temp3 = res.event.update.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.update.data.fromDate = temp3ISO;
+  //         // res.event.update.data.fromDate = res.event.update.data.fromDate.toISOString();
+  //         let index = this.lstExperiences.indexOf(data);
+  //         this.lstExperiences[index] = res.event.update.data;
+  //       }
+  //       let sortedList = this.hrService.sortAscByProperty(
+  //         this.lstExperiences,
+  //         'fromDate'
+  //       );
+  //       this.lstExperiences = sortedList;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+  // Hàm handle không sử dụng form động, bây giờ chỉ có chức năng xem chi tiết
   handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.FormModel = this.eExperienceFormModel;
@@ -4372,6 +4753,72 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  //form động efamilies
+  //   handleEFamilyInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eFamiliesFunc?.formName,this.eFamiliesFunc?.gridViewName,this.eFamiliesFunc?.entityName);
+  //   request.funcID = this.eFamiliesFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eFamilyFormModel.funcID,
+  //       this.eFamilyFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEFamilies(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEFamilies(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEFamilies(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEFamilies(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eFamilyFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event) this.view.dataService.clear();
+  //     else {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         this.lstFamily.push(res.event.save.data);
+
+  //       } else {
+  //         let index = this.lstFamily.indexOf(data);
+  //         this.lstFamily[index] = res.event.update.data;
+  //       }
+  //       this.calculateEFamilyAge();
+  //     }
+  //     this.df.detectChanges();
+  //   });
+  // }
+
+  //form tự vẽ efamili
   handleEFamilyInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.FormModel = this.eFamilyFormModel;
@@ -4404,6 +4851,90 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  //form động epassport
+  //   handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.ePassportFunc?.formName, this.ePassportFunc?.gridViewName, this.ePassportFunc?.entityName);
+  //   request.funcID = this.ePassportFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.ePassportFormModel.funcID,
+  //       this.ePassportFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEPassport(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.ePassportFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //         if (!res?.event) {
+  //         } else {
+  //           if (actionType == 'add' || actionType == 'copy') {
+  //             if (
+  //               !this.crrPassport ||
+  //               res?.event.save.data.issuedDate > this.crrPassport.issuedDate
+  //             ) {
+  //               this.crrPassport = res?.event.save.data;
+  //               // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+  //               this.df.detectChanges();
+  //             }
+  //           } else if (actionType == 'edit') {
+  //             if (
+  //               res.event.update.data.issuedDate >= this.crrPassport.issuedDate
+  //             ) {
+  //               this.crrPassport = res.event.update.data;
+  //               // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+  //             } else {
+  //               this.hrService
+  //                 .GetEmpCurrentPassport(this.employeeID)
+  //                 .subscribe((res) => {
+  //                   this.crrPassport = res;
+  //                   // this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+  //                   this.df.detectChanges();
+  //                 });
+  //             }
+  //           }
+  //           this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+  //         }
+  //         this.df.detectChanges();
+  //       });
+  // }
+
+  //form custome epassport
   handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     //option.DataService = this.passportGridview?.dataService;
@@ -4456,7 +4987,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+    //form động e dayoff
+  //   HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.dayoffFunc?.formName,this.dayoffFunc?.gridViewName,this.dayoffFunc?.entityName);
+  //   request.funcID = this.dayoffFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormSelfInfo(actionHeaderText, actionType, dataService, tempData, data);
+  // }
 
+  // openFormSelfInfo(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.dayoffFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.dayoffGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add'){
+  //         this.updateGridView(this.dayoffGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form tự vẽ
   HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.DataService = this.dayoffGrid.dataService;
@@ -4482,6 +5055,93 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }});
   }
 
+  // form động eworkpermit
+  //   handleEmployeeWorkingPermitInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eWorkPermitFunc?.formName, this.eWorkPermitFunc?.gridViewName, this.eWorkPermitFunc?.entityName);
+  //   request.funcID = this.eWorkPermitFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eWorkPermitFormModel.funcID,
+  //       this.eWorkPermitFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEWorkpermit(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eWorkPermitFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event) {
+  //       // (this.passportGridview.dataService as CRUDService).clear();
+  //     } else {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         if (
+  //           !this.crrWorkpermit ||
+  //           res.event.save.data.issuedDate > this.crrWorkpermit.issuedDate
+  //         ) {
+  //           this.crrWorkpermit = res.event.save.data;
+  //           this.df.detectChanges();
+  //         }
+  //       } else if (actionType == 'edit') {
+  //         if (
+  //           res.event.update.data.issuedDate >= this.crrWorkpermit.issuedDate
+  //         ) {
+  //           this.crrWorkpermit = res.event.update.data
+  //         } else {
+  //           this.hrService
+  //             .GetEmpCurrentWorkpermit(this.employeeID)
+  //             .subscribe((res) => {
+  //               this.crrWorkpermit = res;
+  //               this.df.detectChanges();
+  //             });
+  //         }
+  //       }
+  //       // this.passportRowCount += this.updateGridView(
+  //       //   this.passportGridview,
+  //       //   actionType,
+  //       //   res?.event
+  //       // );
+  //       this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+  //     }
+  //     this.df.detectChanges();
+  //   });
+  // }
+
+  //form tự vẽ eworkpermit
   handleEmployeeWorkingPermitInfo(
     actionHeaderText,
     actionType: string,
@@ -4540,6 +5200,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // Chỉ có mode edit, form động
+  //   HandleEDocumentInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eNeedToSubmitProfileFunc?.formName,this.eNeedToSubmitProfileFunc?.gridViewName,this.eNeedToSubmitProfileFunc?.entityName);
+  //   request.funcID = this.eNeedToSubmitProfileFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormSelfInfo(actionHeaderText, 'edit', dataService, tempData, data);
+  // }
+
+  // openFormSelfInfo(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.edocumentFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if(actionType == 'edit'){
+  //       if(res?.event){
+  //         let index = this.lstEmpDocument.indexOf(data);
+  //         if(index > -1){
+  //           this.lstEmpDocument[index] = res?.event.save.data;
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
+  //form tự vẽ
   HandleEDocumentInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';
@@ -4570,6 +5273,88 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // form động evisa
+  //   handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eVisaFunc?.formName, this.eVisaFunc?.gridViewName, this.eVisaFunc?.entityName);
+  //   request.funcID = this.eVisaFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eVisaFormModel.funcID,
+  //       this.eVisaFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEVisas(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eVisaFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event) {
+  //       // (this.passportGridview.dataService as CRUDService).clear();
+  //     } else {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         if (
+  //           !this.crrVisa ||
+  //           res?.event.save.data.issuedDate > this.crrVisa.issuedDate
+  //         ) {
+  //           this.crrVisa = res?.event.save.data;
+  //           this.df.detectChanges();
+  //         }
+  //       } else if (actionType == 'edit') {
+  //         if (
+  //           res.event.update.data.issuedDate >= this.crrVisa.issuedDate 
+  //         ) {
+  //           this.crrVisa = res.event.update.data;
+  //         } else {
+  //           this.hrService
+  //             .GetEmpCurrentPassport(this.employeeID)
+  //             .subscribe((res) => {
+  //               this.crrVisa = res;
+  //               this.df.detectChanges();
+  //             });
+  //         }
+  //       }
+  //       this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+  //     }
+  //     this.df.detectChanges();
+  //   });
+  // }
+
+  //form tự vẽ evisa
   handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.FormModel = this.eVisaFormModel;
@@ -4615,12 +5400,54 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
         }
         this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
-
       }
       this.df.detectChanges();
     });
   }
 
+    // form động kỷ luật
+  //   HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eDisciplineFunc?.formName,this.eDisciplineFunc?.gridViewName,this.eDisciplineFunc?.entityName);
+  //   request.funcID = this.eDisciplineFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  // }
+
+  // openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eDisciplineFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form custome kỷ luật
   HandleEmployeeEDisciplinesInfo(
     actionHeaderText,
     actionType: string,
@@ -4677,6 +5504,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
       this.df.detectChanges();
     });
+
   }
 
   HandlemployeeAssetInfo(actionHeaderText, actionType: string, data: any) {
@@ -4943,6 +5771,83 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+   // HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eExperienceFunc?.formName,this.eExperienceFunc?.gridViewName,this.eExperienceFunc?.entityName);
+  //   request.funcID = this.eExperienceFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eExperienceFormModel.funcID,
+  //       this.eExperienceFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       debugger
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  // }
+
+  // openFormEExperience(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eExperienceFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     dataService.clear();
+  //     if (res) {
+  //       if (actionType == 'add' || actionType == 'copy') {
+  //         let temp3 = res.event.save.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.save.data.fromDate = temp3ISO;
+  //         this.lstExperiences.push(res.event.save.data);
+
+  //       } else if (actionType == 'edit') {
+  //         let temp3 = res.event.update.data;
+  //         let temp3ISO = new Date(temp3.fromDate).toISOString();
+  //         res.event.update.data.fromDate = temp3ISO;
+  //         // res.event.update.data.fromDate = res.event.update.data.fromDate.toISOString();
+  //         let index = this.lstExperiences.indexOf(data);
+  //         this.lstExperiences[index] = res.event.update.data;
+  //       }
+  //       let sortedList = this.hrService.sortAscByProperty(
+  //         this.lstExperiences,
+  //         'fromDate'
+  //       );
+  //       this.lstExperiences = sortedList;
+  //     }
+  //     this.df.detectChanges();
+  //   }
+  //   );
+  // }
+
+
   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '850px';
@@ -4967,6 +5872,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  // form động khen thưởng
+  //   HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.awardFunc?.formName,this.awardFunc?.gridViewName,this.awardFunc?.entityName);
+  //   request.funcID = this.awardFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  // }
+
+  // openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.awardFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.AwardGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.AwardGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  // form custome khen thưởng
   HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.DataService = this.AwardGrid?.dataService;
@@ -5013,6 +5961,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+      //form động công tác
+  //   HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eBusinessTravelFunc?.formName,this.eBusinessTravelFunc?.gridViewName,this.eBusinessTravelFunc?.entityName);
+  //   request.funcID = this.eBusinessTravelFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+    
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEBusinessTravel(actionHeaderText, actionType, dataService, tempData, data);
+  // }
+
+  // openFormEBusinessTravel(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.EBusinessTravelFormodel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.businessTravelGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.businessTravelGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form custome
   HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '550px';

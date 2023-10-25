@@ -140,7 +140,7 @@ export class PopupAddGiftComponent implements OnInit {
       case 'transType3':
         this.giftTrans.TransType = "3";
         break;
-
+  
       case 'transType4':
         this.giftTrans.TransType = "4";
         break;

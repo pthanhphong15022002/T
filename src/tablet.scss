@@ -50,9 +50,7 @@
     padding-left: 0px !important;
   }
 
-  .aside-detail.w-250px{
-    width: 200px!important;
-  }
+  
   // WP  
 }
  
@@ -65,6 +63,23 @@
       margin-left: 10px;
     }
   }
+
+  .week-item{
+    padding: 5px 2px 2px!important;
+    margin: 1px!important;
+  }
+  codx-view-list-detail .codx-view-splitter > .e-static-pane {
+    min-width: 250px;
+  }
+  div.card.w-1200px{
+    width: 96%!important;
+    max-width: 1000px!important;
+  }
+
+  .aside-detail.w-250px{
+    width: 200px!important;
+  }
+
 }
 /*********** ipad ************/
 

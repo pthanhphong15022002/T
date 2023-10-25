@@ -1,3 +1,4 @@
+import { Browser } from '@syncfusion/ej2-base';
 import {
   AfterViewInit,
   Component,
@@ -11,6 +12,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  DataRequest,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -27,6 +29,10 @@ import {
   IBulletLoadedEventArgs,
   IPointRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
+import { filter, reduce } from 'rxjs';
+import { CodxCmService } from '../codx-cm.service';
+import { Variant } from '@syncfusion/ej2-notifications';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -36,8 +42,9 @@ import {
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   @ViewChildren('templateTarget') dashBoardTaget: QueryList<any>;
-
   @ViewChild('template') template: TemplateRef<any>;
+
+  @ViewChild('accumulationPipe') accumulationPipe: AccumulationChartComponent;
   @ViewChild('noData') noData: TemplateRef<any>;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -104,7 +111,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   colorReasonSuscess = '';
   colorReasonFails = '';
+
   isMax = true;
+  tabActiveMaxMin = 'btMax';
+
   maxOwners = [];
   minOwners = [];
 
@@ -183,39 +193,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   marker = { visible: true };
   isSuccess = true;
+  tabActiveLineSucFail = 'btSuccess';
 
   //nang suat nhan viên
   productivityOwner = [];
   language = 'vn';
-  currencyIDDefault: any = 'VND';
 
   //pyramidcontainer
   legendSettingsPy = {
     visible: false,
     toggleVisibility: false,
   };
-  dataSourcePyStatus = [
-    // {
-    //   name: 'Milk, Youghnut, Cheese',
-    //   quantity: 435,
-    // },
-    // {
-    //   name: 'Vegetables',
-    //   quantity: 470,
-    // },
-    // {
-    //   name: 'Meat, Poultry, Fish',
-    //   quantity: 475,
-    // },
-    // {
-    //   name: 'Rice, Pasta',
-    //   quantity: 930,
-    // },
-    // {
-    //   name: 'Fruits',
-    //   quantity: 520,
-    // },
-  ];
+  dataSourcePyStatus = [];
   dataSourcePyStage = [];
   neckWidth = '0%';
   neckHeight = '0%';
@@ -235,7 +224,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   };
   titlePy: string = 'Food Comparison Chart';
 
-  pyramid: AccumulationChartComponent | AccumulationChart;
+  pyramidStatus: AccumulationChartComponent | AccumulationChart;
+  pyramidStages: AccumulationChartComponent | AccumulationChart;
   dataLabel: Object = {
     name: 'name',
     visible: true,
@@ -252,206 +242,162 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //business line or linh vuc hoac dong
-  isBussinessLine = false;
-
+  isBussinessLine = true;
+  tabActiveBusIns: string = 'btBussinessLine';
   //status or
-  isStatus = false;
+  isStatus = true;
+  tabActivePy = 'btStatus';
 
   //ReasonSuscess
   isReasonSuscess = true;
   valueFormat: any;
 
+  //chart sales pipeline
+
+  lstAlls = [];
+  lstSalesStages = [];
+  lstSalesStatus = [];
+  lstSalesStatusCodes = [];
+  tmpProcessDefault: any;
+  lstStatusCodes = [];
+  vllStatusDeals = [];
+  vllSalesPiplines = [];
+  statusPip = '1';
+  palettePipsStages = [];
+  palettePipsStatus = [];
+  palettePipsStatusCodes = [];
+
+  //end
+
+  //chart series
+  chartArea: Object = {
+    border: {
+      width: 0,
+    },
+  };
+  primaryXAxisY;
+  primaryYAxisY;
+
+  productivityYear = [];
+  cornerRadius: Object = {
+    topLeft: 6,
+    topRight: 6,
+  };
+
+  paretoOptions: Object = {
+    marker: {
+      visible: true,
+      isFilled: true,
+      width: 7,
+      height: 7,
+    },
+    dashArray: '3,2',
+    width: 2,
+  };
+
+  legendSeri: Object = {
+    visible: true,
+    enableHighlight: true,
+  };
+
+  toolTipSeri;
+  vllMonths = [];
+  lstMonthsSeries = [];
+  //end
   //bulletchart
-  public minimumBullet: number = 0;
-  public maximumBullet: number = 600;
-  public interval: number = 100;
-  public dataBullet: Object[] = [{ value: 270, target: 250 }];
+  //Year
+  minimumBullet: number = 0;
+  maximumBulletQ0: number = 1000;
+  width0: string = Browser.isDevice ? '100%' : '80%';
+  titleQ0 = '';
+  intervalQ0: number = 100;
+  dataBulletQ0s = [];
+  dealValueWonQ0: number = 0;
+  targetQ0: string = '0';
+  labelFormatQ0: string = '${value}';
+  tooltipBullet0 = {
+    enable: true,
+  };
+  //Q1
+  maximumBulletQ1: number = 600;
+  titleQ1 = '';
+  intervalQ1: number = 100;
+  dataBulletQ1s: Object[] = [];
+  dealValueWonQ1: number = 0;
+  targetQ1: string = '0';
+  labelFormatQ1: string = '0';
+  tooltipBullet1 = {
+    enable: true,
+  };
+  //Q2
+  maximumBulletQ2: number = 600;
+  titleQ2 = '';
+  intervalQ2: number = 100;
+  dataBulletQ2s = [];
+  dealValueWonQ2: number = 0;
+  targetQ2: string = '0';
+  labelFormatQ2: string = '0';
+  tooltipBullet2 = {
+    enable: true,
+  };
+  //Q3
+  maximumBulletQ3: number = 600;
+  titleQ3 = '';
+  intervalQ3: number = 100;
+  dataBulletQ3s = [];
+  dealValueWonQ3: number = 0;
+  targetQ3: string = '0';
+  labelFormatQ3: string = '0';
+  tooltipBullet3 = {
+    enable: true,
+  };
+  //Q4
+  maximumBulletQ4: number = 600;
+  titleQ4 = '';
+  intervalQ4: number = 100;
+  dataBulletQ4s = [];
+  dealValueWonQ4: number = 0;
+  targetQ4: string = '0';
+  labelFormatQ4: string = '0';
+
+  valueBorder: Object = { color: '#FF4500' };
+  lstQuarters = [];
+  tooltipBullet4 = {
+    enable: true,
+    template: '',
+  };
+  dataLabelBuleet: Object = {
+    enable: true,
+    labelStyle: { color: '#ffffff', size: '13' },
+  };
   //end
 
   //accumulation chart
-  public piedata: Object[] = [];
-  public datalabelAc: Object = {
+  piedata: Object[] = [];
+  datalabelAc: Object = {
     visible: true,
-    position: 'Inside',
+    position: 'Outside',
     enableRotation: false,
-    connectorStyle: { type: 'Curve', length: '10%' },
-    font: { color: 'white', fontWeight: '600' },
   };
-  public startAngle: number = 0;
-  public explodeIndex: number = 2;
-  public endAngle: number = 360;
-  public legendSettings: Object = {
+  startAngle: number = 0;
+  explodeIndex: number = 2;
+  endAngle: number = 360;
+  legendSettings: Object = {
     visible: true,
+    toggleVisibility: false,
+    position: 'Right',
+    textWrap: 'Wrap',
   };
-
+  vllQuaters = [];
   //end
 
   //top sales performance
-  lstUsers = [
-    {
-      userID: 'ADMIN',
-      userName: 'Lê Phạm Hoài Thương',
-      lstTitlePerformance: [
-        { value: '1', text: '124' },
-        { value: '2', text: '124' },
-        { value: '3', text: '4000000' },
-        { value: '4', text: '100000' },
-        { value: '5', text: '4 ngày' },
-      ],
-    },
-    {
-      userID: 'U-0646',
-      userName: 'Nguyễn Thị Bích Vân',
-      lstTitlePerformance: [
-        { value: '1', text: '666' },
-        { value: '2', text: '777' },
-        { value: '3', text: '645000000' },
-        { value: '4', text: '13300000' },
-        { value: '5', text: '131 ngày' },
-      ],
-    },
-    //   {
-    //     userID: 'MINHDE',
-    //     userName: 'Huỳnh Minh Đệ',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '11111' },
-    //       { value: '2', text: '124444' },
-    //       { value: '3', text: '4332000000' },
-    //       { value: '4', text: '143300000' },
-    //       { value: '5', text: '7 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'U-0892',
-    //     userName: 'Trần Thị Thùy Nhiên',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'NTTDUNG',
-    //     userName: 'Nguyễn Thị Thanh Dung',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'NTLOI',
-    //     userName: 'Nguyễn Thị Lợi',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'ANHQUOC',
-    //     userName: 'Lê Anh Quốc',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'KIMPHUONG',
-    //     userName: 'Nguyễn Kim Phương',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-    //   {
-    //     userID: 'QUANGCHINH',
-    //     userName: 'Phan Quang Chính',
-    //     lstTitlePerformance: [
-    //       { value: '1', text: '124' },
-    //       { value: '2', text: '124' },
-    //       { value: '3', text: '4000000' },
-    //       { value: '4', text: '100000' },
-    //       { value: '5', text: '4 ngày' },
-    //     ],
-    //   },
-  ];
+  lstUsers = [];
 
-  lstTitlePerformance = [
-    { value: '1', text: 'Khách hàng tiềm năng đã tạo' },
-    { value: '2', text: 'Cơ hội đã tạo' },
-    { value: '3', text: 'Doanh thu đạt được' },
-    { value: '4', text: 'Doanh tu đã mất' },
-    { value: '5', text: 'Trung bình chu kỳ bán hàng' },
-  ];
-
+  lstVllTopSales = [];
+  vllUpDowns = [];
+  currencyID: any;
+  exchangeRate: number;
   //new
   arrReport: any = [];
   viewCategory: any;
@@ -462,6 +408,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   countProcessing = 0;
   countSuccess = 0;
   countFail = 0;
+  chartBussnessLine: any;
+  vllPy: any;
+  dataReasonsSuscess = [];
+  dataReasonsFails = [];
+  tabActiveReson = 'btReasonSucess';
 
   //end
   constructor(
@@ -469,7 +420,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     private layout: LayoutComponent,
     private auth: AuthService,
     private pageTitle: PageTitleService,
-    private authstore: AuthStore
+    private authstore: AuthStore,
+    private cmSv: CodxCmService
   ) {
     super(inject);
     this.user = this.authstore.get();
@@ -481,19 +433,40 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals1 = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":10,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":20,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":30,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":40,"sizeX":10,"sizeY":3,"minSizeX":10,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":3,"col":16,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":13,"col":0,"sizeX":34,"sizeY":10,"minSizeX":34,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":13,"col":34,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":23,"col":0,"sizeX":50,"sizeY":10,"minSizeX":50,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":48,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":4,"col":0,"sizeX":20,"sizeY":12,"minSizeX":20,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":4,"col":20,"sizeX":40,"sizeY":12,"minSizeX":40,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":16,"col":0,"sizeX":40,"sizeY":12,"minSizeX":40,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":16,"col":40,"sizeX":20,"sizeY":12,"minSizeX":20,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":28,"col":0,"sizeX":60,"sizeY":12,"minSizeX":60,"minSizeY":12,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals1 = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.21519762020964252_layout","data":"8"},{"panelId":"91.21519762020964252_layout","data":"9"},{"panelId":"101.21519762020964252_layout","data":"10"}]'
     );
 
     this.panelsDeals2 = JSON.parse(
-      '[{"id":"12.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"22.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"32.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"42.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"52.4199281088325755_layout","row":3,"col":0,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"62.4592017601751599_layout","row":3,"col":16,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"72.14683256767762543_layout","row":13,"col":0,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"82.36639064171709834_layout","row":13,"col":16,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"92.06496875406606994_layout","row":13,"col":32,"sizeX":16,"sizeY":8,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"102.21519762020962552_layout","row":21,"col":0,"sizeX":32,"sizeY":10,"minSizeX":32,"minSizeY":10,"maxSizeX":null,"maxSizeY":null},{"id":"112.21519762020964252_layout","row":21,"col":32,"sizeX":16,"sizeY":10,"minSizeX":16,"minSizeY":10,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"12.1636284528927885_layout","row":0,"col":0,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"22.5801149283702021_layout","row":0,"col":15,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"32.6937258303982936_layout","row":0,"col":30,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"42.5667390469747078_layout","row":0,"col":45,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"52.4199281088325755_layout","row":4,"col":0,"sizeX":20,"sizeY":20,"minSizeX":20,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"62.4592017601751599_layout","row":4,"col":20,"sizeX":40,"sizeY":20,"minSizeX":40,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"72.14683256767762543_layout","row":24,"col":0,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"82.36639064171709834_layout","row":24,"col":20,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"92.06496875406606994_layout","row":24,"col":40,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"102.21519762020962552_layout","row":38,"col":0,"sizeX":40,"sizeY":18,"minSizeX":40,"minSizeY":18,"maxSizeX":null,"maxSizeY":null},{"id":"112.21519762020964252_layout","row":38,"col":40,"sizeX":20,"sizeY":18,"minSizeX":20,"minSizeY":18,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals2 = JSON.parse(
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
-
+    this.primaryXAxisY = {
+      title: this.language == 'VN' ? 'Tháng' : 'Mothn',
+    };
+    // this.primaryXAxisY = {
+    //   title: null,
+    //   interval: Browser.isDevice ? 2 : 1,
+    //   labelIntersectAction: 'Rotate45',
+    //   valueType: 'Category',
+    //   majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
+    //   majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
+    //   lineStyle: { width: 0 },
+    // };
+    // this.primaryYAxisY = {
+    //   title: this.currencyID,
+    //   minimum: 0,
+    //   maximum: maximum,
+    //   interval: interval,
+    //   lineStyle: { width: 0 },
+    //   majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
+    //   minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
+    //   labelFormat: '{value}',
+    // };
   }
 
   ngAfterViewInit() {
@@ -527,11 +500,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               //dashboard moi
               // this.getDashBoardTargets();
               this.isLoaded = true;
+              this.getDataset('GetDashBoardTargetAsync', null, null, null);
               break;
             // nhom chua co tam
             case 'CMD002':
               // code cũ chạy tạm
-              this.getDataDashboard();
+              //this.getDataDashboard();
+              this.getDataset('GetReportSourceAsync', null, null, null);
               break;
             //ca nhan chua co ne de vay
             case 'CMD003':
@@ -569,19 +544,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       case 'CMD001':
         //dashboard moi
         // this.getDashBoardTargets();
-        this.isLoaded = true;
+        method = 'GetDashBoardTargetAsync';
+        this.getDataset(method, null, null, null);
         break;
       // nhom chua co tam
       case 'CMD002':
-        this.getDataDashboard(predicates, dataValues, param);
+        //this.getDataDashboard(predicates, dataValues, param);
+        this.getDataset('GetReportSourceAsync', param, null, null);
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
-        // let lenght = dataValues.split(';')?.length ?? 0;
+        // let length = dataValues.split(';')?.length ?? 0;
 
         // let predicate =
-        //   lenght == 0 ? 'Owner =@' + lenght : ' and ' + 'Owner =@' + lenght;
-        // let dataValue = lenght == 0 ? this.user.userID : ';' + this.user.userID;
+        //   length == 0 ? 'Owner =@' + length : ' and ' + 'Owner =@' + length;
+        // let dataValue = length == 0 ? this.user.userID : ';' + this.user.userID;
 
         // predicates += predicate;
         // dataValues += dataValue;
@@ -637,6 +614,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 return data;
               });
             //chart
+            this.chartBussnessLine = this.dataDashBoard.countsBussinessLines;
           }
           this.dataStatisticTarget =
             this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
@@ -744,35 +722,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  clickButton(id) {
-    switch (id) {
-      case 'btnMin':
-        this.isMax = false;
-        break;
-      case 'btnMax':
-        this.isMax = true;
-        break;
-      case 'btSuccess':
-        this.isSuccess = true;
-        break;
-      case 'btFail':
-        this.isSuccess = false;
-        break;
-      case 'btBussinessLine':
-        this.isBussinessLine = true;
-        break;
-      case 'btIndustries':
-        this.isBussinessLine = false;
-        break;
-      case 'btStatus':
-        this.isStatus = true;
-        break;
-      case 'btStage':
-        this.isStatus = false;
-        break;
-    }
-    this.detectorRef.detectChanges();
-  }
+  // clickButton(id) {
+  //   switch (id) {
+  //     case 'btnMin':
+  //       this.isMax = false;
+  //       break;
+  //     case 'btnMax':
+  //       this.isMax = true;
+  //       break;
+  //     case 'btSuccess':
+  //       this.isSuccess = true;
+  //       break;
+  //     case 'btFail':
+  //       this.isSuccess = false;
+  //       break;
+  //     case 'btBussinessLine':
+  //       this.isBussinessLine = true;
+  //       break;
+  //     case 'btIndustries':
+  //       this.isBussinessLine = false;
+  //       break;
+  //     case 'btStatus':
+  //       this.isStatus = true;
+  //       break;
+  //     case 'btStage':
+  //       this.isStatus = false;
+  //       break;
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
   getHeightChart() {
     let viewChart = document.getElementById('6');
     let chartBusinessLinesButton = document.getElementById(
@@ -798,6 +776,36 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //load default
   loadChangeDefault() {
+    this.api
+      .execSv<any>(
+        'DP',
+        'ERM.Business.DP',
+        'ProcessesBusiness',
+        'GetProcessDefaultAsync',
+        ['1']
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.tmpProcessDefault = res;
+        }
+      });
+
+    this.cmSv.loadComboboxData('CMDealStatus', 'CM').subscribe((res) => {
+      if(res){
+        this.lstStatusCodes = res;
+      }
+    });
+
+    this.cache.valueList('CRM042').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.vllStatusDeals = vll?.datas;
+      }
+    });
+    this.cache.valueList('CRM071').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.vllSalesPiplines = vll?.datas;
+      }
+    });
     this.cache.valueList('DP036').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.colorReasonSuscess = vll?.datas.filter(
@@ -811,21 +819,30 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     this.cache.valueList('CRM049').subscribe((vl) => {
       if (vl) {
+        this.vllPy = vl.datas;
         this.valueFormat = vl.datas?.find((x) => x.value == '3')?.text;
       }
     });
-
-    // this.cache.valueList('CRM057').subscribe((vl) => {
-    //   if (vl) {
-    //     this.vllData = vl.datas;
-    //     this.filterData = this.vllData.map((x) => {
-    //       return {
-    //         title: x.text,
-    //         path: 'cm/dashboard/CMD01?reportID=' + x.value,
-    //       };
-    //     });
-    //   }
-    // });
+    this.cache.valueList('CRM046').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllQuaters = ele?.datas;
+      }
+    });
+    this.cache.valueList('CRM048').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllMonths = ele?.datas;
+      }
+    });
+    this.cache.valueList('CRM068').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.lstVllTopSales = ele?.datas;
+      }
+    });
+    this.cache.valueList('CRM069').subscribe((ele) => {
+      if (ele && ele?.datas) {
+        this.vllUpDowns = ele?.datas;
+      }
+    });
     this.cache.gridViewSetup('CMDeals', 'grvCMDeals').subscribe((grv) => {
       if (grv) {
         this.vllStatus = grv['Status'].referedValue;
@@ -855,35 +872,51 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
         if (dataParam) {
           let paramDefault = JSON.parse(dataParam.dataValue);
-          this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
-          if (this.language == 'vn') {
-            this.primaryXAxisRatio.title =
-              'Tổng doanh số dự kiến ( ' + this.currencyIDDefault + ')';
-            this.primaryYAxisRatio.title =
-              'Tổng mục tiêu ( ' + this.currencyIDDefault + ')';
-
-            this.tooltip.format =
-              'Tổng doanh số dự kiến : <b>${point.x} ' +
-              this.currencyIDDefault +
-              '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
-              this.currencyIDDefault +
-              '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
-          } else {
-            this.primaryXAxisRatio.title =
-              'Total expected sales ( ' + this.currencyIDDefault + ')';
-            this.primaryYAxisRatio.title =
-              'Total target ( ' + this.currencyIDDefault + ')';
-
-            this.tooltip.format =
-              'Total expected sales : <b>${point.x} ' +
-              this.currencyIDDefault +
-              '</b> <br/>Total target : <b>${point.y} ' +
-              this.currencyIDDefault +
-              '</b><br/>Quantity of deals : <b>${point.size}</b>';
-          }
+          this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          this.cmSv
+            .getExchangeRate(this.currencyID, new Date())
+            .subscribe((res) => {
+              if (res && res?.exchRate > 0) {
+                this.exchangeRate = res?.exchRate;
+              } else {
+                this.exchangeRate = 1;
+                this.currencyID = 'VND';
+              }
+              this.formatSetting();
+            });
+        } else {
+          this.exchangeRate = 1;
+          this.currencyID = 'VND';
+          this.formatSetting();
         }
       }
     });
+  }
+
+  formatSetting() {
+    if (this.language == 'vn') {
+      this.primaryXAxisRatio.title =
+        'Tổng doanh số dự kiến ( ' + this.currencyID + ')';
+      this.primaryYAxisRatio.title = 'Tổng mục tiêu ( ' + this.currencyID + ')';
+
+      this.tooltip.format =
+        'Tổng doanh số dự kiến : <b>${point.x} ' +
+        this.currencyID +
+        '</b> <br/>Tổng mục tiêu : : <b>${point.y} ' +
+        this.currencyID +
+        '</b><br/>Số lượng cơ hội : <b>${point.size}</b>';
+    } else {
+      this.primaryXAxisRatio.title =
+        'Total expected sales ( ' + this.currencyID + ')';
+      this.primaryYAxisRatio.title = 'Total target ( ' + this.currencyID + ')';
+
+      this.tooltip.format =
+        'Total expected sales : <b>${point.x} ' +
+        this.currencyID +
+        '</b> <br/>Total target : <b>${point.y} ' +
+        this.currencyID +
+        '</b><br/>Quantity of deals : <b>${point.size}</b>';
+    }
   }
 
   onActions(e) {
@@ -929,7 +962,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               }
 
               this.isLoaded = false;
-
+              this.pageTitle.setBreadcrumbs([]);
               if (!this.reportItem) {
                 if (this.reportID) {
                   let idx = this.arrReport.findIndex(
@@ -959,11 +992,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   case 'CMD001':
                     //dashboard moi
                     // this.getDashBoardTargets();
-                    this.isLoaded = true;
+                    this.getDataset(
+                      'GetDashBoardTargetAsync',
+                      null,
+                      null,
+                      null
+                    );
                     break;
                   // nhom chua co tam
                   case 'CMD002':
-                    this.getDataDashboard();
+                    // cu
+                    // this.getDataDashboard();
+                    this.getDataset('GetReportSourceAsync', null, null, null);
                     break;
                   //ca nhan chua co ne de vay
                   case 'CMD003':
@@ -1015,27 +1055,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     e.point.tooltip = e.point.x + ' : <b>' + e.point.y + '</b>' + html;
   }
 
-  findItemUser(value, lstTitlePerformance) {
-    let title = lstTitlePerformance.find((x) => x.value == value);
-    return title;
-  }
-
-  onTextRender(args: IAccTextRenderEventArgs) {
-    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
-    let value = text?.text ?? 0;
-    let retrn = '0';
-    if (value === null || isNaN(value)) {
-      retrn = '0';
-    }
-
-    if (value >= 1000000) {
-      retrn = (value / 1000000).toFixed(2) + 'M';
-    } else if (value >= 1000) {
-      retrn = (value / 1000).toFixed(2) + 'K';
-    }
-    args.text = retrn;
-  }
-
   ///-------------------------Get DATASET---------------------------------------------//
   getDataset(
     method: string,
@@ -1047,7 +1066,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.resetData();
     if (method) {
       this.subscription = this.api
-        .execSv(
+        .execSv<any[]>(
           'rptcm',
           'Codx.RptBusiness.CM',
           'SalesDataSetBusiness',
@@ -1057,10 +1076,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         .subscribe((res) => {
           if (res) {
             //xu ly nv
+
             switch (this.funcID) {
               case 'CMD001':
+                this.getSalesDashBoards(res);
+
                 break;
               case 'CMD002':
+                this.changeMySales(res);
                 break;
               case 'CMD003':
                 this.changeMySales(res);
@@ -1069,7 +1092,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 break;
             }
           }
-          this.isLoaded = true;
+          setTimeout(() => {
+            this.isLoaded = true;
+          }, 500);
         });
 
       this.detectorRef.detectChanges();
@@ -1091,8 +1116,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = 0;
     this.countFail = 0;
     this.countProcessing = 0;
+    this.chartBussnessLine = [];
+    this.dataReasonsSuscess = [];
+    this.dataReasonsFails = [];
   }
-
+  // ---------------------------FUNC ----------------------------//
   //sort lấy top
   sortByProp(arr: any[], property: string, dir: string = 'asc') {
     if (arr.length && property) {
@@ -1109,18 +1137,1111 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return [];
   }
 
+  random_bg_color() {
+    let x = Math.floor(Math.random() * 230);
+    let y = Math.floor(Math.random() * 255);
+    let z = Math.floor(Math.random() * 255);
+    return 'rgb(' + x + ',' + y + ',' + z + ')';
+  }
+
+  groupBy(arr: any, key: any) {
+    return arr.reduce(function (r: any, a: any) {
+      r[a[key]] = r[a[key]] || [];
+      r[a[key]].push(a);
+      return r;
+    }, Object.create(null));
+  }
+  // ---------------------------FUNC ----------------------------//
+
   // --------------------------------------------//
-  //Get DATA Ca nhan
+  //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
-  changeMySales(deals) {
-    this.countNew = deals.filter(
+  changeMySales(datas) {
+    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai
+    let dataSetDeals = datas[0];
+    let dataSetLead = datas[1];
+    let dataReason = datas[2];
+    if (dataSetDeals?.lenght == 0) return;
+    this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
     )?.length;
-    this.countProcessing = deals.filter((x) => x.status == '2')?.length;
-    this.countSuccess = deals.filter((x) => x.status == '3')?.length;
-    this.countFail = deals.filter((x) => x.status == '5')?.length;
+    this.countProcessing = dataSetDeals.filter((x) => x.status == '2')?.length;
+    let dataSuccess = dataSetDeals.filter((x) => x.status == '3');
+    this.countSuccess = dataSuccess?.length;
+    let dataFails = dataSetDeals.filter((x) => x.status == '5');
+    this.countFail = dataFails?.length;
+    this.getChartConversionRate(dataSetLead, dataSetDeals);
+    this.getBusinessLine(dataSetDeals);
+    this.getIndustries(dataSetDeals);
+    this.getOwnerTop(dataSuccess);
+    this.getReasonChart(dataReason);
   }
+
+  getBusinessLine(dataSet) {
+    if (!dataSet || dataSet?.length == 0) return;
+    let businesLine = this.groupBy(dataSet, 'businessLineID');
+    if (businesLine) {
+      for (let key in businesLine) {
+        let color = this.random_bg_color();
+
+        let quantity = businesLine[key].length;
+        let obj = {
+          businessLineID: key,
+          businessLineName: businesLine[key][0].businessLineName ?? key,
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        this.dataSourceBussnessLine.push(obj);
+        this.chartBussnessLine.push({
+          ...obj,
+          ...this.getChartBussinessLine(businesLine[key]),
+        });
+        this.dataStatisticTarget.push({
+          ...obj,
+          ...this.getDataStatisticTarget(businesLine[key]),
+        });
+        this.palette.push(color);
+      }
+
+      if (this.dataStatisticTarget.length > 0) {
+        let maxTarget = Math.max(
+          ...this.dataStatisticTarget.map((o) => o.totalTarget)
+        );
+        this.primaryXAxisRatio.maximum =
+          maxTarget + 2 * Math.floor(maxTarget / 10);
+        this.primaryXAxisRatio.interval = Math.floor(
+          this.primaryXAxisRatio.maximum / 10
+        );
+
+        let maxDealValue = Math.max(
+          ...this.dataStatisticTarget.map((o) => o.totalDealValue)
+        );
+
+        this.primaryYAxisRatio.maximum =
+          maxDealValue + 2 * Math.floor(maxDealValue / 10);
+        this.primaryYAxisRatio.interval = Math.floor(
+          this.primaryYAxisRatio.maximum / 10
+        );
+      }
+    }
+  }
+  getChartBussinessLine(dataSet) {
+    let monthGroup = this.groupBy(dataSet, 'moY');
+    let chartDataSuscess = [];
+    let chartDataFail = [];
+    for (let i = 1; i <= 12; i++) {
+      chartDataSuscess.push({
+        month: i,
+        quantity: 0,
+        percentage: 0,
+      });
+      chartDataFail.push({
+        month: i,
+        quantity: 0,
+        percentage: 0,
+      });
+    }
+    if (monthGroup) {
+      for (let key in monthGroup) {
+        var idxSuc = chartDataSuscess.findIndex((x) => x.month == key);
+        if (idxSuc != -1) {
+          chartDataSuscess[idxSuc].quantity =
+            monthGroup[key].filter((x) => x.status == '3')?.length ?? 0;
+          chartDataSuscess[idxSuc].percentage =
+            monthGroup[key]?.length > 0
+              ? (chartDataSuscess[idxSuc].quantity / monthGroup[key]?.length) *
+                100
+              : 0;
+        }
+
+        var idxFail = chartDataFail.findIndex((x) => x.month == key);
+        if (idxFail != -1) {
+          chartDataFail[idxFail].quantity =
+            monthGroup[key].filter((x) => x.status == '5')?.length ?? 0;
+          chartDataFail[idxFail].percentage =
+            monthGroup[key]?.length > 0
+              ? (chartDataFail[idxFail].quantity / monthGroup[key]?.length) *
+                100
+              : 0;
+        }
+      }
+    }
+    return { chartDataSuscess: chartDataSuscess, chartDataFail: chartDataFail };
+  }
+
+  getDataStatisticTarget(dataSet) {
+    let totalTarget = 0;
+    let totalDealValue = 0;
+    if (Array.isArray(dataSet)) {
+      dataSet.forEach((x) => {
+        console.log(x.dealValue + '  ' + x.exchangeRate);
+        totalDealValue += x.dealValue * x.exchangeRate;
+        ///target line ?? targer hoi Khanh
+        totalTarget += Math.random() * 10000000; //tesst
+      });
+    }
+    return {
+      totalTarget: totalTarget / this.exchangeRate,
+      totalDealValue: totalDealValue / this.exchangeRate,
+    };
+  }
+
+  getIndustries(dataSet) {
+    this.dataSourceIndustry = [];
+    this.paletteIndustry = [];
+    if (!dataSet || dataSet?.length == 0) return;
+    let listIndustries = this.groupBy(dataSet, 'industries');
+    if (listIndustries) {
+      for (let key in listIndustries) {
+        let color = this.random_bg_color();
+        let quantity = listIndustries[key].length;
+        let obj = {
+          industryID: key,
+          industryName:
+            listIndustries[key][0].industriesName ??
+            (key != 'null'
+              ? key
+              : this.user.language.toUpperCase() == 'VN'
+              ? 'Chưa có'
+              : 'Not yet'),
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        this.dataSourceIndustry.push(obj);
+        this.paletteIndustry.push(color);
+      }
+    }
+  }
+
+  getOwnerTop(dataSet) {
+    this.minOwners = [];
+    this.maxOwners = [];
+    if (!dataSet || dataSet?.length == 0) return;
+    let listOwner = this.groupBy(dataSet, 'owner');
+    if (listOwner) {
+      let owner = [];
+      for (let key in listOwner) {
+        let color = this.random_bg_color();
+        let quantity = listOwner[key].length;
+        let obj = {
+          objectID: key,
+          objectName: listOwner[key][0].ownerName ?? key,
+          quantity: quantity,
+          percentage: ((quantity * 100) / dataSet?.length).toFixed(2), //chua tinh
+          color: color,
+        };
+        owner.push(obj);
+      }
+      this.maxOwners = JSON.parse(JSON.stringify(owner)).sort(
+        (a, b) => b.quantity - a.quantity
+      );
+      this.minOwners = JSON.parse(JSON.stringify(owner)).sort(
+        (a, b) => a.quantity - b.quantity
+      );
+    }
+  }
+
+  getReasonChart(dataReason) {
+    this.dataReasonsSuscess = [];
+    this.dataReasonsFails = [];
+    if (!dataReason || dataReason?.length == 0) return;
+    let listRsSuscess = dataReason.filter((x) => x.reasonType == '1');
+    if (listRsSuscess?.length > 0) {
+      let reasonsSuscessGroup = this.groupBy(listRsSuscess, 'reasonName');
+      if (reasonsSuscessGroup) {
+        for (let key in reasonsSuscessGroup) {
+          let rsSucess = {
+            reasonName: key,
+            quantity: reasonsSuscessGroup[key]?.length,
+            percentage: (
+              (reasonsSuscessGroup[key]?.length / listRsSuscess.length) *
+              100
+            ).toFixed(2),
+          };
+          this.dataReasonsSuscess.push(rsSucess);
+        }
+      }
+    }
+    let listRsFails = dataReason.filter((x) => x.reasonType == '2');
+    if (listRsFails?.length > 0) {
+      let reasonsFails = this.groupBy(listRsFails, 'reasonName');
+      if (reasonsFails) {
+        for (let key in reasonsFails) {
+          let rsFails = {
+            reasonName: key,
+            quantity: reasonsFails[key]?.length,
+            percentage: (
+              (reasonsFails[key]?.length / listRsFails.length) *
+              100
+            ).toFixed(2),
+          };
+          this.dataReasonsFails.push(rsFails);
+        }
+      }
+    }
+  }
+  //Loi cai chuyen doi ko nằm trong khoảng time tìm kiếm
+  getChartConversionRate(dataLeads, dataDeals) {
+    // EntityName = "CM_Deals",
+    // Value = "4",
+    // Type = "Status",
+    // Name = vllListData?.FirstOrDefault(x => x.Value == "4")?.Text,
+    // Quantity = quatityDealsCVSuc
+    let objectLead = {
+      value: '1',
+      name: this.getNamePy('1'),
+      quantity: dataLeads?.length ?? 0,
+    };
+    this.dataSourcePyStatus.unshift(objectLead);
+    this.dataSourcePyStage.unshift(objectLead);
+    //du dieu kien
+    let leadStatus311 = {
+      value: '1',
+      name: this.getNamePy('2'),
+      quantity:
+        dataLeads?.filter((x) => x.status == '3' || x.status == '11').length ??
+        0,
+    };
+    this.dataSourcePyStatus.unshift(leadStatus311);
+    this.dataSourcePyStage.unshift(leadStatus311);
+    //da chuyen thanh co hoi
+    let dealIDs = [];
+    dataLeads.forEach((x) => {
+      if (x.dealID) dealIDs.push(x.dealID);
+    });
+    let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
+    let leadToDeals = {
+      value: '3',
+      name: this.getNamePy('3'),
+      quantity: dealsOfLead?.length ?? 0,
+      items: [],
+    };
+    let items = [];
+    //theo status Code
+    let statusCode = this.groupBy(dealsOfLead, 'statusCodeID');
+    if (statusCode) {
+      for (let key in statusCode) {
+        let item = {
+          value: '',
+          name: statusCode[key][0].statusCodeName,
+          quantity: statusCode[key].length ?? 0,
+        };
+        items.push(item);
+      }
+    }
+    if (items?.length > 0) {
+      items = items.sort((a, b) => b.quantity - a.quantity);
+      items.forEach((x, idx) => {
+        x.value = (idx + 1).toString();
+      });
+      leadToDeals.items = items;
+    }
+    this.dataSourcePyStatus.unshift(leadToDeals);
+    //da thanh cong
+    let dealsSuc = {
+      value: '4',
+      name: this.getNamePy('4'),
+      quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
+    };
+    this.dataSourcePyStatus.unshift(dealsSuc);
+  }
+  getNamePy(value) {
+    return this.vllPy.find((x) => x.value == value)?.text;
+  }
+
+  changeChart(ele: any, obj: any) {
+    let viewCrr = '1';
+    switch (ele.id) {
+      case 'btBussinessLine':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btIndustries':
+        if (ele.id == this.tabActiveBusIns) return;
+        this.tabActiveBusIns = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btMax':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btMin':
+        if (ele.id == this.tabActiveMaxMin) return;
+        this.tabActiveMaxMin = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btSuccess':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btFail':
+        if (ele.id == this.tabActiveLineSucFail) return;
+        this.tabActiveLineSucFail = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btStatus':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btStages':
+        if (ele.id == this.tabActivePy) return;
+        this.tabActivePy = ele.id;
+        viewCrr = '2';
+        break;
+      case 'btReasonSucess':
+        if (ele.id == this.tabActiveReson) return;
+        this.tabActiveReson = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btReasonFail':
+        if (ele.id == this.tabActiveReson) return;
+        this.tabActiveReson = ele.id;
+        viewCrr = '2';
+        break;
+    }
+    if (viewCrr == '1') {
+      !obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.add('d-none');
+
+      obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.remove('d-none');
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.add('d-none');
+        obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.remove('d-none');
+        obj.chart1.temp.refresh();
+      }
+    } else {
+      !obj.chart1.view.classList.contains('d-none') &&
+        obj.chart1.view.classList.add('d-none');
+
+      obj.chart2.view.classList.contains('d-none') &&
+        obj.chart2.view.classList.remove('d-none');
+
+      if (obj.chart1.temp && obj.chart2.temp) {
+        !obj.chart1.temp.element.classList.contains('d-none') &&
+          obj.chart1.temp.element.classList.add('d-none');
+
+        obj.chart2.temp.element.classList.contains('d-none') &&
+          obj.chart2.temp.element.classList.remove('d-none');
+
+        obj.chart2.temp.refresh();
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
   // --------------------------------------------//
   //End Ca nhan
   // --------------------------------------------//
+
+  // --------------------------------------------//
+  // DASHBOAD SALES TAGET                     //
+  // --------------------------------------------//
+
+  getSalesDashBoards(data, parameters = null) {
+    let currentDate = new Date(data?.currentDate);
+    let deals = data?.deals;
+    let leads = data?.leads;
+    let targetLines = data?.targetsLines;
+    let lstQuarters = [];
+    let lstUsers = [];
+    //get lstQuarters
+    let tmpQuarter = {};
+    tmpQuarter['year'] = currentDate.getFullYear();
+    tmpQuarter['quarter'] = 0;
+    tmpQuarter['target'] = 0;
+    tmpQuarter['dealValueWon'] = 0;
+    tmpQuarter['nameQuarter'] = tmpQuarter['year'].toString();
+    lstQuarters.push(tmpQuarter);
+    if (this.vllQuaters != null) {
+      for (let item of this.vllQuaters) {
+        tmpQuarter = {};
+        tmpQuarter['year'] = currentDate.getFullYear();
+        tmpQuarter['quarter'] = parseInt(item.value);
+        tmpQuarter['target'] = 0;
+        tmpQuarter['dealValueWon'] = 0;
+        tmpQuarter['nameQuarter'] =
+          item.text + '/' + tmpQuarter['year'].toString();
+        lstQuarters.push(tmpQuarter);
+      }
+    }
+    //end
+
+    //get lstUsers
+    const lstOwnersLeads: string[] = leads
+      .filter((x) => x.owner && x.owner.trim() !== '')
+      .map((q) => q.owner)
+      .filter((value, index, self) => self.indexOf(value) === index);
+    const lstDealsOwnerDeals = deals
+      .filter((x) => x.owner && x.owner.trim() !== '')
+      .map((q) => q.owner)
+      .filter((value, index, self) => self.indexOf(value) === index);
+    const lstOwnerAlls = [...lstOwnersLeads, ...lstDealsOwnerDeals].filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
+    const lstDealOwners: string[] = Array.from(new Set(lstOwnerAlls));
+    if (lstDealOwners != null && lstDealOwners.length > 0) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'ERM.Business.AD',
+          'UsersBusiness',
+          'GetUserByIDAsync',
+          [lstDealOwners]
+        )
+        .subscribe((res) => {
+          if (res != null && res.length > 0) {
+            for (var item of res) {
+              var tmpUsers = {};
+              tmpUsers['userID'] = item?.userID;
+              tmpUsers['userName'] = item?.userName;
+              tmpUsers['leads'] = leads.filter((x) => x.owner == item.userID);
+              tmpUsers['deals'] = deals.filter((x) => x.owner == item.userID);
+              lstUsers.push(tmpUsers);
+            }
+            this.lstUsers = this.getTopSalesDashBoards(
+              lstUsers,
+              parameters,
+              currentDate
+            );
+          }
+        });
+    }
+    //end
+    this.getDashBoardPips(deals, parameters, currentDate);
+    this.getDashBoardSalesTrends(deals, parameters, currentDate);
+    this.getDashBoardTargetSales(targetLines, parameters, currentDate);
+    this.getDashBoardSales(
+      deals,
+      targetLines,
+      lstQuarters,
+      parameters,
+      currentDate
+    );
+    this.detectorRef.detectChanges();
+  }
+
+  //sales pipe
+  getDashBoardPips(deals = [], param, currentDate) {
+    if (this.statusPip != null && this.statusPip.trim() != '') {
+      this.lstSalesStages = [];
+      this.lstSalesStatus = [];
+      this.lstSalesStatusCodes = [];
+      this.palettePipsStages = [];
+      this.palettePipsStatus = [];
+      this.palettePipsStatusCodes = [];
+      if (this.tmpProcessDefault) {
+        const lstSteps = this.tmpProcessDefault?.steps ?? [];
+        for (var item of lstSteps) {
+          var tmp = {};
+          tmp['name'] = item.stepName;
+          tmp['value'] = item.recID;
+          tmp['color'] = item.textColor;
+          tmp['backgroundColor'] = item.backgroundColor;
+          const dealsSteps = deals.filter(
+            (x) =>
+              x.processID == this.tmpProcessDefault?.recID &&
+              item.recID == x.stepID
+          );
+          tmp['quantity'] = dealsSteps?.length ?? 0;
+          if (dealsSteps?.length > 0) {
+            this.lstSalesStages.push(tmp);
+            this.palettePipsStages.push(item.backgroundColor);
+          }
+        }
+      }
+      if (this.vllStatusDeals != null) {
+        for (var item of this.vllStatusDeals) {
+          var tmp = {};
+          tmp['name'] = item.text;
+          tmp['value'] = item.value;
+          tmp['color'] = item.color;
+          const countDeals =
+            deals.filter((x) => item.value == x.status)?.length ?? 0;
+          tmp['quantity'] = countDeals;
+          if (countDeals > 0) {
+            this.lstSalesStatus.push(tmp);
+            this.palettePipsStatus.push(item.color);
+          }
+        }
+      }
+
+      if (this.lstStatusCodes != null) {
+        for (var item of this.lstStatusCodes) {
+          var tmp = {};
+          tmp['name'] = item.StatusName;
+          tmp['value'] = item.StatusID;
+          const countDeals =
+            deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
+          tmp['quantity'] = countDeals;
+          if (countDeals > 0) {
+            this.lstSalesStatusCodes.push(tmp);
+          }
+        }
+      }
+
+      this.lstAlls =
+        this.statusPip == '1'
+          ? JSON.parse(JSON.stringify(this.lstSalesStages))
+          : this.statusPip == '2'
+          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
+          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  viewPips(value) {
+    if (value != this.statusPip) {
+      this.statusPip = value;
+      this.lstAlls =
+        this.statusPip == '1'
+          ? JSON.parse(JSON.stringify(this.lstSalesStages))
+          : this.statusPip == '2'
+          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
+          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  isActive(value) {
+    return value === this.statusPip;
+  }
+  //end
+
+  //Sales trend - last 12 months
+  getDashBoardSalesTrends(deals = [], param, currentDate) {
+    let listMonths = [];
+    let now = new Date(currentDate);
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    let max = 0;
+    for (let y = year; y >= year - 1; y--) {
+      for (
+        let m = y === year ? month - 1 : 12;
+        m >= (y === year - 1 ? month : 1);
+        m--
+      ) {
+        let dealMonths = deals?.find(
+          (x) =>
+            new Date(x.createdOn).getFullYear() == y &&
+            new Date(x.createdOn).getMonth() + 1 == m &&
+            x.status == '3'
+        ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
+        let tmp = {};
+        tmp['month'] = m + '/' + y;
+        tmp['year'] = y;
+        let maxProductivity = dealMonths ? dealMonths?.dealValue : 0;
+        tmp['expected'] = maxProductivity;
+        max = maxProductivity > max ? maxProductivity : max;
+        listMonths.push(tmp);
+      }
+    }
+    this.settingChart(max);
+    this.lstMonthsSeries = listMonths.reverse();
+  }
+
+  settingChart(max) {
+    let interval = Math.ceil(max / 10);
+    let maximum = interval * 10;
+
+    this.primaryXAxisY = {
+      title: null,
+      interval: Browser.isDevice ? 2 : 1,
+      labelIntersectAction: 'Rotate45',
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+      minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
+      lineStyle: { width: 0 },
+    };
+    this.primaryYAxisY = {
+      title: this.currencyID,
+      minimum: 0,
+      maximum: maximum,
+      interval: interval,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 },
+      majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 },
+      minorTickLines: { width: 0 },
+      labelFormat: `{value}`,
+    };
+
+    this.toolTipSeri = {
+      enable: true,
+      shared: true,
+      format: '${series.name} : <b>${point.y}</b>',
+    };
+  }
+
+  textSeriRender(args: IAccTextRenderEventArgs) {
+    console.log(args);
+  }
+  //end
+
+  //get sales last 4 quarter
+  getDashBoardTargetSales(lstTargetLines = [], param, currentDate) {
+    let lstPiaData = [];
+    const currencyID = this.currencyID;
+    const exchRate = this.exchangeRate;
+    if (lstTargetLines != null && lstTargetLines.length > 0) {
+      let now = new Date(currentDate);
+      if (param) {
+        // làm sau
+      }
+      let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
+      let sumTarget = 0;
+      for (let i = 0; i < 4; i++) {
+        const { min, max } = this.getQuarterMonthRange(quarter);
+        let year = now.getFullYear();
+        var tmp = {};
+        if (quarter === 1) {
+          quarter = 4;
+          year--;
+        } else {
+          quarter--;
+        }
+        const targetLineQuarters = lstTargetLines.filter(
+          (x) =>
+            new Date(x.startDate)?.getFullYear() === year &&
+            new Date(x.startDate)?.getMonth() + 1 >= min &&
+            new Date(x.startDate)?.getMonth() + 1 <= max
+        );
+
+        tmp['year'] = year;
+        tmp['quarter'] = quarter;
+        let target = targetLineQuarters.reduce(
+          (acc, x) =>
+            acc +
+            (currencyID !== x.currencyID
+              ? (x.target / exchRate) * x.exchangeRate
+              : x.target),
+          0
+        );
+        tmp['text'] = Math.round(target * 100) / 100;
+        sumTarget += tmp['text'];
+        const first = this.vllQuaters?.find(
+          (x) => x.value === quarter.toString()
+        );
+        if (first) {
+          tmp['x'] = `${first.text}/${year}`;
+        }
+        tmp['y'] = 0;
+
+        lstPiaData.push(tmp);
+      }
+      lstPiaData.forEach((item) => {
+        item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
+      });
+    }
+    this.piedata = lstPiaData.sort((a, b) => {
+      return a.year - b.year;
+    });
+  }
+
+  // get sales target
+  getDashBoardSales(
+    deals,
+    targetLines,
+    lstQuarters,
+    param = null,
+    currentDate
+  ) {
+    if (lstQuarters != null) {
+      let now = new Date(currentDate);
+      for (var i = 0; i < lstQuarters.length; i++) {
+        let data = lstQuarters[i];
+        const lstBusinessIds = targetLines
+          ?.map((x) => x.businessLineID)
+          .filter((value, index, self) => self.indexOf(value) === index);
+        let dealWons = deals.filter(
+          (y) =>
+            lstBusinessIds.some((q) => q == y.businessLineID) &&
+            y.status == '3' &&
+            y.actualEnd != null &&
+            new Date(y.actualEnd)?.getFullYear() == now.getFullYear()
+        );
+
+        let target = 0;
+        let dealValueWon = 0;
+        let targetLineQuarters = targetLines?.filter(
+          (x) => new Date(x.startDate)?.getFullYear() == now.getFullYear()
+        );
+        if (parseInt(data.quarter) > 0) {
+          const { min, max } = this.getQuarterMonthRange(
+            parseInt(data.quarter)
+          );
+          targetLineQuarters = targetLineQuarters.filter(
+            (x) =>
+              new Date(x.startDate)?.getMonth() + 1 >= min &&
+              new Date(x.startDate)?.getMonth() + 1 <= max
+          );
+          dealWons = dealWons.filter(
+            (x) =>
+              new Date(x.actualEnd)?.getMonth() + 1 >= min &&
+              new Date(x.actualEnd)?.getMonth() + 1 <= max
+          );
+        }
+        target = Math.round(
+          targetLineQuarters.reduce(
+            (sum, x) => sum + (x.target / this.exchangeRate) * x.exchangeRate,
+            0
+          )
+        );
+        dealValueWon = Math.round(
+          dealWons.reduce(
+            (sum, x) =>
+              sum + (x.dealValue / this.exchangeRate) * x.exchangeRate,
+            0
+          )
+        );
+        lstQuarters[i].target = target;
+        lstQuarters[i].dealValueWon = dealValueWon;
+        this.showValueToChartBullets(lstQuarters[i]);
+      }
+      this.lstQuarters = lstQuarters;
+    }
+  }
+  //end
+
+  //get top sales
+  getTopSalesDashBoards(lstUsers = [], param, currentDate) {
+    let list = [];
+    let now = new Date(currentDate);
+    if (lstUsers?.length > 0) {
+      lstUsers.sort((a, b) => {
+        const dealValueA = a?.deals
+          .filter(
+            (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+          )
+          .reduce(
+            (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+            0
+          );
+        const dealValueB = b?.deals
+          .filter(
+            (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+          )
+          .reduce(
+            (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
+            0
+          );
+        if (dealValueA === 0 && dealValueB === 0) {
+          const numDealsA = a?.deals
+            .filter(
+              (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            )
+            .filter((deal) => deal.status === '3').length;
+          const numDealsB = b?.deals
+            .filter(
+              (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+            )
+            .filter((deal) => deal.status === '3').length;
+          return numDealsB - numDealsA;
+        }
+        return dealValueB - dealValueA;
+      });
+
+      // Giới hạn danh sách tối đa 5 đối tượng
+      lstUsers = lstUsers.slice(0, 10); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+
+      lstUsers.forEach((item) => {
+        var tmp = {};
+        tmp = item;
+        let performances = [];
+        if (this.lstVllTopSales != null && this.lstVllTopSales.length > 0) {
+          for (var vll of this.lstVllTopSales) {
+            var tmpPerform = {};
+            tmpPerform['value'] = vll.value;
+            tmpPerform['text'] = vll.text;
+
+            let count = 0;
+            let countOlds = 0;
+            switch (vll?.value) {
+              case '1': // lead đã tạo
+                count =
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  ).length ?? 0;
+                countOlds =
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() - 1 ==
+                      now.getFullYear() - 1
+                  ).length ?? 0;
+                tmpPerform['count'] = count.toLocaleString();
+                break;
+              case '3': // cơ hội đã tạo
+                count =
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )?.length ?? 0;
+                countOlds =
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() - 1 ==
+                      now.getFullYear() - 1
+                  )?.length ?? 0;
+                tmpPerform['count'] = count.toLocaleString();
+                break;
+              case '5': // doanh thu đạt được
+                item?.deals
+                  .filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )
+                  ?.forEach((ele) => {
+                    if (ele.status == '3') {
+                      count += ele?.dealValue;
+                    }
+                  }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
+                tmpPerform['count'] = count.toLocaleString();
+                break;
+              case '7': //doanh thu đã mất
+                item?.deals
+                  .filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  )
+                  ?.forEach((ele) => {
+                    if (ele.status == '5') {
+                      count += ele?.dealValue;
+                    }
+                  }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
+                tmpPerform['count'] = count.toLocaleString();
+                break;
+              case '9': //trung bình chu kỳ bán hàng
+                count = this.getCountDate(
+                  item?.leads.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() == now.getFullYear()
+                  ),
+                  item?.deals.filter(
+                    (x) =>
+                      new Date(x.createdOn).getFullYear() ==
+                        now.getFullYear() && x.status == '3'
+                  )
+                );
+                tmpPerform['count'] = (Math.round(count) > 0 ?
+                  count.toFixed(1).toLocaleString()
+                   : count.toFixed(0).toLocaleString()) + (this.language == 'vn' ? ' ngày' : ' day');
+                break;
+            }
+
+            let valueAsc = '0';
+            if (count > 0 && countOlds > 0) {
+              valueAsc = Math.round(count / countOlds) * 100 + '%';
+            } else {
+              if (count == countOlds) {
+                valueAsc = 0 + '%';
+              } else {
+                valueAsc = 100 + '%';
+              }
+            }
+            tmpPerform['valueAsc'] = valueAsc.toLocaleString();
+            tmpPerform['isAsc'] =
+              count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+            performances.push(tmpPerform);
+          }
+        }
+        tmp['performances'] = performances;
+        list.push(tmp);
+      });
+    }
+    return list;
+  }
+
+  getCountDate(leads, deals) {
+    let count = 0;
+    if (deals != null && deals.length > 0) {
+      for (var item of deals) {
+        if (item?.actualEnd != null) {
+          let actualEnd = new Date(item?.actualEnd);
+          let createdOn = new Date(item.createdOn);
+          let leadInDeals = leads?.filter((x) => x.dealID == item.recID);
+          if (leadInDeals != null && leadInDeals.length > 0) {
+            let sumDate = leadInDeals.reduce(
+              (acc, x) =>
+                acc +
+                (actualEnd.getTime() - new Date(x.createdOn).getTime()) /
+                  (24 * 60 * 60 * 1000),
+              0
+            );
+
+            count += sumDate;
+          } else {
+            count +=
+              (actualEnd.getTime() - createdOn.getTime()) /
+              (24 * 60 * 60 * 1000);
+          }
+        }
+      }
+      return count / deals.length;
+    }
+
+    return count;
+  }
+
+  findItemUser(value, performances) {
+    let title = performances.find((x) => x.value == value);
+    return title;
+  }
+
+  getIcon(value, type) {
+    let ind = value == '2' ? value : '1';
+    let data = this.vllUpDowns.find((x) => x.value == ind);
+    return data[type];
+  }
+  //end
+
+  getQuarterMonthRange(quarter: number): { min: number; max: number } {
+    let min = 1;
+    let max = 1;
+
+    switch (quarter) {
+      case 1:
+        min = 1;
+        max = 3;
+        break;
+      case 2:
+        min = 4;
+        max = 6;
+        break;
+      case 3:
+        min = 7;
+        max = 9;
+        break;
+      case 4:
+        min = 10;
+        max = 12;
+        break;
+    }
+
+    return { min, max };
+  }
+
+  //Set chart bullets
+  showValueToChartBullets(data) {
+    let obj = {};
+    if (data) {
+      let i = data?.quarter.toString();
+      this[`dataBulletQ${i}s`] = [];
+      this[`titleQ${i}`] = data?.nameQuarter;
+      var tmp = {};
+      tmp['value'] = Math.round(
+        this.formatMaxValue(parseFloat(data.dealValueWon))
+      );
+      tmp['target'] = Math.round(this.formatMaxValue(parseFloat(data?.target)));
+
+      this[`dataBulletQ${i}s`].push(tmp);
+      this[`dealValueWonQ${i}`] = Math.round(
+        this.formatMaxValue(parseFloat(data?.dealValueWon))
+      );
+      let maxinum =
+        parseFloat(data?.target) > parseFloat(data?.dealValueWon)
+          ? parseFloat(data?.target) + (parseFloat(data?.target) * 30) / 100
+          : parseFloat(data?.dealValueWon) +
+            (parseFloat(data?.dealValueWon) * 30) / 100;
+      this[`maximumBulletQ${i}`] = Math.round(this.formatMaxValue(maxinum));
+
+      this[`intervalQ${i}`] = Math.round(
+        this.calculateInterval(this[`maximumBulletQ${i}`])
+      );
+      this[`targetQ${i}`] = Math.round(this.formatMaxValue(maxinum)).toString();
+      this[`labelFormatQ${i}`] = this.labelFormat(maxinum);
+    }
+  }
+
+  formatMaxValue(value: number) {
+    if (value >= 1000000) {
+      return value / 1000000;
+    } else if (value >= 1000) {
+      return value / 1000;
+    } else {
+      return value;
+    }
+  }
+
+  labelFormat(value: number) {
+    if (value >= 1000000) {
+      return '${value}M';
+    } else if (value >= 1000) {
+      return '${value}K';
+    } else {
+      return '${0}';
+    }
+  }
+
+  calculateInterval(value: number): number {
+    if (value >= 100) {
+      return value / 10;
+    } else if (value >= 10) {
+      return value;
+    } else {
+      return 1;
+    }
+  }
+
+  //load bullet
+  load = (args: IBulletLoadedEventArgs) => {
+    let selectedTheme: string = location.hash.split('/')[1];
+    selectedTheme = selectedTheme ? selectedTheme : 'Material';
+    args.bulletChart.theme = <ChartTheme>(
+      selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)
+    )
+      .replace(/-dark/i, 'Dark')
+      .replace(/light/i, 'Light')
+      .replace(/contrast/i, 'Contrast');
+  };
+
+  //render
+  onTextRender(args: IAccTextRenderEventArgs) {
+    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
+    let value = text?.text ?? 0;
+    let retrn = '0';
+    if (value === null || isNaN(value)) {
+      retrn = '0';
+    }
+
+    if (value >= 1000000) {
+      retrn = value / 1000000 + 'M';
+    } else if (value >= 1000) {
+      retrn = value / 1000 + 'K';
+    }
+    args.text = retrn;
+  }
+
+  tooltipRender(e, i) {
+    console.log(e);
+    let target = 0;
+    let dealValue = 0;
+    let index = this.lstQuarters.findIndex((x) => x.quarter == i);
+    let titleTarger = this.language == 'vn' ? 'Mục tiêu' : 'Target';
+    let titleDealValue =
+      this.language == 'vn' ? 'Doanh thu thực tế' : 'DealValue';
+    if (index != -1) {
+      target =
+        this.lstQuarters[index]?.target > 0
+          ? this.lstQuarters[index].target.toLocaleString()
+          : 0;
+      dealValue = this.lstQuarters[index]?.dealValueWon
+        ? this.lstQuarters[index].dealValueWon.toLocaleString()
+        : 0;
+    }
+    let template = `${titleTarger} : <b>${target}</b> ${this.currencyID}<br/>${titleDealValue} : <b>${dealValue}</b> ${this.currencyID}`;
+    e.template = template;
+    e.text = template;
+  }
+  //end
 }

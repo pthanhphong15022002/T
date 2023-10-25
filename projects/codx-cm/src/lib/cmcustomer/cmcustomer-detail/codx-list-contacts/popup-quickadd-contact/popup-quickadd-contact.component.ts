@@ -49,6 +49,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   actionOld = '';
   customerID: any;
   isStep: boolean = false;
+  count = 0;
   constructor(
     private notiService: NotificationsService,
     private cache: CacheService,
@@ -75,6 +76,10 @@ export class PopupQuickaddContactComponent implements OnInit {
       this.data = JSON.parse(JSON.stringify(dt?.data?.dataContact));
       this.isDefault = this.data.isDefault;
       this.contactType = this.data?.contactType;
+    } else {
+      if (this.gridViewSetup)
+        this.gridViewSetup.ContactID.isRequire = false;
+        this.gridViewSetup.RecID.isRequire = false;
     }
   }
   async ngOnInit() {
@@ -267,14 +272,8 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
-    if (this.data.contactName == null || this.data.contactName.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup?.ContactName?.headerText + '"'
-      );
-      return;
-    }
+    this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.count > 0) return;
     if (this.data.mobile != null && this.data.mobile.trim() != '') {
       if (!this.checkEmailOrPhone(this.data.mobile, 'P')) return;
     } else {

@@ -78,6 +78,8 @@ export class DealsComponent
   @ViewChild('templateConsultant') templateConsultant: TemplateRef<any>;
   @ViewChild('templateExpectedClosed') templateExpectedClosed: TemplateRef<any>;
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
+  @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
+  @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -129,7 +131,6 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
-
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -190,10 +191,9 @@ export class DealsComponent
       this.funcIDCrr = f;
       this.functionModule = f.module;
       this.nameModule = f.customName;
-      this.executeApiCallFunctionID(f.formName, f.gridViewName);
     });
-    this.getColorReason();
 
+    this.getColorReason();
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
     this.getListStatusCode();
@@ -203,9 +203,11 @@ export class DealsComponent
         this.processIDKanban = res.recID;
       }
     });
+
+    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
 
-  onInit(): void {
+  async onInit(): Promise<void> {
     this.afterLoad();
     this.button = {
       id: this.btnAdd,
@@ -243,7 +245,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          resources: this.columnGrids,
+          //resources: this.columnGrids,
           // frozenColumns: 1,
         },
       },
@@ -260,7 +262,8 @@ export class DealsComponent
       },
     ];
 
-    this.views = this.viewsDefault;
+    //this.views = this.viewsDefault;
+
     // this.cache.viewSettings(this.funcID).subscribe((views) => {
     //   this.viewsDefault.forEach((v, index) => {
     //     let idx = views.findIndex((x) => x.view == v.type);
@@ -363,7 +366,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
-            ['1', '0','15'].includes(data?.status) ||
+            ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data)
           : true;
     };
@@ -385,7 +388,7 @@ export class DealsComponent
     let isClosed = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? data.closed || ['1', '0','15'].includes(data.status)
+          ? data.closed || ['1', '0', '15'].includes(data.status)
           : true;
     };
     let isOpened = (eventItem, data) => {
@@ -402,14 +405,14 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? !['1', '2','15'].includes(data.status) ||
+        ? !['1', '2', '15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
         : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status)  : true;
+      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -436,25 +439,13 @@ export class DealsComponent
       // Phân quyền
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
-    let isUpload = (eventItem, data) => {
-      // ĐÍnh kèm file, nhập khẩu dữ liệu
-      eventItem.disabled = !data.upload ? true : false;
-    };
-    let isEmail = (eventItem, data) => {
-      // Gửi mail
-      eventItem.disabled = !data.write ? true : false;
-    };
-    let isDownload = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
-      eventItem.disabled = !data.download ? true : false;
-    };
 
     let isDisCRd = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled =  data.full ||  data?.alloweStatus == '1' ? false: true;
+      eventItem.disabled =
+        data.full || data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -469,10 +460,7 @@ export class DealsComponent
         (acc, code) => ({ ...acc, [code]: isDisCRd }),
         {}
       ),
-      ...['SYS003', 'SYS001'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
-        {}
-      ),
+
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -485,10 +473,6 @@ export class DealsComponent
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
-      SYS004: isEmail,
-      SYS002: isDownload,
-      SYS003: isUpload,
-      SYS001: isUpload,
     };
 
     return functionMappings[type];
@@ -510,18 +494,6 @@ export class DealsComponent
       }
     });
   }
-  // async getValuelistStatusCode() {
-  //   this.cache.valueList('CRM041').subscribe((func) => {
-  //     if (func) {
-  //       this.valueListStatusCode = func.datas
-  //         .filter((x) => ['2', '3', '5', '7'].includes(x.value))
-  //         .map((item) => ({
-  //           text: item.text,
-  //           value: item.value,
-  //         }));
-  //     }
-  //   });
-  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -530,24 +502,22 @@ export class DealsComponent
       }
     });
   }
-  getGridViewSetup(formName, gridViewName) {
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-        this.vllStatus = this.gridViewSetup['Status'].referedValue;
-        this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
-        //lay grid view
-        let arrField = Object.values(this.gridViewSetup).filter(
-          (x: any) => x.isVisible
-        );
-        if (Array.isArray(arrField)) {
-          this.arrFieldIsVisible = arrField
-            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-            .map((x: any) => x.fieldName);
-          // this.getColumsGrid(this.gridViewSetup);
-        }
-      }
-    });
+  async getGridViewSetup(formName, gridViewName) {
+    this.gridViewSetup = await firstValueFrom(
+      this.cache.gridViewSetup(formName, gridViewName)
+    );
+    this.vllStatus = this.gridViewSetup['Status'].referedValue;
+    this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+    //lay grid view - view gird he thong
+    // let arrField = Object.values(this.gridViewSetup).filter(
+    //   (x: any) => x.isVisible
+    // );
+    // if (Array.isArray(arrField)) {
+    //   this.arrFieldIsVisible = arrField
+    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+    //     .map((x: any) => x.fieldName);
+    // }
+    //this.getColumsGrid(this.gridViewSetup);
   }
 
   getColorReason() {
@@ -978,6 +948,7 @@ export class DealsComponent
       applyFor: '1',
       dataCM: dataCM,
       stepName: data.currentStepName,
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1580,17 +1551,8 @@ export class DealsComponent
   }
 
   onLoading(e) {
-    if (!this.funCrr) {
-      this.getColumsGrid(this.gridViewSetup);
-      return;
-    }
-
     //reload filter
-
-    // if (this.funCrr != this.funcID) {
-    //   this.view.pinedFilter.filters = [];
-    //   this.view.dataService.filter.filters = [];
-    // }
+    this.loadViewModel();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     if (this.processID) this.dataObj = { processID: this.processID };
@@ -1746,6 +1708,13 @@ export class DealsComponent
           case 'Note':
             template = this.templateNote;
             break;
+          case 'StatusCodeID':
+            template = this.templateStatusCode;
+            break;
+          case 'Industries':
+            template = this.templateIndustries;
+            break;
+
           default:
             break;
         }
@@ -1913,18 +1882,18 @@ export class DealsComponent
     this.statusDefault = data?.statusCodeID;
     this.statusCodecmt = data?.statusCodeCmt;
     var obj = {
-      statusDefault:this.dataSelected?.statusCodeID,
-      statusCodecmt:this.dataSelected?.statusCodeCmt,
-      applyProcess:true,
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: true,
       title: this.titleAction,
       recID: this.dataSelected.recID,
-      valueListStatusCode:this.valueListStatusCode,
-      gridViewSetup:this.gridViewSetup
+      valueListStatusCode: this.valueListStatusCode,
+      gridViewSetup: this.gridViewSetup,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
       '',
-       500,
+      500,
       400,
       '',
       obj,
@@ -1971,4 +1940,15 @@ export class DealsComponent
   //     }
   //   });
   // }
+  getStatusCode(status) {
+    if (status) {
+      let result = this.valueListStatusCode.filter(
+        (x) => x.value === status
+      )[0];
+      if (result) {
+        return result?.text;
+      }
+    }
+    return '';
+  }
 }

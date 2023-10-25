@@ -1,33 +1,36 @@
 <ng-container *ngIf="data?.recID">
-    <codx-detail-tmp
-      [formModel]="formModel"
-      [body]="body"
-      [footer]="footer"
-      [hideMF]="true"
-      [dataItem]="data"
-    >
-      <ng-template #footer>
-        <codx-tabs
-          [entityName]="formModel.entityName"
-          [formModel]="formModel"
-          [TabControl]="tabControl"
-          [objectID]="data.recID"
-          [funcID]="formModel.funcID"
-          [isUpPermission]="true"
-          [isEdit]="true"
-        ></codx-tabs>
-      </ng-template>
+    <codx-detail-tmp [formModel]="formModel" [body]="body" [footer]="footer" [hideMF]="true" [dataItem]="data">
+        <ng-template #footer>
+            <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [TabControl]="tabControl"
+                [objectID]="data.recID" [funcID]="formModel.funcID" [isUpPermission]="true" [isEdit]="true"></codx-tabs>
+        </ng-template>
     </codx-detail-tmp>
-  </ng-container>
+</ng-container>
 
 <ng-template #body>
     <ng-container *ngIf="data">
         <div class="w-100 d-flex flex-column" id="erm_content">
+            <div *ngIf="data.approveStatus == '0'" class="d-flex" style="justify-content: right;">
+                <!-- <div class="d-flex align-items-center me-2 icon-16 mx-2 icon-check text-primary">
+                    <span class="text-nowrap">Duyệt</span>
+                </div>
+                <div class="d-flex align-items-center me-2 icon-16 mx-2 icon-close text-dark">
+                    <span class="text-nowrap">Từ chối</span>
+                </div> -->
+                <div (click)="approve.emit(data)">
+                    <span class="icon-16 mx-2 icon-check" style="color:green"></span>
+                    <codx-label formName="" name="lblreject" default="Duyệt"></codx-label>
+                </div>
+                <div (click)="approve.emit(data)">
+                    <span class="icon-16 mx-2 icon-close" style="color:red"></span>
+                    <codx-label formName="" name="lblreject" default="Từ chối"></codx-label>
+                </div>
+            </div>
             <div class="container p-5">
                 <div class="d-flex">
                     <ng-container>
                         <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail" id="pattern-img"
-                            [style.background]="data.backgroundColor?data.backgroundColor:'url('+backgroundImg+')'" >
+                            [style.background]="data.backgroundColor?data.backgroundColor:'url('+backgroundImg+')'">
                             <h2 class="card-title fw-bolderer mb-5 mt-8 text-center" [style.color]="data.headerColor">
                                 {{data?.cardType | vll:'L1422':'text'|async}}
                             </h2>
@@ -47,20 +50,25 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-center mt-3">
-                                <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users" [width]="30">
+                                <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users"
+                                    [width]="30">
                                 </codx-img>
                                 <span class="pic-send w-50px text-center ion-justify-content-between">
-                                    <img class="ion-margin-top-8" alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
+                                    <img class="ion-margin-top-8" alt="Pic"
+                                        src="/assets/themes/fd/default/img/img_SendCard.svg">
                                 </span>
-                                <codx-img class="symbol-circle" [objectId]="data.receiverID" objectType="AD_Users" [width]="30">
+                                <codx-img class="symbol-circle" [objectId]="data.receiverID" objectType="AD_Users"
+                                    [width]="30">
                                 </codx-img>
                             </div>
                             <div class="content-card text-feed mt-6 pe-1">
-                                <div class="modal-card-sms" id="situation" [className]="showmore?'show-more':''" [style.color]="data.textColor"
-                                    [innerHTML]="data.situation">
+                                <div class="modal-card-sms" id="situation" [className]="showmore?'show-more':''"
+                                    [style.color]="data.textColor" [innerHTML]="data.situation">
                                 </div>
-                                <div class="text-gray-600 mt-2 cursor-pointer text-hover-primary" (click)="showMore()" *ngIf="showSM">
-                                <codx-label default="Xem thêm"  [fiedName]="'lblSVMore'" [formName]="'SVMore'"></codx-label>
+                                <div class="text-gray-600 mt-2 cursor-pointer text-hover-primary" (click)="showMore()"
+                                    *ngIf="showSM">
+                                    <codx-label default="Xem thêm" [fiedName]="'lblSVMore'"
+                                        [formName]="'SVMore'"></codx-label>
                                 </div>
                             </div>
                         </div>
@@ -91,8 +99,8 @@
                             <ng-container *ngIf="data.receiver">
                                 <div class="d-flex align-items-center user-card mb-5">
                                     <span class="me-4">
-                                        <codx-img class="symbol-circle"
-                                            [objectId]="data.receiver.userID" objectType="AD_Users" [width]="35">
+                                        <codx-img class="symbol-circle" [objectId]="data.receiver.userID"
+                                            objectType="AD_Users" [width]="35">
                                         </codx-img>
                                     </span>
                                     <div class="d-flex flex-column">
@@ -164,6 +172,13 @@
                         </ng-container>
                     </ng-container>
                 </div>
+                <div *ngIf="data.comment" class="mt-6">
+                    <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblComment"
+                            default="Ý kiến xác nhận"></codx-label></div>
+                    <div class="modal-card-sms mb-5 text-gray-700">
+                        <span>{{data.comment}}</span>
+                    </div>
+                </div>
                 <ng-container *ngIf="data.hasGift">
                     <div class="mt-6">
                         <div class="text-primary fw-bold">
@@ -190,13 +205,15 @@
                                         </div>
                                         <div class="mb-2">
                                             <span class="fw-normal">
-                                                <codx-label formName="" name="lblNotes" default="Chú thích:"></codx-label>
+                                                <codx-label formName="" name="lblNotes"
+                                                    default="Chú thích:"></codx-label>
                                             </span>
                                             <span>{{item.memo}}</span>
                                         </div>
                                         <div class="mb-2">
                                             <span class="fw-normal text-gray-500 me-1">
-                                                <codx-label formName="" name="lblCount" default="Số lượng:"></codx-label>
+                                                <codx-label formName="" name="lblCount"
+                                                    default="Số lượng:"></codx-label>
                                             </span>
                                             <span>{{item.quantity}}</span>
                                         </div>
@@ -257,7 +274,8 @@
         item.objectType == '6' || item.objectType == '9'; else tmpPermison">
             <span class="bg-gray-200 rounded-3 px-3 py-1 d-flex align-items-center">
                 <span class="symbol-circle me-1">
-                    <img class="w-12px" src="assets/themes/sys/default/img/{{item.objectType | vll:'L1901':'icon' | async}}" />
+                    <img class="w-12px"
+                        src="assets/themes/sys/default/img/{{item.objectType | vll:'L1901':'icon' | async}}" />
                 </span>
                 <span class="fs-7">{{item.objectType | vll:'L1901':'text' |async}}</span>
             </span>

@@ -417,21 +417,41 @@ export class PopupAddCardsComponent implements OnInit {
         break;
 
       case 'industry':
-        this.industry = data;
-        let obj = {};
-        obj[field] = this.industry;
-        this.api
-          .execSv(
-            'BS',
-            'ERM.Business.BS',
-            'IndustriesBusiness',
-            'GetListByID',
-            this.industry
-          )
-          .subscribe((res: any) => {
-            if (res) {
-              this.userReciver = res[0].description;
-              this.api
+        // this.industry = data;
+        // let obj = {};
+        // obj[field] = this.industry;
+        // this.api
+        //   .execSv(
+        //     'BS',
+        //     'ERM.Business.BS',
+        //     'IndustriesBusiness',
+        //     'GetListByID',
+        //     this.industry
+        //   )
+        //   .subscribe((res: any) => {
+        //     if (res) {
+        //       this.userReciver = res[0].description;
+        //       this.api
+        //         .callSv(
+        //           'SYS',
+        //           'ERM.Business.AD',
+        //           'UsersBusiness',
+        //           'GetAsync',
+        //           this.userReciver
+        //         )
+        //         .subscribe((res2) => {
+        //           if (res2.msgBodyData.length) {
+        //             this.userReciverName = res2.msgBodyData[0].userName;
+        //             this.form.patchValue({ receiver: this.userReciver });
+        //           }
+        //         });
+        //     }
+        //   });
+        // this.form.patchValue(obj);
+        const onwer = e?.component.itemsSelected[0]?.Owner;
+        if(onwer) {
+          this.userReciver = onwer;
+          this.api
                 .callSv(
                   'SYS',
                   'ERM.Business.AD',
@@ -445,9 +465,7 @@ export class PopupAddCardsComponent implements OnInit {
                     this.form.patchValue({ receiver: this.userReciver });
                   }
                 });
-            }
-          });
-        this.form.patchValue(obj);
+        }
         break;
 
       case 'situation':

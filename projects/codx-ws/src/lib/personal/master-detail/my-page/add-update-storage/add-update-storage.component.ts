@@ -47,6 +47,7 @@ export class AddUpdateStorageComponent implements OnInit {
   data:any = null;
   action: "add" | "edit" = "add";
   headerText:string = "";
+  isChangeFile = false;
   @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
 
   constructor(
@@ -109,12 +110,20 @@ export class AddUpdateStorageComponent implements OnInit {
       .subscribe((res:any) => {
         if(res)
         {
-          this.imageUpload
-          .updateFileDirectReload(res.recID)
-          .subscribe(item=>{
+          if(this.isChangeFile)
+          {
+            this.imageUpload
+            .updateFileDirectReload(res.recID)
+            .subscribe(item=>{
+              this.notifySV.notifyCode(res ? "SYS006" : "SYS023");
+              this.dialogRef.close(res);
+            });
+          }
+          else
+          {
             this.notifySV.notifyCode(res ? "SYS006" : "SYS023");
             this.dialogRef.close(res);
-          });
+          }
         }
       });
     }
@@ -128,11 +137,19 @@ export class AddUpdateStorageComponent implements OnInit {
         .subscribe((res:boolean) => {
           if(res)
           {
-            this.imageUpload
-            .updateFileDirectReload(this.data.recID).subscribe(item=>{
+            if(this.isChangeFile)
+            {
+              this.imageUpload
+              .updateFileDirectReload(this.data.recID).subscribe(item=>{
+                this.dialogRef.close(res ? this.data : null);
+                this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
+              });
+            }
+            else
+            {
               this.dialogRef.close(res ? this.data : null);
               this.notifySV.notifyCode(res ? "SYS007" : "SYS021");
-            });
+            }
           }
         });
     }
@@ -145,5 +162,10 @@ export class AddUpdateStorageComponent implements OnInit {
     op.methodName = this.action == 'add' ? 'InsertAsync' : 'UpdateStorageAsync';
     op.data = this.data
     return true;
+  }
+
+  handleInput()
+  {
+    this.isChangeFile = true;
   }
 }

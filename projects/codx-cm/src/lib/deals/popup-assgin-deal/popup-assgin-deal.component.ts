@@ -93,7 +93,7 @@ export class PopupAssginDealComponent
     this.user = this.authStore.get();
     this.title = dialogData?.data.titleAction;
     this.applyProcess = dialogData?.data.applyProcess;
-    this.data = dialogData?.data.data;
+    this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     if (this.applyProcess) {
       this.refID = dialogData?.data?.refID;
       (this.stepID = dialogData?.data?.stepID),
@@ -101,7 +101,7 @@ export class PopupAssginDealComponent
     }
     this.recID = dialogData?.data?.recID;
     this.applyFor = dialogData?.data.applyFor;
-    this.owner = dialogData?.data?.owner;
+    this.owner = JSON.parse(JSON.stringify(this.data?.owner));
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
     this.startControl = dialogData?.data.startControl;

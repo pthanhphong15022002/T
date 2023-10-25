@@ -17,7 +17,7 @@
           class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back"
         ></span
       ></a>
-      <h3 class="list-header">{{ title }}</h3>
+      <h3 class="list-header ms-3">{{ title[title.length - 1] }}</h3>
     </div>
     <div class="list-content">
       <ng-container *ngFor="let item of groupSetting">
@@ -106,12 +106,19 @@
             {{ data.tilte }}
           </div>
           <div class="text-gray-500 pt-1">
-            {{ data.description }}
+            {{ data | formatDescription : oldDataValue }}
           </div>
         </div>
         <div
           *ngIf="!isGroup"
-          class="d-flex align-items-center ms-4 min-w-300px justify-content-end category-control"
+          class="d-flex align-items-center ms-4 justify-content-end category-control w-300px min-w-300px"
+          [ngClass]="
+            data.controlType &&
+            data.controlType != 'GroupControl' &&
+            data.category
+              ? 'min-w-300px'
+              : ''
+          "
         >
           <!-- <ng-container
           *ngIf="data.controlType && data.controlType != 'GroupControl'"

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
+  AuthStore,
   CacheService,
   CallFuncService,
   DataRequest,
@@ -27,7 +28,7 @@ import { Query } from '@syncfusion/ej2-data';
 import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { FormGroup } from '@angular/forms';
-import { of, switchMap } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 import {
   SpeedDialComponent,
   SpeedDialItemEventArgs,
@@ -40,6 +41,8 @@ import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components
 import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
 import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
 import { CodxCoService } from '../codx-co.service';
+import { isElementAccessExpression } from 'typescript';
+
 
 @Component({
   selector: 'co-calendar',
@@ -48,28 +51,7 @@ import { CodxCoService } from '../codx-co.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class COCalendarComponent extends UIComponent implements AfterViewInit {
-  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  @ViewChild('ejCalendar') ejCalendar!: CalendarComponent;
-  @ViewChild('calendarCenter') calendarCenter!: CalendarCenterComponent;
-  @ViewChild('speeddial') speeddial: SpeedDialComponent;
-
-  dataResourceModel = [];
-  request?: ResourceModel;
-  views: Array<ViewModel> = [];
-  calendarParams = {};
-  dateChange = new Date();
-  FDdate = new Date();
-  lstDOWeek = [];
-  typeNavigate = 'Month';
-  defaultCalendar;
-  calendarData = [];
-  calendarTempData = [];
-  locale = 'vi';
-  fields: Object;
-  calendarType = 'COT03';
-  calendarTypes = [];
-  resources = [];
-
+  
   roomFM: FormModel;
   roomFG: FormGroup;
   addRoomTitle = '';
@@ -80,36 +62,56 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   meetingFM: FormModel;
   meetingFG: FormGroup;
-  //addMeetingTitle = '';
+
 
   myTaskFM: FormModel;
   myTaskFG: FormGroup;
-  //addMyTaskTitle = '';
+
 
   assignTaskFM: FormModel;
   assignTaskFG: FormGroup;
 
-  items: SpeedDialItemModel[] = [];
-
-  isUpdated = false;
-
-  //calendar cell date
-  cellStart = null;
-  preStartDate = null;
-  cellEnd = null;
+  //#region variable
+  user:any = null;
+  views: Array<ViewModel> = [];
+  calendarParams:any[] = [];
+  typeNavigate = 'Month';
+  defaultFuncID:string = 'COT03'; // lịch cá nhân
+  locale:string = 'vi';
+  calendarID:string = 'COT03';
+  lstCalendars:any[] = [];
   isChangeMonth = true;
-  permission = '';
-  settings = {};
-
+  settings:any = {};
+  dPredicate:any = {};
+  dResources:any = {};
+  statusColor:any[] = [];
+  fromDate:Date = new Date();
+  toDate:Date = new Date();
+  lstEvents:any[] = [];
+  lstResources:any[] = [];
   listOrgUnit:any[] = [];
   checked:string = "1";
+  isLoading:boolean = false;
+  selectedDate:Date = null;
+  sysMoreFunc:any[] = [];
+  startDate:Date = new Date(moment().startOf('month').format('YYYY-MM-DD hh:mm'))
+  endDate:Date = new Date(moment().endOf('month').format('YYYY-MM-DD hh:mm'));
 
+  //speedDial
+  speedDialItems: SpeedDialItemModel[] = [];
+  //
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
+  @ViewChild('calendarCenter') calendarCenter: CalendarCenterComponent;
+  //#endregion 
+  
   constructor(
     injector: Injector,
     private coService: CodxCoService,
     private cacheService: CacheService,
     private notificationsService: NotificationsService,
-    private cfService: CallFuncService
+    private cfService: CallFuncService,
+    private authStore:AuthStore
   ) {
     super(injector);
     this.roomFM = new FormModel();
@@ -117,54 +119,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.meetingFM = new FormModel();
     this.myTaskFM = new FormModel();
     this.assignTaskFM = new FormModel();
-    this.fields = { text: 'defaultName', value: 'functionID' };
+    this.user = this.authStore.get();
   }
 
   onInit(): void {
-    //Get parameters of calendar
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetParamMyCalendarAsync',
-        'WPCalendars')
-        .subscribe((res: any) => {
-        if (res) {
-          for (const prop in res) {
-            let param = JSON.parse(res[prop]);
-            this.resources.push({
-              color: param.ShowBackground,
-              borderColor: param.ShowColor,
-              text: param.Template.TransType,
-              status: param.Template.TransType,
-            });
-
-            if (res.hasOwnProperty(prop)) {
-              this.calendarParams[prop] = JSON.parse(res[prop]);
-              this.settings[prop] = param.Predicate;
-            }
-          }
-        }
-      });
-    this.navigate();
-    this.getCalendarTypes();
-    this.getCalendarNotes();
-    
-    let myInterval = setInterval(() => {
-      if (this.speeddial) {
-        clearInterval(myInterval);
-        this.cacheService.valueList('WP006').subscribe((res) => {
-          for (const data of res.datas) {
-            if (this.calendarParams.hasOwnProperty(data.value)) {
-              this.items.push({ id: data.value, text: data.text });
-            }
-          }
-          this.speeddial.items = this.items;
-          this.speeddial.refresh();
-        });
-      }
+    this.router.params.subscribe((param:any) => {
+      this.funcID = param["funcID"];
     });
+    this.getListCalendars();
+    this.getSettingValue();
+    this.getListEventFunc();
   }
 
   ngAfterViewInit() {
@@ -180,6 +144,12 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       },
     ];
 
+    // get sys more function
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res:any) => {
+      if(res){
+        this.sysMoreFunc = res;
+      }
+    });
     this.coService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
       this.roomFM = res;
       this.roomFG = this.codxService.buildFormGroup(
@@ -231,6 +201,71 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.assignTaskFM?.gridViewName
       );
     });
+
+    
+    
+  }
+
+  // get list event function
+  getListEventFunc(){
+    this.api.execSv("CO","CO","CalendarsBusiness","GetListFunctionEventAsync")
+    .subscribe((res:any)=>{
+      if(res){
+        for (const key in res) {
+          this.speedDialItems.push({id:key,text:res[key]})
+        } 
+      }
+    })
+  }
+  
+  // get settingValue CO
+  getSettingValue(){
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetParamMyCalendarAsync',
+        ['WPCalendars'])
+        .subscribe((res: any) => {
+        if (res?.length > 0) {
+          res.forEach((element) => {
+            let obj = JSON.parse(element);
+            this.statusColor.push({
+              color: obj.ShowBackground,
+              borderColor: obj.ShowColor,
+              text: obj.Template.TransType,
+              status: obj.Template.TransType,
+            });
+            this.dResources[obj.Template.TransType] = {
+              color: obj.ShowColor,
+              backgroundColor: obj.ShowBackground,
+              borderColor: obj.ShowColor,
+              text: obj.Template.TransType,
+              status: obj.Template.TransType,
+            }
+            this.calendarParams.push(obj);
+            this.settings[obj.Template.TransType] = obj.Predicate;
+            this.dPredicate[obj.Template.TransType] = obj.Predicate;
+          });
+          this.getListEvents();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  // get list Calendars
+  getListCalendars() {
+  this.api
+    .execSv('SYS','ERM.Business.AD', 'PermissionsBusiness', 'GetCalendarAllowedAsync',[this.funcID])
+    .subscribe((res: any) => {
+      if(res)
+      {
+        this.lstCalendars = res;
+        this.calendarID = this.defaultFuncID;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   // get lits HR_OrganizationUnits
@@ -239,29 +274,37 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       return;
     this.cache.functionList('HRT01')
     .subscribe((func:any) => {
-      if(func)
-      {
-        var requestOrgUnit = new DataRequest();
-        requestOrgUnit.funcID = 'HRT01';
-        requestOrgUnit.formName  = func.formName;
-        requestOrgUnit.gridViewName  = func.gridViewName;
-        requestOrgUnit.entityName  = func.entityName;
-        requestOrgUnit.entityPermission = func.entityPermission;
-        requestOrgUnit.predicate = func.predicate;
-        requestOrgUnit.dataValue = func.dataValue;
-        requestOrgUnit.pageLoading = false;
-        this.api.execSv('HR','ERM.Business.HR','HRBusiness','GetOrgUnitByCOAsync',[requestOrgUnit])
+      if(func){
+        var request = new DataRequest();
+        request.funcID = 'HRT01';
+        request.formName  = func.formName;
+        request.gridViewName  = func.gridViewName;
+        request.entityName  = func.entityName;
+        request.entityPermission = func.entityPermission;
+        request.predicate = func.predicate;
+        request.dataValue = func.dataValue;
+        request.pageLoading = false;
+        this.api.execSv('HR','ERM.Business.HR','HRBusiness','GetOrgUnitByCOAsync',[request])
         .subscribe((res:any) => {
           this.listOrgUnit = res;
+          this.getListEvents();
+          this.getListResource();
           this.detectorRef.detectChanges();
         });
       }
     });
   }
-  firstime() {
-    console.log('firsttime start end' + this.cellStart + ' ' + this.cellEnd);
 
-    this.getCalendarData();
+  // get list HR_Employes by OrgUnitID
+  getListResource(orgUnitID:string = ""){
+    this.api.execSv("HR","HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.lstResources = res[0];
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   onCreate() {
@@ -291,159 +334,152 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       });
   }
 
-  getCalendarTypes() {
-    this.api
-      .exec('CO', 'CalendarsBusiness', 'GetListCalendarAsync')
-      .subscribe((res: any) => {
-        if (res) {
-          this.calendarTypes = res;
-          this.defaultCalendar = 'COT03';
-          this.calendarType = this.defaultCalendar;
-          this.detectorRef.detectChanges();
-        }
-      });
+
+  // select day in calendar
+  changeDay(args){
+    this.selectedDate = new Date(args.value);
+    var dateDiff = Math.abs((this.startDate as any) - (this.selectedDate as any));
+    if(Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) < 0)
+      this.navigateMoth(this.selectedDate); 
+    this.detectorRef.detectChanges();
   }
 
-  navigate() {
-    this.coService.dateChange$.subscribe((res) => {
-      if (res?.fromDate === 'Invalid Date' && res?.toDate === 'Invalid Date') {
-        return;
-      }
-
-      if (this.dateChange >= res?.fromDate && this.dateChange < res?.toDate) {
-        return;
-      }
-      if (res?.fromDate && res?.toDate) {
-        if (res?.type) {
-          this.typeNavigate = res.type;
-        }
-        if (this.typeNavigate === 'Year') {
-          this.dateChange = this.FDdate;
-        } else {
-          this.dateChange = res.fromDate;
-        }
-        if (this.typeNavigate === 'Year' && res.type === undefined) {
-          this.dateChange = res?.toDate;
-          return;
-        }
-      }
-    });
+  // navigate moth in
+  navigateMoth(args){
+    this.startDate = new Date(moment(args.date.toString()).startOf('month').format('YYYY-MM-DD hh:mm'));
+    this.endDate = new Date(moment(args.date.toString()).endOf('month').format('YYYY-MM-DD hh:mm'));
+    let month = args.date.getMonth() + 1; // javscript month 0-11
+    let crrMonth = new Date().getMonth() + 1; // javscript month 0-11
+    if(month === crrMonth)
+      this.selectedDate = new Date(); // current month set selectedDate is new Date()
+    else
+      this.selectedDate = this.startDate; // new month set selectedDate is startDate
+    this.getListEvents();
+    this.detectorRef.detectChanges();
   }
+  
+  
 
-  changeDayOfMonth(args) {
-    this.FDdate = args.value;
-    args['date'] = args.value;
-    let crrDate = moment(this.FDdate)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
-    let newDate = moment(args.value)
-      .startOf('month')
-      .add(1, 'day')
-      .toISOString();
-    this.FDdate = args.value;
-    if (crrDate !== newDate) {
-      this.changeNewMonth(args);
-    } else {
-      if (
-        this.typeNavigate === 'Day' ||
-        this.typeNavigate === 'Week' ||
-        this.typeNavigate === 'WorkWeek' ||
-        this.typeNavigate === 'Month' ||
-        this.typeNavigate === 'Agenda' ||
-        this.typeNavigate === 'MonthAgenda'
-      ) {
-        this.changeNewMonth(args);
-      }
+  // show/hide events
+  valueChange(e) {
+    let transType = e.field;
+    let value = e.data === false ? "0" : "1";
+
+    this.calendarParams.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
+    if(value == "0")
+    {
+      this.lstEvents = this.lstEvents.filter((x:any)=> x.transType !== transType); 
+      this.detectorRef.detectChanges();
+    }      
+    else
+    {
+      let predicate = this.dPredicate[transType];
+      switch(transType){
+        case"WP_Notes":
+          this.getEventNotes(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;              
+              }
+              this.detectorRef.detectChanges();
+            }
+          });
+          break;
+        case"TM_MyTasks":
+          this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;
+              }
+              this.detectorRef.detectChanges();
+
+            }
+          });
+          break;
+        case"CO_Meetings":
+          this.getEventMeetings(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;
+              }
+              this.detectorRef.detectChanges();
+
+            }
+          });
+          break;
+        case"EP_BookingRooms":
+          this.getEventBooking(this.calendarID,predicate,"1",this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;
+              }
+              this.detectorRef.detectChanges();
+
+            }
+          });
+          break;
+        case"EP_BookingCars":
+          this.getEventBooking(this.calendarID,predicate,"2",this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;
+              }
+              this.detectorRef.detectChanges();
+
+            }
+          });
+          break;
+        case"TM_AssignTasks":
+          this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            if(res?.length > 0)
+            {
+              this.lstEvents = this.lstEvents.concat(res);
+              if (this.ejCalendar) 
+              {
+                this.ejCalendar.refresh();
+                //this.ejCalendar.value = this.startDate;
+              }
+              this.detectorRef.detectChanges();
+
+            }
+          });
+          break;
+      }      
     }
   }
 
-  changeNewMonth(args) {
-    this.FDdate = args.date;
-    console.log('start end ' + this.cellStart + ' ' + this.cellEnd);
-    this.getCalendarData();
-    this.preStartDate = this.cellStart;
-    this.cellStart = null;
-    let ele = document.getElementsByTagName('codx-schedule')[0];
-    if (ele) {
-      let scheduleEle = ele.querySelector('ejs-schedule');
-      if ((scheduleEle as any).ej2_instances[0]) {
-        (scheduleEle as any).ej2_instances[0].selectedDate = new Date(
-          this.FDdate
-        );
-      }
-    }
-  }
-
-  updateSettingValue(e) {
-    if (!this.isUpdated) {
-      let transType = e.field;
-      let value = e.data;
-
-      if (value === false) value = '0';
-      else value = '1';
-
-      this.calendarParams[transType].ShowEvent = value;
-      let isRoomShow = this.calendarParams['EP_BookingRooms'].ShowEvent == '1';
-      if (value === '0') {
-        this.calendarTempData = this.calendarTempData.filter((x) => {
-          if (transType == 'CO_Meetings' && !isRoomShow && x.isRef) {
-            return false;
-          }
-          return x.transType !== transType;
-        });
-      }
-      if (value === '1') {
-        this.calendarTempData.push(
-          ...this.calendarData.filter((x) => {
-            return x.transType === transType;
-          })
-        );
-      }
-
-      if (this.ejCalendar) {
-        this.ejCalendar.refresh();
-        this.ejCalendar.value = this.FDdate;
-      }
-
-      this.coService.calendarData$.next(this.calendarTempData);
-
-      // this.api
-      //   .execSv(
-      //     'SYS',
-      //     'ERM.Business.SYS',
-      //     'SettingValuesBusiness',
-      //     'GetParamMyCalendarAsync',
-      //     'WPCalendars'
-      //   )
-      //   .subscribe((res: any) => {
-      //     if (res) {
-      //       for (const prop in res) {
-      //         if (res.hasOwnProperty(prop)) {
-      //           this.calendarParams[prop] = JSON.parse(res[prop]);
-      //         }
-      //       }
-      //     }
-      //   });
-      this.isUpdated = true;
-    } else {
-      this.isUpdated = false;
-    }
-  }
-
-  filterCalendar() {}
-
-  settingCalendar() {
-    let dModel = new DialogModel();
+  //open popup setting
+  openPopupSetting() {
+    let option = new DialogModel();
     this.cfService.openForm(
       PopupSettingsComponent,
       '',
-      500,
+      600,
       550,
       '',
       this.calendarParams,
       '',
-      dModel
+      option
     );
   }
 
@@ -457,235 +493,268 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  getCalendarNotes() {
-    if (this.calendarCenter) {
-      this.calendarCenter.resources = this.resources;
-    }
-
-    this.coService.calendarData$.subscribe((res) => {
-      if (res) {
-        this.calendarCenter && this.calendarCenter.updateData(res);
-      }
-    });
-  }
-
-  onLoad(args) {
-    if (this.isChangeMonth) {
-      if (this.cellStart == null) {
-        this.cellStart = args.date;
-        this.preStartDate = this.cellStart;
-      }
-      this.cellEnd = args.date;
-    } else if (this.cellEnd.toDateString() == args.date.toDateString()) {
-      this.cellStart = null;
-      this.isChangeMonth = true;
-    }
-
-    if (this.calendarTempData.length > 0) {
-      for (let i = 0; i < this.calendarTempData.length; i++) {
-        let day = new Date(this.calendarTempData[i].startDate);
-        if (
-          day &&
-          args.date.getFullYear() === day.getFullYear() &&
-          args.date.getMonth() === day.getMonth() &&
-          args.date.getDate() === day.getDate()
-        ) {
-          let span: HTMLElement;
-          span = document.createElement('span');
-          span.setAttribute('class', 'e-icons highlight');
-          addClass([args.element], ['special', 'e-day']);
-          args.element.appendChild(span);
-          return;
-        }
-      }
-    }
-  }
-
-  getCalendarData(event = null): void {
-    if (event == null) {
-      event = {
-        value: this.calendarType,
-      };
-    }
-    let calendarType = event.value;
-    //reset data
-    this.coService.calendarData$.next([]);
-    this.api
-      .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-        calendarType,
-        this.preStartDate,
-        this.cellEnd,
-        this.settings,
-      ])
-      .subscribe((res: any) => {
-        if (res) {
-          this.calendarType = calendarType;
-          this.cellStart = null;
-          this.getDataAfterAddEvent(res);
-        }
-      });
-  }
-
-  changeCalendarType(type) {
-    this.calendarType = type;
-    if(type=="COT01") // công ty
+  //render day cell ej2Calendar
+  renderDayCell(args:any) {
+    let arrEvent = this.lstEvents.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
+    if (arrEvent.length > 0)
     {
-      this.getDataOrgUnit();
+      arrEvent = arrEvent.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
+      arrEvent.forEach((e:any) => {
+        let span: HTMLElement;
+        span = document.createElement('span');
+        span.setAttribute('class', 'e-icons highlight');
+        span.setAttribute('style', `color:${this.dResources[e.transType].color}`);
+        addClass([args.element], ['special', 'e-day']);
+        args.element.appendChild(span);
+        return;
+      });
     }
-    this.getCalendarData({
-      value: this.calendarType,
-    });
+  }
+
+  changeCalendarID(id:string) {
+    this.calendarID = id;
+    if(id == "COT01") // lịch công ty
+      this.getDataOrgUnit();
+    else
+      this.lstResources = [];
     this.detectorRef.detectChanges();
   }
 
-  // getCalendarTasks(){
-  //   this.api.exec("ERM.Business.TM", "TaskBusiness", "GetCalendarEventsAsync", [this.permission]).subscribe(res =>{
-  //     if (res){
-  //       this.calendarData.push(res);
-  //     }
-  //   })
-  // }
-  // getCalendarMeetings(){
-  //   this.api.exec("ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync" []).subscribe(res =>{
-  //     if (res){
-  //       this.calendarData.push(res);
-  //     }
-  //   })
-  // }
-  // getCalendarNotes(){
-  //   this.api.exec("ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync", []).subscribe(res =>{
-  //     if (res){
-  //       this.calendarData.push(res);
-  //     }
-  //   })
-  // }
-  // getCalendarBooking(){
-  //   this.api.exec("ERM.Business.EP", "BookingsBusiness", "GetCalendarEventsAsync", []).subscribe(res =>{
-  //     if (res){
-  //       this.calendarData.push(res);
-  //     }
-  //   })
-  // }
+  // get event source
+  getListEvents(){
+    this.lstEvents = [];
+    this.detectorRef.detectChanges();
+    this.calendarParams.forEach((element) => {
+      if(element.ShowEvent === "1")
+      {
+        let predicate = this.dPredicate[element.Template.TransType];
+        switch(element.Template.TransType)
+        {
+          case"WP_Notes":
+            this.getEventNotes(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+          case"TM_MyTasks":
+            this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+          case"CO_Meetings":
+            this.getEventMeetings(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+          case"EP_BookingRooms":
+            this.getEventBooking(this.calendarID,predicate,"1",this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+          case"EP_BookingCars":
+            this.getEventBooking(this.calendarID,predicate,"2",this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+          case"TM_AssignTasks":
+            this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+              if(res?.length > 0)
+              {
+                this.lstEvents = [...this.lstEvents.concat(res)];
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.detectorRef.detectChanges();
+              }
+            });
+            break;
+        }
+      }
+    });
+  }
+
+  // get event TM
+  getEventTasks(funcID:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("TM","ERM.Business.TM", "TaskBusiness", "GetCalendarEventsAsync", [funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+  // get event CO
+  getEventMeetings(funcID:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",[funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+  // get event WP
+  getEventNotes(funcID:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync", [funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+  // get event EP
+  getEventBooking(funcID:string,predicate:string,resourceType:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("EP","ERM.Business.EP", "BookingsBusiness", "GetCalendarEventsAsync", [funcID,predicate,resourceType,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
 
   onFiltering(e: FilteringEventArgs) {
     let query = new Query();
-    //frame the query based on search string with filter type.
     query =
       e.text != ''
         ? query.where('defaultName', 'startswith', e.text, true)
         : query;
-    //pass the filter data source, filter query to updateData method.
-    e.updateData(this.calendarTypes, query);
+    e.updateData(this.lstCalendars, query);
   }
 
-  //#region Save & reset parameters setting
-  saveParams() {}
 
-  resetParams() {}
-  //#endregion
-
-  //#region Add event from module on calendar
+  // add event
   addEvent(args: SpeedDialItemEventArgs) {
-    let transType = args.item.id;
+    if(args?.item?.id){
+      switch (args?.item?.id) 
+      {
+        case 'EP_BookingCars':
+          this.addBookingCar();
+          break;
 
-    this.coService.checkPermission(transType, '').subscribe((res: boolean) => {
-      if (res && res === true) {
-        switch (transType) {
-          case 'EP_BookingCars':
-            this.addBookingCar();
-            break;
+        case 'EP_BookingRooms':
+          this.addBookingRoom();
+          break;
 
-          case 'EP_BookingRooms':
-            this.addBookingRoom();
-            break;
+        case 'WP_Notes':
+          this.addNote();
+          break;
 
-          case 'WP_Notes':
-            this.addNote();
-            break;
+        case 'CO_Meetings':
+          this.addMeeting();
+          break;
 
-          case 'CO_Meetings':
-            this.addMeeting();
-            break;
+        case 'TM_MyTasks':
+          this.addMyTask();
+          break;
 
-          case 'TM_MyTasks':
-            this.addMyTask();
-            break;
+        case 'TM_AssignTasks':
+          this.addAssignTask();
+          break;
+      }
+    }
+    // let transType = args.item.id;
+    // this.coService.checkPermission(transType, '').subscribe((res: boolean) => {
+    //   if (res && res === true) {
+    //     switch (transType) {
+    //       case 'EP_BookingCars':
+    //         this.addBookingCar();
+    //         break;
 
-          case 'TM_AssignTasks':
-            this.addAssignTask();
-            break;
-        }
-      } else {
+    //       case 'EP_BookingRooms':
+    //         this.addBookingRoom();
+    //         break;
+
+    //       case 'WP_Notes':
+    //         this.addNote();
+    //         break;
+
+    //       case 'CO_Meetings':
+    //         this.addMeeting();
+    //         break;
+
+    //       case 'TM_MyTasks':
+    //         this.addMyTask();
+    //         break;
+
+    //       case 'TM_AssignTasks':
+    //         this.addAssignTask();
+    //         break;
+    //     }
+    //   } else 
+    //   {
+    //     this.notificationsService.notifyCode('SYS032');
+    //   }
+    // });
+  }
+
+  // add booking car
+  addBookingCar() {
+    this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user,"EP4","EP4E"])
+    .subscribe((res:boolean) => {
+      if(res)
+      {
+        let option = new SidebarModel();
+        option.FormModel = this.carFM;
+        option.Width = '800px';
+        this.callfc
+          .openSide(
+            CodxAddBookingCarComponent,
+            [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
+            option
+          ).closed.subscribe((event:any) => {
+            debugger
+            if(event){
+
+            }
+          });
+      }
+      else
+      {
+        this.notificationsService.notifyCode('SYS032');
+      }
+    });
+    
+  }
+  //add booking room
+  addBookingRoom() {
+    this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user,"EP4","EP4E"])
+    .subscribe((res:boolean) => {
+      if(res)
+      {
+        let option = new SidebarModel();
+        option.FormModel = this.roomFM;
+        option.Width = '800px';
+        this.callfc
+        .openSide(
+          CodxAddBookingRoomComponent,
+          [this.roomFG?.value, 'SYS01', this.addRoomTitle, null, null, false],
+          option
+        ).closed.subscribe((event:any) => {
+            debugger
+            if(event)
+            {
+
+            }
+          });
+      }
+      else
+      {
         this.notificationsService.notifyCode('SYS032');
       }
     });
   }
 
-  addBookingCar() {
-    let option = new SidebarModel();
-    option.FormModel = this.carFM;
-    option.Width = '800px';
-    this.callfc
-      .openSide(
-        CodxAddBookingCarComponent,
-        [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
-        option
-      )
-      .closed.subscribe((returnData) => {
-        if (!this.calendarType) {
-          this.calendarType = this.defaultCalendar;
-        }
-        if (returnData.event) {
-          this.getCalendarData();
-          // this.api
-          //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-          //     this.calendarType,
-          //   ])
-          //   .subscribe((res: any) => {
-          //     if (res) {
-          //       this.getDataAfterAddEvent(res);
-          //     }
-          //     this.detectorRef.detectChanges();
-          //   });
-        }
-      });
-  }
-
-  addBookingRoom() {
-    let option = new SidebarModel();
-    option.FormModel = this.roomFM;
-    option.Width = '800px';
-    this.callfc
-      .openSide(
-        CodxAddBookingRoomComponent,
-        [this.roomFG?.value, 'SYS01', this.addRoomTitle, null, null, false],
-        option
-      )
-      .closed.subscribe((returnData) => {
-        if (!this.calendarType) {
-          this.calendarType = this.defaultCalendar;
-        }
-        if (returnData.event) {
-          this.getCalendarData();
-
-          // this.api
-          //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-          //     this.calendarType,
-          //   ])
-          //   .subscribe((res: any) => {
-          //     if (res) {
-          //       this.getDataAfterAddEvent(res);
-          //     }
-          //     this.detectorRef.detectChanges();
-          //   });
-        }
-      });
-  }
-
+  // add WP_Notes
   addNote() {
     let obj = {
-      //data: this.WP_Notes,
-      // typeLst: this.typeList,
       formType: 'add',
       currentDate: new Date(),
       component: 'calendar-notes',
@@ -693,13 +762,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     };
 
     let option = new DialogModel();
-    // option.DataService = this.lstView.dataService as CRUDService;
-    // option.FormModel = this.lstView.formModel;
-
+    //let moreFuc = this.sysMoreFunc.find(x => x.functionID == "SYS01")?.customName ?? "Thêm";
     this.callfc
       .openForm(
         AddNoteComponent,
-        'Thêm mới ghi chú',
+        'Thêm ghi chú',
         700,
         500,
         '',
@@ -707,225 +774,218 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         '',
         option
       )
-      .closed.subscribe((returnData) => {
-        if (!this.calendarType) {
-          this.calendarType = this.defaultCalendar;
+      .closed.subscribe((res:any) => {
+        if(res?.event)
+        {
+          this.api.execSv("WP","ERM.Business.WP","NotesBusiness","ConvertNoteToEventAsync",[res.event])
+          .subscribe((event:any) => {
+            if(event)
+            {
+              this.lstEvents.push(event);
+              this.lstEvents = [... this.lstEvents];
+              this.detectorRef.detectChanges();
+            }
+            else
+              this.notificationsService.notify("Lỗi thêm ghi chú");
+          });
         }
-        this.getCalendarData();
-
-        // if (returnData.event) {
-        //   this.api
-        //     .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-        //       this.calendarType,
-        //     ])
-        //     .subscribe((res: any) => {
-        //       if (res) {
-        //         this.getDataAfterAddEvent(res);
-        //       }
-        //     });
-        // }
+        else
+          this.notificationsService.notify("Lỗi thêm ghi chú");
       });
   }
 
+  // add CO_Mettings
   addMeeting() {
     let option = new SidebarModel();
     option.FormModel = this.meetingFM;
     option.Width = 'Auto';
-
     this.api
-      .execSv<any>('CO', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-        'TMT0501',
-        'CO_Meetings',
-      ])
+      .execSv<any>('CO', 'Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0501','CO_Meetings'])
       .subscribe((res) => {
-        //VTHAO truyen lai cho tien
-        let obj = {
-          action: 'add',
-          titleAction: 'Thêm', //Sỹ em ko dc gán cung cai này ? thay đổi ngôn ngữ lỗi á -a tạm copy lại của em để em chạy
-          disabledProject: true,
-          listPermissions: '',
-          data: res.data,
-          isOtherModule: true,
-        };
         if (res) {
-          this.callfc
-            .openSide(
-              PopupAddMeetingComponent,
-              obj,
-              // ['add', 'Thêm', true, '', res.data],
-              option
-            )
-            .closed.subscribe((returnData) => {
-              if (!this.calendarType) {
-                this.calendarType = this.defaultCalendar;
-              }
-              if (returnData.event) {
-                this.getCalendarData();
-
-                // this.api
-                //   .exec('CO', 'CalendarsBusiness', 'GetCalendarDataAsync', [
-                //     this.calendarType,
-                //   ])
-                //   .subscribe((res: any) => {
-                //     if (res) {
-                //       this.getDataAfterAddEvent(res);
-                //     }
-                //   });
-              }
-            });
+          let obj = {
+            action: 'add',
+            titleAction: 'Thêm',
+            disabledProject: true,
+            listPermissions: '',
+            data: res.data,
+            isOtherModule: true,
+          };
+          this.callfc.openSide(
+          PopupAddMeetingComponent,
+          obj,
+          option).closed.subscribe((res2:any) => {
+            if (res2?.event) 
+            {
+              let eventModel = {
+                transType : "CO_Meetings",
+                functionID : "TMT0501",
+                recID : res2.event.recID,
+                transID : res2.event.recID,
+                calendarDate : res2.event.startDate,
+                startDate : res2.event.startDate,
+                endDate : res2.event.endDate,
+                startTime : res2.event.startDate,
+                endTime : res2.event.endDate,
+                status : res2.event.status,
+                title : res2.event.eventName,
+                description : res2.event.memo,
+                memo : res2.event.location,
+                icon : "icon - location_on"
+              };
+              debugger
+              this.lstEvents.push(eventModel);
+              this.lstEvents = [...this.lstEvents];
+              this.detectorRef.detectChanges();
+            }
+            else
+              this.notificationsService.notify("Lỗi thêm sự kiện");
+          });
         }
+        else
+          this.notificationsService.notify("Lỗi thêm sự kiện");
       });
   }
-
+  // add TM_Tasks
   addMyTask() {
     let option = new SidebarModel();
     option.FormModel = this.myTaskFM;
     option.Width = '800px';
     option.zIndex = 1001;
     this.api
-      .execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-        'TMT0201',
-        'TM_Tasks',
-      ])
-      .pipe(
-        switchMap((res) => {
-          let obj = {
-            data: res.data,
-            action: 'add',
-            isAssignTask: false,
-            titleAction: 'Thêm', ///cai nay em tu truyen theo more Fun text cua e
-            functionID: 'TMT0201',
-            disabledProject: false,
-            isOtherModule: true, //tu modele khac truyn qua
-          };
-          return this.callfc.openSide(
-            PopupAddComponent,
-            obj,
-            // [res.data, 'add', false, 'Thêm', 'TMT0201', null, false],
-            option
-          ).closed;
-        }),
-        switchMap((returnData) => {
-          if (!this.calendarType) {
-            this.calendarType = this.defaultCalendar;
+    .execSv<any>('TM', 'ERM.Business.Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0201','TM_Tasks'])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let obj = {
+          data: res.data,
+          action: 'add',
+          isAssignTask: false,
+          titleAction: 'Thêm', 
+          functionID: 'TMT0201',
+          disabledProject: false,
+          isOtherModule: true
+        };
+        this.callfc.openSide(
+          PopupAddComponent,
+          obj,
+          option
+        ).closed.subscribe((res2:any) => {
+          debugger
+          if(res2.event)
+          {
+            let eventModel = {
+              transType: "TM_MyTasks",
+              functionID: "TMT0201",
+              transID: res2.event.RecID,
+              calendarDate: res2.event.DueDate,
+              startDate: res2.event.StartDate,
+              endDate: res2.event.EndDate,
+              startTime: res2.event.StartDate,
+              endTime: res2.event.EndDate,
+              status: res2.event.Status,
+              priority: res2.event.Priority,
+              title: res2.event.TaskName,
+              description: res2.event.TaskName,
+              alert: res2.event.IsOverdue,
+              memo: res2.event.DueDate
+            };
+            this.lstEvents.push(eventModel);
+            this.lstEvents = [...this.lstEvents];
+            this.detectorRef.detectChanges();
           }
-          if (returnData.event) {
-            return this.api.exec(
-              'CO',
-              'CalendarsBusiness',
-              'GetCalendarDataAsync',
-              [
-                this.calendarType,
-                this.preStartDate,
-                this.cellEnd,
-                this.settings,
-              ]
-            );
-          }
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.getDataAfterAddEvent(res);
-        }
-      });
+          else
+            this.notificationsService.notify("Lỗi thêm công việc");
+        });
+      }
+      else
+        this.notificationsService.notify("Lỗi thêm công việc");
+    });
   }
-
+  // add TM_Tasks Assign Task
   addAssignTask() {
     let option = new SidebarModel();
     option.FormModel = this.assignTaskFM;
     option.Width = '800px';
-    this.api
-      .execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
-        'TMT0203',
-        'TM_Tasks',
-      ])
-      .pipe(
-        switchMap((res) => {
-          let obj = {
-            data: res.data,
-            action: 'add',
-            isAssignTask: true,
-            titleAction: 'Thêm', ///cai nay em tu truyen theo more Fun text cua e
-            functionID: 'TMT0203',
-            disabledProject: false,
-            isOtherModule: true, //tu modele khac truyn qua
-          };
-          return this.callfc.openSide(
-            PopupAddComponent,
-            obj,
-            // [res.data, 'add', true, 'Thêm', 'TMT0203', null, false, true],
-            option
-          ).closed;
-        }),
-        switchMap((returnData) => {
-          if (!this.calendarType) {
-            this.calendarType = this.defaultCalendar;
+    this.api.execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0203','TM_Tasks'])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let obj = {
+          data: res.data,
+          action: 'add',
+          isAssignTask: true,
+          titleAction: 'Thêm', 
+          functionID: 'TMT0203',
+          disabledProject: false,
+          isOtherModule: true
+        };
+        this.callfc.openSide(
+          PopupAddComponent,
+          obj,
+          option
+        ).closed.subscribe((res2:any) => {
+          debugger
+          if(res2.event)
+          {
+            let eventModel = {
+              transType: "TM_AssignTasks",
+              functionID: "TMT0204",
+              transID: res2.event.RecID,
+              calendarDate: res2.event.DueDate,
+              startDate: res2.event.StartDate,
+              endDate: res2.event.EndDate,
+              startTime: res2.event.StartDate,
+              endTime: res2.event.EndDate,
+              status: res2.event.Status,
+              priority: res2.event.Priority,
+              title: res2.event.TaskName,
+              description: res2.event.TaskName,
+              alert: res2.event.IsOverdue,
+              memo: res2.event.DueDate
+            };
+            this.lstEvents.push(eventModel);
+            this.lstEvents = [...this.lstEvents];
+            this.detectorRef.detectChanges();
           }
-          if (returnData.event) {
-            return this.api.exec(
-              'CO',
-              'CalendarsBusiness',
-              'GetCalendarDataAsync',
-              [
-                this.calendarType,
-                this.preStartDate,
-                this.cellEnd,
-                this.settings,
-              ]
-            );
-          }
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.getDataAfterAddEvent(res);
-        }
-      });
-  }
-
-  getDataAfterAddEvent(data) {
-    this.calendarData = data;
-    this.calendarTempData = [...this.calendarData];
-    for (let prop in this.calendarParams) {
-      if (this.calendarParams[prop].ShowEvent === '0') {
-        this.calendarTempData = this.calendarTempData.filter((x) => {
-          return x.transType !== prop.toString();
+          else
+            this.notificationsService.notify("Lỗi thêm giao việc");
         });
       }
-    }
-    this.coService.calendarData$.next(this.calendarTempData);
-    this.isChangeMonth = false;
-    this.ejCalendar.refresh();
-    // this.api
-    //   .execSv(
-    //     'SYS',
-    //     'ERM.Business.SYS',
-    //     'SettingValuesBusiness',
-    //     'GetParamMyCalendarAsync',
-    //     'WPCalendars'
-    //   )
-    //   .subscribe((res: any) => {
-    //     if (res) {
-    //       for (const prop in res) {
-    //         let param = JSON.parse(res[prop]);
-    //         this.resources.push({
-    //           color: param.ShowBackground,
-    //           borderColor: param.ShowColor,
-    //           text: param.Template.TransType,
-    //           status: param.Template.TransType,
-    //         });
-
-    //         if (res.hasOwnProperty(prop)) {
-    //           this.calendarParams[prop] = JSON.parse(res[prop]);
-    //         }
-    //       }
-
-    //     }
-    //   });
+      else
+        this.notificationsService.notify("Lỗi thêm giao việc");
+    });
   }
 
-  //#endregion
+  selectOrg(orgUnitID:string){
+    this.api.execSv("HR","HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
+    .subscribe((res:any) => {
+      this.lstResources = res ? res[0] : [];
+    });
+  }
+
+
+  // date select change
+  dateSelectChange(event:any){
+    if (event?.fromDate === 'Invalid Date' && event?.toDate === 'Invalid Date') return;
+    if (this.selectedDate >= event?.fromDate && this.selectedDate < event?.toDate)return;
+    if (event?.fromDate && event?.toDate) 
+    {
+      if (event?.type) 
+      {
+        this.typeNavigate = event.type;
+      }
+      if (this.typeNavigate === 'Year') 
+      {
+        this.selectedDate = this.startDate;
+      } else 
+      {
+        this.selectedDate = event.fromDate;
+      }
+      if (this.typeNavigate === 'Year' && event.type === undefined) {
+        this.selectedDate = event?.toDate;
+        return;
+      }
+    }
+  }
 }

@@ -148,6 +148,7 @@ export class PopupAddDealComponent
   currencyIDOld: string;
   idxCrr: any = -1;
   instanceRes: any;
+  instanceReason:any;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -171,8 +172,17 @@ export class PopupAddDealComponent
       this.formModel = dt?.data?.formMD;
       if (this.action != this.actionAdd) {
         this.deal = dt?.data?.dataCM;
+ //       this.owner = this.deal.owner;
         this.categoryCustomer = dt?.data?.categoryCustomer;
       }
+      this.instanceReason = dt?.data?.instanceReason;
+      // if(this.instanceReason) {
+      //   this.deal.dealName = this.instanceReason?.instance?.title;
+      //   this.deal.owner = this.instanceReason?.ownerMove;
+      //   this.deal.salespersonID = this.instanceReason?.ownerMove;
+      //   this.deal.processID = this.instanceReason?.processMove;
+      // }
+
     } else {
       this.deal =
         this.action != this.actionAdd
@@ -222,6 +232,7 @@ export class PopupAddDealComponent
           this.customerOld = this.customerID;
           this.deal.customerID = this.customerID;
           this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
+          this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
           if (!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerName;
           }
@@ -250,17 +261,16 @@ export class PopupAddDealComponent
   valueChangeOwner($event) {
     if ($event) {
       this.owner = $event;
-      this.deal.owner = this.owner;
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.deal?.owner
+          (x) => x.userID === this.owner
         )[0]?.userName;
       }
-      this.searchOwner('1', 'O', '0', this.deal?.owner, ownerName);
+      this.searchOwner('1', 'O', '0',this.owner, ownerName);
     }
     else if ($event == null || $event == '') {
-      this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
+      this.deleteOwner('1', 'O', '0', this.owner,'owner');
     }
   }
   deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
@@ -303,7 +313,9 @@ export class PopupAddDealComponent
       }
     }
     if (index == -1) {
-      this.addOwner(owner, ownerName, roleType, objectType);
+      if(owner) {
+        this.addOwner(owner, ownerName, roleType, objectType);
+      }
     }
   }
   addOwner(owner, ownerName, roleType, objectType) {
@@ -327,7 +339,8 @@ export class PopupAddDealComponent
     this.deal.permissions.push(permission);
   }
   addPermission(permissionDP) {
-    if (permissionDP?.length > 0 && permissionDP) {
+    if (permissionDP && permissionDP?.length > 0 ) {
+      this.deal.permissions = this.deal?.permissions ? this.deal.permissions : [];
       for (let item of permissionDP) {
         this.deal.permissions.push(this.copyPermission(item));
       }
@@ -449,9 +462,10 @@ export class PopupAddDealComponent
       this.notificationsService.notifyCode(messageCheckFormat);
       return;
     }
+    this.deal.owner = this.owner;
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
-    this.executeSaveData();
+  this.executeSaveData();
   }
 
   async executeSaveData() {
@@ -667,6 +681,59 @@ export class PopupAddDealComponent
         } else this.dialog.close();
       });
   }
+  onAddInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+      .subscribe((res) => {
+        if (res && res.save) {
+          this.deal.status = res.save.status;
+          this.deal.datas = res.save.datas;
+          this.addPermission(res.save.permissions);
+          let datas = [this.deal, this.lstContactDeal];
+          this.codxCmService.addDeal(datas).subscribe((deal) => {
+            if (deal) {
+            }
+          });
+          this.dialog.close(res.save);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+  onUpdateInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.deal.status = res.update?.status;
+          this.deal.datas = res.update?.datas;
+          let datas = [
+            this.deal,
+            this.customerIDOld,
+            this.lstContactDeal,
+            this.lstContactAdd,
+            this.lstContactDelete,
+          ];
+          this.codxCmService.editDeal(datas).subscribe((deal) => {
+            if (deal) {
+            }
+          });
+          this.dialog.close(res.update);
+        }
+      });
+  }
+  beforeSaveInstance(option: RequestOption) {
+    option.service ='DP';
+    option.className = 'InstancesBusiness';
+    option.assemblyName = 'ERM.Business.DP';
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
+    return true;
+  }
   onEdit() {
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option))
@@ -791,11 +858,6 @@ export class PopupAddDealComponent
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
         } else {
-          this.deal.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
-          );
           if (this.listParticipants.length > 0 && this.listParticipants) {
             let index = this.listParticipants.findIndex(
               (x) => x.userID === this.user.userID
@@ -804,6 +866,11 @@ export class PopupAddDealComponent
           }
           this.deal.dealID = res[2];
         }
+        this.deal.endDate = this.HandleEndDate(
+          this.listInstanceSteps,
+          this.action,
+          this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
+        );
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
@@ -815,52 +882,40 @@ export class PopupAddDealComponent
   }
 
   async insertInstance() {
-    let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
-    this.codxCmService.addInstance(data).subscribe((instance) => {
-      if (instance) {
-        this.instanceRes = instance;
-        this.deal.status = instance.status;
-        this.deal.datas = instance.datas;
-        this.addPermission(instance.permissions);
-        !this.isLoading && this.onAdd();
-        this.isLoading && this.addDealForDP();
-      }
-    });
+    if(!this.isLoading) {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.codxCmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.deal.status = instance.status;
+          this.deal.datas = instance.datas;
+          this.addPermission(instance.permissions);
+          this.onAdd();
+        }
+      });
+    }
+    else {
+      this.onAddInstance();
+    }
+
   }
   async editInstance() {
-    let data = [this.instance, this.listCustomFile];
-    this.codxCmService.editInstance(data).subscribe((instance) => {
-      if (instance) {
-        this.instanceRes = instance;
-        this.deal.status = instance.status;
-        this.deal.datas = instance.datas;
-        !this.isLoading && this.onEdit();
-        this.isLoading && this.editDealForDP();
-      }
-    });
-  }
+    if(!this.isLoading) {
+      let data = [this.instance, this.listCustomFile];
+      this.codxCmService.editInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.deal.status = instance.status;
+          this.deal.datas = instance.datas;
+          this.onEdit();
+        }
+      });
 
-  async addDealForDP() {
-    let datas = [this.deal, this.lstContactDeal];
-    this.codxCmService.addDeal(datas).subscribe((deal) => {
-      if (deal) {
-        this.dialog.close(this.instanceRes);
-      }
-    });
-  }
-  async editDealForDP() {
-    let datas = [
-      this.deal,
-      this.customerIDOld,
-      this.lstContactDeal,
-      this.lstContactAdd,
-      this.lstContactDelete,
-    ];
-    this.codxCmService.editDeal(datas).subscribe((deal) => {
-      if (deal) {
-        this.dialog.close(this.instanceRes);
-      }
-    });
+    }
+    else {
+      this.onUpdateInstance();
+    }
+
   }
 
   // check valid
@@ -926,7 +981,10 @@ export class PopupAddDealComponent
   }
 
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-    endDateValue = action === this.actionAdd || action === this.actionCopy || this.action === this.actionEdit && this.deal.status == '1' ? new Date() : new Date(endDateValue);
+    endDateValue = action === this.actionAdd || action === this.actionCopy || (this.action === this.actionEdit && (this.deal.status == '1' ||
+   this.deal.status == '15'
+
+    ))? new Date() : new Date(endDateValue);
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {

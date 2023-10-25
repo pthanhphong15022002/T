@@ -1,4 +1,4 @@
-<div *ngIf="typeTask == 1">
+<div *ngIf="applyProcess">
   <header class="d-flex align-items-center justify-content-between search p-2">
     <div class="left d-flex align-items-center">
       <div>
@@ -34,7 +34,7 @@
         class="d-flex align-items-center me-3 cursor-pointer"
         ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
         placement="top"
-        *ngIf="dataSelected?.status == '2' && dataSelected?.full"
+        *ngIf="dataCM?.status == '2' && dataCM?.full"
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
@@ -69,9 +69,9 @@
   </main>
 </div>
 
-<div *ngIf="typeTask == 2">
+<div *ngIf="!applyProcess">
   <task
-    [customerID]="customerID"
+    [objectID]="dataCM?.recID"
     [isPause]="isPause"
     [entityName]="entityName"
     [isAdmin]="isAdmin"
@@ -80,7 +80,7 @@
     [contractName]="contractName"
     [dealName]="dealName"
     [customerName]="customerName"
-    [ownerInstance]="ownerInstance"
+    [ownerInstance]="owner"
   ></task>
 </div>
 
@@ -138,9 +138,9 @@
         [isShowMore]="true"
         [isDeepCopy]="false"
         [isShowStep]="true"
-        [isStart]="dataSelected?.status == '2'"
-        [isClose]="dataSelected?.closed"
-        [isRoleAll]="dataSelected?.full"
+        [isStart]="dataCM?.status == '2'"
+        [isClose]="dataCM?.closed"
+        [isRoleAll]="dataCM?.full"
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
         [isTaskFirst]="i == 0 ? true : false"
@@ -148,19 +148,19 @@
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
         (isSuccessStep)="susscessStepEnd($event, step)"
-        [sessionID]="dataSelected.recID"
+        [sessionID]="dataCM?.recID"
         [formModelAssign]="formModel"
         [isChangeOwner]="isChangeOwner"
         [leadName]="leadName"
         [contractName]="contractName"
         [dealName]="dealName"
         [customerName]="customerName"
-        [ownerInstance]="ownerInstance"
+        [ownerInstance]="owner"
       ></codx-step-task>
       <div
         *ngIf="
           (step?.isFailStep || step?.isSuccessStep) &&
-          !['0', '1', '2','15'].includes(dataSelected?.status)
+          !['0', '1', '2','15'].includes(dataCM?.status)
         "
       >
         <div>
@@ -171,11 +171,11 @@
                 class="d-flex align-items-center show-step ms-2 me-3"
               >
                 <i
-                  *ngIf="isShowElement"
+                  *ngIf="isShowSuccess"
                   class="icon-20 icon-expand_less text-primary"
                 ></i>
                 <i
-                  *ngIf="!isShowElement"
+                  *ngIf="!isShowSuccess"
                   class="icon-20 icon-expand_more text-primary"
                 ></i>
               </div>
@@ -195,7 +195,7 @@
                 <button class="button-custom" (click)="openPopupReason()">
                   <span
                     [ngClass]="
-                      dataSelected?.closed
+                    dataCM?.closed
                         ? ''
                         : 'icon-edit icon-20 text-primary-600 py-2'
                     "
@@ -206,7 +206,7 @@
             </div>
           </div>
 
-          <div [ngClass]="isShowElement ? 'd-block' : 'd-none'">
+          <div [ngClass]="isShowSuccess ? 'd-block' : 'd-none'">
             <div class="mt-3 ms-9">
               <div class="mb-3">
                 <codx-label
@@ -265,9 +265,9 @@
       [listInstanceStep]="listInstanceStep"
       [isShowTypeTime]="false"
       [typeTime]="typeTime"
-      [instance]="dataSelected"
+      [instance]="dataCM"
       [listSteps]="listInstanceStepShow"
-      [isRoleAll]="dataSelected?.roles?.isOnwer || false"
+      [isRoleAll]="dataCM?.roles?.isOnwer || false"
       [type]="'CM'"
     ></codx-step-chart>
   </div>

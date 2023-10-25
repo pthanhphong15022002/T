@@ -60,6 +60,10 @@ import { DetailStorageComponent } from './personal/master-detail/my-page/detail-
 import { ExtendStorageComponent } from './personal/master-detail/my-page/extend-storage/extend-storage.component';
 import { ExtendNoteBookComponent } from './personal/master-detail/my-page/extend-note-book/extend-note-book.component';
 import { CommonModule } from '@angular/common';
+import { PopupAddPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-add/popup-add-post.component';
+import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
+import { CvInformationComponent } from './workspace/AITool/cv-information/cv-information.component';
+import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
 const routes: Routes = [
   {
     path: '',
@@ -262,7 +266,9 @@ const routes: Routes = [
     ExtendNoteBookComponent,
     MyPageComponent,
     ImgComponent,
-    VideoComponent
+    VideoComponent,
+    CvInformationComponent,
+    CvEvaluateComponent
   ],
   imports: [
     CommonModule,
@@ -273,7 +279,7 @@ const routes: Routes = [
     NgbDropdownModule,
     SpeedDialModule,
     TooltipModule,
-    TabAllModule
+    TabAllModule,
   ],
   exports: [RouterModule],
 })

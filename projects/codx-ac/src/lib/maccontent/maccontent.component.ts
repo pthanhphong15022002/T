@@ -152,10 +152,33 @@ export class MACContentComponent extends UIComponent {
   }
 
   refreshData() {
-    let period = this.periodID;
-    if (this.type == 'D') {
-      period = this.fromDate + '' + '-' + this.toDate + '';
-    } else if (this.type == 'Q')
-      period = this.periodID + '' + '/' + this.quaterID + '';
+    // let period = this.periodID;
+    // if (this.type == 'D') {
+    //   period = this.fromDate + '' + '-' + this.toDate + '';
+    // } else if (this.type == 'Q')
+    //   period = this.periodID + '' + '/' + this.quaterID + '';
+    let obj: any = {};
+    obj['procName'] = '';
+    obj['dataValue'] = [];
+    obj['params'] = {
+      sFunctionID: this.view.funcID,
+      sType: this.type,
+      sFromDate: this.fromDate,
+      sToDate: this.toDate,
+      sPeriodID: this.periodID,
+      sQuaterID: this.quaterID,
+    };
+
+    this.api
+      .execSv(
+        'rptac',
+        'Codx.RptBusiness.AC',
+        'MACBusiness',
+        'GetReportSourceAsync',
+        [obj]
+      )
+      .subscribe((res: any) => {
+        console.log(res);
+      });
   }
 }

@@ -60,12 +60,22 @@ import { PopupAddSegmentComponent } from './setting/category/popup-add-segment/p
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { ApprovalStepSignComponent } from './sign-file/approval-step/approval-step.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
+      },
       {
         path: 'signfiles/:funcID',
         data: { noReuse: true },

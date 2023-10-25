@@ -51,7 +51,10 @@
             [isAllowEdit]="true"
             [objectId]="data?.recID"
             [objectType]="'WP_Storages'"
-            referType="avt">
+            [objectName]="data?.title"
+            referType="image"
+            (handleInput)="handleInput()"
+          >
           </codx-img>
         </div>
       </div>

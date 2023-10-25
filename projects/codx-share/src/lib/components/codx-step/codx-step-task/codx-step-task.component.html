@@ -1,11 +1,9 @@
 <div id="id" class="main-step" [ngClass]="'show-main'">
-  <div
-    class="d-flex align-items-center justify-content-between me-5"
-    *ngIf="isShowStep && currentStep"
-  >
+  <!--View Step -->
+  <div class="d-flex align-items-center me-5" *ngIf="isShowStep && currentStep">
     <div
       (click)="toggleElemen()"
-      class="d-flex align-items-center show-step ms-2 me-3 "
+      class="d-flex align-items-center show-step ms-2 me-3"
     >
       <i
         *ngIf="isShowElement"
@@ -17,108 +15,116 @@
       ></i>
     </div>
 
-    <div
-      class="d-flex align-items-center fw-bold w-100 has-action-menu step-content cursor-pointer"
-      (dblclick)="viewTask(currentStep, 'P')"
-    >
+    <div class="d-flex align-items-center justify-content-between w-100">
       <div
-        class="d-flex align-items-center w-auto h-30px text-primary"
-        [ngStyle]="{
-          'border-bottom': '2px solid' + currentStep?.backgroundColor
-        }"
+        class="d-flex align-items-center fw-bold w-100 has-action-menu step-content cursor-pointer"
+        (dblclick)="viewTask(currentStep, 'P')"
       >
-        <div class="w-20px me-2 text-primary">
-          <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
-        </div>
-        <!-- [ngStyle]="{color: currentStep?.iconColor}"
+        <div
+          class="d-flex align-items-center w-auto h-30px text-primary"
+          [ngStyle]="{
+            'border-bottom': '2px solid' + currentStep?.backgroundColor
+          }"
+        >
+          <div class="w-20px me-2 text-primary">
+            <span [ngClass]="currentStep?.icon" class="fs-5-sm"></span>
+          </div>
+          <!-- [ngStyle]="{color: currentStep?.iconColor}"
         [ngStyle]="{color: currentStep?.textColor}" -->
-        <span
-          class="line-clamp line-clamp-1 fs-6 fw-bold text-primary step-name"
-        >
-          {{ currentStep.stepName || "" }}</span
-        >
-      </div>
-      <div
-        class="ms-3 d-flex align-items-center"
-        #popoverDetails="ngbPopover"
-        [ngbPopover]="'Hướng dẫn'"
-        (mouseenter)="popoverDetails.open()"
-        (mouseleave)="popoverDetails.close()"
-        (click)="showGuide()"
-        *ngIf="currentStep?.memo"
-      >
-        <span
-          class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
-        ></span>
-      </div>
-      <codx-mfunc
-        [formModel]="grvMoreFunction"
-        [isBookMark]="true"
-        [dataItem]="moreDefaut"
-        (changeDataMF)="changeDataMFStep($event, currentStep)"
-        (clickMF)="clickMFStep($event, currentStep)"
-        *ngIf="!isMoveStage"
-      >
-      </codx-mfunc>
-    </div>
-    <div class="d-flex align-items-center ms-5">
-      <div
-        class="me-2"
-        #popoverTooltip="ngbPopover"
-        [ngbPopover]="tooltipDate"
-        [placement]="'top-left bottom-left'"
-        (mouseenter)="openTooltip(popoverTooltip,currentStep)"
-        (mouseleave)="popoverTooltip.close()"
-      >
-        <span
-          class="date text-nowrap text-gray-500"
-          *ngIf="currentStep?.startDate && currentStep?.endDate && currentStep?.stepStatus != '3'"
-        >
-          {{ currentStep?.startDate | date : dateFomat }} -
-          {{ currentStep?.endDate | date : dateFomat }}</span
-        >
-        <span
-          class="date text-nowrap text-gray-500"
-          *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'">
-            {{ currentStep?.actualEnd | date : dateFomat }}
-        </span>
-      </div>
-      <codx-imgs
-        class="me-2 d-flex align-items-center"
-        [width]="25"
-        ojectType="AD_Users"
-        [numberImages]="1"
-        [isToolTip]="true"
-        [objectId]="currentStep?.owner"
-      >
-      </codx-imgs>
-      <div
-        class="disabled-inline me-1"
-        (click)="openPopupUpdateProgress(currentStep, 'P')"
-        [ngClass]="
-          checkRoleUpdateProgress(currentStep, 'P')
-            ? 'cursor-pointer'
-            : 'cursor-not-allowed'
-        "
-      >
-        <codx-progressbar
-          [progress]="currentStep?.progress || 0"
-          [stype]="3"
-          [isStep]="true"
-          [vllData]="vllDataStep"
-          [status]="currentStep?.stepStatus"
+          <span
+            class="line-clamp line-clamp-1 fs-6 fw-bold text-primary step-name"
+          >
+            {{ currentStep.stepName || "" }}</span
+          >
+        </div>
+        <div
+          class="ms-3 d-flex align-items-center"
           #popoverDetails="ngbPopover"
-          [ngbPopover]="'Cập nhật tiến độ'"
+          [ngbPopover]="'Hướng dẫn'"
           (mouseenter)="popoverDetails.open()"
           (mouseleave)="popoverDetails.close()"
-          popoverClass="approverStepClass"
-          container="body"
-          placement="top bottom"
-        ></codx-progressbar>
+          (click)="showGuide()"
+          *ngIf="currentStep?.memo"
+        >
+          <span
+            class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
+          ></span>
+        </div>
+        <codx-mfunc
+          [formModel]="grvMoreFunction"
+          [isBookMark]="true"
+          [dataItem]="moreDefaut"
+          (changeDataMF)="changeDataMFStep($event, currentStep)"
+          (clickMF)="clickMFStep($event, currentStep)"
+          *ngIf="!isMoveStage"
+        >
+        </codx-mfunc>
+      </div>
+      <div class="d-flex align-items-center ms-5">
+        <div
+          class="me-2"
+          #popoverTooltip="ngbPopover"
+          [ngbPopover]="tooltipDate"
+          [placement]="'top-left bottom-left'"
+          (mouseenter)="openTooltip(popoverTooltip, currentStep)"
+          (mouseleave)="popoverTooltip.close()"
+        >
+          <span
+            class="date text-nowrap text-gray-500"
+            *ngIf="
+              currentStep?.startDate &&
+              currentStep?.endDate &&
+              currentStep?.stepStatus != '3'
+            "
+          >
+            {{ currentStep?.startDate | date : dateFomat }} -
+            {{ currentStep?.endDate | date : dateFomat }}</span
+          >
+          <span
+            class="date text-nowrap text-gray-500"
+            *ngIf="currentStep?.actualEnd && currentStep?.stepStatus == '3'"
+          >
+            {{ currentStep?.actualEnd | date : dateFomat }}
+          </span>
+        </div>
+        <codx-imgs
+          class="me-2 d-flex align-items-center"
+          [width]="25"
+          ojectType="AD_Users"
+          [numberImages]="1"
+          [isToolTip]="true"
+          [objectId]="currentStep?.owner"
+        >
+        </codx-imgs>
+        <div
+          class="disabled-inline me-1"
+          (click)="openPopupUpdateProgress(currentStep, 'P')"
+          [ngClass]="
+            checkRoleUpdateProgress(currentStep, 'P')
+              ? 'cursor-pointer'
+              : 'cursor-not-allowed'
+          "
+        >
+          <codx-progressbar
+            [progress]="currentStep?.progress || 0"
+            [stype]="3"
+            [isStep]="true"
+            [vllData]="vllDataStep"
+            [status]="currentStep?.stepStatus"
+            #popoverDetails="ngbPopover"
+            [ngbPopover]="'Cập nhật tiến độ'"
+            (mouseenter)="popoverDetails.open()"
+            (mouseleave)="popoverDetails.close()"
+            popoverClass="approverStepClass"
+            container="body"
+            placement="top bottom"
+          ></codx-progressbar>
+        </div>
       </div>
     </div>
   </div>
-  <!-- drap drop công việc ngoài-->
+  <!-- End step -->
+  <!--View Check Task-->
   <div class="w-100 d-flex justify-content-between" *ngIf="isMoveStage">
     <div class="fs-6 text-primary fw-bold">
       <codx-label
@@ -128,17 +134,15 @@
       >
       </codx-label>
     </div>
-    <div class="d-flex" >
+    <div class="d-flex">
       <div class="d-flex me-5">
         <div class="me-2">
-          <ejs-checkbox #checkbox [checked]="successAll" (change)="changeSuccessAll($event)"></ejs-checkbox>
-          <!-- <codx-input
-            type="checkbox"
+          <ejs-checkbox
+            #checkbox
             [checked]="successAll"
-            field="all"
-            (valueChange)="changeSuccessAll($event)"
-          >
-          </codx-input> -->
+            (change)="changeSuccessAll($event)"
+          ></ejs-checkbox>
+          <!-- <codx-input type="checkbox" [checked]="successAll" field="all" (valueChange)="changeSuccessAll($event)"></codx-input> -->
         </div>
         <codx-label
           name="progressAll"
@@ -149,14 +153,11 @@
       </div>
       <div class="d-flex">
         <div class="me-2">
-          <ejs-checkbox  [checked]="successRequired" (change)="changeSuccessRequired($event)"></ejs-checkbox>
-          <!-- <codx-input
-            type="checkbox"
+          <ejs-checkbox
             [checked]="successRequired"
-            field="required"
-            (valueChange)="changeSuccessRequired($event)"
-          >
-          </codx-input> -->
+            (change)="changeSuccessRequired($event)"
+          ></ejs-checkbox>
+          <!-- <codx-input type="checkbox" [checked]="successRequired" field="required"(valueChange)="changeSuccessRequired($event)"></codx-input> -->
         </div>
         <codx-label
           name="progressDefault"
@@ -167,6 +168,7 @@
       </div>
     </div>
   </div>
+  <!--View Group Task-->
   <div
     class="main-body ms-12 mt-1"
     *ngIf="listGroupTask?.length > 0 && isShowElement"
@@ -212,7 +214,7 @@
                 "
               ></div>
 
-              <!-- kéo thả ở trong  -->
+              <!--View Task-->
               <div
                 cdkDropList
                 [cdkDropListData]="groupTask?.task || []"
@@ -263,7 +265,9 @@
                     <div class="ms-12">
                       <codx-fields-detail-temp
                         *ngIf="task?.fieldID"
-                        [listFields]="getFields(currentStep?.fields, task?.fieldID)"
+                        [listFields]="
+                          getFields(currentStep?.fields, task?.fieldID)
+                        "
                         [showColumnControl]="1"
                         [isShowTitle]="false"
                       >
@@ -299,15 +303,13 @@
     style="flex-grow: 1"
   >
     <!-- show hiden group task -->
-    <span class>
-      <button
-        type="button"
-        class="btn btn-icon btn-light-primary"
-        (click)="toggleTask($event, id + groupTask?.recID)"
-      >
-        <i class="icon-horizontal_rule icon-18"></i>
-      </button>
-    </span>
+    <button
+      type="button"
+      class="btn btn-icon btn-light-primary d-inline"
+      (click)="toggleTask($event, id + groupTask?.recID)"
+    >
+      <i class="icon-horizontal_rule icon-18"></i>
+    </button>
 
     <div class="steplist-hearder ms-3">
       <div class="text-dark fs-6 line-clamp line-clamp-1 group-name">
@@ -351,7 +353,10 @@
       </div>
     </div>
     <codx-mfunc
-      *ngIf="(!isMoveStage && !isViewStep && !isClose) || (isClose && !data?.task?.isTaskDefault)"
+      *ngIf="
+        (!isMoveStage && !isViewStep && !isClose) ||
+        (isClose && !data?.task?.isTaskDefault)
+      "
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
       [dataItem]="moreDefaut"
@@ -410,20 +415,25 @@
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
       [placement]="'top-left bottom-left'"
-      (mouseenter)="openTooltip(popoverTooltip,data?.value)"
+      (mouseenter)="openTooltip(popoverTooltip, data?.value)"
       (mouseleave)="popoverTooltip.close()"
     >
       <span
         class="date text-nowrap text-gray-500"
-        *ngIf="data?.value?.startDate && data?.value?.endDate && data?.value?.status != '3'"
+        *ngIf="
+          data?.value?.startDate &&
+          data?.value?.endDate &&
+          data?.value?.status != '3'
+        "
       >
         {{ data?.value?.startDate | date : dateFomat }} -
         {{ data?.value?.endDate | date : dateFomat }}</span
       >
       <span
         class="date text-nowrap text-gray-500"
-        *ngIf="data?.value?.actualEnd && data?.value?.status == '3'">
-          {{ data?.value?.actualEnd | date : dateFomat }}
+        *ngIf="data?.value?.actualEnd && data?.value?.status == '3'"
+      >
+        {{ data?.value?.actualEnd | date : dateFomat }}
       </span>
     </div>
     <span class="d-flex align-items-center">
@@ -434,14 +444,18 @@
         [numberImages]="1"
         [isToolTip]="true"
         [objectId]="data?.value?.owner"
-        >
+      >
         <!-- [objectName]="getRole(data?.value)" -->
       </codx-imgs>
     </span>
     <div
       class="disabled-inline position-relative"
       (click)="openPopupUpdateProgress(data?.value, data?.type)"
-      [ngClass]="checkRoleUpdateProgress(data?.value, data?.type) ? 'cursor-pointer' : 'cursor-not-allowed'"
+      [ngClass]="
+        checkRoleUpdateProgress(data?.value, data?.type)
+          ? 'cursor-pointer'
+          : 'cursor-not-allowed'
+      "
     >
       <div
         *ngIf="data?.value?.assigned == '1'"
@@ -449,7 +463,8 @@
         #p="ngbPopover"
         [ngbPopover]="'Đã giao việc'"
         (mouseenter)="p.open()"
-        (mouseleave)="p.close()">
+        (mouseleave)="p.close()"
+      >
         <span class="icon-assignment_turned_in assign icon-12"></span>
       </div>
       <codx-progressbar
@@ -457,9 +472,11 @@
         [stype]="3"
         [isStep]="false"
         [vllData]="vllDataTask"
-        [status]="data?.group ? data?.value?.status : setStatusGroup( data?.value)"
+        [status]="
+          data?.group ? data?.value?.status : setStatusGroup(data?.value)
+        "
         #p="ngbPopover"
-        [ngbPopover]="isViewStep? 'Tiến độ công việc':'Cập nhật tiến độ'"
+        [ngbPopover]="isViewStep ? 'Tiến độ công việc' : 'Cập nhật tiến độ'"
         (mouseenter)="p.open()"
         (mouseleave)="p.close()"
       ></codx-progressbar>
@@ -479,7 +496,7 @@
     </span>
     <div>
       <button
-      *ngIf="isZoomOut"
+        *ngIf="isZoomOut"
         type="button"
         class="btn btn-icon background-gray"
         (click)="showGuide()"
@@ -488,7 +505,7 @@
       </button>
 
       <button
-      *ngIf="isZoomIn"
+        *ngIf="isZoomIn"
         type="button"
         class="btn btn-icon background-gray"
         (click)="zoomGuide()"

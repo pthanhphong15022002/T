@@ -787,7 +787,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         );
                       } else {
                         this.notificationsService.notify(
-                          'Đăng ký tenant không thành công'
+                          'Không tìm thấy thông tin tenant'
                         );
                         return [];
                       }
@@ -846,7 +846,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     );
                   } else {
                     this.notificationsService.notify(
-                      'Đăng ký tenant không thành công'
+                      'Không tìm thấy thông tin tenant'
                     );
                     return [];
                   }
@@ -1001,7 +1001,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (typeof regs == 'object' && 'Data' in regs && regs?.Data?.AppId)
         await this.onMultiSaveAfterTenant();
       else {
-        this.notificationsService.notify('Đăng ký tenant không thành công');
+        this.notificationsService.notify('Không tìm thấy thông tin tenant');
         this.closeBtnUp = false;
       }
     }
@@ -1818,7 +1818,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     var permissions = this.dataFolder?.permissions.filter(
       (x) => x.objectType != '1' && x.objectType != '7'
     );
-    newF.permissions = file.permissions.concat(permissions);
+    if(permissions) newF.permissions = file.permissions.concat(permissions);
     newF.assign = true;
     let dialogs = this.callfc.openForm(
       EditFileComponent,
