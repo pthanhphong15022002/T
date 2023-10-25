@@ -655,8 +655,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .subscribe((res: any) => {
         if (res) {
           console.log(res);
-          this.journal = res?.journal; // data journal
-          this.hideFields = res?.hideFields; // array field ẩn từ sổ nhật kí
+          this.journal = res[0]; // data journal
+          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
         }
       });
   }

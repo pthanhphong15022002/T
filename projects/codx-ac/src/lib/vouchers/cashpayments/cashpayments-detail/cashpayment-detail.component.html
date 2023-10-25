@@ -68,8 +68,8 @@
             <!-- Người nhận tiền (phiếu chi)   -->
             <codx-label *ngIf="(formModel.funcID == 'ACT0410')" class="fw-bold label-colon text-nowrap" fiedName="Payee" [formModel]="formModel">
             </codx-label>
-            <span *ngIf="formModel.funcID == 'ACT0410' && itemSelected?.payName" class="text-gray-600">{{itemSelected?.payName}}</span>
-            <span *ngIf="formModel.funcID == 'ACT0410' && (itemSelected?.payName == '' || itemSelected?.payName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Payee'].headerText}}</span>
+            <span *ngIf="formModel.funcID == 'ACT0410' && itemSelected?.contactName" class="text-gray-600">{{itemSelected?.contactName}}</span>
+            <span *ngIf="formModel.funcID == 'ACT0410' && (itemSelected?.contactName == '' || itemSelected?.contactName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Payee'].headerText}}</span>
             <!-- Người nhận tiền (phiếu chi)   -->
     
             <!-- Tài khoản chi (ủy nhiệm chi chi)   -->

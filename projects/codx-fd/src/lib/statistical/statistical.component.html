@@ -226,47 +226,10 @@
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="6">
     <div class="w-100 h-100">
-      <div class="my-5 h-10">
-        <div class="d-flex justify-content-center align-items-center">
-          <!-- <div
-            class="btn-group"
-            role="group"
-            aria-label="Basic radio toggle button group"
-          >
-            <input
-              type="radio"
-              class="btn-check"
-              name="btnradio"
-              id="btnLowestRadio"
-              autocomplete="off"
 
-              #eleAsc
-            />
-            <label
-              class="btn btn-outline-primary"
-              for="btnLowestRadio"
-            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
-
-            <input
-              type="radio"
-              class="btn-check"
-              name="btnradio"
-              id="btnHighestRadio"
-              autocomplete="off"
-              #eleDesc
-              checked
-            />
-            <label
-              class="btn btn-outline-primary"
-              for="btnHighestRadio"
-              default="Cao nhất"
-            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
-          </div> -->
-        </div>
-      </div>
-      <div class="container p-0" style="height: 90%" *ngIf="statByEmps.length">
+      <div class="container p-0 h-100" *ngIf="statByEmps.length">
         <div
-          class="overflow-scroll overflow-x-hidden"
+          class=" overflow-x-hidden scroll-hover"
           style="max-height: 95%; width: 100%"
 
         >
@@ -290,9 +253,9 @@
                   <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
                 </div>
                 <div class="w-100">
-                  <div class="h-15px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
                     <div
-                      class="h-15px rounded-4 float-start "
+                      class="h-10px rounded-4 float-start "
                       role="progressbar"
                       [style.width]="data.percentage + '%'"
                       [style.background-color]="'#00cc99'"
@@ -353,7 +316,7 @@
 </ng-template>
 <ng-template #template let-data>
   <div class="container h-100 p-0" id="7">
-    <div class="w-100 h-100 overflow-scroll">
+    <div class="w-100 h-100 scroll-hover">
       <!-- <div class="my-5 h-10">
         <div class="d-flex justify-content-center align-items-center">
           <div
@@ -406,7 +369,7 @@
           <e-accumulation-series-collection>
             <e-accumulation-series
               [dataSource]="statByBevs"
-              xName="behaviorID"
+              xName="behaviorName"
               yName="quantity"
               startAngle="0"
               innerRadius="80%"

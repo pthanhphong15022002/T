@@ -143,6 +143,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+          this.isShowSuccess =  true;
       }
       if (this.listInstanceStep?.length > 0) {
         this.stepViews = [];
@@ -196,11 +197,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (e.field == 'show' && e.data?.length > 0) {
       this.isShowElement = e.data[0] == '1' ? true : false;
-      this.isShowSuccess = this.isShowElement;
     } else {
       this.isShowElement = true;
-      this.isShowSuccess = this.isShowElement;
     }
+    this.isShowSuccess = this.isShowElement;
   }
 
   handelToggleStep() {
