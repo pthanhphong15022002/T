@@ -1528,8 +1528,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
         obj.chart2.temp.element.classList.contains('d-none') &&
           obj.chart2.temp.element.classList.remove('d-none');
+
+        obj.chart2.temp.refresh();
       }
-      obj.chart2.temp.refresh();
     }
     this.detectorRef.detectChanges();
   }
