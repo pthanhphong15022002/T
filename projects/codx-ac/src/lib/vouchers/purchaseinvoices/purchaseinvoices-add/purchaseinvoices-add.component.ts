@@ -796,27 +796,43 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   }
 
   /**
-   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * *Hàm check validate trước khi save line (cashpayment)
    * @param data 
    * @returns 
    */
-   saveValidationLine(data:any){
-    let lsterror = [];
+  beforeSaveRowPurchase(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridPurchaseInvoice.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
+      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
+      //   event.cancel = true;
+      //   return;
+      // }
+    }
+  }
 
-    // xử lí trường hợp call api để check validate
-    // let error =  new Promise((resolve, reject) => {
-    //   this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValidateAsync', [
-    //     data
-    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-    //     if (res?.error) {
-    //       resolve({ field: res?.field, msgCode: res?.msgCode });
-    //     } else {
-    //       resolve(null);
-    //     }
-    //   });
-    // });
-    // if(error) lsterror.push(error);
-    return lsterror;
+  /**
+   * *Hàm check validate trước khi save line (VATInvoice)
+   * @param data 
+   * @returns 
+   */
+  beforeSaveRowVATInvoice(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridVatInvoices.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
+        this.eleGridVatInvoices.showErrorField('unitPrice','E0730');
+        event.cancel = true;
+        return;
+      }
+    }
   }
 
   @HostListener('click', ['$event']) //? focus out grid

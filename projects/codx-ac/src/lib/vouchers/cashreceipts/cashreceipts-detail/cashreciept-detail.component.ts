@@ -216,137 +216,138 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    let arrBookmark = event.filter(
-      // danh sách các morefunction
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT040106' || // MF ghi sổ (PT)
-        x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-        x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
-        x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-        x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
-        x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-        x.functionID == 'ACT040107' || // Mf khôi phục (PT)
-        x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
-        x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT040108' || // Mf in (PT)
-        x.functionID == 'ACT042907' || // Mf in (UNC)
-        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
-        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
-    );
-    if (arrBookmark.length > 0) {
-      if (type == 'viewgrid') {
-        arrBookmark.forEach((element) => {
-          element.isbookmark = false;
-        });
-      }
-      switch (data?.status) {
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040103' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042902' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT040106' ||
-                element.functionID == 'ACT040108' ||
-                element.functionID == 'ACT042905' ||
-                element.functionID == 'ACT042907'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT040104' ||
-                element.functionID == 'ACT040108' ||
-                element.functionID == 'ACT042903' ||
-                element.functionID == 'ACT042907'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040105' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042904' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040106' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042905' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040107' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042906' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040106' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042905' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        default:
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-      }
-    }
-    return;
+    this.acService.changeMFCashReceipt(event,data,type,this.journal,this.formModel);
+    // let arrBookmark = event.filter(
+    //   // danh sách các morefunction
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ACT040106' || // MF ghi sổ (PT)
+    //     x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
+    //     x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
+    //     x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
+    //     x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
+    //     x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
+    //     x.functionID == 'ACT040107' || // Mf khôi phục (PT)
+    //     x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
+    //     x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
+    //     x.functionID == 'ACT040108' || // Mf in (PT)
+    //     x.functionID == 'ACT042907' || // Mf in (UNC)
+    //     x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
+    //     x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
+    // );
+    // if (arrBookmark.length > 0) {
+    //   if (type == 'viewgrid') {
+    //     arrBookmark.forEach((element) => {
+    //       element.isbookmark = false;
+    //     });
+    //   }
+    //   switch (data?.status) {
+    //     case '7':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040103' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042902' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '1':
+    //       if (this.journal.approvalControl == '0') {
+    //         arrBookmark.forEach((element) => {
+    //           if (
+    //             element.functionID == 'ACT040106' ||
+    //             element.functionID == 'ACT040108' ||
+    //             element.functionID == 'ACT042905' ||
+    //             element.functionID == 'ACT042907'
+    //           ) {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       } else {
+    //         arrBookmark.forEach((element) => {
+    //           if (
+    //             element.functionID == 'ACT040104' ||
+    //             element.functionID == 'ACT040108' ||
+    //             element.functionID == 'ACT042903' ||
+    //             element.functionID == 'ACT042907'
+    //           ) {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       }
+    //       break;
+    //     case '3':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040105' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042904' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '5':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040106' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042905' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '6':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040107' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042906' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '9':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040106' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042905' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     default:
+    //       arrBookmark.forEach((element) => {
+    //         element.disabled = true;
+    //       });
+    //       break;
+    //   }
+    // }
+    // return;
   }
   /**
    * *Hàm ẩn hiện các tab khi thay đổi chứng từ theo loại chứng từ

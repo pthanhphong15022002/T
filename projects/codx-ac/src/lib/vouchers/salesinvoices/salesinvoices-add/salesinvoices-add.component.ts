@@ -265,6 +265,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         Object.assign(oLine, res);
+        oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridSalesInvoice.endProcess();
       }
@@ -425,6 +426,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     oLine.transID = this.formSalesInvoice.data.recID;
     oLine.idiM4 = this.formSalesInvoice.data.warehouseID;
     oLine.note = this.formSalesInvoice.data.note;
+    oLine = this.genFixedDims(oLine);
     return oLine;
   }
   
@@ -645,25 +647,35 @@ export class SalesinvoicesAddComponent extends UIComponent{
     this.formSalesInvoice.setRequire(lstRequire);
   }
 
+  genFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
+    return line;
+  }
+  
   /**
-   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * *Hàm check validate trước khi save line
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
-    let lsterror = [];
-    
-    // xử lí trường hợp call api để check validate
-    // let error = await new Promise((resolve, reject) => {
-    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
-    //     'USD'
-    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-    //     if (res) {
-    //       resolve({status: true});
-    //     }
-    //   });
-    //   });
-    return lsterror;
+  beforeSaveRowSaleInvoice(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridSalesInvoice.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
+      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
+      //   event.cancel = true;
+      //   return;
+      // }
+    }
   }
   
   @HostListener('click', ['$event']) //? focus out grid

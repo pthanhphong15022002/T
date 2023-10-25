@@ -361,7 +361,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    
+    this.acService.changeMFVoucher(event,data,type,this.journal,this.view.formModel);
   }
 
   /**
