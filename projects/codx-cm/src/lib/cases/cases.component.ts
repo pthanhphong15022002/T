@@ -61,7 +61,7 @@ export class CasesComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
   @ViewChild('templateMore') templateMore: TemplateRef<any>;
-  @ViewChild('casesDetail') casesDetail: CasesDetailComponent;
+  @ViewChild('detailViewCase') detailViewCase: CasesDetailComponent;
 
   // extension core
   views: Array<ViewModel> = [];
@@ -370,6 +370,12 @@ export class CasesComponent
           ? !['1'].includes(data.status) || data.closed || !data.applyProcess
           : true;
     };
+    let isOwner = (eventItem, data) => {
+      // Phân bổ
+      eventItem.disabled = data.full
+        ? !['15', '1', '2'].includes(data.status) || data.closed
+        : true;
+    };
 
     let isApprover = (eventItem, data) => {
       eventItem.disabled =
@@ -395,8 +401,8 @@ export class CasesComponent
 
 
     functionMappings = {
-      ...['CM0401_1', 'CM0401_3', 'CM0401_4','CM0401_7','SYS101',
-      'CM0402_1', 'CM0402_3', 'CM0402_4'
+      ...['CM0401_1', 'CM0401_3', 'CM0401_4','SYS101',
+      'CM0402_1', 'CM0402_3', 'CM0402_4',
     ].reduce(
         (fundID, more) => ({ ...fundID, [more]: isDisabled }),
         {}
@@ -406,6 +412,8 @@ export class CasesComponent
         {}
       ),
         CM0401_2: isStartDay,
+        CM0402_7:isOwner,
+        CM0401_7:isOwner,
         CM0401_8: isClosed,
         CM0401_9: isOpened,
         CM0402_2: isStartDay,
@@ -456,84 +464,53 @@ export class CasesComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'CM0401_1':
-        this.moveStage(data);
-        break;
-      case 'CM0401_2':
-        this.startInstance(data);
-        break;
-      case 'CM0401_3':
-        this.moveReason(data, true);
-        break;
-      case 'CM0401_4':
-        this.moveReason(data, false);
-        break;
-      // Open cases
-      case 'CM0401_8':
-        this.openOrCloseCases(data, true);
-        break;
-      case 'CM0401_7':
-        this.popupOwnerRoles(data);
-        break;
-      // Close cases
-      case 'CM0401_9':
-        this.openOrCloseCases(data, false);
-        break;
-      //xuất file
-      case 'CM0401_5':
-      case 'CM0402_5':
-        this.codxCmService.exportFile(data, this.titleAction);
-        break;
-      // trinh ký
-      case 'CM0401_6':
-      case 'CM0402_6':
-        this.approvalTrans(data);
-        break;
-      //huy duyet
-      case 'CM0401_11':
-      case 'CM0402_11':
-        this.cancelApprover(data);
-        break;
-      // //export --core lam
-      // case 'SYS002':
-      //   this.exportFiles(e, data);
-      //   break;
-      case 'CM0401_10':
-        this.popupPermissions(data);
-        break;
-      default: {
-        var customData = {
-          refID: data.recID,
-          refType: 'CM_Contracts',
-        };
-        if (data?.refID && data.applyProcess) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-        }
+    const functionMappings = {
+      SYS03: () => this.edit(data),
+      SYS04: () => this.copy(data),
+      SYS02: () => this.delete(data),
+      CM0401_1: () => this.moveStage(data),
+      CM0401_2: () => this.startDay(data),
+      CM0401_3: () => this.moveReason(data, true),
+      CM0401_4: () => this.moveReason(data, false),
+      CM0401_8: () => this.openOrCloseCases(data, true),
+      CM0401_7: () => this.popupOwnerRoles(data),
+      CM0401_9: () => this.openOrCloseCases(data, false),
+      CM0401_5: () => this.codxCmService.exportFile(data, this.titleAction),
+      CM0402_5: () => this.codxCmService.exportFile(data, this.titleAction),
+      CM0401_6: () => this.approvalTrans(data),
+      CM0402_6: () => this.approvalTrans(data),
+      CM0401_11: () => this.cancelApprover(data),
+      CM0402_11: () => this.cancelApprover(data),
+      CM0401_10: () => this.popupPermissions(data),
+    };
 
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave.bind(this),
-          this.view.formModel,
-          this.view.dataService,
-          this,
-          customData
-        );
-        this.detectorRef.detectChanges();
-        break;
+    const executeFunction = functionMappings[e.functionID];
+    if (executeFunction) {
+      executeFunction();
+    } else {
+      let customData = {
+        refID: data.recID,
+        refType: 'CM_Cases',
+      };
+
+      if (data?.refID && data.applyProcess) {
+        customData = {
+          refID: data.processID,
+          refType: 'DP_Processes',
+        };
       }
+      this.codxShareService.defaultMoreFunc(
+        e,
+        data,
+        this.afterSave.bind(this),
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
     }
+
+
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
@@ -1521,32 +1498,34 @@ export class CasesComponent
   //#endregion
 
   //#region step start
-  startInstance(data) {
+  startDay(data) {
+    let test = this.funcID;
+    return;
     this.notificationsService
-      .alertCode('DP033', null, ['"' + data?.caseName + '"' || ''])
-      .subscribe((x) => {
-        if (x.event && x.event.status == 'Y') {
-          this.api
-          .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [data?.refID])
-          .subscribe((res) => {
-            console.log(res);
-            if (res) {
-              this.listInsStep = res;
+    .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
+    .subscribe((x) => {
+      if (x.event && x.event.status == 'Y') {
+        this.codxCmService
+          .startInstance([data.refID, data.recID, 'CM0205', 'CM_Leads'])
+          .subscribe((resDP) => {
+            if (resDP) {
+              var datas = [data.recID, resDP[0]];
+              this.codxCmService.startLead(datas).subscribe((res) => {
+                if (res) {
+                  this.dataSelected = res;
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.detailViewCase.reloadListStep(resDP[1]);
+                  this.notificationsService.notifyCode('SYS007');
+                  this.view.dataService.update(this.dataSelected).subscribe();
+                }
+                this.detectorRef.detectChanges();
+              });
             }
           });
-
-          // var data = [data?.recID, data?.caseType];
-          // this.codxCmService.startCases(data).subscribe((res) => {
-          //   if (res[0]) {
-          //     this.dataSelected = res[0];
-          //     this.notificationsService.notifyCode('SYS007');
-          //     this.view.dataService.update(this.dataSelected).subscribe();
-          //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          //   }
-          //   this.detectorRef.detectChanges();
-          // });
-        }
-      });
+      }
+    });
   }
   //#endregion
 }

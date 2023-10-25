@@ -105,6 +105,7 @@ import { LayoutNoasideAcComponent } from './_layout-noaside-ac/layout-noaside-ac
 import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advance-payment-request-table/advance-payment-request-table.component';
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
+import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -389,6 +390,7 @@ export const routes: Routes = [
     AdvancePaymentRequestTableComponent,
     PaymentOrderComponent,
     PaymentOrderAddComponent,
+    ReceiptTransactionsTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

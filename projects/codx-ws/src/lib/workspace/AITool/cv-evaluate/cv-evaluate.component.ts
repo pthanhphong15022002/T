@@ -9,7 +9,7 @@ import { DialogData, DialogRef } from 'codx-core';
 })
 export class CvEvaluateComponent {
   dialog:any;
-  data:any;
+  data = "Có kinh nghiệm làm việc trên 2 năm";
   listBreadCrumb = []
   constructor(
     @Optional() dt?: DialogData,
