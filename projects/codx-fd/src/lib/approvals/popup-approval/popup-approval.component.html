@@ -21,8 +21,10 @@
         <codx-label name="lblComment" default="Ý kiến người xét duyệt">
         </codx-label>
         <div class="d-flex">
-            <codx-input style="width: 100vh;" type="text" [crrValue]="comment"
-                (valueChange)="changeComment($event)"></codx-input>
+            <!-- <codx-input style="width: 100vh;" type="text" [crrValue]="comment"
+                (valueChange)="changeComment($event)"></codx-input> -->
+                <codx-input type="textarea" style="width: 100vh;" class="resize-none" (valueChange)="changeComment($event)" [crrValue]="comment"
+                    format="ed2" rows="5"></codx-input>
         </div>
     </div>
 
