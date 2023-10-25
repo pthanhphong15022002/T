@@ -1507,6 +1507,28 @@ export class CodxCmService {
       [bussinessID, year]
     );
   }
+
+
+  getUserByListDepartmentID(listDepID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetUserByListDepartmentIDAsync',
+      listDepID
+    );
+  }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+
+
   //#region
 
   getOneObject(recID, className) {
