@@ -130,19 +130,20 @@ export class CvInformationComponent implements OnInit{
     if(this.jsonExports.length > 0 && this.request)
     {
       this.ngxLoader.start();
+      let i = 0;
       //this.jsonExports = JSON.parse(JSON.stringify(this.jsonExports2));
       this.jsonExports.forEach((e:any) => {
         e.result = null;
+       
         this.evaluateCV(e).subscribe((res:any) => {
-          if(res.accept)
+          if(res.accept) e.result = res;
+          i++;
+          if(i == (this.jsonExports.length -1))
           {
-            e.result = res;
             this.ngxLoader.stop();
+            this.jsonExports = this.jsonExports.filter(x=>x.result);
+            this.jsonExports = [...this.jsonExports]
           }
-          else
-            this.jsonExports = [...this.jsonExports.filter(x => x.id != e.id)];
-          this.changeDetectorRef.detectChanges();
-          
         });
       }); 
     }
@@ -191,7 +192,7 @@ export class CvInformationComponent implements OnInit{
   //Mở Form Đánh giá hồ sơ
   openForm()
   {
-    this.callFunc.openForm(CvEvaluateComponent,"",600,200,"",null,"").closed.subscribe((res) => {
+    this.callFunc.openForm(CvEvaluateComponent,"",600,200,"",this.listBreadCrumb,"").closed.subscribe((res) => {
       if(res?.event)
       {
         this.request = res?.event;

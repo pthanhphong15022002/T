@@ -180,7 +180,7 @@
           #pie1
           class="h-100 w-100"
           style="height: 90% !important; width: 100% !important"
-          [dataSource]="dataSourceBussnessLine ?? []"
+          [dataSource]="dataSourceBussnessLine"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
           [palette]="palette"
@@ -198,9 +198,9 @@
       <div #viewIndus class="d-none">
         <ejs-treemap
           #pie2
-          class="h-100 w-100"
+          class="h-100 w-100 d-none"
           style="height: 90% !important; width: 100% !important"
-          [dataSource]="dataSourceIndustry ?? []"
+          [dataSource]="dataSourceIndustry"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
           [palette]="paletteIndustry"
@@ -450,58 +450,62 @@
   <div class="w-100 h-100" id="8" style="overflow: hidden">
     <codx-label
       class="fs-5 fw-bold"
-      name="lblReasonSuscess"
+      name="lblReasonSuscessFail"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
-      default="Lý do thành công"
+      default="Lý do thành công/Lý do thất bại"
     ></codx-label>
 
-    <div class="mt-5" style="overflow-y: auto; max-height: 85%">
-      <div class="d-flex justify-content-center align-items-center">
-        <div
-          [ngClass]="isReasonSuscess ? 'button-selected' : 'button-no-selected'"
-          class="btn-left py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMax')"
-        >
-          <codx-label
-            name="btnMax"
-            formModel=""
-            default="Cao nhất"
-          ></codx-label>
-        </div>
-        <div
-          [ngClass]="
-            !isReasonSuscess ? 'button-selected' : 'button-no-selected'
-          "
-          class="btn-right py-1 d-flex justify-content-center align-items-center"
-          (click)="clickButton('btnMin')"
-        >
-          <codx-label
-            name="btnMin"
-            formModel=""
-            default="Thấp nhất"
-          ></codx-label>
+    <div class="mt-5">
+      <div class="d-flex justify-content-center h-10">
+        <div id="group5" class="btn-group">
+          <input
+            class="btn-check"
+            type="radio"
+            id="btReasonSucess"
+            name="reasonSF"
+            #btReasonSucess
+            checked
+            (change)="
+              changeChart(btReasonSucess, {
+                chart1: { view: reasonSucsess },
+                chart2: { view: reasonFails }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btReasonSucess">
+            <codx-label
+              name="btReasonSucess"
+              formModel=""
+              default="Thành công"
+            ></codx-label>
+          </label>
+          <input
+            class="btn-check"
+            type="radio"
+            id="btReasonFail"
+            name="reasonSF"
+            #eleMin
+            (change)="
+              changeChart(eleMin, {
+                chart1: { view: reasonSucsess },
+                chart2: { view: reasonFails }
+              })
+            "
+          />
+          <label class="btn btn-outline-primary" for="btReasonFail">
+            <codx-label
+              name="btReasonFail"
+              formModel=""
+              default="Thất bại"
+            ></codx-label>
+          </label>
         </div>
       </div>
     </div>
 
-    <div
-      style="overflow-y: auto; max-height: 90%"
-      *ngIf="
-        isReasonSuscess
-          ? dataDashBoard?.countsReasonsSuscess?.length > 0
-          : dataDashBoard?.countsReasonsFails?.length > 0;
-        else noData
-      "
-    >
-      <div
-        *ngFor="
-          let data of isReasonSuscess
-            ? dataDashBoard?.countsReasonsSuscess
-            : dataDashBoard?.countsReasonsFails
-        "
-        class="mt-4"
-      >
+    <div #reasonSucsess style="overflow-y: auto; max-height: 90%">
+      <div *ngFor="let data of dataReasonsSuscess" class="mt-4">
         <div class="mx-2 my-5">
           <div class="d-flex justify-content-between">
             <div>
@@ -529,42 +533,34 @@
       </div>
     </div>
 
-    <!-- <ng-container *ngIf="!isReasonSuscess">
-      <div
-        style="overflow-y: auto; max-height: 95%"
-        *ngIf="dataDashBoard?.countsReasonsFails?.length > 0; else noData"
-      >
-        <div
-          *ngFor="let data of dataDashBoard?.countsReasonsFails"
-          class="mt-4"
-        >
-          <div class="mx-2 my-5">
-            <div class="d-flex justify-content-between">
-              <div>
-                <span>{{ data?.reasonName }}</span>
-                <span>&nbsp;(</span>
-                <span>{{ data.quantity }}</span>
-                <span>)</span>
-              </div>
-              <div>
-                <span>{{ data?.percentage }}</span
-                ><span>% </span>
-              </div>
+    <div #reasonFails class="d-none" style="overflow-y: auto; max-height: 95%">
+      <div *ngFor="let data of dataReasonsFails" class="mt-4">
+        <div class="mx-2 my-5">
+          <div class="d-flex justify-content-between">
+            <div>
+              <span>{{ data?.reasonName }}</span>
+              <span>&nbsp;(</span>
+              <span>{{ data.quantity }}</span>
+              <span>)</span>
             </div>
-            <div class="d-flex align-items-center min-w-200px">
-              <div class="h-5px w-100 bg-gray-200 rounded-4">
-                <div
-                  class="rounded-4 h-5px"
-                  role="progressbar"
-                  [ngStyle]="{ backgroundColor: colorReasonFails }"
-                  [style.width]="data.percentage + '%'"
-                ></div>
-              </div>
+            <div>
+              <span>{{ data?.percentage }}</span
+              ><span>% </span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center min-w-200px">
+            <div class="h-5px w-100 bg-gray-200 rounded-4">
+              <div
+                class="rounded-4 h-5px"
+                role="progressbar"
+                [ngStyle]="{ backgroundColor: colorReasonFails }"
+                [style.width]="data.percentage + '%'"
+              ></div>
             </div>
           </div>
         </div>
       </div>
-    </ng-container> -->
+    </div>
   </div>
 </ng-template>
 
@@ -896,7 +892,82 @@
   <div class="w-100 h-100" id="5" title="">555</div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="6" title="">666</div>
+  <div class="w-100 h-100" id="6" title="">
+    <codx-label
+      class="fs-5 fw-bold mb-3"
+      name="lblSalesPipeline"
+      formName="CMMyDashboard"
+      gridViewName="grvCMMyDashboard"
+      default="Sales pipline"
+    ></codx-label>
+    <div class="d-flex justify-content-center align-items-center mb-3">
+      <div class="d-flex flex-row">
+        <div
+          *ngFor="let item of vllSalesPiplines"
+          class="w-130px text-center"
+          [ngClass]="
+            item.value == '1'
+              ? 'cm-rounded-pill-left'
+              : item.value == '3'
+              ? 'cm-rounded-pill-right'
+              : 'cm-rounded-pill-center'
+          "
+          (click)="viewPips(item.value)"
+        >
+          <div
+            [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
+          >
+            <button
+              class="btn btn-32px min-w-60px"
+              type="button"
+              aria-expanded="false"
+            >
+              <span class="me-1">{{ item.text }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="lstAlls?.length > 0; else noData">
+      <ejs-accumulationchart
+        id="pyramidcontainer1"
+        #pyramid
+        style="height: 100%; display: block; width: 100%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstAlls"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="80%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            [palettes]="
+              statusPip == '1'
+                ? palettePipsStages
+                : statusPip == '2'
+                ? palettePipsStatus
+                : palettePipsStatusCodes
+            "
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </ng-container>
+  </div>
 </ng-template>
 <ng-template #templateTarget>
   <div class="w-100 h-100" id="7" title="">
@@ -951,7 +1022,7 @@
     <ng-container *ngIf="lstQuarters?.length > 0; else noData">
       <ejs-bulletchart
         align="center"
-        id="revenue"
+        id="revenue0"
         width="800px"
         height="70%"
         style="display: block; text-align: center"
@@ -984,7 +1055,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue1"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -1014,7 +1085,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue2"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -1046,7 +1117,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue3"
           width="500px"
           height="70%"
           style="display: block; text-align: center"
@@ -1076,7 +1147,7 @@
         <ejs-bulletchart
           class="col-6"
           align="center"
-          id="revenue"
+          id="revenue4"
           width="500px"
           height="70%"
           style="display: block; text-align: center"

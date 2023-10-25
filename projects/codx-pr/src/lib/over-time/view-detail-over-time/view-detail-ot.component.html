@@ -1,1 +1,272 @@
-<p>view-detail-ot works!</p>
+<div
+  class="empty-data"
+  *ngIf="dataService && dataService.data.length == 0 && !itemSelected?.taskID"
+>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="itemSelected?.recID">
+  <codx-detail-tmp
+    [header]="header"
+    [formModel]="formModel"
+    [body]="body"
+    [footer]="footer"
+    [hideMF]="!showMoreFunc"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    [dataItem]="itemSelected"
+  >
+    <ng-template #header>
+      <div class="container_detail mt-3 border-bottom">
+        <div class="d-flex flex-grow-1 mb-4">
+          <div class="me-3">
+            <codx-img
+              [objectId]="itemSelected?.emp.employeeID"
+              [objectName]="itemSelected.emp.employeeName"
+              objectType="HR_Employees"
+              [width]="50"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column">
+                <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
+                  {{ itemSelected.emp.employeeName }}
+                </div>
+                <div class="text-gray-500 me-4 mb-1">
+                  {{ itemSelected.emp.positionName }}
+                </div>
+                <ng-container>
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center me-4">
+                      <span
+                        class="icon-phone_android icon-16 text-gray-700 me-2"
+                      ></span>
+                      <div div class="text-gray-700">
+                        <span
+                          #phone
+                          [innerHTML]="itemSelected?.emp.phone"
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span
+                        class="icon-email icon-16 text-gray-700 me-2"
+                      ></span>
+                      <div div class="font-size-sm">
+                        <span
+                          #email
+                          [innerHTML]="itemSelected?.emp.email"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="d-flex flex-row align-items-start">
+                <!-- <codx-vll
+                  *ngIf="
+                    itemSelected?.extendStatus != null &&
+                    itemSelected?.extendStatus >= '3' &&
+                    vllExtendStatus
+                  "
+                  [name]="vllExtendStatus"
+                  [field]="'ExtendStatus'"
+                  [value]="itemSelected?.extendStatus"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-md fs-7"
+                >
+                </codx-vll>
+                <codx-vll
+                  *ngIf="
+                    itemSelected?.approveStatus != null &&
+                    itemSelected?.approveStatus >= '2' &&
+                    vllApproveStatus
+                  "
+                  [name]="vllApproveStatus"
+                  [field]="'ApproveStatus'"
+                  [value]="itemSelected?.approveStatus"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-md fs-7"
+                >
+                </codx-vll>
+                <codx-vll
+                  *ngIf="vllStatus"
+                  [name]="vllStatus"
+                  [field]="'Status'"
+                  [value]="itemSelected?.status"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge badge-light badge-md fs-7"
+                >
+                </codx-vll> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-column mb-3">
+          <div class="task-info">
+            <div class="float-end mb-1">
+              <div class="d-flex me-6">
+                <div class="fw-bold">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="StartDate"
+                    [formName]="formName"
+                    [gridViewName]="gridViewName"
+                    default="Ngày đăng ký"
+                  >
+                  </codx-label>
+                </div>
+                <span
+                  *ngIf="itemSelected?.createdOn"
+                  class="text-gray-700"
+                  #fromDate
+                  [innerHTML]="itemSelected?.createdOn | fmDT"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body>
+      <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
+        <div class="d-flex align-items-center mt-1 flex-wrap">
+          <span class="icon-calendar_today icon-14 me-1"></span>
+          <span class="fs-7 fw-bold" [ngbTooltip]="grvSetup?.FromDate?.headerText">
+            {{ itemSelected.fromDate | fmDT }}
+          </span>
+          <span
+            *ngIf="
+              itemSelected.toDate &&
+              itemSelected.fromDate != itemSelected.toDate
+            "
+            class="mx-1 fs-7"
+          >
+            -
+          </span>
+          <span
+            class="fs-7 fw-bold"
+            *ngIf="
+              itemSelected.toDate &&
+              itemSelected.fromDate != itemSelected.toDate
+            "
+            [ngbTooltip]="grvSetup?.ToDate?.headerText"
+          >
+            {{ itemSelected.toDate | fmDT }}
+          </span>
+
+          <span class="icon-access_time icon-14 ms-4 me-1"></span>
+          <ng-container *ngIf="itemSelected.registerForm != '2'">
+            <span class="fs-7 fw-bold" [ngbTooltip]="grvSetup?.FromTime?.headerText">
+              {{ getHour(itemSelected.fromTime) }}
+            </span>
+            <span
+              *ngIf="
+                itemSelected.toTime &&
+                itemSelected.fromTime != itemSelected.toTime
+              "
+              class="mx-1 fs-7"
+            >
+              -
+            </span>
+            <span
+              class="fs-7 fw-bold"
+              *ngIf="
+                itemSelected.toTime &&
+                itemSelected.fromTime != itemSelected.toTime
+              "
+              [ngbTooltip]="grvSetup?.ToTime?.headerText"
+            >
+              {{ getHour(itemSelected.toTime) }}
+            </span>
+          </ng-container>
+          <ng-container *ngIf="itemSelected.registerForm == '2'">
+            <span class="fs-7" [ngbTooltip]="grvSetup?.hours?.headerText">
+              {{ itemSelected.hours }}
+            </span>
+            <span
+              *ngIf="
+                itemSelected.hours &&
+                itemSelected.fromTime != itemSelected.toTime
+              "
+              class="mx-1 fs-7"
+            >
+            </span>
+          </ng-container>
+        </div>
+      </div>
+      <div class="text-gray-700 mb-2">
+        <codx-label
+          class="label-colon"
+          fiedName="Reason"
+          [formName]="formName"
+          [gridViewName]="gridViewName"
+          default="Lý do tăng ca"
+        >
+        </codx-label>
+        <span
+          *ngIf="itemSelected?.reason"
+          class="text-gray-700 fw-bold"
+          [innerHTML]="itemSelected?.reason"
+        ></span>
+      </div>
+      <div class="text-gray-700 mb-2">
+        <codx-label
+          class="label-colon"
+          fiedName="Location"
+          [formName]="formName"
+          [gridViewName]="gridViewName"
+          default="Địa điểm làm việc"
+        >
+        </codx-label>
+        <span
+          *ngIf="itemSelected?.location"
+          class="text-gray-700 fw-bold"
+          [innerHTML]="itemSelected?.location"
+        ></span>
+      </div>
+      <div class="text-gray-700 mb-2">
+        <codx-label
+          class="label-colon"
+          fiedName="Note"
+          [formName]="formName"
+          [gridViewName]="gridViewName"
+          default="Ghi chú"
+        >
+        </codx-label>
+        <span
+          *ngIf="itemSelected?.note"
+          class="text-gray-700 fw-bold"
+          [innerHTML]="itemSelected?.note"
+        ></span>
+      </div>
+    </ng-template>
+    <ng-template #footer>
+      <codx-tabs
+        [entityName]="formModel.entityName"
+        [formModel]="formModel"
+        [TabControl]="tabControl"
+        [objectID]="itemSelected.recID"
+        [funcID]="formModel.funcID"
+        [isUpPermission]="true"
+        [isEdit]="true"
+      ></codx-tabs>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>
