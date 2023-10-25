@@ -211,6 +211,7 @@ export class SalesinvoicesComponent extends UIComponent
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
+    this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
   //   let arrBookmark = event.filter(
   //     // danh sách các morefunction
   //     (x: { functionID: string }) =>
@@ -710,8 +711,8 @@ export class SalesinvoicesComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.journal = res?.journal; // data journal
-          this.hideFields = res?.hideFields; // array field ẩn từ sổ nhật kí
+          this.journal = res[0]; // data journal
+          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
         }
       });
   }

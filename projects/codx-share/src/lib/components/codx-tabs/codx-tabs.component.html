@@ -101,6 +101,25 @@
         [addPermissions]="addPermissions"
       ></codx-files-attachment>
       <!-- [allowExtensions]="allowExtensions" -->
+
+      <!-- Hiện file xet duyệt tạm Chung làm sau -->
+      <ng-container *ngIf="showFileApprove && listIDTransApprove?.length > 0">
+        <ng-container *ngFor="let objectTrans of listIDTransApprove">
+          <codx-files-attachment
+            [objectID]="objectTrans"
+            [hideFolder]="1"
+            [isEdit]="false"
+            [type]="type"
+            [allowMultiFile]="allowMultiFile"
+            [formModel]="formModel"
+            [funcID]="funcID"
+            [dataSelected]="dataSelected"
+            [displayThumb]="displayThumb"
+            [referType]="referType"
+            [addPermissions]="addPermissions"
+          ></codx-files-attachment
+        ></ng-container>
+      </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'comment'">
       <div class="tab-comt">

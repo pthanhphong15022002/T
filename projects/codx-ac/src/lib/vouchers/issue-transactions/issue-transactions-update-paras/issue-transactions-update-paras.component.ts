@@ -9,8 +9,6 @@ import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { VouchersLines } from '../../../models/VouchersLines.model';
-import { Vouchers } from '../../../models/Vouchers.model';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 import { IssueTransactionsLineAddComponent } from '../issue-transactions-line-add/issue-transactions-line-add.component';
 import { Validators } from '@angular/forms';
@@ -34,13 +32,13 @@ export class IssueTransactionsUpdateParasComponent extends UIComponent implement
   reason: any = [];
   headerText: string;
   dialog!: DialogRef;
-  vouchers: Vouchers = new Vouchers();
+  vouchers: any;
   formType: any;
   validate: any = 0;
   //totalAmt: any = 0;
   journalNo: any;
   modeGrid: any;
-  dataUpdate: VouchersLines = new VouchersLines();
+  dataUpdate: any;
   hideFields = [];
   journal: IJournal;
 
@@ -552,7 +550,7 @@ export class IssueTransactionsUpdateParasComponent extends UIComponent implement
 
   /** Kiểm tra mode grid trước khi thêm dòng */
   checkModeGridBeforeAddLine() {
-    let data = new VouchersLines();
+    let data:any
     let idx;
     this.api
       .exec<any>('IV', 'VouchersLinesBusiness', 'SetDefaultAsync', [
