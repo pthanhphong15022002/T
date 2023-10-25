@@ -27,10 +27,11 @@ export class PopupSettingsComponent
   ) {
     super(injector);
     this.dialog = dialog;
-    this.data = dt;
+    this.data = dt.data;
   }
 
   onInit(): void {
+    debugger
     const { data } = this.data;
     console.log(data);
   }

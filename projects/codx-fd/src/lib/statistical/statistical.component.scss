@@ -147,3 +147,10 @@
     font-size: 1rem !important;
 }
 
+.scroll-hover {
+  overflow: hidden;
+}
+
+.scroll-hover:hover {
+  overflow-y: scroll;
+}

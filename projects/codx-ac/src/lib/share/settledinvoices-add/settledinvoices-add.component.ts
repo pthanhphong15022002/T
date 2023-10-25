@@ -149,7 +149,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
           } else {
             this.grid.gridRef?.selectRows(this.oldSelected);
           }     
-        },50);
+        },20);
       }
     })
   }

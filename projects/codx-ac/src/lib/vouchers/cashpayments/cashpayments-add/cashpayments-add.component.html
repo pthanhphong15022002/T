@@ -548,9 +548,9 @@
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
         [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
-        [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" 
-        [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID" [saveValidator]="saveValidationLine"
-        [templateMore]="TmpMFCashpayment" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
+        [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" (beforeSaveRow)="beforeSaveRowCashPayment($event)"
+        [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
+        [templateMore]="templateMore" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
         rowNoField="rowNo" (eventAction)="onActionGridCashpayment($event)" (actionCompleted)="onActionGridCashpayment($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
@@ -633,10 +633,10 @@
   <ng-container *ngIf="formCashPayment?.data?.subType == '9'">
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName" [gridViewName]="fmVATInvoices.gridViewName"
-        [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)"
-        (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true"
+        [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
+        (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true" [templateMore]="templateMore"
         (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0" gridLines="Both" [autoFitColumns]="false"
-        [dataValues]="formCashPayment?.data?.recID" [hideMoreFunc]="true" service="AC">
+        [dataValues]="formCashPayment?.data?.recID" service="AC">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
@@ -655,8 +655,8 @@
 <!-- End: Grid VATInvoices -->
 
 <!-- Start: More function Cashpayment -->
-<ng-template #TmpMFCashpayment let-data>
-  <codx-mfunc [formModel]="fmCashpaymentLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)"
+<ng-template #templateMore let-data>
+  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'gridcash')" (clickMF)="clickMF($event, data)"
     type="view"></codx-mfunc>
 </ng-template>
 <!-- End: More function Cashpayment -->

@@ -268,6 +268,7 @@ export class WorkspaceComponent extends WSUIComponent{
     }
         
   }
+  
   //
   exportFileCV(file){
     if(file)
