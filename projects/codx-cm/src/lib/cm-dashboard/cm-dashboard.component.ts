@@ -2,8 +2,10 @@ import { Browser } from '@syncfusion/ej2-base';
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   Injector,
   QueryList,
+  Renderer2,
   TemplateRef,
   ViewChild,
   ViewChildren,
@@ -47,6 +49,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChild('accumulationPipe') accumulationPipe: AccumulationChartComponent;
   @ViewChild('noData') noData: TemplateRef<any>;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
+  @ViewChild('myIsActiveEle') myIsActiveEle: ElementRef;
   views: Array<ViewModel> = [];
   button = {
     id: 'btnAdd',
@@ -422,7 +425,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     private auth: AuthService,
     private pageTitle: PageTitleService,
     private authstore: AuthStore,
-    private cmSv: CodxCmService
+    private cmSv: CodxCmService,
+    private renderer: Renderer2
   ) {
     super(inject);
     this.user = this.authstore.get();
@@ -1962,6 +1966,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           : this.statusPip == '2'
           ? JSON.parse(JSON.stringify(this.lstSalesStatus))
           : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
+      const element = this.myIsActiveEle?.nativeElement;
+      if (element) {
+        if (this.isActive(value)) {
+          this.renderer?.removeClass(element, 'view-switch');
+          this.renderer?.addClass(element, 'cm-bg-primary');
+        } else {
+          this.renderer?.removeClass(element, 'cm-bg-primary');
+          this.renderer?.addClass(element, 'view-switch');
+        }
+      }
     }
     this.detectorRef.detectChanges();
   }

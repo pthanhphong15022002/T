@@ -1126,7 +1126,7 @@
       gridViewName="grvCMMyDashboard"
       default="Sales pipline"
     ></codx-label>
-    <div class="d-flex justify-content-center align-items-center mb-3">
+    <div class="d-flex justify-content-center align-items-center mb-1">
       <div class="d-flex flex-row">
         <div
           *ngFor="let item of vllSalesPiplines"
@@ -1140,7 +1140,7 @@
           "
           (click)="viewPips(item.value)"
         >
-          <div
+          <div #myIsActiveEle
             [id]="'isActive' + item"
             [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
           >
