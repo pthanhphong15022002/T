@@ -252,8 +252,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isReasonSuscess = true;
   valueFormat: any;
 
+  //dash board deals
+  tmpDashBoardDeals = [];
+  //end
   //chart sales pipeline
-
   lstAlls = [];
   lstSalesStages = [];
   lstSalesStatus = [];
@@ -266,7 +268,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   palettePipsStages = [];
   palettePipsStatus = [];
   palettePipsStatusCodes = [];
-
   //end
 
   //chart series
@@ -545,7 +546,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         //dashboard moi
         // this.getDashBoardTargets();
         method = 'GetDashBoardTargetAsync';
-        this.getDataset(method, null, null, null);
+        this.getDataset(method, param, null, null);
         break;
       // nhom chua co tam
       case 'CMD002':
@@ -791,7 +792,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
     this.cmSv.loadComboboxData('CMDealStatus', 'CM').subscribe((res) => {
-      if(res){
+      if (res) {
         this.lstStatusCodes = res;
       }
     });
@@ -1606,6 +1607,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               tmpUsers['deals'] = deals.filter((x) => x.owner == item.userID);
               lstUsers.push(tmpUsers);
             }
+            //dash board top sales performance
             this.lstUsers = this.getTopSalesDashBoards(
               lstUsers,
               parameters,
@@ -1615,9 +1617,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         });
     }
     //end
+    //dash board deals
+    this.getDashBoardDeals(deals, leads, currentDate);
+    //dash board sales pipline
     this.getDashBoardPips(deals, parameters, currentDate);
+    //dashboard sales trend - last 12 months
     this.getDashBoardSalesTrends(deals, parameters, currentDate);
+    //dash board sales target
     this.getDashBoardTargetSales(targetLines, parameters, currentDate);
+    //dash board sales last 4 quarter
     this.getDashBoardSales(
       deals,
       targetLines,
@@ -1628,8 +1636,210 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  //dash board deals
+  getDashBoardDeals(deals = [], leads = [], currentDate) {
+    this.tmpDashBoardDeals = [];
+    var tmp = {};
+    const now = new Date(currentDate);
+    const dealCurrents = deals.filter(
+      (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+    ); // đổi field createdOn -> ExpectedClosed
+    const dealOlds = deals.filter(
+      (x) => new Date(x.createdOn).getFullYear() == now.getFullYear() - 1
+    ); // đổi field createdOn -> ExpectedClosed
+
+    //Doanh số bán hàng
+    let countDealValues = Math.round(
+      dealCurrents?.reduce((acc, x) => acc + x.dealValue, 0)
+    );
+    let countDealValueOlds = Math.round(
+      dealOlds?.reduce((acc, x) => acc + x.dealValue, 0)
+    );
+    let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
+    let valueAsc = '0';
+    if (countDealValues > 0 && countDealValueOlds > 0) {
+      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
+    } else {
+      if (countDealValues == countDealValueOlds) {
+        valueAsc = 0 + '%';
+      } else {
+        valueAsc = 100 + '%';
+      }
+    }
+    let isAsc =
+      countDealValues - countDealValueOlds == 0
+        ? '0'
+        : countDealValues - countDealValueOlds > 0
+        ? '1'
+        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    tmp['value'] = '1';
+    tmp['count'] = this.formatDealValues(countDealValues);
+    tmp['countOld'] = this.formatDealValues(countDealValueOlds);
+    tmp['countAsc'] = this.formatDealValues(countDealAscs); //số
+    tmp['valueAsc'] = valueAsc; // %
+    tmp['isAsc'] = isAsc;
+    this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
+    //end
+
+    //Cơ hội bán hàng
+    countDealValues = dealCurrents?.length ?? 0;
+    countDealValueOlds = dealOlds?.length ?? 0;
+    countDealAscs = Math.abs(countDealValues - countDealValueOlds);
+    valueAsc = '0';
+    if (countDealValues > 0 && countDealValueOlds > 0) {
+      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
+    } else {
+      if (countDealValues == countDealValueOlds) {
+        valueAsc = 0 + '%';
+      } else {
+        valueAsc = 100 + '%';
+      }
+    }
+    isAsc =
+      countDealValues - countDealValueOlds == 0
+        ? '0'
+        : countDealValues - countDealValueOlds > 0
+        ? '1'
+        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    tmp['value'] = '2';
+    tmp['count'] = countDealValues;
+    tmp['countOld'] = countDealValueOlds;
+    tmp['countAsc'] = countDealAscs; //số
+    tmp['valueAsc'] = valueAsc; // %
+    tmp['isAsc'] = isAsc;
+    this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
+    //end
+
+    //Won deals
+    countDealValues = dealCurrents.filter((x) => x.status == '3')?.length ?? 0;
+    countDealValueOlds = dealOlds.filter((x) => x.status == '3')?.length ?? 0;
+    countDealAscs = Math.abs(countDealValues - countDealValueOlds);
+    valueAsc = '0';
+    if (countDealValues > 0 && countDealValueOlds > 0) {
+      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
+    } else {
+      if (countDealValues == countDealValueOlds) {
+        valueAsc = 0 + '%';
+      } else {
+        valueAsc = 100 + '%';
+      }
+    }
+    isAsc =
+      countDealValues - countDealValueOlds == 0
+        ? '0'
+        : countDealValues - countDealValueOlds > 0
+        ? '1'
+        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    tmp['value'] = '3';
+    tmp['count'] = countDealValues;
+    tmp['countOld'] = countDealValueOlds;
+    tmp['countAsc'] = countDealAscs; //số
+    tmp['valueAsc'] = valueAsc; // %
+    tmp['isAsc'] = isAsc;
+    this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
+    //end
+
+    //Lost deals
+    countDealValues = dealCurrents.filter((x) => x.status == '5')?.length ?? 0;
+    countDealValueOlds = dealOlds.filter((x) => x.status == '5')?.length ?? 0;
+    countDealAscs = Math.abs(countDealValues - countDealValueOlds);
+    valueAsc = '0';
+    if (countDealValues > 0 && countDealValueOlds > 0) {
+      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
+    } else {
+      if (countDealValues == countDealValueOlds) {
+        valueAsc = 0 + '%';
+      } else {
+        valueAsc = 100 + '%';
+      }
+    }
+    isAsc =
+      countDealValues - countDealValueOlds == 0
+        ? '0'
+        : countDealValues - countDealValueOlds > 0
+        ? '1'
+        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    tmp['value'] = '4';
+    tmp['count'] = countDealValues;
+    tmp['countOld'] = countDealValueOlds;
+    tmp['countAsc'] = countDealAscs; //số
+    tmp['valueAsc'] = valueAsc; // %
+    tmp['isAsc'] = isAsc;
+    this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
+    //end
+
+    //Tỷ lệ chuyển đổi
+    const lstDealsIDs = leads
+      ?.map((x) => x.dealID)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    const countDealsConverts =
+      dealCurrents.filter((x) => lstDealsIDs.some((y) => y == x.recID))
+        ?.length ?? 0;
+    const countDealsConvertOlds =
+      dealOlds.filter((x) => lstDealsIDs.some((y) => y == x.recID))?.length ??
+      0;
+
+    countDealValues =
+      dealCurrents.length > 0
+        ? Math.round(countDealsConverts / dealCurrents.length) * 100
+        : 0;
+    countDealValueOlds =
+      dealOlds.length > 0
+        ? Math.round(countDealsConvertOlds / dealOlds.length) * 100
+        : 0;
+    valueAsc = '0';
+    if (countDealValues > 0 && countDealValueOlds > 0) {
+      valueAsc =
+        Math.round(
+          Math.abs(countDealValues - countDealValueOlds) / countDealValueOlds
+        ) *
+          100 +
+        '%';
+    } else {
+      if (countDealValues == countDealValueOlds) {
+        valueAsc = 0 + '%';
+      } else {
+        valueAsc = 100 + '%';
+      }
+    }
+    isAsc =
+      countDealValues - countDealValueOlds == 0
+        ? '0'
+        : countDealValues - countDealValueOlds > 0
+        ? '1'
+        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    tmp['value'] = '5';
+    tmp['count'] = countDealValues + '%';
+    tmp['countOld'] = countDealValueOlds + '%';
+    tmp['countAsc'] = 0; //số
+    tmp['valueAsc'] = valueAsc; // %
+    tmp['isAsc'] = isAsc;
+    this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
+    //end
+  }
+
+  findTmpDeals(value) {
+    return this.tmpDashBoardDeals.find((x) => x.value == value);
+  }
+
+  formatDealValues(value: number) {
+    if (value >= 1000000) {
+      return Math.round(value / 1000000).toLocaleString() + 'M';
+    } else if (value >= 1000) {
+      return Math.round(value / 1000).toLocaleString() + 'K';
+    } else {
+      return value.toLocaleString();
+    }
+  }
+  //end
+
   //sales pipe
   getDashBoardPips(deals = [], param, currentDate) {
+    const now = new Date(currentDate);
+    deals = deals.filter(
+      (x) => new Date(x.createdOn).getFullYear() == now.getFullYear()
+    );
     if (this.statusPip != null && this.statusPip.trim() != '') {
       this.lstSalesStages = [];
       this.lstSalesStatus = [];
@@ -1975,7 +2185,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.leads.filter(
                     (x) =>
-                      new Date(x.createdOn).getFullYear() - 1 ==
+                      new Date(x.createdOn).getFullYear() ==
                       now.getFullYear() - 1
                   ).length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
@@ -1989,7 +2199,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.deals.filter(
                     (x) =>
-                      new Date(x.createdOn).getFullYear() - 1 ==
+                      new Date(x.createdOn).getFullYear() ==
                       now.getFullYear() - 1
                   )?.length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
@@ -2032,15 +2242,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                         now.getFullYear() && x.status == '3'
                   )
                 );
-                tmpPerform['count'] = (Math.round(count) > 0 ?
-                  count.toFixed(1).toLocaleString()
-                   : count.toFixed(0).toLocaleString()) + (this.language == 'vn' ? ' ngày' : ' day');
+                tmpPerform['count'] =
+                  (Math.round(count) > 0
+                    ? count.toFixed(1).toLocaleString()
+                    : count.toFixed(0).toLocaleString()) +
+                  (this.language == 'vn' ? ' ngày' : ' day');
                 break;
             }
 
             let valueAsc = '0';
             if (count > 0 && countOlds > 0) {
-              valueAsc = Math.round(count / countOlds) * 100 + '%';
+              valueAsc =
+                Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
             } else {
               if (count == countOlds) {
                 valueAsc = 0 + '%';
