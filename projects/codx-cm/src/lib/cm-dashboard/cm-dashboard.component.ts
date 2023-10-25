@@ -1497,7 +1497,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         viewCrr = '1';
         break;
       case 'btReasonFail':
-        if (ele.id == this.tabActivePy) return;
+        if (ele.id == this.tabActiveReson) return;
         this.tabActiveReson = ele.id;
         viewCrr = '2';
         break;
