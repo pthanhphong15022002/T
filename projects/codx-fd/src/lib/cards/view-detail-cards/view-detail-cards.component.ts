@@ -13,6 +13,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   @Input() cardType: string = "";
   @Input() formModel: FormModel;
   @Input() ratingVLL: string = "";
+  @Input() showApproveButton: boolean = false;
 
   @Output() approve = new EventEmitter();
   @Output() reject = new EventEmitter();
@@ -46,6 +47,15 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       template: null,
     },
   ];
+  CARDTYPE_EMNUM = {
+    Commendation: '1',
+    Thankyou: '2',
+    CommentForChange: '3',
+    SuggestionImprovement: '4',
+    Share: '5',
+    Congratulation: '6',
+    Radio: '7',
+  };
   objectID: string;
   backgroundImg: string;
 
