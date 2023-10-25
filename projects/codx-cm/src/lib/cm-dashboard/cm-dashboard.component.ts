@@ -2017,56 +2017,55 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let lstPiaData = [];
     const currencyID = this.currencyID;
     const exchRate = this.exchangeRate;
-    if (lstTargetLines != null && lstTargetLines.length > 0) {
-      let now = new Date(currentDate);
-      if (param) {
-        // làm sau
-      }
-      let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
-      let sumTarget = 0;
-      for (let i = 0; i < 4; i++) {
-        const { min, max } = this.getQuarterMonthRange(quarter);
-        let year = now.getFullYear();
-        var tmp = {};
-        if (quarter === 1) {
-          quarter = 4;
-          year--;
-        } else {
-          quarter--;
-        }
-        const targetLineQuarters = lstTargetLines.filter(
-          (x) =>
-            new Date(x.startDate)?.getFullYear() === year &&
-            new Date(x.startDate)?.getMonth() + 1 >= min &&
-            new Date(x.startDate)?.getMonth() + 1 <= max
-        );
-
-        tmp['year'] = year;
-        tmp['quarter'] = quarter;
-        let target = targetLineQuarters.reduce(
-          (acc, x) =>
-            acc +
-            (currencyID !== x.currencyID
-              ? (x.target / exchRate) * x.exchangeRate
-              : x.target),
-          0
-        );
-        tmp['text'] = Math.round(target * 100) / 100;
-        sumTarget += tmp['text'];
-        const first = this.vllQuaters?.find(
-          (x) => x.value === quarter.toString()
-        );
-        if (first) {
-          tmp['x'] = `${first.text}/${year}`;
-        }
-        tmp['y'] = 0;
-
-        lstPiaData.push(tmp);
-      }
-      lstPiaData.forEach((item) => {
-        item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
-      });
+    let now = new Date(currentDate);
+    if (param) {
+      // làm sau
     }
+    let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
+    let sumTarget = 0;
+    for (let i = 0; i < 4; i++) {
+      const { min, max } = this.getQuarterMonthRange(quarter);
+      let year = now.getFullYear();
+      var tmp = {};
+      if (quarter === 1) {
+        quarter = 4;
+        year--;
+      } else {
+        quarter--;
+      }
+      const targetLineQuarters = lstTargetLines.filter(
+        (x) =>
+          new Date(x.startDate)?.getFullYear() === year &&
+          new Date(x.startDate)?.getMonth() + 1 >= min &&
+          new Date(x.startDate)?.getMonth() + 1 <= max
+      );
+
+      tmp['year'] = year;
+      tmp['quarter'] = quarter;
+      let target = targetLineQuarters.reduce(
+        (acc, x) =>
+          acc +
+          (currencyID !== x.currencyID
+            ? (x.target / exchRate) * x.exchangeRate
+            : x.target),
+        0
+      );
+      tmp['text'] = Math.round(target * 100) / 100;
+      sumTarget += tmp['text'];
+      const first = this.vllQuaters?.find(
+        (x) => x.value === quarter.toString()
+      );
+      if (first) {
+        tmp['x'] = `${first.text}/${year}`;
+      }
+      tmp['y'] = 0;
+
+      lstPiaData.push(tmp);
+    }
+    lstPiaData.forEach((item) => {
+      item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
+    });
+
     this.piedata = lstPiaData.sort((a, b) => {
       return a.year - b.year;
     });
@@ -2403,7 +2402,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           ? Math.round(this.formatMaxValue(maxinum)).toString()
           : '1000';
       this[`labelFormatQ${i}`] =
-        maxinum > 0 ? this.labelFormat(maxinum) : '${0}';
+        maxinum > 0 ? this.labelFormat(maxinum) : '${value}';
     }
   }
 
