@@ -171,11 +171,11 @@
                 class="d-flex align-items-center show-step ms-2 me-3"
               >
                 <i
-                  *ngIf="isShowElement"
+                  *ngIf="isShowSuccess"
                   class="icon-20 icon-expand_less text-primary"
                 ></i>
                 <i
-                  *ngIf="!isShowElement"
+                  *ngIf="!isShowSuccess"
                   class="icon-20 icon-expand_more text-primary"
                 ></i>
               </div>
@@ -206,7 +206,7 @@
             </div>
           </div>
 
-          <div [ngClass]="isShowElement ? 'd-block' : 'd-none'">
+          <div [ngClass]="isShowSuccess ? 'd-block' : 'd-none'">
             <div class="mt-3 ms-9">
               <div class="mb-3">
                 <codx-label
