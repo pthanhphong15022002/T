@@ -1326,6 +1326,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
+  getProductivityOwner(dataSet) {
+    this.productivityOwner = [];
+  }
 
   getOwnerTop(dataSet) {
     this.minOwners = [];
