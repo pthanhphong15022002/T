@@ -873,7 +873,7 @@
 <!-- SALE TAGET =>CMD001  templateTarget-->
 <!-- Tem TOp sale Tager -->
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="1" title="">
+  <div class="w-100 h-100 p-2" id="1" title="">
     <div class="d-flex flex-column">
       <codx-label
         class="fw-bold mb-1 fs-5"
@@ -905,7 +905,7 @@
             findTmpDeals("1")?.countAsc
           }}</span>
           <span class="fw-bold fs-6"
-            >( {{ findTmpDeals("1")?.valueAsc }} )</span
+            >({{ findTmpDeals("1")?.valueAsc }})</span
           >
         </div>
       </div>
@@ -923,7 +923,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="2" title="">
+  <div class="w-100 h-100 p-2" id="2" title="">
     <div class="d-flex flex-column">
       <codx-label
         class="fw-bold mb-1 fs-5"
@@ -955,7 +955,7 @@
             findTmpDeals("2")?.countAsc
           }}</span>
           <span class="fw-bold fs-6"
-            >( {{ findTmpDeals("2")?.valueAsc }} )</span
+            >({{ findTmpDeals("2")?.valueAsc }})</span
           >
         </div>
       </div>
@@ -973,7 +973,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="3" title="">
+  <div class="w-100 h-100 p-2" id="3" title="">
     <div class="d-flex flex-column">
       <codx-label
         class="fw-bold mb-1 fs-5"
@@ -1005,7 +1005,7 @@
             findTmpDeals("3")?.countAsc
           }}</span>
           <span class="fw-bold fs-6"
-            >( {{ findTmpDeals("3")?.valueAsc }} )</span
+            >({{ findTmpDeals("3")?.valueAsc }})</span
           >
         </div>
       </div>
@@ -1023,7 +1023,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="4" title="">
+  <div class="w-100 h-100 p-2" id="4" title="">
     <div class="d-flex flex-column">
       <codx-label
         class="fw-bold mb-1 fs-5"
@@ -1055,7 +1055,7 @@
             findTmpDeals("4")?.countAsc
           }}</span>
           <span class="fw-bold fs-6"
-            >( {{ findTmpDeals("4")?.valueAsc }} )</span
+            >({{ findTmpDeals("4")?.valueAsc }})</span
           >
         </div>
       </div>
@@ -1073,7 +1073,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="5" title="">
+  <div class="w-100 h-100 p-2" id="5" title="">
     <div class="d-flex flex-column">
       <codx-label
         class="fw-bold mb-1 fs-5"
@@ -1101,9 +1101,7 @@
             [ngClass]="getIcon(findTmpDeals('5')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6"
-            >{{ findTmpDeals("5")?.valueAsc }}</span
-          >
+          <span class="fw-bold fs-6">{{ findTmpDeals("5")?.valueAsc }}</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
@@ -1120,7 +1118,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="6" title="">
+  <div class="w-100 h-100 p-2" id="6" title="">
     <codx-label
       class="fs-5 fw-bold mb-3"
       name="lblSalesPipeline"
@@ -1199,7 +1197,7 @@
   </div>
 </ng-template>
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="7" title="">
+  <div class="w-100 h-100 p-2" id="7" title="">
     <codx-label
       class="fs-5 fw-bold mb-3"
       name="lblSalesTrend"
@@ -1208,39 +1206,42 @@
       default="Sales trend - Last 12 months"
     ></codx-label>
     <ng-container *ngIf="lstMonthsSeries?.length > 0; else noData">
-      <ejs-chart
-        style="display: block"
-        [chartArea]="chartArea"
-        [width]="'50%'"
-        id="chartcontainer"
-        [primaryXAxis]="primaryXAxisY"
-        [primaryYAxis]="primaryYAxisY"
-        [legendSettings]="legendSeri"
-        [tooltip]="toolTipSeri"
-        (textRender)="textSeriRender($event)"
-      >
-        <e-series-collection>
-          <e-series
-            [dataSource]="lstMonthsSeries"
-            type="StackingColumn"
-            xName="month"
-            yName="expected"
-            name="Doanh thu dự kiến"
-            opacity="0.75"
-            [cornerRadius]="cornerRadius"
-            columnWidth="0.4"
-            [paretoOptions]="paretoOptions"
-            width="2"
-          >
-          </e-series>
-        </e-series-collection>
-      </ejs-chart>
+      <div style="max-height: 92%; overflow: scroll">
+        <ejs-chart
+          style="display: block"
+          [chartArea]="chartArea"
+          [width]="'50%'"
+          style="height: 100%"
+          id="chartcontainer"
+          [primaryXAxis]="primaryXAxisY"
+          [primaryYAxis]="primaryYAxisY"
+          [legendSettings]="legendSeri"
+          [tooltip]="toolTipSeri"
+          (textRender)="textSeriRender($event)"
+        >
+          <e-series-collection>
+            <e-series
+              [dataSource]="lstMonthsSeries"
+              type="StackingColumn"
+              xName="month"
+              yName="expected"
+              name="Doanh thu dự kiến"
+              opacity="0.75"
+              [cornerRadius]="cornerRadius"
+              columnWidth="0.4"
+              [paretoOptions]="paretoOptions"
+              width="2"
+            >
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+      </div>
     </ng-container>
   </div>
 </ng-template>
 
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="8" title="">
+  <div class="w-100 h-100 p-2" id="8" title="">
     <codx-label
       class="fs-5 fw-bold mb-3"
       name="lblSalesTargets"
@@ -1410,7 +1411,7 @@
 
 <!-- Tem templateSaker -->
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="9" title="">
+  <div class="w-100 h-100 p-2" id="9" title="">
     <codx-label
       class="fs-5 fw-bold mb-3"
       name="lblSakerQuarters"
@@ -1455,7 +1456,7 @@
 
 <!-- Tem TOp sale performan -->
 <ng-template #templateTarget>
-  <div class="w-100 h-100" id="10" title="">
+  <div class="w-100 h-100 p-2" id="10" title="">
     <codx-label
       class="fs-5 fw-bold mb-3"
       name="lblSalePerformance"
