@@ -12,6 +12,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  DataRequest,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -787,11 +788,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.tmpProcessDefault = res;
         }
       });
-    this.cache.combobox('CMDealStatus').subscribe((cbx) => {
-      if (cbx) {
-        this.lstStatusCodes = cbx;
+
+    this.cmSv.loadComboboxData('CMDealStatus', 'CM').subscribe((res) => {
+      if(res){
+        this.lstStatusCodes = res;
       }
     });
+
     this.cache.valueList('CRM042').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.vllStatusDeals = vll?.datas;
@@ -1658,6 +1661,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
+
+      if (this.lstStatusCodes != null) {
+        for (var item of this.lstStatusCodes) {
+          var tmp = {};
+          tmp['name'] = item.StatusName;
+          tmp['value'] = item.StatusID;
+          const countDeals =
+            deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
+          tmp['quantity'] = countDeals;
+          if (countDeals > 0) {
+            this.lstSalesStatusCodes.push(tmp);
+          }
+        }
+      }
+
       this.lstAlls =
         this.statusPip == '1'
           ? JSON.parse(JSON.stringify(this.lstSalesStages))
@@ -2003,9 +2021,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                         now.getFullYear() && x.status == '3'
                   )
                 );
-                tmpPerform['count'] =
-                  count.toLocaleString() +
-                  (this.language == 'vn' ? ' ngày' : ' day');
+                tmpPerform['count'] = (Math.round(count) > 0 ?
+                  count.toFixed(1).toLocaleString()
+                   : count.toFixed(0).toLocaleString()) + (this.language == 'vn' ? ' ngày' : ' day');
                 break;
             }
 
@@ -2032,7 +2050,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return list;
   }
 
-  getCountDate(leads, deals)  {
+  getCountDate(leads, deals) {
     let count = 0;
     if (deals != null && deals.length > 0) {
       for (var item of deals) {
@@ -2057,7 +2075,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
-      return Math.floor(count / deals.length);
+      return count / deals.length;
     }
 
     return count;
