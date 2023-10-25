@@ -28,7 +28,7 @@
           <codx-label [formModel]="form.formModel" fiedName="BusinessLineID">
           </codx-label>
           <codx-input
-          #codxInput
+            #codxInput
             [disabled]="action == 'edit'"
             [formModel]="form.formModel"
             [crrValue]="businessLineID"
@@ -82,22 +82,20 @@
             <button
               type="button"
               class="btn btn-sm btn-icon btn-light-primary"
-              (click)="openPopup()"
+              (click)="openPopup(controlShare)"
             >
               <span class="icon-person_add_alt_1 icon-16"></span>
             </button>
-            <ng-container *ngIf="isPopup">
-              <codx-combobox-popup
-                [comboboxName]="'Users'"
-                [field]="'owner'"
+            <ng-template #controlShare let-dialogControl>
+              <codx-share
+                [dialog]="dialogControl"
                 [multiple]="true"
-                [width]="700"
-                [height]="600"
-                [value]=""
-                (clickSave)="eventApply($event)"
+                (eventApply)="eventApply($event)"
+                [listName]="'CRM052'"
               >
-              </codx-combobox-popup>
-            </ng-container>
+              </codx-share>
+            </ng-template>
+
           </div>
         </div>
         <ng-container>

@@ -44,9 +44,13 @@ export class WorkspaceComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/"+data.url)
-    this.codxWsService.functionID = data.functionID;
-    this.codxWsService.listBreadCumb.push(data);
+    if(data?.functionID == "GPTTA") this.openPopupUploadFile();
+    else
+    {
+      this.codxService.navigate("","/"+data.url)
+      this.codxWsService.functionID = data.functionID;
+      this.codxWsService.listBreadCumb.push(data);
+    }
   }
 
   //#region  Unitet chat GPT
