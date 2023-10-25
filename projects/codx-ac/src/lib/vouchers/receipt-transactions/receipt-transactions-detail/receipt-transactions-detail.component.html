@@ -63,11 +63,23 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1">
       <div class="float-left">
-        <div class="d-flex align-items-center">
+        <div *ngIf="itemSelected.subType == '0301'" class="d-flex align-items-center">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM1" [formModel]="formModel">
           </codx-label>
-          <span *ngIf="itemSelected?.diM1" class="text-gray-600">{{itemSelected?.diM1}}</span>
+          <span *ngIf="itemSelected?.diM1" class="text-gray-600">{{itemSelected?.diM1Name}}</span>
           <span *ngIf="(itemSelected?.diM1 == '' || itemSelected?.diM1 == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
+        </div>
+        <div *ngIf="itemSelected.subType == '0302'" class="d-flex align-items-center me-6">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="ObjectID" [formModel]="formModel">
+          </codx-label>
+          <span *ngIf="itemSelected?.objectID" class="text-gray-600">{{itemSelected?.objectName}}</span>
+          <span *ngIf="(itemSelected?.objectID == '' || itemSelected?.objectID == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
+        </div>
+        <div *ngIf="itemSelected.subType == '0302'" class="d-flex align-items-center me-6">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="Requester" [formModel]="formModel">
+          </codx-label>
+          <span *ngIf="itemSelected?.requester" class="text-gray-600">{{itemSelected?.requesterName}}</span>
+          <span *ngIf="(itemSelected?.requester == '' || itemSelected?.requester == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
         </div>
       </div>
       <div class="d-flex align-self-center">
@@ -77,11 +89,20 @@
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1">
-      <div class="d-flex align-items-top mb-1">
+      <div *ngIf="itemSelected.subType == '0301'"  class="d-flex align-items-top mb-1">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM2" [formModel]="formModel">
         </codx-label>
-        <span *ngIf="itemSelected?.diM2" class="text-gray-600">{{itemSelected?.diM2}}</span>
+        <span *ngIf="itemSelected?.diM2" class="text-gray-600">{{itemSelected?.diM2Name}}</span>
         <span *ngIf="(itemSelected?.diM2 == '' || itemSelected?.diM2 == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
+      </div>
+      <div *ngIf="itemSelected.subType == '0302'"  class="d-flex align-items-top mb-1">
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="RequestDate" [formModel]="formModel">
+        </codx-label>
+        <span #requestDate [innerHTML]="
+            itemSelected?.requestDate
+                  | formatvalue : formModel : 'requestDate' : requestDate
+                  | async
+              " class="text-gray-600"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1">
@@ -149,7 +170,9 @@
 <!-- End: template listdetail Footer-->
 
 <ng-template #tabVoucher let-data>
-
+  <ng-container *ngIf="itemSelected">
+    <receipt-transactions-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></receipt-transactions-table>
+  </ng-container>
 </ng-template>
 
 <ng-template #tabAcctTrans let-data>
