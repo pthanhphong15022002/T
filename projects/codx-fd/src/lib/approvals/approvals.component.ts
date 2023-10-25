@@ -139,8 +139,13 @@ export class ApprovalsComponent extends UIComponent {
           ['FDParameters', item.cardType]
         )
         .subscribe((res) => {
+          const dataValueJson = res.dataValue;
+          if (dataValueJson) {
+            const dataValue = JSON.parse(dataValueJson);
+            this.activeCoins = dataValue?.ManualCoins || '0';
+            this.activeKudos = dataValue?.ManualPoints || '0';
+          }
           this.openPopupApproval(item);
-
         });
     }
   }
