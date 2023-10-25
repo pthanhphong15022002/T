@@ -791,7 +791,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
     this.cmSv.loadComboboxData('CMDealStatus', 'CM').subscribe((res) => {
-      if(res){
+      if (res) {
         this.lstStatusCodes = res;
       }
     });
@@ -1157,10 +1157,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
   changeMySales(datas) {
-    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai
+    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai //data[3] : target bus year
     let dataSetDeals = datas[0];
     let dataSetLead = datas[1];
     let dataReason = datas[2];
+    let dataTargetYear = datas[3];
     if (dataSetDeals?.lenght == 0) return;
     this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
@@ -1171,13 +1172,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
     this.getChartConversionRate(dataSetLead, dataSetDeals);
-    this.getBusinessLine(dataSetDeals);
+    this.getBusinessLine(dataSetDeals, dataTargetYear);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
     this.getReasonChart(dataReason);
   }
 
-  getBusinessLine(dataSet) {
+  getBusinessLine(dataSet, dataTargetYear) {
     if (!dataSet || dataSet?.length == 0) return;
     let businesLine = this.groupBy(dataSet, 'businessLineID');
     if (businesLine) {
@@ -1197,9 +1198,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           ...obj,
           ...this.getChartBussinessLine(businesLine[key]),
         });
+
+        let target =
+          dataTargetYear?.filter((x) => x.businessLineID == key)[0]?.target ??
+          0;
         this.dataStatisticTarget.push({
           ...obj,
-          ...this.getDataStatisticTarget(businesLine[key]),
+          ...this.getDataStatisticTarget(businesLine[key], target),
         });
         this.palette.push(color);
       }
@@ -1270,15 +1275,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return { chartDataSuscess: chartDataSuscess, chartDataFail: chartDataFail };
   }
 
-  getDataStatisticTarget(dataSet) {
+  getDataStatisticTarget(dataSet, target) {
     let totalTarget = 0;
     let totalDealValue = 0;
+
     if (Array.isArray(dataSet)) {
       dataSet.forEach((x) => {
         console.log(x.dealValue + '  ' + x.exchangeRate);
         totalDealValue += x.dealValue * x.exchangeRate;
-        ///target line ?? targer hoi Khanh
-        totalTarget += Math.random() * 10000000; //tesst
+        ///target  ?? targer Khanh keeu lay theo nam
+        totalTarget = target;
       });
     }
     return {
@@ -1384,11 +1390,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   //Loi cai chuyen doi ko nằm trong khoảng time tìm kiếm
   getChartConversionRate(dataLeads, dataDeals) {
-    // EntityName = "CM_Deals",
-    // Value = "4",
-    // Type = "Status",
-    // Name = vllListData?.FirstOrDefault(x => x.Value == "4")?.Text,
-    // Quantity = quatityDealsCVSuc
     let objectLead = {
       value: '1',
       name: this.getNamePy('1'),
@@ -2033,9 +2034,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                         now.getFullYear() && x.status == '3'
                   )
                 );
-                tmpPerform['count'] = (Math.round(count) > 0 ?
-                  count.toFixed(1).toLocaleString()
-                   : count.toFixed(0).toLocaleString()) + (this.language == 'vn' ? ' ngày' : ' day');
+                tmpPerform['count'] =
+                  (Math.round(count) > 0
+                    ? count.toFixed(1).toLocaleString()
+                    : count.toFixed(0).toLocaleString()) +
+                  (this.language == 'vn' ? ' ngày' : ' day');
                 break;
             }
 
