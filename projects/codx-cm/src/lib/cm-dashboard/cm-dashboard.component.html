@@ -609,13 +609,9 @@
   </div>
 </ng-template> -->
 
-<!-- chart pyramid -->
+<!-- chart pyramid  style="height: 100% !important; overflow: hidden"-->
 <ng-template #templateDeals>
-  <div
-    class="w-100 h-100"
-    id="9"
-    style="height: 100% !important; overflow: hidden"
-  >
+  <div class="w-100 h-100" id="9">
     <codx-label
       class="fs-5 fw-bold"
       name="lblConversionRate"
@@ -672,7 +668,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 100% !important">
+      <div style="">
         <div #viewStatus>
           <ejs-accumulationchart
             id="pyramidcontainer"
@@ -697,7 +693,7 @@
                 [gapRatio]="gapRatio"
                 [emptyPointSettings]="emptyPointSettings"
                 width="60%"
-                height="100%"
+                height="50%"
                 [explode]="explode"
                 [dataLabel]="dataLabel"
                 type="Funnel"
@@ -731,7 +727,7 @@
                 [gapRatio]="gapRatio"
                 [emptyPointSettings]="emptyPointSettings"
                 width="60%"
-                height="100%"
+                height="50%"
                 [explode]="explode"
                 [dataLabel]="dataLabel"
                 type="Funnel"
@@ -914,7 +910,8 @@
           "
           (click)="viewPips(item.value)"
         >
-          <div [id]="'isActive' + item"
+          <div
+            [id]="'isActive' + item"
             [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
           >
             <button

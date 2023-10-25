@@ -1157,11 +1157,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
   changeMySales(datas) {
-    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai //data[3] : target bus year
+    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai //data[3] : target bus year //data[4] :tmpProcessDefault
     let dataSetDeals = datas[0];
     let dataSetLead = datas[1];
     let dataReason = datas[2];
     let dataTargetYear = datas[3];
+    let tmpProcessDefault = datas[4];
     if (dataSetDeals?.lenght == 0) return;
     this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
@@ -1171,7 +1172,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.countSuccess = dataSuccess?.length;
     let dataFails = dataSetDeals.filter((x) => x.status == '5');
     this.countFail = dataFails?.length;
-    this.getChartConversionRate(dataSetLead, dataSetDeals);
+    this.getChartConversionRate(dataSetLead, dataSetDeals, tmpProcessDefault);
     this.getBusinessLine(dataSetDeals, dataTargetYear);
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
@@ -1389,7 +1390,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
   }
   //Loi cai chuyen doi ko nằm trong khoảng time tìm kiếm
-  getChartConversionRate(dataLeads, dataDeals) {
+  getChartConversionRate(dataLeads, dataDeals, tmpProcessDefault) {
     let objectLead = {
       value: '1',
       name: this.getNamePy('1'),
@@ -1413,6 +1414,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       if (x.dealID) dealIDs.push(x.dealID);
     });
     let dealsOfLead = dataDeals?.filter((x) => dealIDs.includes(x.recID));
+    if (!dealsOfLead || dealsOfLead?.length == 0) return;
     let leadToDeals = {
       value: '3',
       name: this.getNamePy('3'),
@@ -1447,6 +1449,48 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
     };
     this.dataSourcePyStatus.unshift(dealsSuc);
+
+    //theo quy trinh ma dinh -stage
+    //da chuyen thanh co hoi
+    if (!tmpProcessDefault) return;
+    let dealsOfDf = dealsOfLead?.filter(
+      (x) => x.processID == tmpProcessDefault.processID
+    );
+    if (!dealsOfDf || dealsOfDf?.length == 0) return;
+    let dealsDf = {
+      value: '3',
+      name: tmpProcessDefault.processName,
+      quantity: dealsOfDf?.length ?? 0,
+      items: [],
+    };
+    let itemsDf = [];
+
+    let refIns = tmpProcessDefault?.referentsSteps;
+    let refIDList = dealsOfDf.map((x) => x.refID);
+
+    if (Array.isArray(refIns) && refIns?.length > 0) {
+      refIns.forEach((ref, index) => {
+        let listIns = ref.referentsInstances;
+
+        let item = {
+          value: index + 1,
+          name: ref.stepName,
+          quantity: listIns.filter((x) => refIDList.includes(x))?.length ?? 0,
+        };
+        items.push(item);
+      });
+    }
+
+    dealsDf.items = itemsDf;
+    this.dataSourcePyStage.unshift(dealsDf);
+
+    //da thanh cong
+    let dealsSucDf = {
+      value: '4',
+      name: this.getNamePy('4'),
+      quantity: dealsOfLead?.filter((x) => x.status == '3')?.length ?? 0,
+    };
+    this.dataSourcePyStage.unshift(dealsSucDf);
   }
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
