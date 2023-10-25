@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="w-100" *ngFor="let param of data.data | keyvalue">
+          <tr class="w-100" *ngFor="let param of data">
             <td>
               <div
                 class="e-appointment-1 py-2 ps-3"
@@ -30,9 +30,9 @@
                   border-left-style: solid;
                 "
                 [ngStyle]="{
-                  borderLeftColor: param?.value.ShowColor,
-                  color: param?.value.ShowColor,
-                  backgroundColor: param?.value.ShowBackground
+                  borderLeftColor: param.ShowColor,
+                  color: param.ShowColor,
+                  backgroundColor: param.ShowBackground
                 }"
               >
                 <div class="d-flex align-items-center">
@@ -41,7 +41,7 @@
                       [showText]="true"
                       [showBgColor]="false"
                       name="WP006"
-                      [value]="param?.key"
+                      [value]="param.Template.TransType"
                   /></span>
                 </div>
               </div>
@@ -51,7 +51,7 @@
                 <codx-colorpicker
                   field="color"
                   mode="Picker"
-                  [value]="param?.value.ShowColor"
+                  [value]="param.ShowColor"
                   (valueChange)="valueChange($event)"
                 ></codx-colorpicker>
               </div>
@@ -61,7 +61,7 @@
                 <codx-colorpicker
                   field="backgroundColor"
                   mode="Picker"
-                  [value]="param?.value.ShowBackground"
+                  [value]="param.ShowBackground"
                   (valueChange)="valueChange($event)"
                 ></codx-colorpicker>
               </div>
@@ -70,8 +70,8 @@
               <div class="d-flex justify-content-center">
                 <codx-input
                   type="checkbox"
-                  [field]="param?.key"
-                  [checked]="param?.value.ShowEvent === '1'"
+                  [field]="param.Template.TransType"
+                  [checked]="param.ShowEvent === '1'"
                   labelPosition="Before"
                   [disabled]="false"
                   class="test-check"

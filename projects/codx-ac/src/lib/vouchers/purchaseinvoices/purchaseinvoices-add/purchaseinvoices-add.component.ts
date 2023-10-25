@@ -70,7 +70,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     private acService: CodxAcService,
     private notification: NotificationsService,
     private journalService: JournalService,
-    purchaseInvoiceService: PurchaseInvoiceService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -265,6 +264,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         Object.assign(oLine, res);
+        oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
       }
@@ -468,6 +468,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
     oLine.note = this.formPurchaseInvoices.data.note;
+    oLine = this.genFixedDims(oLine);
     return oLine;
   }
 
@@ -772,6 +773,17 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
   }
 
+  genFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
+    return line;
+  }
+
   /**
    * *Hàm set validate cho form
    */
@@ -788,22 +800,22 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
+   saveValidationLine(data:any){
     let lsterror = [];
 
     // xử lí trường hợp call api để check validate
-    let error = await new Promise((resolve, reject) => {
-      this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValidateAsync', [
-        data
-      ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-        if (res?.error) {
-          resolve({ field: res?.field, msgCode: res?.msgCode });
-        } else {
-          resolve(null);
-        }
-      });
-    });
-    if(error) lsterror.push(error);
+    // let error =  new Promise((resolve, reject) => {
+    //   this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValidateAsync', [
+    //     data
+    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+    //     if (res?.error) {
+    //       resolve({ field: res?.field, msgCode: res?.msgCode });
+    //     } else {
+    //       resolve(null);
+    //     }
+    //   });
+    // });
+    // if(error) lsterror.push(error);
     return lsterror;
   }
 

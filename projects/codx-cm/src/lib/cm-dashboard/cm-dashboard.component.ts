@@ -12,6 +12,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  DataRequest,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -411,6 +412,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   vllPy: any;
   dataReasonsSuscess = [];
   dataReasonsFails = [];
+  tabActiveReson = 'btReasonSucess';
 
   //end
   constructor(
@@ -720,35 +722,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  clickButton(id) {
-    switch (id) {
-      case 'btnMin':
-        this.isMax = false;
-        break;
-      case 'btnMax':
-        this.isMax = true;
-        break;
-      case 'btSuccess':
-        this.isSuccess = true;
-        break;
-      case 'btFail':
-        this.isSuccess = false;
-        break;
-      case 'btBussinessLine':
-        this.isBussinessLine = true;
-        break;
-      case 'btIndustries':
-        this.isBussinessLine = false;
-        break;
-      case 'btStatus':
-        this.isStatus = true;
-        break;
-      case 'btStage':
-        this.isStatus = false;
-        break;
-    }
-    this.detectorRef.detectChanges();
-  }
+  // clickButton(id) {
+  //   switch (id) {
+  //     case 'btnMin':
+  //       this.isMax = false;
+  //       break;
+  //     case 'btnMax':
+  //       this.isMax = true;
+  //       break;
+  //     case 'btSuccess':
+  //       this.isSuccess = true;
+  //       break;
+  //     case 'btFail':
+  //       this.isSuccess = false;
+  //       break;
+  //     case 'btBussinessLine':
+  //       this.isBussinessLine = true;
+  //       break;
+  //     case 'btIndustries':
+  //       this.isBussinessLine = false;
+  //       break;
+  //     case 'btStatus':
+  //       this.isStatus = true;
+  //       break;
+  //     case 'btStage':
+  //       this.isStatus = false;
+  //       break;
+  //   }
+  //   this.detectorRef.detectChanges();
+  // }
   getHeightChart() {
     let viewChart = document.getElementById('6');
     let chartBusinessLinesButton = document.getElementById(
@@ -787,11 +789,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.tmpProcessDefault = res;
         }
       });
-    this.cache.combobox('CMDealStatus').subscribe((cbx) => {
-      if (cbx) {
-        this.lstStatusCodes = cbx;
+
+    this.cmSv.loadComboboxData('CMDealStatus', 'CM').subscribe((res) => {
+      if(res){
+        this.lstStatusCodes = res;
       }
     });
+
     this.cache.valueList('CRM042').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.vllStatusDeals = vll?.datas;
@@ -1365,7 +1369,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let reasonsFails = this.groupBy(listRsFails, 'reasonName');
       if (reasonsFails) {
         for (let key in reasonsFails) {
-          let rsSucess = {
+          let rsFails = {
             reasonName: key,
             quantity: reasonsFails[key]?.length,
             percentage: (
@@ -1373,7 +1377,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               100
             ).toFixed(2),
           };
-          this.dataReasonsFails.push(rsSucess);
+          this.dataReasonsFails.push(rsFails);
         }
       }
     }
@@ -1490,6 +1494,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.tabActivePy = ele.id;
         viewCrr = '2';
         break;
+      case 'btReasonSucess':
+        if (ele.id == this.tabActiveReson) return;
+        this.tabActiveReson = ele.id;
+        viewCrr = '1';
+        break;
+      case 'btReasonFail':
+        if (ele.id == this.tabActiveReson) return;
+        this.tabActiveReson = ele.id;
+        viewCrr = '2';
+        break;
     }
     if (viewCrr == '1') {
       !obj.chart2.view.classList.contains('d-none') &&
@@ -1517,8 +1531,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
         obj.chart2.temp.element.classList.contains('d-none') &&
           obj.chart2.temp.element.classList.remove('d-none');
+
+        obj.chart2.temp.refresh();
       }
-      obj.chart2.temp.refresh();
     }
     this.detectorRef.detectChanges();
   }
@@ -1658,6 +1673,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
+
+      if (this.lstStatusCodes != null) {
+        for (var item of this.lstStatusCodes) {
+          var tmp = {};
+          tmp['name'] = item.StatusName;
+          tmp['value'] = item.StatusID;
+          const countDeals =
+            deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
+          tmp['quantity'] = countDeals;
+          if (countDeals > 0) {
+            this.lstSalesStatusCodes.push(tmp);
+          }
+        }
+      }
+
       this.lstAlls =
         this.statusPip == '1'
           ? JSON.parse(JSON.stringify(this.lstSalesStages))
@@ -2003,9 +2033,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                         now.getFullYear() && x.status == '3'
                   )
                 );
-                tmpPerform['count'] =
-                  count.toLocaleString() +
-                  (this.language == 'vn' ? ' ngày' : ' day');
+                tmpPerform['count'] = (Math.round(count) > 0 ?
+                  count.toFixed(1).toLocaleString()
+                   : count.toFixed(0).toLocaleString()) + (this.language == 'vn' ? ' ngày' : ' day');
                 break;
             }
 
@@ -2032,7 +2062,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return list;
   }
 
-  getCountDate(leads, deals)  {
+  getCountDate(leads, deals) {
     let count = 0;
     if (deals != null && deals.length > 0) {
       for (var item of deals) {
@@ -2057,7 +2087,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           }
         }
       }
-      return Math.floor(count / deals.length);
+      return count / deals.length;
     }
 
     return count;
