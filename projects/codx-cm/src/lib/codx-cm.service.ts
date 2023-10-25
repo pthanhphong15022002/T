@@ -424,6 +424,32 @@ export class CodxCmService {
       );
   }
 
+  loadComboboxData(
+    comboboxName: string,
+    service: string,
+    predicates?: string,
+    dataValues?: string
+  ): Observable<any[]> {
+    const dataRequest = new DataRequest();
+    dataRequest.comboboxName = comboboxName;
+    dataRequest.pageLoading = false;
+    dataRequest.predicates = predicates ?? '';
+    dataRequest.dataValues = dataValues ?? '';
+    return this.api
+      .execSv(
+        service,
+        'ERM.Business.Core',
+        'DataBusiness',
+        'LoadDataCbxAsync',
+        [dataRequest]
+      )
+      .pipe(
+        //tap((p) => console.log(p)),
+        map((p) => JSON.parse(p[0]))
+        //tap((p) => console.log(p))
+      );
+  }
+
   initCache() {
     return this.api.exec('BS', 'ProvincesBusiness', 'InitCacheLocationsAsync');
   }
@@ -1481,6 +1507,28 @@ export class CodxCmService {
       [bussinessID, year]
     );
   }
+
+
+  getUserByListDepartmentID(listDepID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetUserByListDepartmentIDAsync',
+      listDepID
+    );
+  }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );
+  }
+
+
   //#region
 
   getOneObject(recID, className) {

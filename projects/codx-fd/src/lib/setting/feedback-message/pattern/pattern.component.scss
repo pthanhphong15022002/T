@@ -32,6 +32,7 @@
 
   .card-img {
     height: 150px !important;
+    background-size: 100% auto;
   }
 
   .icon-check {
@@ -58,12 +59,10 @@
   background-size: cover;
   background-position: center;
 }
-.gift-card.w-100px.h-150px{
-  width: 100px;
-  height: 150px;
+.gift-card{
   overflow: hidden;
   img{
-    min-width: 100px;
+    min-width: 125px;
     height: 150px;
     width: auto;
   }

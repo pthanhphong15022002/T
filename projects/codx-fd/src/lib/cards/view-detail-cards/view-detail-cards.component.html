@@ -10,18 +10,12 @@
 <ng-template #body>
     <ng-container *ngIf="data">
         <div class="w-100 d-flex flex-column" id="erm_content">
-            <div *ngIf="data.approveStatus == '0'" class="d-flex" style="justify-content: right;">
-                <!-- <div class="d-flex align-items-center me-2 icon-16 mx-2 icon-check text-primary">
-                    <span class="text-nowrap">Duyệt</span>
-                </div>
-                <div class="d-flex align-items-center me-2 icon-16 mx-2 icon-close text-dark">
-                    <span class="text-nowrap">Từ chối</span>
-                </div> -->
+            <div *ngIf="showApproveButton && data.approveStatus == '0'" class="d-flex" style="justify-content: right;">
                 <div (click)="approve.emit(data)">
                     <span class="icon-16 mx-2 icon-check" style="color:green"></span>
                     <codx-label formName="" name="lblreject" default="Duyệt"></codx-label>
                 </div>
-                <div (click)="approve.emit(data)">
+                <div (click)="reject.emit(data)">
                     <span class="icon-16 mx-2 icon-close" style="color:red"></span>
                     <codx-label formName="" name="lblreject" default="Từ chối"></codx-label>
                 </div>
@@ -49,7 +43,8 @@
                                         class="symbol-image icon-money-1 h-25px me-2" />
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center mt-3">
+                            <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio"
+                                class="d-flex align-items-center justify-content-center mt-3">
                                 <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users"
                                     [width]="30">
                                 </codx-img>
@@ -62,6 +57,8 @@
                                 </codx-img>
                             </div>
                             <div class="content-card text-feed mt-6 pe-1">
+                                <div *ngIf="data?.cardType == CARDTYPE_EMNUM.Radio" class="text-primary fw-bold mb-2">
+                                    <codx-label formName="" name="lblSituation" default="Nội dung"></codx-label></div>
                                 <div class="modal-card-sms" id="situation" [className]="showmore?'show-more':''"
                                     [style.color]="data.textColor" [innerHTML]="data.situation">
                                 </div>
@@ -93,7 +90,7 @@
                                 </div>
                             </div>
                         </ng-container>
-                        <div class="mt-6">
+                        <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio" class="mt-6">
                             <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblReciver"
                                     default="Người nhận"></codx-label></div>
                             <ng-container *ngIf="data.receiver">
@@ -111,6 +108,17 @@
                                         </div>
                                     </div>
                                 </div>
+                            </ng-container>
+                        </div>
+                        <div *ngIf="data?.cardType == CARDTYPE_EMNUM.Radio" class="mt-6">
+                            <div class="text-primary fw-bold mb-4">
+                                <codx-label formName="" name="lblShare" default="Gửi đến"></codx-label>
+                            </div>
+                            <ng-container *ngIf="data.listShare">
+                                <ng-container *ngFor="let item of data.listShare">
+                                    <ng-container
+                                        *ngTemplateOutlet="templateShare; context:{$implicit:item}"></ng-container>
+                                </ng-container>
                             </ng-container>
                         </div>
                         <ng-container *ngIf="data.industry">
@@ -153,7 +161,7 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div class="mt-6">
+                        <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio" class="mt-6">
                             <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblSituation"
                                     default="Nội dung"></codx-label></div>
                             <div class="modal-card-sms mb-5 text-gray-700">
@@ -162,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-6">
+                <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio" class="mt-6">
                     <div class="text-primary fw-bold mb-4">
                         <codx-label formName="" name="lblShare" default="Chia sẻ"></codx-label>
                     </div>

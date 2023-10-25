@@ -32,7 +32,7 @@
                     default="Tải lên hồ sơ"
                 ></codx-label>
             </button>
-            <button type="button" class="btn btn-warning ms-2" (click)="openForm()" [disabled]="disabledBtn">
+            <button type="button" class="btn btn-success ms-2" (click)="openForm()" [disabled]="disabledBtn">
                 <codx-label
                     default="Đánh giá hồ sơ"
                 ></codx-label>
@@ -65,8 +65,8 @@
         <tr class="table-secondary border-bottom">
           <th class="w-20 fw-bold">Thông tin cá nhân</th>
           <th class="w-20 fw-bold">Liên hệ</th>
-          <th class="fw-bold" [ngClass]="cellExvalueate?'w-20':'w-60'">Kinh nghiệm</th>
-          <th class="w-40 fw-bold" *ngIf="cellExvalueate">Đánh giá</th>
+          <th class="w-30 fw-bold">Kinh nghiệm</th>
+          <th class="w-30 fw-bold ">Đánh giá</th>
         </tr>
       </thead>
       <tbody class="overflow-auto">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                   </td>
-                  <td [ngClass]="item.result?'w-20':'w-60'">
+                  <td [ngClass]="'w-30'">
                     <div class="d-flex flex-column">
                         <div class="d-flex align-items-center">
                             <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Thâm niên"></codx-label>:</span>
@@ -144,21 +144,31 @@
                         </div> -->
                     </div>
                   </td>
-                  <td class="w-40" *ngIf="item.result">
-                    <div class="d-flex flex-column">
-                        <div class="d-flex flex-column">
-                            <codx-label default="Kết quả" class="fw-bold text-nowrap"></codx-label> 
-                            <span class="text-start">{{item.result.evaluate}}</span>
-                        </div>
-                        <div class="d-flex flex-column border-top">
-                            <codx-label default="Điểm mạnh" class="fw-bold text-nowrap"></codx-label> 
-                            <span class="text-start">{{item.result.advantage}}</span>
-                        </div>
-                        <div class="d-flex flex-column border-top">
-                            <codx-label default="Điểm yếu" class="fw-bold text-nowrap"></codx-label> 
-                            <ng-container *ngIf="item.result.weakness , else emptyLabel"><span>{{item.result.weakness}}</span></ng-container>
-                        </div>
-                    </div>
+                  <td class="w-30">
+                    <ng-container *ngIf="item?.result , else tmpStatus">
+                      <div class="d-flex flex-column">
+                          <span class="badge rounded-pill w-100px" [ngClass]="item?.result?.status == 'Phù hợp' ? 'bg-success' : 'bg-danger'">{{item?.result?.status}}</span>
+                          <ng-container *ngIf="item?.result?.evaluate">
+                            <div class="d-flex flex-column mt-2">
+                                <codx-label default="Kết quả" class="fw-bold text-nowrap"></codx-label> 
+                                <span class="text-start">{{item.result.evaluate}}</span>
+                            </div>
+                            <div class="d-flex flex-column border-top">
+                                <codx-label default="Điểm mạnh" class="fw-bold text-nowrap"></codx-label> 
+                                <span class="text-start">{{item.result.advantage}}</span>
+                            </div>
+                            <div class="d-flex flex-column border-top">
+                                <codx-label default="Điểm yếu" class="fw-bold text-nowrap"></codx-label> 
+                                <ng-container *ngIf="item.result.weakness , else emptyLabel"><span>{{item.result.weakness}}</span></ng-container>
+                            </div>
+                          </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #tmpStatus>
+                      <span class="badge rounded-pill bg-secondary">Mới tạo</span>
+                    </ng-template>
+                    <ng-container>
+                    </ng-container>
                   </td>
                 </tr>
               </ng-container>

@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DialogData, DialogRef, UIComponent } from 'codx-core';
+import { DataRequest, DialogData, DialogRef, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-evouchers',
@@ -18,6 +18,9 @@ export class EVouchersComponent extends UIComponent {
   columnsGrid: any[] = [];
 
   data: any[] = [];
+
+  request = new DataRequest();
+
   constructor(
     private inject: Injector,
     @Optional() dt?: DialogData,
@@ -27,9 +30,15 @@ export class EVouchersComponent extends UIComponent {
     this.dialog = dialog;
   }
   onInit(): void {
+    this.setting();
     this.loadData();
   }
 
+  setting()
+  {
+    this.request.page = 1;
+    this.request.pageSize = 20;
+  }
   loadData() {
     this.api
       .execSv<any>('FD', 'FD', 'VouchersBusiness', 'GotITProductList', [
@@ -38,42 +47,13 @@ export class EVouchersComponent extends UIComponent {
         0,
         'asc',
         0,
-        5,
-        1,
+        this.request.pageSize,
+        this.request.page,
+        true
       ])
       .subscribe((data) => {
         if (data) {
-          console.log(data);
-          this.columnsGrid = [
-            {
-              field: 'productId',
-              headerText: 'Mã quà tặng',
-              textAlign: 'center',
-              width: 150,
-            },
-            {
-              field: 'productNm',
-              headerText: 'Tên quà tặng',
-              textAlign: 'center',
-            },
-            {
-              field: 'brandNm',
-              headerText: 'Thương hiệu',
-              textAlign: 'center',
-            },
-            {
-              field: 'productImg',
-              headerText: 'Hình ảnh',
-              template: this.productImg,
-              textAlign: 'center',
-            },
-          ];
           this.data = data.productList;
-
-          // this.changeEvoucherSkeletonLoading = false;
-          // if (this.eVoucherGotIt.length == 0) {
-          //   this.emptyEvoucherData = true;
-          // }
         }
       });
   }

@@ -29,6 +29,10 @@
                 padding: 10px;
             }
         }
+        tr:hover
+        {
+            background-color: var(--primary-lightest);
+        }
         display: block;
         height: calc(100vh - 120px);
         width: 100%;
