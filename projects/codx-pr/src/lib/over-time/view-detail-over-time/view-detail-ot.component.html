@@ -1,6 +1,6 @@
 <div
   class="empty-data"
-  *ngIf="dataService && dataService.data.length == 0 && !itemSelected?.taskID"
+  *ngIf="dataService && dataService.data?.length == 0 && !itemSelected?.taskID"
 >
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
@@ -33,7 +33,7 @@
           <div class="me-3">
             <codx-img
               [objectId]="itemSelected?.emp.employeeID"
-              [objectName]="itemSelected.emp.employeeName"
+              [objectName]="itemSelected?.emp.employeeName"
               objectType="HR_Employees"
               [width]="50"
             >
@@ -43,10 +43,10 @@
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column">
                 <div class="fw-bold fs-6 text-dark codx-text-overflow-1line">
-                  {{ itemSelected.emp.employeeName }}
+                  {{ itemSelected?.emp.employeeName }}
                 </div>
                 <div class="text-gray-500 me-4 mb-1">
-                  {{ itemSelected.emp.positionName }}
+                  {{ itemSelected?.emp.positionName }}
                 </div>
                 <ng-container>
                   <div class="d-flex align-items-center">

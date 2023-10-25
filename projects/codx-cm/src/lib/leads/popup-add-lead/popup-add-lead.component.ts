@@ -408,15 +408,15 @@ export class PopupAddLeadComponent
       this.lead[field] = $event;
     }
   }
-  valueChangeOwner($event, view) {
+  async valueChangeOwner($event, view) {
       if (view === this.viewOwnerDefault) {
-        if($event.data) {
-          let ownerName = '';
-          this.owner = $event?.data;
-          ownerName = $event?.component?.itemsSelected[0]?.UserName;
-          this.searchOwner('1', 'O', '0', this.owner, ownerName);
+        if($event?.data && $event?.data !== "") {
+            let ownerName = '';
+            this.owner = $event?.data;
+            ownerName = $event?.component?.itemsSelected[0]?.UserName;
+            this.searchOwner('1', 'O', '0', this.owner, ownerName);
         }
-        else if ($event === null || $event === '') {
+        else if ($event === null || $event === '' || $event === "") {
           this.deleteOwner('1', 'O', '0', this.lead.owner,'owner');
         }
       } else if (view === this.viewOwnerProcess) {
@@ -463,26 +463,27 @@ export class PopupAddLeadComponent
       if (index == -1) {
         this.addOwner(owner, ownerName, roleType, objectType);
       }
-      this.lead.owner = owner;
     }
   }
 
   deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
-    let index = this.lead?.permissions.findIndex(
-      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
-    if(index != -1) {
-      if(field === 'owner' ){
-        this.lead.owner = null;
-        this.owner= null;
-        this.lead.salespersonID = null;
+    if(this.lead?.permissions && this.lead?.permissions.length > 0 ) {
+      let index = this.lead?.permissions.findIndex(
+        (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+      if(index != -1) {
+        if(field === 'owner' ){
+          this.lead.owner = null;
+          this.owner= null;
+        }
+        else if (field === 'salespersonID') {
+          this.lead.salespersonID = null;
+        }else if (field === 'consultantID') {
+          this.lead.consultantID = null;
+        }
+        this.lead.permissions.splice(index, 1);
       }
-      else if (field === 'salespersonID') {
-        this.lead.salespersonID = null;
-      }else if (field === 'consultantID') {
-        this.lead.consultantID = null;
-      }
-      this.lead.permissions.splice(index, 1);
     }
+
   }
 
   addOwner(owner, ownerName, roleType, objectType) {
@@ -668,16 +669,14 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionEdit) {
       lead.stepID = this.listInstanceSteps[0]?.stepID;
       lead.nextStep = this.listInstanceSteps[1]?.stepID;
-      lead.status = this.owner ? '1' : '0';
+      lead.status = this.owner ? '1' : '15';
       lead.refID = instance.recID;
       lead.startDate = null;
     }
   }
 
   async promiseSaveFile() {
-    if (this.owner) {
-      this.lead.owner = this.owner;
-    }
+    this.lead.owner = this.owner;
     this.lead.applyProcess &&
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
@@ -705,10 +704,11 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.lead.datas = instance?.datas;
         this.lead.status = instance.status;
         this.addPermission(instance.permissions);
         this.onAdd();
-        this.isLoading && this.dialog.close(instance);
+     //   this.isLoading && this.dialog.close(instance);
       }
     });
   }
@@ -716,8 +716,11 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
+        this.lead.datas = instance?.datas;
         this.lead.status = instance.status;
-        this.isLoading && this.dialog.close(instance);
+        this.lead.permissions = this.lead.permissions.filter(x=>x.memberType != '2');
+        this.addPermission(instance?.permissions);
+       // this.isLoading && this.dialog.close(instance);
         this.onEdit();
       }
     });
