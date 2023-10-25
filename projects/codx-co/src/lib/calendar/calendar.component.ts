@@ -13,6 +13,7 @@ import {
   CacheService,
   CallFuncService,
   DataRequest,
+  DataService,
   DialogModel,
   FormModel,
   NotificationsService,
@@ -42,6 +43,7 @@ import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-t
 import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
 import { CodxCoService } from '../codx-co.service';
 import { isElementAccessExpression } from 'typescript';
+import { Data } from '@syncfusion/ej2-angular-grids';
 
 
 @Component({
@@ -89,24 +91,47 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   toDate:Date = new Date();
   lstEvents:any[] = [];
   lstResources:any[] = [];
-  listOrgUnit:any[] = [];
   checked:string = "1";
   isLoading:boolean = false;
   selectedDate:Date = null;
   sysMoreFunc:any[] = [];
+  id:string = "";
+
   startDate:Date = new Date(moment().startOf('month').format('YYYY-MM-DD hh:mm'))
   endDate:Date = new Date(moment().endOf('month').format('YYYY-MM-DD hh:mm'));
-
   //speedDial
   speedDialItems: SpeedDialItemModel[] = [];
   //
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
   @ViewChild('calendarCenter') calendarCenter: CalendarCenterComponent;
+  @ViewChild('resourceTemplate') resourceTemplate: TemplateRef<any>;
+
+  hrRequest:DataService = null;
+  resourceModel:any = {
+    // Name: 'employeeName',
+    // Field: 'employeeID',
+    // IdField: 'employeeID',// field mapping vs event Schedule
+    // TextField: 'employeeName',
+    // Title: 'employeeName',
+    Name: 'name',
+    Field: 'field',
+    IdField: 'idField',// field mapping vs event Schedule
+    TextField: 'textField',
+    Title:  'title'
+  };
+  eventModel:any = {
+    id: 'recID',
+    subject: { name: 'title' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'recID' },// field mapping vs resource Schedule
+    status: 'transType',
+  };
   //#endregion 
   
   constructor(
-    injector: Injector,
+    private injector: Injector,
     private coService: CodxCoService,
     private cacheService: CacheService,
     private notificationsService: NotificationsService,
@@ -121,7 +146,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.assignTaskFM = new FormModel();
     this.user = this.authStore.get();
   }
-
   onInit(): void {
     this.router.params.subscribe((param:any) => {
       this.funcID = param["funcID"];
@@ -129,6 +153,20 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.getListCalendars();
     this.getSettingValue();
     this.getListEventFunc();
+    this.cache.functionList('HRT01')
+    .subscribe((func:any) => {
+      if(func)
+      {
+        this.hrRequest = new DataService(this.injector);
+        this.hrRequest.predicate = func.predicate;
+        this.hrRequest.dataValue = func.dataValue;
+        this.hrRequest.service = "HR";
+        this.hrRequest.page = 1;
+        this.hrRequest.pageSize = 20;
+        this.hrRequest.idField = "OrgUnitID";
+        this.hrRequest.selector = "OrgUnitID;OrgUnitName";
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -201,9 +239,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.assignTaskFM?.gridViewName
       );
     });
-
-    
-    
+    var itv = setInterval(() => {
+      if(this.ejCalendar)
+      {
+        document.querySelector(".e-footer-container").firstChild.addEventListener("click",() => {
+          this.ejCalendar.value = new Date();
+        });
+        clearInterval(itv);
+      }
+    },1000);    
   }
 
   // get list event function
@@ -229,6 +273,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         ['WPCalendars'])
         .subscribe((res: any) => {
         if (res?.length > 0) {
+          let arrParam = [];
           res.forEach((element) => {
             let obj = JSON.parse(element);
             this.statusColor.push({
@@ -236,6 +281,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               borderColor: obj.ShowColor,
               text: obj.Template.TransType,
               status: obj.Template.TransType,
+              textColor: obj.TextColor ?? "#1F1717" // textColor chưa có thiết lập - gắn để test
             });
             this.dResources[obj.Template.TransType] = {
               color: obj.ShowColor,
@@ -244,10 +290,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               text: obj.Template.TransType,
               status: obj.Template.TransType,
             }
-            this.calendarParams.push(obj);
-            this.settings[obj.Template.TransType] = obj.Predicate;
             this.dPredicate[obj.Template.TransType] = obj.Predicate;
+            arrParam.push(obj);
           });
+          this.calendarParams = [...arrParam];
           this.getListEvents();
           this.detectorRef.detectChanges();
         }
@@ -257,7 +303,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   // get list Calendars
   getListCalendars() {
   this.api
-    .execSv('SYS','ERM.Business.AD', 'PermissionsBusiness', 'GetCalendarAllowedAsync',[this.funcID])
+    .execSv('SYS','ERM.Business.SYS', 'FunctionListBusiness', 'GetCalendarAllowedAsync',[this.funcID])
     .subscribe((res: any) => {
       if(res)
       {
@@ -268,36 +314,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  // get lits HR_OrganizationUnits
-  getDataOrgUnit(){
-    if(this.listOrgUnit?.length > 0)
-      return;
-    this.cache.functionList('HRT01')
-    .subscribe((func:any) => {
-      if(func){
-        var request = new DataRequest();
-        request.funcID = 'HRT01';
-        request.formName  = func.formName;
-        request.gridViewName  = func.gridViewName;
-        request.entityName  = func.entityName;
-        request.entityPermission = func.entityPermission;
-        request.predicate = func.predicate;
-        request.dataValue = func.dataValue;
-        request.pageLoading = false;
-        this.api.execSv('HR','ERM.Business.HR','HRBusiness','GetOrgUnitByCOAsync',[request])
-        .subscribe((res:any) => {
-          this.listOrgUnit = res;
-          this.getListEvents();
-          this.getListResource();
-          this.detectorRef.detectChanges();
-        });
+  lstUserGroups:any[] = [];
+  // Get list AD_UserGroup
+  getListUserGroup(){
+    this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetUserGroupByCOAsync")
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.lstUserGroups = res[0];
+        this.id = this.lstUserGroups[0].groupID;
+        this.getListGroupMember(this.id);
+        this.getListEvents();
+        this.detectorRef.detectChanges();
       }
     });
   }
-
-  // get list HR_Employes by OrgUnitID
-  getListResource(orgUnitID:string = ""){
-    this.api.execSv("HR","HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
+  //get list group member
+  getListGroupMember(groupID=""){
+    this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetGroupMemberByCOAsync",[groupID])
     .subscribe((res:any) => {
       if(res)
       {
@@ -306,34 +340,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-
-  onCreate() {
-    let footerElement: HTMLElement = document.getElementsByClassName(
-      'e-icon-container'
-    )[0] as HTMLElement;
-    let btn: HTMLElement = document.createElement('button');
-    let proxy = this;
-
-    //remove footer of ejs-calendar
-    document
-      .querySelector('ejs-calendar')
-      .removeChild(document.querySelector('.e-footer-container'));
-
-    //creates the custom element for setToday button
-    btn.className = 'e-btn e-today e-flat e-css';
-    btn.setAttribute('type', 'button');
-    btn.textContent = 'Today';
-    footerElement.appendChild(btn);
-    footerElement.insertBefore(btn, footerElement.children[1]);
-
-    // custom click handler to update the value property with null values.
-    document
-      .querySelector('.e-icon-container .e-today')
-      .addEventListener('click', function () {
-        proxy.ejCalendar.value = new Date();
-      });
-  }
-
 
   // select day in calendar
   changeDay(args){
@@ -357,8 +363,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.getListEvents();
     this.detectorRef.detectChanges();
   }
-  
-  
 
   // show/hide events
   valueChange(e) {
@@ -369,6 +373,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     if(value == "0")
     {
       this.lstEvents = this.lstEvents.filter((x:any)=> x.transType !== transType); 
+      //this.ejCalendar.value = this.startDate;
+      // this.ejCalendar.refresh()
       this.detectorRef.detectChanges();
     }      
     else
@@ -376,91 +382,67 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       let predicate = this.dPredicate[transType];
       switch(transType){
         case"WP_Notes":
-          this.getEventNotes(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventNotes(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;              
-              }
+              if(this.ejCalendar)
+                this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
             }
           });
           break;
         case"TM_MyTasks":
-          this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;
-              }
+              if(this.ejCalendar)
+                this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
-
             }
           });
           break;
         case"CO_Meetings":
-          this.getEventMeetings(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventMeetings(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;
-              }
+              if(this.ejCalendar)
+                this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
-
             }
           });
           break;
         case"EP_BookingRooms":
-          this.getEventBooking(this.calendarID,predicate,"1",this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventBooking(this.calendarID,"1",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;
-              }
+              if(this.ejCalendar)
+                this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
-
             }
           });
           break;
         case"EP_BookingCars":
-          this.getEventBooking(this.calendarID,predicate,"2",this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventBooking(this.calendarID,"2",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;
-              }
+             // this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
-
             }
           });
           break;
         case"TM_AssignTasks":
-          this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+          this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
             if(res?.length > 0)
             {
               this.lstEvents = this.lstEvents.concat(res);
-              if (this.ejCalendar) 
-              {
-                this.ejCalendar.refresh();
-                //this.ejCalendar.value = this.startDate;
-              }
+              if(this.ejCalendar)
+                this.ejCalendar.value = this.startDate;
               this.detectorRef.detectChanges();
-
             }
           });
           break;
@@ -483,6 +465,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     );
   }
 
+  //
   convertStrToDate(eleDate) {
     if (eleDate) {
       let str = eleDate.title.split(',');
@@ -495,35 +478,49 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   //render day cell ej2Calendar
   renderDayCell(args:any) {
-    let arrEvent = this.lstEvents.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
-    if (arrEvent.length > 0)
+    let eventDays = this.lstEvents.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
+    if (eventDays.length > 0)
     {
-      arrEvent = arrEvent.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
-      arrEvent.forEach((e:any) => {
+      eventDays = eventDays.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
+      eventDays.forEach((e:any) => {
         let span: HTMLElement;
         span = document.createElement('span');
         span.setAttribute('class', 'e-icons highlight');
         span.setAttribute('style', `color:${this.dResources[e.transType].color}`);
         addClass([args.element], ['special', 'e-day']);
+        if((args.element as HTMLElement).children.length > 3)
+        {
+
+        }
         args.element.appendChild(span);
         return;
       });
     }
   }
 
+  // change calendarID
   changeCalendarID(id:string) {
     this.calendarID = id;
-    if(id == "COT01") // lịch công ty
-      this.getDataOrgUnit();
-    else
-      this.lstResources = [];
+    switch(id){
+      case "COT01": // Lịch công ty
+        break;
+      case "COT02": // Lịch nhóm
+        this.lstResources = [];
+        this.getListUserGroup();
+        break;
+      case "COT03": // Lịch cá nhân
+        this.id = "";
+        this.lstResources = [];
+        this.getListEvents();
+        break;
+    }
+        
     this.detectorRef.detectChanges();
   }
 
   // get event source
   getListEvents(){
     this.lstEvents = [];
-    this.detectorRef.detectChanges();
     this.calendarParams.forEach((element) => {
       if(element.ShowEvent === "1")
       {
@@ -531,62 +528,74 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         switch(element.Template.TransType)
         {
           case"WP_Notes":
-            this.getEventNotes(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventNotes(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
           case"TM_MyTasks":
-            this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
           case"CO_Meetings":
-            this.getEventMeetings(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventMeetings(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
           case"EP_BookingRooms":
-            this.getEventBooking(this.calendarID,predicate,"1",this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventBooking(this.calendarID,"1",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
           case"EP_BookingCars":
-            this.getEventBooking(this.calendarID,predicate,"2",this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventBooking(this.calendarID,"2",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
           case"TM_AssignTasks":
-            this.getEventTasks(this.calendarID,predicate,this.startDate,this.endDate).subscribe((res:any) => {
+            this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
               if(res?.length > 0)
               {
                 this.lstEvents = [...this.lstEvents.concat(res)];
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.detectorRef.detectChanges();
+                if(this.ejCalendar)
+                {
+                  this.ejCalendar.value = new Date();
+                }
               }
             });
             break;
@@ -596,30 +605,34 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // get event TM
-  getEventTasks(funcID:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("TM","ERM.Business.TM", "TaskBusiness", "GetCalendarEventsAsync", [funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
-  }
-  // get event CO
-  getEventMeetings(funcID:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",[funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
-  }
-  // get event WP
-  getEventNotes(funcID:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync", [funcID,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
-  }
-  // get event EP
-  getEventBooking(funcID:string,predicate:string,resourceType:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("EP","ERM.Business.EP", "BookingsBusiness", "GetCalendarEventsAsync", [funcID,predicate,resourceType,fromDate,toDate]).pipe(map((res:any) => {
+  getEventTasks(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("TM","ERM.Business.TM", "TaskBusiness", "GetCalendarEventsAsync", [funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
       return res;
     }));
   }
 
+  // get event CO
+  getEventMeetings(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",[funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+
+  // get event WP
+  getEventNotes(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync", [funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+
+  // get event EP
+  getEventBooking(funcID:string,resourceType:string,id:string,predicate:string,fromDate:Date,toDate:Date){
+    return this.api.execSv("EP","ERM.Business.EP", "BookingsBusiness", "GetCalendarEventsAsync", [funcID,resourceType,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
+      return res;
+    }));
+  }
+
+  //on Filter
   onFiltering(e: FilteringEventArgs) {
     let query = new Query();
     query =
@@ -628,7 +641,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         : query;
     e.updateData(this.lstCalendars, query);
   }
-
 
   // add event
   addEvent(args: SpeedDialItemEventArgs) {
@@ -697,58 +709,99 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // add booking car
   addBookingCar() {
-    this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user,"EP4","EP4E"])
-    .subscribe((res:boolean) => {
-      if(res)
+    this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT21','EP_Bookings'])
+    .subscribe((model:any) => {
+      if(model?.data)
       {
-        let option = new SidebarModel();
-        option.FormModel = this.carFM;
-        option.Width = '800px';
-        this.callfc
-          .openSide(
-            CodxAddBookingCarComponent,
-            [this.carFG?.value, 'SYS01', this.addCarTitle, null, null, false],
-            option
-          ).closed.subscribe((event:any) => {
-            debugger
-            if(event){
-
-            }
-          });
+        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
+        .subscribe((res:boolean) => {
+          let option = new SidebarModel();
+          option.FormModel = this.carFM;
+          option.Width = '800px';
+          this.callfc
+            .openSide(
+              CodxAddBookingCarComponent,
+              [model.data, 'SYS01', this.addCarTitle, null, null, false,res],
+              option
+            ).closed.subscribe((res2:any) => {
+              debugger
+              if(res2?.event)
+              {
+                let eventModel = {
+                  transType: "EP_BookingCars",
+                  functionID:"EPT2",
+                  refID: res2.event.refID,
+                  transID: res2.event.recID,
+                  calendarDate: res2.event.startDate,
+                  startDate: res2.event.startDate,
+                  endDate: res2.event.endDate,
+                  startTime: res2.event.startDate,
+                  endTime: res2.event.endDate,
+                  status: "Status|vll:EP022",
+                  title: res2.event.title,
+                  description: res2.event.memo,
+                  memo: "ResourceID | cbx:EP_Cars"
+                };
+                this.lstEvents.push(eventModel);
+                this.lstEvents = [...this.lstEvents];
+                this.detectorRef.detectChanges();
+              }
+              else
+                this.notificationsService.notify("Lỗi đặt xe");
+            });
+        });
       }
       else
-      {
-        this.notificationsService.notifyCode('SYS032');
-      }
+        this.notificationsService.notify("Lỗi đặt xe");
     });
-    
   }
+
   //add booking room
   addBookingRoom() {
-    this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user,"EP4","EP4E"])
-    .subscribe((res:boolean) => {
-      if(res)
+    this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT11','EP_Bookings'])
+    .subscribe((model:any) => {
+      if(model?.data)
       {
-        let option = new SidebarModel();
-        option.FormModel = this.roomFM;
-        option.Width = '800px';
-        this.callfc
-        .openSide(
-          CodxAddBookingRoomComponent,
-          [this.roomFG?.value, 'SYS01', this.addRoomTitle, null, null, false],
-          option
-        ).closed.subscribe((event:any) => {
-            debugger
-            if(event)
-            {
-
-            }
-          });
+        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
+        .subscribe((res:boolean) => {
+          let option = new SidebarModel();
+          option.FormModel = this.carFM;
+          option.Width = '800px';
+          this.callfc
+            .openSide(
+              CodxAddBookingCarComponent,
+              [model.data, 'SYS01', this.addRoomTitle, null, null,res],
+              option
+            ).closed.subscribe((res2:any) => {
+              debugger
+              if(res2?.event)
+              {
+                let eventModel = {
+                  transType: "EP_BookingRooms",
+                  functionID:"EPT2",
+                  refID: res2.event.refID,
+                  transID: res2.event.recID,
+                  calendarDate: res2.event.startDate,
+                  startDate: res2.event.startDate,
+                  endDate: res2.event.endDate,
+                  startTime: res2.event.startDate,
+                  endTime: res2.event.endDate,
+                  status: "Status|vll:EP022",
+                  title: res2.event.title,
+                  description: res2.event.memo,
+                  memo: "ResourceID | cbx:EP_Rooms"
+                };
+                this.lstEvents.push(eventModel);
+                this.lstEvents = [...this.lstEvents];
+                this.detectorRef.detectChanges();
+              }
+              else
+                this.notificationsService.notify("Lỗi đặt phòng");
+            });
+        });
       }
       else
-      {
-        this.notificationsService.notifyCode('SYS032');
-      }
+        this.notificationsService.notify("Lỗi đặt phòng");
     });
   }
 
@@ -833,7 +886,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                 memo : res2.event.location,
                 icon : "icon - location_on"
               };
-              debugger
               this.lstEvents.push(eventModel);
               this.lstEvents = [...this.lstEvents];
               this.detectorRef.detectChanges();
@@ -846,6 +898,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.notificationsService.notify("Lỗi thêm sự kiện");
       });
   }
+
   // add TM_Tasks
   addMyTask() {
     let option = new SidebarModel();
@@ -871,24 +924,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           obj,
           option
         ).closed.subscribe((res2:any) => {
-          debugger
           if(res2.event)
           {
+            let task = res2.event[0];
             let eventModel = {
               transType: "TM_MyTasks",
               functionID: "TMT0201",
-              transID: res2.event.RecID,
-              calendarDate: res2.event.DueDate,
-              startDate: res2.event.StartDate,
-              endDate: res2.event.EndDate,
-              startTime: res2.event.StartDate,
-              endTime: res2.event.EndDate,
-              status: res2.event.Status,
-              priority: res2.event.Priority,
-              title: res2.event.TaskName,
-              description: res2.event.TaskName,
-              alert: res2.event.IsOverdue,
-              memo: res2.event.DueDate
+              transID: task.recID,
+              calendarDate: task.dueDate,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              startTime: task.startDate,
+              endTime: task.endDate,
+              status: task.status,
+              priority: task.priority,
+              title: task.taskName,
+              description: task.taskName,
+              alert: task.isOverdue,
+              memo: task.dueDate
             };
             this.lstEvents.push(eventModel);
             this.lstEvents = [...this.lstEvents];
@@ -902,6 +955,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.notificationsService.notify("Lỗi thêm công việc");
     });
   }
+
   // add TM_Tasks Assign Task
   addAssignTask() {
     let option = new SidebarModel();
@@ -925,24 +979,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           obj,
           option
         ).closed.subscribe((res2:any) => {
-          debugger
           if(res2.event)
           {
+            let task = res2.event[0];
             let eventModel = {
               transType: "TM_AssignTasks",
               functionID: "TMT0204",
-              transID: res2.event.RecID,
-              calendarDate: res2.event.DueDate,
-              startDate: res2.event.StartDate,
-              endDate: res2.event.EndDate,
-              startTime: res2.event.StartDate,
-              endTime: res2.event.EndDate,
-              status: res2.event.Status,
-              priority: res2.event.Priority,
-              title: res2.event.TaskName,
-              description: res2.event.TaskName,
-              alert: res2.event.IsOverdue,
-              memo: res2.event.DueDate
+              transID: task.recID,
+              calendarDate: task.dueDate,
+              startDate: task.startDate,
+              endDate: task.endDate,
+              startTime: task.startDate,
+              endTime: task.endDate,
+              status: task.status,
+              priority: task.priority,
+              title: task.taskName,
+              description: task.taskName,
+              alert: task.isOverdue,
+              memo: task.dueDate
             };
             this.lstEvents.push(eventModel);
             this.lstEvents = [...this.lstEvents];
@@ -956,14 +1010,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.notificationsService.notify("Lỗi thêm giao việc");
     });
   }
-
-  selectOrg(orgUnitID:string){
-    this.api.execSv("HR","HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
-    .subscribe((res:any) => {
-      this.lstResources = res ? res[0] : [];
-    });
-  }
-
 
   // date select change
   dateSelectChange(event:any){
@@ -987,5 +1033,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         return;
       }
     }
+  }
+
+  // selected HR_OrganziUnits
+  selectOrganizationUnit(event = null){
+    this.id = event.data.OrgUnitID;
+    this.api.execSv("HR","ERM.Business.HR","HRBusiness","GetEmployeeByCOAsync","")
+    .subscribe((res:any) => 
+    { 
+      let data = res ? res[0] : [];
+      this.lstResources = [...data];
+      this.getListEvents();
+      this.detectorRef.detectChanges();
+    });
+  }
+
+  //select AD_UserGroup
+  selectUserGroup(item:any){
+    this.id = item.groupID;
+    this.getListGroupMember(item.groupID);
   }
 }

@@ -70,7 +70,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     private acService: CodxAcService,
     private notification: NotificationsService,
     private journalService: JournalService,
-    purchaseInvoiceService: PurchaseInvoiceService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -265,6 +264,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         Object.assign(oLine, res);
+        oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
       }
@@ -468,6 +468,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
     oLine.note = this.formPurchaseInvoices.data.note;
+    oLine = this.genFixedDims(oLine);
     return oLine;
   }
 
@@ -772,6 +773,17 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
   }
 
+  genFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
+    return line;
+  }
+
   /**
    * *Hàm set validate cho form
    */
@@ -784,27 +796,43 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   }
 
   /**
-   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * *Hàm check validate trước khi save line (cashpayment)
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
-    let lsterror = [];
+  beforeSaveRowPurchase(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridPurchaseInvoice.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
+      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
+      //   event.cancel = true;
+      //   return;
+      // }
+    }
+  }
 
-    // xử lí trường hợp call api để check validate
-    let error = await new Promise((resolve, reject) => {
-      this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValidateAsync', [
-        data
-      ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
-        if (res?.error) {
-          resolve({ field: res?.field, msgCode: res?.msgCode });
-        } else {
-          resolve(null);
-        }
-      });
-    });
-    if(error) lsterror.push(error);
-    return lsterror;
+  /**
+   * *Hàm check validate trước khi save line (VATInvoice)
+   * @param data 
+   * @returns 
+   */
+  beforeSaveRowVATInvoice(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridVatInvoices.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
+        this.eleGridVatInvoices.showErrorField('unitPrice','E0730');
+        event.cancel = true;
+        return;
+      }
+    }
   }
 
   @HostListener('click', ['$event']) //? focus out grid
