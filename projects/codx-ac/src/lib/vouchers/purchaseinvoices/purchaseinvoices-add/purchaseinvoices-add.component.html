@@ -401,7 +401,7 @@
     <codx-gridview-v2 #eleGridPurchaseInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
       [autoFitColumns]="false" [formName]="fmPurchaseInvoicesLines.formName"
       [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [hideMoreFunc]="true"
-      [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0" [saveValidator]="saveValidationLine"
+      [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowPurchase($event)"
       (gridInit)="beforeInitGridPurchaseInvoices($event)" [dataValues]="formPurchaseInvoices?.data?.recID" service="AC"
       [editOnClick]="true" (eventAction)="onActionGridPurchaseInvoice($event)" (cellChanged)="valueChangeLine($event)"
       (actionCompleted)="onActionGridPurchaseInvoice($event)" rowNoField="rowNo"></codx-gridview-v2>
@@ -430,7 +430,8 @@
         [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" [showEmptyRecord]="false" [editOnClick]="true"
         predicates="TransID=@0" gridLines="Both" [autoFitColumns]="false" [dataValues]="formPurchaseInvoices?.data?.recID"
         [hideMoreFunc]="true" service="AC" (eventAction)="onActionGridVatInvoice($event)"
-        (cellChanged)="valueChangeLineVATInvoices($event)" (actionCompleted)="onActionGridVatInvoice($event)">
+        (beforeSaveRow)="beforeSaveRowVATInvoice($event)" (cellChanged)="valueChangeLineVATInvoices($event)"
+        (actionCompleted)="onActionGridVatInvoice($event)">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
