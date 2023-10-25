@@ -72,7 +72,8 @@
                         [crrValue]="form.controls['industry'].value" (valueChange)="valueChange($event)">
                     </codx-input> -->
                     
-                    <codx-input ControlName="industry" [formModel]="dialog.formModel" [Group]="form">
+                    <codx-input ControlName="industry" [formModel]="dialog.formModel" [Group]="form" 
+                        (valueChange)="valueChange($event)" field="industry">
                     </codx-input>
                 </div>
                 <div class="form-group">

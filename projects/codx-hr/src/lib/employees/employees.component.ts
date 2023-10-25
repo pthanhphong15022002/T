@@ -228,6 +228,12 @@ export class EmployeesComponent extends UIComponent {
       }
     }
   }
+
+  //departmentname: "Trung tâm DXS"
+  //orgunitID: "T02"
+  //departmentID: "D08"
+  //companyID: "C01"
+
   // edit
   edit(event: any, data: any) {
     if (event && data) {

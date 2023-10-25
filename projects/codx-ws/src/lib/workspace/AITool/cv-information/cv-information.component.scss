@@ -1,0 +1,47 @@
+.ws-table-cv
+{
+    thead
+    {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    tr
+    {
+        th
+        {
+            background: white;
+            padding: 10px;
+        }
+    }
+    tbody
+    {
+        tr
+        {
+            border-bottom: solid 1px #E1E6E7;
+            line-height: 25px;
+            display: table;
+            width: 100%;
+            height: 50px;
+            table-layout: fixed;
+            td
+            {
+                padding: 10px;
+            }
+        }
+        display: block;
+        height: calc(100vh - 120px);
+        width: 100%;
+    }
+    margin-bottom: 0 !important;
+}
+.w-5
+{
+    width: 5%;
+}
+.ws-empty-data
+{
+    position: absolute;
+    top: 36%;
+    left: 5%;
+}

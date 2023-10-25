@@ -339,7 +339,8 @@ export class PopupAddDealComponent
     this.deal.permissions.push(permission);
   }
   addPermission(permissionDP) {
-    if (permissionDP?.length > 0 && permissionDP) {
+    if (permissionDP && permissionDP?.length > 0 ) {
+      this.deal.permissions = this.deal?.permissions ? this.deal.permissions : [];
       for (let item of permissionDP) {
         this.deal.permissions.push(this.copyPermission(item));
       }
@@ -464,7 +465,7 @@ export class PopupAddDealComponent
     this.deal.owner = this.owner;
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
-    this.executeSaveData();
+  this.executeSaveData();
   }
 
   async executeSaveData() {

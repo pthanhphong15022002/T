@@ -183,3 +183,24 @@ ejs-bulletchart {
     width: 100%;
   }
 }
+.view-switch .btn{
+  background-color:var(--primary-lighter) !important;
+}
+
+.cm-bg-primary .btn{
+  background-color: var(--primary) !important;
+  color: var(--primary-lightest);
+}
+.cm-rounded-pill-left .btn{
+  border-top-right-radius: 0!important;
+  border-bottom-right-radius: 0!important;
+}
+.cm-rounded-pill-right .btn{
+  border-top-left-radius: 0!important;
+  border-bottom-left-radius: 0!important;
+}
+
+.cm-rounded-pill-center .btn{
+  border-right: 1px!important;
+  border-left: 1px!important;
+}
