@@ -40,6 +40,7 @@ import { CodxBookingService } from './codx-booking.service';
 import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
 import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
+import { EP_BookingInputParam } from './codx-booking.model';
 
 @Component({
   selector: 'codx-booking',
@@ -320,104 +321,105 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.funcIDName = funcList?.customName?.toString()?.toLowerCase();
         this.runMode = funcList?.runMode;
         this.detectorRef.detectChanges();
-      }
-    });
-    this.codxBookingService.getFormModel(this.funcID).then((res) => {
-      if (res) {
-        this.formModel = res;
-      }
-    });
-    switch (this.crrEntityName) {
-      case EPCONST.ENTITY.R_Bookings:
-        this.resourceType = EPCONST.VLL.ResourceType.Room;
-        this.categoryIDProcess = 'ES_EP001';
-        break;
-      case EPCONST.ENTITY.C_Bookings:
-        this.resourceType = EPCONST.VLL.ResourceType.Car;
-        this.categoryIDProcess = 'ES_EP002';
-        break;
-
-      case EPCONST.ENTITY.S_Bookings:
-        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
-        this.categoryIDProcess = 'ES_EP003';
-        break;
-      case EPCONST.ENTITY.S_Distribution:
-        this.resourceType = EPCONST.VLL.ResourceType.Stationery;
-        this.categoryIDProcess = 'ES_EP003';
-        this.isAllocateStationery = true;
-        break;
-    }
-    this.codxShareService.getSettingValueWithOption('F','EPParameters').subscribe((res) => {
-      if (res) {
-        let listSetting = res;
-        let stationerySetting_1 = listSetting.filter(
-          (x) =>
-            x.category == '1' &&
-            x.transType == EPCONST.PARAM.EPStationeryParameters
-        );
-        if (stationerySetting_1?.length > 0) {
-          let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
-          //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP
-          this.autoApproveItem =
-            setting?.AutoApproveItem != null
-              ? setting?.AutoApproveItem
-              : EPCONST.APPROVALRULE.NotHaved; //KTra tự duyệt và cấp phát VPP khi đặt phòng
-        }
-        let epSetting_4 = listSetting.filter(
-          (x) => x.category == '4' && x.tranType == null
-        );
-        if (epSetting_4?.length > 0) {
-          let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
-          let roomSetting_4 = listEPSetting.filter(
-            (x) => x.FieldName == EPCONST.ES_CategoryID.Room
-          );
-          let carSetting_4 = listEPSetting.filter(
-            (x) => x.FieldName == EPCONST.ES_CategoryID.Car
-          );
-          let stationerySetting_4 = listEPSetting.filter(
-            (x) => x.FieldName == EPCONST.ES_CategoryID.Stationery
-          );
-          this.stationeryAR =
-            stationerySetting_4?.length > 0 &&
-            stationerySetting_4[0]?.ApprovalRule != null
-              ? stationerySetting_4[0]?.ApprovalRule
-              : EPCONST.APPROVALRULE.Haved;
-          switch (this.resourceType) {
-            case EPCONST.VLL.ResourceType.Room:
-              if (roomSetting_4?.length > 0) {
-                this.approvalRule =
-                  roomSetting_4[0]?.ApprovalRule != null
-                    ? roomSetting_4[0]?.ApprovalRule
-                    : EPCONST.APPROVALRULE.Haved;
-              }
-              break;
-            case EPCONST.VLL.ResourceType.Car:
-              if (carSetting_4?.length > 0) {
-                this.approvalRule =
-                  carSetting_4[0]?.ApprovalRule != null
-                    ? carSetting_4[0]?.ApprovalRule
-                    : EPCONST.APPROVALRULE.Haved;
-              }
-              break;
-            case EPCONST.VLL.ResourceType.Stationery:
-              if (stationerySetting_4?.length > 0) {
-                this.approvalRule =
-                  stationerySetting_4[0]?.ApprovalRule != null
-                    ? stationerySetting_4[0]?.ApprovalRule
-                    : EPCONST.APPROVALRULE.Haved;
-              }
-              break;
+        this.codxBookingService.getFormModel(this.funcID).then((res) => {
+          if (res) {
+            this.formModel = res;
           }
+        });
+        switch (this.crrEntityName) {
+          case EPCONST.ENTITY.R_Bookings:
+            this.resourceType = EPCONST.VLL.ResourceType.Room;
+            this.categoryIDProcess = 'ES_EP001';
+            break;
+          case EPCONST.ENTITY.C_Bookings:
+            this.resourceType = EPCONST.VLL.ResourceType.Car;
+            this.categoryIDProcess = 'ES_EP002';
+            break;
+    
+          case EPCONST.ENTITY.S_Bookings:
+            this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+            this.categoryIDProcess = 'ES_EP003';
+            break;
+          case EPCONST.ENTITY.S_Distribution:
+            this.resourceType = EPCONST.VLL.ResourceType.Stationery;
+            this.categoryIDProcess = 'ES_EP003';
+            this.isAllocateStationery = true;
+            break;
+        }
+        this.codxShareService.getSettingValueWithOption('F','EPParameters').subscribe((res) => {
+          if (res) {
+            let listSetting = res;
+            let stationerySetting_1 = listSetting.filter(
+              (x) =>
+                x.category == '1' &&
+                x.transType == EPCONST.PARAM.EPStationeryParameters
+            );
+            if (stationerySetting_1?.length > 0) {
+              let setting = JSON.parse(stationerySetting_1[0]?.dataValue);
+              //this.autoComfirm = setting?.AutoConfirm != null ? setting?.AutoConfirm : EPCONST.APPROVALRULE.NotHaved;//KTra tự duyệt và cấp phát VPP
+              this.autoApproveItem =
+                setting?.AutoApproveItem != null
+                  ? setting?.AutoApproveItem
+                  : EPCONST.APPROVALRULE.NotHaved; //KTra tự duyệt và cấp phát VPP khi đặt phòng
+            }
+            let epSetting_4 = listSetting.filter(
+              (x) => x.category == '4' && x.tranType == null
+            );
+            if (epSetting_4?.length > 0) {
+              let listEPSetting = JSON.parse(epSetting_4[0]?.dataValue);
+              let roomSetting_4 = listEPSetting.filter(
+                (x) => x.FieldName == EPCONST.ES_CategoryID.Room
+              );
+              let carSetting_4 = listEPSetting.filter(
+                (x) => x.FieldName == EPCONST.ES_CategoryID.Car
+              );
+              let stationerySetting_4 = listEPSetting.filter(
+                (x) => x.FieldName == EPCONST.ES_CategoryID.Stationery
+              );
+              this.stationeryAR =
+                stationerySetting_4?.length > 0 &&
+                stationerySetting_4[0]?.ApprovalRule != null
+                  ? stationerySetting_4[0]?.ApprovalRule
+                  : EPCONST.APPROVALRULE.Haved;
+              switch (this.resourceType) {
+                case EPCONST.VLL.ResourceType.Room:
+                  if (roomSetting_4?.length > 0) {
+                    this.approvalRule =
+                      roomSetting_4[0]?.ApprovalRule != null
+                        ? roomSetting_4[0]?.ApprovalRule
+                        : EPCONST.APPROVALRULE.Haved;
+                  }
+                  break;
+                case EPCONST.VLL.ResourceType.Car:
+                  if (carSetting_4?.length > 0) {
+                    this.approvalRule =
+                      carSetting_4[0]?.ApprovalRule != null
+                        ? carSetting_4[0]?.ApprovalRule
+                        : EPCONST.APPROVALRULE.Haved;
+                  }
+                  break;
+                case EPCONST.VLL.ResourceType.Stationery:
+                  if (stationerySetting_4?.length > 0) {
+                    this.approvalRule =
+                      stationerySetting_4[0]?.ApprovalRule != null
+                        ? stationerySetting_4[0]?.ApprovalRule
+                        : EPCONST.APPROVALRULE.Haved;
+                  }
+                  break;
+              }
+            }
+          }
+        });
+        if (this.resourceType == '1') {
+          this.popupBookingComponent = CodxAddBookingRoomComponent;
+        } else if (this.resourceType == '2') {
+          this.popupBookingComponent = CodxAddBookingCarComponent;
+        } else if (this.resourceType == '6') {
+          this.popupBookingComponent = CodxAddBookingStationeryComponent;
         }
       }
     });
-    if (this.resourceType == '1') {
-      this.popupBookingComponent = CodxAddBookingRoomComponent;
-    } else if (this.resourceType == '2') {
-      this.popupBookingComponent = CodxAddBookingCarComponent;
-    } else if (this.resourceType == '6') {
-      this.popupBookingComponent = CodxAddBookingStationeryComponent;
-    }
+    
   }
 
   getSchedule() {
@@ -1055,7 +1057,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           );
           dialogStationery.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              //this.updateData(returnData?.event);
+              this.view?.dataService?.update(returnData?.event);
             } else {
               this.view.dataService.clear();
             }
@@ -1065,14 +1067,20 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           option.Width = '800px';
+          let inputParam = new EP_BookingInputParam();
+          inputParam.data = res;
+          inputParam.funcType =EPCONST.MFUNCID.Add;
+          inputParam.popupTitle = this.popupTitle;
+          inputParam.optionalData =this.optionalData;
           let dialogAdd = this.callfc.openSide(
             this.popupBookingComponent,
+            //inputParam,
             [res, EPCONST.MFUNCID.Add, this.popupTitle, this.optionalData],
             option
           );
           dialogAdd.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              //this.updateData(returnData?.event);
+              this.view?.dataService?.update(returnData?.event);
             } else {
               this.view.dataService.clear();
             }
@@ -1125,8 +1133,13 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                   this.view.dataService.dataSelected = booking;
                   option.DataService = this.view?.dataService;
                   option.FormModel = this.formModel;
+                  let inputParam = new EP_BookingInputParam();
+                  inputParam.data = this.view.dataService.dataSelected;
+                  inputParam.funcType =EPCONST.MFUNCID.Edit;
+                  inputParam.popupTitle = this.popupTitle;
                   let dialogEdit = this.callfc.openSide(
                     this.popupBookingComponent,
+                    //inputParam,
                     [
                       this.view.dataService.dataSelected,
                       EPCONST.MFUNCID.Edit,
@@ -1191,8 +1204,13 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     option.Width = '800px';
                     option.DataService = this.view?.dataService;
                     option.FormModel = this.formModel;
+                    let inputParam = new EP_BookingInputParam();
+                    inputParam.data = res;
+                    inputParam.funcType =EPCONST.MFUNCID.Copy;
+                    inputParam.popupTitle = this.popupTitle;
                     let dialogCopy = this.callfc.openSide(
                       this.popupBookingComponent,
+                      //inputParam,
                       [res, EPCONST.MFUNCID.Copy, this.popupTitle],
                       option
                     );
@@ -1263,8 +1281,14 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     option.Width = '800px';
     option.DataService = this.view?.dataService;
     option.FormModel = this.formModel;
+    let inputParam = new EP_BookingInputParam();
+    inputParam.data = data;
+    inputParam.funcType =EPCONST.MFUNCID.Edit;
+    inputParam.popupTitle = 'Xem chi tiết';
+    inputParam.viewOnly =true;
     let dialogview = this.callfc.openSide(
       this.popupBookingComponent,
+      //inputParam,
       [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
       option
     );
