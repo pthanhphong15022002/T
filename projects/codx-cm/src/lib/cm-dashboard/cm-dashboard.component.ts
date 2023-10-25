@@ -2063,7 +2063,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       lstPiaData.push(tmp);
     }
     lstPiaData.forEach((item) => {
-      item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
+      item['y'] =
+        Math.round(sumTarget) > 0
+          ? Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100
+          : 100 / 4;
     });
 
     this.piedata = lstPiaData.sort((a, b) => {
