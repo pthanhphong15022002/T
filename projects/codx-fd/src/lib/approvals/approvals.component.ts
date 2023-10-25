@@ -77,7 +77,7 @@ export class ApprovalsComponent extends UIComponent {
         }
       }
     });
-    this.getSetting();
+    // this.getSetting();
   }
 
   ngAfterViewInit() {
@@ -100,36 +100,54 @@ export class ApprovalsComponent extends UIComponent {
 
   getSetting() {
     // Get activeCoins and activeKudos
-    this.api
-      .call(
-        'ERM.Business.FD',
-        'WalletsBusiness',
-        'GetDataForSettingWalletNewAsync',
-        []
-      )
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0].length > 0) {
-          const listActiveCoins = res.msgBodyData[0][1];
-          const listActiveKudos = res.msgBodyData[0][3];
-          if (listActiveCoins) {
-            this.activeCoins = listActiveCoins.find(
-              (x) => x.fieldName == 'Manual' && x.transType == 'ActiveCoins'
-            )?.fieldValue;
-          }
-          if (listActiveKudos) {
-            this.activeKudos = listActiveKudos.find(
-              (x) => x.fieldName == 'Manual' && x.transType == 'ActiveMyKudos'
-            )?.fieldValue;
-          }
-        }
-      });
+    // this.api
+    //   .call(
+    //     'ERM.Business.FD',
+    //     'WalletsBusiness',
+    //     'GetDataForSettingWalletNewAsync',
+    //     []
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.msgBodyData[0].length > 0) {
+    //       const listActiveCoins = res.msgBodyData[0][1];
+    //       const listActiveKudos = res.msgBodyData[0][3];
+    //       if (listActiveCoins) {
+    //         this.activeCoins = listActiveCoins.find(
+    //           (x) => x.fieldName == 'Manual' && x.transType == 'ActiveCoins'
+    //         )?.fieldValue;
+    //       }
+    //       if (listActiveKudos) {
+    //         this.activeKudos = listActiveKudos.find(
+    //           (x) => x.fieldName == 'Manual' && x.transType == 'ActiveMyKudos'
+    //         )?.fieldValue;
+    //       }
+    //     }
+    //   });
   }
 
   accept(item) {
     // if (this.activeCoins == '1' || this.activeKudos == '1') {
     //   this.openPopupApproval(item);
     // } else this.update(item, 1);
-    this.openPopupApproval(item);
+    if (item.cardType) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'SYS',
+          'SettingValuesBusiness',
+          'GetByModuleAsync',
+          ['FDParameters', item.cardType]
+        )
+        .subscribe((res) => {
+          const dataValueJson = res.dataValue;
+          if (dataValueJson) {
+            const dataValue = JSON.parse(dataValueJson);
+            this.activeCoins = dataValue?.ManualCoins || '0';
+            this.activeKudos = dataValue?.ManualPoints || '0';
+          }
+          this.openPopupApproval(item);
+        });
+    }
   }
 
   notAccept(item) {
@@ -171,8 +189,8 @@ export class ApprovalsComponent extends UIComponent {
     let popup = this.callFC.openForm(
       PopupApprovalComponent,
       '',
-      200,
-      350,
+      400,
+      450,
       '',
       obj,
       ''
