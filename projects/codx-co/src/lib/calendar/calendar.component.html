@@ -8,9 +8,9 @@
         <div class="calendar-left">
           <div ngbAccordion class="w-100 h-100">
             <ng-container *ngIf="calendarID == 'COT03'">
-              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-50">
+              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-auto">
                 <div ngbAccordionCollapse class="w-100 h-100">
-                  <div ngbAccordionBody class="">
+                  <div ngbAccordionBody class="p-3">
                     <ejs-calendar
                       #ejCalendar
                       cssClass="width-calendar"
@@ -26,9 +26,9 @@
               </div>
             </ng-container>
             <ng-container *ngIf="calendarID !== 'COT03'">
-              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-50">
-                <div ngbAccordionHeader class="h-20">
-                  <div ngbAccordionHeader class="custom-header w-100 h-20">
+              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-auto red">
+                <div ngbAccordionHeader class="h-40px">
+                  <div ngbAccordionHeader class="custom-header w-100">
                     <div ngbAccordionToggle class="w-100"  >
                       <div class="d-flex justify-content-between align-items-center mt-3 w-100">
                         <codx-label
@@ -41,7 +41,7 @@
                   </div>
                 </div>
                 <div ngbAccordionCollapse class="h-80">
-                  <div ngbAccordionBody class="overflow-auto h-100">
+                  <div ngbAccordionBody class="overflow-auto h-100 p-3">
                     <ng-container *ngIf="listOrgUnit?.length > 0">
                       <ng-container *ngFor="let item of listOrgUnit">
                         <div class="px-5 py-2" (click)="selectOrg(item.orgUnitID)">
@@ -53,10 +53,10 @@
                 </div>
               </div>
             </ng-container>
-            <div *ngIf="calendarParams?.length > 0" ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-50">
-              <div ngbAccordionHeader class="custom-header w-100 h-20">
+            <div *ngIf="calendarParams?.length > 0" ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch calendar-evens">
+              <div ngbAccordionHeader class="custom-header w-100 h-40px">
                 <div ngbAccordionToggle class="w-100"  >
-                  <div class="d-flex justify-content-between align-items-center mt-3 w-100">
+                  <div class="d-flex justify-content-between align-items-center mt-3 w-100 px-3">
                     <codx-label
                       fiedName="Events"
                       default="Danh sách sự kiện"
@@ -69,8 +69,8 @@
                   </div>
                 </div>
               </div>
-              <div ngbAccordionCollapse class="h-80">
-                <div ngbAccordionBody class="h-100">
+              <div ngbAccordionCollapse class="calendar-evens-list h-100 px-2">
+                <div ngbAccordionBody class="h-100 p-3">
                     <div class="w-100 h-100 overflow-auto">
                       <ng-container *ngFor="let item of calendarParams">
                         <div class="d-flex mt-3 align-items-center w-100">
@@ -104,59 +104,60 @@
                     </div>
                 </div>
               </div>
+              <div class="w-100 bg-body">
+                <div class="p-2 border-top">
+                  <div class="d-flex justify-content-between align-items-center nav">
+                    <div
+                      class="d-flex flex-column justify-content-between nav-item"
+                      [ngClass]="{ active: calendarID == 'COT03' }"
+                      (click)="changeCalendarID('COT03')"
+                    >
+                      <span class="text-center"
+                        ><i class="icon-i-person icon-24"></i
+                      ></span>
+                      <div class="user-select-none">Cá nhân</div>
+                    </div>
+      
+                    <div
+                      class="d-flex flex-column justify-content-between nav-item"
+                      [ngClass]="{ active: calendarID == 'COT02' }"
+                      (click)="changeCalendarID('COT02')"
+                    >
+                      <span class="text-center"
+                        ><i class="icon-i-people icon-24"></i
+                      ></span>
+                      <div class="user-select-none">Nhóm</div>
+                    </div>
+      
+                    <div
+                      class="d-flex flex-column justify-content-between nav-item"
+                      [ngClass]="{ active: calendarID == 'COT01' }"
+                      (click)="changeCalendarID('COT01')"
+                    >
+                      <span class="text-center">
+                        <i class="icon-i-diagram-3 icon-24"></i>
+                      </span>
+                      <div class="user-select-none">Công ty</div>
+                    </div>
+      
+                    <div
+                      class="d-flex flex-column justify-content-between nav-item disabled"
+                    >
+                      <span class="text-center">
+                        <i class="icon-i-gear icon-24"></i>
+                      </span>
+                      <div class="user-select-none">Thiết lập</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="w-100 bg-body">
-          <div class="p-2 border-top">
-            <div class="d-flex justify-content-between align-items-center nav">
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarID == 'COT03' }"
-                (click)="changeCalendarID('COT03')"
-              >
-                <span class="text-center"
-                  ><i class="icon-i-person icon-24"></i
-                ></span>
-                <div class="user-select-none">Cá nhân</div>
-              </div>
-
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarID == 'COT02' }"
-                (click)="changeCalendarID('COT02')"
-              >
-                <span class="text-center"
-                  ><i class="icon-i-people icon-24"></i
-                ></span>
-                <div class="user-select-none">Nhóm</div>
-              </div>
-
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarID == 'COT01' }"
-                (click)="changeCalendarID('COT01')"
-              >
-                <span class="text-center">
-                  <i class="icon-i-diagram-3 icon-24"></i>
-                </span>
-                <div class="user-select-none">Công ty</div>
-              </div>
-
-              <div
-                class="d-flex flex-column justify-content-between nav-item disabled"
-              >
-                <span class="text-center">
-                  <i class="icon-i-gear icon-24"></i>
-                </span>
-                <div class="user-select-none">Thiết lập</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <!-- template right -->
-      <div class="w-100 bg-white h-100">
+      <div class="w-100 bg-white h-100 p-3 calender-viewmain">
         <co-calendar-center #calendarCenter 
           [isOutSource]="true" 
           [eventData]="lstEvents" 

@@ -179,9 +179,9 @@ body.tailwind #selected {
 .calendar-left {
   position: relative;
   width: 100%;
-  height: calc(100% - 70px);
-  padding-bottom: 15px;
-  background-color: #fff;
+  //height: calc(100% - 60px);
+  //padding-bottom: 15px;
+  background-color: rgb(192, 255, 140);
 }
 
 .nav-item {
@@ -223,4 +223,17 @@ body.tailwind #selected {
 }
 .e-cell{
   vertical-align: sub;
+}
+
+.calender-viewmain #Content-Fillter.width-0 {
+  display: none!important;
+}
+.calendar-evens{
+  height: calc(100vh - 396px)!important;
+  .calendar-evens-list{
+  
+    height: calc(100% - 100px)!important;
+    overflow: auto;
+  }
+
 }
