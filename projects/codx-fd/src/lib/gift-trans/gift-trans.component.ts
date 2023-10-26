@@ -22,6 +22,7 @@ export class GiftTransComponent extends UIComponent {
     //
     listGiftTran: any[] = [];
     selectedGiftID: string = "";
+    dataSelected: any;
     @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
     @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
     @ViewChild("panelLefRef") panelLefRef: TemplateRef<any>;
@@ -72,7 +73,13 @@ export class GiftTransComponent extends UIComponent {
     }
     selectedChange(event: any) {
         if (!event || !event.data) return;
+        this.dataSelected = event.data;
         this.selectedGiftID = event.data.recID;
         this.dt.detectChanges();
+    }
+
+    changeStatus(event: string) {
+        this.dataSelected.status = event;
+        this.view.dataService.update(this.dataSelected).subscribe();
     }
 }
