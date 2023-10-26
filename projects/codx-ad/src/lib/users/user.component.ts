@@ -209,9 +209,6 @@ export class UserComponent extends UIComponent {
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.idField = 'userID';
-          this.view.dataService.update(e.event).subscribe();
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -252,6 +249,7 @@ export class UserComponent extends UIComponent {
           if (x.event) {
             x.event.modifiedOn = new Date();
             this.view.dataService.data;
+            this.view.dataService.idField = 'userID';
             this.view.dataService.update(x.event).subscribe((res) => {
               console.log('edit xong', res);
             });

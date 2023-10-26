@@ -77,6 +77,12 @@ export class PopupAddDealComponent
   listCustomFile: any[] = [];
   listParticipants: any[] = [];
   listOrgs: any[] = [];
+  lstContactCustomer: any[] = [];
+  lstContactDeal: any[] = [];
+  lstContactDelete: any[] = [];
+  lstContactAdd: any[] = [];
+  lstContactOld: any[] = [];
+  listInstanceSteps: any[] = [];
 
   // const
   readonly actionAdd: string = 'add';
@@ -116,27 +122,28 @@ export class PopupAddDealComponent
   listProcess: any;
   user: any;
   owner: any;
+  idxCrr: any = -1;
+  instanceRes: any;
+  instanceReason:any;
   dateMessage: any;
   dateMax: any;
+  paramView: any;
   customerIDOld: any;
-  // model of DP
-  instance: tmpInstances = new tmpInstances();
   instanceSteps: any;
   model: any;
-  listInstanceSteps: any[] = [];
+  customerName: any;
+  functionModule: any;
+  customerView: any;
+  // model of DP
+  instance: tmpInstances = new tmpInstances();
+
 
   customerID: string = '';
   customerOld: string;
-  lstContactCustomer: any[] = [];
-  lstContactDeal: any[] = [];
-  lstContactDelete: any[] = [];
-  lstContactAdd: any[] = [];
-  lstContactOld: any[] = [];
   isLoad: boolean = true;
-  customerName: any;
   isViewAll: boolean = false;
-  functionModule: any;
-  paramView: any;
+
+
 
   processIdDefault: string = '';
   defaultDeal: string = '';
@@ -145,10 +152,9 @@ export class PopupAddDealComponent
   // load data form DP
   isLoading: boolean = false;
   isBlock: boolean = true;
+  isviewCustomer: boolean = false;
   currencyIDOld: string;
-  idxCrr: any = -1;
-  instanceRes: any;
-  instanceReason:any;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -168,6 +174,11 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
+
+    // add view from customer
+    this.isviewCustomer = dt?.data?.isviewCustomer;
+    this.customerView =  dt?.data?.customerView;
+
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
       if (this.action != this.actionAdd) {
@@ -194,6 +205,7 @@ export class PopupAddDealComponent
         this.deal.currencyID = dt?.data?.currencyIDDefault;
       }
     }
+    this.isviewCustomer && this.copyDataCustomer(this.deal,this.customerView);
 
     if (dt?.data.processID) {
       this.deal.processID = dt?.data?.processID;
@@ -219,6 +231,14 @@ export class PopupAddDealComponent
     if (this.action !== this.actionAdd) {
       this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
     }
+  }
+
+  copyDataCustomer(deal:any, data:any){
+    deal.customerID = data.customerID;
+    deal.dealName = data.dealName;
+    deal.industries = data.industries;
+    deal.channelID = data.channelID;
+    deal.shortName = data.shortName;
   }
 
   valueChange($event) {
@@ -270,7 +290,7 @@ export class PopupAddDealComponent
       }
       this.searchOwner('1', 'O', '0',this.owner, ownerName);
     }
-    else if ($event == null || $event == '') {
+    else if ($event === null || $event === '') {
       this.deleteOwner('1', 'O', '0', this.deal.owner,'owner');
     }
   }
@@ -280,9 +300,7 @@ export class PopupAddDealComponent
         (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
       if(index != -1) {
         if(field === 'owner' ){
-          this.deal.owner = null;
           this.owner= null;
-          this.deal.salespersonID = null;
         }
         else if(field === 'consultantID') {
           this.deal.consultantID = null;
@@ -467,6 +485,7 @@ export class PopupAddDealComponent
       return;
     }
     this.deal.owner = this.owner;
+    this.deal.salespersonID = this.owner;
     this.convertDataInstance(this.deal, this.instance);
     this.updateDateDeal(this.instance, this.deal);
   this.executeSaveData();
@@ -640,7 +659,7 @@ export class PopupAddDealComponent
             this.deal.processID = processId;
             let result = this.checkProcessInList(processId);
             if (result) {
-              this.listParticipants = null;
+              this.listParticipants = [];
               this.listInstanceSteps = result?.steps;
               this.listParticipants = JSON.parse(
                 JSON.stringify(result?.permissions)
@@ -652,7 +671,7 @@ export class PopupAddDealComponent
                 this.action !== this.actionEdit || this.action === this.actionEdit && (this.deal.status == '1' || this.deal.status == '15' ) ? null : this.deal.createdOn
               );
               this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-              if (this.listParticipants.length > 0 && this.listParticipants) {
+              if (this.listParticipants && this.listParticipants?.length > 0) {
                 let index = this.listParticipants.findIndex(
                   (x) => x.userID === this.user.userID
                 );
@@ -859,7 +878,7 @@ export class PopupAddDealComponent
         }
         this.listInstanceSteps = res[0];
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        this.listParticipants = null;
+        this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;

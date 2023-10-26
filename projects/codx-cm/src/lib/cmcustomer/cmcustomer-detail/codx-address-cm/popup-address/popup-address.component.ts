@@ -40,6 +40,7 @@ export class PopupAddressComponent implements OnInit {
   type = '';
   objectID = '';
   objectType = '';
+  objectName = '';
   lstAddress = [];
   checkAddressName = false;
   checkSetName = false;
@@ -69,6 +70,7 @@ export class PopupAddressComponent implements OnInit {
     this.type = dt?.data?.type;
     this.objectID = dt?.data?.objectID;
     this.objectType = dt?.data?.objectType;
+    this.objectName = dt?.data?.objectName;
     this.lstAddress = dt?.data?.listAddress;
   }
 
@@ -214,13 +216,14 @@ export class PopupAddressComponent implements OnInit {
 
   async onSaveHanle() {
     this.data.isDefault = this.isDefault;
-
+    this.data.objectID = this.objectID;
+    this.data.objectType = this.objectType;
+    this.data.objectName = this.objectName;
     if (this.type == 'formAdd') {
       this.dialog.close(this.data);
     } else {
       if (this.action == 'add') {
-        this.data.objectID = this.objectID;
-        this.data.objectType = this.objectType;
+
         this.cmSv.addOneAddress(this.data).subscribe((res) => {
           if (res) {
             this.dialog.close(res);

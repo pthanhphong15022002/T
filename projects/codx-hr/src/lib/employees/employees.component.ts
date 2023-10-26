@@ -33,6 +33,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { HR_Employees } from '../model/HR_Employees.model';
 import { PopupAddEmployeesComponent } from './popup-add-employees/popup-add-employees.component';
 import { UpdateStatusComponent } from './update-status/update-status.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-employees',
@@ -70,6 +71,7 @@ export class EmployeesComponent extends UIComponent {
     private injector: Injector,
     private notifiSV: NotificationsService,
     private df: ChangeDetectorRef,
+    private shareService: CodxShareService,
   ) {
     super(injector);
   }
@@ -222,8 +224,18 @@ export class EmployeesComponent extends UIComponent {
         // case 'HR0032': // xem chi tiết
         //   this.viewEmployeeInfo(event.data, data);
         //   break;
-        case 'SYS002':
-          this.exportFile();
+        // case 'SYS002':
+        //   this.exportFile();
+        //   break;
+        default:
+          this.shareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.view.formModel,
+            this.view.dataService,
+            this
+          );
           break;
       }
     }
@@ -298,11 +310,7 @@ export class EmployeesComponent extends UIComponent {
 
   delete(data: any) {
     this.view.dataService
-      .delete(
-        [data],
-        true,
-        (option: any) => this.beforeDel(option),
-      )
+      .delete([data], true, (option: any) => this.beforeDel(option))
       .subscribe();
     this.detectorRef.detectChanges();
   }
@@ -383,8 +391,7 @@ export class EmployeesComponent extends UIComponent {
       if (e?.event) {
         var emp = e.event;
         if (emp.status === '90') this.view.dataService.remove(emp).subscribe();
-        else this.view.dataService.update(emp).subscribe(
-        );
+        else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
