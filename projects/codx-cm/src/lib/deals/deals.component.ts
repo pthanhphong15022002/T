@@ -63,6 +63,8 @@ export class DealsComponent
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('popViewDetail') popViewDetail: TemplateRef<any>;
+  @ViewChild('templateViewDetail') templateViewDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
@@ -106,6 +108,7 @@ export class DealsComponent
   idField = 'recID';
   predicate = '';
   dataValue = '';
+  popupViewDeal: DialogRef;
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -735,8 +738,8 @@ export class DealsComponent
     option.IsFull = true;
     option.zIndex = 999;
 
-    let popup = this.callfc.openForm(
-      this.popDetail,
+    this.popupViewDeal = this.callfc.openForm(
+      this.templateViewDetail,
       '',
       Util.getViewPort().width,
       Util.getViewPort().height,
@@ -745,7 +748,17 @@ export class DealsComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {});
+    // let popup = this.callfc.openForm(
+    //   this.popDetail,
+    //   '',
+    //   Util.getViewPort().width,
+    //   Util.getViewPort().height,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    this.popupViewDeal.closed.subscribe((e) => {});
   }
 
   //end Kanaban
