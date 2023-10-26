@@ -177,7 +177,6 @@ export class PopupAddressComponent implements OnInit {
           x.recID != this.data.recID &&
           x.address == this.data.address &&
           x.adressType == this.data.adressType &&
-          x.street == this.data.street &&
           x.countryID == this.data.countryID &&
           x.provinceID == this.data.provinceID &&
           x.districtID == this.data.districtID &&
@@ -252,7 +251,6 @@ export class PopupAddressComponent implements OnInit {
   }
   setAdressName() {
     if (
-      this.data?.street == null &&
       this.nameWard == null &&
       this.nameDistrict == null &&
       this.nameProvince == null &&
@@ -260,10 +258,6 @@ export class PopupAddressComponent implements OnInit {
     ) {
       this.data.address = null;
     } else {
-      var street =
-        this.data?.street != null && this.data?.street?.trim()
-          ? this.data?.street + ','
-          : '';
       var ward =
         this.nameWard != null && this.nameWard.trim()
           ? ' ' + this.nameWard + ','
@@ -280,7 +274,7 @@ export class PopupAddressComponent implements OnInit {
         this.nameCountry != null && this.nameCountry.trim()
           ? ' ' + this.nameCountry
           : '';
-      var address = street + ward + district + province + country;
+      var address = ward + district + province + country;
       if (address != null && address.trim() != '') {
         if (address.endsWith(',')) {
           address = address.slice(0, -1);
