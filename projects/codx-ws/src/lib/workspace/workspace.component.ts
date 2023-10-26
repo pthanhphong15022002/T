@@ -1,11 +1,10 @@
 import { Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
-import { isObservable } from 'rxjs';
+import { from, isObservable, of } from 'rxjs';
 import { SpeedDialItemModel } from '@syncfusion/ej2-angular-buttons';
 import axios from 'axios';
-import { DialogModel } from 'codx-core';
-import { T } from '@angular/cdk/keycodes';
-import { log } from 'console';
+import { DialogModel, Util } from 'codx-core';
+import { CvInformationComponent } from './AITool/cv-information/cv-information.component';
 
 @Component({
   selector: 'lib-workspace',
@@ -45,22 +44,29 @@ export class WorkspaceComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/"+data.url)
-    this.codxWsService.functionID = data.functionID;
-    this.codxWsService.listBreadCumb.push(data);
+    if(data?.functionID == "GPTTA") this.openPopupUploadFile();
+    else
+    {
+      this.codxService.navigate("","/"+data.url)
+      this.codxWsService.functionID = data.functionID;
+      this.codxWsService.listBreadCumb.push(data);
+    }
   }
 
-  // speed dial
+  //#region  Unitet chat GPT
   @ViewChild("popupCV") popupCV:TemplateRef<any>;
   @ViewChild("popupEmail") popupEmail:TemplateRef<any>;
   @ViewChild("popupSocial") popupSocial:TemplateRef<any>;
   @ViewChild("popupOKR") popupOKR:TemplateRef<any>;
+  @ViewChild("popupUploads") popupUploads:TemplateRef<any>;
 
   cvModel:CVModel = new CVModel();
   emailModel:EmailModel = new EmailModel();
   socialMediaModel:SocialMediaModel = new SocialMediaModel();
   okrModel:OKRModel = new OKRModel();
-
+  
+  jsonExports:any[] = [];
+  request:string = "";
   loading = false;
   speedDialItems: SpeedDialItemModel[] = [
     {
@@ -82,11 +88,18 @@ export class WorkspaceComponent extends WSUIComponent{
       id:'3',
       text:'Key Result',
       iconCss:'icon-lightbulb'
+    },
+    {
+      id:'4',
+      text:'UPload Files',
+      iconCss:'icon-upload'
     }
   ];
 
   // click open popupp
+  disabledSpeedDial:boolean = false;
   openPoup(item:any){
+    this.disabledSpeedDial = true;
     switch(item.id){
       case"0":
         this.openPoupupSocial();
@@ -98,8 +111,11 @@ export class WorkspaceComponent extends WSUIComponent{
         this.openPopupCV();
         break;
       case"3":
-      this.openPoupupOKR();
-      break;
+        this.openPoupupOKR();
+        break;
+      case"4":
+        this.openPopupUploadFile();
+        break;
     }
   }
   // CV
@@ -108,9 +124,11 @@ export class WorkspaceComponent extends WSUIComponent{
     {
       let option = new DialogModel();
       this.cvModel = new CVModel();
-      this.callFunc.openForm(this.popupCV,"",600,700,"",null,"",option);
+      this.callFunc.openForm(this.popupCV,"",800,900,"",null,"",option);
     }
   }
+
+  
   // Mail
   openPopupMail(){
     if(this.popupEmail)
@@ -138,6 +156,17 @@ export class WorkspaceComponent extends WSUIComponent{
       this.callFunc.openForm(this.popupOKR,"",900,700,"",null,"",option);
     }
   }
+
+  //open popup upload files
+  openPopupUploadFile(){
+    let option = new DialogModel();
+    option.IsFull = true;
+    this.callFunc.openForm(CvInformationComponent,"",1000,900,"",null,"",option).closed.subscribe((res) => {
+      this.disabledSpeedDial = false; 
+      this.changeDetectorRef.detectChanges()
+    });
+  }
+
   // value change
   valueChange(evt:any,type:string)
   {
@@ -147,13 +176,15 @@ export class WorkspaceComponent extends WSUIComponent{
       this.socialMediaModel[evt.field] = evt.data;
     else if(type === "okr")
       this.okrModel[evt.field] = evt.data;
+    else if(type==="request")
+      this.request = evt.data;
   }
-  
+
   // select file cv
   onSelectFileCV(e:any){
     // api đọc CV
-    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
     let file = e.target.files[0];
+    let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
     var form = new FormData();
     this.loading = true;
     form.append("prompt", `
@@ -211,14 +242,101 @@ export class WorkspaceComponent extends WSUIComponent{
           this.cvModel.result = res2.data.Data.replace(/\n/g,"<br/>");
           this.changeDetectorRef.detectChanges();
         }).catch((err) => {
-          console.log(err);
           this.loading = false;
         });
     }).catch((err) => {
-      console.log(err);
       this.loading = false;
     });
   }
+
+  
+  //
+  onSelectFiles(e:any){
+    let files = Array.from(e.target.files);
+    if(files.length > 0)
+    {
+      files.forEach((f) => {
+        this.exportFileCV(f).subscribe((res:any) => {
+          if(res)
+          {
+            res.id = Util.uid();
+            this.jsonExports.push(res);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+      });
+    }
+        
+  }
+  
+  //
+  exportFileCV(file){
+    if(file)
+    {
+      let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
+      var form = new FormData();
+      form.append("prompt", `
+      Hãy trích xuất thông tin CV ứng viên tới định dạng JSON như sau:
+      {
+        "name": "",
+        "phone": "",
+        "email":"",
+        "skills":[]
+      }
+      Lưu ý: Nếu thông tin không tìm thấy hãy để trống.`);
+      form.append("sourceFile", file); 
+      return from(axios.post(url, form)
+      .then((res:any) => {
+        return JSON.parse(res.data.Data.JsonResult); 
+      })
+      .catch(() => {return null}));
+    }
+    else
+    {
+      return of(null);
+    }
+  }
+
+  // api đánh giá
+  evaluateCV(json:any){
+    let url2 = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-gpt-action";
+    return from(axios.post(
+      url2,
+      {
+        'Prompt': `Hãy đánh giá CV dạng JSON bên dưới có đáp ứng được các mục yêu cầu tuyển dụng như sau:
+         ${this.request}.
+         Nhận xét ưu điểm và khuyết điểm để đưa ra kết luận tuyển dụng hay không.
+         Và trích xuất thành dạng JSON như sau 
+         {
+            "evaluate":"",
+            "accept":true or false
+         }`,
+        'SourceText': JSON.stringify(json)
+      }).then((res2:any) =>
+      {
+        return JSON.parse(res2.data.Data);
+      }).catch(() => {return null}));
+  }
+  //
+  cellExvalueate = false;
+  searchCV(){
+    this.cellExvalueate = true;
+    if(this.jsonExports.length > 0 && this.request)
+    {
+      this.jsonExports.forEach((e:any) => {
+        e.result = null;
+        this.evaluateCV(e).subscribe((res:any) => {
+          if(res.accept)
+            e.result = res;
+          else
+            this.jsonExports = [...this.jsonExports.filter(x => x.id != e.id)];
+          this.changeDetectorRef.detectChanges();
+        });
+      }); 
+    }
+  }
+
+  
 
   // create mail
   createdMail(){
@@ -322,8 +440,10 @@ export class WorkspaceComponent extends WSUIComponent{
         this.loading = false;
       });
   }
-}
 
+  //#endregion
+}
+//#region model
 class CVModel{
   name:string;
   phone:string;
@@ -349,7 +469,7 @@ class CVModel{
     this.result = "";
   }
 }
-class EmailModel{
+export class EmailModel{
   // language:any;
   subject:string;
   contents:string;
@@ -371,7 +491,7 @@ class EmailModel{
     this.result = null;
   }
 }
-class SocialMediaModel{
+export class SocialMediaModel{
   // language:any;
   socialMedias:any[];
   type:string;
@@ -416,7 +536,8 @@ class SocialMediaModel{
     this.result = null;
   }
 }
-class OKRModel{
+export class OKRModel
+{
   target:string;
   num_KPI:number;
   result:string;
@@ -426,3 +547,4 @@ class OKRModel{
     this.result = "";
   }
 }
+//#endregion

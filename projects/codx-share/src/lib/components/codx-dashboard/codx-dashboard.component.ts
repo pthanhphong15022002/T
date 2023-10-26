@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
   Input,
   OnInit,
@@ -135,6 +136,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       }, 100);
     }
   }
+  @HostBinding('class') class = 'd-block h-100';
 
   @ViewChild('dashboard') objDashboard!: DashboardLayoutComponent;
   @ViewChild('panelLayout') panelLayout?: TemplateRef<any>;
@@ -696,6 +698,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           this.objDashboard?.element?.childElementCount > 0
         ) {
           clearInterval(iGenPanels);
+
           this.panels.forEach((ele: any) => {
             let idx = this.objDashboard.panels.findIndex(
               (x: any) => x.id == ele.id

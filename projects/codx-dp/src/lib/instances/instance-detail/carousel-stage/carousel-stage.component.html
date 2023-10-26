@@ -27,10 +27,10 @@
             <div class="d-flex align-items-top ps-6">
               <span
                 [ngClass]="item?.icon"
-                [ngStyle]="item?.stepStatus == '3' || item?.stepStatus > '3' ? { color: item?.iconColor } : ''"
+                [ngStyle]="item?.stepStatus != '2' ? { color: item?.iconColor } : '{color: #000000 }'"
                 class="fs-6 me-2"
               ></span>
-              <span class="line-clamp line-clamp-2 step-name" [ngStyle]="item?.stepStatus == '3' || item?.stepStatus > '3' ? {color: item?.textColor } : ''">
+              <span class="line-clamp line-clamp-2 step-name" [ngStyle]="item?.stepStatus != '2' ? {color: item?.textColor } : '{color: #000000 }'">
                 {{ item[fieldName] }}</span
               >
             </div>

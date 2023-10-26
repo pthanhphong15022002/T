@@ -5,8 +5,12 @@ import {
   ViewChild,
   TemplateRef,
   Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter
 } from '@angular/core';
-import { ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
+import { FormModel, ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxCoService } from '../../codx-co.service';
 
 @Component({
@@ -16,19 +20,28 @@ import { CodxCoService } from '../../codx-co.service';
 })
 export class CalendarCenterComponent
   extends UIComponent
-  implements AfterViewInit
+  implements AfterViewInit,OnChanges
 {
   @ViewChild('contentTmp') contentTmp: TemplateRef<any>;
-  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
+  // @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('resourceHeader') resourceHeader: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
 
   @Input() resources: any;
-  @Input() resourceModel!: any;
+  @Input() eventData: any;
+  @Input() eventModel:any;
+  @Input() resourceModel: any;
+  @Input() isOutSource:boolean = false;
+  @Input() statusColor:any;
+  @Input() selectedDate:any;
+  @Input() eventTemplate:TemplateRef<any>;
+  @Input() resourceTemplate:TemplateRef<any>;
 
-  @Input() orgUnitID: string = "";
+  @Output() evtResourceClick = new EventEmitter();
+  @Output() evtAction = new EventEmitter();
+  @Output() evtDateSelectChange = new EventEmitter();
+
 
   views: Array<ViewModel> | any = [];
   
@@ -38,82 +51,88 @@ export class CalendarCenterComponent
   btnAdd = {
     id: 'btnAdd',
   };
-  calendar_center: any;
+  codxSchedule: any;
   dayoff: any;
   calendarID = 'STD';
-
-
-  //#region  list employee
-  scheduleHeader?: ResourceModel;
-  scheduleHeaderModel:any = {
-    Name: 'EmployeeName',
-    Field: 'EmployeeID',
-    IdField: 'EmployeeID',// field mapping vs event Schedule
-    TextField: 'EmployeeName',
-    Title: 'EmployeeName',
-  };
-
-  scheduleEvent?: ResourceModel;
-  scheduleEvtModel:any = {
-    id: 'transID',
-    subject: { name: 'title' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-    resourceId: { name: 'resourceID' },// field mapping vs resource Schedule
-    status: 'approveStatus',
-  };
-
-  //#endregion
   
 
 
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
+  
 
   onInit(): void {
     this.getDayOff();
+    // set statusColor & isOutSource for Schedule
+    var itv = setInterval(()=> {
+      if((this.view?.currentView as any)?.schedule)
+      {
+        (this.view.currentView as any).schedule.isOutSource = this.isOutSource;
+        (this.view.currentView as any).statusColor = this.statusColor;
+        clearInterval(itv);
+      }
+    },1000)
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes["eventData"])
+    {
+      this.changeEvents(this.eventData);
+    }
+    if(changes["resources"])
+    {
+      if((this.view?.currentView as any)?.schedule)
+      {
+        (this.view.currentView as any).schedule.resourceDataSource = [...this.resources];
+        (this.view.currentView as any).schedule.setEventSettings();
+        this.detectorRef.detectChanges();
+      }
+    }
+    if(changes["selectedDate"])
+    {
+      if((this.view?.currentView as any)?.schedule)
+      {
+        (this.view.currentView as any).schedule.selectedDate = this.selectedDate;
+        (this.view.currentView as any).schedule.setEventSettings();
+        this.detectorRef.detectChanges();
+      }
+    }
   }
 
   // init schedule
-  initSchedule(){
-    this.scheduleEvent = new ResourceModel();
-    this.scheduleEvent.service = 'CO';
-    this.scheduleEvent.assemblyName = 'ERM.Business.CO';
-    this.scheduleEvent.className = 'CalendarsBusiness';
-    this.scheduleEvent.method = 'GetCalendarDataAsync';
-
-    this.scheduleHeader = new ResourceModel();
-    this.scheduleHeader.service = 'HR';
-    this.scheduleHeader.assemblyName = 'ERM.Business.HR';
-    this.scheduleHeader.className = 'HRBusiness';
-    this.scheduleHeader.method = 'GetEmployeeByCOAsync';
-    this.scheduleHeader.predicate = 'OrgUnitID=@0';
-    this.scheduleHeader.predicate = this.orgUnitID;
-
-  }
+  
   ngAfterViewInit(): void {
     // setting mode view
-    this.initSchedule();
-
     this.views = [
       {
         type: ViewType.schedule,
         active:true,
-        request: this.scheduleEvent,//request lấy data cho event schedule
-        request2: this.scheduleHeader,//request lấy data cho resource schedule
         showSearchBar: false,
         showFilter: true,
         model: {
-          eventModel: this.scheduleEvtModel,// mapping của event schedule
-          resourceModel: this.scheduleHeaderModel, // mapping của resource schedule
+          eventModel: this.eventModel,// mapping của event schedule
+          resourceModel: this.resourceModel, // mapping của resource schedule
+          // template: , //template popup event
           template3: this.cellTemplate,
-          template4: this.resourceHeader,//template của resource schedule
+          template4: this.resourceTemplate,//template của resource schedule
           template6: this.mfButton,
         },
       },
     ];
+    this.evtAction.emit();
     this.detectorRef.detectChanges();
+  }
+
+  
+
+
+  changeResource(datas:any[]){
+    if(this.view)
+    {
+      (this.view.currentView as any).schedule.resourceDataSource = datas;
+      (this.view.currentView as any).schedule.setEventSettings();
+    }
   }
   //navigate scheduler
   onAction(event: any) {
@@ -149,21 +168,21 @@ export class CalendarCenterComponent
           type: event?.data.type,
         };
       }
-
-      this.coService.dateChange$.next(obj);
+      this.evtDateSelectChange.emit(obj);
     }
   }
 
-  updateData(dataSource: any) {
-    let myInterval = setInterval(() => {
-      this.calendar_center = (this.view?.currentView as any)?.schedule;
-      if (this.calendar_center) {
-        clearInterval(myInterval);
-        for (const data of dataSource) {
+  changeEvents(dataSource: any) {
+    let ivt = setInterval(() => 
+    {
+      this.codxSchedule = (this.view?.currentView as any)?.schedule;
+      if (this.codxSchedule) 
+      {
+        clearInterval(ivt);
+        for (const data of dataSource) 
+        {
           if (
-            data.transType === 'TM_AssignTasks' ||
-            data.transType === 'TM_MyTasks'
-          ) {
+            data.transType === 'TM_AssignTasks' || data.transType === 'TM_MyTasks') {
             let tempStartDate = new Date(data.startDate);
             let tempEndDate = new Date(data.endDate);
             data.startDate = new Date(
@@ -182,14 +201,13 @@ export class CalendarCenterComponent
             ).toString();
           }
         }
-        this.calendar_center.dataSource = dataSource;
-        this.calendar_center?.setEventSettings();
+        this.codxSchedule.dataSource = dataSource;
+        this.codxSchedule.setEventSettings();
         this.detectorRef.detectChanges();
       }
     });
   }
 
-  //region EP
   showHour(stringDate: any) {
     const date: Date = new Date(stringDate);
     const hours: number = date.getHours();
@@ -202,9 +220,7 @@ export class CalendarCenterComponent
     return timeString;
   }
 
-  //endRegion EP
 
-  //region CO
   getDate(data) {
     if (data.startDate) {
       let date = new Date(data.startDate);
@@ -237,7 +253,6 @@ export class CalendarCenterComponent
     const res = permisstionIDs.join(';');
     return res;
   }
-  //endRegion CO
 
   getCellContent(evt: any) {
     let obj = evt.date;
@@ -303,4 +318,5 @@ export class CalendarCenterComponent
       ])
       .subscribe();
   }
+
 }

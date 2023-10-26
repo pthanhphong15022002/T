@@ -276,11 +276,7 @@ export class PopupAddLeadComponent
   }
   valueChangePermission($event) {
     if ($event.data === null || $event.data === '') {
-      this.deleteOwner(
-        'U',
-        $event.field === 'salespersonID' ? 'S' : 'C',
-        '0', $event.field
-      );
+      this.deleteOwner( 'U', $event.field === 'salespersonID' ? 'S' : 'C', '0', $event.field === 'salespersonID' ? this.lead.salespersonID: this.lead.consultantID ,$event.field );
     } else {
       this.searchOwner(
         'U',
@@ -382,7 +378,7 @@ export class PopupAddLeadComponent
           [this.lead.address, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '') {
+      if (json != null && json.trim() != '' && json != "null") {
         let lstDis = JSON.parse(json);
         this.lead.provinceID = lstDis?.ProvinceID;
         this.lead.districtID = lstDis?.DistrictID;
@@ -412,23 +408,32 @@ export class PopupAddLeadComponent
       this.lead[field] = $event;
     }
   }
-  valueChangeOwner($event, view) {
-    if ($event && view === this.viewOwnerDefault) {
-      let ownerName = '';
-      this.owner = $event?.data;
-      ownerName = $event?.component?.itemsSelected[0]?.UserName;
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if ($event && view === this.viewOwnerProcess) {
-      this.owner = $event;
-      let ownerName = '';
-      this.owner;
-      if (this.listParticipants.length > 0 && this.listParticipants) {
-        ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0].userName;
+  async valueChangeOwner($event, view) {
+      if (view === this.viewOwnerDefault) {
+        if($event?.data && $event?.data !== "") {
+            let ownerName = '';
+            this.owner = $event?.data;
+            ownerName = $event?.component?.itemsSelected[0]?.UserName;
+            this.searchOwner('1', 'O', '0', this.owner, ownerName);
+        }
+        else if ($event === null || $event === '' || $event === "") {
+          this.deleteOwner('1', 'O', '0', this.lead.owner,'owner');
+        }
+      } else if (view === this.viewOwnerProcess) {
+        if($event) {
+          this.owner = $event;
+          let ownerName = '';
+          if (this.listParticipants.length > 0 && this.listParticipants) {
+            ownerName = this.listParticipants.filter(
+              (x) => x.userID === this.owner
+            )[0].userName;
+          }
+          this.searchOwner('1', 'O', '0', this.owner, ownerName);
+        }
+        else if ($event === null || $event === '') {
+          this.deleteOwner('1', 'O', '0', this.lead.owner,'owner');
+        }
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    }
   }
   searchOwner(
     objectType: any,
@@ -458,30 +463,29 @@ export class PopupAddLeadComponent
       if (index == -1) {
         this.addOwner(owner, ownerName, roleType, objectType);
       }
-    } else {
     }
   }
-  deleteOwner(
-    objectType: any,
-    roleType: any,
-    memberType: any,
-    field: any
-  ) {
-    let index = this.lead?.permissions.findIndex(
-      (x) =>
-        x.objectType == objectType &&
-        x.roleType === roleType &&
-        x.memberType == memberType
-    );
-    if (index != -1) {
-      if (field === 'salespersonID') {
-        this.lead.salespersonID = null;
-      } else if (field === 'consultantID') {
-        this.lead.consultantID = null;
+
+  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
+    if(this.lead?.permissions && this.lead?.permissions.length > 0 ) {
+      let index = this.lead?.permissions.findIndex(
+        (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
+      if(index != -1) {
+        if(field === 'owner' ){
+          this.lead.owner = null;
+          this.owner= null;
+        }
+        else if (field === 'salespersonID') {
+          this.lead.salespersonID = null;
+        }else if (field === 'consultantID') {
+          this.lead.consultantID = null;
+        }
+        this.lead.permissions.splice(index, 1);
       }
-      this.lead.permissions.splice(index, 1);
     }
+
   }
+
   addOwner(owner, ownerName, roleType, objectType) {
     var permission = new CM_Permissions();
     permission.objectID = owner;
@@ -493,8 +497,7 @@ export class PopupAddLeadComponent
     permission.update = true;
     permission.upload = true;
     permission.download = true;
-    permission.allowUpdateStatus =
-      roleType === 'O' || roleType === 'S' ? '1' : '0';
+    permission.allowUpdateStatus =roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
@@ -666,16 +669,14 @@ export class PopupAddLeadComponent
     if (this.action !== this.actionEdit) {
       lead.stepID = this.listInstanceSteps[0]?.stepID;
       lead.nextStep = this.listInstanceSteps[1]?.stepID;
-      lead.status = this.owner ? '1' : '0';
+      lead.status = this.owner ? '1' : '15';
       lead.refID = instance.recID;
       lead.startDate = null;
     }
   }
 
   async promiseSaveFile() {
-    if (this.owner) {
-      this.lead.owner = this.owner;
-    }
+    this.lead.owner = this.owner;
     this.lead.applyProcess &&
       this.convertDataInstance(this.lead, this.instance);
     this.lead.applyProcess && this.updateDataLead(this.instance, this.lead);
@@ -703,9 +704,11 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
     this.codxCmService.addInstance(data).subscribe((instance) => {
       if (instance) {
+        this.lead.datas = instance?.datas;
+        this.lead.status = instance.status;
         this.addPermission(instance.permissions);
         this.onAdd();
-        this.isLoading && this.dialog.close(instance);
+     //   this.isLoading && this.dialog.close(instance);
       }
     });
   }
@@ -713,7 +716,11 @@ export class PopupAddLeadComponent
     var data = [this.instance, this.listCustomFile];
     this.codxCmService.editInstance(data).subscribe((instance) => {
       if (instance) {
-        this.isLoading && this.dialog.close(instance);
+        this.lead.datas = instance?.datas;
+        this.lead.status = instance.status;
+        this.lead.permissions = this.lead.permissions.filter(x=>x.memberType != '2');
+        this.addPermission(instance?.permissions);
+       // this.isLoading && this.dialog.close(instance);
         this.onEdit();
       }
     });
@@ -817,17 +824,17 @@ export class PopupAddLeadComponent
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
-          this.lead.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
           this.lead.leadID = res[2];
         }
+        this.lead.endDate = this.HandleEndDate(
+          this.listInstanceSteps,
+          this.action,
+          this.action !== this.actionEdit || this.action === this.actionEdit && (this.lead.status == '1' || this.lead.status == '15' ) ? null : this.lead.createdOn
+        );
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action !== this.actionEdit ? null : this.lead.createdOn
+          this.action != this.actionEdit ? null : this.lead.createdOn
         );
         this.planceHolderAutoNumber = this.lead.leadID;
 
@@ -836,11 +843,28 @@ export class PopupAddLeadComponent
     });
   }
 
+  // HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+  //   var dateNow =
+  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+  //   var endDate =
+  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+  //   for (let i = 0; i < listSteps.length; i++) {
+  //     endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+  //     endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+  //     endDate = this.setTimeHoliday(
+  //       dateNow,
+  //       endDate,
+  //       listSteps[i]?.excludeDayoff
+  //     );
+  //     dateNow = endDate;
+  //   }
+  //   return endDate;
+  // }
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-    var dateNow =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-    var endDate =
-      action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
+    endDateValue = action === this.actionAdd || action === this.actionCopy || (this.action === this.actionEdit && (this.lead.status == '1' ||
+   this.lead.status == '15' ))? new Date() : new Date(endDateValue);
+    let dateNow = endDateValue;
+    let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
       endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
       endDate.setHours(endDate.getHours() + listSteps[i].durationHour);

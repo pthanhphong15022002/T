@@ -82,7 +82,7 @@ export class ViewListCmComponent implements OnInit {
       .getAdressNameByIsDefault(objectID, entityName)
       .subscribe((res) => {
         if (res) {
-          this.addressNameCM = res?.adressName;
+          this.addressNameCM = res?.address;
         }else{
           this.addressNameCM = null;
         }

@@ -228,6 +228,12 @@ export class EmployeesComponent extends UIComponent {
       }
     }
   }
+
+  //departmentname: "Trung tâm DXS"
+  //orgunitID: "T02"
+  //departmentID: "D08"
+  //companyID: "C01"
+
   // edit
   edit(event: any, data: any) {
     if (event && data) {
@@ -249,8 +255,11 @@ export class EmployeesComponent extends UIComponent {
       );
       popup.closed.subscribe((result) => {
         if (result?.event) {
-          let dataUpdate = result.event;
-          this.view.dataService.update(dataUpdate).subscribe();
+          this.view.dataService.data = [];
+          this.view.dataService.load().subscribe((temp) => {
+          });
+          // let dataUpdate = result.event;
+          // this.view.dataService.update(dataUpdate).subscribe();
         }
       });
       this.detectorRef.detectChanges();

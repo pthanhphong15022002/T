@@ -591,7 +591,10 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   eventUser(e) {
-    this.owner = e?.id;
+    if(e || e === null || e === '') {
+      this.owner = e;
+    }
+
   }
   removeItemSuccess(list) {
     let idx = list.findIndex((x) => x.isSuccessStep);
@@ -618,10 +621,11 @@ export class PopupMoveStageComponent implements OnInit {
       this.listStepsCbx[indexClick].isFailStep
     ) {
       return false;
-    } else if (space > 0) {
-      return true;
     }
-    return false;
+    else if (space < 0) {
+      return false;
+    }
+    return true;
   }
 
   getGrvInstanceStep() {

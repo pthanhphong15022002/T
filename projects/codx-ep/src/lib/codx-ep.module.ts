@@ -34,6 +34,8 @@ import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTra
 import { PopupDriverAssignComponent } from './approval/popup-driver-assign/popup-driver-assign.component';
 import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components/codx-view-content/codx-view-content.component';
+import { EPDashboardComponent } from './dashboard/dashboard.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 export const routes: Routes = [
   {
@@ -100,6 +102,10 @@ export const routes: Routes = [
       {
         path: 'dialog/:funcID',
         component: CodxViewContentComponent,
+      },      
+      {
+        path: 'dashboard/:funcID',
+        component: EPDashboardComponent,
       },
     ],
   },
@@ -151,6 +157,7 @@ export const routes: Routes = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
+    TreeMapModule,
   ],
   exports: [RouterModule],
   declarations: [
@@ -166,6 +173,7 @@ export const routes: Routes = [
     PopupAddCardTransComponent,
     CardTransComponent,
     PopupDriverAssignComponent,
+    EPDashboardComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

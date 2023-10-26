@@ -45,6 +45,7 @@
     style="width: 100%"
     [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     [imageId]="data?.customerID"
+    [imageObjName]="data?.customerName"
     [imgOn]="data?.modifiedOn"
     [imageReferType]="'avt'"
     [imageWidth]="35"
@@ -158,6 +159,16 @@
         ></span
         ><span>%</span> -->
       </div>
+      <div
+      *ngIf="dataSelected?.statusCodeID"
+      class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+    >
+      <span
+        class="text-ellipsis line-clamp line-clamp-2"
+        [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
+        > {{getStatusCode(dataSelected?.statusCodeID)}}</span
+      >
+    </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-1">
       <div class="d-flex align-items-end codx-badge">
@@ -191,7 +202,7 @@
           >
           </codx-vll>
         </ng-template>
-        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+        <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
             [field]="'ApproveStatus'"
@@ -408,7 +419,7 @@
           ></span>
         </div>
       </div>
-      
+
       <div class="col-5 pe-0 d-flex justify-content-end align-items-center">
         <span class="icon-16 icon-av_timer text-gray-600 me-1"></span>
         <span
@@ -471,7 +482,7 @@
           >
           </codx-vll>
         </ng-template>
-        <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
+        <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
             [field]="'ApproveStatus'"
@@ -668,15 +679,23 @@
 </ng-template>
 
 <ng-template #templateOwner let-data>
-  <div class="">
-    <codx-imgs
+
+  <div class="d-flex align-items-center" data-example="alignSelf">
+    <div class="align-self-center pe-2"> <codx-imgs
       [isToolTip]="true"
       [width]="25"
       [objectId]="data?.owner"
       objectType="AD_Users"
       [numberImages]="1"
     >
-    </codx-imgs>
+    </codx-imgs></div>
+    <span
+      [innerHTML]="
+        data.owner
+          | formatvalue : view.formModel : 'owner'
+          | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -734,6 +753,51 @@
         | async
     "
   ></span>
+</ng-template>
+<ng-template #templateNote let-data>
+  <ng-template #tooltipNote>
+    <div class="text-end text-sm-start">
+      <strong class="label-colon">{{
+        gridViewSetup?.Note?.headerText
+      }}</strong>
+      {{ data?.note }}
+    </div>
+  </ng-template>
+  <span
+  class="text-gray-600 fs-7 line-clamp line-clamp-2"
+  #note
+  [ngbTooltip]="tooltipNote"
+  [innerHTML]="
+    data?.note
+      | formatvalue : formModel : 'note' : note
+      | async
+  "
+></span>
+
+</ng-template>
+
+<ng-template #templateStatusCode let-data>
+  <div
+  *ngIf="data?.statusCodeID"
+  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+>
+  <span
+    class="text-ellipsis line-clamp line-clamp-2"
+    [ngbTooltip]="getStatusCode(data?.statusCodeID)"
+    > {{getStatusCode(data?.statusCodeID)}}</span
+  >
+</div>
+</ng-template>
+<ng-template #templateIndustries let-data>
+  <span
+  class="text-gray-600 fs-7 "
+  #industries
+  [innerHTML]="
+    data?.industries
+      | formatvalue : view.formModel : 'industries' : industries
+      | async
+  "
+></span>
 </ng-template>
 
 <ng-template #dashBoard>

@@ -553,9 +553,11 @@ export class InstancesComponent
                     }
                   });
               }
-            } else if (this.process.applyFor == '4') {
-              this.openPopupContract('add', formMD);
-            } else {
+            }
+            // else if (this.process.applyFor == '4') {
+            //   this.openPopupContract('add', formMD);
+            // }
+            else {
               this.openPopUpAdd(
                 applyFor,
                 formMD,
@@ -575,8 +577,9 @@ export class InstancesComponent
       this.view.dataService.dataSelected.reCID = Util.uid();
     }
     this.view.dataService.copy().subscribe((res) => {
-      const funcIDApplyFor =
-        this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      // const funcIDApplyFor =
+      //   this.process.applyFor === '1' ? 'CM0201' : 'DPT0405';
+      const funcIDApplyFor = this.checkFunctionID(this.process.applyFor);
       const applyFor = this.process.applyFor;
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
@@ -595,7 +598,6 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-            
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -644,10 +646,11 @@ export class InstancesComponent
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
     };
+    this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
@@ -655,24 +658,21 @@ export class InstancesComponent
             this.kanban.refresh();
           }
         }
-
         if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected
-          this.detailViewInstance.getStageByStep()
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.getStageByStep();
         }
 
         if (this.detailViewPopup) {
           this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.loadChangeData()
+          this.detailViewPopup.loadChangeData();
         }
-
-     
         this.detectorRef.detectChanges();
       }
     });
   }
 
-  openPopupEdit(applyFor, formMD, option, titleAction) {
+  async openPopupEdit(applyFor, formMD, option, titleAction) {
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -689,18 +689,19 @@ export class InstancesComponent
       isLoad: applyFor != '0',
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
+      processID: this.processID,
     };
-    let dialogEditInstance = this.checkPopupInCM(applyFor, obj, option);
+    let dialogEditInstance = await this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view.dataService.update(e.event).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }else  this.kanban.updateCard(this.dataSelected); 
+          } else this.kanban.updateCard(this.dataSelected);
         }
-      
+
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
           this.detailViewInstance.loadChangeData();
@@ -708,7 +709,7 @@ export class InstancesComponent
 
         if (this.detailViewPopup) {
           this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.loadChangeData()
+          this.detailViewPopup.loadChangeData();
         }
 
         this.detectorRef.detectChanges();
@@ -719,6 +720,7 @@ export class InstancesComponent
   edit(data, titleAction) {
     if (data) {
       this.view.dataService.dataSelected = data;
+      this.oldIdInstance = data.recID;
     }
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -938,9 +940,9 @@ export class InstancesComponent
                   res.disabled = true;
                 }
                 break;
-              //an khi aprover rule
+              //an khi aprover rule || data.approveStatus == '5' xoa di
               case 'DP17':
-                if (!data.write || data.closed || data.approveStatus == '5') {
+                if (!data.write || data.closed) {
                   res.disabled = true;
                 } else if (!this.process?.approveRule) {
                   res.isblur = true;
@@ -1686,13 +1688,13 @@ export class InstancesComponent
                 this.detailViewInstance.listSteps = this.listStepInstances;
                 this.detailViewInstance.loadChangeData();
               }
-           
+
               if (this.detailViewPopup) {
                 this.detailViewPopup.dataSelect = this.dataSelected;
                 this.detailViewPopup.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData()
+                this.detailViewPopup.loadChangeData();
               }
-      
+
               this.detectorRef.detectChanges();
             }
           });
@@ -1779,11 +1781,9 @@ export class InstancesComponent
       isReason: isMoveSuccess,
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
-      listProccessCbx: this.listProccessCbx,
-      listParticipantReason: await this.codxDpService.getListUserByOrg(
-        listParticipantReason
-      ),
+      processID: this.processID,
       applyFor: '0',
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1830,6 +1830,11 @@ export class InstancesComponent
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
+        // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
+        //   e.event?.ownerMove,
+        //   e.event?.instance,
+        //   'testttt'
+        //   );
       }
     });
   }
@@ -2448,6 +2453,13 @@ export class InstancesComponent
       this.dataSelected.approveStatus = '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      // if (this.detailViewInstance) {
+      //   this.detailViewInstance.getViewApprove();
+      // }
+      // if (this.detailViewPopup) {
+      //   this.detailViewPopup.getViewApprove();
+      // }
+
       //da cap nhat tai BE
       // this.codxDpService
       //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
@@ -2586,6 +2598,11 @@ export class InstancesComponent
       return this.callfc.openSide(PopupAddDealComponent, obj, option);
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
+    } else if (applyFor == '4') {
+      option.isFull = true;
+      option.FormModel = obj?.formMD;
+      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
+      return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
   }
@@ -2652,45 +2669,82 @@ export class InstancesComponent
     }
   }
 
-  async openPopupContract(action, formModel: FormModel, contract?) {
-    let data = {
-      action,
-      contract: contract || null,
-      type: 'DP',
-      isAddContractInDP: true
+  addMoveProcess(processMove, applyForMove, ownerMove, instance, titleAction) {
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        const funcIDApplyFor = this.checkFunctionID(applyForMove);
+        const applyFor = applyForMove;
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            titleAction =
+              titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
+          }
+          let instanceReason = {
+            applyForMove: applyForMove,
+            processMove: processMove,
+            ownerMove: ownerMove,
+            instance: instance,
+          };
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width =
+                this.addFieldsControl == '1' || applyFor != '0'
+                  ? '800px'
+                  : '550px';
+              option.zIndex = 1001;
+              if (applyFor != '0') {
+                this.openPopupMove(
+                  applyFor,
+                  formMD,
+                  option,
+                  'add',
+                  instanceReason
+                );
+              }
+            });
+        });
+      });
+  }
+  openPopupMove(applyFor, formMD, option, action, instanceReason) {
+    var obj = {
+      action: action === 'add' ? 'add' : 'copy',
+      applyFor: applyFor,
+      titleAction: this.titleAction,
+      formMD: formMD,
+      endDate: this.HandleEndDate(this.listStepsCbx, action, null),
+      lstParticipants: this.lstOrg,
+      oldIdInstance: this.oldIdInstance,
+      autoName: this.autoName,
+      isAdminRoles: this.isAdminRoles,
+      addFieldsControl: this.addFieldsControl,
+      isLoad: applyFor != '0',
+      processID: this.processID,
+      instanceNoSetting: this.process.instanceNoSetting,
+      dataCM: this.dataCM,
+      categoryCustomer: this.categoryCustomer,
+      instanceReason: instanceReason,
     };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1010;
-    option.FormModel = formModel;
-    option.DataService = this.view.dataService;
-    let popupContract = this.callfc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    if (dataPopupOutput && dataPopupOutput.event != null) {
-      let data = dataPopupOutput.event;
-      if (this.kanban) {
-        // this.kanban.updateCard(data);  //core mới lỗi chô này
-        if (this.kanban?.dataSource?.length == 1) {
-          this.kanban.refresh();
-        }
+    this.detailViewInstance;
+    let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
+    dialogCustomField.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        this.detectorRef.detectChanges();
       }
-      this.dataSelected = data?.instance;
-      if (this.detailViewInstance) {
-        this.detailViewInstance.dataSelect = this.dataSelected;
-        this.detailViewInstance.listSteps = this.listStepInstances;
-      }
-      this.view?.dataService.update(this.dataSelected);
-      this.detectorRef.detectChanges();
-    }
-    return dataPopupOutput;
+    });
   }
 }

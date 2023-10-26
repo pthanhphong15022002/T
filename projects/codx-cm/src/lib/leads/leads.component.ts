@@ -138,7 +138,7 @@ export class LeadsComponent
   action: any;
   currencyIDDefault: any;
   statusDefault: any;
-  user:any;
+  user: any;
   valueListStatus: any;
 
   isLoading = false;
@@ -162,8 +162,7 @@ export class LeadsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore,
-
+    private authStore: AuthStore
   ) {
     super(inject);
     if (!this.funcID) {
@@ -178,8 +177,6 @@ export class LeadsComponent
     }
     this.executeApiCalls();
     this.loadParam();
-    this.api.execSv<any>('CM','ERM.Business.CM','CustomersBusiness','RPAUpdateAddresscAsync',['CM_Leads']).subscribe(res => {});
-
   }
 
   onInit(): void {
@@ -259,7 +256,7 @@ export class LeadsComponent
         this.valueListStatusCode = [];
       }
     });
-}
+  }
   async getProcessSetting() {
     this.codxCmService
       .getListProcessDefault([this.applyForLead])
@@ -450,9 +447,7 @@ export class LeadsComponent
       // Bắt đầu ngay
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['15', '1'].includes(data.status) ||
-            data.closed ||
-            !data.applyProcess
+          ? !['1'].includes(data.status) || data.closed || !data.applyProcess
           : true;
     };
     let isConvertLead = (eventItem, data) => {
@@ -533,18 +528,7 @@ export class LeadsComponent
         data.approveStatus != '3';
       eventItem.isblur = false;
     };
-    let isUpload = (eventItem, data) => {
-      // ĐÍnh kèm file, nhập khẩu dữ liệu
-      eventItem.disabled = !data.upload ? true : false;
-    };
-    let isEmail = (eventItem, data) => {
-      // Gửi mail
-      eventItem.disabled = !data.write ? true : false;
-    };
-    let isDownload = (eventItem, data) => {
-      // Nhập khẩu dữ liệu
-      eventItem.disabled = !data.download ? true : false;
-    };
+
     let isDisabledDefault = (eventItem, data) => {
       eventItem.disabled = true;
     };
@@ -574,10 +558,6 @@ export class LeadsComponent
       CM0205_15: isDeleteProcess, // khong su dung quy trinh
       CM0205_17: isRejectApprover,
       CM0205_16: isPermission, //Phân quyền
-      SYS003: isUpload,
-      SYS004: isEmail,
-      SYS001: isUpload,
-      SYS002: isDownload,
     };
     return functionMappings[type];
   }
@@ -866,11 +846,9 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-        //    e.event.modifiedOn = new Date();
-          //  data.modifiedOn = new Date() ;
-          data.modifiedOn = moment(new Date())
-          .add(99, 'hours')
-          .toDate();
+            //    e.event.modifiedOn = new Date();
+            //  data.modifiedOn = new Date() ;
+            data.modifiedOn = moment(new Date()).add(99, 'hours').toDate();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = JSON.parse(JSON.stringify(e.event));
             this.view.dataService.update(this.dataSelected).subscribe();
@@ -1011,49 +989,60 @@ export class LeadsComponent
 
   //auto update address
   async updateAutoAddress(datas = []) {
-    let lsts = datas.filter(
-      (x) => x.address != null && x.address?.trim() != ''
-    );
-    for (var item of lsts) {
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [item?.address, this.leverSetting]
-        )
-      );
-      if (json != null && json.trim() != '') {
-        let lstDis = JSON.parse(json);
-        if (item.provinceID != lstDis?.ProvinceID)
-          item.provinceID = lstDis?.ProvinceID;
-        if (item.districtID != lstDis?.DistrictID)
-          item.districtID = lstDis?.DistrictID;
-        // if (item?.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
-      } else {
-        item.provinceID = null;
-        item.districtID = null;
-        item.wardID = null;
-      }
-    }
+    // let lsts = datas.filter(
+    //   (x) => x.address != null && x.address?.trim() != ''
+    // );
+    // for (var item of lsts) {
+    //   let json = await firstValueFrom(
+    //     this.api.execSv<any>(
+    //       'BS',
+    //       'ERM.Business.BS',
+    //       'ProvincesBusiness',
+    //       'GetLocationAsync',
+    //       [item?.address, this.leverSetting]
+    //     )
+    //   );
+    //   if (json != null && json.trim() != '' && json != "null") {
+    //     let lstDis = JSON.parse(json);
+    //     if (item.provinceID != lstDis?.ProvinceID)
+    //       item.provinceID = lstDis?.ProvinceID;
+    //     if (item.districtID != lstDis?.DistrictID)
+    //       item.districtID = lstDis?.DistrictID;
+    //     // if (item?.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+    //   } else {
+    //     item.provinceID = null;
+    //     item.districtID = null;
+    //     item.wardID = null;
+    //   }
+    // }
 
+    // this.api
+    //   .execSv<any>(
+    //     'CM',
+    //     'ERM.Business.CM',
+    //     'CustomersBusiness',
+    //     'UpdateAutoAddressAsync',
+    //     [null, lsts]
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       lsts.forEach((ele) => {
+    //         this.view.dataService.update(ele).subscribe();
+    //       });
+    //       this.notificationsService.notifyCode('SYS007');
+    //       this.detectorRef.detectChanges();
+    //     }
+    //   });
     this.api
       .execSv<any>(
         'CM',
         'ERM.Business.CM',
         'CustomersBusiness',
-        'UpdateAutoAddressAsync',
-        [null, lsts]
+        'RPAUpdateAddresscAsync',
+        ['CM_Leads']
       )
       .subscribe((res) => {
-        if (res) {
-          lsts.forEach((ele) => {
-            this.view.dataService.update(ele).subscribe();
-          });
-          this.notificationsService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
+        this.notificationsService.notifyCode('SYS007');
       });
   }
 
@@ -1237,14 +1226,7 @@ export class LeadsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           if (!isCheck) {
-            let datas = [
-              data.recID,
-              this.applyForLead,
-              isCheck,
-              this.processId,
-              '',
-              '',
-            ];
+            let datas = [data, isCheck];
             this.getApiUpdateProcess(datas, []);
           } else {
             let datas = [
@@ -1261,8 +1243,9 @@ export class LeadsComponent
                 data.processID = res[0].processID;
                 data.datas = res[0].datas;
                 data.status = res[0].status;
-                this.addPermission(res[0].permissions ,data);
-                let datas= [data ,isCheck];
+                data.owner = res[0]?.owner; /// check dụm bao
+                this.addPermission(res[0].permissions, data);
+                let datas = [data, isCheck];
                 this.getApiUpdateProcess(datas, res[1]);
               }
             });
@@ -1277,30 +1260,29 @@ export class LeadsComponent
       }
     }
   }
-    // Add permission form DP - FE
-    copyPermission(permissionDP: any) {
-      let permission = new CM_Permissions();
-      permission.objectID = permissionDP.objectID;
-      permission.objectName = permissionDP.objectName;
-      permission.objectType = permissionDP.objectType;
-      permission.roleType = permissionDP.roleType;
-      // permission.full =  permissionDP.full;
-      permission.read = permissionDP.read;
-      permission.update = permissionDP.update;
-      permission.assign = permissionDP.assign;
-      permission.delete = permissionDP.delete;
-      permission.upload = permissionDP.upload;
-      permission.download = permissionDP.download;
-      permission.isActive = permissionDP.isActive;
-      permission.create = permissionDP.create;
-      permission.memberType = '2'; // Data from DP
-      permission.allowPermit = permissionDP.allowPermit;
-      permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
-      permission.createdOn = new Date();
-      permission.createdBy = this.user.userID;
-      return permission;
-    }
-
+  // Add permission form DP - FE
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = permissionDP.isActive;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
+    return permission;
+  }
 
   getApiUpdateProcess(datas, listStep) {
     this.codxCmService.updateProcess(datas).subscribe((res) => {
@@ -1465,6 +1447,7 @@ export class LeadsComponent
       applyFor: this.applyForLead,
       dataCM: dataCM,
       stepName: data.currentStepName,
+      isMoveProcess: false,
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1501,7 +1484,7 @@ export class LeadsComponent
   }
 
   popupOwnerRoles(data) {
-    this.dataSelected = data;
+    this.dataSelected =  JSON.parse(JSON.stringify(data)) ;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.funcIDCrr.functionID;
@@ -1609,7 +1592,9 @@ export class LeadsComponent
     this.dataSelected = data;
     this.statusDefault = this.dataSelected.applyProcess
       ? this.dataSelected?.statusCode
-      : ['1','15'].includes(this.dataSelected?.status)?'':this.dataSelected?.status;
+      : ['1', '15'].includes(this.dataSelected?.status)
+      ? ''
+      : this.dataSelected?.status;
     this.dialogQuestionCopy = this.callfc.openForm(
       this.popUpQuestionCopy,
       '',

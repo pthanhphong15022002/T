@@ -1,9 +1,11 @@
 import { Component, Injector, Optional, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 import {
   AuthService,
   AuthStore,
   CacheService,
+  CodxFormComponent,
   DataRequest,
   DialogData,
   DialogRef,
@@ -13,8 +15,10 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
+import moment from 'moment';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-over-time',
@@ -36,7 +40,9 @@ export class PopupOverTimeComponent extends UIComponent {
   toTime: string;
   formGroup: FormGroup;
   employeeObj;
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: CodxFormComponent;
+  registerForm: '1' | '2';
+  private destroy$ = new Subject<void>();
 
   constructor(
     injector: Injector,
@@ -56,12 +62,10 @@ export class PopupOverTimeComponent extends UIComponent {
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
 
-    console.log(this.data);
-
     //data employee login if exists
-    if (dialogData?.data[4]) {
-      this.employeeObj = dialogData?.data[4];
-    }
+    // if (dialogData?.data[4]) {
+    //   this.employeeObj = dialogData?.data[4];
+    // }
 
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
@@ -76,18 +80,18 @@ export class PopupOverTimeComponent extends UIComponent {
       this.data.toDate = null;
     }
 
-    // if (this.funcType != 'add') {
-    //   let tmpStartTime = new Date(this.data?.fromTime);
-    //   let tmpEndTime = new Date(this.data?.toTime);
-    //   this.fromTime =
-    //     ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-    //     ':' +
-    //     ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-    //   this.toTime =
-    //     ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-    //     ':' +
-    //     ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
-    // }
+    if (this.funcType != 'add') {
+      let tmpStartTime = new Date(this.data?.fromTime);
+      let tmpEndTime = new Date(this.data?.toTime);
+      this.fromTime =
+        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+        ':' +
+        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+      this.toTime =
+        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+        ':' +
+        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+    }
   }
 
   getGrvSetup() {
@@ -115,6 +119,20 @@ export class PopupOverTimeComponent extends UIComponent {
           this.formGroup.patchValue(this.data);
         }
       });
+
+    if (this.funcType == 'edit' || this.funcType == 'copy') {
+      this.getEmployeeInfoById(this.data.employeeID);
+      this.registerForm = this.data.registerForm;
+      this.fromTime = this.data.fromTime;
+      this.toTime = this.data.toTime;
+    } else {
+      this.registerForm = '1';
+      if (this.optionalData?.resource) {
+        var employeeID = this.optionalData.resource.employeeID;
+        this.getEmployeeInfoById(employeeID);
+        this.data.employeeID = employeeID;
+      }
+    }
   }
 
   valueChange(e) {
@@ -126,7 +144,6 @@ export class PopupOverTimeComponent extends UIComponent {
       }
     }
   }
-
   handleSelectEmp(evt) {
     if (evt.data) {
       this.getEmployeeInfoById(evt.data);
@@ -144,6 +161,7 @@ export class PopupOverTimeComponent extends UIComponent {
         'GetEmployeeByUserIDAsync',
         [empId, 'getEmployee']
       )
+      .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.employeeObj = res;
 
@@ -155,23 +173,72 @@ export class PopupOverTimeComponent extends UIComponent {
       });
   }
 
-  valueToTimeChange(e) {
-    if (e.data.toDate) {
-      this.data[e.field] = e.data.toDate;
+  valueFromTimeChange(e) {
+    if (e?.data) {
+      this.fromTime = e.data.fromDate;
+      this.validateFromToTime(this.fromTime, this.toTime);
     }
   }
+  valueToTimeChange(e) {
+    if (e?.data) {
+      this.toTime = e.data.fromDate;
+      this.validateFromToTime(this.fromTime, this.toTime);
+    }
+  }
+  validateFromToTime(fromTime: any, toTime: any) {
+    let tmpDay = new Date(this.data.createdOn);
 
-  Add(data: any) {
-    return this.api.execSv<any>(
-      'PR',
-      'ERM.Business.PR',
-      'TimeKeepingRequest',
-      'AddAsync',
-      data
-    );
+    if (fromTime != null) {
+      let tempFromTime = fromTime.split(':');
+
+      this.data.fromTime = new Date(
+        tmpDay.getFullYear(),
+        tmpDay.getMonth(),
+        tmpDay.getDate(),
+        tempFromTime[0],
+        tempFromTime[1],
+        0
+      );
+    }
+    if (toTime != null) {
+      let tempToTime = toTime.split(':');
+
+      this.data.toTime = new Date(
+        tmpDay.getFullYear(),
+        tmpDay.getMonth(),
+        tmpDay.getDate(),
+        tempToTime[0],
+        tempToTime[1],
+        0
+      );
+    }
+    return true;
+  }
+  changeRegisterForm() {
+    this.registerForm = this.registerForm == '1' ? '2' : '1';
   }
 
+  // Add(data: any) {
+  //   return this.api.execSv<any>(
+  //     'PR',
+  //     'ERM.Business.PR',
+  //     'TimeKeepingRequest',
+  //     'AddAsync',
+  //     data
+  //   );
+  // }
+
   validateForm() {
+    if (!this.data.employeeID) {
+      console.log(this.grView['employeeID']);
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + 'Nhân viên' + '"'
+      );
+      return false;
+    }
+
     if (!this.data.fromDate) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -188,20 +255,57 @@ export class PopupOverTimeComponent extends UIComponent {
       );
       return false;
     }
-    if (!this.data.employeeID) {
-      console.log(this.grView['employeeID']);
+    if (this.data.fromDate > this.data.toDate) {
+      this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
+      return false;
+    }
+    if (this.registerForm == '1') {
+      if (!this.data.fromTime) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['fromTime']['headerText'] + '"'
+        );
+        return false;
+      }
+      if (!this.data.toTime) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['toTime']['headerText'] + '"'
+        );
+        return false;
+      }
+    } else {
+      if (!this.data.hours) {
+        this.notificationsService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.grView['hours']['headerText'] + '"'
+        );
+        return false;
+      }
+    }
+    if (!this.data.reason) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
-        '"' + 'Nhân viên' + '"'
+        '"' + this.grView['reason']['headerText'] + '"'
       );
       return false;
-    } else return true;
+    }
+    return true;
   }
 
   beforeSave(option: RequestOption) {
-    option.methodName = 'AddAsync';
-    option.className = 'TimeKeepingRequest';
+    if (this.funcType === 'add' || this.funcType == 'copy') {
+      this.data.requestType = 'OT';
+      option.methodName = 'AddAsync';
+      this.data.registerForm = this.registerForm;
+    } else {
+      option.methodName = 'EditAsync';
+    }
+    option.className = 'TimeKeepingRequestBusiness';
     option.assemblyName = 'PR';
     option.service = 'PR';
     option.data = this.data;
@@ -209,23 +313,34 @@ export class PopupOverTimeComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if (this.validateForm() === true) {
-      if (this.funcType === 'add') {
-        this.data.requestType = 'OT';
-        console.log(this.data);
-        this.dialogRef.dataService
-          .save(
-            (opt: RequestOption) => this.beforeSave(opt),
-            0,
-            null,
-            null,
-            true
-          )
-          .subscribe(async (res) => {
-            console.log(res);
+    // if (this.data.fromDate > this.data.toDate) {
+    //   this.hrService.notifyInvalidFromTo('FromDate', 'ToDate', this.formModel);
+    //   return;
+    // }
+    // this.form?.formGroup.patchValue(this.data);
+    // if (this.form?.formGroup.invalid == true) {
+    //   this.hrService.notifyInvalid(this.form?.formGroup, this.formModel);
+    //   return;
+    // }
+    if (this.validateForm()) {
+      this.dialogRef.dataService
+        .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, true)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if(res?.save){
             this.dialogRef && this.dialogRef.close(res.save);
-          });
-      }
+          }else{
+            this.dialogRef && this.dialogRef.close(res.update);
+          }
+        });
+    }
+  }
+
+  getHour(data) {
+    if (data) {
+      return moment(data).format('HH : mm');
+    } else {
+      return null;
     }
   }
 }

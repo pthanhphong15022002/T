@@ -15,7 +15,7 @@
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeMFDetail($event, data)" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event, data,'viewdetail')" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 

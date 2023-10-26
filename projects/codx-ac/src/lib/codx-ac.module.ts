@@ -43,7 +43,6 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
-import { ReceiptTransactionsLineAddComponent } from './vouchers/receipt-transactions/receipt-transactions-line-add/receipt-transactions-line-add.component';
 import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
 import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { TableLineDetailStaticComponent } from './vouchers/salesinvoices/components/table-line-detail-static/table-line-detail-static.component';
@@ -79,26 +78,15 @@ import { CashtransferAddComponent as CashtransfersAddComponent } from './voucher
 import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
-import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
 import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
-import { AdvancePaymentComponent } from './advance-payment/advance-payment.component';
-import { AdvancePaymentAddComponent } from './advance-payment/advance-payment-add/advance-payment-add.component';
-import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayment-detail.component';
-import { CashrecieptDetailComponent } from './vouchers/cashreceipts/cashreciept-detail.component';
 import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/purchaseinvoices-detail/purchaseinvoices-detail.component';
 import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/issue-transactions-detail/issue-transactions-detail.component';
 import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
-import { AdvancePaymentDetailComponent } from './advance-payment/advance-payment-detail/advance-payment-detail.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
-import { IssueTransactionsUpdateParasComponent } from './vouchers/issue-transactions/issue-transactions-update-paras/issue-transactions-update-paras.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
-import { PaymentOrderComponent } from './payment-order/payment-order.component';
-import { PaymentOrderAddComponent } from './payment-order/payment-order-add/payment-order-add.component';
-import { PaymentOrderDetailComponent } from './payment-order/payment-order-detail/payment-order-detail.component';
-import { AdvancedPaymentLinkComponent } from './payment-order/advanced-payment-link/advanced-payment-link.component';
 import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
 import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
 import { VatinvoicesTableComponent } from './share/ac-tableview/vatInvoices-table/vatinvoices-table.component';
@@ -106,6 +94,16 @@ import { PurchaseinvoicesTableComponent } from './share/ac-tableview/purchaseinv
 import { SalesinvoicesTableComponent } from './share/ac-tableview/salesinvoices-table/salesinvoices-table.component';
 import { MACContentComponent } from './maccontent/maccontent.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
+import { AdvancePaymentRequestComponent } from './vouchers/advance-payment-request/advance-payment-request.component';
+import { AdvancePaymentRequestAddComponent } from './vouchers/advance-payment-request/advance-payment-request-add/advance-payment-request-add.component';
+import { CashpaymentDetailComponent } from './vouchers/cashpayments/cashpayments-detail/cashpayment-detail.component';
+import { CashrecieptDetailComponent } from './vouchers/cashreceipts/cashreceipts-detail/cashreciept-detail.component';
+import { AdvancePaymentRequestDetailComponent } from './vouchers/advance-payment-request/advance-payment-request-detail/advance-payment-request-detail.component';
+import { LayoutNoasideAcComponent } from './_layout-noaside-ac/layout-noaside-ac.component';
+import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advance-payment-request-table/advance-payment-request-table.component';
+import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
+import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
+import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -265,7 +263,7 @@ export const routes: Routes = [
     component: LayoutOnlyHeaderComponent,
     children: [
       {
-        path: 'MACContent', //  /:funcID',
+        path: 'maccontent/:funcID',
         component: MACContentComponent,
       },
     ],
@@ -331,7 +329,6 @@ export const routes: Routes = [
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
     ReportsComponent,
-    ReceiptTransactionsLineAddComponent,
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
@@ -366,31 +363,30 @@ export const routes: Routes = [
     TranformClassBorderPipe,
     IssueTransactionsComponent,
     IssueTransactionsAddComponent,
-    IssueTransactionsLineAddComponent,
     IsObjectEmptyPipe,
     CashreceiptsComponent,
     CashreceiptsAddComponent,
-    AdvancePaymentComponent,
-    AdvancePaymentAddComponent,
     CashpaymentDetailComponent,
     CashrecieptDetailComponent,
     PurchaseinvoicesDetailComponent,
     IssueTransactionsDetailComponent,
     ReceiptTransactionsDetailComponent,
     SalesinvoicesDetailComponent,
-    AdvancePaymentDetailComponent,
     CashtransfersDetailComponent,
-    IssueTransactionsUpdateParasComponent,
-    PaymentOrderComponent,
-    PaymentOrderAddComponent,
-    PaymentOrderDetailComponent,
-    AdvancedPaymentLinkComponent,
     AcctrantsTableComponent,
     SettledinvoicesTableComponent,
     VatinvoicesTableComponent,
     PurchaseinvoicesTableComponent,
     SalesinvoicesTableComponent,
     MACContentComponent,
+    AdvancePaymentRequestComponent,
+    AdvancePaymentRequestAddComponent,
+    AdvancePaymentRequestDetailComponent,
+    LayoutNoasideAcComponent,
+    AdvancePaymentRequestTableComponent,
+    PaymentOrderComponent,
+    PaymentOrderAddComponent,
+    ReceiptTransactionsTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

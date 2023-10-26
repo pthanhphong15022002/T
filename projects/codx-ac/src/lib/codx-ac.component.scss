@@ -5,6 +5,9 @@
 .mw-850 {
     max-width: 850px !important;
 }
+.mw-800 {
+    max-width: 800px !important;
+}
 
 .table-ac {
     height: calc(100vh - 429px) !important;
@@ -50,6 +53,15 @@
 .tabline-content .e-content {
     height: calc(100vh - 505px) !important;
 }
+
+.tablinevoucher-content .e-content {
+    height: calc(100vh - 435px) !important;
+}
+
+.tabadvance-content .e-content {
+    height: calc(100vh - 515px) !important;
+}
+
 
 .tabset-content .e-content {
     height: calc(90vh - 417px) !important
@@ -259,16 +271,6 @@
     position: absolute !important;
 }
 
-// .ac-animation-slideRight {
-//     animation-name: slideRight;
-//     animation-duration: 500ms;
-//     animation-fill-mode: both;
-//     animation-timing-function: ease;
-//     width: 100%;
-//     height: 100%;
-//     position: absolute;
-// }
-
 @keyframes slideRight {
     0% {
         transform: translate3d(100%, 0, 0);
@@ -285,6 +287,11 @@
 .ac-empty-record {
     background-color: #f8f9fa !important;
     height: 30px !important;
+}
+
+#gridViewV2.e-grid.e-default tr td:first-child{
+    border-left-width: 0px !important;
+    border-top-width: 0px !important;
 }
 
 .rounded-15 {

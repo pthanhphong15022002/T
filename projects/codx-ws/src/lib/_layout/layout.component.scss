@@ -26,21 +26,23 @@ codx-view-list-detail .codx-detail-footer {
             padding: 0 13px 0 0 !important;
         }
     }
+   
 }
 .ws-body{
     height: calc(100vh - 55px);
+    .toolbar {
+        padding: 0.2rem!important;
+    }
     co-calendar>codx-views>.container-fluid
     {
         padding: 15px 15px 0px 15px !important;
         height: calc(100vh - 50px) !important;
         overflow: hidden;
-        .calendar-left
-        {
-            height: 100% !important;
-        }
+  
     }
     .pin-bar .my-2.w-100{
         margin-top:0!important;
         margin-bottom:0!important;
     }
+
 }

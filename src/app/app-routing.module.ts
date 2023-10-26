@@ -52,6 +52,12 @@ var childAuthRoutes: Routes = [
       import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
   },
   {
+    path: 'tme',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-tm/src/lib/codx-tm.module').then((m) => m.TMModule),
+  },
+  {
     path: 'wp',
     canActivate: [AuthGuard],
     data: { noReuse: true },
@@ -143,6 +149,14 @@ var childAuthRoutes: Routes = [
   },
   {
     path: 'od',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-od/src/lib/codx-od.module').then(
+        (m) => m.CodxODModule
+      ),
+  },
+  {
+    path: 'ode',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-od/src/lib/codx-od.module').then(

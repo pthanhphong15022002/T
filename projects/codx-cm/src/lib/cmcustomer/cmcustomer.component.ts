@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   AlertConfirmInputConfig,
+  AuthStore,
   ButtonModel,
   CacheService,
   DialogModel,
@@ -30,6 +31,8 @@ import { firstValueFrom } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddLeadComponent } from '../leads/popup-add-lead/popup-add-lead.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
+import { CM_Deals } from '../models/cm_model';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -96,6 +99,8 @@ export class CmCustomerComponent
   queryParams: any;
   status = '';
   leverSetting = 0;
+  user: any;
+  isAdmin: boolean = false;
   // const set value
   readonly btnAdd: string = 'btnAdd';
   constructor(
@@ -104,12 +109,14 @@ export class CmCustomerComponent
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private authstore: AuthStore
   ) {
     super(inject);
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
+    this.user = this.authstore.get();
     this.router.params.subscribe((param: any) => {
       if (param.funcID) {
         this.loaded = false;
@@ -169,6 +176,7 @@ export class CmCustomerComponent
       id: this.btnAdd,
     };
     this.showButtonAdd = true;
+    this.checkAdmin();
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -213,6 +221,16 @@ export class CmCustomerComponent
     this.view.dataService.methodDelete = 'DeleteCmAsync';
     this.cmSv.initCache().subscribe((res) => {});
     this.detectorRef.detectChanges();
+  }
+
+  async checkAdmin() {
+    let data = await firstValueFrom(this.cmSv.getAdminRolesByModule());
+    let isAdmin = false;
+    if (data) {
+      let lstId = data.split(';');
+      isAdmin = lstId.some((x) => lstId.includes(this.user.userID));
+    }
+    this.isAdmin = isAdmin || this.user.administrator;
   }
 
   onLoading(e) {
@@ -318,8 +336,12 @@ export class CmCustomerComponent
         this.convertCustomerToLeads(data);
         break;
       case 'CM0101_4':
+      case 'CM0105_4':
         this.popupPermissions(data);
         break;
+      // case 'CM0101_7':
+      //   this.convertCustomerToDeals(data);
+      //   break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -397,19 +419,40 @@ export class CmCustomerComponent
                 res.disabled = true;
               break;
             case 'CM0101_4':
-              if (!data.assign && !data.allowPermit) res.disabled = true;
+            case 'CM0105_4':
+              if (
+                data?.owner != this.user?.userID &&
+                !data.assign &&
+                !data.allowPermit &&
+                !this.isAdmin
+              )
+                res.disabled = true;
               break;
-            default:
+            case 'SYS003':
+            case 'SYS004':
+            case 'SYS001':
+            case 'SYS002':
+              res.disabled = false;
               break;
           }
         } else {
           switch (res.functionID) {
             case 'CM0105_6':
             case 'CM0101_6':
+            case 'SYS003':
+            case 'SYS004':
+            case 'SYS001':
+            case 'SYS002':
               res.disabled = false;
               break;
             case 'CM0101_4':
-              if (!data.assign && !data.allowPermit) res.disabled = true;
+              if (
+                data?.owner != this.user?.userID &&
+                !data.assign &&
+                !data.allowPermit &&
+                !this.isAdmin
+              )
+                res.disabled = true;
               break;
             default:
               res.disabled = true;
@@ -716,49 +759,43 @@ export class CmCustomerComponent
 
   //auto update address
   async updateAutoAddress(datas = []) {
-    let lsts = datas.filter(
-      (x) => x.address != null && x.address?.trim() != ''
-    );
-    for (var item of lsts) {
-      let json = await firstValueFrom(
-        this.api.execSv<any>(
-          'BS',
-          'ERM.Business.BS',
-          'ProvincesBusiness',
-          'GetLocationAsync',
-          [item?.address, this.leverSetting]
-        )
-      );
-      if (json != null && json.trim() != '') {
-        let lstDis = JSON.parse(json);
-        if (item.provinceID != lstDis?.ProvinceID)
-          item.provinceID = lstDis?.ProvinceID;
-        if (item.districtID != lstDis?.DistrictID)
-          item.districtID = lstDis?.DistrictID;
-        if (item.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
-      } else {
-        item.provinceID = null;
-        item.districtID = null;
-        item.wardID = null;
-      }
-    }
+    // let lsts = datas.filter(
+    //   (x) => x.address != null && x.address?.trim() != ''
+    // );
+    // for (var item of lsts) {
+    //   let json = await firstValueFrom(
+    //     this.api.execSv<any>(
+    //       'BS',
+    //       'ERM.Business.BS',
+    //       'ProvincesBusiness',
+    //       'GetLocationAsync',
+    //       [item?.address, this.leverSetting]
+    //     )
+    //   );
+    //   if (json != null && json.trim() != '' && json != "null") {
+    //     let lstDis = JSON.parse(json);
+    //     if (item.provinceID != lstDis?.ProvinceID)
+    //       item.provinceID = lstDis?.ProvinceID;
+    //     if (item.districtID != lstDis?.DistrictID)
+    //       item.districtID = lstDis?.DistrictID;
+    //     if (item.wardID != lstDis?.WardID) item.wardID = lstDis?.WardID;
+    //   } else {
+    //     item.provinceID = null;
+    //     item.districtID = null;
+    //     item.wardID = null;
+    //   }
+    // }
 
     this.api
       .execSv<any>(
         'CM',
         'ERM.Business.CM',
         'CustomersBusiness',
-        'UpdateAutoAddressAsync',
-        [lsts, null]
+        'RPAUpdateAddresscAsync',
+        ['CM_Customers']
       )
       .subscribe((res) => {
-        if (res) {
-          lsts.forEach((ele) => {
-            this.view.dataService.update(ele).subscribe();
-          });
-          this.notiService.notifyCode('SYS007');
-          this.detectorRef.detectChanges();
-        }
+        this.notiService.notifyCode('SYS007');
       });
   }
 
@@ -946,11 +983,78 @@ export class CmCustomerComponent
   }
 
   addressNameCMEmit(e) {
-    this.dataSelected.address = e ? e?.adressName : null;
+    this.dataSelected.address = e ? e?.address : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
     this.dataSelected.wardID = e ? e?.wardID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
+  }
+
+  // open form covnert deal
+  convertCustomerToDeals(data) {
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      //this.oldIdDeal = data.recID;
+    }
+    let deal = new CM_Deals();
+    deal.customerID = data.recID;
+    deal.dealName = data.customerName;
+    deal.industries = data.industries;
+    deal.channelID = data.channelID;
+    deal.shortName = data.shortName;
+
+    this.view.dataService.copy().subscribe((res) => {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let formModel = new FormModel();
+      // hard code
+      formModel.funcID = 'CM0201';
+      formModel.formName = 'CMDeals';
+      formModel.entityName = 'CM_Deals';
+      formModel.gridViewName = 'grvCMDeals';
+      option.FormModel = formModel;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          let customerView = {
+            customerID:data.recID,
+            dealName:data.customerName,
+            industries:data.industries,
+            channelID:data.channelID,
+            shortName:data.shortName,
+          };
+          let obj = {
+            action: 'add',
+            formMD: formModel,
+            titleAction: this.titleAction,
+            processID: null,
+            gridViewSetup: res,
+            isviewCustomer: true,
+            customerView:customerView,
+       //     functionModule: this.functionModule,
+            // currencyIDDefault: this.currencyIDDefault,
+            // exchangeRateDefault: this.exchangeRateDefault,
+            categoryCustomer:  data?.categoryCustomer,
+          };
+          let dialogCustomDeal = this.callfc.openSide(
+            PopupAddDealComponent,
+            obj,
+            option
+          );
+          dialogCustomDeal.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              //   this.detailViewDeal.promiseAllAsync();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
+    });
   }
 }

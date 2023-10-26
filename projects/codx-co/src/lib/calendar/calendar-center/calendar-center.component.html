@@ -99,18 +99,6 @@
 </ng-template>
 
 <ng-template #eventTemplate let-data>
-  <!-- <ng-container *ngIf="data.transType === 'EP_BookingCars'">
-    <div class="d-flex flex-column w-100">
-      <span class="d-flex flex-start"
-        >{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span
-      >
-      <span
-        class="d-flex flex-start fw-bold"
-        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
-        >{{ data.title }}</span
-      >
-    </div>
-  </ng-container> -->
   <ng-container
     *ngIf="
       data.transType === 'TM_MyTasks' ||
@@ -144,19 +132,7 @@
 </ng-template>
 
 
-<ng-template #resourceHeader let-data>
-  <div class="">
-    <codx-temp-full
-      [imageId]="data.resourceData?.employeeID"
-      [imageObjType]="'AD_Users'"
-      [imageReferType]="'avt'"
-      [title]="data.resourceData.employeeName"
-      [subTitle]="data.resourceData.postionName"
-      content="(0)"
-    >
-    </codx-temp-full>
-  </div>
-</ng-template>
+
 
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">

@@ -491,6 +491,8 @@ export class DP_Instances_Steps_Tasks {
   isTaskDefault: boolean;
   actionStatus: string;
   fieldID: string;
+  objectID: string;
+  objectType: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

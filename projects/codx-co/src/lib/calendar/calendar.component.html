@@ -2,149 +2,171 @@
 </codx-views>
 <ng-template #templateLeft>
   <div class="rounded-3 p-0 position-relative h-100">
-    <div class="row w-100 h-100">
+    <div class="d-flex w-100 h-100">
       <!-- template left -->
-      <div class="col-2 h-100">
+      <div class="w-350px min-w-350px h-100">
         <div class="calendar-left">
-          <!-- Calendar -->
-          <ng-container *ngIf="calendarType == 'COT03'">
-            <div class="w-100 h-100">
-              <ejs-calendar
-                #ejCalendar
-                cssClass="width-calendar"
-                class="e-customStyle w-100 mw-100"
-                [locale]="locale"
-                [firstDayOfWeek]="1"
-                [value]="dateChange"
-                (change)="changeDayOfMonth($event)"
-                (navigated)="changeNewMonth($event)"
-                (renderDayCell)="onLoad($event)"
-                (created)="firstime()">
-              </ejs-calendar>
-            </div>
-          </ng-container>
-          <!-- Accordion -->
-          <ng-container  *ngIf="calendarType !== 'COT03'">
-            <div ngbAccordion class="w-100 h-100">
-              <div ngbAccordionItem [collapsed]="false" class="d-flex flex-column align-items-stretch h-50">
-                <div ngbAccordionHeader class="h-20">
-                  <button ngbAccordionButton (click)="checked = '1'">
-                    <div class="d-flex justify-content-between align-items-center p-2 w-100">
-                      <div class="d-flex align-items-center">
-                        <i class="icon-i-bar-chart-steps icon-20"></i>
-                        <h3 class="ms-2">Sơ đồ tổ chức</h3>
+          <div ngbAccordion class="w-100 h-100">
+            <!-- Lịch công ty -->
+            <ng-container *ngIf="calendarID == 'COT01'">
+              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column h-50">
+                <div ngbAccordionHeader class="">
+                  <div ngbAccordionHeader class="custom-header w-100">
+                    <div ngbAccordionToggle class="w-100"  >
+                      <div class="d-flex justify-content-between align-items-center mt-3 w-100">
+                        <codx-label
+                          fiedName="Events"
+                          default="Sơ đồ tổ chức"
+                          class="fw-bold">
+                        </codx-label>
                       </div>
-                      <input
-                        class="form-check-input"
-                        style="width: 1rem; height: 1rem"
-                        type="radio"
-                        name="flexRadioDefault"
-                        id="flexRadioDefault1"
-                        [checked]="checked == '1'"/>
                     </div>
-                  </button>
+                  </div>
                 </div>
                 <div ngbAccordionCollapse class="h-80">
-                  <div ngbAccordionBody class="overflow-auto h-100">
-                    <ng-container *ngIf="listOrgUnit?.length > 0">
-                      <div class="px-5 py-2" *ngFor="let item of listOrgUnit">
-                        <span class="text-break">{{ item.orgUnitName }}</span>
-                      </div>
-                    </ng-container>
+                  <div ngbAccordionBody class="h-100 px-0">
+                    <codx-listview 
+                    [dataService]="hrRequest" 
+                    [itemTemplate]="orgUnitTemplate" 
+                    funcID="HRT01" 
+                    [entityName]="'HR_OrganizationUnits'"
+                    [selectFirst]="true"
+                    (onSelectionChanged)="selectOrganizationUnit($event)">
+                    </codx-listview>
                   </div>
                 </div>
               </div>
+            </ng-container>
+            <!-- Lịch nhóm -->
+            <ng-container *ngIf="calendarID == 'COT02'">
+              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column h-50">
+                <div ngbAccordionHeader class="">
+                  <div ngbAccordionHeader class="custom-header w-100">
+                    <div ngbAccordionToggle class="w-100">
+                      <div class="d-flex justify-content-between align-items-center mt-3 w-100">
+                        <codx-label
+                          fiedName="Events"
+                          default="Danh sách nhóm"
+                          class="fw-bold">
+                        </codx-label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div ngbAccordionCollapse class="h-80">
+                  <div ngbAccordionBody class="h-100 px-0">
+                    <div class="w-100 h-100 overflow-auto">
+                      <ng-container *ngFor="let item of lstUserGroups">
+                        <p class="p-2 cursor-pointer" (click)="selectUserGroup(item)">{{item.groupName}}</p>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <!-- Lịch cá nhân -->
+            <ng-container *ngIf="calendarID == 'COT03'">
               <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-50">
-                <div ngbAccordionHeader class="custom-header w-100 h-20">
-                  <div ngbAccordionToggle class="w-100"  >
-                    <div class="d-flex justify-content-between align-items-center mt-3 w-100">
+                <div ngbAccordionCollapse class="w-100 h-100">
+                  <div ngbAccordionBody class="py-0">
+                    <ejs-calendar
+                      #ejCalendar
+                      cssClass="width-calendar"
+                      class="e-customStyle w-100 mw-100"
+                      [locale]="locale"
+                      [firstDayOfWeek]="1"
+                      [value]="selectedDate"
+                      (change)="changeDay($event)"
+                      (navigated)="navigateMoth($event)"
+                      (renderDayCell)="renderDayCell($event)">
+                    </ejs-calendar>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <!-- Calendar Setting -->
+            <ng-container *ngIf="calendarParams">
+              <div ngbAccordionItem [collapsed]="false" [disabled]="true" class="d-flex flex-column align-items-stretch h-50">
+                <div ngbAccordionHeader class="custom-header w-100">
+                  <div ngbAccordionToggle class="w-100">
+                    <div class="d-flex justify-content-between align-items-center w-100">
                       <codx-label
                         fiedName="Events"
                         default="Danh sách sự kiện"
                         class="fw-bold">
                       </codx-label>
                       <button class="btn btn-icon btn-primary me-1"
-                        (click)="settingCalendar()">
+                        (click)="openPopupSetting()">
                         <i class="icon-settings text-white icon-18"></i>
                       </button>
                     </div>
                   </div>
                 </div>
                 <div ngbAccordionCollapse class="h-80">
-                  <div ngbAccordionBody class="h-100">
+                  <div ngbAccordionBody class="h-100 px-0">
                     <div class="w-100 h-100 overflow-auto">
-                      <ng-container *ngFor="let param of calendarParams | keyvalue">
-                        <div class="d-flex mt-3 align-items-center w-100">
-                          <div class="w-5px me-2">
-                            <li
-                              [style.background-color]="param?.value?.ShowColor"
-                              [style.color]="param?.value?.ShowColor">
-                            </li>
-                          </div>
-                          <div class="show-list-event w-100">
-                            <codx-vll
-                              [showText]="true"
-                              [showBgColor]="false"
-                              name="WP006"
-                              [value]="param?.key">
-                            </codx-vll>
-                          </div>
-                          <div class="show-event-check me-2 w-50px d-flex justify-content-end">
-                            <codx-input
-                              type="checkbox"
-                              [field]="param?.key"
-                              [checked]="param?.value?.ShowEvent === '1'"
-                              labelPosition="Before"
-                              [disabled]="false"
-                              class="test-check"
-                              (valueChange)="updateSettingValue($event)">
-                            </codx-input>
-                          </div>
+                      <div class="d-flex mt-3 align-items-center w-100" *ngFor="let item of calendarParams">
+                        <div class="w-5px me-2">
+                          <li
+                            [style.background-color]="item.ShowColor"
+                            [style.color]="item.ShowColor">
+                          </li>
                         </div>
-                      </ng-container>
+                        <div class="show-list-event w-100">
+                          <codx-vll
+                            [showText]="true"
+                            [showBgColor]="false"
+                            name="WP006"
+                            [value]="item.Template.TransType">
+                          </codx-vll>
+                        </div>
+                        <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                          <codx-input
+                            type="checkbox"
+                            [field]="item.Template.TransType"
+                            [checked]="item.ShowEvent === '1'"
+                            labelPosition="Before"
+                            [disabled]="false"
+                            class="test-check"
+                            (valueChange)="valueChange($event)">
+                          </codx-input>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         <div class="w-100 bg-body">
           <div class="p-2 border-top">
             <div class="d-flex justify-content-between align-items-center nav">
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarType == 'COT03' }"
-                (click)="changeCalendarType('COT03')"
-              >
-                <span class="text-center"
-                  ><i class="icon-i-person icon-24"></i
-                ></span>
+              <div class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarID == 'COT03' }"
+                (click)="changeCalendarID('COT03')">
+                <span class="text-center">
+                  <i class="icon-i-person icon-24"></i>
+                </span>
                 <div class="user-select-none">Cá nhân</div>
               </div>
 
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarType == 'COT02' }"
-                (click)="changeCalendarType('COT02')"
-              >
-                <span class="text-center"
-                  ><i class="icon-i-people icon-24"></i
-                ></span>
+              <div class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarID == 'COT02' }"
+                (click)="changeCalendarID('COT02')">
+                <span class="text-center">
+                  <i class="icon-i-people icon-24"></i>
+                </span>
                 <div class="user-select-none">Nhóm</div>
               </div>
-
-              <div
-                class="d-flex flex-column justify-content-between nav-item"
-                [ngClass]="{ active: calendarType == 'COT01' }"
-                (click)="changeCalendarType('COT01')"
-              >
+              <div class="d-flex flex-column justify-content-between nav-item"
+                [ngClass]="{ active: calendarID == 'COT01' }"
+                (click)="changeCalendarID('COT01')">
                 <span class="text-center">
                   <i class="icon-i-diagram-3 icon-24"></i>
                 </span>
                 <div class="user-select-none">Công ty</div>
-              </div>
-
+              </div> 
               <div
                 class="d-flex flex-column justify-content-between nav-item disabled"
               >
@@ -153,32 +175,75 @@
                 </span>
                 <div class="user-select-none">Thiết lập</div>
               </div>
+              <!-- <ng-container *ngFor="let func of lstCalendars">
+                <div class="col cursor-pointer"
+                  [class.active]="calendarID === func.functionID"
+                  (click)="changeCalendarID(func.functionID)">
+                  <p class="text-center">
+                    <i class="icon-i-person icon-24"></i>
+                  </p>
+                  <p>{{func.customName}}</p>
+                </div>
+              </ng-container>
+              
+              <div class="col disabled">
+                <p class="text-center">
+                  <i class="icon-i-gear icon-24"></i>
+                </p>
+                <p class="cursor-pointer">Thiết lập</p>
+              </div> -->
             </div>
           </div>
         </div>
+        
       </div>
       <!-- template right -->
-      <div class="col-10 bg-white h-100">
-        <co-calendar-center #calendarCenter></co-calendar-center>
+      <div class="col-10 bg-white h-100 calender-viewmain">
+        <co-calendar-center 
+          #calendarCenter 
+          [selectedDate]="selectedDate"
+          [statusColor]="statusColor"
+          [isOutSource]="true" 
+          [eventData]="lstEvents" 
+          [eventModel]="eventModel"
+          [resources]="lstResources"
+          [resourceModel]="resourceModel"
+          [resourceTemplate]="resourceTemplate"
+          (evtDateSelectChange)="dateSelectChange($event)">
+        </co-calendar-center>
       </div>
     </div>
   </div>
-  <div class="calendar-btnadd">
+  <div class="calendar-btnadd" *ngIf="speedDialItems.length > 0">
     <button
       #speeddial
       ejs-speeddial
-      id="speeddial"
-      target="#target"
-      itemTemplate="#itemTemplate"
+      [items]="speedDialItems"
+      [itemTemplate]="itemTemplate"
       openIconCss="icon-add icon-22"
       cssClass="e-primary"
       (clicked)="addEvent($event)"
     >
-      <ng-template #itemTemplate let-items="">
-        <div class="itemlist">
-          <span class="text">{{ items.text }}</span>
-        </div>
-      </ng-template>
+    <ng-template #itemTemplate let-items>
+      <div class="itemlist">
+        <span class="text">{{ items.text }}</span>
+      </div>
+    </ng-template>
     </button>
   </div>
+</ng-template>
+
+<ng-template #resourceTemplate let-data>
+  <div class="container">
+    <codx-temp-full
+      [imageId]="data.resourceData.idField"
+      [imageObjType]="'AD_Users'"
+      [imageReferType]="'avt'"
+      [title]="data.resourceData.title"
+      [content]="'(' + data.resourceData.events + ')'">
+    </codx-temp-full>
+  </div>
+</ng-template>
+<ng-template #orgUnitTemplate let-item>
+  <p class="p-2 text-break">{{ item.OrgUnitName }}</p>
 </ng-template>

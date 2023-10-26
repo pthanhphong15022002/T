@@ -46,14 +46,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   //#region Đát Bo
 
   panels:any = JSON.parse(
-    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":6,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null,"header":"Mức độ cảm xúc lời cảm ơn"},{"id":"0.4199281088325755_layout","row":0,"col":12,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê theo loại phiếu"},{"id":"0.4592017601751599_layout","row":0,"col":30,"sizeX":18,"sizeY":12,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên hoạt động nhiều nhất"},{"id":"0.06496875406606994_layout","row":12,"col":12,"sizeX":36,"sizeY":15,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỉ lệ phiếu theo phòng ban"},{"id":"0.21519762020962552_layout","row":6,"col":0,"sizeX":12,"sizeY":21,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Hành vi được tuyên dương"}]'
+    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":6,"minSizeX":8,"minSizeY":4,"maxSizeX":null,"maxSizeY":null,"header":"Mức độ cảm xúc lời cảm ơn"},{"id":"0.4199281088325755_layout","row":0,"col":12,"sizeX":18,"sizeY":10,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Thống kê theo loại phiếu"},{"id":"0.4592017601751599_layout","row":0,"col":30,"sizeX":18,"sizeY":10,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Top nhân viên hoạt động nhiều nhất"},{"id":"0.06496875406606994_layout","row":10,"col":12,"sizeX":36,"sizeY":13,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null,"header":"Tỉ lệ phiếu theo phòng ban"},{"id":"0.21519762020962552_layout","row":6,"col":0,"sizeX":12,"sizeY":17,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null,"header":"Hành vi được tuyên dương"}]'
   );
   datas:any = JSON.parse(
     '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.4199281088325755_layout","data":"5"},{"panelId":"0.4592017601751599_layout","data":"6"},{"panelId":"0.06496875406606994_layout","data":"8"},{"panelId":"0.21519762020962552_layout","data":"7"}]'
   );
 
   panels2:any = JSON.parse(
-    '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":14,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":25,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+    '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":23,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
   );
   datas2:any = JSON.parse(
     '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
@@ -75,16 +75,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   };
 
   //Column Chart
-  primaryXAxis: Object = {
-    valueType: 'Category',
-    interval: 1,
-    crosshairTooltip: { enable: true },
-  };
-
-  primaryYAxis: Object = {
-    title: '',
-    labelFormat: '{value}',
-  };
 
   tooltip: Object = { enable: true, shared: true };
 
@@ -278,6 +268,30 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   };
   circleMarker: Object = { visible: true, height: 7, width: 7 , shape: 'Circle' , isFilled: true };
   palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
+
+  primaryXAxis: Object = {
+    majorGridLines: { width: 0 },
+    minorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    minorTickLines: { width: 0 },
+    interval: 1,
+    lineStyle: { width: 0 },
+    labelIntersectAction: 'Rotate45',
+    valueType: 'Category'
+};
+//Initializing Primary Y Axis
+ primaryYAxis: Object = {
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+};
+chartArea: Object = {
+  border: {
+      width: 0
+  }
+};
   constructor(
     private injector: Injector,
     private cacheService: CacheService,
@@ -385,6 +399,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
           let idx =this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
           if(idx >-1){
             this.reportItem = this.arrReport[idx];
+            this.funcID = this.reportItem.reportID;
             if(this.reportItem.reportID == 'FDD001'){
               this.typeBallot='0';
             }
@@ -467,9 +482,13 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   }
 
   reloadAllChart() {
-    this.setPredicate();
-    this.getDataChartA();
-    this.getDataChartB();
+
+    //this.setPredicate();
+    if(this.funcID == 'FDD001' || this.funcID == 'FDD002')
+      this.getDataChartB();
+    if(this.funcID == 'FDD003')
+      this.loadData();
+    //this.getDataChartB();
   }
 
   open(content) {
@@ -478,6 +497,84 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       centered: true,
       size: 'sm',
     });
+  }
+
+  coinsIn:any=[];
+  coinsOut:any=[];
+  coinsByTypeIn:any=[];
+  coinsByTypeOut:any=[];
+  transferCoins:any=[];
+  coinsByEmp:any=[]
+  giftTrans:any=[];
+  loadData() {
+    this.coinsByTypeIn=[];
+    this.coinsByTypeOut=[];
+    this.isLoaded = false;
+    this.options.pageLoading = false;
+    this.options.entityName = 'FD_KudosTrans';
+    this.options.entityPermission = 'FD_KudosTrans';
+    this.options.gridViewName = 'grvKudosTrans';
+    this.options.formName = 'KudosTrans';
+    this.options.funcID = this.funcID;
+    this.options.dataObj = 'Coins';
+    this.api
+      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
+        this.options, this.objParams ? this.objParams : {},
+      ])
+      .subscribe((res) => {
+        if (res) {
+
+          this.dataset = res[1];
+          let objGifts = this.groupBy(res[2],'departmentName');
+          for(let key in objGifts){
+            let obj:any={};
+            obj.departmentName=key;
+            obj.quantity=objGifts[key].length;
+            this.giftTrans.push(obj);
+          }
+
+          this.transferCoins = JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.transType=='2'))).map((x:any)=>{x.coins=-x.coins; return x;});
+          this.coinsIn = this.dataset.filter((x:any)=>x.coins >0);
+          this.coinsOut = JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.coins <0))).map((x:any)=>{x.coins=-x.coins; return x;});
+          let objEmp=this.groupBy(this.dataset,'userID');
+          for(let key in objEmp){
+            let  obj:any={};
+            obj.userID = key;
+            obj.userName= objEmp[key][0].userName;
+            obj.positionName= objEmp[key][0].positionName;
+            obj.departmentName= objEmp[key][0].departmentName;
+            obj.coinsIn = this.sumByProp(objEmp[key].filter((x:any)=>x.coins >0),'coins');
+            let _coinOut =  this.sumByProp(objEmp[key].filter((x:any)=>x.coins <0),'coins');
+            obj.coinsOut = _coinOut != 0 && _coinOut < 0 ? -_coinOut : 0;
+            obj.percentageIn = this.toFixed((obj.coinsIn/this.sumByProp(this.coinsIn,'coins'))*100);
+            obj.percentageOut = obj.coinsOut > 0 ?this.toFixed((obj.coinsOut/this.sumByProp(this.coinsOut,'coins'))*100) : 0;
+            this.coinsByEmp.push(obj);
+          }
+          //this.coinsOut = this.coinsOut.map((x:any)=> x.coins = -x.coins);
+          let objIn = this.groupBy(this.coinsIn,'transType');
+          for(let key in objIn){
+            let  obj:any={};
+            obj.transType = key;
+            obj.transName= objIn[key][0].categoryName;
+            obj.coins = this.sumByProp(objIn[key],'coins');
+            obj.percentage = this.toFixed((obj.coins/this.sumByProp(this.coinsIn,'coins'))*100);
+            this.coinsByTypeIn.push(obj);
+          }
+          let objOut = this.groupBy(this.coinsOut,'transType');
+          for(let key in objOut){
+            let  obj:any={};
+            obj.transType = key;
+            obj.transName= objOut[key][0].categoryName;
+            obj.coins = this.sumByProp(objOut[key],'coins');
+            obj.percentage = this.toFixed((obj.coins/this.sumByProp(this.coinsOut,'coins'))*100);
+            this.coinsByTypeOut.push(obj);
+          }
+
+          this.detectorRef.detectChanges();
+          console.log(objEmp);
+          this.isLoaded = true;
+        }
+      });
   }
 
   ratingStats:any=[];
@@ -547,7 +644,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       .subscribe((res) => {
         if (res) {
           this.dataset=res.lstCards;
-          this.listBehaviors=res.lstBehaivor;
+          this.listBehaviors=res.lstBehaivor || [];
           this.mappingData()
           this.cardsByRatingType = this.groupBy(this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName),'ratingName');
           for(let key in this.cardsByRatingType){
@@ -882,6 +979,44 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       return data;
     })
   }
+
+  activeTab:any='btnCoinsIn'
+  changeDir(ele:any,id:any,obj:any){
+    if(ele.id == this.activeTab) return;
+    this.activeTab = ele.id;
+    if(ele.id=='btnCoinsOut'){
+      if(obj){
+        !obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.add('d-none');
+        !obj.chart1.gauge1.classList.contains('d-none')&& obj.chart1.gauge1.classList.add('d-none');
+
+        obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.remove('d-none');
+        obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.remove('d-none');
+        obj.chart2.pie2.refresh()
+      }
+    }
+    if(ele.id=='btnCoinsIn'){
+      if(obj){
+        !obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.add('d-none');
+        !obj.chart2.gauge2.classList.contains('d-none')&& obj.chart2.gauge2.classList.add('d-none');
+
+        obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.remove('d-none');
+        obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.remove('d-none');
+        obj.chart1.pie1.refresh()
+      }
+    }
+
+    this.detectorRef.detectChanges();
+  }
+
+  sumByProp(arr:any[],property:string){
+    if(arr && arr.length){
+      return arr.reduce((accumulator:any, object:any) => {
+        return accumulator + object[property];
+      }, 0);
+    }
+    return 0;
+  }
+
   newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
@@ -996,10 +1131,15 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
       }
     }
+    if(e.type == 'reportItem'){
+      this.reportItem = e.data;
+    }
   }
 
+  objParams:any;
   filterChange(e:any){
-    debugger
+    this.objParams=e[1];
+    this.reportItem &&  this.reloadAllChart();
   }
 
   private groupBy(arr: any, key: any) {

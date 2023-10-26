@@ -500,7 +500,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         );
         if (reportItem) {
           this.reportItem = reportItem;
-          this.funcID=reportItem?.reportID;
+        }
+        if(this.reportItem){
+          this.funcID=this.reportItem?.reportID;
           let method:string='';
           switch (this.funcID) {
             case 'TMD001':
@@ -521,86 +523,11 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
 
           }
           this.getDataset(method)
-          let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
+          let pinnedParams = this.reportItem.parameters?.filter((x: any) => x.isPin);
           if (pinnedParams) this.view.pinedReportParams = pinnedParams;
-
         }
-        //this.getAssignDashboardData()
-        //this.getTeamDashboardData();
-        // //this.getMyDashboardData();
-        //     this.api
-        //       .execSv(
-        //         'rpttm',
-        //         'Codx.RptBusiness.TM',
-        //         'TaskDataSetBusiness',
-        //         'GetReportSourceAsync',
-        //         []
-        //       )
-        //       .subscribe((res: TM_DashBoard[]) => {
-        //         this.dataset = res;
 
-        //         setTimeout(() => {
-        //           this.isLoaded = true;
-        //         }, 500);
-        //       });
-        // switch (res.funcID) {
-        //   case 'TMD001':
-        //     //this.getMyDashboardData();
-        //     this.api
-        //       .execSv(
-        //         'rpttm',
-        //         'Codx.RptBusiness.TM',
-        //         'TaskDataSetBusiness',
-        //         'GetReportSourceAsync',
-        //         []
-        //       )
-        //       .subscribe((res: TM_DashBoard[]) => {
-        //         this.dataset = res;
 
-        //         setTimeout(() => {
-        //           this.isLoaded = true;
-        //         }, 500);
-        //       });
-        //     break;
-        //   case 'TMD002':
-        //     //this.getTeamDashboardData();
-        //     this.api
-        //       .execSv(
-        //         'rpttm',
-        //         'Codx.RptBusiness.TM',
-        //         'TaskDataSetBusiness',
-        //         'GetReportSourceAsync',
-        //         []
-        //       )
-        //       .subscribe((res: TM_DashBoard[]) => {
-        //         this.dataset = res;
-
-        //         setTimeout(() => {
-        //           this.isLoaded = true;
-        //         }, 500);
-        //       });
-        //     break;
-        //   case 'TMD003':
-        //     //this.getAssignDashboardData();
-        //     this.api
-        //       .execSv(
-        //         'rpttm',
-        //         'Codx.RptBusiness.TM',
-        //         'TaskDataSetBusiness',
-        //         'GetReportSourceAsync',
-        //         []
-        //       )
-        //       .subscribe((res: TM_DashBoard[]) => {
-        //         this.dataset = res;
-
-        //         setTimeout(() => {
-        //           this.isLoaded = true;
-        //         }, 500);
-        //       });
-        //     break;
-        //   default:
-        //     break;
-        // }
       }
     });
     this.detectorRef.detectChanges();
@@ -674,10 +601,11 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-
+  objParams:any;
   filterChange(e: any) {
     this.isLoaded = false;
     let parameters = e[1];
+    this.objParams=parameters;
     if(this.subscription) this.subscription.unsubscribe();
     let method:any=''
     if(!this.funcID) return;
@@ -699,7 +627,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         break;
 
     }
-    this.getDataset(method,parameters)
+    this.reportItem && this.getDataset(method,parameters)
     this.detectorRef.detectChanges();
   }
 
@@ -723,6 +651,8 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                       path: 'tm/dashboard/' + this.arrReport[i].recID,
                     });
                   }
+                  let method:any=''
+                  let parameters:any={};
                   if(!this.reportItem){
                     if(this.reportID){
                       let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
@@ -749,36 +679,45 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
                       this.funcID= this.arrReport[0].reportID;
                     }
 
-                    let method:any=''
-                    let parameters:any={};
-                    switch (this.funcID) {
-                      case 'TMD001':
-                        this.viewCategory='myTasks'
-                        method='GetReportSourceAsync'
-                        break;
 
-                      case 'TMD002':
-                        this.viewCategory='teamTasks';
-                        method='GetReportSourceAsync'
-                        break;
 
-                      case 'TMD003':
-                        this.viewCategory='assignedTasks'
-                        method='GetReportSourceAsync'
-                        parameters.Category='3'
-                        break;
-
-                    }
-                    this.getDataset(method,parameters)
+                    //
                   }
+                  else{
+                    let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportItem.recID);
+                    if(idx>-1){
+                      this.pageTitle.setSubTitle(arrChildren[idx].title);
+                      this.pageTitle.setChildren(arrChildren);
+                      //this.codxService.navigate('', arrChildren[idx].path);
+                      this.funcID= this.reportItem.reportID;
+                    }
 
                   //this.isLoaded = true
-                }
-              });
+                  }
+                  switch (this.funcID) {
+                    case 'TMD001':
+                      this.viewCategory='myTasks'
+                      method='GetReportSourceAsync'
+                      break;
+
+                    case 'TMD002':
+                      this.viewCategory='teamTasks';
+                      method='GetReportSourceAsync'
+                      break;
+
+                    case 'TMD003':
+                      this.viewCategory='assignedTasks'
+                      method='GetReportSourceAsync'
+                      parameters.Category='3'
+                      break;
+
+                  }
+                  this.getDataset(method,parameters)
+              }});
 
       }
     }
-    //this.isLoaded = false;
+
   }
 
   getTaskStatus(status:string){
@@ -897,7 +836,6 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
   tasksByProjectID:any=[];
 
   getDataset(method:string,parameters:any=undefined){
-    if(this.isLoaded)  return;
     if(method){
       this.taskByCategory={};
       this.taskByEmployees={};
@@ -906,7 +844,9 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
       this.taskByProject={};
       this.tasksByProjectID=[];
       this.taskByRefType=[];
-
+      if(parameters) this.objParams = parameters;
+      else parameters = this.objParams;
+      this.subscription &&  this.subscription.unsubscribe();
       this.subscription= this.api
       .execSv(
         'rpttm',

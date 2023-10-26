@@ -91,34 +91,70 @@
           </codx-input>
         </div>
 
-        <div class="col-6">
-          <codx-label fiedName="FromTime" [formModel]="formModel"> </codx-label>
-          <codx-input
-            type="datetime"
-            field="fromTime"
-            [formModel]="formModel"
-            format="t"
-            (valueChange)="valueToTimeChange($event)"
-          >
-          </codx-input>
-        </div>
+        <!-- <ng-container *ngIf="funcType === 'add'">
+          <div class="col-12">
+            <codx-input type="switch" (valueChange)="changeRegisterForm()">
+            </codx-input>
+          </div>
+        </ng-container> -->
 
-        <div class="col-6">
-          <codx-label fiedName="ToTime" [formModel]="formModel"> </codx-label>
-          <codx-input
-            type="datetime"
-            field="toTime"
-            [formModel]="formModel"
-            format="t"
-            (valueChange)="valueToTimeChange($event)"
-          >
-          </codx-input>
-        </div>
+        <ng-container *ngIf="registerForm == '1'">
+          <div class="col-6">
+            <codx-label fiedName="FromTime" [formModel]="formModel">
+            </codx-label>
+            <codx-input
+              type="datetime"
+              field="fromTime"
+              [disabled]="viewOnly"
+              format="t"
+              [crrValue]="fromTime"
+              (valueChange)="valueFromTimeChange($event)"
+            >
+            </codx-input>
+          </div>
+
+          <div class="col-6">
+            <codx-label fiedName="ToTime" [formModel]="formModel"> </codx-label>
+            <codx-input
+              type="datetime"
+              field="toTime"
+              [disabled]="viewOnly"
+              [crrValue]="toTime"
+              format="t"
+              (valueChange)="valueToTimeChange($event)"
+            >
+            </codx-input>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="registerForm == '2'">
+          <div class="col-6" *ngIf="registerForm">
+            <codx-label fiedName="Hours" [formModel]="formModel"> </codx-label>
+            <codx-input
+              type="number"
+              field="hours"
+              [Group]="form.formGroup"
+              [formModel]="formModel"
+              [disabled]="viewOnly"
+            >
+            </codx-input>
+          </div>
+        </ng-container>
 
         <div class="col-12">
           <codx-label fiedName="Reason" [formModel]="formModel"> </codx-label>
           <codx-input
             field="reason"
+            [formModel]="formModel"
+            [Group]="form.formGroup"
+            [disabled]="viewOnly"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-12">
+          <codx-label fiedName="Location" [formModel]="formModel"> </codx-label>
+          <codx-input
+            field="location"
             [formModel]="formModel"
             [Group]="form.formGroup"
             [disabled]="viewOnly"

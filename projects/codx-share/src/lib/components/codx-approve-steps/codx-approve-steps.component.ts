@@ -96,6 +96,8 @@ export class CodxApproveStepsComponent
       this.transId = dialogData?.data.transID ?? '';
       this.model = dialogData?.data.model;
       this.data = dialogData?.data.data;
+      this.data = dialogData?.data.data;
+      this.eSign = dialogData?.data?.data?.eSign !=null ? dialogData?.data?.data?.eSign : this.eSign ;
       this.vllShare = this.vllShare ?? dialogData?.data.vllShare;
       console.log(this.data);
 

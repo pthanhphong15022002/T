@@ -336,6 +336,7 @@ export class DynamicFormComponent extends UIComponent {
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       debugger;
+
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,
         {

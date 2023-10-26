@@ -47,6 +47,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() entityName = '';
   @Input() gridViewSetup: any;
   @Input() lstCustGroups = [];
+  @Input() isAdmin: boolean = false;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -70,7 +71,6 @@ export class CmCustomerDetailComponent implements OnInit {
   loaded: boolean;
   addressNameCM: any;
   category = '';
-  isAdmin = false;
   user: any;
   isShow = false;
   constructor(
@@ -88,7 +88,7 @@ export class CmCustomerDetailComponent implements OnInit {
   async ngOnInit() {
     // this.getGridviewSetup();
     // this.getVllByGridViewSetupContact();
-    this.checkAdmin();
+    // this.checkAdmin();
     this.getFormModelAddress();
   }
 
@@ -207,8 +207,8 @@ export class CmCustomerDetailComponent implements OnInit {
   }
 
   addressDefault(e) {
-    this.addressNameCM = e ? e?.adressName : null;
-    this.dataSelected.address = e ? e?.adressName : null;
+    this.addressNameCM = e ? e?.address : null;
+    this.dataSelected.address = e ? e?.address : null;
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
     this.dataSelected.wardID = e ? e?.wardID : null;
@@ -449,7 +449,7 @@ export class CmCustomerDetailComponent implements OnInit {
         if (tmpCus['address'] != null && tmpCus['address']?.trim() != '') {
           tmpAd['recID'] = Util.uid();
           tmpAd['adressType'] = '6';
-          tmpAd['adressName'] = tmpCus['address'];
+          tmpAd['address'] = tmpCus['address'];
           tmpAd['isDefault'] = true;
           tmpAd['objectID'] = tmpCus['recID'];
         }

@@ -1,0 +1,256 @@
+
+<div class="d-flex flex-column w-100 h-100">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+</div>
+
+<ng-template #header>
+    <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-4">
+        <div class="d-flex align-items-center">
+            <div class="me-2 cursor-pointer" (click)="close()"><i class="icon-i-arrow-left icon-22"></i></div>
+            <codx-label default="Hồ sơ tuyển dụng" fiedName="lblWSCVTitle" gridViewName="fmWSCVTitle" class="fs-2 fw-bold"></codx-label>
+            <ng-container *ngIf="listBreadCrumb && listBreadCrumb.length>0">
+                <div class="d-flex align-items-center">
+                    <codx-label default="Lọc theo" class="ms-2 fw-bold"></codx-label>
+                    <span class="me-2">:</span>
+                    <div *ngIf="listBreadCrumb && listBreadCrumb.length>0">
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                              <li class="breadcrumb-item" *ngFor="let item of listBreadCrumb">
+                                {{item}}
+                              </li>
+                            </ol>
+                          </nav>
+                    </div>
+                </div>
+                
+            </ng-container>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary mx-2" (click)="inputFile.click()">
+                <codx-label
+                    default="Tải lên hồ sơ"
+                ></codx-label>
+            </button>
+            <button type="button" class="btn btn-success ms-2" (click)="openForm()" [disabled]="disabledBtn">
+                <codx-label
+                    default="Đánh giá hồ sơ"
+                ></codx-label>
+            </button>
+
+            <div class="cursor-pointer ms-2 mt-1" (click)="refeshEvaluate()"><i class="icon-autorenew"></i></div>
+        </div>
+    </div>
+    <input #inputFile type="file" class="d-none" multiple (change)="onSelectFiles($event)">
+</ng-template>
+
+<ng-template #body>
+    <!-- <codx-gridview-v2
+    #gridView2
+    [columnsGrid]="columnGrid"
+    [autoFitColumns]="false"
+    [dataSource]="null"
+    [editSettings]="{mode:'Normal',allowEditing:true, allowAdding:true}"
+    [hideMoreFunc]="true"
+    [editOnClick]="true"
+    [idField]="'RecID'"
+    height="100%"
+    [gridLines]="'Both'"
+  >
+  </codx-gridview-v2> -->
+  <div class="">
+   
+    <table class="table ws-table-cv h-100">
+      <thead>
+        <tr class="table-secondary border-bottom">
+          <th class="w-20 fw-bold">Thông tin cá nhân</th>
+          <th class="w-20 fw-bold">Liên hệ</th>
+          <th class="w-30 fw-bold">Kinh nghiệm</th>
+          <th class="w-30 fw-bold ">Đánh giá</th>
+        </tr>
+      </thead>
+      <tbody class="overflow-auto">
+        <ng-container  *ngIf="jsonExports.length > 0 , else defaulEmpt">
+            <ng-container *ngFor="let item of jsonExports;index as idx">
+                <tr>
+                  <td class="w-20">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <span class="fw-bold">{{item.name}}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Giới tính"></codx-label>:</span>
+                            <ng-container *ngIf="item?.gender , else emptyLabel"><span>{{item.gender}}</span></ng-container>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Ngày sinh"></codx-label>:</span>
+                            <ng-container *ngIf="item?.birthday , else emptyLabel"><span>{{item.birthday}}</span></ng-container>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Nơi sinh"></codx-label>:</span>
+                            <ng-container *ngIf="item?.birthPlace , else emptyLabel"><span>{{item.birthPlace}}</span></ng-container>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Hồ sơ"></codx-label>:</span>
+                            <ng-container *ngIf="item?.fileName , else emptyLabel"><span class="text-primary text-truncate" [title]="item.fileName">{{item.fileName}}</span></ng-container>
+                        </div>
+                    </div>
+                  </td>
+                  <td class="w-20">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <i class="icon-email me-2"></i>
+                            <span class="text-primary">{{item.email}}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="icon-phone_android me-2"></i>
+                            <span class="text-primary">{{item.phone}}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="icon-facebook me-2"></i>
+                            <span class="text-primary">{{item.facebook}}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fab fa-github ms-1 me-2"></i>
+                            <span class="text-primary">{{item.github}}</span>
+                        </div>
+                    </div>
+                  </td>
+                  <td [ngClass]="'w-30'">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Thâm niên"></codx-label>:</span>
+                            <ng-container *ngIf="item?.seniorityDate , else emptyLabel"><span>{{item.seniorityDate}}</span></ng-container>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Trình độ"></codx-label>:</span>
+                            <ng-container *ngIf="item?.degreeName , else emptyLabel"><span>{{item.degreeName}}</span></ng-container>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Kỹ năng"></codx-label></span>
+                            <div class="flex flex-wrap">
+                                <ng-container *ngIf="item.skills?.length > 0">
+                                    <span *ngFor="let skill of item.skills"  class="badge rounded-pill bg-success text-truncate mw-200px me-1" [title]="skill">{{skill}}</span>
+                                  </ng-container>
+                            </div>
+                        </div>
+                        <!-- <div class="d-flex align-items-center">
+                            <span class="text-gray-500 me-2 text-nowrap"><codx-label default="Dự án"></codx-label>:</span>
+                            <div class="flex flex-wrap">
+                                <ng-container *ngIf="item.project?.length > 0">
+                                    <span *ngFor="let project of item.project"  class="badge rounded-pill bg-secondary m-1">{{project | json }}</span>
+                                  </ng-container>
+                            </div>
+                        </div> -->
+                    </div>
+                  </td>
+                  <td class="w-30">
+                    <ng-container *ngIf="item?.result , else tmpStatus">
+                      <div class="d-flex flex-column">
+                          <span class="badge rounded-pill w-100px" [ngClass]="item?.result?.status == 'Phù hợp' ? 'bg-success' : 'bg-danger'">{{item?.result?.status}}</span>
+                          <ng-container *ngIf="item?.result?.evaluate">
+                            <div class="d-flex flex-column mt-2">
+                                <codx-label default="Kết quả" class="fw-bold text-nowrap"></codx-label> 
+                                <span class="text-start">{{item.result.evaluate}}</span>
+                            </div>
+                            <div class="d-flex flex-column border-top">
+                                <codx-label default="Điểm mạnh" class="fw-bold text-nowrap"></codx-label> 
+                                <span class="text-start">{{item.result.advantage}}</span>
+                            </div>
+                            <div class="d-flex flex-column border-top">
+                                <codx-label default="Điểm yếu" class="fw-bold text-nowrap"></codx-label> 
+                                <ng-container *ngIf="item.result.weakness , else emptyLabel"><span>{{item.result.weakness}}</span></ng-container>
+                            </div>
+                          </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #tmpStatus>
+                      <span class="badge rounded-pill bg-secondary">Mới tạo</span>
+                    </ng-template>
+                    <ng-container>
+                    </ng-container>
+                  </td>
+                </tr>
+              </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- <ng-container *ngIf="request">
+        <div class="d-flex align-items-center"><i class="bi bi-dot ms-2"></i><span>{{request}}</span></div>
+    </ng-container> -->
+  </div>
+</ng-template>
+<!-- <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="UPloads CV" [body]="body" [footer]="footer" >
+</codx-form>
+<ng-template #body>
+  <div class="h-100" *ngIf="jsonExports.length > 0">
+    <table class="table h-100">
+      <thead>
+        <tr class="table-secondary">
+          <th>STT</th>
+          <th>Họ tên</th>
+          <th>Email</th>
+          <th>SĐT</th>
+          <th>Kỹ năng</th>
+          <th *ngIf="cellExvalueate">Đánh giá</th>
+        </tr>
+      </thead>
+      <tbody class="overflow-auto">
+        <ng-container *ngFor="let item of jsonExports;index as idx">
+          <tr>
+            <td>{{idx + 1}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.email}}</td>
+            <td>
+              <ng-container *ngIf="item.skills?.length > 0">
+                <span *ngFor="let skill of item.skills"  class="badge rounded-pill bg-secondary m-1">{{skill}}</span>
+              </ng-container>
+            </td>
+            <td>
+              <span *ngIf="item.result" class="text-start">
+                {{item.result.evaluate}}
+              </span>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <div>
+      <span class="icon-photo icon-24 text-success" type="button" data-toggle="tooltip" title="Attach files" (click)="inputFile.click()"></span>
+      <input #inputFile type="file" class="d-none" multiple (change)="onSelectFiles($event)">
+    </div>
+    <div class="w-100 rounded-pill">
+      <codx-input type="text" field="request" [placeholder]="'Nhập nội dung'" [crrValue]="request" (valueChange)="valueChange($event,'request')"></codx-input>
+    </div>
+    <div>
+      <span class="icon-send" type="button" (click)="searchCV()"></span>
+    </div>
+  </div>
+</ng-template> -->
+
+<ng-template #defaulEmpt>
+    <div class="container ws-empty-data">
+        <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+            <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+            />
+            <div class="fw-bold mt-1 text-center">
+            {{ "SYS011" | mssg | async }}
+            </div>
+            <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+        </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #emptyLabel>
+    <span class="text-gray-300">Không có thông tin</span>
+</ng-template>

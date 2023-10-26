@@ -48,7 +48,7 @@ export class CatagoryComponent implements OnInit {
     PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
-  title = '';
+  title: string[] = [];
   //listName = 'SYS001';
   settingFull = [];
   setting = [];
@@ -66,6 +66,7 @@ export class CatagoryComponent implements OnInit {
   dialog?: DialogRef;
   oldSettingFull = [];
   oldDataValue: any = {};
+  idOld: string[] = [];
   //labels
   labels = [];
   lineType = '1';
@@ -133,7 +134,7 @@ export class CatagoryComponent implements OnInit {
         const ds = (this.valuelist.datas as any[]).find(
           (item) => item.value == this.category
         );
-        this.title = ds.text;
+        this.title.push(ds.text);
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
         //else if (this.category === '4') this.getCategories();
@@ -181,33 +182,40 @@ export class CatagoryComponent implements OnInit {
       cssClass = '',
       dialogModel = new DialogModel();
     if (!reference) {
-      let lineType = +this.lineType + 1 + '';
-      var itemChild = this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === lineType
-      );
-      if (!itemChild || itemChild.length == 0)
-        itemChild = this.oldSettingFull.filter(
+      if (
+        this.dataValue[item.transType] &&
+        this.dataValue[item.transType][value]
+      ) {
+        let dtvalue = this.dataValue[item.transType][value];
+        if (dtvalue === '0') return;
+        let lineType = +this.lineType + 1 + '';
+        var itemChild = this.settingFull.filter(
           (x) => x.refLineID === recID && x.lineType === lineType
         );
-      data['settingFull'] = itemChild;
-      data['valuelist'] = this.valuelist;
-      //data['settingValue'] = this.settingValue;
-      data['category'] = this.category;
-      data['function'] = this.function;
-      data['lineType'] = lineType;
-      width = 500;
-      height = 100 * itemChild.length;
+        if (!itemChild || itemChild.length == 0)
+          itemChild = this.oldSettingFull.filter(
+            (x) => x.refLineID === recID && x.lineType === lineType
+          );
+        data['settingFull'] = itemChild;
+        data['valuelist'] = this.valuelist;
+        //data['settingValue'] = this.settingValue;
+        data['category'] = this.category;
+        data['function'] = this.function;
+        data['lineType'] = lineType;
+        width = 500;
+        height = 100 * itemChild.length;
 
-      this.callfc.openForm(
-        CatagoryComponent,
-        title,
-        width,
-        height,
-        funcID,
-        data,
-        cssClass,
-        dialogModel
-      );
+        this.callfc.openForm(
+          CatagoryComponent,
+          title,
+          width,
+          height,
+          funcID,
+          data,
+          cssClass,
+          dialogModel
+        );
+      }
     } else {
       var component = this.components[reference] as Type<any>;
       switch (reference.toLowerCase()) {
@@ -417,7 +425,10 @@ export class CatagoryComponent implements OnInit {
   }
 
   openSub(evt: any, data: any, dataValue: any) {
+    this.title.push(data.tilte);
+    this.lineType = +this.lineType + 1 + '';
     let recID = data.recID;
+    this.idOld.push(data.recID);
     this.isOpenSub = true;
     if (!this.oldSettingFull || Object.keys(this.oldSettingFull).length === 0)
       this.oldSettingFull = JSON.parse(JSON.stringify(this.settingFull));
@@ -428,39 +439,19 @@ export class CatagoryComponent implements OnInit {
       this.componentSub = data.reference;
 
       this.dataValue = dataValue || {};
-      this.groupSetting = this.setting = this.settingFull = [data];
+      this.groupSetting = [];
+      this.setting = [data];
     } else {
-      this.lineType = +this.lineType + 1 + '';
-      this.settingFull =
-        this.settingFull.filter(
-          (x) => x.refLineID === recID && x.lineType === this.lineType
-        ) || [];
       this.setting =
-        this.settingFull.filter((res) => res.isVisible == true) || [];
-      //this.dataValue = dataValue;
+        this.settingFull.filter(
+          (x) =>
+            x.refLineID === recID &&
+            x.lineType === this.lineType &&
+            x.isVisible == true
+        ) || [];
       this.groupSetting = this.setting.filter((x) => {
         return x.lineType === this.lineType;
       });
-      // .filter((x) => {
-      //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
-      // });
-      // if (this.groupSetting.length > 0) {
-      //   var lstNoGroup = this.setting.filter((x) => {
-      //     return (
-      //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-      //         !x.controlType) &&
-      //       !x.refLineID
-      //     );
-      //   });
-      //   if (lstNoGroup.length > 0) {
-      //     var objGroupTMP: any = {
-      //       recID: '',
-      //       refLineID: '',
-      //       controlType: 'GroupControl',
-      //     };
-      //     this.groupSetting.splice(0, 0, objGroupTMP);
-      //   }
-      // }
       if (this.category === '2' || this.category === '7')
         this.getIDAutoNumber();
       else if (this.category === '5') this.getAlertRule();
@@ -471,20 +462,33 @@ export class CatagoryComponent implements OnInit {
   }
 
   backSub(evt: any) {
+    this.title = this.title.slice(0, -1);
+    this.idOld = this.idOld.slice(0, -1);
+    if (this.lineType == '1') {
+      this.oldSettingFull = [];
+      this.oldDataValue = {};
+    } else {
+      if (this.lineType == '2') this.isOpenSub = false;
+      this.lineType = +this.lineType - 1 + '';
+    }
+
     evt.preventDefault();
     this.dataValue = JSON.parse(JSON.stringify(this.oldDataValue));
     this.settingFull = JSON.parse(JSON.stringify(this.oldSettingFull));
-
+    let a = this.idOld;
+    let recID = this.idOld[this.idOld.length - 1];
     this.setting =
-      this.settingFull.filter((res) => res.isVisible == true) || [];
+      this.settingFull.filter(
+        (x) => x.lineType === this.lineType && x.isVisible == true
+      ) || [];
+    if (recID)
+      this.setting = this.setting.filter((x) => x.refLineID === recID) || [];
+    // this.setting =
+    //   this.settingFull.filter((res) =>) || [];
     this.groupSetting = this.setting.filter((x) => {
       return x.lineType === this.lineType;
     });
-    if (this.lineType == '1') {
-      this.isOpenSub = false;
-      this.oldSettingFull = [];
-      this.oldDataValue = {};
-    } else this.lineType = +this.lineType - 1 + '';
+
     if (this.componentSub) {
       this.componentSub = '';
     } else {

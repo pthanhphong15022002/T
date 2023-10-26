@@ -1,0 +1,32 @@
+<div class="d-flex flex-column bg-white">
+  <ng-container *ngTemplateOutlet="header"></ng-container>
+  <ng-container *ngTemplateOutlet="body"></ng-container>
+</div>
+<ng-template #header>
+</ng-template>
+<ng-template #body>
+  <div class="d-flex flex-wrap w-100 h-100">
+    <ng-container *ngFor="let item of data">
+      <codx-card-img
+          [imageSrc]="item?.productImg"
+          [dataItem]="item"
+          cardCss="border card-img-mwp img-storage w-225px h-250px ms-4 mt-2" 
+          [title]="item?.productNm"
+          [titleLine]="'2 w-200px'"
+          [contentCss]="'mt-2'" 
+          imgCss="h-150px w-100 mb-2"
+          [footer]="tmpFooter" 
+      >
+      </codx-card-img>
+      <ng-template #tmpFooter>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle bg-e-voucher-img" [style.background-image]="'url(' + item?.brandLogo + ')'"></div>
+              <div class="ms-2 text-gray-600 text-truncate" [title]="item?.brandNm">{{item?.brandNm}}</div>
+            </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</ng-template>
+

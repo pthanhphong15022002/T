@@ -17,7 +17,7 @@ import {
   ViewType,
   ViewsComponent,
 } from 'codx-core';
-import { PopupInputPointsComponent } from './popup-input-points/popup-input-points.component';
+import { PopupApprovalComponent } from './popup-approval/popup-approval.component';
 import { PopupAddCardsComponent } from '../cards/popup-add-cards/popup-add-cards.component';
 
 @Component({
@@ -38,8 +38,7 @@ export class ApprovalsComponent extends UIComponent {
   service = 'FD';
   assemblyName = 'ERM.Business.FD';
   className = 'CardsBusiness';
-  method = 'GetListCardByApprovalAsync'
-    
+  method = 'GetListCardByApprovalAsync';
 
   activeCoins: string;
   activeKudos: string;
@@ -78,7 +77,7 @@ export class ApprovalsComponent extends UIComponent {
         }
       }
     });
-    this.getSetting();
+    // this.getSetting();
   }
 
   ngAfterViewInit() {
@@ -101,35 +100,54 @@ export class ApprovalsComponent extends UIComponent {
 
   getSetting() {
     // Get activeCoins and activeKudos
-    this.api
-      .call(
-        'ERM.Business.FD',
-        'WalletsBusiness',
-        'GetDataForSettingWalletNewAsync',
-        []
-      )
-      .subscribe((res) => {
-        if (res && res.msgBodyData[0].length > 0) {
-          const listActiveCoins = res.msgBodyData[0][1];
-          const listActiveKudos = res.msgBodyData[0][3];
-          if (listActiveCoins) {
-            this.activeCoins = listActiveCoins.find(
-              (x) => x.fieldName == 'Manual' && x.transType == 'ActiveCoins'
-            )?.fieldValue;
-          }
-          if (listActiveKudos) {
-            this.activeKudos = listActiveKudos.find(
-              (x) => x.fieldName == 'Manual' && x.transType == 'ActiveMyKudos'
-            )?.fieldValue;
-          }
-        }
-      });
+    // this.api
+    //   .call(
+    //     'ERM.Business.FD',
+    //     'WalletsBusiness',
+    //     'GetDataForSettingWalletNewAsync',
+    //     []
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.msgBodyData[0].length > 0) {
+    //       const listActiveCoins = res.msgBodyData[0][1];
+    //       const listActiveKudos = res.msgBodyData[0][3];
+    //       if (listActiveCoins) {
+    //         this.activeCoins = listActiveCoins.find(
+    //           (x) => x.fieldName == 'Manual' && x.transType == 'ActiveCoins'
+    //         )?.fieldValue;
+    //       }
+    //       if (listActiveKudos) {
+    //         this.activeKudos = listActiveKudos.find(
+    //           (x) => x.fieldName == 'Manual' && x.transType == 'ActiveMyKudos'
+    //         )?.fieldValue;
+    //       }
+    //     }
+    //   });
   }
 
   accept(item) {
-    if (this.activeCoins == '1' || this.activeKudos == '1') {
-      this.openPopupInputPoints(item);
-    } else this.update(item, 1);
+    // if (this.activeCoins == '1' || this.activeKudos == '1') {
+    //   this.openPopupApproval(item);
+    // } else this.update(item, 1);
+    if (item.cardType) {
+      this.api
+        .execSv<any>(
+          'SYS',
+          'SYS',
+          'SettingValuesBusiness',
+          'GetByModuleAsync',
+          ['FDParameters', item.cardType]
+        )
+        .subscribe((res) => {
+          const dataValueJson = res.dataValue;
+          if (dataValueJson) {
+            const dataValue = JSON.parse(dataValueJson);
+            this.activeCoins = dataValue?.ManualCoins || '0';
+            this.activeKudos = dataValue?.ManualPoints || '0';
+          }
+          this.openPopupApproval(item);
+        });
+    }
   }
 
   notAccept(item) {
@@ -159,8 +177,8 @@ export class ApprovalsComponent extends UIComponent {
     this.viewComponent.dataService.update(item).subscribe();
   }
 
-  // popup chọn điểm
-  openPopupInputPoints(item) {
+  // popup chọn điểm và ý kiến
+  openPopupApproval(item) {
     var obj = {
       recID: item.recID,
       activeCoins: this.activeCoins,
@@ -169,10 +187,10 @@ export class ApprovalsComponent extends UIComponent {
     };
 
     let popup = this.callFC.openForm(
-      PopupInputPointsComponent,
+      PopupApprovalComponent,
       '',
-      200,
-      300,
+      400,
+      450,
       '',
       obj,
       ''
@@ -243,20 +261,30 @@ export class ApprovalsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
-    } else if (event.functionID === 'FDT1001'){
+    } else if (event.functionID === 'FDT1001') {
       this.accept(data);
-    } else if(event.functionID === 'FDT1002') {
+    } else if (event.functionID === 'FDT1002') {
       this.notAccept(data);
     }
   }
 
   deleteCard(card: any) {}
 
-  changeDataMF(event: any) {
+  changeDataMF(event: any, data) {
     if (event?.length > 0) {
       const mf = event.find((i) => i.functionID === 'SYS03');
       if (mf) {
         mf.disabled = true;
+      }
+      if (data.approveStatus != '0') {
+        const fdt1001 = event.find((i) => i.functionID === 'FDT1001');
+        if (fdt1001) {
+          fdt1001.disabled = true;
+        }
+        const fdt1002 = event.find((i) => i.functionID === 'FDT1002');
+        if (fdt1002) {
+          fdt1002.disabled = true;
+        }
       }
     }
   }

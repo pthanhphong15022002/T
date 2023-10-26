@@ -440,91 +440,92 @@ export class SalesinvoicesDetailComponent extends UIComponent {
    * @returns
    */
    changeMFDetail(event: any, data: any, type: any = '') {
-    let arrBookmark = event.filter(
-      // danh sách các morefunction
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT060506' || // MF ghi sổ
-        x.functionID == 'ACT060504' || // MF gửi duyệt
-        x.functionID == 'ACT060505' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT060507' || // Mf khôi phục
-        x.functionID == 'ACT060508' || // Mf in
-        x.functionID == 'ACT060503'// MF kiểm tra tính hợp lệ
-    );
-    if (arrBookmark.length > 0) {
-      switch (data?.status) {
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060504' || element.functionID == 'ACT060508') {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060505' || element.functionID == 'ACT060508') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060507' || element.functionID == 'ACT060508') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '2':
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060503' || element.functionID == 'ACT060508') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        default:
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-      }
-    }
-    return;
+    this.acService.changeMFSale(event,data,type,this.journal,this.formModel);
+    // let arrBookmark = event.filter(
+    //   // danh sách các morefunction
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ACT060506' || // MF ghi sổ
+    //     x.functionID == 'ACT060504' || // MF gửi duyệt
+    //     x.functionID == 'ACT060505' || // MF hủy yêu cầu duyệt
+    //     x.functionID == 'ACT060507' || // Mf khôi phục
+    //     x.functionID == 'ACT060508' || // Mf in
+    //     x.functionID == 'ACT060503'// MF kiểm tra tính hợp lệ
+    // );
+    // if (arrBookmark.length > 0) {
+    //   switch (data?.status) {
+    //     case '1':
+    //       if (this.journal.approvalControl == '0') {
+    //         arrBookmark.forEach((element) => {
+    //           if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       } else {
+    //         arrBookmark.forEach((element) => {
+    //           if (element.functionID == 'ACT060504' || element.functionID == 'ACT060508') {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       }
+    //       break;
+    //     case '3':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060505' || element.functionID == 'ACT060508') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '5':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '6':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060507' || element.functionID == 'ACT060508') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '2':
+    //     case '7':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060503' || element.functionID == 'ACT060508') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '9':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060506' || element.functionID == 'ACT060508') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     default:
+    //       arrBookmark.forEach((element) => {
+    //         element.disabled = true;
+    //       });
+    //       break;
+    //   }
+    // }
+    // return;
   }
 
   /**
