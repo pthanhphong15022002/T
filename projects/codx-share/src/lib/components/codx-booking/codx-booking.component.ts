@@ -428,8 +428,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.scheduleEvent.assemblyName = 'EP';
     this.scheduleEvent.className = 'BookingsBusiness';
     this.scheduleEvent.service = 'EP';
-    this.scheduleEvent.method = 'GetListBookingAsync';
-    //this.scheduleEvent.method = 'GetListBookingScheduleAsync';
+    //this.scheduleEvent.method = 'GetListBookingAsync';
+    this.scheduleEvent.method = 'GetListBookingScheduleAsync';
     this.scheduleEvent.predicate = 'ResourceType=@0';
     this.scheduleEvent.dataValue = this.resourceType;
     if (this.queryParams?.predicate && this.queryParams?.dataValue) {
