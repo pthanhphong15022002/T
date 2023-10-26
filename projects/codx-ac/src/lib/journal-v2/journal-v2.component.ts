@@ -33,6 +33,8 @@ import { toCamelCase } from '../utils';
   styleUrls: ['./journal-v2.component.scss'],
 })
 export class JournalV2Component extends UIComponent implements OnInit {
+  @ViewChild('grid') grid?: CodxGridviewV2Component;
+  @ViewChild('contentTemplate') contentTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
   subViews: Array<ViewModel> = [];
   viewActive: number = ViewType.smallcard;
@@ -53,17 +55,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
   creaters: { journalNo: string; value: string }[];
   posters: { journalNo: string; value: string }[];
 
-  mainFilterValue: string = '1';
-  subFilterValue: string = '0';
+  mainFilterValue: string;
+  subFilterValue: string;
   ViewType = ViewType;
   button: ButtonModel = {
+    icon:'icon-i-journal-plus',
     id: 'btnAdd',
   };
-
-  @ViewChild('grid') grid?: CodxGridviewV2Component;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  viewComponent = [];
-
   constructor(
     inject: Injector,
     private route: Router,
@@ -76,22 +74,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   //#region Init
   override onInit(): void {
-    this.viewComponent.push(this.viewActive);
-    this.subViews = [
-      {
-        type: ViewType.smallcard,
-        active: this.viewActive === ViewType.smallcard,
-      },
-      {
-        type: ViewType.list,
-        active: this.viewActive === ViewType.list,
-      },
-      {
-        type: ViewType.grid,
-        active: this.viewActive === ViewType.grid,
-      },
-    ];
-
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
@@ -125,100 +107,113 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.assignVllToProp2('AC137', 'journalTypes137');
     this.assignVllToProp2('AC138', 'journalTypes138');
 
-    combineLatest({
-      users: this.journalService.getUsers$(),
-      userGroups: this.journalService.getUserGroups$(),
-      userRoles: this.journalService.getUserRoles$(),
-      random: this.randomSubject.asObservable(),
-    }).subscribe(({ users, userGroups, userRoles }) => {
-      const options = new DataRequest();
-      options.entityName = 'AC_JournalsPermission';
-      options.pageLoading = false;
-      this.acService
-        .loadData$('AC', options)
-        .subscribe((journalPermissions: IJournalPermission[]) => {
-          let createrMap: Map<string, string[]> = new Map();
-          let posterMap: Map<string, string[]> = new Map();
+    // combineLatest({
+    //   users: this.journalService.getUsers$(),
+    //   userGroups: this.journalService.getUserGroups$(),
+    //   userRoles: this.journalService.getUserRoles$(),
+    //   random: this.randomSubject.asObservable(),
+    // }).subscribe(({ users, userGroups, userRoles }) => {
+    //   const options = new DataRequest();
+    //   options.entityName = 'AC_JournalsPermission';
+    //   options.pageLoading = false;
+    //   this.acService
+    //     .loadData$('AC', options)
+    //     .subscribe((journalPermissions: IJournalPermission[]) => {
+    //       let createrMap: Map<string, string[]> = new Map();
+    //       let posterMap: Map<string, string[]> = new Map();
 
-          for (const permission of journalPermissions) {
-            let name: string;
-            if (permission.objectType === 'U') {
-              name = this.nameByIdPipe.transform(
-                users,
-                'UserID',
-                'UserName',
-                permission.objectID
-              );
-            } else if (permission.objectType === 'UG') {
-              name = this.nameByIdPipe.transform(
-                userGroups,
-                'GroupID',
-                'GroupName',
-                permission.objectID
-              );
-            } else {
-              name = this.nameByIdPipe.transform(
-                userRoles,
-                'RoleID',
-                'RoleName',
-                permission.objectID
-              );
-            }
+    //       for (const permission of journalPermissions) {
+    //         let name: string;
+    //         if (permission.objectType === 'U') {
+    //           name = this.nameByIdPipe.transform(
+    //             users,
+    //             'UserID',
+    //             'UserName',
+    //             permission.objectID
+    //           );
+    //         } else if (permission.objectType === 'UG') {
+    //           name = this.nameByIdPipe.transform(
+    //             userGroups,
+    //             'GroupID',
+    //             'GroupName',
+    //             permission.objectID
+    //           );
+    //         } else {
+    //           name = this.nameByIdPipe.transform(
+    //             userRoles,
+    //             'RoleID',
+    //             'RoleName',
+    //             permission.objectID
+    //           );
+    //         }
 
-            if (permission.add === '1') {
-              let creaters: string[] =
-                createrMap.get(permission.journalNo) ?? [];
-              creaters.push(name);
-              createrMap.set(permission.journalNo, creaters);
-            }
+    //         if (permission.add === '1') {
+    //           let creaters: string[] =
+    //             createrMap.get(permission.journalNo) ?? [];
+    //           creaters.push(name);
+    //           createrMap.set(permission.journalNo, creaters);
+    //         }
 
-            if (permission.post === '1') {
-              let posters: string[] = posterMap.get(permission.journalNo) ?? [];
-              posters.push(name);
-              posterMap.set(permission.journalNo, posters);
-            }
-          }
+    //         if (permission.post === '1') {
+    //           let posters: string[] = posterMap.get(permission.journalNo) ?? [];
+    //           posters.push(name);
+    //           posterMap.set(permission.journalNo, posters);
+    //         }
+    //       }
 
-          this.creaters = Array.from(createrMap, ([key, value]) => ({
-            journalNo: key,
-            value: value.join(', '),
-          }));
-          this.posters = Array.from(posterMap, ([key, value]) => ({
-            journalNo: key,
-            value: value.join(', '),
-          }));
-
-          console.log(this.creaters);
-          console.log(this.posters);
-        });
-    });
+    //       this.creaters = Array.from(createrMap, ([key, value]) => ({
+    //         journalNo: key,
+    //         value: value.join(', '),
+    //       }));
+    //       this.posters = Array.from(posterMap, ([key, value]) => ({
+    //         journalNo: key,
+    //         value: value.join(', '),
+    //       }));
+    //     });
+    // });
   }
 
   ngAfterViewInit() {
+    this.acService.changeToolBar.next(this.view.funcID);
     this.views = [
       {
         type: ViewType.content,
         active: true,
         sameData: true,
         model: {
-          panelLeftRef: this.panelLeftRef,
+          panelLeftRef: this.contentTemplate,
         },
       },
     ];
-    ScrollComponent.reinitialization();
-    this.detectorRef.detectChanges();
+    this.subViews = [
+      {
+        type: ViewType.smallcard,
+        active: this.viewActive === ViewType.smallcard,
+      },
+      {
+        type: ViewType.list,
+        active: this.viewActive === ViewType.list,
+      },
+      {
+        type: ViewType.grid,
+        active: this.viewActive === ViewType.grid,
+      },
+    ];
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       this.functionName = toCamelCase(res.defaultName);
     });
   }
 
+  ngOnDestroy() {
+    this.acService.changeToolBar.next(null);
+  }
+
   //#region Init
 
   //#region Events
   viewChanged(view) {
-    if (!this.viewComponent.includes(view.type))
-      this.viewComponent.push(view.type);
+    if(view && view.type == this.viewActive) return;
     this.viewActive = view.type;
     this.subViews?.filter(function (v) {
       if (v.type == view.type) v.active = true;
@@ -241,6 +236,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   changePredicate(value: string, field: string): void {
+    if(field === 'mainFilterValue' && this.mainFilterValue == value) return;
+    if(field === 'subFilterValue' && this.subFilterValue == value) return;
     this[field] = value;
 
     let journalTypes: string = '';
@@ -269,6 +266,17 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.view.dataService.setPredicates(predicates, dataValues, () => {
       this.grid?.refresh();
     });
+  }
+
+  changeMF(event){
+    let array = ['SYS02','SYS03','SYS04'];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        element.isbookmark = false;
+      }
+    })
   }
 
   search(e) {
@@ -418,7 +426,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.cache
       .valueList(vllCode)
       .pipe(
-        tap((t) => console.log(vllCode, t)),
         map((d) => d.datas.map((v) => v.value))
       )
       .subscribe((res) => {

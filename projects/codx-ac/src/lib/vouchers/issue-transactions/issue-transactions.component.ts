@@ -34,7 +34,8 @@ import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
-import { IssueTransactionsUpdateParasComponent } from './issue-transactions-update-paras/issue-transactions-update-paras.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { JournalService } from '../../journals/journals.service';
 
 @Component({
   selector: 'lib-issue-transactions',
@@ -44,183 +45,107 @@ import { IssueTransactionsUpdateParasComponent } from './issue-transactions-upda
 })
 export class IssueTransactionsComponent extends UIComponent {
   //#region Constructor
-
-  views: Array<ViewModel> = [];
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-  @ViewChild('templateDetail') templateDetail?: TemplateRef<any>;
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('memoContent', { read: ElementRef })
-  memoContent: ElementRef<HTMLElement>;
-  public animation: AnimationModel = { enable: true, duration: 500, delay: 0 };
-  public animationAcctTrans: AnimationModel = { enable: true, duration: 500, delay: 0 };
-  private destroy$ = new Subject<void>();
-  dialog!: DialogRef;
-  button?: ButtonModel = { id: 'btnAdd' };
-  headerText: any;
-  funcName: any;
+  views: Array<ViewModel> = []; // model view
+  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
+  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
-  parentID: string;
-  journalNo: string;
-  totalacct: any = 0;
-  totaloff: any = 0;
-  totalQuantity: any = 0;
-  totalAmt: any = 0;
-  width: any;
-  height: any;
-  innerWidth: any;
-  itemSelected: any;
-  objectname: any;
-  oData: any;
-  lsVatCode: any;
-  entityName: any;
-  acctTrans: any;
-  vllReceipt: any = 'AC116';
-  vllIssue: any = 'AC117';
-  overflowed: boolean = false;
-  expanding: boolean = false;
-  isLoadDataAcct: any = true;
-  loading: any = false;
-  loadingAcct: any = false;
-  journal: IJournal;
-  dataDefault: any;
-  voucherCopy: any;
-  hideFields: Array<any> = [];
-  fmVouchers: FormModel = {
-    formName: 'VouchersIssues',
-    gridViewName: 'grvVouchersIssues',
-    entityName: 'IV_Vouchers',
+  journalNo: string; //? số của sổ nhật kí
+  itemSelected: any; //? data của view danh sách chi tiết khi được chọn
+  userID: any; //?  tên user đăng nhập
+  dataCategory: any; //? data của category
+  journal: any; //? data sổ nhật kí
+  baseCurr: any; //? đồng tiền hạch toán
+  dataDefault: any; //? data default của phiếu
+  hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
+  button: ButtonModel = {
+    //? nút thêm phiếu
+    id: 'btnAdd',
+    icon: 'icon-i-file-earmark-plus',
   };
-  fmVouchersLines: FormModel = {
-    formName: 'VouchersLinesIssues',
-    gridViewName: 'grvVouchersLinesIssues',
-    entityName: 'IV_VouchersLines',
-  };
-  vouchersLines: Array<any> = [];
-  fmAccTrans: FormModel = {
-    formName: 'AcctTrans',
-    gridViewName: 'grvAcctTrans',
-    entityName: 'AC_AcctTrans',
-  };
-  parent: any;
+  optionSidebar: SidebarModel = new SidebarModel();
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
+    private authStore: AuthStore,
+    private shareService: CodxShareService,
     private notification: NotificationsService,
-    private callfunc: CallFuncService,
-    private routerActive: ActivatedRoute,
     private tenant: TenantStore,
-    private pageTitleService: PageTitleService,
-    @Optional() dialog?: DialogRef
+    private journalService: JournalService
   ) {
     super(inject);
-    this.dialog = dialog;
-    this.routerActive.queryParams
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((params) => {
-      this.journalNo = params?.journalNo;
-      if (params?.parent) {
-        this.cache.functionList(params.parent)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
-          if (res) this.parent = res;
-        });
-      }
-    });
-    this.funcID = this.routerActive.snapshot.params['funcID'];
-    this.loadhideFields();
+    this.cache
+      .companySetting()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res.length > 0) {
+          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+        }
+      });
+    this.router.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        this.journalNo = params?.journalNo; //? get số journal từ router
+      });
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
 
-  onInit(): void {}
+  onInit(): void {
+    //this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
+  }
 
   ngAfterViewInit() {
-
-    this.cache.functionList(this.view.funcID).pipe(takeUntil(this.destroy$)).subscribe((res) => {
-      if(res)
-      {
-        this.funcName = res.defaultName;
-        this.runmode = res.runMode;
-        this.detectorRef.detectChanges();
-      }
-    });
+    this.cache
+      .functionList(this.view.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.runmode = res?.runMode; //? lấy runmode
+        }
+      });
 
     this.views = [
       {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-        },
-      },
-      {
-        type: ViewType.listdetail,
+        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
         active: true,
         sameData: true,
         model: {
-          template: this.itemTemplate,
-          panelRightRef: this.templateDetail,
+          template: this.templateDetailLeft,
+          panelRightRef: this.templateDetailRight,
+          collapsed: true,
+          widthLeft:'25%'
+          //separatorSize:3
+        },
+      },
+      {
+        type: ViewType.list, //? thiết lập view danh sách
+        active: true,
+        sameData: true,
+        model: {
+          template: this.listTemplate,
         },
       },
       {
         type: ViewType.grid, //? thiết lập view lưới
         active: true,
         sameData: true,
-        subModel:{
-          gridviewName: this.fmVouchersLines.gridViewName,
-          formName: this.fmVouchersLines.formName,
-          entityName: this.fmVouchersLines.entityName,
-          service:'IV',
-          predicates:'TransID=@0',
-          rowNoField:'rowNo',
-        },
         model: {
-          template2: this.templateMore,
+          template2: this.templateGrid,
         },
       },
     ];
-    
-    this.view.setRootNode(this.parent?.customName);
+    this.journalService.setChildLinks(this.journalNo);
 
-    const options1 = new DataRequest();
-    options1.entityName = 'SYS_FunctionList';
-    options1.pageLoading = false;
-    options1.predicates = 'ParentID=@0';
-    options1.dataValues = 'ACT';
-
-    const options2 = new DataRequest();
-    options2.entityName = 'AC_Journals';
-    options2.pageLoading = false;
-    options2.predicates = 'Status=@0';
-    options2.dataValues = '1';
-
-    combineLatest({
-      functionList: this.acService.loadData$('SYS', options1),
-      journals: this.acService.loadData$('AC', options2),
-      vll077: this.cache.valueList('AC077').pipe(map((v) => v.datas)),
-    }).subscribe(({ functionList, journals, vll077 }) => {
-      console.log(journals);
-      const links: PageLink[] = [];
-      for (const journal of journals as IJournal[]) {
-        if (journal.journalNo === this.journalNo) {
-          continue;
-        }
-
-        const functionId: string = vll077.find(
-          (v) => v.value === journal.journalType
-        )?.default;
-        links.push({
-          title: journal.journalDesc,
-          path:
-            functionList.find((f) => f.functionID === functionId)?.url +
-            `?journalNo=${journal.journalNo}`,
-        });
-      }
-
-      this.pageTitleService.setChildren(links);
-    });
+    //* thiết lập cấu hình sidebar
+    this.optionSidebar.DataService = this.view.dataService;
+    this.optionSidebar.FormModel = this.view.formModel;
+    this.optionSidebar.isFull = true;
   }
 
   ngDoCheck(){
@@ -228,7 +153,6 @@ export class IssueTransactionsComponent extends UIComponent {
   }
 
   ngOnDestroy() {
-    this.view.setRootNode('');
     this.onDestroy();
   }
 
@@ -237,227 +161,68 @@ export class IssueTransactionsComponent extends UIComponent {
     this.destroy$.complete();
   }
 
-  ngAfterViewChecked(): void {
-    const element: HTMLElement = this.memoContent?.nativeElement;
-    this.overflowed = element?.scrollWidth > element?.offsetWidth;
-  }
-  //#endregion
+  //#endregion Init
 
   //#region Event
 
-  toolBarClick(e) {
-    switch (e.id) {
+  /**
+   * * Hàm xử lí click toolbar
+   * @param event
+   */
+  toolbarClick(event) {
+    switch (event.id) {
       case 'btnAdd':
-        this.add(e);
+        this.addNewVoucher(); //? thêm mới chứng từ
         break;
     }
   }
 
-  clickMF(e, data) {
+  /**
+   * *Hàm click các morefunction
+   * @param event
+   * @param data
+   */
+  clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.delete(data);
+        this.deleteVoucher(data); //? xóa chứng từ
         break;
       case 'SYS03':
-        this.edit(e, data);
+        this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        this.copy(data);
+        this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        this.export(data);
+        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT070808':
+      case 'ACT071404':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT071405':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT071403':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT071406':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT071407':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
       case 'ACT071408':
-        this.printVoucher(data, e.functionID);
+        //this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
 
-  onClickShowLess(): void {
-    this.expanding = !this.expanding;
-    this.detectorRef.detectChanges();
-  }
-  //#endregion
-
-  //#region Method
-
-  setDefault(data:any,action:any = '') {
-    return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-      data,
-      this.journalNo,
-      action
-    ]);
-  }
-
-  openFormDbGrid(e)
-  {
-    var obj = {
-      formType: 'add',
-      headerText: this.headerText,
-      formModelMaster: this.fmVouchers,
-      formModelLine: this.fmVouchersLines,
-      hideFields: this.hideFields,
-      journal: this.journal,
-    };
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.isFull = true;
-    this.dialog = this.callfunc.openSide(
-      IssueTransactionsUpdateParasComponent,
-      obj,
-      option,
-      this.view.funcID
-    );
-  }
-
-  add(e) {
-    this.headerText = this.funcName;
-    this.view.dataService
-      .addNew((o) => this.setDefault(this.dataDefault))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res != null) {
-          if(this.dataDefault == null) this.dataDefault = {...res};
-          var obj = {
-            formType: 'add',
-            headerText: this.headerText,
-            formModelMaster: this.fmVouchers,
-            formModelLine: this.fmVouchersLines,
-            hideFields: this.hideFields,
-            journal: this.journal,
-            oData: { ...res },
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          this.dialog = this.callfunc.openSide(
-            IssueTransactionsAddComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-        }
-      });
-  }
-
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if(res)
-        {
-          var obj = {
-            formType: 'edit',
-            headerText: this.funcName,
-            formModelMaster: this.fmVouchers,
-            formModelLine: this.fmVouchersLines,
-            hideFields: this.hideFields,
-            journal: this.journal,
-            oData: { ...res },
-          };
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.isFull = true;
-          this.dialog = this.callfunc.openSide(
-            IssueTransactionsAddComponent,
-            obj,
-            option,
-            this.view.funcID
-          );
-        }
-      });
-  }
-
-  copy(dataCopy) {
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
-      .copy((o) => this.setDefault(dataCopy,'copy'))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        if (res != null) {
-          let datas = {...res};
-          this.view.dataService.saveAs(datas).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
-            if (res) {
-              var obj = {
-                formType: 'copy',
-                headerText: this.funcName,
-                formModelMaster: this.fmVouchers,
-                formModelLine: this.fmVouchersLines,
-                hideFields: this.hideFields,
-                journal: this.journal,
-                oData: { ...datas },
-              };
-              let option = new SidebarModel();
-              option.DataService = this.view.dataService;
-              option.FormModel = this.view.formModel;
-              option.isFull = true;
-              this.dialog = this.callfunc.openSide(
-                IssueTransactionsAddComponent,
-                obj,
-                option,
-                this.view.funcID
-              );
-              this.view.dataService.add(datas).pipe(takeUntil(this.destroy$)).subscribe();
-            }
-          })
-        }
-      });
-  }
-
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.delete([data], true)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {});
-  }
-
-  export(data) {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
-    this.callfunc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-  //#endregion
-
-  //#region Function
-
-  beforeDelete(opt: RequestOption, data) {
-    opt.methodName = 'DeleteAsync';
-    opt.className = 'VouchersBusiness';
-    opt.assemblyName = 'IV';
-    opt.service = 'IV';
-    opt.data = data;
-    return true;
-  }
-  
-  changeItemDetail(event) {
+  /**
+   * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
+   * @param event
+   * @returns
+   */
+  onSelectedItem(event) {
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -466,193 +231,273 @@ export class IssueTransactionsComponent extends UIComponent {
         this.detectorRef.detectChanges();
       }
     }
-    this.expanding = false;
-    this.detectorRef.detectChanges();
   }
 
-  formatDate(date) {
-    return new Date(date).toLocaleDateString();
-  }
+  //#endregion Event
 
-  loadTotal(){
-    this.totalAmt = 0;
-    this.totalQuantity = 0;
-    this.vouchersLines.forEach((item) => {
-      if(item)
-      {
-        this.totalQuantity += item.quantity;
-        this.totalAmt += item.costAmt;
-      }
-    });
-  }
+  //#region Function
 
-  loadAcctTransTotal() {
-    this.totalacct = 0;
-    this.totaloff = 0;
-    for (let index = 0; index < this.acctTrans.length; index++) {
-      if (!this.acctTrans[index].crediting) {
-        this.totalacct = this.totalacct + this.acctTrans[index].transAmt;
-      } else {
-        this.totaloff = this.totaloff + this.acctTrans[index].transAmt;
-      }
-    }
-  }
-
-  createLine(item) {
-    if (item.crediting) {
-      var data = this.acctTrans.filter((x) => x.entryID == item.entryID);
-      let index = data
-        .filter((x) => x.crediting == item.crediting)
-        .findIndex((x) => x.recID == item.recID);
-      if (
-        index ==
-        data.filter((x) => x.crediting == item.crediting).length - 1
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return false;
-  }
-
-  loadhideFields() {
-    this.acService
-      .execApi('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
+  /**
+   * *Hàm thêm mới chứng từ
+   */
+  addNewVoucher() {
+    this.view.dataService
+      .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.journal = res.journal;
-        this.hideFields = res.hideFields;
-      });
-  }
-
-  changeDataMF(e: any, data: any)
-  {
-    this.showHideMF(e, data);
-  }
-  
-  printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
+      .subscribe((res) => {
         if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
+          res.isAdd = true;
+          if (this.dataDefault == null) this.dataDefault = { ...res };
+          let data = {
+            headerText: this.headerText, //? tiêu đề voucher
+            journal: { ...this.journal }, //?  data journal
+            oData: { ...res }, //?  data của cashpayment
+            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+          };
+          let dialog = this.callfc.openSide(
+            IssueTransactionsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
         }
       });
   }
 
-  openFormReportVoucher(data: any, reportList: any) {
-    var obj = {
-      data: data,
-      reportList: reportList,
-      url: 'ac/report/detail/',
-      formModel:this.view.formModel
-    };
-    let opt = new DialogModel();
-    var dialog = this.callfunc.openForm(
-      CodxListReportsComponent,
-      '',
-      400,
-      600,
-      '',
-      obj,
-      '',
-      opt
-    );
+  /**
+   * *Hàm chỉnh sửa chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  editVoucher(dataEdit) {
+    this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText, //? tiêu đề voucher
+          journal: { ...this.journal }, //?  data journal
+          oData: { ...res }, //?  data của cashpayment
+          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+        };
+        let dialog = this.callfc.openSide(
+          IssueTransactionsAddComponent,
+          data,
+          this.optionSidebar,
+          this.view.funcID
+        );
+      });
   }
 
-  showHideMF(e: any, data: any)
-  {
-    var bm = e.filter(
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT071406' || // ghi sổ
-        x.functionID == 'ACT071404' || // gửi duyệt
-        x.functionID == 'ACT071405' || // hủy yêu cầu duyệt
-        x.functionID == 'ACT071407' || // khôi phục
-        x.functionID == 'ACT071408' || // in
-        x.functionID == 'ACT071403' // kiểm tra tính hợp lệ
-    );
-    if (bm.length > 0) {
-      switch(data.status)
-      {
-        case '0':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071403' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '1':
-          if(this.journal.approvalControl == '1' || this.journal.approvalControl == '2')
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT071404' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
+  /**
+   * *Hàm sao chép chứng từ
+   * @param event
+   * @param dataCopy : data chứng từ sao chép
+   */
+  copyVoucher(dataCopy) {
+    this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res != null) {
+          res.isCopy = true;
+          let datas = { ...res };
+          this.view.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                };
+                let dialog = this.callfc.openSide(
+                  IssueTransactionsAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+                this.view.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
             });
-          }
-          else if(this.journal.approvalControl == '' || this.journal.approvalControl == '0' || this.journal.approvalControl == null)
-          {
-            bm.forEach((morefunction) => {
-              if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-                morefunction.disabled = false;
-              else
-                morefunction.disabled = true;
-            });
-          }
-          break;
-        case '3':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071405' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '5':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '6':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071407' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-          break;
-        case '9':
-          bm.forEach((morefunction) => {
-            if(morefunction.functionID == 'ACT071406' || morefunction.functionID == 'ACT071408')
-              morefunction.disabled = false;
-            else
-              morefunction.disabled = true;
-          });
-        break;
-      }
-    }
+        }
+      });
   }
-  //#endregion
+
+  /**
+   * *Hàm xóa chứng từ
+   * @param dataDelete : data xóa
+   */
+  deleteVoucher(dataDelete) {
+    this.view.dataService
+      .delete([dataDelete], true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {});
+  }
+
+  /**
+   * *Hàm gửi duyệt chứng từ (xử lí cho MF gửi duyệt)
+   * @param data
+   */
+  releaseVoucher(text: any, data: any) {
+    this.acService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.dataCategory = res;
+        this.shareService
+          .codxRelease(
+            'IV',
+            data.recID,
+            this.dataCategory.processID,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            '',
+            '',
+            ''
+          )
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((result: any) => {
+            if (result?.msgCodeError == null && result?.rowCount) {
+              data.status = result?.returnStatus;
+              this.view.dataService.updateDatas.set(data['_uuid'], data);
+              this.view.dataService
+                .save(null, 0, '', '', false)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res: any) => {
+                  if (res && !res.update.error) {
+                    this.notification.notifyCode('AC0029', 0, text);
+                  }
+                });
+            } else this.notification.notifyCode(result?.msgCodeError);
+          });
+      });
+  }
+
+  /**
+   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
+   * @param data
+   */
+  cancelReleaseVoucher(text: any, data: any) {
+    this.shareService
+      .codxCancel('IV', data?.recID, this.view.formModel.entityName, null, null)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        if (result && result?.msgCodeError == null) {
+          data.status = result?.returnStatus;
+          this.view.dataService.updateDatas.set(data['_uuid'], data);
+          this.view.dataService
+            .save(null, 0, '', '', false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res && !res.update.error) {
+                this.notification.notifyCode('AC0029', 0, text);
+              }
+            });
+        } else this.notification.notifyCode(result?.msgCodeError);
+      });
+  }
+
+  /**
+   * *Hàm kiểm tra tính hợp lệ của chứng từ (xử lí cho MF kiểm tra tính hợp lệ)
+   * @param data
+   */
+  validateVourcher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
+   * @param data
+   */
+  postVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
+   * @param data
+   */
+  unPostVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
+   * @param event : danh sách morefunction
+   * @param data
+   * @returns
+   */
+  changeMFDetail(event: any, data: any, type: any = '') {
+    this.acService.changeMFIssueVoucher(event,data,type,this.journal,this.view.formModel);
+  }
+
+  /**
+   * *Hàm get data mặc định của chứng từ
+   */
+  getJournal() {
+    this.api
+      .exec('AC', 'ACBusiness', 'GetJournalAsync', [this.journalNo])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res && res.length > 0) {
+          this.journal = res[0]; // data journal
+          this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
+        }
+      });
+  }
+
+  /**
+   * *Hàm call set default data khi thêm mới chứng từ
+   * @returns
+   */
+  setDefault(data: any, action: any = '') {
+    return this.api.exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+      data,
+      this.journal,
+      this.journalNo,
+      action,
+    ]);
+  }
+
+  //#endregion Function
 }

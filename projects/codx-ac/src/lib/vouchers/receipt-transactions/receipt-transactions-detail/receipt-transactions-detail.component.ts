@@ -17,6 +17,7 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReceiptTransactionsDetailComponent extends UIComponent {
+  
   //#region Constructor
   @Input() recID: any;
   @Input() dataItem: any;
@@ -83,38 +84,38 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    * @param data
    */
   clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT060102':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT060104':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT060106':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT060103':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT060105':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT060107':
-    //     this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteVoucher(data); //? xóa chứng từ
+        break;
+      case 'SYS03':
+        this.editVoucher(data); //? sửa chứng từ
+        break;
+      case 'SYS04':
+        this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS002':
+        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        break;
+      case 'ACT070804':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT070805':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT070803':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT070806':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT070807':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT070808':
+        //this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+    }
   }
 
   //#endregion
@@ -124,28 +125,28 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    * *Hàm thêm mới chứng từ
    */
   addNewVoucher() {
-    // this.dataService
-    //   .addNew((o) => this.setDefault(this.dataDefault))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res:any) => {
-    //     if (res != null) {
-    //       res.isAdd = true;
-    //       if (this.dataDefault == null) this.dataDefault = { ...res };
-    //       let data = {
-    //         headerText: this.headerText, //? tiêu đề voucher
-    //         journal: { ...this.journal }, //?  data journal
-    //         oData: { ...res }, //?  data của cashpayment
-    //         hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //         baseCurr: this.baseCurr //?  đồng tiền hạch toán
-    //       };
-    //       let dialog = this.callfc.openSide(
-    //         PurchaseinvoicesAddComponent,
-    //         data,
-    //         this.optionSidebar,
-    //         this.formModel.funcID
-    //       );
-    //     }
-    //   });
+    this.dataService
+      .addNew((o) => this.setDefault(this.dataDefault))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res != null) {
+          res.isAdd = true;
+          if (this.dataDefault == null) this.dataDefault = { ...res };
+          let data = {
+            headerText: this.headerText, //? tiêu đề voucher
+            journal: { ...this.journal }, //?  data journal
+            oData: { ...res }, //?  data của cashpayment
+            hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+          };
+          let dialog = this.callfc.openSide(
+            ReceiptTransactionsAddComponent,
+            data,
+            this.optionSidebar,
+            this.funcID
+          );
+        }
+      });
   }
 
   /**
@@ -153,26 +154,26 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    // this.dataService.dataSelected = dataEdit;
-    // this.dataService
-    //   .edit(dataEdit)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     res.isEdit = true;
-    //     let data = {
-    //       headerText: this.headerText, //? tiêu đề voucher
-    //       journal: { ...this.journal }, //?  data journal
-    //       oData: { ...res }, //?  data của cashpayment
-    //       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //     };
-    //     let dialog = this.callfc.openSide(
-    //       PurchaseinvoicesAddComponent,
-    //       data,
-    //       this.optionSidebar,
-    //       this.formModel.funcID
-    //     );
-    //   });
+    this.dataService.dataSelected = dataEdit;
+    this.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText, //? tiêu đề voucher
+          journal: { ...this.journal }, //?  data journal
+          oData: { ...res }, //?  data của cashpayment
+          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+        };
+        let dialog = this.callfc.openSide(
+          ReceiptTransactionsAddComponent,
+          data,
+          this.optionSidebar,
+          this.funcID
+        );
+      });
   }
 
   /**
@@ -181,40 +182,40 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.dataService.dataSelected = dataCopy;
-    // this.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText, //? tiêu đề voucher
-    //               journal: { ...this.journal }, //?  data journal
-    //               oData: { ...datas }, //?  data của cashpayment
-    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //             };
-    //             let dialog = this.callfc.openSide(
-    //               PurchaseinvoicesAddComponent,
-    //               data,
-    //               this.optionSidebar,
-    //               this.formModel.funcID
-    //             );
-    //             this.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
+    this.dataService.dataSelected = dataCopy;
+    this.dataService
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res != null) {
+          res.isCopy = true;
+          let datas = { ...res };
+          this.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                };
+                let dialog = this.callfc.openSide(
+                  ReceiptTransactionsAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.funcID
+                );
+                this.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
+        }
+      });
   }
 
   /**
@@ -229,69 +230,18 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
   }
 
   /**
-   * *Hàm kiểm tra tính hợp lệ của chứng từ (xử lí cho MF kiểm tra tính hợp lệ)
-   * @param data
-   */
-  validateVourcher(text: any, data: any) {
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data.recID])
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.dataService.update(res?.data).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
-  /**
-   * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
-   * @param data
-   */
-  postVoucher(text: any, data: any) {
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data.recID])
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
-          this.dataService.update(this.itemSelected).subscribe();
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
-  /**
-   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
-   * @param data
-   */
-  unPostVoucher(text: any, data: any) {
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data.recID])
-      .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
-          this.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode('AC0029', 0, text);
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
-  /**
    * *Hàm gửi duyệt chứng từ (xử lí cho MF gửi duyệt)
    * @param data
    */
   releaseVoucher(text: any, data: any) {
     this.acService
-      .getCategoryByEntityName(this.formModel.entityName)
+      .getCategoryByEntityName(this.view.formModel.entityName)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
         this.shareService
           .codxRelease(
-            'AC',
+            'IV',
             data.recID,
             this.dataCategory.processID,
             this.formModel.entityName,
@@ -324,7 +274,7 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    */
   cancelReleaseVoucher(text: any, data: any) {
     this.shareService
-      .codxCancel('AC', data?.recID, this.formModel.entityName, null, null)
+      .codxCancel('IV', data?.recID, this.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
         if (result && result?.msgCodeError == null) {
@@ -339,6 +289,59 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
               }
             });
         } else this.notification.notifyCode(result?.msgCodeError);
+      });
+  }
+
+  /**
+   * *Hàm kiểm tra tính hợp lệ của chứng từ (xử lí cho MF kiểm tra tính hợp lệ)
+   * @param data
+   */
+  validateVourcher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
+   * @param data
+   */
+  postVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
+   * @param data
+   */
+  unPostVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
       });
   }
 

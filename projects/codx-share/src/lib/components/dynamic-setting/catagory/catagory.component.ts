@@ -182,33 +182,40 @@ export class CatagoryComponent implements OnInit {
       cssClass = '',
       dialogModel = new DialogModel();
     if (!reference) {
-      let lineType = +this.lineType + 1 + '';
-      var itemChild = this.settingFull.filter(
-        (x) => x.refLineID === recID && x.lineType === lineType
-      );
-      if (!itemChild || itemChild.length == 0)
-        itemChild = this.oldSettingFull.filter(
+      if (
+        this.dataValue[item.transType] &&
+        this.dataValue[item.transType][value]
+      ) {
+        let dtvalue = this.dataValue[item.transType][value];
+        if (dtvalue === '0') return;
+        let lineType = +this.lineType + 1 + '';
+        var itemChild = this.settingFull.filter(
           (x) => x.refLineID === recID && x.lineType === lineType
         );
-      data['settingFull'] = itemChild;
-      data['valuelist'] = this.valuelist;
-      //data['settingValue'] = this.settingValue;
-      data['category'] = this.category;
-      data['function'] = this.function;
-      data['lineType'] = lineType;
-      width = 500;
-      height = 100 * itemChild.length;
+        if (!itemChild || itemChild.length == 0)
+          itemChild = this.oldSettingFull.filter(
+            (x) => x.refLineID === recID && x.lineType === lineType
+          );
+        data['settingFull'] = itemChild;
+        data['valuelist'] = this.valuelist;
+        //data['settingValue'] = this.settingValue;
+        data['category'] = this.category;
+        data['function'] = this.function;
+        data['lineType'] = lineType;
+        width = 500;
+        height = 100 * itemChild.length;
 
-      this.callfc.openForm(
-        CatagoryComponent,
-        title,
-        width,
-        height,
-        funcID,
-        data,
-        cssClass,
-        dialogModel
-      );
+        this.callfc.openForm(
+          CatagoryComponent,
+          title,
+          width,
+          height,
+          funcID,
+          data,
+          cssClass,
+          dialogModel
+        );
+      }
     } else {
       var component = this.components[reference] as Type<any>;
       switch (reference.toLowerCase()) {
@@ -442,32 +449,9 @@ export class CatagoryComponent implements OnInit {
             x.lineType === this.lineType &&
             x.isVisible == true
         ) || [];
-      // this.setting =
-      // this.setting.filter((res) => res.isVisible == true) || [];
-      //this.dataValue = dataValue;
       this.groupSetting = this.setting.filter((x) => {
         return x.lineType === this.lineType;
       });
-      // .filter((x) => {
-      //   return x.controlType && x.controlType.toLowerCase() === 'groupcontrol';
-      // });
-      // if (this.groupSetting.length > 0) {
-      //   var lstNoGroup = this.setting.filter((x) => {
-      //     return (
-      //       ((x.controlType && x.controlType.toLowerCase() !== 'groupcontrol') ||
-      //         !x.controlType) &&
-      //       !x.refLineID
-      //     );
-      //   });
-      //   if (lstNoGroup.length > 0) {
-      //     var objGroupTMP: any = {
-      //       recID: '',
-      //       refLineID: '',
-      //       controlType: 'GroupControl',
-      //     };
-      //     this.groupSetting.splice(0, 0, objGroupTMP);
-      //   }
-      // }
       if (this.category === '2' || this.category === '7')
         this.getIDAutoNumber();
       else if (this.category === '5') this.getAlertRule();

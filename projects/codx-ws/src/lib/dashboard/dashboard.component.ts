@@ -17,13 +17,13 @@ export class DashboardComponent extends WSUIComponent{
   countBookMarks = 0;
   selectedToolBar = "All"
   imgDefault = "assets/themes/ws/default/img/Dashboard_Empty.svg";
-  
+
   override onInit(): void {
     this.formatListGroupReport();
     this.getModuleByUserID();
     this.getCountBookMark();
   }
-  
+
   getCountBookMark()
   {
     let widthBody = document.body.offsetWidth - 40;
@@ -32,7 +32,7 @@ export class DashboardComponent extends WSUIComponent{
 
   formatListGroupReport()
   {
-    var obj = 
+    var obj =
     {
       functionID : "All",
       customName : "Tất cả"
@@ -93,13 +93,13 @@ export class DashboardComponent extends WSUIComponent{
         }
       }
     });
-    
+
     return data
   }
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/ws/"+data.moduleID.toLowerCase()+"/dashboard/"+data.reportID);
+    this.codxService.navigate("","/ws/"+data.moduleID.toLowerCase()+"/dashboard/"+data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);
@@ -153,7 +153,7 @@ export class DashboardComponent extends WSUIComponent{
         if(index >= 0) {
 
           this.listDashboard[index].isBookMark = !this.listDashboard[index].isBookMark;
-          
+
           if(!this.listDashboard[index].isBookMark)
           {
             className = "opacity-25";
@@ -170,7 +170,7 @@ export class DashboardComponent extends WSUIComponent{
 
           //Bookmark report
           document.getElementById("ws-report-bookmark" + this.listDashboard[index].recID).classList.add(className);
-          
+
           //Noti
           this.notifySvr.notifyCode(messCode,0,this.userInfo?.userName);
 

@@ -506,8 +506,8 @@ export class DealsComponent
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup(formName, gridViewName)
     );
-    this.vllStatus = this.gridViewSetup['Status'].referedValue;
-    this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+    this.vllStatus = this.gridViewSetup?.Status?.referedValue;
+    this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
     //lay grid view - view gird he thong
     // let arrField = Object.values(this.gridViewSetup).filter(
     //   (x: any) => x.isVisible
@@ -806,16 +806,16 @@ export class DealsComponent
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              let nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
-              }
+              // let nextStep = '';
+              // if (
+              //   index != -1 &&
+              //   !listSteps[index]?.isSuccessStep &&
+              //   !listSteps[index]?.isFailStep
+              // ) {
+              //   if (index != e.event.listStep.length) {
+              //     nextStep = listSteps[index]?.stepID;
+              //   }
+              // }
               let dataUpdate = [
                 data.recID,
                 instance.stepID,
