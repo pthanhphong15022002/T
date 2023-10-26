@@ -267,6 +267,7 @@ export class CvInformationComponent implements OnInit{
           "id": "79ac5a96-d3e3-4dd2-a4c5-3cdd3aca3a31"
       }
     ]
+    this.jsonExports2 = JSON.parse(JSON.stringify(this.jsonExports))
     this.disabledBtn = false;
   }
   setColumn()
