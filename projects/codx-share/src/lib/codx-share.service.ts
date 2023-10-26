@@ -1320,7 +1320,12 @@ export class CodxShareService {
       [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
-
+  genURLParamObject(object:any ){    
+    var json =JSON.stringify(object);
+    //json = encode(json) Thêm bước mã hóa
+    let paramURL = encodeURIComponent(json);
+    return paramURL;    
+  }
   getRpListByTemplateID(recID: any) {
     return this.api.execSv(
       'rptrp',

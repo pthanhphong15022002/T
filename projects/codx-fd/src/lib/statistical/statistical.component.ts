@@ -515,7 +515,7 @@ chartArea: Object = {
     this.options.entityPermission = 'FD_KudosTrans';
     this.options.gridViewName = 'grvKudosTrans';
     this.options.formName = 'KudosTrans';
-    this.options.funcID = this.funcID;
+    this.options.funcID = 'FDW011';
     this.options.dataObj = 'Coins';
     this.api
       .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
@@ -630,7 +630,6 @@ chartArea: Object = {
     var dt = [];
     let i = 0;
     this.ratingStats=[];
-    this.statByDepts=[];
     this.listCardsPerBev=[];
     this.statByBevs=[];
     this.statByEmps=[];
@@ -654,7 +653,7 @@ chartArea: Object = {
             obj.percentage = this.toFixed((obj.quantity/this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName).length)*100);
             this.ratingStats.push(obj);
           }
-          this.cardByDepts = this.groupBy(this.dataset,'departmentID');
+          this.cardByDepts = this.groupBy(this.dataset.filter((x:any)=>x.departmentID),'departmentID');
           for(let key in this.cardByDepts){
             let obj:any={};
             obj.recID= this.newGuid();

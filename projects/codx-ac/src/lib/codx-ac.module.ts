@@ -108,7 +108,6 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-
     children: [
       {
         path: 'report/:funcID',
@@ -247,17 +246,18 @@ export const routes: Routes = [
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
-  {
-    path: '',
-    component: LayloutJournalComponent,
-    children: [
-      {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
-    ],
-  },
+  // {
+  //   path: '',
+  //   component: LayloutJournalComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+  //   ],
+  // },
   {
     path: '',
     component: LayoutOnlyHeaderComponent,
