@@ -407,7 +407,7 @@ export class DealsComponent
           : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = data.full
+      eventItem.disabled = data.full ||  data?.alloweStatus == '1'
         ? !['1', '2', '15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
@@ -415,7 +415,7 @@ export class DealsComponent
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
+      eventItem.disabled = data.full || data?.alloweStatus == '1' ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -509,8 +509,8 @@ export class DealsComponent
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup(formName, gridViewName)
     );
-    this.vllStatus = this.gridViewSetup['Status'].referedValue;
-    this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+    this.vllStatus = this.gridViewSetup?.Status?.referedValue;
+    this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
     //lay grid view - view gird he thong
     // let arrField = Object.values(this.gridViewSetup).filter(
     //   (x: any) => x.isVisible
@@ -653,7 +653,7 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-    if (data?.alloweStatus != '1' || !data?.full) {
+    if (data?.alloweStatus != '1') {
       this.notificationsService.notifyCode('CM027');
       return;
     }
@@ -809,16 +809,16 @@ export class DealsComponent
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              let nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
-              }
+              // let nextStep = '';
+              // if (
+              //   index != -1 &&
+              //   !listSteps[index]?.isSuccessStep &&
+              //   !listSteps[index]?.isFailStep
+              // ) {
+              //   if (index != e.event.listStep.length) {
+              //     nextStep = listSteps[index]?.stepID;
+              //   }
+              // }
               let dataUpdate = [
                 data.recID,
                 instance.stepID,

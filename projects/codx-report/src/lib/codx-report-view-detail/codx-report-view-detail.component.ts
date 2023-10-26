@@ -110,11 +110,12 @@ export class CodxReportViewDetailComponent
     });
 
     this.router.queryParams.subscribe((param: any) => {
-      if (param['params']){
-        this._paramString = param['params'];
-        this.params = JSON.parse(param['params']);
-        this.getReport(this.reportID);
-      }
+    if (param['params']){
+      this._paramString = decodeURIComponent(param['params']);
+      //this._paramString = decode(this._paramString)
+      this.params = JSON.parse(this._paramString);
+      this.getReport(this.reportID);
+    }
     });
     let objFormat: any = {};
     objFormat['timeZone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -458,6 +459,6 @@ export class CodxReportViewDetailComponent
       this.data.service
     }/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(
       this._paramString
-    )}&${sk}`;
+    )}&${sk}&=`+Util.uid();
   }
 }

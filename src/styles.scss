@@ -4058,7 +4058,16 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
   max-height: calc(100vh - 400px);
 }
 
-
+div.e-more-popup-wrapper{
+  min-width: 250px;
+}
+lib-deals div[data-field="customerID"] {
+  font-weight: 500;
+  span.text-truncate:hover{
+    cursor: pointer;
+    
+  }
+}
   
 // .ws-body{ 
 //   codx-views > .container-fluid.p-0{
