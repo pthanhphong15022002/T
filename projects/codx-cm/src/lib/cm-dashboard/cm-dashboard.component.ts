@@ -727,35 +727,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
   }
 
-  // clickButton(id) {
-  //   switch (id) {
-  //     case 'btnMin':
-  //       this.isMax = false;
-  //       break;
-  //     case 'btnMax':
-  //       this.isMax = true;
-  //       break;
-  //     case 'btSuccess':
-  //       this.isSuccess = true;
-  //       break;
-  //     case 'btFail':
-  //       this.isSuccess = false;
-  //       break;
-  //     case 'btBussinessLine':
-  //       this.isBussinessLine = true;
-  //       break;
-  //     case 'btIndustries':
-  //       this.isBussinessLine = false;
-  //       break;
-  //     case 'btStatus':
-  //       this.isStatus = true;
-  //       break;
-  //     case 'btStage':
-  //       this.isStatus = false;
-  //       break;
-  //   }
-  //   this.detectorRef.detectChanges();
-  // }
   getHeightChart() {
     let viewChart = document.getElementById('6');
     let chartBusinessLinesButton = document.getElementById(
