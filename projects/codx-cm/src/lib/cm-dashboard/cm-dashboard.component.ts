@@ -1577,10 +1577,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let targetLines = data?.targetsLines;
     let lstQuarters = [];
     let lstUsers = [];
-    let fromDate = new Date(data?.currentDate);
-    let toDate = new Date(data?.currentDate);
+    let fromDate = new Date(currentDate);
+    let toDate = new Date(currentDate);
     //get lstQuarters
-    if (fromDate) {
+    if (data?.fromDate) {
       fromDate = new Date(data?.fromDate);
     }
     if (data?.toDate) {
@@ -1670,18 +1670,20 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     var tmp = {};
     const frmDate = new Date(fromDate);
     const tDate = new Date(toDate);
-    const frmDateOlds = new Date(frmDate.setMonth(frmDate.getMonth() - 1));
-    const tDateOlds = new Date(frmDate.setMonth(frmDate.getMonth() - 1));
+    let frmDateOlds = new Date(frmDate);
+    frmDateOlds.setMonth(frmDateOlds.getMonth() - 1);
+    let tDateOlds = new Date(tDate);
+    tDateOlds.setMonth(tDateOlds.getMonth() - 1);
 
     const dealCurrents = deals.filter(
       (x) =>
-        new Date(x.expectedClosed) >= frmDate &&
-        new Date(x.expectedClosed) <= tDate
+        new Date(x?.expectedClosed) >= frmDate &&
+        new Date(x?.expectedClosed) <= tDate
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x.expectedClosed) >= frmDateOlds &&
-        new Date(x.expectedClosed) <= tDateOlds
+        new Date(x?.expectedClosed) >= frmDateOlds &&
+        new Date(x?.expectedClosed) <= tDateOlds
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
@@ -2060,10 +2062,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     const currencyID = this.currencyID;
     const exchRate = this.exchangeRate;
     let now = new Date(toDate);
-    let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
+    let quarter = this.compareQuarter(toDate.getMonth() + 1);
     let sumTarget = 0;
     let year = now.getFullYear();
     for (let i = 0; i < 4; i++) {
+      if (quarter === 1) {
+        quarter = 4;
+        year--;
+      } else {
+        quarter--;
+      }
       const { min, max } = this.getQuarterMonthRange(quarter);
       var tmp = {};
       tmp['quarter'] = quarter;
@@ -2092,13 +2100,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       sumTarget += tmp['text'];
 
       tmp['y'] = 0;
-      if (quarter === 1) {
-        quarter = 4;
-        year--;
-      } else {
-        quarter--;
-      }
-
 
       lstPiaData.push(tmp);
     }
@@ -2113,6 +2114,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       return a.year - b.year;
     });
   }
+
+  compareQuarter(toDate: number) {
+    let q = 1;
+    if (toDate >= 1 && toDate <= 3) {
+      q = 1;
+    } else if (toDate >= 4 && toDate <= 6) {
+      q = 2;
+    } else if (toDate >= 7 && toDate <= 9) {
+      q = 3;
+    } else {
+      q = 4;
+    }
+    return q;
+  }
+  //end
 
   //get top sales
   getTopSalesDashBoards(lstUsers = [], param, fromDate, toDate) {
@@ -2283,21 +2299,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       toDateOlds.setFullYear(tDate.getFullYear() - 1);
     }
     return [frmDateOlds, toDateOlds];
-  }
-
-  compareQuarter(frmDate: number, toDate: number) {
-    let q = '';
-    if (frmDate >= 1 && toDate <= 3) {
-      q = 'q1';
-    } else if (frmDate >= 4 && toDate <= 6) {
-      q = 'q2';
-    }
-    if (frmDate >= 7 && toDate <= 9) {
-      q = 'q3';
-    } else {
-      q = 'q4';
-    }
-    return q;
   }
 
   retrnValueAsc(count, countOlds) {
