@@ -131,6 +131,8 @@ export class PopupAddEmployeesComponent implements OnInit {
     let arrFieldUnValid: string = '';
     if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
+        if(field === 'EmployeeID') return;
+        
         let key = Util.camelize(field);
         if (!this.employee[key]) {
           arrFieldUnValid += this.grvSetup[field]['headerText'] + ';';
