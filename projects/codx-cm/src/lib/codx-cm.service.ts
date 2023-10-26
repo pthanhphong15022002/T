@@ -234,9 +234,12 @@ export class CodxCmService {
   }
 
   addDealCompetitor(dealCompetitor) {
-    return this.api.exec<any>('CM', 'DealsCompetitorsBusiness', 'AddDealCompetitorAsync', [
-      dealCompetitor,
-    ]);
+    return this.api.exec<any>(
+      'CM',
+      'DealsCompetitorsBusiness',
+      'AddDealCompetitorAsync',
+      [dealCompetitor]
+    );
   }
 
   updateStatusDealsCompetitorAsync(dealCompetitor) {
@@ -1480,6 +1483,15 @@ export class CodxCmService {
     );
   }
 
+  getRecIDProcessDefault(applyFor) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetRecIDProcessDefaultAsync',
+      applyFor
+    );
+  }
+
   getProcessByBusinessLineID(bussinessID) {
     return this.api.exec<any>(
       'CM',
@@ -1511,7 +1523,6 @@ export class CodxCmService {
     );
   }
 
-
   getUserByListDepartmentID(listDepID) {
     return this.api.execSv<any>(
       'HR',
@@ -1521,7 +1532,7 @@ export class CodxCmService {
       listDepID
     );
   }
-  getListUserIDByListPositionsID(listPositionID){
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1530,7 +1541,6 @@ export class CodxCmService {
       listPositionID
     );
   }
-
 
   //#region
 
