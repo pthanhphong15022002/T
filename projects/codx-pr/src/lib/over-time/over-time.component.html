@@ -202,16 +202,16 @@
 </ng-template>
 
 <ng-template #cardTemplate let-data>
-  <div [style.background-color]="getColorItem(data.status)">
-    <div class="d-flex" *ngIf="data.registerForm == '2'">
-      <span [innerHTML]="data.hours + ' Hours'"> </span>
-    </div>
-    <div class="d-flex" *ngIf="data.registerForm != '2'">
-      <span>
-        {{ getHour(data.fromTime) }}
-      </span>
-      <span> - </span>
-      <span>{{ getHour(data.toTime) }}</span>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate" *ngIf="data.registerForm == '1'"
+        >{{ getHour(data.fromTime) }} - {{ getHour(data.toTime) }}</span
+      >
+      <span
+        class="w-100 text-truncate"
+        *ngIf="data.registerForm == '2'"
+        [innerHTML]="data.hours + ' Hours'"
+      ></span>
     </div>
   </div>
 </ng-template>

@@ -1606,6 +1606,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let targetLines = data?.targetsLines;
     let lstQuarters = [];
     let lstUsers = [];
+    let fromDate = data?.fromDate;
+    let toDate = data?.toDate;
     //get lstQuarters
     let tmpQuarter = {};
     tmpQuarter['year'] = currentDate.getFullYear();
@@ -1709,16 +1711,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       dealOlds?.reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
-    let valueAsc = '0';
-    if (countDealValues > 0 && countDealValueOlds > 0) {
-      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
-    } else {
-      if (countDealValues == countDealValueOlds) {
-        valueAsc = 0 + '%';
-      } else {
-        valueAsc = 100 + '%';
-      }
-    }
+
     let isAsc =
       countDealValues - countDealValueOlds == 0
         ? '0'
@@ -1729,7 +1722,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['count'] = this.formatDealValues(countDealValues);
     tmp['countOld'] = this.formatDealValues(countDealValueOlds);
     tmp['countAsc'] = this.formatDealValues(countDealAscs); //số
-    tmp['valueAsc'] = valueAsc; // %
+    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1738,16 +1731,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     countDealValues = dealCurrents?.length ?? 0;
     countDealValueOlds = dealOlds?.length ?? 0;
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
-    valueAsc = '0';
-    if (countDealValues > 0 && countDealValueOlds > 0) {
-      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
-    } else {
-      if (countDealValues == countDealValueOlds) {
-        valueAsc = 0 + '%';
-      } else {
-        valueAsc = 100 + '%';
-      }
-    }
+
     isAsc =
       countDealValues - countDealValueOlds == 0
         ? '0'
@@ -1758,7 +1742,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
     tmp['countAsc'] = countDealAscs; //số
-    tmp['valueAsc'] = valueAsc; // %
+    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1767,16 +1751,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     countDealValues = dealCurrents.filter((x) => x.status == '3')?.length ?? 0;
     countDealValueOlds = dealOlds.filter((x) => x.status == '3')?.length ?? 0;
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
-    valueAsc = '0';
-    if (countDealValues > 0 && countDealValueOlds > 0) {
-      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
-    } else {
-      if (countDealValues == countDealValueOlds) {
-        valueAsc = 0 + '%';
-      } else {
-        valueAsc = 100 + '%';
-      }
-    }
+
     isAsc =
       countDealValues - countDealValueOlds == 0
         ? '0'
@@ -1787,7 +1762,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
     tmp['countAsc'] = countDealAscs; //số
-    tmp['valueAsc'] = valueAsc; // %
+    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1796,16 +1771,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     countDealValues = dealCurrents.filter((x) => x.status == '5')?.length ?? 0;
     countDealValueOlds = dealOlds.filter((x) => x.status == '5')?.length ?? 0;
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
-    valueAsc = '0';
-    if (countDealValues > 0 && countDealValueOlds > 0) {
-      valueAsc = Math.round(countDealAscs / countDealValueOlds) * 100 + '%';
-    } else {
-      if (countDealValues == countDealValueOlds) {
-        valueAsc = 0 + '%';
-      } else {
-        valueAsc = 100 + '%';
-      }
-    }
+
     isAsc =
       countDealValues - countDealValueOlds == 0
         ? '0'
@@ -1816,7 +1782,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
     tmp['countAsc'] = countDealAscs; //số
-    tmp['valueAsc'] = valueAsc; // %
+    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1841,21 +1807,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       dealOlds.length > 0
         ? Math.round(countDealsConvertOlds / dealOlds.length) * 100
         : 0;
-    valueAsc = '0';
-    if (countDealValues > 0 && countDealValueOlds > 0) {
-      valueAsc =
-        Math.round(
-          Math.abs(countDealValues - countDealValueOlds) / countDealValueOlds
-        ) *
-          100 +
-        '%';
-    } else {
-      if (countDealValues == countDealValueOlds) {
-        valueAsc = 0 + '%';
-      } else {
-        valueAsc = 100 + '%';
-      }
-    }
+
     isAsc =
       countDealValues - countDealValueOlds == 0
         ? '0'
@@ -1866,7 +1818,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['count'] = countDealValues + '%';
     tmp['countOld'] = countDealValueOlds + '%';
     tmp['countAsc'] = 0; //số
-    tmp['valueAsc'] = valueAsc; // %
+    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -2065,56 +2017,58 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let lstPiaData = [];
     const currencyID = this.currencyID;
     const exchRate = this.exchangeRate;
-    if (lstTargetLines != null && lstTargetLines.length > 0) {
-      let now = new Date(currentDate);
-      if (param) {
-        // làm sau
-      }
-      let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
-      let sumTarget = 0;
-      for (let i = 0; i < 4; i++) {
-        const { min, max } = this.getQuarterMonthRange(quarter);
-        let year = now.getFullYear();
-        var tmp = {};
-        if (quarter === 1) {
-          quarter = 4;
-          year--;
-        } else {
-          quarter--;
-        }
-        const targetLineQuarters = lstTargetLines.filter(
-          (x) =>
-            new Date(x.startDate)?.getFullYear() === year &&
-            new Date(x.startDate)?.getMonth() + 1 >= min &&
-            new Date(x.startDate)?.getMonth() + 1 <= max
-        );
-
-        tmp['year'] = year;
-        tmp['quarter'] = quarter;
-        let target = targetLineQuarters.reduce(
-          (acc, x) =>
-            acc +
-            (currencyID !== x.currencyID
-              ? (x.target / exchRate) * x.exchangeRate
-              : x.target),
-          0
-        );
-        tmp['text'] = Math.round(target * 100) / 100;
-        sumTarget += tmp['text'];
-        const first = this.vllQuaters?.find(
-          (x) => x.value === quarter.toString()
-        );
-        if (first) {
-          tmp['x'] = `${first.text}/${year}`;
-        }
-        tmp['y'] = 0;
-
-        lstPiaData.push(tmp);
-      }
-      lstPiaData.forEach((item) => {
-        item['y'] = Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100;
-      });
+    let now = new Date(currentDate);
+    if (param) {
+      // làm sau
     }
+    let quarter = Math.floor((now.getMonth() - 1) / 3) + 1;
+    let sumTarget = 0;
+    for (let i = 0; i < 4; i++) {
+      const { min, max } = this.getQuarterMonthRange(quarter);
+      let year = now.getFullYear();
+      var tmp = {};
+      if (quarter === 1) {
+        quarter = 4;
+        year--;
+      } else {
+        quarter--;
+      }
+      const targetLineQuarters = lstTargetLines.filter(
+        (x) =>
+          new Date(x.startDate)?.getFullYear() === year &&
+          new Date(x.startDate)?.getMonth() + 1 >= min &&
+          new Date(x.startDate)?.getMonth() + 1 <= max
+      );
+
+      tmp['year'] = year;
+      tmp['quarter'] = quarter;
+      let target = targetLineQuarters.reduce(
+        (acc, x) =>
+          acc +
+          (currencyID !== x.currencyID
+            ? (x.target / exchRate) * x.exchangeRate
+            : x.target),
+        0
+      );
+      tmp['text'] = Math.round(target * 100) / 100;
+      sumTarget += tmp['text'];
+      const first = this.vllQuaters?.find(
+        (x) => x.value === quarter.toString()
+      );
+      if (first) {
+        tmp['x'] = `${first.text}/${year}`;
+      }
+      tmp['y'] = 0;
+
+      lstPiaData.push(tmp);
+    }
+    lstPiaData.forEach((item) => {
+      item['y'] =
+        Math.round(sumTarget) > 0
+          ? Math.round((item?.['text'] / sumTarget) * 100 * 100) / 100
+          : 100 / 4;
+    });
+
     this.piedata = lstPiaData.sort((a, b) => {
       return a.year - b.year;
     });
@@ -2278,6 +2232,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                       count += ele?.dealValue;
                     }
                   }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
+                countOlds = item?.deals
+                  ?.filter(
+                    (x) =>
+                      x.status == '3' &&
+                      new Date(x.createdOn).getFullYear() ==
+                        now.getFullYear() - 1
+                  )
+                  .reduce((acc, x) => acc + x.dealValue, 0);
                 tmpPerform['count'] = count.toLocaleString();
                 break;
               case '7': //doanh thu đã mất
@@ -2313,18 +2275,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 break;
             }
 
-            let valueAsc = '0';
-            if (count > 0 && countOlds > 0) {
-              valueAsc =
-                Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
-            } else {
-              if (count == countOlds) {
-                valueAsc = 0 + '%';
-              } else {
-                valueAsc = 100 + '%';
-              }
-            }
-            tmpPerform['valueAsc'] = valueAsc.toLocaleString();
+            tmpPerform['valueAsc'] = this.retrnValueAsc(
+              count,
+              countOlds
+            ).toLocaleString();
             tmpPerform['isAsc'] =
               count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
             performances.push(tmpPerform);
@@ -2335,6 +2289,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
     }
     return list;
+  }
+
+  retrnValueAsc(count, countOlds) {
+    let valueAsc = '0';
+    if (countOlds > 0) {
+      valueAsc =
+        Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
+    } else {
+      valueAsc = '- %';
+    }
+    return valueAsc;
   }
 
   getCountDate(leads, deals) {
@@ -2428,13 +2393,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           ? parseFloat(data?.target) + (parseFloat(data?.target) * 30) / 100
           : parseFloat(data?.dealValueWon) +
             (parseFloat(data?.dealValueWon) * 30) / 100;
-      this[`maximumBulletQ${i}`] = Math.round(this.formatMaxValue(maxinum));
+      this[`maximumBulletQ${i}`] =
+        maxinum > 0 ? Math.round(this.formatMaxValue(maxinum)) : 1000;
 
-      this[`intervalQ${i}`] = Math.round(
-        this.calculateInterval(this[`maximumBulletQ${i}`])
-      );
-      this[`targetQ${i}`] = Math.round(this.formatMaxValue(maxinum)).toString();
-      this[`labelFormatQ${i}`] = this.labelFormat(maxinum);
+      this[`intervalQ${i}`] =
+        maxinum > 0
+          ? Math.round(this.calculateInterval(this[`maximumBulletQ${i}`]))
+          : 100;
+      this[`targetQ${i}`] =
+        maxinum > 0
+          ? Math.round(this.formatMaxValue(maxinum)).toString()
+          : '1000';
+      this[`labelFormatQ${i}`] =
+        maxinum > 0 ? this.labelFormat(maxinum) : '${value}';
     }
   }
 

@@ -384,16 +384,16 @@ export class OverTimeComponent extends UIComponent {
           ...res,
           emp: this.currentEmpObj,
         };
-        // this.hrService
-        //   .addBGTrackLog(
-        //     res.recID,
-        //     this.cmtStatus,
-        //     this.view.formModel.entityName,
-        //     'C1',
-        //     null,
-        //     'EAppointionsBusiness'
-        //   )
-        //   .subscribe();
+        this.prService
+          .addBGTrackLog(
+            res.recID,
+            this.cmtStatus,
+            this.view.formModel.entityName,
+            'C1',
+            null,
+            'TimeKeepingRequestBusiness'
+          )
+          .subscribe();
         this.view.dataService.update(this.editStatusObj).subscribe();
         this.detectorRef.detectChanges();
         this.dialogEditStatus && this.dialogEditStatus.close(data);
@@ -440,6 +440,26 @@ export class OverTimeComponent extends UIComponent {
     }
   }
 
+  changeResource(event: any) {
+    if (event) {
+      let resources = {};
+
+      resources['value'] = event.employeeID;
+      resources['text'] = event.employeeID;
+      resources['positionName'] = event.emp.positionName;
+      resources['employeeName'] = event.emp.employeeName;
+      resources['employeeID'] = event.employeeID;
+      resources['ClassName'] = 'e-child-node';
+      (this.view.currentView as any).schedule.resourceDataSource.push(
+        resources
+      );
+      (this.view.currentView as any).schedule.resourceDataSource = [
+        ...(this.view.currentView as any).schedule.resourceDataSource,
+      ];
+      (this.view.currentView as any).schedule.setEventSettings();
+    }
+  }
+
   addNew(evt?) {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
@@ -460,37 +480,7 @@ export class OverTimeComponent extends UIComponent {
       );
       dialogAdd.closed.subscribe((res) => {
         if (res?.event) {
-          // let data = {};
-          // data['recID'] = res.event.recID;
-          // data['value'] = res.event.recID;
-          // data['employeeID'] = res.event.employeeID;
-          // data['ClassName'] = 'e-child-node';
-          // data['fromDate'] = res.event.fromDate;
-          // data['toDate'] = res.event.toDate;
-          // data['fromTime'] = res.event.fromTime;
-          // data['toTime'] = res.event.toTime;
-          // data['emp'] = res.event.emp;
-          // this.view.currentView['schedule'].resourceDataSource.push(data);
-          // this.view.currentView['schedule'].dataSource.push(data);
-          // this.view.currentView['schedule'].displayResource.push(data);
-          // this.view.currentView.refesh();
-          // this.view.currentView['schedule'].refresh();
-          // this.detectorRef.detectChanges();
-          // this.view.currentView.dataService.load().subscribe();
-          let resources = {};
-          
-          resources['value'] = res?.event.employeeID;
-          resources['text'] = res?.event.employeeID;
-          resources['positionName'] = res?.event.emp.positionName;
-          // resourceHeader.events
-          resources['employeeName'] = res?.event.emp.employeeName;
-          resources['employeeID'] = res?.event.employeeID;
-          // resourceHeader.Count
-          resources['ClassName'] = 'e-child-node';
-          (this.view.currentView as any).schedule.setEventSettings();
-          (this.view.currentView as any).schedule.resourceDataSource.push(resources);
-          (this.view.currentView as any).schedule.displayResource.push(resources);
-          (this.view.currentView as any).schedule.setEventSettings();
+          this.changeResource(res?.event);
         } else {
           this.view.dataService.clear();
         }
@@ -504,27 +494,27 @@ export class OverTimeComponent extends UIComponent {
     });
   }
   edit(evt, data) {
+    if (data) this.view.dataService.dataSelected = data;
+
     this.view.dataService.edit(data).subscribe((res) => {
       let option = new SidebarModel();
       this.view.dataService.dataSelected = data;
       option.DataService = this.view?.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
+      var obj = [
+        this.view.dataService.dataSelected,
+        'edit',
+        this.popupTitle,
+        null,
+        this.userLogin,
+      ];
       this.popupTitle = evt.text + ' ' + this.funcIDName;
-      let dialogAdd = this.callfc.openSide(
-        PopupOverTimeComponent,
-        [
-          this.view.dataService.dataSelected,
-          'edit',
-          this.popupTitle,
-          null,
-          this.userLogin,
-        ],
-        option
-      );
+      let dialogAdd = this.callfc.openSide(PopupOverTimeComponent, obj, option);
       dialogAdd.closed.subscribe((res) => {
         if (res?.event) {
           this.itemSelected = res.event;
+          this.changeResource(res?.event);
         } else {
           this.view.dataService.clear();
         }
@@ -532,22 +522,29 @@ export class OverTimeComponent extends UIComponent {
     });
   }
   copy(evt, data) {
+    if (data) this.view.dataService.dataSelected = data;
+
     this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
+      var obj = [
+        this.view.dataService.dataSelected,
+        'copy',
+        this.popupTitle,
+        null,
+        this.userLogin,
+      ];
       this.popupTitle = evt.text + ' ' + this.funcIDName;
-      let dialogAdd = this.callfc.openSide(
-        PopupOverTimeComponent,
-        [data, 'edit', this.popupTitle, null, this.userLogin],
-        option
-      );
-      // dialogAdd.closed.subscribe((res) => {
-      //   if (!res?.event) {
-      //     this.view.dataService.clear();
-      //   }
-      // });
+      let dialogAdd = this.callfc.openSide(PopupOverTimeComponent, obj, option);
+      dialogAdd.closed.subscribe((res) => {
+        if (!res?.event) {
+          this.view.dataService.clear();
+        } else {
+          this.changeResource(res?.event);
+        }
+      });
     });
   }
 
