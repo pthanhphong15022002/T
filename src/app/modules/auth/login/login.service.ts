@@ -77,13 +77,10 @@ export class LoginService {
         } else window.location.href = this.returnUrl;
       } else {
         if (this.returnUrl.indexOf(user.tenant) > 0)
-          return this.navRouter.navigate([`${this.returnUrl}`]);
+          window.location.href = this.returnUrl;
+        //return this.navRouter.navigate([`${this.returnUrl}`]);
         else if (environment.saas == 1) {
           if (!user.tenant) return this.navRouter.navigate(['/tenants']);
-          else
-            return this.navRouter.navigate([
-              `${this.returnUrl ? this.returnUrl : user.tenant}`,
-            ]);
         }
         window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
       }

@@ -1,12 +1,10 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -20,15 +18,9 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import {
-  BehaviorSubject,
-  Subject,
-  distinctUntilKeyChanged,
-  takeUntil,
-} from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
 import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
-import { PurchaseInvoiceService } from './purchaseinvoices.service';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -47,6 +39,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  @ViewChild('xml', { read: ElementRef }) private xml: ElementRef;
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
@@ -62,6 +55,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+  moreFuncs: Array<ButtonModel> = [
+    {
+      id: 'btnImportXml',
+      icon: '',
+      text: 'Đọc file xml',
+    },
+  ];
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -140,7 +140,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         },
       },
     ];
-    
+
     this.journalService.setChildLinks(this.journalNo);
 
     //* thiết lập cấu hình sidebar
@@ -166,12 +166,15 @@ export class PurchaseinvoicesComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click toolbar
-   * @param event 
+   * @param event
    */
-  toolbarClick(event){
+  toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
+        break;
+      case 'btnImportXml':
+        this.xml.nativeElement.click();
         break;
     }
   }
@@ -231,7 +234,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         if (res != null) {
           res.isAdd = true;
           if (this.dataDefault == null) this.dataDefault = { ...res };
@@ -240,7 +243,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             journal: { ...this.journal }, //?  data journal
             oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr //?  đồng tiền hạch toán
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           };
           let dialog = this.callfc.openSide(
             PurchaseinvoicesAddComponent,
@@ -338,7 +341,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [
+        data.recID,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -372,7 +377,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [
+        data.recID,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -507,10 +514,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
 
-   /**
+  /**
    * *Hàm mở form báo cáo
    */
-   openFormReportVoucher(data: any, reportList: any) {
+  openFormReportVoucher(data: any, reportList: any) {
     var obj = {
       data: data,
       reportList: reportList,
@@ -529,13 +536,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
       opt
     );
   }
-  
+
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
    * @param event
    * @returns
    */
-  onSelectedItem(event){
+  onSelectedItem(event) {
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -561,7 +568,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         x.functionID == 'ACT060104' || // MF hủy yêu cầu duyệt
         x.functionID == 'ACT060105' || // Mf khôi phục
         x.functionID == 'ACT060107' || // Mf in
-        x.functionID == 'ACT060106'// MF kiểm tra tính hợp lệ
+        x.functionID == 'ACT060106' // MF kiểm tra tính hợp lệ
     );
     if (arrBookmark.length > 0) {
       if (type == 'viewgrid') {
@@ -573,7 +580,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
         case '1':
           if (this.journal.approvalControl == '0') {
             arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+              if (
+                element.functionID == 'ACT060103' ||
+                element.functionID == 'ACT060107'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -581,7 +591,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
             });
           } else {
             arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060102' || element.functionID == 'ACT060107') {
+              if (
+                element.functionID == 'ACT060102' ||
+                element.functionID == 'ACT060107'
+              ) {
                 element.disabled = false;
               } else {
                 element.disabled = true;
@@ -591,7 +604,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
           break;
         case '3':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060104' || element.functionID == 'ACT060107') {
+            if (
+              element.functionID == 'ACT060104' ||
+              element.functionID == 'ACT060107'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -600,7 +616,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
           break;
         case '5':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+            if (
+              element.functionID == 'ACT060103' ||
+              element.functionID == 'ACT060107'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -609,7 +628,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
           break;
         case '6':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060105' || element.functionID == 'ACT060107') {
+            if (
+              element.functionID == 'ACT060105' ||
+              element.functionID == 'ACT060107'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -619,7 +641,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
         case '2':
         case '7':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060106' || element.functionID == 'ACT060107') {
+            if (
+              element.functionID == 'ACT060106' ||
+              element.functionID == 'ACT060107'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -628,7 +653,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
           break;
         case '9':
           arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+            if (
+              element.functionID == 'ACT060103' ||
+              element.functionID == 'ACT060107'
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -661,16 +689,41 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
 
-   /**
+  /**
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-   setDefault(data: any, action: any = '') {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
       action,
     ]);
+  }
+
+  /**read xml from input file */
+  scanMail() {
+    let st = new Date('2023-01-01');
+    let ed = new Date('2023-10-01');
+    this.api
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ScanXMLFromMail', ['', st, ed])
+      .subscribe();
+  }
+
+  async readXml(event: any) {
+    const input = event.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const bytes = (e.target.result as string).split('base64,')[1];
+      this.api
+        .exec('AC', 'PurchaseInvoicesBusiness', 'ReadXml', [
+          this.journalNo,
+          bytes,
+        ])
+        .subscribe();
+    };
+    reader.readAsDataURL(input);
   }
   //#endregion Function
 }

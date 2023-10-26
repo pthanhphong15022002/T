@@ -209,9 +209,6 @@ export class UserComponent extends UIComponent {
       dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.idField = 'userID';
-          this.view.dataService.add(e.event).subscribe();
           this.changeDetectorRef.detectChanges();
         }
       });
