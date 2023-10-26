@@ -108,11 +108,6 @@ export class PopupOwnerDealComponent {
       this.owner = $event;
     }
   }
-  valueChangeOwnerStep($event){
-    if($event) {
-      this.ownerStep = $event;
-    }
-  }
     setRoles() {
     var tmp = this.listParticipants.find((x) => x.userID == this.owner);
     if (
@@ -206,9 +201,4 @@ export class PopupOwnerDealComponent {
     }
     return owner;
   }
-
-
-
-
-
 }

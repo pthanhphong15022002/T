@@ -41,6 +41,26 @@ export class CodxPrService {
     );
   }
   //#endregion
+
+  //#region TrackLog
+  addBGTrackLog(
+    objectID,
+    comment,
+    objectType,
+    actionType,
+    createdBy,
+    Bussiness
+  ) {
+    return this.api.execSv<any>(
+      'PR',
+      'PR',
+      Bussiness,
+      'ReceiveToAddBGTrackLog',
+      [objectID, comment, objectType, actionType, createdBy]
+    );
+  }
+    //#endregion
+
   //#endregion
 
 }

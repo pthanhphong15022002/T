@@ -78,7 +78,6 @@ import { CashtransferAddComponent as CashtransfersAddComponent } from './voucher
 import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
-import { IssueTransactionsLineAddComponent } from './vouchers/issue-transactions/issue-transactions-line-add/issue-transactions-line-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
 import { CashreceiptsComponent } from './vouchers/cashreceipts/cashreceipts.component';
 import { CashreceiptsAddComponent } from './vouchers/cashreceipts/cashreceipts-add/cashreceipts-add.component';
@@ -87,7 +86,6 @@ import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/
 import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
 import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
-import { IssueTransactionsUpdateParasComponent } from './vouchers/issue-transactions/issue-transactions-update-paras/issue-transactions-update-paras.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
 import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
 import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
@@ -105,6 +103,7 @@ import { LayoutNoasideAcComponent } from './_layout-noaside-ac/layout-noaside-ac
 import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advance-payment-request-table/advance-payment-request-table.component';
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
+import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -364,7 +363,6 @@ export const routes: Routes = [
     TranformClassBorderPipe,
     IssueTransactionsComponent,
     IssueTransactionsAddComponent,
-    IssueTransactionsLineAddComponent,
     IsObjectEmptyPipe,
     CashreceiptsComponent,
     CashreceiptsAddComponent,
@@ -375,7 +373,6 @@ export const routes: Routes = [
     ReceiptTransactionsDetailComponent,
     SalesinvoicesDetailComponent,
     CashtransfersDetailComponent,
-    IssueTransactionsUpdateParasComponent,
     AcctrantsTableComponent,
     SettledinvoicesTableComponent,
     VatinvoicesTableComponent,
@@ -389,6 +386,7 @@ export const routes: Routes = [
     AdvancePaymentRequestTableComponent,
     PaymentOrderComponent,
     PaymentOrderAddComponent,
+    ReceiptTransactionsTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

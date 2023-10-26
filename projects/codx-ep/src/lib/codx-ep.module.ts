@@ -102,20 +102,20 @@ export const routes: Routes = [
       {
         path: 'dialog/:funcID',
         component: CodxViewContentComponent,
+      },      
+      {
+        path: 'dashboard/:funcID',
+        component: EPDashboardComponent,
       },
     ],
   },
   {
     path: '',
-    component: LayoutComponent,
+    component: LayoutNoAsideComponent,
     children: [
       {
         path: 'stationery/:funcID',
         component: ResourcesComponent,
-      },
-      {
-        path: 'dashboard/:funcID',
-        component: EPDashboardComponent,
       },
       {
         path: 'rooms/:funcID',

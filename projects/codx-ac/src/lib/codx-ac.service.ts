@@ -76,6 +76,13 @@ export const fmSalesInvoicesLines: FormModel = {
 
 export const fmVouchersLines: FormModel = {
   entityName: 'IV_VouchersLines',
+  formName: 'VouchersLinesReceipts',
+  gridViewName: 'grvVouchersLinesReceipts',
+  entityPer: 'IV_VouchersLines',
+};
+
+export const fmIssueVouchersLines: FormModel = {
+  entityName: 'IV_VouchersLines',
   formName: 'VouchersLinesIssues',
   gridViewName: 'grvVouchersLinesIssues',
   entityPer: 'IV_VouchersLines',
@@ -95,6 +102,42 @@ export enum MorfuncCash {
   InUPC = 'ACT042907',
   KiemTraHopLePC = 'ACT041009',
   KiemTraHopLeUPC = 'ACT042902',
+}
+
+export enum MorfuncCashReceipt {
+  GhiSo = 'ACT040106',
+  GuiDuyet = 'ACT040104',
+  HuyDuyet = 'ACT040105',
+  KhoiPhuc = 'ACT040107',
+  In = 'ACT040108',
+  KiemTraHopLe = 'ACT040103',
+}
+
+export enum MorfuncPur {
+  GhiSo = 'ACT060103',
+  GuiDuyet = 'ACT060102',
+  HuyDuyet = 'ACT060104',
+  KhoiPhuc = 'ACT060105',
+  In = 'ACT060107',
+  KiemTraHopLe = 'ACT060106',
+}
+
+export enum MorfuncSale {
+  GhiSo = 'ACT060506',
+  GuiDuyet = 'ACT060504',
+  HuyDuyet = 'ACT060505',
+  KhoiPhuc = 'ACT060507',
+  In = 'ACT060508',
+  KiemTraHopLe = 'ACT060503',
+}
+
+export enum MorfuncVoucher {
+  GhiSo = 'ACT070806',
+  GuiDuyet = 'ACT070804',
+  HuyDuyet = 'ACT070805',
+  KhoiPhuc = 'ACT070807',
+  In = 'ACT070808',
+  KiemTraHopLe = 'ACT070803',
 }
 
 @Injectable({
@@ -504,6 +547,342 @@ export class CodxAcService {
       case '10':
         arrBookmark.forEach((element) => {
           if ((element.functionID == MorfuncCash.GhiSoUPC || element.functionID == MorfuncCash.InUPC) && formModel.funcID == 'ACT0429') {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      default:
+        arrBookmark.forEach((element) => {
+          element.disabled = true;
+        })
+        break;
+    }
+  }
+
+  changeMFVoucher(event, data, type:any = '',journal,formModel){
+    let array = [MorfuncVoucher.GhiSo, MorfuncVoucher.GuiDuyet, MorfuncVoucher.HuyDuyet,MorfuncVoucher.KhoiPhuc, MorfuncVoucher.In, MorfuncVoucher.KiemTraHopLe,
+      'SYS02','SYS03','SYS04'];
+    let arrBookmark = [];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        if (type === 'viewgrid') {
+          element.isbookmark = false;
+        }
+        if (type === 'viewdetail') {
+          if (Object.values(MorfuncVoucher).includes(element.functionID)) {
+            element.isbookmark = true;
+          }
+          else{
+            element.isbookmark = false;
+          }
+        }
+        if (element.functionID != 'SYS02' && element.functionID != 'SYS03' && element.functionID != 'SYS04') {
+          let item = event.find(x => x.functionID.toLowerCase() == element.functionID.toLowerCase());
+          if(item != null) arrBookmark.push(item);
+        }
+      }
+    });
+    
+    switch (data?.status) {
+      case '1':
+      case '5':
+      case '9':
+        if (journal.approvalControl == '0') {
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncVoucher.GhiSo || MorfuncVoucher.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }else{
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncVoucher.GuiDuyet || element.functionID == MorfuncVoucher.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }
+        break;
+      case '3':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncVoucher.HuyDuyet ||element.functionID == MorfuncVoucher.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '6':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncVoucher.KhoiPhuc || element.functionID == MorfuncVoucher.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '2':
+      case '7':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncVoucher.KiemTraHopLe || element.functionID == MorfuncVoucher.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      default:
+        arrBookmark.forEach((element) => {
+          element.disabled = true;
+        })
+        break;
+    }
+  }
+
+  changeMFCashReceipt(event, data, type:any = '',journal,formModel){
+    let array = [MorfuncCashReceipt.GhiSo, MorfuncCashReceipt.GuiDuyet, MorfuncCashReceipt.HuyDuyet,MorfuncCashReceipt.KhoiPhuc, MorfuncCashReceipt.In, MorfuncCashReceipt.KiemTraHopLe,
+      'SYS02','SYS03','SYS04'];
+    let arrBookmark = [];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        if (type === 'viewgrid') {
+          element.isbookmark = false;
+        }
+        if (type === 'viewdetail') {
+          if (Object.values(MorfuncCashReceipt).includes(element.functionID)) {
+            element.isbookmark = true;
+          }
+          else{
+            element.isbookmark = false;
+          }
+        }
+        if (element.functionID != 'SYS02' && element.functionID != 'SYS03' && element.functionID != 'SYS04') {
+          let item = event.find(x => x.functionID.toLowerCase() == element.functionID.toLowerCase());
+          if(item != null) arrBookmark.push(item);
+        }
+      }
+    });
+    
+    switch (data?.status) {
+      case '1':
+      case '5':
+      case '9':
+        if (journal.approvalControl == '0') {
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncCashReceipt.GhiSo || MorfuncCashReceipt.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }else{
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncCashReceipt.GuiDuyet || element.functionID == MorfuncCashReceipt.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }
+        break;
+      case '3':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncCashReceipt.HuyDuyet ||element.functionID == MorfuncCashReceipt.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '6':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncCashReceipt.KhoiPhuc || element.functionID == MorfuncCashReceipt.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '2':
+      case '7':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncCashReceipt.KiemTraHopLe || element.functionID == MorfuncCashReceipt.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      default:
+        arrBookmark.forEach((element) => {
+          element.disabled = true;
+        })
+        break;
+    }
+  }
+
+  changeMFPur(event, data, type:any = '',journal,formModel){
+    let array = [MorfuncPur.GhiSo, MorfuncPur.GuiDuyet, MorfuncPur.HuyDuyet,MorfuncPur.KhoiPhuc, MorfuncPur.In, MorfuncPur.KiemTraHopLe,
+      'SYS02','SYS03','SYS04'];
+    let arrBookmark = [];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        if (type === 'viewgrid') {
+          element.isbookmark = false;
+        }
+        if (type === 'viewdetail') {
+          if (Object.values(MorfuncPur).includes(element.functionID)) {
+            element.isbookmark = true;
+          }
+          else{
+            element.isbookmark = false;
+          }
+        }
+        if (element.functionID != 'SYS02' && element.functionID != 'SYS03' && element.functionID != 'SYS04') {
+          let item = event.find(x => x.functionID.toLowerCase() == element.functionID.toLowerCase());
+          if(item != null) arrBookmark.push(item);
+        }
+      }
+    });
+    
+    switch (data?.status) {
+      case '1':
+      case '5':
+      case '9':
+        if (journal.approvalControl == '0') {
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncPur.GhiSo || MorfuncPur.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }else{
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncPur.GuiDuyet || element.functionID == MorfuncPur.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }
+        break;
+      case '3':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncPur.HuyDuyet ||element.functionID == MorfuncPur.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '6':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncPur.KhoiPhuc || element.functionID == MorfuncPur.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '2':
+      case '7':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncPur.KiemTraHopLe || element.functionID == MorfuncPur.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      default:
+        arrBookmark.forEach((element) => {
+          element.disabled = true;
+        })
+        break;
+    }
+  }
+
+  changeMFSale(event, data, type:any = '',journal,formModel){
+    let array = [MorfuncSale.GhiSo, MorfuncSale.GuiDuyet, MorfuncSale.HuyDuyet,MorfuncSale.KhoiPhuc, MorfuncSale.In, MorfuncSale.KiemTraHopLe,
+      'SYS02','SYS03','SYS04'];
+    let arrBookmark = [];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        if (type === 'viewgrid') {
+          element.isbookmark = false;
+        }
+        if (type === 'viewdetail') {
+          if (Object.values(MorfuncSale).includes(element.functionID)) {
+            element.isbookmark = true;
+          }
+          else{
+            element.isbookmark = false;
+          }
+        }
+        if (element.functionID != 'SYS02' && element.functionID != 'SYS03' && element.functionID != 'SYS04') {
+          let item = event.find(x => x.functionID.toLowerCase() == element.functionID.toLowerCase());
+          if(item != null) arrBookmark.push(item);
+        }
+      }
+    });
+    
+    switch (data?.status) {
+      case '1':
+      case '5':
+      case '9':
+        if (journal.approvalControl == '0') {
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncSale.GhiSo || MorfuncSale.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }else{
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncSale.GuiDuyet || element.functionID == MorfuncSale.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }
+        break;
+      case '3':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncSale.HuyDuyet ||element.functionID == MorfuncSale.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '6':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncSale.KhoiPhuc || element.functionID == MorfuncSale.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '2':
+      case '7':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncSale.KiemTraHopLe || element.functionID == MorfuncSale.In) {
             element.disabled = false;
           }else{
             element.disabled = true;

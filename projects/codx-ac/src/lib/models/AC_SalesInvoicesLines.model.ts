@@ -10,7 +10,7 @@ export class AC_SalesInvoicesLines {
 
   lineType: string;
 
-  lineStatus: string;
+  lineStatus: string = '60';
 
   lotID: string = Util.uid();;
 
@@ -40,7 +40,7 @@ export class AC_SalesInvoicesLines {
 
   IDIM9: string;
 
-  fixedDIMs: string;
+  fixedDIMs: string = '0000000000';
 
   CWUM: string;
 

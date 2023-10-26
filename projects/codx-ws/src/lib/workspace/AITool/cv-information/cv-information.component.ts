@@ -267,6 +267,7 @@ export class CvInformationComponent implements OnInit{
           "id": "79ac5a96-d3e3-4dd2-a4c5-3cdd3aca3a31"
       }
     ]
+    this.jsonExports2 = JSON.parse(JSON.stringify(this.jsonExports))
     this.disabledBtn = false;
   }
   setColumn()
@@ -284,7 +285,9 @@ export class CvInformationComponent implements OnInit{
     {
       this.ngxLoader.start();
       let i = 0;
-      files.forEach((f) => {
+      const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+      files.forEach(async(f) => {
+        await sleep(1000);
         this.exportFileCV(f).subscribe((res:any) => {
           if(res)
           {
@@ -308,6 +311,7 @@ export class CvInformationComponent implements OnInit{
   exportFileCV(file){
     if(file)
     {
+      console.log(new Date())
       let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
       var form = new FormData();
       form.append("prompt", `

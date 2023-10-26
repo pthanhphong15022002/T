@@ -185,42 +185,33 @@ export class ReceiptTransactionsComponent extends UIComponent {
   clickMoreFunction(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        //this.deleteVoucher(data); //? xóa chứng từ
+        this.deleteVoucher(data); //? xóa chứng từ
         break;
       case 'SYS03':
         this.editVoucher(data); //? sửa chứng từ
         break;
       case 'SYS04':
-        //this.copyVoucher(data); //? sao chép chứng từ
+        this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
         //this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
-        //this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+      case 'ACT070804':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
-        //this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+      case 'ACT070805':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
-        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+      case 'ACT070803':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
-        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT070806':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
-        //this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+      case 'ACT070807':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT042901':
-        //this.transferToBank(e.text,data); //? chuyển tiền ngân hàng điện tử
-        break;
-      case 'ACT041010':
-      case 'ACT042907':
+      case 'ACT070808':
         //this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
@@ -355,13 +346,129 @@ export class ReceiptTransactionsComponent extends UIComponent {
   }
 
   /**
+   * *Hàm gửi duyệt chứng từ (xử lí cho MF gửi duyệt)
+   * @param data
+   */
+  releaseVoucher(text: any, data: any) {
+    this.acService
+      .getCategoryByEntityName(this.view.formModel.entityName)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        this.dataCategory = res;
+        this.shareService
+          .codxRelease(
+            'IV',
+            data.recID,
+            this.dataCategory.processID,
+            this.view.formModel.entityName,
+            this.view.formModel.funcID,
+            '',
+            '',
+            ''
+          )
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((result: any) => {
+            if (result?.msgCodeError == null && result?.rowCount) {
+              data.status = result?.returnStatus;
+              this.view.dataService.updateDatas.set(data['_uuid'], data);
+              this.view.dataService
+                .save(null, 0, '', '', false)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe((res: any) => {
+                  if (res && !res.update.error) {
+                    this.notification.notifyCode('AC0029', 0, text);
+                  }
+                });
+            } else this.notification.notifyCode(result?.msgCodeError);
+          });
+      });
+  }
+
+  /**
+   * *Hàm hủy gửi duyệt chứng từ (xử lí cho MF hủy yêu cầu duyệt)
+   * @param data
+   */
+  cancelReleaseVoucher(text: any, data: any) {
+    this.shareService
+      .codxCancel('IV', data?.recID, this.view.formModel.entityName, null, null)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        if (result && result?.msgCodeError == null) {
+          data.status = result?.returnStatus;
+          this.view.dataService.updateDatas.set(data['_uuid'], data);
+          this.view.dataService
+            .save(null, 0, '', '', false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => {
+              if (res && !res.update.error) {
+                this.notification.notifyCode('AC0029', 0, text);
+              }
+            });
+        } else this.notification.notifyCode(result?.msgCodeError);
+      });
+  }
+
+  /**
+   * *Hàm kiểm tra tính hợp lệ của chứng từ (xử lí cho MF kiểm tra tính hợp lệ)
+   * @param data
+   */
+  validateVourcher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm ghi sổ chứng từ (xử lí cho MF ghi sổ)
+   * @param data
+   */
+  postVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
+   * *Hàm khôi phục chứng từ (xử lí cho MF khôi phục)
+   * @param data
+   */
+  unPostVoucher(text: any, data: any) {
+    this.api
+      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data.recID])
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.itemSelected = res?.data;
+          this.view.dataService.update(this.itemSelected).subscribe();
+          //this.getDatadetail(this.itemSelected);
+          this.notification.notifyCode('AC0029', 0, text);
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
    * @param event : danh sách morefunction
    * @param data
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    
+    this.acService.changeMFVoucher(event,data,type,this.journal,this.view.formModel);
   }
 
   /**
