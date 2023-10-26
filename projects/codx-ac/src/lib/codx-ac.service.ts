@@ -76,6 +76,13 @@ export const fmSalesInvoicesLines: FormModel = {
 
 export const fmVouchersLines: FormModel = {
   entityName: 'IV_VouchersLines',
+  formName: 'VouchersLinesReceipts',
+  gridViewName: 'grvVouchersLinesReceipts',
+  entityPer: 'IV_VouchersLines',
+};
+
+export const fmIssueVouchersLines: FormModel = {
+  entityName: 'IV_VouchersLines',
   formName: 'VouchersLinesIssues',
   gridViewName: 'grvVouchersLinesIssues',
   entityPer: 'IV_VouchersLines',

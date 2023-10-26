@@ -219,44 +219,44 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
    * lưu chứng từ
    */
   saveVoucher(type){
-    // this.api
-    //   .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateVoucherAsync', [
-    //     this.formPurchaseInvoices.data,
-    //     this.journal,
-    //   ])
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res?.update) {
-    //       this.dialog.dataService.update(res.data).subscribe();
-    //       if (type == 'save') {
-    //         this.onDestroy();
-    //         this.dialog.close();
-    //       }else{
-    //         this.api
-    //         .exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-    //           this.dialogData.data?.oData,
-    //           this.journal,
-    //         ])
-    //         .subscribe((res: any) => {
-    //           if (res) {
-    //             res.data.isAdd = true;
-    //             this.formPurchaseInvoices.refreshData({...res.data});
-    //             setTimeout(() => {
-    //               this.refreshGrid();
-    //             }, 100);
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         });
-    //       }
-    //       if (this.formPurchaseInvoices.data.isAdd || this.formPurchaseInvoices.data.isCopy)
-    //         this.notification.notifyCode('SYS006');
-    //       else 
-    //         this.notification.notifyCode('SYS007');
+    this.api
+      .exec('IV', 'VouchersBusiness', 'UpdateVoucherAsync', [
+        this.formVouchers.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          }else{
+            this.api
+            .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+              this.dialogData.data?.oData,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                res.data.isAdd = true;
+                this.formVouchers.refreshData({...res.data});
+                setTimeout(() => {
+                  this.eleGridVouchers.dataSource = [];
+                  this.eleGridVouchers.refresh();
+                }, 100);
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+          if (this.formVouchers.data.isAdd || this.formVouchers.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
           
-    //     }
-    //     if(this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
-    //     if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
-    //   });
+        }
+        if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+      });
   }
   //#endregion Method
 

@@ -3977,7 +3977,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[6]){
-            debugger
             this.active[6] = this.eQuitJobFuncID;
           }
           for(let i = 0; i < res.length; i++){
@@ -4000,6 +3999,43 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       // }
     })
   }
+
+    //form động evaccine
+  //   editEmployeeQuitJobInfo(actionHeaderText) {
+  //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.quitJobInfoFunc?.formName,this.quitJobInfoFunc?.gridViewName,this.quitJobInfoFunc?.entityName);
+  //   request.funcID = this.quitJobInfoFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEQuitjob(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  // }
+
+  // openFormEQuitjob(actionHeaderText, actionType, dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eInfoFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res?.event) {
+  //       this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
+  //       this.df.detectChanges();
+  //     }
+  //   });
+  // }
 
   editEmployeeQuitJobInfo(actionHeaderText) {
     let option = new SidebarModel();
@@ -4532,7 +4568,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             let kq = this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate)
             if(kq == true){
               let index = this.listCrrBenefit.indexOf(data)
-              if(index >-1){
+              if(index >-1 ){
                 this.listCrrBenefit[index] = res.event;
               }
               // this.listCrrBenefit.push(res.event);
@@ -5479,6 +5515,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+      // form động tai nạn lđ
+  //   HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eAccidentsFunc?.formName,this.eAccidentsFunc?.gridViewName,this.eAccidentsFunc?.entityName);
+  //   request.funcID = this.eAccidentsFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
+  // }
+
+  // openFormEAccident(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eAccidentsFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eAccidentGridView, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eAccidentGridView, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form tự vẽ tai nạn lđ
   HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.DataService = this.eAccidentGridView?.dataService;
@@ -5847,7 +5926,50 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //   );
   // }
 
+    //form động khám sức khỏe
+  //   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eHealthFunc?.formName,this.eHealthFunc?.gridViewName,this.eHealthFunc?.entityName);
+  //   request.funcID = this.eHealthFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEHealth(actionHeaderText, actionType, dataService, tempData, data);
+  // }
 
+  // openFormEHealth(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eHealthFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eHealthsGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eHealthsGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+
+  //form custome khám sk
   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '850px';
@@ -5940,6 +6062,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  //form động bệnh nghề nghiệp
+  //   HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eDiseasesFunc?.formName,this.eDiseasesFunc?.gridViewName,this.eDiseasesFunc?.entityName);
+  //   request.funcID = this.eDiseasesFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEDiseases(actionHeaderText, actionType, dataService, tempData, data);
+  // }
+
+  // openFormEDiseases(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eDiseasesFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eDiseasesGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eDiseasesGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form tự vẽ bệnh nghề nghiệp
   HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.Width = '850px';
@@ -6030,7 +6195,49 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
+  //form động evaccine
+  //   HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eVaccinesFunc?.formName,this.eVaccinesFunc?.gridViewName,this.eVaccinesFunc?.entityName);
+  //   request.funcID = this.eVaccinesFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
+  
+  //   dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+  // }
 
+  // openFormEVaccine(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
+  //   let option = new SidebarModel();
+  //   option.FormModel = this.eVaccineFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     CodxFormDynamicComponent,
+  //     {
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
+  //     },
+  //     option
+  //   );
+
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eVaccinesGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eVaccinesGrid, actionType, res.event.save.data, null);
+  //       }
+  //     this.df.detectChanges();
+  //   }});
+  // }
+
+  //form customize evaccine
   HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
     this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
