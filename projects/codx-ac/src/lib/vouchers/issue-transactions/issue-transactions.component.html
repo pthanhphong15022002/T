@@ -20,10 +20,10 @@
 
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
-    <receipt-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
+    <issue-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
       [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
       [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
-      [dataDefault]="dataDefault"></receipt-transactions-detail>
+      [dataDefault]="dataDefault"></issue-transactions-detail>
   </ng-container>
 </ng-template>
 

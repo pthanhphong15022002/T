@@ -630,13 +630,15 @@ export class CashpaymentDetailComponent extends UIComponent {
               PrintMoney:'TRUE',
               PrintMode:'1'
             }
-            let url = `/${this.tenant.getName()}/ac/report/detail/${res[0].recID}/${JSON.stringify(params)}`
+            //let paramURL = this.shareService.genURLParamObject(params);
+            let paramURL = encodeURIComponent(JSON.stringify(params));
+            let url = `/${this.tenant.getName()}/ac/report/detail/${res[0].recID}?params=${paramURL}`
             window.open(url);
           }
         }
       });
   }
-
+  
   /**
    * *Hàm mở form báo cáo
    */

@@ -84,38 +84,38 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    * @param data
    */
   clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT060102':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT060104':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT060106':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT060103':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT060105':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT060107':
-    //     this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteVoucher(data); //? xóa chứng từ
+        break;
+      case 'SYS03':
+        this.editVoucher(data); //? sửa chứng từ
+        break;
+      case 'SYS04':
+        this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS002':
+        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        break;
+      case 'ACT070804':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT070805':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT070803':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT070806':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT070807':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT070808':
+        //this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+    }
   }
 
   //#endregion
