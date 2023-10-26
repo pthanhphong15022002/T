@@ -336,7 +336,6 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
       this.isChangeData = false;
-      this.loaded = true;
     }
   }
 
@@ -375,8 +374,8 @@ export class InstanceDetailComponent implements OnInit {
         this.progress = '0';
         this.tmpDataSteps = null;
       }
-      //  this.getListStepsStatus();
-      // this.loaded = true;
+
+      this.loaded = true;
     });
   }
   getViewApprove() {

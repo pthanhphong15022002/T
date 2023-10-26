@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, ViewEncapsulation } from '@angular/core';
-import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
+import { CallFuncService, DialogRef, LayoutBaseComponent, UIComponent } from 'codx-core';
 
 import { CodxAcService } from '../codx-ac.service';
 import { RoundService } from '../round.service';
@@ -10,8 +10,9 @@ import { RoundService } from '../round.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent extends LayoutBaseComponent {
+export class LayoutComponent extends LayoutBaseComponent  {
   dialog!: DialogRef;
+  funcID:any;
   constructor(
     inject: Injector,
     private callfc: CallFuncService,
@@ -20,16 +21,24 @@ export class LayoutComponent extends LayoutBaseComponent {
     private detectorRef: ChangeDetectorRef,
   ) {
     super(inject);
-
     this.module = 'AC';
     this.round.initCache();
   }
 
   onInit(): void {}
   onAfterViewInit(): void {
+    this.codxAC.changeToolBar.subscribe((funcID:any)=>{
+      if (funcID) {
+        if (funcID === 'ACT') {
+          this.funcID = funcID;
+        }
+      }else{
+        this.funcID = null;
+      }
+    })
   }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
-  }
+  }  
 }
