@@ -140,13 +140,22 @@ export enum MorfuncVoucher {
   KiemTraHopLe = 'ACT070803',
 }
 
+export enum MorfuncIssueVoucher {
+  GhiSo = 'ACT071406',
+  GuiDuyet = 'ACT071404',
+  HuyDuyet = 'ACT071405',
+  KhoiPhuc = 'ACT071407',
+  In = 'ACT071408',
+  KiemTraHopLe = 'ACT071403',
+}
+
 @Injectable({
   providedIn: 'root',
 })
 
 export class CodxAcService {
-  
   childMenuClick = new BehaviorSubject<any>(null);
+  changeToolBar = new BehaviorSubject<string>(null);
   stores = new Map<string, any>();
   constructor(
     private cache: CacheService,
@@ -883,6 +892,90 @@ export class CodxAcService {
       case '7':
         arrBookmark.forEach((element) => {
           if (element.functionID == MorfuncSale.KiemTraHopLe || element.functionID == MorfuncSale.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      default:
+        arrBookmark.forEach((element) => {
+          element.disabled = true;
+        })
+        break;
+    }
+  }
+
+  changeMFIssueVoucher(event, data, type:any = '',journal,formModel){
+    let array = [MorfuncIssueVoucher.GhiSo, MorfuncIssueVoucher.GuiDuyet, MorfuncIssueVoucher.HuyDuyet,MorfuncIssueVoucher.KhoiPhuc, MorfuncIssueVoucher.In, MorfuncIssueVoucher.KiemTraHopLe,
+      'SYS02','SYS03','SYS04'];
+    let arrBookmark = [];
+    event.forEach(element => {
+      if (!(array.includes(element.functionID))) {
+        element.disabled = true;
+      }else{
+        if (type === 'viewgrid') {
+          element.isbookmark = false;
+        }
+        if (type === 'viewdetail') {
+          if (Object.values(MorfuncIssueVoucher).includes(element.functionID)) {
+            element.isbookmark = true;
+          }
+          else{
+            element.isbookmark = false;
+          }
+        }
+        if (element.functionID != 'SYS02' && element.functionID != 'SYS03' && element.functionID != 'SYS04') {
+          let item = event.find(x => x.functionID.toLowerCase() == element.functionID.toLowerCase());
+          if(item != null) arrBookmark.push(item);
+        }
+      }
+    });
+    
+    switch (data?.status) {
+      case '1':
+      case '5':
+      case '9':
+        if (journal.approvalControl == '0') {
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncIssueVoucher.GhiSo || MorfuncIssueVoucher.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }else{
+          arrBookmark.forEach(element => {
+            if (element.functionID == MorfuncIssueVoucher.GuiDuyet || element.functionID == MorfuncIssueVoucher.In) {
+              element.disabled = false;
+            }else{
+              element.disabled = true;
+            }
+          });
+        }
+        break;
+      case '3':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncIssueVoucher.HuyDuyet ||element.functionID == MorfuncIssueVoucher.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '6':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncIssueVoucher.KhoiPhuc || element.functionID == MorfuncIssueVoucher.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        })
+        break;
+      case '2':
+      case '7':
+        arrBookmark.forEach((element) => {
+          if (element.functionID == MorfuncIssueVoucher.KiemTraHopLe || element.functionID == MorfuncIssueVoucher.In) {
             element.disabled = false;
           }else{
             element.disabled = true;

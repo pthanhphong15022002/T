@@ -1,15 +1,8 @@
-<codx-views
-  #view
-  [views]="views"
-  service="AC"
-  entityName="AC_Journals"
-  predicates="Status=@0"
-  [dataValues]="mainFilterValue ?? '1'"
-  [autoLoad]="true"
->
+<codx-views [toolbarDisplay]="false" #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
+  [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true">
 </codx-views>
 
-<ng-template #panelLeftRef>
+<ng-template #contentTemplate>
   <div class="px-4 bg-body list-survey h-100">
     <div class="d-flex justify-content-between py-2 hhder">
       <div class="main-list">
@@ -17,118 +10,49 @@
           <div class="codx-breadcrumb mb-2">
             <ol class="breadcrumb breadcrumb-dash fs-3 fw-bold">
               <li class="breadcrumb-item" *ngFor="let item of vll86">
-                <a
-                  (click)="changePredicate(item.value, 'mainFilterValue')"
-                  href="javascript:void(0)"
-                  [ngClass]="item.value == mainFilterValue ? 'active' : ''"
-                  class="breadcrumb-text"
-                  >{{ item.text }}
+                <a (click)="changePredicate(item.value, 'mainFilterValue')" href="javascript:void(0)"
+                  [ngClass]="item.value == mainFilterValue ? 'active' : ''" class="breadcrumb-text">{{ item.text }}
                 </a>
               </li>
             </ol>
           </div>
           <div class="codx-breadcrumb">
             <ol class="breadcrumb breadcrumb-dot fs-6 fw-bold">
-              <li
-                class="breadcrumb-item"
-                [ngClass]="
-                  item.value === subFilterValue ? 'text-dark' : 'text-muted'
-                "
-                *ngFor="let item of vll85; let i = index"
-              >
-                <a
-                  href="javascript:void(0)"
-                  (click)="changePredicate(item.value, 'subFilterValue')"
-                  style="color: inherit"
-                  >{{ item.text }}</a
-                >
-                <i
-                  class="icon-i-caret-down-fill font-12"
-                  style="color: inherit"
-                ></i>
+              <li class="breadcrumb-item" [ngClass]="item.value === subFilterValue ? 'text-dark' : 'text-muted'" *ngFor="let item of vll85; let i = index">
+                <a href="javascript:void(0)" (click)="changePredicate(item.value, 'subFilterValue')"
+                  style="color: inherit">{{ item.text }}</a>
+                <i class="icon-i-caret-down-fill font-12" style="color: inherit"></i>
               </li>
             </ol>
           </div>
         </div>
       </div>
       <div class="d-flex align-items-center">
-        <codx-searchbar
-          (searchEvent)="search($event)"
-        ></codx-searchbar>
-        <codx-toolbar-button
-          class="ms-3"
-          *ngIf="button"
-          [button]="button"
-          (buttonClick)="add($event)"
-        >
+        <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
+        <codx-toolbar-button class="ms-3" *ngIf="button" [button]="button" (buttonClick)="add($event)">
         </codx-toolbar-button>
-        <codx-toolbar-choose
-          class="me-2 ms-1"
-          [views]="subViews"
-          (viewChange)="viewChanged($event)"
-        >
+        <codx-toolbar-choose class="me-2 ms-1" [views]="subViews" (viewChange)="viewChanged($event)">
         </codx-toolbar-choose>
       </div>
     </div>
-    <div
-      class="row"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".hhder, .header"
-      data-kt-scroll-wrappers=".wrapper"
-      data-kt-scroll-offset="0px"
-    >
-      <div
-        class="h-100"
-        [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }"
-        *ngIf="viewComponent.includes(ViewType.list)"
-      >
-        <codx-listview
-          type="listView"
-          funcId="ACT"
-          service="AC"
-          entityName="AC_Journals"
-          ngClass="py-5"
-          [dataService]="view.dataService"
-          [itemTemplate]="listItemTemplate"
-        >
+    <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
+      <div style="overflow: auto !important;"   class="h-100" [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }">
+        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT" service="AC" [entityName]="view.entityName"
+          [dataService]="view.dataService" [itemTemplate]="listItemTemplate">
         </codx-listview>
       </div>
 
-      <div
-        class="h-100"
-        [ngStyle]="viewActive == ViewType.smallcard ? '' : { display: 'none' }"
-        *ngIf="viewComponent.includes(ViewType.smallcard)"
-      >
-        <codx-listview
-          [itemTemplate]="templateListCard"
-          type="cardView"
-          funcId="ACT"
-          service="AC"
-          entityName="AC_Journals"
-          ngClass="py-5"
-          [dataService]="view.dataService"
-        >
+      <div class="h-100" [ngStyle]="viewActive == ViewType.smallcard ? '' : { display: 'none' }">
+        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
+        [entityName]="view.entityName" [dataService]="view.dataService">
         </codx-listview>
       </div>
 
-      <div
-        class="h-100"
-        [ngStyle]="viewActive == ViewType.grid ? '' : { display: 'none' }"
-        *ngIf="viewComponent.includes(ViewType.grid)"
-      >
-        <codx-gridview-v2
-          #grid
-          [formName]="view.formModel.formName"
-          [gridViewName]="view.formModel.gridViewName"
-          [entityName]="view.formModel.entityName"
-          [templateMore]="moreTemplate"
-          service="AC"
-          [isMainView]="true"
-          [dataSource]="view.dataService.data"
-          ngClass="py-5"
-        >
+      <div class="h-100" *ngIf="viewActive == ViewType.grid">
+        <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight py-5" #grid [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName"
+          [entityName]="view.formModel.entityName" [templateMore]="moreTemplate" service="AC" [isMainView]="true"
+          [dataSource]="view.dataService.data">
         </codx-gridview-v2>
       </div>
     </div>
@@ -136,21 +60,21 @@
 </ng-template>
 
 <ng-template #templateListCard let-data>
-    <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" [imageSrc]="
+  <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" [imageSrc]="
       !data.hasImage
         ? 'assets/themes/ac/default/img/' +
           (data.journalType | vll : 'AC078' : 'text' | async)
         : ''
     " [imageId]="data.recID" [imageObjType]="view.formModel.entityName" resourceObjType="AC_Journals"
-        imgCss="w-100 h-150px" [imageWidth]="1000" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
-        [typeMF]="'hover'" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
-    </codx-card-img>
+    imgCss="w-100 h-150px" [imageWidth]="1000" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
+    [typeMF]="'hover'" (changeDataMF)="changeMF($event)" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
+  </codx-card-img>
 </ng-template>
 
 <ng-template #titleTmp let-data>
-    <div class="d-flex py-3 gap-2 w-100" [title]="data?.journalDesc">
-        <span [class]="data?.journalType | vll : 'AC064' : 'icon' | async"></span>
-        <!-- <div>
+  <div class="d-flex py-3 gap-2 w-100" [title]="data?.journalDesc">
+    <span [class]="data?.journalType | vll : 'AC064' : 'icon' | async"></span>
+    <!-- <div>
             <div class="fs-6 fw-bold text-dark w-100">
                 {{
                 vllJournalTypes064
@@ -160,185 +84,171 @@
             <div class="fst-italic text-truncate" style="width: 174px" [title]="data?.journalDesc">{{ data?.journalDesc
                 }}</div>
         </div> -->
-        <div class="fw-bold text-truncate">{{ data?.journalDesc }}</div>
-    </div>
+    <div class="fw-bold text-truncate">{{ data?.journalDesc }}</div>
+  </div>
 </ng-template>
 
 <ng-template #header1Template>
-    <codx-label field="lblHeader1" [formModel]="view.formModel" default="Sổ nhật ký"></codx-label>
+  <codx-label field="lblHeader1" [formModel]="view.formModel" default="Sổ nhật ký"></codx-label>
 </ng-template>
 
 <ng-template #header2Template>
-    <codx-label field="lblHeader2" [formModel]="view.formModel" default="Thiết lập chung"></codx-label>
+  <codx-label field="lblHeader2" [formModel]="view.formModel" default="Thiết lập chung"></codx-label>
 </ng-template>
 
 <ng-template #header3Template>
-    <codx-label field="lblHeader3" [formModel]="view.formModel" default="Phân quyền"></codx-label>
+  <codx-label field="lblHeader3" [formModel]="view.formModel" default="Phân quyền"></codx-label>
 </ng-template>
 
 <ng-template #column1Template let-data>
-    <div class="d-flex gap-5 p-2">
-        <codx-img id="lImg" [imgSource]="
+  <div class="d-flex gap-5 p-2">
+    <codx-img id="lImg" [imgSource]="
           !data.hasImage
             ? 'assets/themes/ac/default/img/' +
               (data.journalType | vll : 'AC078' : 'text' | async)
             : ''
         " [funcId]="view.formModel?.funcID" [objectId]="data.recID" [objectType]="view.formModel?.entityName"
-            [width]="80" [imgOn]="data.modifiedOn" [isDefaulImg]="true" imageType="square">
-        </codx-img>
+      [width]="80" [imgOn]="data.modifiedOn" [isDefaulImg]="true" imageType="square">
+    </codx-img>
 
-        <div class="d-flex flex-column">
-            <div class="fw-bold mb-1">{{ data.journalDesc }}</div>
-            <div>
-                <codx-label fiedName="periodID" [formModel]="view.formModel"></codx-label>
-                : <span class="text-primary">{{ data.periodID }}</span>
-            </div>
-        </div>
+    <div class="d-flex flex-column">
+      <div class="fw-bold mb-1">{{ data.journalDesc }}</div>
+      <div>
+        <codx-label fiedName="periodID" [formModel]="view.formModel"></codx-label>
+        : <span class="text-primary">{{ data.periodID }}</span>
+      </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #column2Template let-data>
-    <div class="d-flex gap-2 mb-1">
-        <div class="mw-45 text-truncate">
-            <codx-label fiedName="drAcctControl" [formModel]="view.formModel"></codx-label>
-            :
-            <span class="text-primary" [innerHTML]="
+  <div class="d-flex gap-2 mb-1">
+    <div class="mw-45 text-truncate">
+      <codx-label fiedName="drAcctControl" [formModel]="view.formModel"></codx-label>
+      :
+      <span class="text-primary" [innerHTML]="
             data.drAcctID
               | formatvalue : view.formModel : 'drAcctID'
               | async
               | replace : ';' : ', '
           "></span>
-        </div>
-        •
-        <div class="mw-45 text-truncate">
-            <codx-label fiedName="crAcctControl" [formModel]="view.formModel"></codx-label>
-            :
-            <span class="text-primary" [innerHTML]="
+    </div>
+    •
+    <div class="mw-45 text-truncate">
+      <codx-label fiedName="crAcctControl" [formModel]="view.formModel"></codx-label>
+      :
+      <span class="text-primary" [innerHTML]="
             data.crAcctID
               | formatvalue : view.formModel : 'crAcctID'
               | async
               | replace : ';' : ', '
           "></span>
-        </div>
     </div>
+  </div>
 
-    <div class="d-flex gap-2 mb-1">
-        <div class="mw-30 text-truncate">
-            <codx-label fiedName="diM1Control" [formModel]="view.formModel"></codx-label>
-            :
-            <span class="text-primary" [innerHTML]="
+  <div class="d-flex gap-2 mb-1">
+    <div class="mw-30 text-truncate">
+      <codx-label fiedName="diM1Control" [formModel]="view.formModel"></codx-label>
+      :
+      <span class="text-primary" [innerHTML]="
             data.diM1
               | formatvalue : view.formModel : 'diM1'
               | async
               | replace : ';' : ', '
           "></span>
-        </div>
-        •
-        <div class="mw-30 text-truncate">
-            <codx-label fiedName="diM2Control" [formModel]="view.formModel"></codx-label>
-            :
-            <span class="text-primary" [innerHTML]="
+    </div>
+    •
+    <div class="mw-30 text-truncate">
+      <codx-label fiedName="diM2Control" [formModel]="view.formModel"></codx-label>
+      :
+      <span class="text-primary" [innerHTML]="
             data.diM2
               | formatvalue : view.formModel : 'diM2'
               | async
               | replace : ';' : ', '
           "></span>
-        </div>
-        •
-        <div class="mw-30 text-truncate">
-            <codx-label fiedName="diM3Control" [formModel]="view.formModel"></codx-label>
-            :
-            <span class="text-primary" [innerHTML]="
+    </div>
+    •
+    <div class="mw-30 text-truncate">
+      <codx-label fiedName="diM3Control" [formModel]="view.formModel"></codx-label>
+      :
+      <span class="text-primary" [innerHTML]="
             data.diM3
               | formatvalue : view.formModel : 'diM3'
               | async
               | replace : ';' : ', '
           "></span>
-        </div>
     </div>
+  </div>
 
-    <div class="d-flex flex-wrap gap-2">
-        <div class="d-flex align-items-center">
-            <codx-label class="label-colon" fiedName="projectControl" [formModel]="view.formModel"></codx-label>
-            <span class="text-primary" [innerHTML]="
+  <div class="d-flex flex-wrap gap-2">
+    <div class="d-flex align-items-center">
+      <codx-label class="label-colon" fiedName="projectControl" [formModel]="view.formModel"></codx-label>
+      <span class="text-primary" [innerHTML]="
             data.assetControl
               | formatvalue : view.formModel : 'projectControl'
               | async
           "></span>
-            <span class="ms-2">•</span>
-        </div>
-        <div class="d-flex align-items-center">
-            <codx-label class="label-colon" fiedName="loanControl" [formModel]="view.formModel"></codx-label>
-            <span class="text-primary" [innerHTML]="
+      <span class="ms-2">•</span>
+    </div>
+    <div class="d-flex align-items-center">
+      <codx-label class="label-colon" fiedName="loanControl" [formModel]="view.formModel"></codx-label>
+      <span class="text-primary" [innerHTML]="
             data.assetControl
               | formatvalue : view.formModel : 'loanControl'
               | async
           "></span>
-            <span class="ms-2">•</span>
-        </div>
-        <div class="d-flex align-items-center">
-            <codx-label class="label-colon" fiedName="assetControl" [formModel]="view.formModel"></codx-label>
-            <span class="text-primary" [innerHTML]="
+      <span class="ms-2">•</span>
+    </div>
+    <div class="d-flex align-items-center">
+      <codx-label class="label-colon" fiedName="assetControl" [formModel]="view.formModel"></codx-label>
+      <span class="text-primary" [innerHTML]="
             data.assetControl
               | formatvalue : view.formModel : 'assetControl'
               | async
           "></span>
-        </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #column3Template let-data>
-    <div class="text-truncate">
-        <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
-        :
-        <span class="text-primary">{{
-            this.creaters | nameById : "journalNo" : "value" : data.journalNo
-            }}</span>
-    </div>
-    <div class="text-truncate">
-        <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>:
-        <span class="text-primary">
-            {{
-            this.posters | nameById : "journalNo" : "value" : data.journalNo
-            }}</span>
-    </div>
+  <div class="text-truncate">
+    <codx-label fiedName="creater" [formModel]="view.formModel"></codx-label>
+    :
+    <span class="text-primary">{{
+      this.creaters | nameById : "journalNo" : "value" : data.journalNo
+      }}</span>
+  </div>
+  <div class="text-truncate">
+    <codx-label fiedName="poster" [formModel]="view.formModel"></codx-label>:
+    <span class="text-primary">
+      {{
+      this.posters | nameById : "journalNo" : "value" : data.journalNo
+      }}</span>
+  </div>
 </ng-template>
 
 <ng-template #moreTemplate let-data>
-    <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-        type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="view"></codx-mfunc>
 </ng-template>
 
 <ng-template #listItemTemplate let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="clickMF($event, data)"
-    [isBookMark]="true"
-    type="hover"
-    style="top: 50%; transform: translateY(-50%)"
-  ></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+    type="hover" style="top: 50%; transform: translateY(-50%)"></codx-mfunc>
 
-  <div
-    class="row align-items-center"
-    style="border-bottom: 1px solid var(--bs-border-color); margin-left: 0; margin-right: 0;"
-  >
+  <div (click)="dbClick(data)" class="row align-items-center"
+    style="border-bottom: 1px solid var(--bs-border-color); margin-left: 0; margin-right: 0;">
     <div class="col-3">
-      <ng-container
-        *ngTemplateOutlet="column1Template; context: { $implicit: data }"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="column1Template; context: { $implicit: data }"></ng-container>
     </div>
 
     <div class="col-6">
-      <ng-container
-        *ngTemplateOutlet="column2Template; context: { $implicit: data }"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="column2Template; context: { $implicit: data }"></ng-container>
     </div>
 
     <div class="col-3">
-      <ng-container
-        *ngTemplateOutlet="column3Template; context: { $implicit: data }"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="column3Template; context: { $implicit: data }"></ng-container>
     </div>
   </div>
 </ng-template>

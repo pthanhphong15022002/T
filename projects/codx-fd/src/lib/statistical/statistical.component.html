@@ -430,7 +430,7 @@
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="8">
     <div class="row" style="height:50px">
-      <div class="col-3">
+      <div class="col-6">
 
       </div>
       <div class="col-6 text-center">
@@ -445,7 +445,7 @@
 
 
       </div>
-      <div class="col-3 text-center">
+      <!-- <div class="col-3 text-center">
          <div class="my-1 h-10 d-flex align-items-center">
         <div class="d-flex justify-content-center align-items-center">
           <div
@@ -482,12 +482,91 @@
           </div>
         </div>
       </div>
-      </div>
+      </div> -->
 
     </div>
     <div class="row" style="height:calc( 100% - 50px)">
       <div class="col h-100">
-        <div class="border w-100 h-100">
+        <div class=" w-100 h-100">
+          <table class="table table-hover" id="tableFD">
+            <thead class="bg-light h-40px">
+              <tr class="border">
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tên đơn vị</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tuyên dương</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Lời cảm ơn</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Góp ý thay đổi</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Đề xuất cải tiến</div></th>
+                <th scope="col border-0"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-bottom" *ngFor="let data of statByDepts;let i = index">
+
+                <td class="border">
+                  <div class="container p-0 h-50px  d-flex align-items-center">
+                    <div class="fw-bold">{{data.departmentName}}</div>
+                  </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 ">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType1}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType1/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType2/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType3/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                 </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType4/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                 </div>
+                </td>
+                <td class="border w-50px">
+                  <div class="container text-hover-primary " (click)="doubleClick(data)">
+                    <div class="d-flex  align-items-center " >
+                      <i class="icon-i-box-arrow-up-right icon-20 mt-4 fw-bold" style="font-weight:500"></i>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+<!--
           <codx-gridview-v2 #eleGridCashPayment
           [editSettings]="editSettings" [allowSorting]="false"
           [columnsGrid]="columnGrids"
@@ -497,7 +576,7 @@
           (onEdit)="doubleClick($event)"
           [editOnClick]="true"
           [rowHeight]="50"
-         ></codx-gridview-v2>
+         ></codx-gridview-v2> -->
         </div>
       </div>
 

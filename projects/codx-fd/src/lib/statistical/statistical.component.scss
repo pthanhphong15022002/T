@@ -154,3 +154,7 @@
 .scroll-hover:hover {
   overflow-y: scroll;
 }
+
+#tableFD.table tfoot tr:last-child, .table tbody tr:last-child {
+  border-bottom: 1px solid #ddd !important;
+}
