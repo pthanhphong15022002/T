@@ -404,7 +404,7 @@ export class DealsComponent
           : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = data.full
+      eventItem.disabled = data.full ||  data?.alloweStatus == '1'
         ? !['1', '2', '15'].includes(data.status) ||
           data.closed ||
           ['1', '0'].includes(data.status)
@@ -412,7 +412,7 @@ export class DealsComponent
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
+      eventItem.disabled = data.full || data?.alloweStatus == '1' ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -650,7 +650,7 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-    if (data?.alloweStatus != '1' || !data?.full) {
+    if (data?.alloweStatus != '1') {
       this.notificationsService.notifyCode('CM027');
       return;
     }
