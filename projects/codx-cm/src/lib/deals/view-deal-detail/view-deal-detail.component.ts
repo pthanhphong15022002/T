@@ -26,6 +26,7 @@ import { DealsComponent } from '../deals.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { TabDetailCustomComponent } from '../deal-detail/tab-detail-custom/tab-detail-custom.component';
+import { CodxTabDealcompetitorsComponent } from '../deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 
 @Component({
   selector: 'view-deal-detail',
@@ -55,8 +56,8 @@ export class ViewDealDetailComponent implements OnInit {
   tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
-  @ViewChild('loadContactDeal')
-  loadContactDeal: CodxListContactsComponent;
+  @ViewChild('loadContactDeal')loadContactDeal: CodxListContactsComponent;
+  @ViewChild('competitors') competitors: CodxTabDealcompetitorsComponent;
   @ViewChild('tabObj') tabObj: TabComponent;
 
   formModelQuotations: FormModel = {
@@ -802,5 +803,17 @@ export class ViewDealDetailComponent implements OnInit {
     this.isShowFields.show = this.isShow;
     this.isShowTask.show = this.isShow;
     this.isShowOpponent.show = this.isShow;
+  }
+  addContac(){
+    if(this.loadContactDeal){
+      let moreFuncAdd= this.loadContactDeal?.moreFuncAdd ;
+      this.loadContactDeal.clickAddContact('add', null, moreFuncAdd);
+    }
+  }
+  addCompetitors(){
+    if(this.competitors){
+      let moreFuncAdd= this.competitors?.moreFuncAdd ;
+      this.competitors.clickAddCompetitor(moreFuncAdd, 'add', null);
+    }
   }
 }

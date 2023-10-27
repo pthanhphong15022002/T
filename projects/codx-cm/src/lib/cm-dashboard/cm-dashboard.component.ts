@@ -2135,13 +2135,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let list = [];
     let frDate = new Date(fromDate);
     let tDate = new Date(toDate);
-
+    let frmDateOlds = new Date(frDate);
+    frmDateOlds.setMonth(frmDateOlds.getMonth() - 1);
+    let tDateOlds = new Date(tDate);
+    tDateOlds.setMonth(tDateOlds.getMonth() - 1);
     if (lstUsers?.length > 0) {
       lstUsers.sort((a, b) => {
         const dealValueA = a?.deals
           .filter(
             (x) =>
-              new Date(x.createdOn) >= frDate && new Date(x.createdOn) <= tDate
+              new Date(x.expectedClosed) >= frDate &&
+              new Date(x.expectedClosed) <= tDate
           )
           .reduce(
             (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
@@ -2150,7 +2154,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         const dealValueB = b?.deals
           .filter(
             (x) =>
-              new Date(x.createdOn) >= frDate && new Date(x.createdOn) <= tDate
+              new Date(x.expectedClosed) >= frDate &&
+              new Date(x.expectedClosed) <= tDate
           )
           .reduce(
             (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
@@ -2160,15 +2165,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           const numDealsA = a?.deals
             .filter(
               (x) =>
-                new Date(x.createdOn) >= frDate &&
-                new Date(x.createdOn) <= tDate
+                new Date(x.expectedClosed) >= frDate &&
+                new Date(x.expectedClosed) <= tDate
             )
             .filter((deal) => deal.status === '3').length;
           const numDealsB = b?.deals
             .filter(
               (x) =>
-                new Date(x.createdOn) >= frDate &&
-                new Date(x.createdOn) <= tDate
+                new Date(x.expectedClosed) >= frDate &&
+                new Date(x.expectedClosed) <= tDate
             )
             .filter((deal) => deal.status === '3').length;
           return numDealsB - numDealsA;
@@ -2202,8 +2207,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.leads.filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.createdOn) >= frmDateOlds &&
+                      new Date(x.createdOn) <= tDateOlds
                   ).length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2217,8 +2222,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.deals.filter(
                     (x) =>
-                      new Date(x.createdOn).getFullYear() ==
-                      tDate.getFullYear() - 1
+                      new Date(x.createdOn) >= frmDateOlds &&
+                      new Date(x.createdOn) <= tDateOlds
                   )?.length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2226,8 +2231,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 item?.deals
                   .filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.expectedClosed) >= frDate &&
+                      new Date(x.expectedClosed) <= tDate
                   )
                   ?.forEach((ele) => {
                     if (ele.status == '3') {
@@ -2235,7 +2240,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     }
                   }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
                 countOlds = item?.deals
-                  ?.filter((x) => x.status == '3')
+                  ?.filter(
+                    (x) =>
+                      x.status == '3' &&
+                      new Date(x.expectedClosed) >= frmDateOlds &&
+                      new Date(x.expectedClosed) <= tDateOlds
+                  )
                   .reduce((acc, x) => acc + x.dealValue, 0);
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2243,8 +2253,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 item?.deals
                   .filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.expectedClosed) >= frDate &&
+                      new Date(x.expectedClosed) <= tDate
                   )
                   ?.forEach((ele) => {
                     if (ele.status == '5') {

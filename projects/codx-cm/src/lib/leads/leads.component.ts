@@ -70,11 +70,13 @@ export class LeadsComponent
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('templateViewDetail') tempViewLeadDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   dialogQuestionCopy: DialogRef;
+  dialogViewLead: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -587,8 +589,8 @@ export class LeadsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        if (this.viewCrr != 11) this.viewDetail(e.data);
-        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
+        if (this.viewCrr != 11) this.viewLeadDetail(e.data);
+        else if (e?.data?.rowData) this.viewLeadDetail(e?.data?.rowData);
         break;
     }
   }
@@ -1559,6 +1561,25 @@ export class LeadsComponent
     );
     popup.closed.subscribe((e) => {});
   }
+
+  viewLeadDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+
+    this.dialogViewLead = this.callfc.openForm(
+      this.tempViewLeadDetail,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
+  }
+  
   checkApplyProcess(data) {
     return data?.applyProcess;
   }

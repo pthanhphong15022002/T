@@ -90,7 +90,7 @@
     <codx-label
       [formModel]="form.formModel"
       name="lblInstanceNo"
-      [default]="'Mã ' + autoName"
+      [default]="gridViewSetup['InstanceNo']?.headerText +' '+ autoName"
     >
     </codx-label>
     <codx-input
@@ -106,7 +106,7 @@
     <codx-label
       [formModel]="form.formModel"
       name="lblTitle"
-      [default]="'Tên ' + autoName"
+      [default]="gridViewSetup['Title']?.headerText+' ' + autoName"
     >
     </codx-label>
     <codx-input

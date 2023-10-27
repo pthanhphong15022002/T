@@ -205,8 +205,7 @@ export class PopupAddDealComponent
         this.deal.currencyID = dt?.data?.currencyIDDefault;
       }
     }
-    this.isviewCustomer && this.copyDataCustomer(this.deal,this.customerView);
-
+  //  this.isviewCustomer && this.copyDataCustomer(this.deal,this.customerView);
     if (dt?.data.processID) {
       this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
@@ -228,8 +227,11 @@ export class PopupAddDealComponent
   ngAfterViewInit(): void {
     this.tabInfo = [this.menuGeneralInfo];
     this.tabContent = [this.tabGeneralInfoDetail];
-    if (this.action !== this.actionAdd) {
+    if (this.action !== this.actionAdd || this.isviewCustomer ) {
+     // this.categoryCustomer = this.customerView?.category;
+     // this.customerID = this.deal?.customerID;
       this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
+   //   this.getListContactByObjectID(this.customerID);
     }
   }
 
@@ -239,6 +241,8 @@ export class PopupAddDealComponent
     deal.industries = data.industries;
     deal.channelID = data.channelID;
     deal.shortName = data.shortName;
+    this.categoryCustomer = data.category;
+    //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
 
   valueChange($event) {

@@ -134,7 +134,9 @@ export class PopupAddInstanceComponent implements OnInit {
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
       this.owner = this.instance?.owner;
-    } else {
+    }
+    else {
+      this.instance.title = this.autoName?.trim();
       this.instance.endDate = this.endDate;
       let check = false;
       if (this.lstParticipants != null && this.lstParticipants.length > 0)
