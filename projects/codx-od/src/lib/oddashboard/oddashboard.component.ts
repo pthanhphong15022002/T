@@ -45,7 +45,22 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
     { moduleName: 'Trình ký', percentage: 15 },
     { moduleName: 'Khác', percentage: 10 },
   ];
-
+  primaryYAxis: Object = {
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+};
+primaryXAxis: Object = {
+  majorGridLines: { width: 0 },
+  minorGridLines: { width: 0 },
+  majorTickLines: { width: 0 },
+  minorTickLines: { width: 0 },
+  interval: 1,
+  lineStyle: { width: 0 },
+  valueType: 'Category'
+};
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,

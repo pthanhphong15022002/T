@@ -269,24 +269,24 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   circleMarker: Object = { visible: true, height: 7, width: 7 , shape: 'Circle' , isFilled: true };
   palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
 
-  primaryXAxis: Object = {
-    majorGridLines: { width: 0 },
-    minorGridLines: { width: 0 },
-    majorTickLines: { width: 0 },
-    minorTickLines: { width: 0 },
-    interval: 1,
-    lineStyle: { width: 0 },
-    labelIntersectAction: 'Rotate45',
-    valueType: 'Category'
-};
-//Initializing Primary Y Axis
- primaryYAxis: Object = {
-    lineStyle: { width: 0 },
-    majorTickLines: { width: 0 },
-    majorGridLines: { width: 1 },
-    minorGridLines: { width: 1 },
-    minorTickLines: { width: 0 },
-};
+    primaryXAxis: Object = {
+      majorGridLines: { width: 0 },
+      minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
+      interval: 1,
+      lineStyle: { width: 0 },
+      labelIntersectAction: 'Rotate45',
+      valueType: 'Category'
+  };
+  //Initializing Primary Y Axis
+  primaryYAxis: Object = {
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 },
+      majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 },
+      minorTickLines: { width: 0 },
+  };
 chartArea: Object = {
   border: {
       width: 0
