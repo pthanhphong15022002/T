@@ -427,11 +427,6 @@ export class PopupAddTargetComponent {
       });
     }
 
-    this.countClick = 0;
-    // this.setQuarterInOwner();
-    // this.setTargetToLine(1, 4);
-    // this.getListTimeCalendar(this.text);
-    this.setListTargetLine();
     this.changedetectorRef.detectChanges();
   }
 
@@ -487,6 +482,12 @@ export class PopupAddTargetComponent {
           }
           this.data.salespersonID = id;
         }
+
+        this.countClick = 0;
+        // this.setQuarterInOwner();
+        // this.setTargetToLine(1, 4);
+        // this.getListTimeCalendar(this.text);
+        this.setListTargetLine();
       });
   }
 
