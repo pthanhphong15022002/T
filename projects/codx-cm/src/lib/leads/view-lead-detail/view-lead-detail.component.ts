@@ -387,4 +387,5 @@ export class ViewLeadDetailComponent implements OnInit {
     this.isShowTask.show = this.isShow;
     this.isShowOpponent.show = this.isShow;
   }
+
 }
