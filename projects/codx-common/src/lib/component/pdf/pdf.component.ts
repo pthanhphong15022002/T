@@ -97,12 +97,14 @@ export class PdfComponent
   @Input() curFileName :string = "";//Tên file đang view (tên file khi tải xuống)
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
+  @Input() isSettingMode: boolean = false; // Thiết lập mẫu ko lấy danh sách người duyệt theo role dynamic
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
 
   @Input() hideActions = false;
   @Input() isSignMode = false;
-  @Input() dynamicApprovers = [];
+  @Input() dynamicApprovers = [];  
+  @Input() hideThumbnail: boolean = false;//thumbnail
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -270,8 +272,6 @@ export class PdfComponent
   ];
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
-  //thumbnail
-  hideThumbnail: boolean = false;
 
   vllSupplier: any;
   oSignfile: any;
@@ -295,6 +295,7 @@ export class PdfComponent
         this.isEditable,
         this.transRecID,
         this.dynamicApprovers,
+        this.isSettingMode,
       ])
       .subscribe((res: any) => {
         console.table('sf', res);

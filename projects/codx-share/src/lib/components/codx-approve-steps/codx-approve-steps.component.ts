@@ -188,7 +188,7 @@ export class CodxApproveStepsComponent
                     }
                   }
                 }                 
-                this.lstStep = tempListStep;               
+                this.lstStep = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);               
               }
             }
             

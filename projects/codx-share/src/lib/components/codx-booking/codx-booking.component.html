@@ -119,11 +119,11 @@
 </ng-template>
 <ng-template #gridResourceName let-data>
   <div>
-    <span [innerHTML]="data?.resourceName "></span>
+    <span [innerHTML]="data?.resourceName ?? data?.resourceName2 ?? (data?.resourceID | formatvalue : formModel : 'ResourceID' | async)"></span>
   </div>
 </ng-template>
 <ng-template #gridOwner let-data>
-  <span [innerHTML]="data?.owner | formatvalue : formModel : 'Owner' | async"></span>
+  <span [innerHTML]="data?.ownerName ?? (data?.owner | formatvalue : formModel : 'Owner' | async)"></span>
 </ng-template>
 <ng-template #gridBookingOn let-data>
   <div>
