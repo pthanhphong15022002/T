@@ -66,7 +66,6 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
     this.api.execSv(this.service, this.assemblyName, this.className, "GetGiftTranInforAsync", objectID)
       .subscribe((res: any) => {
         if (res) {
-          console.log(res);
           this.data = res;
           this.dt.detectChanges();
         }
@@ -101,7 +100,7 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
       data
     );
     this.dialogConfirmStatus.closed.subscribe((e) => {
-      if (e) {
+      if (e && e.event == "oke") {
         this.serviceFD.sendGift(
           this.data.recID,
           "2",
