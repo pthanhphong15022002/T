@@ -293,22 +293,6 @@
             "
           ></span>
         </div>
-        <!-- <div class="mb-2">
-			<codx-label
-			  class="fw-bold label-colon text-gray-600"
-			  [formModel]="formModel"
-			  fiedName="expectedTo"
-			  [setRequire]="false"
-			></codx-label>
-			<span
-			  class="text-dark fs-6 fw-bold line-clamp line-clamp-1"
-			  [innerHTML]="
-				dataSelected?.expectedTo
-				  | formatvalue : formModel : 'ExpectedTo'
-				  | async
-			  "
-			></span>
-		  </div> -->
         <div class="mb-2">
           <codx-label
             class="fw-bold label-colon text-gray-600"
@@ -430,47 +414,6 @@
         <ng-container [ngTemplateOutlet]="header"></ng-container>
       </div>
       <div class="body-right">
-        <div class="contanct mb-2">
-          <div class="d-flex align-items-center justify-content-between w-100">
-            <div class="d-flex align-items-center">
-              <span class="icon-add_to_photos icon-16 me-1"></span>
-              <codx-label
-                class="fw-bold fs-4"
-                default="Liên hệ"
-                [formModel]="formModel"
-                name="lblContanct"
-              ></codx-label>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="icon-person_add_alt_1 text-primary icon-20"></i>
-              <ng-container
-                [ngTemplateOutlet]="temToggleElemen"
-                [ngTemplateOutletContext]="{ data: isShowContanct }"
-              ></ng-container>
-            </div>
-          </div>
-          <div
-            class="ms-4"
-            [ngClass]="isShowContanct?.show ? 'd-block' : 'd-none'"
-          >
-            <codx-list-contacts
-              #loadContactDeal
-              [selectAll]="false"
-              [funcID]="'CM0205'"
-              [objectID]="dataSelected?.recID"
-              [objectName]="dataSelected.dealName"
-              [customerID]="dataSelected?.customerID"
-              [objectType]="'4'"
-              [type]="'formDetail'"
-              [hidenMF]="
-                !dataSelected?.write ||
-                dataSelected?.closed ||
-                ['1', '0', '3', '5', '15'].includes(dataSelected.status)
-              "
-            ></codx-list-contacts>
-          </div>
-          <hr />
-        </div>
         <div class="fields mb-2">
           <div class="d-flex align-items-center mb-2">
             <div
