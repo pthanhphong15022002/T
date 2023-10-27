@@ -76,6 +76,7 @@ export class LeadsComponent
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   dialogQuestionCopy: DialogRef;
+  dialogViewLead: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -1567,7 +1568,7 @@ export class LeadsComponent
     option.IsFull = true;
     option.zIndex = 999;
 
-    let popup = this.callfc.openForm(
+    this.dialogViewLead = this.callfc.openForm(
       this.tempViewLeadDetail,
       '',
       0,
@@ -1577,7 +1578,6 @@ export class LeadsComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {});
   }
   
   checkApplyProcess(data) {

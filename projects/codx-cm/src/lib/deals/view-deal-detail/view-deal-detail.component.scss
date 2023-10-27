@@ -34,7 +34,7 @@
 .right {
   .body-right {
     height: calc(100vh - 110px) !important;
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     overflow-x: hidden;
   }
 
