@@ -417,7 +417,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataReasonsSuscess = [];
   dataReasonsFails = [];
   tabActiveReson = 'btReasonSucess';
-
+  textTitle = '';
   //end
   constructor(
     inject: Injector,
@@ -1670,11 +1670,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     var tmp = {};
     const frmDate = new Date(fromDate);
     const tDate = new Date(toDate);
-    let frmDateOlds = new Date(frmDate);
-    frmDateOlds.setMonth(frmDateOlds.getMonth() - 1);
-    let tDateOlds = new Date(tDate);
-    tDateOlds.setMonth(tDateOlds.getMonth() - 1);
-
+    let { frmDateOld, tDateOld, type } = this.setDateOlds(frmDate, tDate);
+    this.textTitle = type;
+    // let frmDateOlds = this.setDateOlds(frmDate, tDate)?.frmDateOld;
+    // let tDateOlds = this.setDateOlds(frmDate, tDate)?.tDateOld;
+    // let type = this.setDateOlds(frmDate, tDate)?.type;
     const dealCurrents = deals.filter(
       (x) =>
         new Date(x?.expectedClosed) >= frmDate &&
@@ -1682,8 +1682,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDateOlds &&
-        new Date(x?.expectedClosed) <= tDateOlds
+        new Date(x?.expectedClosed) >= frmDateOld &&
+        new Date(x?.expectedClosed) <= tDateOld
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
@@ -1820,6 +1820,105 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       return value.toLocaleString();
     }
   }
+
+  setDateOlds(
+    fromDate: Date,
+    toDate: Date
+  ): { frmDateOld: Date; tDateOld: Date; type: string } {
+    let yearFd = fromDate.getFullYear();
+    let yearTd = toDate.getFullYear();
+    let monthFd = fromDate.getMonth() + 1;
+    let monthTd = toDate.getMonth() + 1;
+    let dateFd = fromDate.getDate();
+    let dateTd = toDate.getDate();
+    let frmDateOld = new Date(fromDate);
+    let tDateOld = new Date(toDate);
+    let type = '';
+    if (yearFd == yearTd) {
+      if (dateFd == 1 && monthFd == 1 && monthTd == 3 && dateTd == 31) {
+        frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
+        frmDateOld.setMonth(9);
+        tDateOld.setFullYear(tDateOld.getFullYear() - 1);
+        tDateOld.setMonth(11);
+        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+      } else if (dateFd == 1 && monthFd == 4 && monthTd == 6 && dateTd == 30) {
+        frmDateOld.setMonth(0);
+        tDateOld.setMonth(2);
+        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+      } else if (dateFd == 1 && monthFd == 7 && monthTd == 9 && dateTd == 30) {
+        frmDateOld.setMonth(3);
+        tDateOld.setMonth(5);
+        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+      } else if (
+        dateFd == 1 &&
+        monthFd == 10 &&
+        monthTd == 12 &&
+        dateTd == 31
+      ) {
+        frmDateOld.setMonth(6);
+        tDateOld.setMonth(8);
+        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+      } else if (monthFd == monthTd) {
+        if (dateFd == dateTd) {
+          frmDateOld.setDate(frmDateOld.getDate() - 1);
+          tDateOld.setDate(tDateOld.getDate() - 1);
+          type = this.language == 'vn' ? 'Ngày trước' : 'Yesterday';
+        } else {
+          frmDateOld.setMonth(frmDateOld.getMonth() - 1);
+          tDateOld.setMonth(tDateOld.getMonth() - 1);
+          type = this.language == 'vn' ? 'Tháng trước' : 'Last month';
+        }
+      } else if (monthFd == 1 && monthTd == 12) {
+        frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
+        tDateOld.setFullYear(tDateOld.getFullYear() - 1);
+        type = this.language == 'vn' ? 'Năm trước' : 'Last year';
+      } else {
+        let day = Math.floor(
+          Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
+            (24 * 60 * 60 * 1000)
+        );
+        tDateOld = new Date(frmDateOld.setDate(frmDateOld.getDate() - 1));
+        frmDateOld.setDate(tDateOld.getDate() - day);
+        type =
+          frmDateOld.toLocaleDateString('en-GB') +
+          ' - ' +
+          tDateOld.toLocaleDateString('en-GB');
+      }
+    } else {
+      let day = Math.floor(
+        Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
+          (24 * 60 * 60 * 1000)
+      );
+      tDateOld = new Date(frmDateOld.setDate(frmDateOld.getDate() - 1));
+      frmDateOld.setDate(tDateOld.getDate() - day);
+      type =
+        frmDateOld.toLocaleDateString('en-GB') +
+        ' - ' +
+        tDateOld.toLocaleDateString('en-GB');
+    }
+
+    console.log('frmDateOld ', frmDateOld.toLocaleDateString('en-GB'));
+    console.log('tDateOld ', tDateOld.toLocaleDateString('en-GB'));
+    console.log('type ', type);
+
+    return { frmDateOld, tDateOld, type };
+  }
+
+  getTotalDaysInMonth(month, year) {
+    if (month === 1) {
+      // Tháng 2
+      if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+        return 29; // Năm nhuận, tháng 2 có 29 ngày
+      } else {
+        return 28; // Năm không nhuận, tháng 2 có 28 ngày
+      }
+    } else if (month === 3 || month === 5 || month === 8 || month === 10) {
+      return 30; // Các tháng có 30 ngày
+    } else {
+      return 31; // Các tháng có 31 ngày
+    }
+  }
+
   //end
 
   //sales pipe
@@ -2135,10 +2234,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let list = [];
     let frDate = new Date(fromDate);
     let tDate = new Date(toDate);
-    let frmDateOlds = new Date(frDate);
-    frmDateOlds.setMonth(frmDateOlds.getMonth() - 1);
-    let tDateOlds = new Date(tDate);
-    tDateOlds.setMonth(tDateOlds.getMonth() - 1);
+    let { frmDateOld, tDateOld, type } = this.setDateOlds(frDate, tDate);
     if (lstUsers?.length > 0) {
       lstUsers.sort((a, b) => {
         const dealValueA = a?.deals
@@ -2207,8 +2303,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.leads.filter(
                     (x) =>
-                      new Date(x.createdOn) >= frmDateOlds &&
-                      new Date(x.createdOn) <= tDateOlds
+                      new Date(x.createdOn) >= frmDateOld &&
+                      new Date(x.createdOn) <= tDateOld
                   ).length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2222,8 +2318,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.deals.filter(
                     (x) =>
-                      new Date(x.createdOn) >= frmDateOlds &&
-                      new Date(x.createdOn) <= tDateOlds
+                      new Date(x.createdOn) >= frmDateOld &&
+                      new Date(x.createdOn) <= tDateOld
                   )?.length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2243,8 +2339,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   ?.filter(
                     (x) =>
                       x.status == '3' &&
-                      new Date(x.expectedClosed) >= frmDateOlds &&
-                      new Date(x.expectedClosed) <= tDateOlds
+                      new Date(x.expectedClosed) >= frmDateOld &&
+                      new Date(x.expectedClosed) <= tDateOld
                   )
                   .reduce((acc, x) => acc + x.dealValue, 0);
                 tmpPerform['count'] = count.toLocaleString();
