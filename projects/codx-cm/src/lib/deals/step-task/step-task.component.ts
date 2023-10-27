@@ -54,6 +54,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() isHeightAuto = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -133,6 +134,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         'SendMailNotificationAsync'
       )
       .subscribe((res) => {});
+    this.taskHeight = this.isHeightAuto ? 'auto' : 'this.taskHeight';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -179,7 +181,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    this.setHeight();
+    !this.isHeightAuto && this.setHeight();
   }
   changeValue(e) {
     this.type = e.data;
@@ -405,7 +407,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: Event) {
-    this.setHeight();
+    !this.isHeightAuto && this.setHeight();
   }
 
   setHeight() {
