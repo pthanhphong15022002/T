@@ -183,7 +183,7 @@
 <!--list details tempfull-->
 <!--Detail-->
 <ng-template #templateDetail>
-  <!-- <codx-lead-detail
+  <codx-lead-detail
     #detailViewLead
     [formModel]="view.formModel"
     [dataSelected]="dataSelected"
@@ -197,7 +197,10 @@
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
   >
-  </codx-lead-detail> -->
+  </codx-lead-detail>
+</ng-template>
+
+<ng-template #templateViewDetail>
   <view-lead-detail
   #detailViewLead
   [formModel]="view.formModel"
@@ -214,7 +217,6 @@
 >
 </view-lead-detail>
 </ng-template>
-
 <!--View Kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
