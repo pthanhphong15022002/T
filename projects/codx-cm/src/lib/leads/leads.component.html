@@ -200,6 +200,23 @@
   </codx-lead-detail>
 </ng-template>
 
+<ng-template #templateViewDetail>
+  <view-lead-detail
+  [formModel]="view.formModel"
+  [dataSelected]="dataSelected"
+  [gridViewSetup]="gridViewSetup"
+  [colorReasonSuccess]="colorReasonSuccess"
+  [colorReasonFail]="colorReasonFail"
+  [funcID]="funcID"
+  [valueListStatusCode]="valueListStatusCode"
+  [listCategory]="listCategory"
+  [applyProcess]="checkApplyProcess(dataSelected)"
+  (changeMF)="changeMF($event)"
+  (clickMoreFunc)="clickMoreFunc($event)"
+  [dialog]="dialogViewLead"
+>
+</view-lead-detail>
+</ng-template>
 <!--View Kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img

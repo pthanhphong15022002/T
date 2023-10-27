@@ -364,7 +364,6 @@ export class BS_AddressBook {
   objectType: string;
   objectID: string;
   objectName: string;
-  street: string;
   city: string;
   countryID: string;
   provinceID: string;

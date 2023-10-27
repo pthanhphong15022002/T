@@ -339,9 +339,9 @@ export class CmCustomerComponent
       case 'CM0105_4':
         this.popupPermissions(data);
         break;
-      // case 'CM0101_7':
-      //   this.convertCustomerToDeals(data);
-      //   break;
+      case 'CM0101_7':
+        //this.convertCustomerToDeals(data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1004,7 +1004,6 @@ export class CmCustomerComponent
     deal.channelID = data.channelID;
     deal.shortName = data.shortName;
 
-    this.view.dataService.copy().subscribe((res) => {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -1027,6 +1026,7 @@ export class CmCustomerComponent
             industries:data.industries,
             channelID:data.channelID,
             shortName:data.shortName,
+            category:data.category
           };
           let obj = {
             action: 'add',
@@ -1055,6 +1055,5 @@ export class CmCustomerComponent
           });
         }
       });
-    });
   }
 }
