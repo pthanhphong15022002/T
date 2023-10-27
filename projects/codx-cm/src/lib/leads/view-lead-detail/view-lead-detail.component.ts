@@ -1,10 +1,12 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  Renderer2,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -113,7 +115,7 @@ export class ViewLeadDetailComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
   ) {
     this.isDataLoading = true;
     this.executeApiCalls();
@@ -121,7 +123,7 @@ export class ViewLeadDetailComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {}
+  // ngAfterViewInit(): void {}
   ngAfterViewChecked() {
     // if (!this.hasRunOnce) {
     //   this.resetTab(this.dataSelected?.applyProcess);
@@ -387,5 +389,4 @@ export class ViewLeadDetailComponent implements OnInit {
     this.isShowTask.show = this.isShow;
     this.isShowOpponent.show = this.isShow;
   }
-
 }

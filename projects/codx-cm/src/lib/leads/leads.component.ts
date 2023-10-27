@@ -146,6 +146,8 @@ export class LeadsComponent
   isLoading = false;
   hideMoreFC = false;
   applyProcess: boolean = true;
+  gridDetailView = '2';
+
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
@@ -589,8 +591,8 @@ export class LeadsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        if (this.viewCrr != 11) this.viewLeadDetail(e.data);
-        else if (e?.data?.rowData) this.viewLeadDetail(e?.data?.rowData);
+        if (this.viewCrr != 11) this.viewDetail(e.data);
+        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
         break;
     }
   }
@@ -1545,31 +1547,13 @@ export class LeadsComponent
 
   viewDetail(data) {
     this.dataSelected = data;
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 999;
-
-    let popup = this.callfc.openForm(
-      this.popDetail,
-      '',
-      0,
-      0,
-      '',
-      null,
-      '',
-      option
-    );
-    popup.closed.subscribe((e) => {});
-  }
-
-  viewLeadDetail(data) {
-    this.dataSelected = data;
+    let temView = this.gridDetailView == "2" ?this.tempViewLeadDetail:this.popDetail;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
 
     this.dialogViewLead = this.callfc.openForm(
-      this.tempViewLeadDetail,
+      temView,
       '',
       0,
       0,
@@ -1578,6 +1562,7 @@ export class LeadsComponent
       '',
       option
     );
+    this.dialogViewLead.closed.subscribe((e) => {});
   }
   
   checkApplyProcess(data) {
@@ -1835,6 +1820,12 @@ export class LeadsComponent
 
   loadParam() {
     //approver
+    this.codxCmService.getParam('CMParameters', '1').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        this.gridDetailView = dataValue?.GridDetailView || '2';        
+      }
+    });
     this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
       if (res) {
         let dataValue = JSON.parse(res.dataValue);
