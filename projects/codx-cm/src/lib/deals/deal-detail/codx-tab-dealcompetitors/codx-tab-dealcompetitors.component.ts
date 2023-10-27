@@ -30,6 +30,7 @@ export class CodxTabDealcompetitorsComponent implements OnInit {
   @Input() dealID: any;
   @Input() funcID: any;
   @Input() hidenMF = true;
+  @Input() hidenMFAdd = false;
   lstDealCompetitors = [];
   moreFuncAdd = '';
   formModel: FormModel = {
