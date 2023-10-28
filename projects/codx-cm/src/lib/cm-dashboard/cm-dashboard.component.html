@@ -859,19 +859,12 @@
           <span class="fw-bold fs-6 me-1">{{
             findTmpDeals("1")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("1")?.valueAsc }})</span
-          >
+          <span class="fw-bold fs-6">({{ findTmpDeals("1")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
-        <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
-          formName="CMMyDashboard"
-          gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
-        ></codx-label>
+        <span class="">{{ textTitle }}</span>
+        <span class="label-colon me-1"></span>
         <span>{{ findTmpDeals("1")?.countOld }}</span>
       </div>
     </div>
@@ -909,19 +902,11 @@
           <span class="fw-bold fs-6 me-1">{{
             findTmpDeals("2")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("2")?.valueAsc }})</span
-          >
+          <span class="fw-bold fs-6">({{ findTmpDeals("2")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
-        <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
-          formName="CMMyDashboard"
-          gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
-        ></codx-label>
+        <span class="me-1 label-colon">{{ textTitle }}</span>
         <span>{{ findTmpDeals("2")?.countOld }}</span>
       </div>
     </div>
@@ -959,19 +944,11 @@
           <span class="fw-bold fs-6 me-1">{{
             findTmpDeals("3")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("3")?.valueAsc }})</span
-          >
+          <span class="fw-bold fs-6">({{ findTmpDeals("3")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
-        <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
-          formName="CMMyDashboard"
-          gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
-        ></codx-label>
+        <span class="me-1 label-colon">{{ textTitle }}</span>
         <span>{{ findTmpDeals("3")?.countOld }}</span>
       </div>
     </div>
@@ -1009,19 +986,12 @@
           <span class="fw-bold fs-6 me-1">{{
             findTmpDeals("4")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("4")?.valueAsc }})</span
-          >
+          <span class="fw-bold fs-6">({{ findTmpDeals("4")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
-        <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
-          formName="CMMyDashboard"
-          gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
-        ></codx-label>
+        <span class="me-1 label-colon">{{ textTitle }}</span>
+
         <span>{{ findTmpDeals("4")?.countOld }}</span>
       </div>
     </div>
@@ -1060,13 +1030,7 @@
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
-        <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
-          formName="CMMyDashboard"
-          gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
-        ></codx-label>
+        <span class="me-1 label-colon">{{ textTitle }}</span>
         <span>{{ findTmpDeals("5")?.countOld }}</span>
       </div>
     </div>
@@ -1095,7 +1059,8 @@
           "
           (click)="viewPips(item.value)"
         >
-          <div #myIsActiveEle
+          <div
+            #myIsActiveEle
             [id]="'isActive' + item"
             [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
           >

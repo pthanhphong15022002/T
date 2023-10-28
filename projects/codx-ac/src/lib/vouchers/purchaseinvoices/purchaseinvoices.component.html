@@ -1,6 +1,7 @@
-<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
-  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
+  [entityName]="view.entityName" (buttonClick)="toolbarClick($event)"
+  [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo"
+  (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 
 <!-- Start: templateGrid -->
@@ -20,9 +21,9 @@
 
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
-    <purchaseinvoices-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
-      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
-      [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
+    <purchaseinvoices-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
+      [dataItem]="itemSelected" [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal"
+      [headerText]="headerText" [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
       [dataDefault]="dataDefault"></purchaseinvoices-detail>
   </ng-container>
 </ng-template>
@@ -93,3 +94,5 @@
   </div>
 </ng-template>
 <!-- End: template listdetail -->
+
+<input #xml type="file" class="d-none" (change)="readXml($event)">

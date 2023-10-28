@@ -114,6 +114,8 @@ import { CampaignDealsComponent } from './campaigns/campaigns-detail/campaign-de
 import { PopupAddTaskCalendarComponent } from './calendars/view-calendar/popup-add-task-calendar/popup-add-task-calendar.component';
 import { PopupUpdateStatusComponent } from './deals/popup-update-status/popup-update-status.component';
 import { CodxShowMoreLessComponent } from './deals/deal-detail/codx-show-more-less/codx-show-more-less.component';
+import { ViewDealDetailComponent } from './deals/view-deal-detail/view-deal-detail.component';
+import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-detail.component';
 
 export const routes: Routes = [
   {
@@ -275,6 +277,8 @@ const T_Component: Type<any>[] = [
     PopupAddTaskCalendarComponent,
     PopupUpdateStatusComponent,
     CodxShowMoreLessComponent,
+    ViewDealDetailComponent,
+    ViewLeadDetailComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

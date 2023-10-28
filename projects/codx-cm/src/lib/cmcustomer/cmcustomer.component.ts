@@ -31,6 +31,8 @@ import { firstValueFrom } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupAddLeadComponent } from '../leads/popup-add-lead/popup-add-lead.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
+import { CM_Deals } from '../models/cm_model';
 
 @Component({
   selector: 'codx-cmcustomer',
@@ -336,6 +338,9 @@ export class CmCustomerComponent
       case 'CM0101_4':
       case 'CM0105_4':
         this.popupPermissions(data);
+        break;
+      case 'CM0101_7':
+        //this.convertCustomerToDeals(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -984,5 +989,71 @@ export class CmCustomerComponent
     this.dataSelected.wardID = e ? e?.wardID : null;
     this.view.dataService.update(this.dataSelected).subscribe();
     this.detectorRef.detectChanges();
+  }
+
+  // open form covnert deal
+  convertCustomerToDeals(data) {
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      //this.oldIdDeal = data.recID;
+    }
+    let deal = new CM_Deals();
+    deal.customerID = data.recID;
+    deal.dealName = data.customerName;
+    deal.industries = data.industries;
+    deal.channelID = data.channelID;
+    deal.shortName = data.shortName;
+
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let formModel = new FormModel();
+      // hard code
+      formModel.funcID = 'CM0201';
+      formModel.formName = 'CMDeals';
+      formModel.entityName = 'CM_Deals';
+      formModel.gridViewName = 'grvCMDeals';
+      option.FormModel = formModel;
+      option.Width = '800px';
+      option.zIndex = 1001;
+      this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          let customerView = {
+            customerID:data.recID,
+            dealName:data.customerName,
+            industries:data.industries,
+            channelID:data.channelID,
+            shortName:data.shortName,
+            category:data.category
+          };
+          let obj = {
+            action: 'add',
+            formMD: formModel,
+            titleAction: this.titleAction,
+            processID: null,
+            gridViewSetup: res,
+            isviewCustomer: true,
+            customerView:customerView,
+       //     functionModule: this.functionModule,
+            // currencyIDDefault: this.currencyIDDefault,
+            // exchangeRateDefault: this.exchangeRateDefault,
+            categoryCustomer:  data?.categoryCustomer,
+          };
+          let dialogCustomDeal = this.callfc.openSide(
+            PopupAddDealComponent,
+            obj,
+            option
+          );
+          dialogCustomDeal.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              this.view.dataService.update(e.event).subscribe();
+              //   this.detailViewDeal.promiseAllAsync();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      });
   }
 }

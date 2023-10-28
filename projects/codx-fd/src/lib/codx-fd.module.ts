@@ -68,8 +68,12 @@ import { DrilldownComponent } from './statistical/popup-drilldown/popup-drilldow
 import { PopupApprovalComponent } from './approvals/popup-approval/popup-approval.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { EVouchersComponent } from './evouchers/evouchers.component';
+<<<<<<< HEAD
 import { EvoucherDetailComponent } from './evouchers/evoucher-detail/evoucher-detail.component';
 import { EvoucherAddComponent } from './evouchers/evoucher-add/evoucher-add.component';
+=======
+import { PopupSendGiftComponent } from './gift-trans/popup-send-gift/popup-send-gift.component';
+>>>>>>> 11fcc828d506a2fe19122ee7d5d365e7441cbe19
 
 export const routes: Routes = [
   {
@@ -253,6 +257,7 @@ const T_Pipe: Type<any>[] = [];
     T_Pipe,
     PopupApprovalComponent,
     ApprovalsComponent,
+    PopupSendGiftComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

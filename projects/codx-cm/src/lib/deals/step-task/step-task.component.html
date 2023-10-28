@@ -57,7 +57,7 @@
       </div>
     </div>
   </header>
-  <main class="main-step" [ngStyle]="{ height: taskHeight }">
+  <main class="main-step" [ngStyle]="{ height: taskHeight }" [ngClass]="isHeightAuto ? 'overflow-hidden': ''">
     <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"

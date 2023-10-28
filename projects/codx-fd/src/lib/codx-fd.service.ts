@@ -281,4 +281,18 @@ export class CodxFdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+  sendGift(
+    recID: string, 
+    status: string, 
+    comment: string, 
+    funcID: string
+  ) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'GiftTransBusiness',
+      'DeliverGiftTransAsync',
+      [recID, status, comment, funcID]
+    );
+  }
 }

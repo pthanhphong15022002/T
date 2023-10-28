@@ -31,6 +31,7 @@ export class CodxAddressCmComponent implements OnInit {
   @Input() funcID: any;
   @Input() entityName: any;
   @Input() id: any;
+  @Input() objectName: any;
   @Input() type: any;
   @Input() hidden = false;
   @Input() isConvertLeadToCus = false;
@@ -210,6 +211,7 @@ export class CodxAddressCmComponent implements OnInit {
             type: this.type,
             objectID: this.id,
             objectType: this.entityName,
+            objectName: this.objectName
           };
           var dialog = this.callFc.openForm(
             PopupAddressComponent,

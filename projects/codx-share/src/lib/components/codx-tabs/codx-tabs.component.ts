@@ -40,6 +40,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() isEdit = true; //mac dinh bằng true - Thao them sua ngay 23/2/2023
   @Input() showFileApprove = false; //truyền bằng true sẽ hiện file gửi kí duyệt - Thao them sua ngay 25/10/2023
   @Input() listIDTransApprove = []; //truyền danh sach file kí duyệt - Thao them sua ngay 25/10/2023
+  @Input() entityNameApprove = ''; //truyền entity nghiep vụ ki duyet file kí duyệt - Thao them sua ngay 25/10/2023
   //Attachment
   @Input() hideFolder: string = '1';
   @Input() type: string = 'inline';
@@ -54,7 +55,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() transID: string;
   @Input() approveStatus: string;
 
-  @Input() referType: string = 'attach'; //de mac định the nay moi luu dc file cho task dung-VTHAO sua ngay 9/2/2023
+  @Input() referType: string = 'attach';
 
   private all: TabModel[] = [
     {
@@ -127,12 +128,23 @@ export class CodxTabsComponent implements OnInit {
   ngOnChanges() {
     if (this.objectID && !this.loadingCount) {
       this.loadingCount = true;
-      this.api
-        .execSv('DM', 'DM', 'FileBussiness', 'CountAttachmentAsync', [
+      let methodCountFile = 'CountAttachmentAsync';
+      let resquetCountFile = [this.objectID, this.referType, this.entityName];
+
+      //truyền danh sach file kí duyệt để đếm - Thao them ngay 26/10/2023 - Theo yêu cầu của Nhi
+      if (this.showFileApprove && this.listIDTransApprove?.length > 0) {
+        methodCountFile = 'CountAttachmentWithListObjectApproveFileAsync';
+        resquetCountFile = [
           this.objectID,
           this.referType,
           this.entityName,
-        ])
+          this.listIDTransApprove.join(';'),
+          this.entityNameApprove,
+        ];
+      }
+
+      this.api
+        .execSv('DM', 'DM', 'FileBussiness', methodCountFile, resquetCountFile)
         .subscribe((res) => {
           if (res) this.oCountFooter['attachment'] = res;
           this.loadingCount = false;

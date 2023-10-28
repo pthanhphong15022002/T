@@ -11,7 +11,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 
 @Component({
-  selector: 'lib-issue-transactions-detail',
+  selector: 'issue-transactions-detail',
   templateUrl: './issue-transactions-detail.component.html',
   styleUrls: ['./issue-transactions-detail.component.css']
 })
@@ -83,38 +83,38 @@ export class IssueTransactionsDetailComponent extends UIComponent {
    * @param data
    */
   clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT060102':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT060104':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT060106':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT060103':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT060105':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT060107':
-    //     this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteVoucher(data); //? xóa chứng từ
+        break;
+      case 'SYS03':
+        this.editVoucher(data); //? sửa chứng từ
+        break;
+      case 'SYS04':
+        this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS002':
+        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        break;
+      case 'ACT071404':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT071405':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT071403':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT071406':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT071407':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT071408':
+        //this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+    }
   }
 
   //#endregion
@@ -433,7 +433,7 @@ export class IssueTransactionsDetailComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFVoucher(event,data,type,this.journal,this.formModel);
+    this.acService.changeMFIssueVoucher(event,data,type,this.journal,this.formModel);
     // let arrBookmark = event.filter(
     //   // danh sách các morefunction
     //   (x: { functionID: string }) =>
