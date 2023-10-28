@@ -113,7 +113,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       });
     }
     //Lấy version đầu tiên
-    else if (this.isFristVer) this.formatFristVersion(this.files);
+    else if (this.isFristVer) this.files = this.formatFristVersion(this.files);
     this.userID = this.authStore.get().userID;
   }
 
@@ -131,11 +131,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
           elm.thumbnail = f.thumbnail;
           elm.pathDisk = f.pathDisk;
           elm.uploadId = f.uploadId;
-          elm.fileName = f.fileName;
-          //elm.fileName = f.fileName?.replace('(Ver 001)','');
+          //elm.fileName = f.fileName;
+          elm.fileName = f.fileName?.replace('(Ver 001)','');
         }
       }
     });
+    this.changeDetectorRef.detectChanges();
     return data;
   }
 
@@ -290,6 +291,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                 if (c[0].displayMode == '2') {
                   const queryParams = {
                     id: file.recID,
+                    _fv:this.isFristVer
                   };
                   var l = this.router.url.split('/');
                   const url = this.router.serializeUrl(
