@@ -8,6 +8,7 @@ import { ApiHttpService, DataRequest, DialogData, DialogRef } from 'codx-core';
 })
 export class EvoucherAddComponent implements OnInit{
   dialog:any;
+  data:any;
   constructor(
     private api : ApiHttpService,
     @Optional() dt?: DialogData,
@@ -22,9 +23,6 @@ export class EvoucherAddComponent implements OnInit{
 
   getData()
   {
-    var model = new DataRequest();
-    model.page = 1;
-    model.pageSize = 20;
-    this.api.execSv("FD","FD","VouchersBusiness","GetCategoriesERMAsync",model).subscribe();
+    this.api.execSv("FD","FD","VouchersBusiness","GetCategoriesERMAsync").subscribe(item=>{this.data=item});
   }
 }

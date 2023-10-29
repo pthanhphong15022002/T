@@ -475,24 +475,37 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.dataSelected && !this.objectId)
-      this.objectId = this.dataSelected.recID;
+    debugger
+    if (this.dataSelected && !this.objectId) this.objectId = this.dataSelected.recID;
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
       this.dataRequest.pageLoading = this.pageLoading;
+      var listObjectID = this.objectId.split(";");
       if (!this.isReferType) {
         this.dataRequest.predicate =
           'ObjectID=@0 && ObjectType=@2 && IsDelete = false && (ReferType=@1';
         if (this.referType == 'source')
           this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
         this.dataRequest.predicate += ')';
-      } else this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false';
-      this.dataRequest.dataValue = [
-        this.objectId,
+      } 
+      else {
+        this.dataRequest.predicate = "";
+        for(var i = 0 ; i < listObjectID.length ; i++)
+        {
+          
+          if(i==0) this.dataRequest.predicate += "( ObjectID=@" + i;
+          else this.dataRequest.predicate += "|| ObjectID=@" + i;
+          
+          if(i== (listObjectID.length - 1)) this.dataRequest.predicate += " )"
+        }
+        this.dataRequest.predicate += ' && IsDelete = false';
+      }
+      listObjectID = listObjectID.concat([
         this.referType,
         this.objectType,
-      ].join(';');
+      ]);
+      this.dataRequest.dataValue = listObjectID.join(';');
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
       this.fileService
