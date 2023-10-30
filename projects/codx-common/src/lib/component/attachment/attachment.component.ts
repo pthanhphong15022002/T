@@ -475,7 +475,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
+    // debugger
     if (this.dataSelected && !this.objectId) this.objectId = this.dataSelected.recID;
     if (this.objectId) {
       this.dataRequest.page = 1;

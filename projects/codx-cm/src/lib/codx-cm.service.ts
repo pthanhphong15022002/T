@@ -1131,7 +1131,7 @@ export class CodxCmService {
     return this.api.exec<any>(
       'CM',
       'ContactsBusiness',
-      'GetOneAsync',
+      'GetListUserByBUIDAsync',
       data
     );
   }
