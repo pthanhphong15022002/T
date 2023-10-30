@@ -1000,12 +1000,13 @@ export class CmCustomerComponent
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       //this.oldIdDeal = data.recID;
     }
-    let deal = new CM_Deals();
-    deal.customerID = data.recID;
-    deal.dealName = data.customerName;
-    deal.industries = data.industries;
-    deal.channelID = data.channelID;
-    deal.shortName = data.shortName;
+    // let deal = new CM_Deals();
+
+    // deal.customerID = data.recID;
+    // deal.dealName = data.customerName;
+    // deal.industries = data.industries;
+    // deal.channelID = data.channelID;
+    // deal.shortName = data.shortName;
 
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
