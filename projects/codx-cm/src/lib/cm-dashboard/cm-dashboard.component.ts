@@ -402,6 +402,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   vllUpDowns = [];
   currencyID: any;
   exchangeRate: number;
+  vllTextYears = [];
   //new
   arrReport: any = [];
   viewCategory: any;
@@ -777,6 +778,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.vllStatusDeals = vll?.datas;
       }
     });
+
+    this.cache.valueList('SYS058').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.vllTextYears = vll?.datas;
+      }
+    });
+
     this.cache.valueList('CRM071').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.vllSalesPiplines = vll?.datas;
@@ -1840,15 +1848,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         frmDateOld.setMonth(9);
         tDateOld.setFullYear(tDateOld.getFullYear() - 1);
         tDateOld.setMonth(11);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (dateFd == 1 && monthFd == 4 && monthTd == 6 && dateTd == 30) {
         frmDateOld.setMonth(0);
         tDateOld.setMonth(2);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (dateFd == 1 && monthFd == 7 && monthTd == 9 && dateTd == 30) {
         frmDateOld.setMonth(3);
         tDateOld.setMonth(5);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (
         dateFd == 1 &&
         monthFd == 10 &&
@@ -1857,21 +1865,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       ) {
         frmDateOld.setMonth(6);
         tDateOld.setMonth(8);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (monthFd == monthTd) {
         if (dateFd == dateTd) {
           frmDateOld.setDate(frmDateOld.getDate() - 1);
           tDateOld.setDate(tDateOld.getDate() - 1);
-          type = this.language == 'vn' ? 'Ngày trước' : 'Yesterday';
+          type = this.vllTextYears?.find((x) => x.value == 'TY20')?.text;
         } else {
           frmDateOld.setMonth(frmDateOld.getMonth() - 1);
           tDateOld.setMonth(tDateOld.getMonth() - 1);
-          type = this.language == 'vn' ? 'Tháng trước' : 'Last month';
+          type = this.vllTextYears?.find((x) => x.value == 'TY22')?.text;
         }
       } else if (monthFd == 1 && monthTd == 12) {
         frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
         tDateOld.setFullYear(tDateOld.getFullYear() - 1);
-        type = this.language == 'vn' ? 'Năm trước' : 'Last year';
+        type = this.vllTextYears?.find((x) => x.value == 'TY24')?.text;
       } else {
         let day = Math.floor(
           Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
