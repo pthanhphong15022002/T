@@ -27,9 +27,9 @@ import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/ca
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
-import { MultiSelectPopupComponent } from 'projects/codx-ac/src/lib/journals/components/multi-select-popup/multi-select-popup.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { ActivatedRoute } from '@angular/router';
+import { JournalsAddIdimcontrolComponent } from 'projects/codx-ac/src/lib/journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
 
 @Component({
   selector: 'lib-catagory',
@@ -44,7 +44,7 @@ export class CatagoryComponent implements OnInit {
     cpnApprovals: CodxApproveStepsComponent,
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
-    MultiSelectPopupComponent: MultiSelectPopupComponent,
+    idimControl:JournalsAddIdimcontrolComponent,
     PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
@@ -369,45 +369,76 @@ export class CatagoryComponent implements OnInit {
           );
           break;
         case 'multiselectpopupcomponent':
-          var dataValue = this.dataValue[item.transType];
+          let dataValue = this.dataValue['null'];
           if (dataValue) {
-            var dim = dataValue[value];
-            this.callfc
-              .openForm(
-                MultiSelectPopupComponent,
-                '',
-                400,
-                500,
-                '',
-                {
-                  selectedOptions: dim,
-                  showAll: true,
-                },
-                '',
-                dialogModel
-              )
-              .closed.subscribe(({ event }) => {
-                if (event == null) {
-                  return;
-                }
-
-                dataValue[value] = event;
-                var dt = this.settingValue.find(
-                  (x) =>
-                    x.category == this.category && x.transType == item.transType
-                );
+            let obj = {
+              lsselectidimcontrol: this.dataValue['null'][value] == '' ? [] :this.dataValue['null'][value].split(';'),
+              headerText : item.tilte,
+              showAll : true
+            };
+            let dialog = this.callfc.openForm(
+              JournalsAddIdimcontrolComponent,
+              '',
+              350,
+              500,
+              '',
+              obj,
+              '',
+              dialogModel
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event != null) {
+                dataValue[value] = res.event;
+                let dt = this.settingValue.find(x => x.category == this.category && x.transType == item.transType);
                 if (dt) {
                   dt.dataValue = JSON.stringify(dataValue);
                   this.api
                     .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
                     .subscribe((res) => {
-                      this.changeDetectorRef.detectChanges();
-                      console.log(res);
                     });
                 }
-                console.log(event);
-              });
+              }
+            });
           }
+          // var dataValue = this.dataValue[item.transType];
+          // if (dataValue) {
+          //   var dim = dataValue[value];
+          //   this.callfc
+          //     .openForm(
+          //       MultiSelectPopupComponent,
+          //       '',
+          //       400,
+          //       500,
+          //       '',
+          //       {
+          //         selectedOptions: dim,
+          //         showAll: true,
+          //       },
+          //       '',
+          //       dialogModel
+          //     )
+          //     .closed.subscribe(({ event }) => {
+          //       if (event == null) {
+          //         return;
+          //       }
+
+          //       dataValue[value] = event;
+          //       var dt = this.settingValue.find(
+          //         (x) =>
+          //           x.category == this.category && x.transType == item.transType
+          //       );
+          //       if (dt) {
+          //         dt.dataValue = JSON.stringify(dataValue);
+          //         this.api
+          //           .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+          //           .subscribe((res) => {
+          //             this.changeDetectorRef.detectChanges();
+          //             console.log(res);
+          //           });
+          //       }
+          //       console.log(event);
+          //     });
+          // }
 
           break;
         //crm
