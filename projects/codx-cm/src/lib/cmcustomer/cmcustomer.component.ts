@@ -719,7 +719,7 @@ export class CmCustomerComponent
                   JSON.stringify(this.dataSelected)
                 );
               // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-              this.view.dataService.update(this.dataSelected).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.notiService.notifyCode('SYS007');
               this.detectorRef.detectChanges();
             }
