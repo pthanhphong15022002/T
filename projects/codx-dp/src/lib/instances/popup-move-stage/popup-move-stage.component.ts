@@ -163,10 +163,7 @@ export class PopupMoveStageComponent implements OnInit {
     this.executeApiCalls();
   }
 
-  ngOnInit(): void {
-    // if (!this.isLoad) {
-    // }
-  }
+  ngOnInit(): void {}
   autoClickedSteps(listStep: any) {
     let idx = listStep.findIndex((x) => x.stepID === this.stepIdOld);
     if (idx > -1 && idx !== listStep.length - 1) {
@@ -262,20 +259,6 @@ export class PopupMoveStageComponent implements OnInit {
     });
   }
 
-  // getStepByStepIDAndInID(insID, stepID) {
-  //   this.codxDpService
-  //     .getStepByStepIDAndInID(insID, stepID)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.stepCurrent = res;
-  //         if (this.isStopData) {
-  //           var data = JSON.parse(JSON.stringify(res));
-  //           this.updateDataInstance(data);
-  //           this.isStopData = false;
-  //         }
-  //       }
-  //     });
-  // }
   selectOwnerNext() {
     let stepCurrent = this.listStepsCbx.filter(
       (x) => x.stepID == this.stepIdClick
@@ -591,10 +574,9 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   eventUser(e) {
-    if(e || e === null || e === '') {
+    if (e || e === null || e === '') {
       this.owner = e;
     }
-
   }
   removeItemSuccess(list) {
     let idx = list.findIndex((x) => x.isSuccessStep);
@@ -621,8 +603,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.listStepsCbx[indexClick].isFailStep
     ) {
       return false;
-    }
-    else if (space < 0) {
+    } else if (space < 0) {
       return false;
     }
     return true;

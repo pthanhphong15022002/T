@@ -934,8 +934,7 @@
                   [type]="'formDetail'"
                   [hidenMF]="
                     !dataSelected?.write ||
-                    dataSelected?.closed ||
-                    ['1', '0', '3', '5','15'].includes(dataSelected.status)
+                    dataSelected?.closed
                   "
                   (contactEvent)="contactChange($event)"
                   (lstContactEmit)="lstContactEmit($event)"
@@ -961,8 +960,7 @@
                   [dealID]="dataSelected.recID"
                   [hidenMF]="
                     !dataSelected?.write ||
-                    dataSelected.closed ||
-                    ['1', '0', '3', '5','15'].includes(dataSelected.status)
+                    dataSelected.closed
                   "
                 ></codx-tab-dealcompetitors>
               </div>
