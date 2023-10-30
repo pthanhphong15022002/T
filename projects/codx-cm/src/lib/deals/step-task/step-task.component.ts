@@ -224,9 +224,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addTask() {
-    this.indexAddTask = this.listInstanceStep.findIndex(
-      (step) => step.stepStatus == '1'
-    );
+    let index = this.listInstanceStep.findIndex((step) => step.stepStatus == '1');
+    this.indexAddTask = index >-1 ? index : 0;
     setTimeout(() => {
       this.indexAddTask = -1;
     }, 1000);

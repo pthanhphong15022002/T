@@ -379,8 +379,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     dataCopy['modifiedBy'] = null;
 
     let taskOutput = await this.openPopupTask('copy', dataCopy);
-    if (taskOutput?.event) {
-      let data = taskOutput?.event;
+    let data = taskOutput?.event?.task;
+    if (data) {
       this.copyData(data, this.activitie);
       let rolesTask = data?.roles;
       let roles: DP_Activities_Roles[] = [];
