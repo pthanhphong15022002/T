@@ -4068,7 +4068,18 @@ lib-deals div[data-field="customerID"] {
     
   }
 }
-  
+.card-img-30px img{
+  width: 30px;
+  height: auto;
+}
+.card-img-40px img{
+  width: 40px;
+  height: auto;
+}
+codx-report-view-detail{
+  overflow: hidden;
+}
+
 // .ws-body{ 
 //   codx-views > .container-fluid.p-0{
 //     height: calc(100vh - 109px)!important;

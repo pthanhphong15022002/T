@@ -133,9 +133,11 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
           .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', params.id)
           .subscribe((item) => {
             if (item) {
+              if(params?._fv) item = this.formatFristVersion(item)
               this.dataFile = item;
               this.data = item;
               this.getData();
+              this.changeDetectorRef.detectChanges();
             }
           });
       } else if (params) {
@@ -146,6 +148,24 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     //if(this.data)this.getData();
   }
 
+  //Lấy version đầu tiên
+  formatFristVersion(data) {
+    if (data.history && data.history.length > 0) {
+      var frist = data?.history.filter((x) => x.version == 'Ver 001');
+      if (frist && frist[0]) {
+        var f = frist[0];
+        data.extension = f.extension;
+        data.fileSize = f.fileSize;
+        data.thumbnail = f.thumbnail;
+        data.pathDisk = f.pathDisk;
+        data.uploadId = f.uploadId;
+        //elm.fileName = f.fileName;
+        data.fileName = f.fileName?.replace('(Ver 001)','');
+      }
+    }
+    return data;
+  }
+  
   setShare() {
     if (this.checkShareRight()) {
       var data = new DataItem();

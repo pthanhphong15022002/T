@@ -475,24 +475,37 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.dataSelected && !this.objectId)
-      this.objectId = this.dataSelected.recID;
+    debugger
+    if (this.dataSelected && !this.objectId) this.objectId = this.dataSelected.recID;
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
       this.dataRequest.pageLoading = this.pageLoading;
+      var listObjectID = this.objectId.split(";");
       if (!this.isReferType) {
         this.dataRequest.predicate =
           'ObjectID=@0 && ObjectType=@2 && IsDelete = false && (ReferType=@1';
         if (this.referType == 'source')
           this.dataRequest.predicate += ' || ReferType=null || ReferType=""';
         this.dataRequest.predicate += ')';
-      } else this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false';
-      this.dataRequest.dataValue = [
-        this.objectId,
+      } 
+      else {
+        this.dataRequest.predicate = "";
+        for(var i = 0 ; i < listObjectID.length ; i++)
+        {
+          
+          if(i==0) this.dataRequest.predicate += "( ObjectID=@" + i;
+          else this.dataRequest.predicate += "|| ObjectID=@" + i;
+          
+          if(i== (listObjectID.length - 1)) this.dataRequest.predicate += " )"
+        }
+        this.dataRequest.predicate += ' && IsDelete = false';
+      }
+      listObjectID = listObjectID.concat([
         this.referType,
         this.objectType,
-      ].join(';');
+      ]);
+      this.dataRequest.dataValue = listObjectID.join(';');
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
       this.fileService
@@ -500,7 +513,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .subscribe((res) => {
           if (res) {
             this.data = res[0];
-            if(this.isFristVer) this.data = this.formatFristVersion(this.data);
             this.fileGet.emit(this.data);
             this.changeDetectorRef.detectChanges();
           }
@@ -545,28 +557,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
     //Kiểm tra tenant đã có chưa
   }
-
-    //Lấy version đầu tiên
-    formatFristVersion(data)
-    {
-      data.forEach(elm => {
-        if(elm.history && elm.history.length>0)
-        {
-          var frist = elm?.history.filter(x=>x.version == "Ver 001");
-          if(frist && frist[0])
-          {
-            var f = frist[0];
-            elm.extension = f.extension;
-            elm.fileSize = f.fileSize;
-            elm.thumbnail = f.thumbnail;
-            elm.pathDisk = f.pathDisk;
-            elm.uploadId = f.uploadId;
-          }
-        }
-       
-      });
-      return data;
-    }
 
   onSelectionAddChanged($data, tree) {
     var id = $data.dataItem.recID;

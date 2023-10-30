@@ -170,6 +170,7 @@ export class DealsComponent
   statusDefault: string = '';
   statusCodecmt: string = '';
   queryParams: any;
+  gridDetailView = '2';
 
   constructor(
     private inject: Injector,
@@ -740,9 +741,9 @@ export class DealsComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
-
+    let temView = this.gridDetailView == "2" ? this.templateViewDetail : this.popDetail;
     this.popupViewDeal = this.callfc.openForm(
-      this.templateViewDetail,
+      temView,
       '',
       Util.getViewPort().width,
       Util.getViewPort().height,
@@ -751,16 +752,6 @@ export class DealsComponent
       '',
       option
     );
-    // let popup = this.callfc.openForm(
-    //   this.popDetail,
-    //   '',
-    //   Util.getViewPort().width,
-    //   Util.getViewPort().height,
-    //   '',
-    //   null,
-    //   '',
-    //   option
-    // );
     this.popupViewDeal.closed.subscribe((e) => {});
   }
 
@@ -1837,6 +1828,7 @@ export class DealsComponent
       if (dataParam1) {
         let paramDefault = JSON.parse(dataParam1.dataValue);
         this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.gridDetailView = paramDefault?.GridDetailView || '2';  
         this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
         if (this.currencyIDDefault != 'VND') {
           let day = new Date();

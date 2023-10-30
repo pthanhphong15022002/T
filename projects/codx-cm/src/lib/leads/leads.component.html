@@ -202,7 +202,6 @@
 
 <ng-template #templateViewDetail>
   <view-lead-detail
-  #detailViewLead
   [formModel]="view.formModel"
   [dataSelected]="dataSelected"
   [gridViewSetup]="gridViewSetup"
@@ -214,6 +213,7 @@
   [applyProcess]="checkApplyProcess(dataSelected)"
   (changeMF)="changeMF($event)"
   (clickMoreFunc)="clickMoreFunc($event)"
+  [dialog]="dialogViewLead"
 >
 </view-lead-detail>
 </ng-template>
