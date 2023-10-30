@@ -19,7 +19,7 @@ import {
 } from 'codx-core';
 import { JournalsAddComponent } from '../journals/journals-add/journals-add.component';
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
-import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { JournalService } from '../journals/journals.service';
 import { CodxAcService } from '../codx-ac.service';
@@ -38,23 +38,21 @@ export class JournalV2Component extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   subViews: Array<ViewModel> = [];
   viewActive: number = ViewType.smallcard;
-  functionName: string;
+  headerText: string;
+  funcName:any;
   vll86 = [];
   vll85 = [];
   func = [];
   vllJournalTypes064: any[] = [];
-
   journalTypes134: string[];
   journalTypes135: string[];
   journalTypes136: string[];
   journalTypes137: string[];
   journalTypes138: string[];
-
   randomSubject = new BehaviorSubject<number>(Math.random());
   nameByIdPipe = new NameByIdPipe();
   creaters: { journalNo: string; value: string }[];
   posters: { journalNo: string; value: string }[];
-
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
@@ -62,6 +60,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
     icon:'icon-i-journal-plus',
     id: 'btnAdd',
   };
+  optionSidebar: SidebarModel = new SidebarModel();
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
     private route: Router,
@@ -175,6 +175,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.acService.changeToolBar.next(this.view.funcID);
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) {
+        this.funcName = res.defaultName;
+      }
+    });
+
     this.views = [
       {
         type: ViewType.content,
@@ -200,18 +207,25 @@ export class JournalV2Component extends UIComponent implements OnInit {
       },
     ];
 
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      this.functionName = toCamelCase(res.defaultName);
-    });
+    //* thiết lập cấu hình sidebar
+    this.optionSidebar.DataService = this.view.dataService;
+    this.optionSidebar.FormModel = this.view.formModel;
+    this.optionSidebar.Width = '800px';
   }
 
   ngOnDestroy() {
     this.acService.changeToolBar.next(null);
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   //#region Init
 
-  //#region Events
+  //#region Event
   viewChanged(view) {
     if(view && view.type == this.viewActive) return;
     this.viewActive = view.type;
@@ -305,100 +319,162 @@ export class JournalV2Component extends UIComponent implements OnInit {
     });
   }
 
-  // onActions(e): void {
-  //   console.log('onActions', e);
+  toolbarClick(event) {
+    switch (event.id) {
+      case 'btnAdd':
+        this.addNewJournal(event);
+        break;
+    }
+  }
+  //#endregion Event
 
-  //   if (e.type === 'edit') {
-  //     this.dbClick(e.data);
-  //   }
-  // }
-  //#region Events
+  //#region Function
+
+  addNewJournal(e) {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.view.dataService
+      .addNew((o) => this.setDefault())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res != null) {
+          res.isAdd = true;
+          let data = {
+            headerText: this.headerText,
+            oData:{...res}
+          };
+          let dialog = this.callfc.openSide(
+            JournalsAddComponent,
+            data,
+            this.optionSidebar,
+            this.view.funcID
+          );
+        }
+      });
+    // this.view.dataService
+    //   .addNew(() =>
+    //     this.api.exec(
+    //       'AC',
+    //       'JournalsBusiness',
+    //       'SetDefaultAsync',
+    //       this.mainFilterValue == '3'
+    //     )
+    //   )
+    //   .subscribe(() => {
+    //     const options = new SidebarModel();
+    //     options.Width = '800px';
+    //     options.DataService = this.view.dataService;
+    //     options.FormModel = this.view.formModel;
+
+    //     this.callfc.openSide(
+    //       JournalsAddComponent,
+    //       {
+    //         formType: 'add',
+    //         formTitle: `${e.text} ${this.functionName}`,
+    //       },
+    //       options,
+    //       this.view.funcID
+    //     );
+    //   });
+  }
+
+  //#endregion Function
+
 
   //#region Method
-  add(e): void {
-    this.view.dataService
-      .addNew(() =>
-        this.api.exec(
-          'AC',
-          'JournalsBusiness',
-          'SetDefaultAsync',
-          this.mainFilterValue == '3'
-        )
-      )
-      .subscribe(() => {
-        const options = new SidebarModel();
-        options.Width = '800px';
-        options.DataService = this.view.dataService;
-        options.FormModel = this.view.formModel;
+  
 
-        this.callfc.openSide(
+  edit(e, dataEdit): void {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText,
+          oData:{...res}
+        };
+        let dialog = this.callfc.openSide(
           JournalsAddComponent,
-          {
-            formType: 'add',
-            formTitle: `${e.text} ${this.functionName}`,
-          },
-          options,
+          data,
+          this.optionSidebar,
           this.view.funcID
         );
       });
+    // console.log('edit', { data });
+
+    // let tempData = { ...data };
+    // // if (data.extras) {
+    // //   tempData = { ...data, ...JSON.parse(data.extras) };
+    // // }
+
+    // this.view.dataService.dataSelected = tempData;
+    // this.view.dataService.edit(tempData).subscribe(() => {
+    //   const options = new SidebarModel();
+    //   options.Width = '800px';
+    //   options.DataService = this.view.dataService;
+    //   options.FormModel = this.view.formModel;
+
+    //   this.callfc
+    //     .openSide(
+    //       JournalsAddComponent,
+    //       {
+    //         formType: 'edit',
+    //         formTitle: `${e.text} ${this.functionName}`,
+    //       },
+    //       options,
+    //       this.view.funcID
+    //     )
+    //     .closed.subscribe(() => {
+    //       this.randomSubject.next(Math.random()); // ❌ bùa refresh
+    //     });
+    // });
   }
 
-  edit(e, data: IJournal): void {
-    console.log('edit', { data });
+  copy(e, dataCopy): void {
+    this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
+    this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        if (res) {
+          res.isCopy = true;
+          let data = {
+            headerText: this.headerText,
+            oData:{...res}
+          };
+          let dialog = this.callfc.openSide(
+            JournalsAddComponent,
+            data,
+            this.optionSidebar
+          );
+        }
+      });
+    // console.log('copy', data);
 
-    let tempData = { ...data };
+    // let tempData = { ...data };
     // if (data.extras) {
     //   tempData = { ...data, ...JSON.parse(data.extras) };
     // }
 
-    this.view.dataService.dataSelected = tempData;
-    this.view.dataService.edit(tempData).subscribe(() => {
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
+    // this.view.dataService.dataSelected = tempData;
+    // this.view.dataService.copy().subscribe(() => {
+    //   const options = new SidebarModel();
+    //   options.Width = '800px';
+    //   options.DataService = this.view.dataService;
+    //   options.FormModel = this.view.formModel;
 
-      this.callfc
-        .openSide(
-          JournalsAddComponent,
-          {
-            formType: 'edit',
-            formTitle: `${e.text} ${this.functionName}`,
-          },
-          options,
-          this.view.funcID
-        )
-        .closed.subscribe(() => {
-          this.randomSubject.next(Math.random()); // ❌ bùa refresh
-        });
-    });
-  }
-
-  copy(e, data: IJournal): void {
-    console.log('copy', data);
-
-    let tempData = { ...data };
-    if (data.extras) {
-      tempData = { ...data, ...JSON.parse(data.extras) };
-    }
-
-    this.view.dataService.dataSelected = tempData;
-    this.view.dataService.copy().subscribe(() => {
-      const options = new SidebarModel();
-      options.Width = '800px';
-      options.DataService = this.view.dataService;
-      options.FormModel = this.view.formModel;
-
-      this.callfc.openSide(
-        JournalsAddComponent,
-        {
-          formType: 'add',
-          formTitle: `${e.text} ${this.functionName}`,
-        },
-        options,
-        this.view.funcID
-      );
-    });
+    //   this.callfc.openSide(
+    //     JournalsAddComponent,
+    //     {
+    //       formType: 'add',
+    //       formTitle: `${e.text} ${this.functionName}`,
+    //     },
+    //     options,
+    //     this.view.funcID
+    //   );
+    // });
   }
 
   delete(data): void {
@@ -421,7 +497,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //#region Method
 
   //#region Function
-  /** vll with pipe(map((d) => d.datas.map((v) => v.value))) */
+
+  setDefault() {
+    return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
+      this.mainFilterValue,
+    ]);
+  }
+
   assignVllToProp2(vllCode: string, propName: string): void {
     this.cache
       .valueList(vllCode)
