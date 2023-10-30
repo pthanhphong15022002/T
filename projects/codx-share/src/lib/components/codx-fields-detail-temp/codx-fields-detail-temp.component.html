@@ -112,7 +112,8 @@
       [ngClass]="showColumnControl == 1 ? 'min-w-150px' : ''"
     >
       <span class="text-gray-600">{{ data.title }}</span>
-      <span *ngIf="data.isRequired">
+      <!-- //sale bảo tắt -->
+      <!-- <span *ngIf="data.isRequired">
         <codx-label
           class="text-danger"
           name="attentionIsRequired"
@@ -121,7 +122,7 @@
           default="*"
         >
         </codx-label>
-      </span>
+      </span> -->
       <span>
         <codx-label
           class="text-gray-600"

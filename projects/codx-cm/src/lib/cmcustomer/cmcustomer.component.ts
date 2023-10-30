@@ -340,7 +340,7 @@ export class CmCustomerComponent
         this.popupPermissions(data);
         break;
       case 'CM0101_7':
-        //this.convertCustomerToDeals(data);
+        this.convertCustomerToDeals(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -548,9 +548,11 @@ export class CmCustomerComponent
               let lstAddress = e.event[2] ?? [];
               data.modifiedOn = new Date();
               this.dataSelected = JSON.parse(JSON.stringify(data));
-              this.customerDetail.getOneCustomerDetail(this.dataSelected);
-              this.customerDetail.onChangeContact(lstContact);
-              this.customerDetail.onChangeAddress(lstAddress);
+              if (this.customerDetail) {
+                this.customerDetail.getOneCustomerDetail(this.dataSelected);
+                this.customerDetail.onChangeContact(lstContact);
+                this.customerDetail.onChangeAddress(lstAddress);
+              }
               this.view.dataService.update(data).subscribe();
               this.detectorRef.detectChanges();
             }
@@ -712,11 +714,12 @@ export class CmCustomerComponent
           this.cmSv.setIsBlackList(data.recID, isBlacklist).subscribe((res) => {
             if (res) {
               this.dataSelected.isBlackList = isBlacklist;
-              this.customerDetail.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
+              if (this.customerDetail)
+                this.customerDetail.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
               // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-              this.view.dataService.update(this.dataSelected).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.notiService.notifyCode('SYS007');
               this.detectorRef.detectChanges();
             }
@@ -1005,29 +1008,29 @@ export class CmCustomerComponent
     // deal.channelID = data.channelID;
     // deal.shortName = data.shortName;
 
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      let formModel = new FormModel();
-      // hard code
-      formModel.funcID = 'CM0201';
-      formModel.formName = 'CMDeals';
-      formModel.entityName = 'CM_Deals';
-      formModel.gridViewName = 'grvCMDeals';
-      option.FormModel = formModel;
-      option.Width = '800px';
-      option.zIndex = 1001;
-      this.cache
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let formModel = new FormModel();
+    // hard code
+    formModel.funcID = 'CM0201';
+    formModel.formName = 'CMDeals';
+    formModel.entityName = 'CM_Deals';
+    formModel.gridViewName = 'grvCMDeals';
+    option.FormModel = formModel;
+    option.Width = '800px';
+    option.zIndex = 1001;
+    this.cache
       .gridViewSetup(formModel.formName, formModel.gridViewName)
       .subscribe((res) => {
         if (res) {
           let customerView = {
-            customerID:data.recID,
-            dealName:data.customerName,
-            industries:data.industries,
-            channelID:data.channelID,
-            shortName:data.shortName,
-            category:data.category
+            customerID: data.recID,
+            dealName: data.customerName,
+            industries: data.industries,
+            channelID: data.channelID,
+            shortName: data.shortName,
+            category: data.category,
           };
           let obj = {
             action: 'add',
@@ -1036,11 +1039,11 @@ export class CmCustomerComponent
             processID: null,
             gridViewSetup: res,
             isviewCustomer: true,
-            customerView:customerView,
-       //     functionModule: this.functionModule,
+            customerView: customerView,
+            //     functionModule: this.functionModule,
             // currencyIDDefault: this.currencyIDDefault,
             // exchangeRateDefault: this.exchangeRateDefault,
-            categoryCustomer:  data?.categoryCustomer,
+            categoryCustomer: data?.categoryCustomer,
           };
           let dialogCustomDeal = this.callfc.openSide(
             PopupAddDealComponent,
@@ -1049,7 +1052,8 @@ export class CmCustomerComponent
           );
           dialogCustomDeal.closed.subscribe((e) => {
             if (e && e.event != null) {
-              this.view.dataService.update(e.event).subscribe();
+              this.notiService.notifyCode('SYS007');
+          //    this.view.dataService.update(e.event).subscribe();
               //   this.detailViewDeal.promiseAllAsync();
               this.detectorRef.detectChanges();
             }

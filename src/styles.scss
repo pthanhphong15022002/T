@@ -3288,7 +3288,7 @@ codx-toolbar-report{
   }
   .h-375px{
     //height: 275px!important;
-    height: 235px!important;
+    height: 230px!important;
   }
 }
 
@@ -4078,6 +4078,11 @@ lib-deals div[data-field="customerID"] {
 }
 codx-report-view-detail{
   overflow: hidden;
+}
+.btn.btn-icon.btn-xs {
+  height: 18px !important;
+  width: 18px !important;
+  min-width: 18px;
 }
 
 // .ws-body{ 
