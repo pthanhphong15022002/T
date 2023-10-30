@@ -35,6 +35,7 @@ export class CodxListContactsComponent implements OnInit {
   @Input() objectName: any;
   @Input() objectType: any;
   @Input() hidenMF = true;
+  @Input() hidenMFAdd = false;
   @Input() type = '';
   @Input() isConvertLeadToCus = false;
   @Input() selectAll: boolean = false;
@@ -42,7 +43,6 @@ export class CodxListContactsComponent implements OnInit {
   @Input() lstContactRef = [];
   @Input() customerID: any;
   @Input() isRole = true;
-
   @Output() lstContactEmit = new EventEmitter<any>();
   @Output() lstContactDeleteEmit = new EventEmitter<any>();
   @Output() objectConvert = new EventEmitter<any>();

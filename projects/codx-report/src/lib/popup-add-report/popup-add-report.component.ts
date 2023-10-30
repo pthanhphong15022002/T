@@ -499,7 +499,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
           this.data.recID,
           null,
           null,
-          this.dialog.formModel?.entityName,
+          this.data.entityName//this.dialog.formModel?.entityName,
         ],
         null
       )

@@ -23,7 +23,7 @@
     [panels]="panels1"
     [datas]="datas1"
     [isEditMode]="isEditMode"
-    [cellSpacing]="[20, 20]"
+    [cellSpacing]="[10, 10]"
     (background)="getBackground($event)"
   ></codx-dashboard>
 </ng-template>
@@ -78,6 +78,10 @@
           [enableAnimation]="{
             enable: true
           }"
+          [centerLabel]="{
+            text:
+            sumByProp(statByType,'quantity') + '<br>files'
+          }"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -87,6 +91,7 @@
               innerRadius="70%"
               [border]="{ width: 3 }"
               [palettes]="palettes"
+              [dataLabel]="dataLabel"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -105,6 +110,10 @@
           [enableAnimation]="{
             enable: true
           }"
+          [centerLabel]="{
+            text:
+            sumByProp(statByModule,'quantity') + '<br>files'
+          }"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
@@ -114,6 +123,7 @@
               innerRadius="70%"
               [border]="{ width: 3 }"
               [palettes]="palettes"
+              [dataLabel]="dataLabel2"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
@@ -136,19 +146,19 @@
                     <img
                       [src]="getThumbnail(item)"
                       class="me-2"
-                      style="width: 30px; height: 30px"
+                      style="width: 25px; height: 25px"
                     />
                     <div>
-                      <h5 class="card-title">{{ item.extension }}</h5>
-                      <h6 class="card-subtitle mb-2 text-muted">
+                      <div class="fw-bold" style="font-size:16px">{{ item.extension }}</div>
+                      <div class="card-subtitle text-muted">
                         {{ item.quantity }} files
-                      </h6>
+                      </div>
                     </div>
                   </div>
                   <div class="d-flex align-items-center">
-                    <h5 class="fw-bold">
+                    <div class="fw-bold">
                       {{ item.totalFileSize | filesize }}
-                    </h5>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -321,8 +331,9 @@
       id="chart-container"
       [primaryXAxis]="primaryXAxis"
       [legendSettings]="{ visible: true }"
-      [primaryYAxis]="{majorGridLines:{width:0}}"
+      [primaryYAxis]="primaryYAxis"
       [palettes]="palettes"
+      [chartArea]="{border: { width:0}}"
     >
       <e-series-collection>
         <e-series
@@ -428,11 +439,11 @@
                   >
                   </codx-thumbnail>
                   <div>
-                    <h6 class="card-subtitle mb-2 text-muted">
+                    <div class="card-subtitle mb-2 text-muted">
                       {{ item.extension }} |
                       {{ item.createdOn | fmDT : "dmy" }} |
                       {{ item.createdBy }}
-                    </h6>
+                    </div>
                   </div>
                 </div>
                 <div class="d-flex">

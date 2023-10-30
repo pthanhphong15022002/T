@@ -554,11 +554,34 @@
   </codx-deal-detail>
 </ng-template>
 
+<ng-template #templateViewDetail>
+  <view-deal-detail
+    #detailViewDeal
+    [formModel]="view.formModel"
+    [dataSelected]="dataSelected"
+    [gridViewSetup]="gridViewSetup"
+    [funcID]="funcID"
+    [listSteps]="listSteps"
+    [valueListStatusCode]="valueListStatusCode"
+    [colorReasonSuccess]="colorReasonSuccess"
+    [colorReasonFail]="colorReasonFail"
+    (changeMF)="changeMF($event)"
+    (clickMoreFunc)="clickMoreFunc($event)"
+    [checkMoreReason]="checkMoreReason(dataSelected)"
+    (changeProgress)="autoStart($event)"
+    [isChangeOwner]="isChangeOwner"
+    [dialog]="popupViewDeal"
+  >
+  </view-deal-detail>
+</ng-template>
+
 <!-- View chi tiet kanban -->
 <ng-template #popDetail let-popup>
   <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>
-
+<ng-template #popViewDetail let-popup>
+  <codx-form [body]="templateViewDetail" [dialog]="popup"> </codx-form>
+</ng-template>
 <!-- toolip dealName -->
 
 <!--Confirm or Refuse-->

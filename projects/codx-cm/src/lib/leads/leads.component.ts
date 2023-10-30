@@ -70,11 +70,13 @@ export class LeadsComponent
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('templateViewDetail') tempViewLeadDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
   @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   dialogQuestionCopy: DialogRef;
+  dialogViewLead: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
@@ -144,6 +146,8 @@ export class LeadsComponent
   isLoading = false;
   hideMoreFC = false;
   applyProcess: boolean = true;
+  gridDetailView = '2';
+
 
   readonly applyForLead: string = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
@@ -187,7 +191,7 @@ export class LeadsComponent
 
   async ngAfterViewInit() {
     this.loadViewModel();
-    var param = await firstValueFrom(
+    let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
     let lever = 0;
@@ -1543,12 +1547,13 @@ export class LeadsComponent
 
   viewDetail(data) {
     this.dataSelected = data;
+    let temView = this.gridDetailView == "2" ?this.tempViewLeadDetail:this.popDetail;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
 
-    let popup = this.callfc.openForm(
-      this.popDetail,
+    this.dialogViewLead = this.callfc.openForm(
+      temView,
       '',
       0,
       0,
@@ -1557,8 +1562,9 @@ export class LeadsComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {});
+    this.dialogViewLead.closed.subscribe((e) => {});
   }
+
   checkApplyProcess(data) {
     return data?.applyProcess;
   }
@@ -1814,6 +1820,12 @@ export class LeadsComponent
 
   loadParam() {
     //approver
+    this.codxCmService.getParam('CMParameters', '1').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        this.gridDetailView = dataValue?.GridDetailView || '2';        
+      }
+    });
     this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
       if (res) {
         let dataValue = JSON.parse(res.dataValue);

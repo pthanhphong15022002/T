@@ -34,7 +34,6 @@
         class="d-flex align-items-center me-3 cursor-pointer"
         ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
         placement="top"
-        *ngIf="dataCM?.status == '2' && dataCM?.full"
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
@@ -57,7 +56,7 @@
       </div>
     </div>
   </header>
-  <main class="main-step" [ngStyle]="{ height: taskHeight }">
+  <main class="main-step" [ngStyle]="{ height: taskHeight }" [ngClass]="isHeightAuto ? 'overflow-hidden': ''">
     <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
@@ -133,7 +132,7 @@
     >
       <codx-step-task
         *ngIf="!step?.isSuccessStep && !step?.isFailStep"
-        [dataSources]="step"
+        [instanceStep]="step"
         [isShowBtnAddTask]="false"
         [isShowMore]="true"
         [isDeepCopy]="false"

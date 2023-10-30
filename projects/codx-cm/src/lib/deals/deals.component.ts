@@ -63,6 +63,8 @@ export class DealsComponent
   @ViewChild('cardTitleTmp') cardTitleTmp!: TemplateRef<any>;
   @ViewChild('footerKanban') footerKanban!: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
+  @ViewChild('popViewDetail') popViewDetail: TemplateRef<any>;
+  @ViewChild('templateViewDetail') templateViewDetail: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
 
   @ViewChild('detailViewDeal') detailViewDeal: DealDetailComponent;
@@ -106,6 +108,7 @@ export class DealsComponent
   idField = 'recID';
   predicate = '';
   dataValue = '';
+  popupViewDeal: DialogRef;
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -167,6 +170,7 @@ export class DealsComponent
   statusDefault: string = '';
   statusCodecmt: string = '';
   queryParams: any;
+  gridDetailView = '2';
 
   constructor(
     private inject: Injector,
@@ -194,13 +198,14 @@ export class DealsComponent
     });
 
     this.getColorReason();
-    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    if (this.processID) this.dataObj = { processID: this.processID };
+    // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
+    // if (this.processID) this.dataObj = { processID: this.processID };
+
     this.getListStatusCode();
-    this.codxCmService.getProcessDefault('1').subscribe((res) => {
+    this.codxCmService.getRecIDProcessDefault('1').subscribe((res) => {
       if (res) {
-        this.processIDDefault = res.recID;
-        this.processIDKanban = res.recID;
+        this.processIDDefault = res;
+        this.processIDKanban = res;
       }
     });
 
@@ -303,17 +308,19 @@ export class DealsComponent
   }
 
   changeView(e) {
-    this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.viewCrr = e?.view?.type;
     //xu ly view fitter
     this.changeFilter();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.viewCrr = e?.view?.type;
+
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    if (this.processID) this.dataObj = { processID: this.processID };
-    else if (this.processIDKanban)
+    if (this.processID) {
+      this.dataObj = { processID: this.processID };
+    } else if (this.processIDKanban)
       this.dataObj = { processID: this.processIDKanban };
 
     if (this.funCrr != this.funcID) {
@@ -404,15 +411,19 @@ export class DealsComponent
           : true;
     };
     let isOwner = (eventItem, data) => {
-      eventItem.disabled = data.full
-        ? !['1', '2', '15'].includes(data.status) ||
-          data.closed ||
-          ['1', '0'].includes(data.status)
-        : true;
+      eventItem.disabled =
+        data.full || data?.alloweStatus == '1'
+          ? !['1', '2', '15'].includes(data.status) ||
+            data.closed ||
+            ['1', '0'].includes(data.status)
+          : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
-      eventItem.disabled = data.full ? !['0'].includes(data.status) : true;
+      eventItem.disabled =
+        data.full || data?.alloweStatus == '1'
+          ? !['0'].includes(data.status)
+          : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -506,8 +517,8 @@ export class DealsComponent
     this.gridViewSetup = await firstValueFrom(
       this.cache.gridViewSetup(formName, gridViewName)
     );
-    this.vllStatus = this.gridViewSetup['Status'].referedValue;
-    this.vllApprove = this.gridViewSetup['ApproveStatus'].referedValue;
+    this.vllStatus = this.gridViewSetup?.Status?.referedValue;
+    this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
     //lay grid view - view gird he thong
     // let arrField = Object.values(this.gridViewSetup).filter(
     //   (x: any) => x.isVisible
@@ -650,7 +661,7 @@ export class DealsComponent
     //   this.notificationsService.notifyCode('SYS032');
     //   return;
     // }
-    if (data?.alloweStatus != '1' || !data?.full) {
+    if (data?.alloweStatus != '1') {
       this.notificationsService.notifyCode('CM027');
       return;
     }
@@ -734,9 +745,10 @@ export class DealsComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
-
-    let popup = this.callfc.openForm(
-      this.popDetail,
+    let temView =
+      this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
+    this.popupViewDeal = this.callfc.openForm(
+      temView,
       '',
       Util.getViewPort().width,
       Util.getViewPort().height,
@@ -745,7 +757,7 @@ export class DealsComponent
       '',
       option
     );
-    popup.closed.subscribe((e) => {});
+    this.popupViewDeal.closed.subscribe((e) => {});
   }
 
   //end Kanaban
@@ -798,7 +810,8 @@ export class DealsComponent
             if (e && e.event != null) {
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
-              this.detailViewDeal.reloadListStep(listSteps);
+
+              this.detailViewDeal?.reloadListStep(listSteps);
               let index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -806,16 +819,16 @@ export class DealsComponent
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              let nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
-              }
+              // let nextStep = '';
+              // if (
+              //   index != -1 &&
+              //   !listSteps[index]?.isSuccessStep &&
+              //   !listSteps[index]?.isFailStep
+              // ) {
+              //   if (index != e.event.listStep.length) {
+              //     nextStep = listSteps[index]?.stepID;
+              //   }
+              // }
               let dataUpdate = [
                 data.recID,
                 instance.stepID,
@@ -827,14 +840,14 @@ export class DealsComponent
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
-                  data = res;
-                  this.view.dataService.update(data).subscribe();
-                  this.detailViewDeal.dataSelected = data;
+                  this.view.dataService.update(res).subscribe();
+                  if (this.kanban) this.kanban.updateCard(res);
+                  if (this.detailViewDeal)
+                    this.detailViewDeal.dataSelected = res;
                   if (e.event.isReason != null) {
-                    this.moveReason(data, e.event.isReason);
+                    this.moveReason(res, e.event.isReason);
                   }
-                  if (this.kanban)
-                    this.kanban.updateCard(this.detailViewDeal.dataSelected);
+
                   this.detectorRef.detectChanges();
                 }
               });
@@ -918,10 +931,11 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event).subscribe();
-        this.detailViewDeal.dataSelected = JSON.parse(
-          JSON.stringify(this.dataSelected)
-        );
-        //   this.detailViewDeal.getListContactByDealID(this.dataSelected.recID);
+        if (this.detailViewDeal)
+          this.detailViewDeal.dataSelected = JSON.parse(
+            JSON.stringify(this.dataSelected)
+          );
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -962,7 +976,7 @@ export class DealsComponent
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
         var listSteps = e.event?.listStep;
-        this.detailViewDeal.reloadListStep(listSteps);
+        this.detailViewDeal?.reloadListStep(listSteps);
         data = this.updateReasonDeal(e.event?.instance, data);
         var datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
@@ -1022,10 +1036,11 @@ export class DealsComponent
             if (res) {
               this.dataSelected = res;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-              this.detailViewDeal.reloadListStep(resDP[1]);
-              this.notificationsService.notifyCode('SYS007');
               this.view.dataService.update(this.dataSelected).subscribe();
               if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              if (this.detailViewDeal)
+                this.detailViewDeal.reloadListStep(resDP[1]);
+              this.notificationsService.notifyCode('SYS007');
             }
             this.detectorRef.detectChanges();
           });
@@ -1070,9 +1085,10 @@ export class DealsComponent
     );
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
-        this.dataSelected = e?.event
+        this.dataSelected = e?.event;
         this.view.dataService.update(e?.event).subscribe();
-        this.detailViewDeal.promiseAllAsync();
+
+        this.detailViewDeal?.promiseAllAsync();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
@@ -1170,6 +1186,7 @@ export class DealsComponent
       .subscribe((res) => {
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
+        this.funcID;
         option.FormModel = this.view.formModel;
         option.Width = '800px';
         option.zIndex = 1001;
@@ -1202,12 +1219,14 @@ export class DealsComponent
               this.renderTotal(dt.stepID, 'add', money);
               this.kanban.refresh();
             }
+            if (this.detailViewDeal) {
+              this.detailViewDeal.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewDeal?.promiseAllAsync();
+            }
 
-            this.detailViewDeal.dataSelected = JSON.parse(
-              JSON.stringify(this.dataSelected)
-            );
             this.isChangeOwner = ownerIdOld != e.event.owner;
-            this.detailViewDeal.promiseAllAsync();
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -1288,11 +1307,14 @@ export class DealsComponent
 
   autoMoveStage($event) {
     if ($event && $event != null) {
-      this.detailViewDeal.promiseAllAsync();
       this.view.dataService.update($event).subscribe();
-      this.detailViewDeal.dataSelected = JSON.parse(
-        JSON.stringify(this.dataSelected)
-      );
+      if (this.detailViewDeal) {
+        this.detailViewDeal.promiseAllAsync();
+        this.detailViewDeal.dataSelected = JSON.parse(
+          JSON.stringify(this.dataSelected)
+        );
+      }
+
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -1511,7 +1533,7 @@ export class DealsComponent
     }
     // load kanban
     if (this.viewCrr == 6 && this.processIDKanban != this.crrProcessID) {
-      this.processIDKanban == this.crrProcessID;
+      this.crrProcessID == this.processIDKanban;
       this.dataObj = { processID: this.processIDKanban };
       this.view.views.forEach((x) => {
         if (x.type == 6) {
@@ -1555,11 +1577,19 @@ export class DealsComponent
   onLoading(e) {
     //reload filter
     this.loadViewModel();
+    this.loadDefaultSetting();
+  }
+
+  loadDefaultSetting() {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
-    if (this.processID) this.dataObj = { processID: this.processID };
-    else if (this.processIDKanban)
-      this.dataObj = { processID: this.processIDKanban };
+    if (this.processID) this.processIDKanban = this.processID;
+
+    this.dataObj = { processID: this.processIDKanban };
+
+    this.crrProcessID = this.processIDKanban;
+
     this.cache.viewSettings(this.funcID).subscribe((views) => {
       if (views) {
         this.afterLoad();
@@ -1624,11 +1654,13 @@ export class DealsComponent
                 if (res) {
                   this.dataSelected.status = '1';
                   this.dataSelected.nodifiedBy = new Date();
-                  this.detailViewDeal.dataSelected = JSON.parse(
-                    JSON.stringify(this.dataSelected)
-                  );
+
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.notificationsService.notifyCode('SYS007');
+                  if (this.detailViewDeal)
+                    this.detailViewDeal.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1812,6 +1844,7 @@ export class DealsComponent
       if (dataParam1) {
         let paramDefault = JSON.parse(dataParam1.dataValue);
         this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.gridDetailView = paramDefault?.GridDetailView || '2';
         this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
         if (this.currencyIDDefault != 'VND') {
           let day = new Date();
@@ -1914,34 +1947,7 @@ export class DealsComponent
       }
     });
   }
-  // valueChangeStatusCode($event) {
-  //   if ($event) {
-  //     this.statusDefault = $event;
-  //   } else {
-  //     this.statusDefault = null;
-  //   }
-  // }
-  // valueChange($event) {
-  //   if ($event) {
-  //     this.statusCodecmt = $event.data.trim();
-  //   } else {
-  //     this.statusCodecmt = null;
-  //   }
-  // }
-  // saveStatus() {
-  //   var datas = [this.dataSelected.recID, this.statusDefault, this.statusCodecmt];
-  //   this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
-  //     if (res) {
-  //       this.dialogQuestionForm.close();
-  //       this.dataSelected.statusCodeID = this.statusDefault;
-  //       this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-  //       this.view.dataService.dataSelected = this.dataSelected;
-  //       this.view.dataService.update(this.dataSelected).subscribe();
-  //       this.detectorRef.detectChanges();
-  //       this.notificationsService.notifyCode('SYS007');
-  //     }
-  //   });
-  // }
+
   getStatusCode(status) {
     if (status) {
       let result = this.valueListStatusCode.filter(
