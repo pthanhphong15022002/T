@@ -49,6 +49,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
   @Input() dataSelected: any;
+  @Input() isFirstVer=false;
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess

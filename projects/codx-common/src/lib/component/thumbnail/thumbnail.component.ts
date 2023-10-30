@@ -113,7 +113,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
       });
     }
     //Lấy version đầu tiên
-    else if (this.isFristVer) this.formatFristVersion(this.files);
+    else if (this.isFristVer) this.files = this.formatFristVersion(this.files);
     this.userID = this.authStore.get().userID;
   }
 
@@ -131,9 +131,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
           elm.thumbnail = f.thumbnail;
           elm.pathDisk = f.pathDisk;
           elm.uploadId = f.uploadId;
+          //elm.fileName = f.fileName;
+          elm.fileName = f.fileName?.replace('(Ver 001)','');
         }
       }
     });
+    this.changeDetectorRef.detectChanges();
     return data;
   }
 
@@ -257,6 +260,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   async download(file: any): Promise<void> {
     this.fileService.getFile(file.recID).subscribe(async (item) => {
       if (item && item.download) {
+        if(this.isFristVer) item = this.formatFristVersion([item])?.pop();
         //window.location.href = environment.urlUpload + '/' + item?.pathDisk+"?download=1";
         let blob = await fetch(
           environment.urlUpload + '/' + item.pathDisk
@@ -277,6 +281,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     if (this.isOpenFile) return;
     this.fileService.getFile(file.recID, true, true).subscribe((item) => {
       if (item && item.read) {
+        if(this.isFristVer) item = this.formatFristVersion([item])?.pop();
         this.cache
           .moreFunction('FileInfo', 'grvFileInfo')
           .subscribe((item2) => {
@@ -286,6 +291,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                 if (c[0].displayMode == '2') {
                   const queryParams = {
                     id: file.recID,
+                    _fv:this.isFristVer
                   };
                   var l = this.router.url.split('/');
                   const url = this.router.serializeUrl(

@@ -199,10 +199,10 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         this.dataReferences = [];
         if (res) {
           this.itemDetail = res;
-          this.isFristVer = this.itemDetail?.approveStatus =='5'? true :false;
-          if(this.runMode!=1){
+          this.isFristVer = this.itemDetail?.approveStatus =='5'? false :true;
+          if(this.runMode!= '1' && this.data?.unbounds){
             this.itemDetail.unbounds=this.data?.unbounds;
-            this.isFristVer = this.itemDetail?.unbounds?.statusApproval =='5'? true : false;
+            //this.isFristVer = this.itemDetail?.unbounds?.statusApproval =='5'? false : true;
           }
           this.files = [];
           this.df.detectChanges();

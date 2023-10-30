@@ -170,25 +170,19 @@
         </div>
       </div>
 
-      <span class=" flex-nowrap">
-        <span class="symbol-group-badge pe-2" *ngIf="resources != null && resources?.length >= 1">
-          <span class="symbol symbol-30px symbol-circle position-relative">
-            <codx-img [width]="30" [objectId]="resources[0]?.userID" objectType="AD_Users"></codx-img>
-            <span class="position-absolute attendees-tag"
-              [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[0]?.icon"></span>
+      <span class=" flex-nowrap d-flex flex-row" >
+        <div class="flex-nowrap " *ngFor="let item of resources;let i=index">
+          <span class="symbol-group-badge pe-2" *ngIf="i <= 7">
+            <span class="symbol symbol-30px symbol-circle position-relative">
+              <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users"></codx-img>
+              <span class="position-absolute attendees-tag"
+                [inlineSVG]="'./assets/themes/ep/default/img/'+item?.icon"></span>
+            </span>
           </span>
-        </span>
-        <span class="symbol-group-badge pe-2" *ngIf="resources?.length >= 2">
-          <span class="symbol symbol-30px symbol-circle position-relative">
-            <codx-img [width]="30" [objectId]="resources[1]?.userID" objectType="AD_Users"></codx-img>
-            <span class="position-absolute attendees-tag"
-              [inlineSVG]="'./assets/themes/ep/default/img/'+ resources[1]?.icon"></span>
-          </span>
-        </span>
-
-        <span class="symbol-group-badge pe-2" *ngIf="resources.length > 2">
-          <span class="symbol symbol-30px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ resources.length - 2 }}</span>
+        </div>
+        <span class="symbol-group-badge pe-2" *ngIf="resources?.length > 8">
+          <span class="symbol symbol-30px symbol-circle" >
+            <span class="symbol-label bg-light-primary text-primary fs-8 fw-bolder">+{{ resources?.length - 8 }}</span>
           </span>
         </span>
       </span>
