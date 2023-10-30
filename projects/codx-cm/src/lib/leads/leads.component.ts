@@ -191,7 +191,7 @@ export class LeadsComponent
 
   async ngAfterViewInit() {
     this.loadViewModel();
-    var param = await firstValueFrom(
+    let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
     let lever = 0;
@@ -1564,7 +1564,7 @@ export class LeadsComponent
     );
     this.dialogViewLead.closed.subscribe((e) => {});
   }
-  
+
   checkApplyProcess(data) {
     return data?.applyProcess;
   }

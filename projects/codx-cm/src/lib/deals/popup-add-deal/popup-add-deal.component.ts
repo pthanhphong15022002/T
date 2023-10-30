@@ -205,7 +205,7 @@ export class PopupAddDealComponent
         this.deal.currencyID = dt?.data?.currencyIDDefault;
       }
     }
-  //  this.isviewCustomer && this.copyDataCustomer(this.deal,this.customerView);
+    this.isviewCustomer && this.copyDataCustomer(this.deal,this.customerView);
     if (dt?.data.processID) {
       this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
@@ -228,11 +228,30 @@ export class PopupAddDealComponent
     this.tabInfo = [this.menuGeneralInfo];
     this.tabContent = [this.tabGeneralInfoDetail];
     if (this.action !== this.actionAdd || this.isviewCustomer ) {
-     // this.categoryCustomer = this.customerView?.category;
-     // this.customerID = this.deal?.customerID;
+      if(this.isviewCustomer) {
+        this.categoryCustomer = this.customerView?.category;
+      }
+       this.customerID = this.deal?.customerID;
       this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
-   //   this.getListContactByObjectID(this.customerID);
+      this.getListContactByObjectID(this.customerID);
+      this.isviewCustomer && this.getContactDefault(this.customerID)
     }
+  }
+
+  getContactDefault(customerID) {
+    this.codxCmService.getDeafaultCategory(customerID).subscribe((res)=> {
+        if(res) {
+          debugger;
+          res.refID = res.recID;
+          res.recID = Util.uid();
+          res.objectID = this.deal.recID;
+          res.objectName = this.deal.dealName;
+          res.objectType = '4';
+          res.isDefault = true;
+          res.contactType = '0';
+          this.lstContactDeal.push(res);
+        }
+    })
   }
 
   copyDataCustomer(deal:any, data:any){
@@ -242,6 +261,7 @@ export class PopupAddDealComponent
     deal.channelID = data.channelID;
     deal.shortName = data.shortName;
     this.categoryCustomer = data.category;
+
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
 

@@ -1127,6 +1127,15 @@ export class CodxCmService {
     );
   }
 
+  getDefaultContactID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContactsBusiness',
+      'GetOneAsync',
+      data
+    );
+  }
+
   getListUserByBUID(data) {
     return this.api.exec<any>(
       'AD',
@@ -1135,6 +1144,7 @@ export class CodxCmService {
       data
     );
   }
+
 
   //#endregion -- Bao
 
