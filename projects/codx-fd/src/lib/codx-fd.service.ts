@@ -9,7 +9,7 @@ import {
   NotificationsService,
   DataRequest,
 } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, finalize, map, share } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +23,16 @@ export class CodxFdService {
   active = '';
   tenant: string;
   private title = new BehaviorSubject<any>(null);
+  SetLayout = new BehaviorSubject<any>(null);
+  private caches = new Map<string, Map<string, any>>();
+  private cachedObservables = new Map<string, Observable<any>>();
   constructor(
     private api: ApiHttpService,
     private router: Router,
     private tenantStore: TenantStore,
     private notificationsService: NotificationsService,
-    private cache: CacheService
+    private cache: CacheService,
+
   ) {}
   appendTitle(title) {
     this.title.next(title);
@@ -235,6 +239,60 @@ export class CodxFdService {
       'CardsBusiness',
       'AddCommentAsync',
       [recID, comment]
+    );
+  }
+
+  loadData(
+    paras:any,
+    keyRoot:any,
+    service:any,
+    assemly:any,
+    className:any,
+    method:any
+  ): Observable<any>
+  {
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.api.execSv(service,assemly,className,method,paras)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+  sendGift(
+    recID: string, 
+    status: string, 
+    comment: string, 
+    funcID: string
+  ) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'GiftTransBusiness',
+      'DeliverGiftTransAsync',
+      [recID, status, comment, funcID]
     );
   }
 }

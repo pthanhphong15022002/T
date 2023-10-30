@@ -119,6 +119,7 @@ export class CodxAddTaskComponent implements OnInit {
   typeCM = '';
   typeCMName = '';
   dataTypeCM;
+  dataParentTask;
   dataCM = {
     deals: '',
     leads: '',
@@ -249,6 +250,9 @@ export class CodxAddTaskComponent implements OnInit {
       startDays.setDate(startDays?.getDate() + 1);
       this.stepsTasks.endDate = startDays;
     }
+    if(this.action == 'edit' && this.type == 'calendar'){
+      this.getParentTask(this.stepsTasks);
+    }
   }
 
   setFieldTask() {
@@ -295,7 +299,7 @@ export class CodxAddTaskComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
-    role['roleType'] = 'O';
+    role['roleType'] = 'U';
     role['objectType'] = this.user?.objectType;
     return role;
   }
@@ -933,6 +937,57 @@ export class CodxAddTaskComponent implements OnInit {
         this.listGroup = [];
         this.isShowCbxGroup = false;
       }
+    }
+  }
+
+  getParentTask(task){
+    if(task){
+      let recID = task?.recID;
+      let taskGroupID = task?.taskGroupID;
+      let stepID = task?.stepID;
+      let instanceID = task?.instanceID;
+      let objectID = task?.objectID;
+      let objectType = task?.objectType;
+      this.api.exec<any>(
+        'DP',
+        'ActivitiesBusiness',
+        'GetParentOfTaskAsync',
+        [recID, taskGroupID, stepID, instanceID , objectID, objectType]
+      ).subscribe((res) => {
+        if(res){
+          this.dataParentTask = res;
+          if(res?.instancesStep){
+            this.listInsStep = [res?.instancesStep];
+            this.isShowCbxStep = true;
+            this.disableStep = false;
+            if(res?.instancesStep?.taskGroups){
+              this.listGroup = res?.instancesStep?.taskGroups;
+              this.isShowCbxGroup = true;
+            }
+          }
+          
+          switch(res?.applyFor){
+            case '1':
+              this.typeCM = '5';
+              break;
+            case '2':
+              this.typeCM = '9';
+              break;
+            case '3':
+              this.typeCM;
+              break;
+            case '4':
+              this.typeCM =  '7';
+              break;
+            case '5':
+              this.typeCM = '3';
+              break;
+            case '6':
+              this.typeCM = '1';
+              break;
+          }
+        }
+      })
     }
   }
 }
