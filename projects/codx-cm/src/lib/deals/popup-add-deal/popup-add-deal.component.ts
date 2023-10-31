@@ -255,6 +255,8 @@ export class PopupAddDealComponent
       contact.mobile = res.mobile;
       contact.personalEmail = res.personalEmail;
       contact.role = res.role;
+      contact.createdBy = this.user.userId;
+      contact.createdOn = new Date();
 
       setTimeout(() => {
         if (this.loadContactDeal && this.loadContactDeal?.loaded) {
