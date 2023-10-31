@@ -1397,6 +1397,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           group['modifiedBy'] = data?.groupTask?.modifiedBy;
           group['durationDay'] = data?.groupTask?.durationDay;
           group['durationHour'] = data?.groupTask?.durationHour;
+          group['owner'] = data?.groupTask?.owner;
           if (!group?.isTaskDefault) {
             group['taskGroupName'] = data?.groupTask?.taskGroupName;
             group['memo'] = data?.groupTask?.memo;
