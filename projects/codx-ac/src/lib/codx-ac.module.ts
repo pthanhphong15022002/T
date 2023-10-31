@@ -104,6 +104,7 @@ import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advanc
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
 import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
+import { ImportEInvoicesComponent } from './periodic/importeinvoices/importeinvoices.component';
 export const routes: Routes = [
   {
     path: '',
@@ -138,11 +139,11 @@ export const routes: Routes = [
         component: PurchaseinvoicesComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: 'journalnames/:funcID',
-      //   component: JournalsComponent,
-      //   data: { noReuse: true },
-      // },
+      {
+        path: 'importeinvoices/:funcID',
+        component: ImportEInvoicesComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'cashtranfers/:funcID',
         component: CashtransfersComponent,
@@ -387,6 +388,7 @@ export const routes: Routes = [
     PaymentOrderComponent,
     PaymentOrderAddComponent,
     ReceiptTransactionsTableComponent,
+    ImportEInvoicesComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

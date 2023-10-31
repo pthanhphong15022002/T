@@ -1,0 +1,14 @@
+<codx-views #view idField="recID" [views]="views" [button]="button" service="AC" (buttonClick)="toolBarClick($event)">
+</codx-views>
+
+<ng-template #templateMore let-data>
+    <div>
+        <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
+            type="view"></codx-mfunc>
+    </div>
+</ng-template>
+<ng-template #itemTemplate let-data>
+    <codx-card-center cardCss="dp-card-process border rounded-2 h-100" [rootData]="data" [dataItem]="data"
+        [formModel]="view.formModel" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
+    </codx-card-center>
+</ng-template>
