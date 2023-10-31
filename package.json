@@ -68,6 +68,7 @@
     "cldr-data": "^36.0.1",
     "codx-core": "file:codx-core/codx-core-16.0.0.tgz",
     "crypto-js": "^4.1.1",
+    "expr-eval": "^2.0.2",
     "firebase": "^8.6.8",
     "iv-viewer": "^2.0.1",
     "konva": "^8.4.3",
