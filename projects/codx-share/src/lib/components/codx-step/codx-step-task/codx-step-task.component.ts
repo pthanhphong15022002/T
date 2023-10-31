@@ -1576,6 +1576,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     } else {
       data.progress = dataProgress?.progressTask;
       data.status = dataProgress?.progressTask == 100 ? '3' : '2';
+      this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       if (this.isMoveStage) {
         let index = this.moveStageData?.findIndex(
           (task) => task.taskID == dataProgress?.taskID
