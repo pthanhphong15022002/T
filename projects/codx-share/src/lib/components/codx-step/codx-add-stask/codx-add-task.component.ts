@@ -215,7 +215,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.isShowCbxGroup = false;
     }
     if(!this.isStart){
-      this.isStart = this.isActivitie = true ? true : this.isActivitie;
+      this.isStart = this.isActivitie == true ? true : this.isActivitie;
     }
     if (!this.listInsStep?.length) {
       this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
