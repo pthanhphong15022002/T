@@ -64,6 +64,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
   @ViewChild('subheader') subheader;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
+  @ViewChild('panelMore') panelMore: TemplateRef<any>;
   @ViewChild(ImageViewerComponent) imageViewer: ImageViewerComponent;
   @Output() loadData = new EventEmitter();
 
@@ -146,6 +147,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
           active: false,
           model: {
             resources: this.columnsGrid,
+            template2: this.panelMore,
           },
         },
       ];
@@ -288,6 +290,28 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
     });
   }
 
+  copy(data) {
+    if (data) this.view.dataService.dataSelected = data;
+    var obj = {
+      formType: 'copy',
+      isModeAdd: true,
+      headerText: this.headerText,
+    };
+    this.view.dataService
+      .copy()
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          AddDedicationRankComponent,
+          obj,
+          option
+        );
+      });
+  }
+
   edit(data) {
     if (data) this.view.dataService.dataSelected = data;
     var obj = {
@@ -342,6 +366,23 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         case 'SYS02':
           this.delete(data);
           break;
+        case 'SYS04':
+          this.copy(data);
+          break;
+      }
+    }
+  }
+
+  changeDataMFGird(e, data) {
+    this.changeDataMF(e, data, 11);
+  }
+
+  changeDataMF($event, data, type = null) {
+    if ($event != null && data != null) {
+      for (let eventItem of $event) {
+        if (type == 11) {
+          eventItem.isbookmark = false;
+        }
       }
     }
   }
