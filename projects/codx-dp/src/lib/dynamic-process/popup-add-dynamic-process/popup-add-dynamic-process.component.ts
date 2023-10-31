@@ -4339,17 +4339,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.stepSuccess.icon = this.iconReasonSuccess?.icon;
         this.stepFail.icon = this.iconReasonFail?.icon;
 
-        this.stepSuccess.backgroundColor = '#fff';
-        this.stepFail.backgroundColor = '#fff';
+        this.stepSuccess.backgroundColor = this.iconReasonSuccess?.color;;
+        this.stepFail.backgroundColor = this.iconReasonFail?.color;
 
-        this.stepSuccess.textColor = '#808080';
-        this.stepFail.textColor = '#808080';
+        this.stepSuccess.textColor = this.iconReasonSuccess?.textColor;;
+        this.stepFail.textColor = this.iconReasonFail?.textColor;
 
-        this.stepSuccess.iconColor = '#808080';
-        this.stepFail.iconColor = '#808080';
+        this.stepSuccess.iconColor = this.iconReasonSuccess?.textColor;;
+        this.stepFail.iconColor = this.iconReasonFail?.textColor;
 
-        this.stepSuccess.stepName = this.iconReasonSuccess?.text;
-        this.stepFail.stepName = this.iconReasonFail?.text;
+        this.stepSuccess.stepName = this.iconReasonSuccess?.textColor;
+        this.stepFail.stepName = this.iconReasonFail?.textColor;
 
         this.stepNameSuccess = this.iconReasonSuccess?.text;
         this.stepNameFail = this.iconReasonFail?.text;

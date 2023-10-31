@@ -105,7 +105,10 @@
           >
             {{ data.tilte }}
           </div>
-          <div class="text-gray-500 pt-1">
+          <div
+            class="text-gray-500 pt-1 setting-description"
+            [attr.data-id]="data.recID"
+          >
             {{ data | formatDescription : oldDataValue }}
           </div>
         </div>
