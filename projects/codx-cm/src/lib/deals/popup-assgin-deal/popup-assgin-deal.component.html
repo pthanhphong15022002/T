@@ -223,6 +223,7 @@
         </button>
         <button
           type="button"
+          [disabled]="isLockStep"
           (click)="onSaveForm()"
           class="btn btn-primary ms-2"
         >

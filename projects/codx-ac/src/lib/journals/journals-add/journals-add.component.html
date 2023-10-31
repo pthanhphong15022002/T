@@ -449,7 +449,146 @@
 <!-- End: TabEstablish -->
 
 <!-- Start: TabRole -->
-<ng-template #tabRole>comingsoon</ng-template>
+<ng-template #tabRole>
+  <ng-container *ngIf="formJournal?.form?.formGroup && formJournal?.form?.data?.journalType != null">
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="Creater" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Creater'].description}}</span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center justify-content-end">
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="ApprovalControl" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['ApprovalControl'].description}}</span>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class="d-flex align-items-center">
+          <div class="w-100 me-2">
+            <codx-input field="approvalControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          </div>
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="Approver" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Approver'].description}}</span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center justify-content-end">
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <div class="d-flex justify-content-between form-group">
+      <codx-label fiedName="AutoPost" [formModel]="dialog.formModel"></codx-label>
+      <codx-input field="autoPost" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="Poster" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Poster'].description}}</span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center justify-content-end">
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <div class="d-flex justify-content-between form-group">
+      <codx-label fiedName="UnpostControl" [formModel]="dialog.formModel"></codx-label>
+      <codx-input field="unpostControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+    </div>
+    <div class="row" [ngStyle]="formJournal?.form?.data?.unpostControl ? '' : {display:'none'}">
+      <div class="col-8">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="Unposter" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Unposter'].description}}</span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center justify-content-end">
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+    <div class="row" [ngStyle]="formJournal?.form?.data?.unpostControl ? '' : {display:'none'}">
+      <div class="col-7">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="UnPostDays" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['UnPostDays'].description}}</span>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class="d-flex align-items-center justify-content-end">
+          <div class="w-100 me-2">
+            <codx-input field="unPostDays" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+          </div>
+        </div>  
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <div>
+            <codx-label class="fw-bold" fiedName="Sharer" [formModel]="dialog.formModel"></codx-label>
+          </div>
+          <span class="text-gray-500">{{formJournal?.form?.gridviewSetup['Sharer'].description}}</span>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="d-flex align-items-center justify-content-end">
+          <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
+          >
+            <span class="icon-connection-point icon-18"></span>
+          </button>
+        </div>  
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
 <!-- End: TabRole -->
 
 
