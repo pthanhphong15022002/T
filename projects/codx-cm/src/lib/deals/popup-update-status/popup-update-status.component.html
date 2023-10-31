@@ -53,6 +53,7 @@
         </button>
         <button
           type="button"
+          [disabled]="isLockStep"
           (click)="saveForm()"
           class="btn btn-primary ms-2"
         >

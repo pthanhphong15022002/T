@@ -50,7 +50,7 @@ export class SignalRService {
   public registerOnServerEvents() {
     this.hubConnection.on('ReceiveMessage', (res) => {
       if (res) {
-        switch (res.event) {
+        switch (res.data.action) {
           case 'onConnected':
             break;
           case 'onDisconnected':

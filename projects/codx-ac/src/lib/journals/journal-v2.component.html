@@ -29,7 +29,7 @@
       </div>
       <div class="d-flex align-items-center">
         <codx-searchbar (searchEvent)="search($event)"></codx-searchbar>
-        <codx-toolbar-button class="ms-3" *ngIf="button" [button]="button" (buttonClick)="add($event)">
+        <codx-toolbar-button class="ms-3" *ngIf="button" [button]="button" (buttonClick)="toolbarClick($event)">
         </codx-toolbar-button>
         <codx-toolbar-choose class="me-2 ms-1" [views]="subViews" (viewChange)="viewChanged($event)">
         </codx-toolbar-choose>
@@ -65,9 +65,9 @@
         ? 'assets/themes/ac/default/img/' +
           (data.journalType | vll : 'AC078' : 'text' | async)
         : ''
-    " [imageId]="data.recID" [imageObjType]="view.formModel.entityName" resourceObjType="AC_Journals"
-    imgCss="w-100 h-150px" [imageWidth]="1000" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
-    [typeMF]="'hover'" (changeDataMF)="changeMF($event)" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
+    " [imageId]="data.recID" [imageObjType]="view.entityName" 
+    imgCss="w-100 h-150px" [imageWidth]="1000" [dataItem]="data" [formModel]="view.formModel"
+    updateDirect="true" [typeMF]="'hover'" (changeDataMF)="changeMF($event)" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
   </codx-card-img>
 </ng-template>
 

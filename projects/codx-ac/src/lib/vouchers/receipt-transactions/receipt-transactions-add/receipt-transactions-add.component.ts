@@ -104,6 +104,22 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   /**
+   * *Hàm click các morefunction của CashpaymentLines
+   * @param event
+   * @param data
+   */
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'SYS104':
+        this.copyRow(data);
+        break;
+      case 'SYS102':
+        this.deleteRow(data);
+        break;
+    }
+  }
+
+  /**
    * *Hàm xử lí change subtype
    * @param event 
    */
@@ -339,6 +355,43 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formVouchers.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm ẩn các morefunction trong lưới
+   * @param event
+   */
+  changeMF(event) {
+    event.forEach((element) => {
+      if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
+        element.disabled = false;
+        element.isbookmark = false;
+      }else{
+        element.disabled = true;
+      }
+    });
+  }
+
+  /**
+   * *Hàm sao chép dòng trong lưới
+   * @param data
+   */
+  copyRow(data) {
+    if (this.eleGridVouchers) {
+      data.recID = Util.uid();
+      data.index = this.eleGridVouchers.dataSource.length;
+      this.eleGridVouchers.addRow(data, this.eleGridVouchers.dataSource.length);
+    }
+  }
+
+  /**
+   * *Hàm xóa dòng trong lưới
+   * @param data
+   */
+  deleteRow(data) {
+    if (this.eleGridVouchers) {
+      this.eleGridVouchers.deleteRow(data);
+    }
   }
 
   @HostListener('click', ['$event']) //? focus out grid

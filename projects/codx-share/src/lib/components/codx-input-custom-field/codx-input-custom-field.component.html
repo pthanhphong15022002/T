@@ -1,63 +1,71 @@
 <div class="form-group">
   <!-- <div class="d-flex justify-content-between">
     <div class="'justify-content-start"> -->
-  <codx-label
-    [name]="customField.fieldName"
-    formName="DPInstancesStepsFields"
-    gridViewName="grvDPInstancesStepsFields"
-    [default]="customField.title"
-  >
-  </codx-label>
-  <span *ngIf="viewFieldName && customField.fieldName">
-    {{ "(" + customField.fieldName + ")" }}
-  </span>
-  <span *ngIf="customField.isRequired">
-    <codx-label
-      class="text-danger"
-      name="attentionIsRequired"
-      formName="DPInstancesStepsFields"
-      gridViewName="grvDPInstancesStepsFields"
-      default="*"
-    >
-    </codx-label>
-  </span>
-  <span
-    *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
-    class="codx-label"
-  >
-    (%)
-  </span>
-  <!-- </div> -->
-  <!-- <div class="d-flex justify-content-end"> -->
-  <span
-    *ngIf="customField.dataType == 'A'"
-    class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
-    (click)="!disable ? addFile() : ''"
-  ></span>
-  <span
-    *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
-    class="mx-2 me-5"
-  >
-    <button
-      type="button"
-      class="btn btn-sm btn-icon btn-light-primary"
-      (click)="customField.dataType == 'P' ? openUserPopup() : openContact()"
-      [disabled]="disable"
-    >
-      <span class="icon-group_add icon-16"></span>
-    </button>
-  </span>
-  <span *ngIf="customField.dataType == 'TA'" class="mx-2 me-5">
-    <button
-      type="button"
-      class="btn btn-icon btn-sm btn-light-primary me-2"
-      (click)="clickAddLine()"
-      [disabled]="disable"
-    >
-      <i class="icon-add_box icon-16"></i></button
-  ></span>
-  <!-- </div> -->
-  <!-- </div> -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div class="w-100">
+        <codx-label
+          [name]="customField.fieldName"
+          formName="DPInstancesStepsFields"
+          gridViewName="grvDPInstancesStepsFields"
+          [default]="customField.title"
+        >
+        </codx-label>
+      </div>
+      <div class="d-flex align-items-center">
+        <span *ngIf="viewFieldName && customField.fieldName">
+          {{ "(" + customField.fieldName + ")" }}
+        </span>
+        <span *ngIf="customField.isRequired">
+          <codx-label
+            class="text-danger"
+            name="attentionIsRequired"
+            formName="DPInstancesStepsFields"
+            gridViewName="grvDPInstancesStepsFields"
+            default="*"
+          >
+          </codx-label>
+        </span>
+        <span
+          *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
+          class="codx-label"
+        >
+          (%)
+        </span>
+        <!-- </div> -->
+        <!-- <div class="d-flex justify-content-end"> -->
+        <span
+          *ngIf="customField.dataType == 'A'"
+          class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
+          (click)="!disable ? addFile() : ''"
+        ></span>
+        <span
+          *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
+          class="ms-2"
+        >
+          <button
+            type="button"
+            class="btn btn-icon btn-light-primary"
+            (click)="customField.dataType == 'P' ? openUserPopup() : openContact()"
+            [disabled]="disable"
+          >
+            <span class="icon-group_add icon-16"></span>
+          </button>
+        </span>
+        <span *ngIf="customField.dataType == 'TA'" class="ms-2">
+          <button
+            type="button"
+            class="btn btn-icon btn-light-primary me-2"
+            (click)="clickAddLine()"
+            [disabled]="disable"
+          >
+            <i class="icon-add_box icon-16"></i></button
+        ></span>
+        <!-- </div> -->
+        <!-- </div> -->
+      </div>
+    </div>
+  
+  
   <ng-container *ngIf="customField.dataType == 'T'">
     <codx-input
       *ngIf="customField.dataFormat != 'L'"
@@ -194,13 +202,13 @@
       ></codx-imgs> -->
     <div class="d-flex flex-wrap" *ngIf="arrIdUser && arrIdUser?.length > 0">
       <ng-container *ngFor="let id of arrIdUser">
-        <div style="position: relative">
+        <div class="me-5" style="position: relative">
           <codx-img class="" [objectId]="id" objectType="AD_Users"> </codx-img>
-          <div style="position: absolute; right: 0px; top: 0px">
-            <span
-              class="text-danger icon-close icon-16 cursor-pointer"
-              (click)="deleteUser(id)"
-            ></span>
+          <div style="position: absolute; right: -5px; top: -5px">
+            <button type="button"
+              class="btn btn-icon btn-xs btn-danger" (click)="deleteUser(id)">
+              <i class="icon-close icon-12"></i>
+            </button>
           </div>
         </div>
       </ng-container>

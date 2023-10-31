@@ -75,7 +75,7 @@
           [refValue]="refValueDataType"
           [placeholder]="grvSetup['DataType']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit'"
+          [disabled]="disable && action == 'edit'"
         >
         </codx-input>
       </div>
@@ -114,6 +114,7 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="disable && action == 'edit'"
         >
         </codx-input>
         <codx-input
@@ -150,12 +151,7 @@
         >
         </codx-input>
       </div>
-      <ng-container
-        *ngIf="
-          column.dataType == 'L' &&
-          (column.dataFormat == 'C' || column.dataFormat == 'V')
-        "
-      >
+      <ng-container *ngIf="column.dataType == 'L'">
         <div class="form-group">
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">
@@ -200,6 +196,7 @@
             [crrValue]="column.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
+            [disabled]="disable && action == 'edit'"
           ></codx-input>
 
           <ng-container *ngIf="column.dataFormat == 'V'">
@@ -211,6 +208,7 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
+              [enabled]="!(disable && action == 'edit')"
             ></ejs-combobox
           ></ng-container>
         </div>
