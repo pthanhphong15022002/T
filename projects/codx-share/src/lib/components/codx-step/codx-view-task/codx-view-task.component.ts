@@ -428,6 +428,31 @@ export class CodxViewTaskComponent implements OnInit {
               res.isblur = true;
             }
             break;
+            case 'DP28': // Cập nhật
+            if (['B', 'M'].includes(this.dataView?.taskType)) {
+              // this.convertMoreFunctions(event, res, this.dataView.taskType);
+              if (this.dataView?.actionStatus != '2') res.disabled = true;
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP29': // Hủy
+            if (['B', 'M'].includes(this.dataView.taskType)) {
+              // this.convertMoreFunctions(event, res, task.taskType);
+              if (this.dataView?.actionStatus != '2') res.disabled = true;
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP30': //Khôi phục
+            // if (['B', 'M'].includes(task.taskType)) {
+            //   this.convertMoreFunctions(event, res, task.taskType);
+            //   if (task.taskType == 'M') res.disabled = true;
+            // } else {
+            //   res.disabled = true;
+            // }
+            res.disabled = true;
+            break;
         }
       });
     }
