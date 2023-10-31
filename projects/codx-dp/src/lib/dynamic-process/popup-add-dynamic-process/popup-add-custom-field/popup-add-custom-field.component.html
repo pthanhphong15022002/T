@@ -171,6 +171,7 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
+          [disabled]="action == 'edit'"
         >
         </codx-input>
         <codx-input
@@ -257,6 +258,7 @@
             [crrValue]="field.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
+            [disabled]="action == 'edit'"
           ></codx-input>
 
           <ng-container *ngIf="field.dataFormat == 'V'">
@@ -268,6 +270,7 @@
               [allowFiltering]="true"
               [placeholder]="grvSetup['refValue']?.description"
               (valueChange)="cbxChangeVll($event)"
+              [enabled]="action != 'edit'"
             ></ejs-combobox
           ></ng-container>
         </div>

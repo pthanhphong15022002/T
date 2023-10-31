@@ -184,7 +184,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
 
-
   async valueChange(e) {
     if (e.field == 'multiselect') {
       this.field[e.field] = e.data;
@@ -616,11 +615,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   async cbxChangeVll(value) {
-
     this.field['refValue'] = value;
     if (!value) {
       // await this.getDefaultVll();
-      this.crrVll = null ;
+      this.crrVll = null;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
@@ -806,8 +804,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
         option.zIndex = 1050;
         let obj = {
           // data: this.column,
-          action: 'add',
-          titleAction: 'Setting colum', //test
+          action: this.action,
+          titleAction: 'Setting columns', //test
           grvSetup: this.grvSetup,
           processNo: this.processNo,
           user: this.user,

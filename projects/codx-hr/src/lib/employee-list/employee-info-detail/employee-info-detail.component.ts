@@ -4130,19 +4130,24 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //   editEmployeeForeignWorkerInfo(actionHeaderText) {
   //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
   //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
-  //   request.funcID = this.eInfoFunc?.functionID;
+  //   console.log('foreignworker func', this.foreignWorkerFunc);
+    
+  //   let request = new DataRequest(this.foreignWorkerFunc?.formName,this.foreignWorkerFunc?.gridViewName,this.foreignWorkerFunc?.entityName);
+  //   request.funcID = this.foreignWorkerFunc?.functionID;
   //   dataService.service = 'HR';
   //   dataService.request = request;
     
   //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormForeignWorker(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  //   this.hrService.getFormModel(this.foreignWorkerFunc.functionID).then((res) => {
+  //     let formM = res;
+  //     this.openFormForeignWorker(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal, formM);
+  //   })
   // }
 
-  // openFormForeignWorker(actionHeaderText, actionType,dataService, tempData, data){
+  // openFormForeignWorker(actionHeaderText, actionType,dataService, tempData, data, formModel){
   //   dataService.dataSelected = tempData;
   //   let option = new SidebarModel();
-  //   option.FormModel = this.eInfoFormModel;
+  //   option.FormModel = formModel;
   //   option.Width = '550px';
   //   let dialogAdd = this.callfunc.openSide(
   //     CodxFormDynamicComponent,
@@ -4194,19 +4199,24 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //   editAssuranceTaxBankAccountInfo(actionHeaderText) {
   //   let tempData = JSON.parse(JSON.stringify(this.infoPersonal));
   //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.eInfoFunc?.formName,this.eInfoFunc?.gridViewName,this.eInfoFunc?.entityName);
-  //   request.funcID = this.eInfoFunc?.functionID;
+  //   console.log('einfoFunc', this.eAssurFunc);
+    
+  //   let request = new DataRequest(this.eAssurFunc?.formName,this.eAssurFunc?.gridViewName,this.eAssurFunc?.entityName);
+  //   request.funcID = this.eAssurFunc?.functionID;
   //   dataService.service = 'HR';
   //   dataService.request = request;
     
   //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormEditAssure(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
+  //   this.hrService.getFormModel(this.eAssurFunc.functionID).then((res) => {
+  //     let formM = res;
+  //     this.openFormEditAssure(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal, formM);
+  //   })
   // }
 
-  // openFormEditAssure(actionHeaderText, actionType,dataService, tempData, data){
+  // openFormEditAssure(actionHeaderText, actionType,dataService, tempData, data, formModel){
   //   dataService.dataSelected = tempData;
   //   let option = new SidebarModel();
-  //   option.FormModel = this.eInfoFormModel;
+  //   option.FormModel = formModel;
   //   option.Width = '550px';
   //   let dialogAdd = this.callfunc.openSide(
   //     CodxFormDynamicComponent,
@@ -4887,7 +4897,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     });
   }
 
-  //form động epassport
+  // form động epassport
   //   handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
   //   var dataService = new CRUDService(this.inject);
@@ -5106,7 +5116,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //       this.eWorkPermitFormModel.entityName,
   //       'RecID'
   //     ).subscribe((res: any) => {
-  //       debugger
   //       tempData = res?.data;
   //       tempData.employeeID = this.employeeID;
   //       dataService.addDatas.set(tempData.recID, tempData);
@@ -5516,75 +5525,93 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
       // form động tai nạn lđ
-  //   HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
-  //   let tempData = JSON.parse(JSON.stringify(data));
-  //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.eAccidentsFunc?.formName,this.eAccidentsFunc?.gridViewName,this.eAccidentsFunc?.entityName);
-  //   request.funcID = this.eAccidentsFunc?.functionID;
-  //   dataService.service = 'HR';
-  //   dataService.request = request;
-  
-  //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
-  // }
+    HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
+    let tempData = JSON.parse(JSON.stringify(data));
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(this.eAccidentsFunc?.formName,this.eAccidentsFunc?.gridViewName,this.eAccidentsFunc?.entityName);
+    request.funcID = this.eAccidentsFunc?.functionID;
+    dataService.service = 'HR';
+    dataService.request = request;
 
-  // openFormEAccident(actionHeaderText, actionType,dataService, tempData, data){
-  //   dataService.dataSelected = tempData;
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.eAccidentsFormModel;
-  //   option.Width = '550px';
-  //   let dialogAdd = this.callfunc.openSide(
-  //     CodxFormDynamicComponent,
-  //     {
-  //       formModel: option.FormModel,
-  //       data: tempData,
-  //       function: null,
-  //       dataService: dataService,
-  //       titleMore: actionHeaderText,
-  //     },
-  //     option
-  //   );
+        if(actionType == 'add'){
+      this.hrService.getDataDefault(
+        this.eAccidentsFormModel.funcID,
+        this.eAccidentsFormModel.entityName,
+        'RecID'
+      ).subscribe((res: any) => {
+        tempData = res?.data;
+        tempData.employeeID = this.employeeID;
+        dataService.addDatas.set(tempData.recID, tempData);
+        this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
+      })
+    }
+    else if(actionType == 'copy'){
+      dataService.addDatas.set(tempData.recID, tempData);
+      this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
+    }
+    else if(actionType == 'edit'){
+      dataService.updateDatas.set(tempData.recID, tempData);
+      this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
+    }
+  }
 
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if(actionType == 'edit'){
-  //         this.updateGridView(this.eAccidentGridView, actionType, res.event.update.data, null);
-  //       }
-  //       else if(actionType == 'add' || actionType =='copy'){
-  //         this.updateGridView(this.eAccidentGridView, actionType, res.event.save.data, null);
-  //       }
-  //     this.df.detectChanges();
-  //   }});
-  // }
-
-  //form tự vẽ tai nạn lđ
-  HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
+  openFormEAccident(actionHeaderText, actionType,dataService, tempData, data){
+    dataService.dataSelected = tempData;
     let option = new SidebarModel();
-    option.DataService = this.eAccidentGridView?.dataService;
     option.FormModel = this.eAccidentsFormModel;
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      PopupEaccidentsComponent,
+      CodxFormDynamicComponent,
       {
-        actionType: actionType,
-        employeeId: this.employeeID,
-        headerText:
-          actionHeaderText + ' ', //+ this.getFormHeader2(this.eAccidentsFuncID, this.lstFuncHealth),
-        funcID: this.eAccidentsFuncID,
-        accidentObj: data,
+        formModel: option.FormModel,
+        data: tempData,
+        function: null,
+        dataService: dataService,
+        titleMore: actionHeaderText,
       },
       option
     );
-    dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.eAccidentGridView?.dataService as CRUDService)?.clear();
-      else if(res.event) {
-        this.updateGridView(this.eAccidentGridView, actionType, res.event, data);
-      }
-      this.df.detectChanges();
-    });
 
+    dialogAdd.closed.subscribe((res) => {
+      if (res.event) {
+        if(actionType == 'edit'){
+          this.updateGridView(this.eAccidentGridView, actionType, res.event.update.data, null);
+        }
+        else if(actionType == 'add' || actionType =='copy'){
+          this.updateGridView(this.eAccidentGridView, actionType, res.event.save.data, null);
+        }
+      this.df.detectChanges();
+    }});
   }
+
+  //form tự vẽ tai nạn lđ
+  // HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
+  //   let option = new SidebarModel();
+  //   option.DataService = this.eAccidentGridView?.dataService;
+  //   option.FormModel = this.eAccidentsFormModel;
+  //   option.Width = '850px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEaccidentsComponent,
+  //     {
+  //       actionType: actionType,
+  //       employeeId: this.employeeID,
+  //       headerText:
+  //         actionHeaderText + ' ', //+ this.getFormHeader2(this.eAccidentsFuncID, this.lstFuncHealth),
+  //       funcID: this.eAccidentsFuncID,
+  //       accidentObj: data,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event)
+  //       (this.eAccidentGridView?.dataService as CRUDService)?.clear();
+  //     else if(res.event) {
+  //       this.updateGridView(this.eAccidentGridView, actionType, res.event, data);
+  //     }
+  //     this.df.detectChanges();
+  //   });
+
+  // }
 
   HandlemployeeAssetInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();

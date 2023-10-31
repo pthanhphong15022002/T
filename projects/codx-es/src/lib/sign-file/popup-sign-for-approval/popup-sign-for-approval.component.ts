@@ -59,6 +59,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
   isInteractPDF: boolean = false;
   isEdited: boolean;
   dialogOtpPin: any;
+  isApproved: boolean;
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -73,7 +74,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.dialog = dialog;
     this.data = dt?.data;
     this.lstMF = dt?.data?.lstMF;
-
+    this.isApproved = dt?.data?.status =='5' ? true : false;
     this.oApprovalTrans = dt?.data?.oTrans;
     if (this.oApprovalTrans?.confirmControl == '1') {
       this.isConfirm = false;

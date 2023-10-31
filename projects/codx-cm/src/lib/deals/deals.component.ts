@@ -613,7 +613,7 @@ export class DealsComponent
       ) {
         this.dataSelected.approveStatus = appoverStatus;
       }
-      this.view.dataService.update(this.dataSelected,true).subscribe();
+      this.view.dataService.update(this.dataSelected, true).subscribe();
     }
   }
   changeMF(e) {
@@ -840,8 +840,10 @@ export class DealsComponent
               ];
               this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
                 if (res) {
-                  this.view.dataService.update(res,true).subscribe();
-                  if (this.kanban) this.kanban.updateCard(res);
+                  this.view.dataService.update(res, true).subscribe();
+                  if (this.kanban) {
+                    this.renderKanban(res);
+                  }
                   if (this.detailViewDeal)
                     this.detailViewDeal.dataSelected = res;
                   if (e.event.isReason != null) {
@@ -880,14 +882,16 @@ export class DealsComponent
             if (res) {
               this.dataSelected.closed = check;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-              this.view.dataService.update(this.dataSelected,true).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
                 0,
                 "'" + data.dealName + "'"
               );
               if (data.showInstanceControl === '1') {
-                this.view.dataService.update(this.dataSelected,true).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
               }
               if (
                 data.showInstanceControl === '0' ||
@@ -900,7 +904,9 @@ export class DealsComponent
                   data: data,
                 });
               }
-              if (this.kanban) this.kanban.updateCard(this.dataSelected);
+              if (this.kanban) {
+                this.renderKanban(this.dataSelected);
+              }
               this.detectorRef.detectChanges();
             }
           });
@@ -930,7 +936,7 @@ export class DealsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.view.dataService.update(e.event,true).subscribe();
+        this.view.dataService.update(e.event, true).subscribe();
         if (this.detailViewDeal)
           this.detailViewDeal.dataSelected = JSON.parse(
             JSON.stringify(this.dataSelected)
@@ -982,14 +988,10 @@ export class DealsComponent
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res;
-            this.view.dataService.update(data,true).subscribe();
+            this.view.dataService.update(data, true).subscribe();
             //up kaban
             if (this.kanban) {
-              let money = data.dealValue * data.exchangeRate;
-              this.renderTotal(data.stepID, 'add', money);
-              this.renderTotal(this.crrStepID, 'minus', money);
-              if (this.kanban) this.kanban.updateCard(data);
-              this.kanban.refresh();
+              this.renderKanban(data);
             }
             this.detectorRef.detectChanges();
           }
@@ -1036,7 +1038,7 @@ export class DealsComponent
             if (res) {
               this.dataSelected = res;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-              this.view.dataService.update(this.dataSelected,true).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               if (this.kanban) this.kanban.updateCard(this.dataSelected);
               if (this.detailViewDeal)
                 this.detailViewDeal.reloadListStep(resDP[1]);
@@ -1086,7 +1088,7 @@ export class DealsComponent
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
         this.dataSelected = e?.event;
-        this.view.dataService.update(e?.event,true).subscribe();
+        this.view.dataService.update(e?.event, true).subscribe();
 
         this.detailViewDeal?.promiseAllAsync();
         if (this.kanban) this.kanban.updateCard(this.dataSelected);
@@ -1160,7 +1162,7 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.view.dataService.update(e.event,true).subscribe();
+        this.view.dataService.update(e.event, true).subscribe();
         //up kaban
         if (this.kanban) {
           let dt = e.event;
@@ -1206,7 +1208,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.view.dataService.update(e.event,true).subscribe();
+            this.view.dataService.update(e.event, true).subscribe();
             //up kaban
             if (
               this.kanban &&
@@ -1307,7 +1309,7 @@ export class DealsComponent
 
   autoMoveStage($event) {
     if ($event && $event != null) {
-      this.view.dataService.update($event,true).subscribe();
+      this.view.dataService.update($event, true).subscribe();
       if (this.detailViewDeal) {
         this.detailViewDeal.promiseAllAsync();
         this.detailViewDeal.dataSelected = JSON.parse(
@@ -1368,7 +1370,7 @@ export class DealsComponent
         .subscribe((q) => {
           if (q) {
             this.dataSelected = q;
-            this.view.dataService.update(this.dataSelected,true).subscribe();
+            this.view.dataService.update(this.dataSelected, true).subscribe();
             if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.notificationsService.notifyCode('ES007');
@@ -1435,6 +1437,14 @@ export class DealsComponent
       }
     }
     return totalCol;
+  }
+
+  renderKanban(data) {
+    let money = data.dealValue * data.exchangeRate;
+    this.renderTotal(data.stepID, 'add', money);
+    this.renderTotal(this.crrStepID, 'minus', money);
+    this.kanban.updateCard(data);
+    this.kanban.refresh();
   }
 
   renderTotal(stepID, action = 'add', money) {
@@ -1655,7 +1665,9 @@ export class DealsComponent
                   this.dataSelected.status = '1';
                   this.dataSelected.nodifiedBy = new Date();
 
-                  this.view.dataService.update(this.dataSelected,true).subscribe();
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   if (this.detailViewDeal)
                     this.detailViewDeal.dataSelected = JSON.parse(
@@ -1889,7 +1901,7 @@ export class DealsComponent
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event,true).subscribe();
+          this.view.dataService.update(e?.event, true).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -1941,7 +1953,7 @@ export class DealsComponent
         this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.dataSelected = this.dataSelected;
-        this.view.dataService.update(this.dataSelected,true).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         this.detectorRef.detectChanges();
         this.notificationsService.notifyCode('SYS007');
       }
