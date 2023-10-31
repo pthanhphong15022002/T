@@ -88,6 +88,20 @@ export const fmIssueVouchersLines: FormModel = {
   entityPer: 'IV_VouchersLines',
 };
 
+export const fmGeneralJournalsLines: FormModel = {
+  entityName: 'AC_GeneralJournalsLines',
+  formName: 'GeneralJournalsLines',
+  gridViewName: 'grvGeneralJournalsLines',
+  entityPer: 'AC_GeneralJournalsLines',
+};
+
+export const fmGeneralJournalsLinesOne: FormModel = {
+  entityName: 'AC_GeneralJournalsLines',
+  formName: 'GeneralJournalsLinesOneAccount',
+  gridViewName: 'grvCashPaymentsLinesOneAccount',
+  entityPer: 'AC_GeneralJournalsLines',
+};
+
 export enum MorfuncCash {
   GhiSoPC = 'ACT041003',
   GhiSoUPC = 'ACT042905',
@@ -490,11 +504,10 @@ export class CodxAcService {
     
     switch (data?.status) {
       case '1':
-      case '5':
-      case '9':
         if (journal.approvalControl == '0') {
           arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncCash.GhiSoPC || element.functionID == MorfuncCash.GhiSoUPC || MorfuncCash.InPC || MorfuncCash.InUPC ||
+            if (element.functionID == MorfuncCash.GhiSoPC || element.functionID == MorfuncCash.GhiSoUPC || element.functionID == MorfuncCash.InPC 
+              || element.functionID == MorfuncCash.InUPC ||
               (element.functionID == MorfuncCash.ChuyenTienDienTu && formModel.funcID == 'ACT0429')) {
               element.disabled = false;
             }else{
@@ -521,6 +534,18 @@ export class CodxAcService {
             element.disabled = true;
           }
         })
+        break;
+      case '5':
+      case '9':
+        arrBookmark.forEach(element => {
+          if (element.functionID == MorfuncCash.GhiSoPC || element.functionID == MorfuncCash.GhiSoUPC || element.functionID == MorfuncCash.InPC 
+            || element.functionID == MorfuncCash.InUPC ||
+            (element.functionID == MorfuncCash.ChuyenTienDienTu && formModel.funcID == 'ACT0429')) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        });
         break;
       case '6':
         arrBookmark.forEach((element) => {

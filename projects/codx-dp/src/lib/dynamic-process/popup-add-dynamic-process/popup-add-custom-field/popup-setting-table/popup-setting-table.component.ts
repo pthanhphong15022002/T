@@ -59,6 +59,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   pos: any;
   data: any;
   release: boolean = true;
+  actionField = 'add';
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -73,6 +74,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.grvSetup = dt?.data?.grvSetup;
+    this.actionField = dt?.data?.action;
     this.listColumns = JSON.parse(JSON.stringify(dt?.data?.listColumns));
     if (this.listColumns?.length > 0) {
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
@@ -259,6 +261,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
       titleAction: this.actionEdit,
       grvSetup: this.grvSetup,
       processNo: this.processNo,
+      disable: this.actionField == 'edit',
     };
 
     let option = new DialogModel();

@@ -25,6 +25,7 @@ import {
   DialogRef,
 } from 'codx-core';
 import {
+  DP_Instances_Steps,
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
@@ -62,8 +63,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @ViewChild('popupGuide') popupGuide;
   //#region Input
   @Input() stepId: any;
-  @Input() dataSources: any;
   @Input() formModel: FormModel;
+  @Input() instanceStep: DP_Instances_Steps;
+  @Input() listInstanceStep: DP_Instances_Steps[];
   @Input() taskAdd: DP_Instances_Steps_Tasks;
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
 
@@ -211,7 +213,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    if (changes.dataSources || changes.stepId) {
+    if (changes.instanceStep || changes.stepId) {
       this.grvMoreFunction = await this.getFormModel('DPT040102');
       await this.getStepById();
       if (this.isLockSuccess) {
@@ -243,7 +245,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (
       changes?.isAddTask &&
       this.isRoleAll &&
-      this.isOnlyView &&
       this.isAddTask
     ) {
       this.chooseTypeTask();
@@ -301,8 +302,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
     } else {
       this.currentStep = this.isDeepCopy
-        ? JSON.parse(JSON.stringify(this.dataSources))
-        : this.dataSources;
+        ? JSON.parse(JSON.stringify(this.instanceStep))
+        : this.instanceStep;
     }
     this.isRoleAll = this.isRoleAll
       ? this.isRoleAll
@@ -468,8 +469,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (
               !(
                 !task?.isTaskDefault &&
-                (this.isRoleAll || isGroup) &&
-                this.isOnlyView
+                (this.isRoleAll || isGroup)
               )
             ) {
               res.disabled = true;
@@ -1397,6 +1397,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           group['modifiedBy'] = data?.groupTask?.modifiedBy;
           group['durationDay'] = data?.groupTask?.durationDay;
           group['durationHour'] = data?.groupTask?.durationHour;
+          group['owner'] = data?.groupTask?.owner;
           if (!group?.isTaskDefault) {
             group['taskGroupName'] = data?.groupTask?.taskGroupName;
             group['memo'] = data?.groupTask?.memo;
@@ -1705,6 +1706,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.startTaskAuto(data);
         }
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
   //#endregion

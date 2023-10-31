@@ -133,7 +133,7 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
           .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', params.id)
           .subscribe((item) => {
             if (item) {
-              if(params?._fv) item = this.formatFristVersion(item)
+              if(params?._fv == true || params?._fv == 'true') item = this.formatFristVersion(item)
               this.dataFile = item;
               this.data = item;
               this.getData();

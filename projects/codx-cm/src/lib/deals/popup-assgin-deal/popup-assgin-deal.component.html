@@ -47,6 +47,7 @@
                         [fields]="fieldCbxParticipants"
                         [placeholder]="gridViewSetup?.Owner?.description"
                         [allowFiltering]="true"
+                        [filterType]="'Contains'"
                         [value]="owner"
                       ></ejs-combobox>
 
@@ -222,6 +223,7 @@
         </button>
         <button
           type="button"
+          [disabled]="isLockStep"
           (click)="onSaveForm()"
           class="btn btn-primary ms-2"
         >
