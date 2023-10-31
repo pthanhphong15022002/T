@@ -7,6 +7,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 import { StepService } from '../step.service';
@@ -317,13 +318,17 @@ export class CodxViewTaskComponent implements OnInit {
       step: this.instanceStep,
       isActivitie: this.isActivitie,
     };
+    let option = new DialogModel();
+    option.zIndex = 1020;
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,
       '',
       550,
       400,
       '',
-      dataInput
+      dataInput,
+      '',
+      option
     );
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);
@@ -427,6 +432,31 @@ export class CodxViewTaskComponent implements OnInit {
             ) {
               res.isblur = true;
             }
+            break;
+            case 'DP28': // Cập nhật
+            if (['B', 'M'].includes(this.dataView?.taskType)) {
+              // this.convertMoreFunctions(event, res, this.dataView.taskType);
+              if (this.dataView?.actionStatus != '2') res.disabled = true;
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP29': // Hủy
+            if (['B', 'M'].includes(this.dataView.taskType)) {
+              // this.convertMoreFunctions(event, res, task.taskType);
+              if (this.dataView?.actionStatus != '2') res.disabled = true;
+            } else {
+              res.disabled = true;
+            }
+            break;
+          case 'DP30': //Khôi phục
+            // if (['B', 'M'].includes(task.taskType)) {
+            //   this.convertMoreFunctions(event, res, task.taskType);
+            //   if (task.taskType == 'M') res.disabled = true;
+            // } else {
+            //   res.disabled = true;
+            // }
+            res.disabled = true;
             break;
         }
       });

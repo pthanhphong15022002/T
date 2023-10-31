@@ -119,6 +119,7 @@ export class CodxAddTaskComponent implements OnInit {
   typeCM = '';
   typeCMName = '';
   dataTypeCM;
+  dataParentTask;
   dataCM = {
     deals: '',
     leads: '',
@@ -214,7 +215,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.isShowCbxGroup = false;
     }
     if(!this.isStart){
-      this.isStart = this.isActivitie = true ? true : this.isActivitie;
+      this.isStart = this.isActivitie == true ? true : this.isActivitie;
     }
     if (!this.listInsStep?.length) {
       this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
@@ -248,6 +249,9 @@ export class CodxAddTaskComponent implements OnInit {
       let startDays = new Date(this.startDateParent);
       startDays.setDate(startDays?.getDate() + 1);
       this.stepsTasks.endDate = startDays;
+    }
+    if(this.action == 'edit' && this.type == 'calendar'){
+      this.getParentTask(this.stepsTasks);
     }
   }
 
@@ -295,7 +299,7 @@ export class CodxAddTaskComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
-    role['roleType'] = 'O';
+    role['roleType'] = 'U';
     role['objectType'] = this.user?.objectType;
     return role;
   }
@@ -623,7 +627,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.checkStatusShowForm();
   }
   //#region save
-  async beforeSave(isCreateMeeting = false) {
+  async beforeSave(isCreateMeeting = false, isAddTask = false){
     this.stepsTasks['roles'] = [
       ...this.ownerDefaut,
       ...this.participant,
@@ -686,30 +690,30 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        this.save(this.stepsTasks, isCreateMeeting);
+        this.save(this.stepsTasks, isCreateMeeting, isAddTask);
       });
     } else {
-      this.save(this.stepsTasks, isCreateMeeting);
+      this.save(this.stepsTasks, isCreateMeeting, isAddTask);
     }
   }
 
-  save(task, isCreateMeeting = false) {
+  save(task, isCreateMeeting = false, isAddTask = false) {
     if (this.action == 'add' || this.action == 'copy') {
       if (isCreateMeeting) {
         task.actionStatus = '2';
         task.status = '2';
       }
-      this.addTask(task, isCreateMeeting);
+      this.addTask(task, isCreateMeeting, isAddTask);
     }
     if (this.action == 'edit') {
       this.editTask(task);
     }
   }
 
-  addTask(task, isCreateMeeting = false) {
+  addTask(task, isCreateMeeting = false, isAddTask = false) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', task)
+        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [task, isCreateMeeting, isAddTask])
         .subscribe((res) => {
           if (res) {
             this.dialog.close({
@@ -721,7 +725,7 @@ export class CodxAddTaskComponent implements OnInit {
           }
         });
     } else {
-      this.dialog.close({task,isActivitie: this.isActivitie});
+      this.dialog.close({task,isActivitie: this.isActivitie, isCreateMeeting, isAddTask});
     }
   }
   editTask(task) {
@@ -933,6 +937,57 @@ export class CodxAddTaskComponent implements OnInit {
         this.listGroup = [];
         this.isShowCbxGroup = false;
       }
+    }
+  }
+
+  getParentTask(task){
+    if(task){
+      let recID = task?.recID;
+      let taskGroupID = task?.taskGroupID;
+      let stepID = task?.stepID;
+      let instanceID = task?.instanceID;
+      let objectID = task?.objectID;
+      let objectType = task?.objectType;
+      this.api.exec<any>(
+        'DP',
+        'ActivitiesBusiness',
+        'GetParentOfTaskAsync',
+        [recID, taskGroupID, stepID, instanceID , objectID, objectType]
+      ).subscribe((res) => {
+        if(res){
+          this.dataParentTask = res;
+          if(res?.instancesStep){
+            this.listInsStep = [res?.instancesStep];
+            this.isShowCbxStep = true;
+            this.disableStep = false;
+            if(res?.instancesStep?.taskGroups){
+              this.listGroup = res?.instancesStep?.taskGroups;
+              this.isShowCbxGroup = true;
+            }
+          }
+          
+          switch(res?.applyFor){
+            case '1':
+              this.typeCM = '5';
+              break;
+            case '2':
+              this.typeCM = '9';
+              break;
+            case '3':
+              this.typeCM;
+              break;
+            case '4':
+              this.typeCM =  '7';
+              break;
+            case '5':
+              this.typeCM = '3';
+              break;
+            case '6':
+              this.typeCM = '1';
+              break;
+          }
+        }
+      })
     }
   }
 }

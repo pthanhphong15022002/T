@@ -21,7 +21,7 @@
   </div>
   <div *ngIf="extendMode == 'module'" class="moduleInfo w-100 fs-6">
     <codx-temp-full
-      cardCss="card-template border-bottom py-3"
+      cardCss="card-template border-bottom pb-3 card-img-40px"
       [typeMF]="'hover'"
       [imageSrc]="lstModule[0].boughtModule?.image"
       [title]="lstModule[0].boughtModule.moduleName"
@@ -43,24 +43,24 @@
 <ng-template #body>
   <div *ngIf="lstModule" class="container w-100 h-100 p-2">
     <div class="grvModule">
-      <div class="title d-flex justify-content-between row">
-        <div class="space col-4"></div>
-        <div class="title-name col-4 d-flex justify-content-center">
-          <h1>
-            <codx-label name="lblBill" default="Đơn hàng"></codx-label>
-          </h1>
-        </div>
-        <div class="months d-flex align-items-center col-4">
-          <codx-input
-            type="valuelist"
-            field=""
-            refValue="TN001"
-            [crrValue]="months"
-            (valueChange)="changeMonths($event)"
-            [showInput]="false"
-          >
-          </codx-input>
-          /
+      <div class="title d-flex justify-content-center mb-4">
+        <div class="d-flex align-items-center">
+          <div class="title-name me-3">
+            <h3>
+              <codx-label name="lblBill" default="Đơn hàng"></codx-label>
+            </h3>
+          </div>
+          <div class="me-2 w-100px">
+            <codx-input
+              type="valuelist"
+              field=""
+              refValue="TN001"
+              [crrValue]="months"
+              (valueChange)="changeMonths($event)"
+              [showInput]="false"
+            >
+            </codx-input>
+          </div>
           <codx-vll
             [name]="grvTNOrders['Interval']?.referedValue"
             [value]="'1'"
@@ -161,9 +161,9 @@
 </ng-template>
 <!-- Column Content -->
 <ng-template #emplTmp let-module>
-  <span *ngIf="module.childModule" class="d-flex">
+  <div *ngIf="module.childModule" class="d-flex">
     <div class="d-flex">
-      <div class="input w-50 h-100">
+      <div class="input w-75px h-100 me-2">
         <codx-input
           type="number"
           [crrValue]="+module.childModule.boughtModule.quantity"
@@ -178,12 +178,12 @@
         {{ " / " + module.childModule.boughtModule.umid }}
       </span>
     </div>
-  </span>
+  </div>
 </ng-template>
 
 <ng-template #operatorTmp let-module>
   <div class="d-flex">
-    <div class="input w-100 h-100">
+    <div class="input w-75px h-100 me-2">
       <codx-input
         type="number"
         [crrValue]="+module.boughtModule.quantity"
@@ -203,7 +203,7 @@
 <ng-template #moduleTmp let-module>
   {{ module.moduleName }}
   <codx-temp-full
-    cardCss="card-template border-bottom py-3"
+    cardCss="card-template border-bottom py-3 card-img-30px"
     [typeMF]="'hover'"
     [title]="module.boughtModule.moduleName"
     [descTmp]="moduleOperatorDescTmp"

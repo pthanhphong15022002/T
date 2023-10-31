@@ -1,0 +1,35 @@
+<codx-form
+    [headerText]="headerText"
+    [dialog]="dialog"
+    [body]="body"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column h-100">
+        <div class="d-flex my-2">
+            <div class="rounded fd-evo-detail-img me-4" [style.background-image]="'url('+data?.productImg+')'"></div>
+            <div class="d-flex flex-column w-100">
+                <h2>{{data?.productNm}}</h2>
+                <div class="d-flex align-items-center pb-4">
+                    <img *ngIf="data?.brandLogo" [src]="data?.brandLogo" class="rounded-0 w-25px h-25px">
+                    <span class="ms-2 fw-bold">{{data?.brandNm}}</span>
+                </div>
+                <div class="d-flex flex-column" *ngIf="data?.size && data?.size.length>0">
+                    <div class="d-flex flex-wrap">
+                        <div class="border rounded-0 px-2 py-1 me-1 mb-2" *ngFor="let item of data?.size">{{item?.pricePrice | currency:'VND':true}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column overflow-auto h-scroll-fd-e-d pt-2">
+            <div class="d-flex flex-column pb-2" *ngIf="data?.brandServiceGuide">
+                <codx-label default="Mô tả thẻ quà tặng" class="fw-bold mb-2 fs-5-sm"></codx-label>
+                <div class="ps-4" [innerHTML]="data?.brandServiceGuide"></div>
+            </div>
+            <div class="d-flex flex-column" *ngIf="data?.terms">
+                <codx-label default="Thông tin nhà cung cấp" class="fw-bold mb-2 fs-5-sm"></codx-label>
+                <div class="ps-4" [innerHTML]="data?.brandDesc"></div>
+            </div>
+        </div>
+    </div>
+</ng-template>

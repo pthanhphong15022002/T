@@ -1320,7 +1320,12 @@ export class CodxShareService {
       [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
-
+  genURLParamObject(object:any ){    
+    var json =JSON.stringify(object);
+    //json = encode(json) Thêm bước mã hóa
+    let paramURL = encodeURIComponent(json);
+    return paramURL;    
+  }
   getRpListByTemplateID(recID: any) {
     return this.api.execSv(
       'rptrp',
@@ -1376,6 +1381,15 @@ export class CodxShareService {
     );
   }
   
+  createNewESSF(sf:any){
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'SignFilesBusiness',
+      'AddNewSignFileAsync',
+      [sf]
+    );
+  }
   getSettingValueWithOption(option, formName, transType=null, category=null) {
     //option: Filter With 
     //"F": FormName 
@@ -1931,69 +1945,7 @@ export class CodxShareService {
       }
     );
   }
-  //Gộp hàm
-  // apCreateExportFile(
-  //   approveProcess: ApproveProcess,
-  //   releaseCallback: (response: ResponseModel, component: any) => void,
-  //   exportUpload: ExportUpload
-  // ) {
-  //   this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
-  //     (exportedFile: any) => {
-  //       //Nhận thông tin file trả lên sau khi export
-  //       if (exportedFile) {
-  //         switch (approveProcess?.category?.releaseControl) {
-  //           case '2': //Export và tạo ES_SignFiles để gửi duyệt
-  //             this.getFileByObjectID(approveProcess.recID).subscribe(
-  //               (lstFile: any) => {
-  //                 let signFile = this.apCreateSignFile(approveProcess, lstFile);
-  //                 if (lstFile?.length > 0) {
-  //                   this.apOpenPopupSignFile(
-  //                     approveProcess,
-  //                     releaseCallback,
-  //                     signFile,
-  //                     lstFile
-  //                   );
-  //                 } else {
-  //                   this.notificationsService.notify(
-  //                     'Không tìm thấy tài liệu!',
-  //                     '2'
-  //                   );
-  //                 }
-  //               }
-  //             );
-  //             break;
-
-  //           case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
-  //           case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-  //           //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
-  //             if (exportedFile?.extension != '.pdf') {
-  //               this.convertFileToPDF(
-  //                 exportedFile?.recID,
-  //                 exportedFile?.extension
-  //               ).subscribe((res) => {
-  //                 if(res){
-  //                   this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
-  //                 }
-  //                 else{
-  //                   this.notificationsService.notify(
-  //                     'Xuất tài liệu PDF thất bại!',
-  //                     '2'
-  //                   );
-  //                 }
-  //               });
-  //             }
-  //             else{
-  //               this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
-  //             }
-  //             break;
-  //         }
-  //       } else {
-  //         this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
-  //       }
-  //     }
-  //   );
-  // }
-
+  
   apReleaseWithoutSignFile(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void
@@ -2018,11 +1970,22 @@ export class CodxShareService {
         break;
 
       case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-        this.apBaseRelease(approveProcess, releaseCallback);
+      this.getFileByObjectID(approveProcess.recID).subscribe(
+        (lstFile: any) => {
+          let signFile = this.apCreateSignFile(
+            approveProcess,
+            lstFile
+          );
+          this.createNewESSF(signFile).subscribe(res=>{
+            if(res){
+              this.apBaseRelease(approveProcess, releaseCallback);            
+            }
+          });
+        });
         break;
+        
     }
   }
-
   apOpenViewSignFile(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,

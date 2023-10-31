@@ -30,6 +30,8 @@ import {
   IAccTextRenderEventArgs,
   IBulletLoadedEventArgs,
   IPointRenderEventArgs,
+  ITextRenderEventArgs,
+  ITooltipRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
 import { filter, reduce } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
@@ -267,7 +269,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   lstStatusCodes = [];
   vllStatusDeals = [];
   vllSalesPiplines = [];
-  statusPip = '1';
+  statusPip = 'btSaleStages';
   palettePipsStages = [];
   palettePipsStatus = [];
   palettePipsStatusCodes = [];
@@ -402,6 +404,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   vllUpDowns = [];
   currencyID: any;
   exchangeRate: number;
+  vllTextYears = [];
   //new
   arrReport: any = [];
   viewCategory: any;
@@ -417,7 +420,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataReasonsSuscess = [];
   dataReasonsFails = [];
   tabActiveReson = 'btReasonSucess';
-
+  textTitle = '';
   //end
   constructor(
     inject: Injector,
@@ -777,6 +780,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.vllStatusDeals = vll?.datas;
       }
     });
+
+    this.cache.valueList('SYS058').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.vllTextYears = vll?.datas;
+      }
+    });
+
     this.cache.valueList('CRM071').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.vllSalesPiplines = vll?.datas;
@@ -1670,11 +1680,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     var tmp = {};
     const frmDate = new Date(fromDate);
     const tDate = new Date(toDate);
-    let frmDateOlds = new Date(frmDate);
-    frmDateOlds.setMonth(frmDateOlds.getMonth() - 1);
-    let tDateOlds = new Date(tDate);
-    tDateOlds.setMonth(tDateOlds.getMonth() - 1);
-
+    let { frmDateOld, tDateOld, type } = this.setDateOlds(frmDate, tDate);
+    this.textTitle = type;
     const dealCurrents = deals.filter(
       (x) =>
         new Date(x?.expectedClosed) >= frmDate &&
@@ -1682,8 +1689,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDateOlds &&
-        new Date(x?.expectedClosed) <= tDateOlds
+        new Date(x?.expectedClosed) >= frmDateOld &&
+        new Date(x?.expectedClosed) <= tDateOld
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
@@ -1776,19 +1783,32 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .filter((value, index, self) => self.indexOf(value) === index);
 
     const countDealsConverts =
-      dealCurrents.filter((x) => lstDealsIDs.some((y) => y == x.recID))
-        ?.length ?? 0;
+      dealCurrents.filter(
+        (x) => lstDealsIDs.some((y) => y == x.recID) && x.status == '3'
+      )?.length ?? 0;
     const countDealsConvertOlds =
-      dealOlds.filter((x) => lstDealsIDs.some((y) => y == x.recID))?.length ??
-      0;
+      dealOlds.filter(
+        (x) => lstDealsIDs.some((y) => y == x.recID) && x.status == '3'
+      )?.length ?? 0;
+
+    const leadCurrentCount = leads.filter(
+      (x) =>
+        new Date(x?.createdOn) >= frmDate && new Date(x?.createdOn) <= tDate
+    ).length;
+
+    const leadOldsCount = leads.filter(
+      (x) =>
+        new Date(x?.createdOn) >= frmDateOld &&
+        new Date(x?.createdOn) <= tDateOld
+    ).length;
 
     countDealValues =
-      dealCurrents.length > 0
-        ? Math.round(countDealsConverts / dealCurrents.length) * 100
+      leadCurrentCount > 0
+        ? countDealsConverts / leadCurrentCount * 100
         : 0;
     countDealValueOlds =
-      dealOlds.length > 0
-        ? Math.round(countDealsConvertOlds / dealOlds.length) * 100
+      leadOldsCount > 0
+        ? countDealsConvertOlds / leadOldsCount * 100
         : 0;
 
     isAsc =
@@ -1798,8 +1818,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         ? '1'
         : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
     tmp['value'] = '5';
-    tmp['count'] = countDealValues + '%';
-    tmp['countOld'] = countDealValueOlds + '%';
+    tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
+    tmp['countOld'] = (countDealValueOlds > 0 ?  countDealValues.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
     tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
@@ -1820,6 +1840,100 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       return value.toLocaleString();
     }
   }
+
+  setDateOlds(
+    fromDate: Date,
+    toDate: Date
+  ): { frmDateOld: Date; tDateOld: Date; type: string } {
+    let yearFd = fromDate.getFullYear();
+    let yearTd = toDate.getFullYear();
+    let monthFd = fromDate.getMonth() + 1;
+    let monthTd = toDate.getMonth() + 1;
+    let dateFd = fromDate.getDate();
+    let dateTd = toDate.getDate();
+    let frmDateOld = new Date(fromDate);
+    let tDateOld = new Date(toDate);
+    let type = '';
+    if (yearFd == yearTd) {
+      if (dateFd == 1 && monthFd == 1 && monthTd == 3 && dateTd == 31) {
+        frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
+        frmDateOld.setMonth(9);
+        tDateOld.setFullYear(tDateOld.getFullYear() - 1);
+        tDateOld.setMonth(11);
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
+      } else if (dateFd == 1 && monthFd == 4 && monthTd == 6 && dateTd == 30) {
+        frmDateOld.setMonth(0);
+        tDateOld.setMonth(2);
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
+      } else if (dateFd == 1 && monthFd == 7 && monthTd == 9 && dateTd == 30) {
+        frmDateOld.setMonth(3);
+        tDateOld.setMonth(5);
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
+      } else if (
+        dateFd == 1 &&
+        monthFd == 10 &&
+        monthTd == 12 &&
+        dateTd == 31
+      ) {
+        frmDateOld.setMonth(6);
+        tDateOld.setMonth(8);
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
+      } else if (monthFd == monthTd) {
+        if (dateFd == dateTd) {
+          frmDateOld.setDate(frmDateOld.getDate() - 1);
+          tDateOld.setDate(tDateOld.getDate() - 1);
+          type = this.vllTextYears?.find((x) => x.value == 'TY20')?.text;
+        } else {
+          frmDateOld.setMonth(frmDateOld.getMonth() - 1);
+          tDateOld.setMonth(tDateOld.getMonth() - 1);
+          type = this.vllTextYears?.find((x) => x.value == 'TY22')?.text;
+        }
+      } else if (monthFd == 1 && monthTd == 12) {
+        frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
+        tDateOld.setFullYear(tDateOld.getFullYear() - 1);
+        type = this.vllTextYears?.find((x) => x.value == 'TY24')?.text;
+      } else {
+        let day = Math.floor(
+          Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
+            (24 * 60 * 60 * 1000)
+        );
+        tDateOld = new Date(frmDateOld.setDate(frmDateOld.getDate() - 1));
+        frmDateOld.setDate(tDateOld.getDate() - day);
+        type =
+          frmDateOld.toLocaleDateString('en-GB') +
+          ' - ' +
+          tDateOld.toLocaleDateString('en-GB');
+      }
+    } else {
+      let day = Math.floor(
+        Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
+          (24 * 60 * 60 * 1000)
+      );
+      tDateOld = new Date(frmDateOld.setDate(frmDateOld.getDate() - 1));
+      frmDateOld.setDate(tDateOld.getDate() - day);
+      type =
+        frmDateOld.toLocaleDateString('en-GB') +
+        ' - ' +
+        tDateOld.toLocaleDateString('en-GB');
+    }
+    return { frmDateOld, tDateOld, type };
+  }
+
+  getTotalDaysInMonth(month, year) {
+    if (month === 1) {
+      // Tháng 2
+      if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
+        return 29; // Năm nhuận, tháng 2 có 29 ngày
+      } else {
+        return 28; // Năm không nhuận, tháng 2 có 28 ngày
+      }
+    } else if (month === 3 || month === 5 || month === 8 || month === 10) {
+      return 30; // Các tháng có 30 ngày
+    } else {
+      return 31; // Các tháng có 31 ngày
+    }
+  }
+
   //end
 
   //sales pipe
@@ -1830,92 +1944,115 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     deals = deals.filter(
       (x) => new Date(x.createdOn) >= frmDate && new Date(x.createdOn) <= tDate
     );
-    if (this.statusPip != null && this.statusPip.trim() != '') {
-      this.lstSalesStages = [];
-      this.lstSalesStatus = [];
-      this.lstSalesStatusCodes = [];
-      this.palettePipsStages = [];
-      this.palettePipsStatus = [];
-      this.palettePipsStatusCodes = [];
-      if (this.tmpProcessDefault) {
-        const lstSteps = this.tmpProcessDefault?.steps ?? [];
-        for (var item of lstSteps) {
-          var tmp = {};
-          tmp['name'] = item.stepName;
-          tmp['value'] = item.recID;
-          tmp['color'] = item.textColor;
-          tmp['backgroundColor'] = item.backgroundColor;
-          const dealsSteps = deals.filter(
-            (x) =>
-              x.processID == this.tmpProcessDefault?.recID &&
-              item.recID == x.stepID
-          );
-          tmp['quantity'] = dealsSteps?.length ?? 0;
-          if (dealsSteps?.length > 0) {
-            this.lstSalesStages.push(tmp);
-            this.palettePipsStages.push(item.backgroundColor);
-          }
+    this.lstSalesStages = [];
+    this.lstSalesStatus = [];
+    this.lstSalesStatusCodes = [];
+    this.palettePipsStages = [];
+    this.palettePipsStatus = [];
+    this.palettePipsStatusCodes = [];
+    if (this.tmpProcessDefault) {
+      const lstSteps = this.tmpProcessDefault?.steps ?? [];
+      for (var item of lstSteps) {
+        var tmp = {};
+        tmp['name'] = item.stepName;
+        tmp['value'] = item.recID;
+        tmp['color'] = item.textColor;
+        tmp['backgroundColor'] = item.backgroundColor;
+        const dealsSteps = deals.filter(
+          (x) =>
+            x.processID == this.tmpProcessDefault?.recID &&
+            item.recID == x.stepID
+        );
+        tmp['quantity'] = dealsSteps?.length ?? 0;
+        if (dealsSteps?.length > 0) {
+          this.lstSalesStages.push(tmp);
+          this.palettePipsStages.push(item.backgroundColor);
         }
       }
-      if (this.vllStatusDeals != null) {
-        for (var item of this.vllStatusDeals) {
-          var tmp = {};
-          tmp['name'] = item.text;
-          tmp['value'] = item.value;
-          tmp['color'] = item.color;
-          const countDeals =
-            deals.filter((x) => item.value == x.status)?.length ?? 0;
-          tmp['quantity'] = countDeals;
-          if (countDeals > 0) {
-            this.lstSalesStatus.push(tmp);
-            this.palettePipsStatus.push(item.color);
-          }
+    }
+    if (this.vllStatusDeals != null) {
+      for (var item of this.vllStatusDeals) {
+        var tmp = {};
+        tmp['name'] = item.text;
+        tmp['value'] = item.value;
+        tmp['color'] = item.color;
+        const countDeals =
+          deals.filter((x) => item.value == x.status)?.length ?? 0;
+        tmp['quantity'] = countDeals;
+        if (countDeals > 0) {
+          this.lstSalesStatus.push(tmp);
+          this.palettePipsStatus.push(item.color);
         }
       }
+    }
 
-      if (this.lstStatusCodes != null) {
-        for (var item of this.lstStatusCodes) {
-          var tmp = {};
-          tmp['name'] = item.StatusName;
-          tmp['value'] = item.StatusID;
-          const countDeals =
-            deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
-          tmp['quantity'] = countDeals;
-          if (countDeals > 0) {
-            this.lstSalesStatusCodes.push(tmp);
-          }
+    if (this.lstStatusCodes != null) {
+      for (var item of this.lstStatusCodes) {
+        var tmp = {};
+        tmp['name'] = item.StatusName;
+        tmp['value'] = item.StatusID;
+        const countDeals =
+          deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
+        tmp['quantity'] = countDeals;
+        if (countDeals > 0) {
+          this.lstSalesStatusCodes.push(tmp);
         }
       }
-
-      this.lstAlls =
-        this.statusPip == '1'
-          ? JSON.parse(JSON.stringify(this.lstSalesStages))
-          : this.statusPip == '2'
-          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
-          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
     }
     this.detectorRef.detectChanges();
   }
 
-  viewPips(value) {
-    if (value != this.statusPip) {
-      this.statusPip = value;
-      this.lstAlls =
-        this.statusPip == '1'
-          ? JSON.parse(JSON.stringify(this.lstSalesStages))
-          : this.statusPip == '2'
-          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
-          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
-      const element = this.myIsActiveEle?.nativeElement;
-      if (element) {
-        if (this.isActive(value)) {
-          this.renderer?.removeClass(element, 'view-switch');
-          this.renderer?.addClass(element, 'cm-bg-primary');
-        } else {
-          this.renderer?.removeClass(element, 'cm-bg-primary');
-          this.renderer?.addClass(element, 'view-switch');
-        }
-      }
+  changeGroupType(ele: any, obj: any) {
+    if (ele.id == this.statusPip) return;
+    this.statusPip = ele.id;
+    if (ele?.id == 'btSaleStages' && Object.keys(obj)?.length) {
+      !obj.chart2.pie2.element.classList.contains('d-none') &&
+        obj.chart2.pie2.element.classList.add('d-none');
+      !obj.chart2.gauge2.classList.contains('d-none') &&
+        obj.chart2.gauge2.classList.add('d-none');
+      !obj.chart3.pie3.element.classList.contains('d-none') &&
+        obj.chart3.pie3.element.classList.add('d-none');
+      !obj.chart3.gauge3.classList.contains('d-none') &&
+        obj.chart3.gauge3.classList.add('d-none');
+
+      obj.chart1.pie1.element.classList.contains('d-none') &&
+        obj.chart1.pie1.element.classList.remove('d-none');
+      obj.chart1.pie1.refresh();
+      obj.chart1.gauge1.classList.contains('d-none') &&
+        obj.chart1.gauge1.classList.remove('d-none');
+    }
+    if (ele?.id == 'btSaleStatus' && Object.keys(obj)?.length) {
+      !obj.chart1.pie1.element.classList.contains('d-none') &&
+        obj.chart1.pie1.element.classList.add('d-none');
+      !obj.chart1.gauge1.classList.contains('d-none') &&
+        obj.chart1.gauge1.classList.add('d-none');
+      !obj.chart3.pie3.element.classList.contains('d-none') &&
+        obj.chart3.pie3.element.classList.add('d-none');
+      !obj.chart3.gauge3.classList.contains('d-none') &&
+        obj.chart3.gauge3.classList.add('d-none');
+
+      obj.chart2.pie2.element.classList.contains('d-none') &&
+        obj.chart2.pie2.element.classList.remove('d-none');
+      obj.chart2.pie2.refresh();
+      obj.chart2.gauge2.classList.contains('d-none') &&
+        obj.chart2.gauge2.classList.remove('d-none');
+    }
+
+    if (ele?.id == 'btSaleStatusCodes' && Object.keys(obj)?.length) {
+      !obj.chart1.pie1.element.classList.contains('d-none') &&
+        obj.chart1.pie1.element.classList.add('d-none');
+      !obj.chart1.gauge1.classList.contains('d-none') &&
+        obj.chart1.gauge1.classList.add('d-none');
+      !obj.chart2.pie2.element.classList.contains('d-none') &&
+        obj.chart2.pie2.element.classList.add('d-none');
+      !obj.chart2.gauge2.classList.contains('d-none') &&
+        obj.chart2.gauge2.classList.add('d-none');
+
+      obj.chart3.pie3.element.classList.contains('d-none') &&
+        obj.chart3.pie3.element.classList.remove('d-none');
+      obj.chart3.pie3.refresh();
+      obj.chart3.gauge3.classList.contains('d-none') &&
+        obj.chart3.gauge3.classList.remove('d-none');
     }
     this.detectorRef.detectChanges();
   }
@@ -1958,7 +2095,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   settingChart(max) {
-    let interval = Math.ceil(max / 10);
+    let interval = this.formatMaxValue(Math.ceil(max / 10));
     let maximum = interval * 10;
 
     this.primaryXAxisY = {
@@ -1972,6 +2109,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       minorTickLines: { width: 0 },
       lineStyle: { width: 0 },
     };
+    let labelFormat = this.labelFormat(max);
     this.primaryYAxisY = {
       title: this.currencyID,
       minimum: 0,
@@ -1982,18 +2120,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       majorGridLines: { width: 1 },
       minorGridLines: { width: 1 },
       minorTickLines: { width: 0 },
-      labelFormat: `{value}`,
+      labelFormat: labelFormat,
     };
 
     this.toolTipSeri = {
       enable: true,
       shared: true,
-      format: '${series.name} : <b>${point.y}</b>',
+      format: '${point.tooltip}',
     };
   }
 
-  textSeriRender(args: IAccTextRenderEventArgs) {
-    console.log(args);
+  textSeriRender(args: ITextRenderEventArgs) {
+    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
+    let value = text?.text ?? 0;
+    let retrn = '0';
+    if (value === null || isNaN(value)) {
+      retrn = '0';
+    }
+  }
+
+  poinSeriRender(args: IPointRenderEventArgs): void {
+    let index = this.lstMonthsSeries.findIndex(x => x.month == args.point.x);
+
+    if(index != -1){
+      args.point.tooltip = this.lstMonthsSeries[index]?.expected.toLocaleString();
+    }
+  }
+
+  tooltipSeriRender(e: ITooltipRenderEventArgs){
+    console.log(e);
   }
   //end
 
@@ -2135,13 +2290,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let list = [];
     let frDate = new Date(fromDate);
     let tDate = new Date(toDate);
-
+    let { frmDateOld, tDateOld, type } = this.setDateOlds(frDate, tDate);
     if (lstUsers?.length > 0) {
       lstUsers.sort((a, b) => {
         const dealValueA = a?.deals
           .filter(
             (x) =>
-              new Date(x.createdOn) >= frDate && new Date(x.createdOn) <= tDate
+              new Date(x.expectedClosed) >= frDate &&
+              new Date(x.expectedClosed) <= tDate
           )
           .reduce(
             (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
@@ -2150,7 +2306,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         const dealValueB = b?.deals
           .filter(
             (x) =>
-              new Date(x.createdOn) >= frDate && new Date(x.createdOn) <= tDate
+              new Date(x.expectedClosed) >= frDate &&
+              new Date(x.expectedClosed) <= tDate
           )
           .reduce(
             (sum, deal) => (deal.status === '3' ? sum + deal?.dealValue : sum),
@@ -2160,15 +2317,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           const numDealsA = a?.deals
             .filter(
               (x) =>
-                new Date(x.createdOn) >= frDate &&
-                new Date(x.createdOn) <= tDate
+                new Date(x.expectedClosed) >= frDate &&
+                new Date(x.expectedClosed) <= tDate
             )
             .filter((deal) => deal.status === '3').length;
           const numDealsB = b?.deals
             .filter(
               (x) =>
-                new Date(x.createdOn) >= frDate &&
-                new Date(x.createdOn) <= tDate
+                new Date(x.expectedClosed) >= frDate &&
+                new Date(x.expectedClosed) <= tDate
             )
             .filter((deal) => deal.status === '3').length;
           return numDealsB - numDealsA;
@@ -2202,8 +2359,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.leads.filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.createdOn) >= frmDateOld &&
+                      new Date(x.createdOn) <= tDateOld
                   ).length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2217,8 +2374,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 countOlds =
                   item?.deals.filter(
                     (x) =>
-                      new Date(x.createdOn).getFullYear() ==
-                      tDate.getFullYear() - 1
+                      new Date(x.createdOn) >= frmDateOld &&
+                      new Date(x.createdOn) <= tDateOld
                   )?.length ?? 0;
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2226,8 +2383,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 item?.deals
                   .filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.expectedClosed) >= frDate &&
+                      new Date(x.expectedClosed) <= tDate
                   )
                   ?.forEach((ele) => {
                     if (ele.status == '3') {
@@ -2235,7 +2392,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     }
                   }); //Để test dữ liệu xong thay field createdOn thành ExpectedClosed
                 countOlds = item?.deals
-                  ?.filter((x) => x.status == '3')
+                  ?.filter(
+                    (x) =>
+                      x.status == '3' &&
+                      new Date(x.expectedClosed) >= frmDateOld &&
+                      new Date(x.expectedClosed) <= tDateOld
+                  )
                   .reduce((acc, x) => acc + x.dealValue, 0);
                 tmpPerform['count'] = count.toLocaleString();
                 break;
@@ -2243,8 +2405,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 item?.deals
                   .filter(
                     (x) =>
-                      new Date(x.createdOn) >= frDate &&
-                      new Date(x.createdOn) <= tDate
+                      new Date(x.expectedClosed) >= frDate &&
+                      new Date(x.expectedClosed) <= tDate
                   )
                   ?.forEach((ele) => {
                     if (ele.status == '5') {
@@ -2431,11 +2593,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   labelFormat(value: number) {
     if (value >= 1000000) {
-      return '${value}M';
+      return '{value}M';
     } else if (value >= 1000) {
-      return '${value}K';
+      return '{value}K';
     } else {
-      return '${0}';
+      return '{0}';
     }
   }
 

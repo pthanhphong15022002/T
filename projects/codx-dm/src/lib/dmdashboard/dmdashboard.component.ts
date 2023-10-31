@@ -56,17 +56,47 @@ export class DMDashboardComponent extends UIComponent implements AfterViewInit {
     { orgUnitID: 'ORG-0001', exe: 16 },
   ];
 
-  public primaryXAxis: Object = {
-    valueType: 'Category',
-    majorGridLines: {width:0}
-  };
+  primaryXAxis: Object = {
+    majorGridLines: { width: 0 },
+    minorGridLines: { width: 0 },
+    majorTickLines: { width: 0 },
+    minorTickLines: { width: 0 },
+    interval: 1,
+    lineStyle: { width: 0 },
+    valueType: 'Category'
+};
+//Initializing Primary Y Axis
+primaryYAxis: Object = {
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+};
 
   public levels: object = [
     // { groupPath: 'Country', border: { color: 'black', width: 0.5 } },
     // { groupPath: 'JobDescription', border: { color: 'black', width: 0.5 } },
     // { groupPath: 'JobGroup', border: { color: 'black', width: 0.5 } },
   ];
+  dataLabel: Object = {
+    visible: true,
+    position: 'Outside', name: 'extension',
+    font: {
+        fontWeight: '500'
+    },
+    connectorStyle: { length: '20px', type: 'Curve'},
 
+  };
+  dataLabel2: Object = {
+    visible: true,
+    position: 'Outside', name: 'module',
+    font: {
+        fontWeight: '500'
+    },
+    connectorStyle: { length: '20px', type: 'Curve'},
+
+  };
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,

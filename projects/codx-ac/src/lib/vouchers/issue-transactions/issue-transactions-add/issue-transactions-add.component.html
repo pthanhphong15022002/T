@@ -182,7 +182,7 @@
               </div>
             </div>
             <div class="row"
-              [style]="formVouchers.data?.subType == '0302' ? 'visibility: hidden;position: absolute;' : ''">
+              [style]="formVouchers.data?.subType == '0312' ? 'visibility: hidden;position: absolute;' : ''">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="DIM1"
@@ -207,7 +207,7 @@
               </div>
             </div>
             <div class="row"
-              [style]="formVouchers.data?.subType == '0301' ? 'visibility: hidden;position: absolute;' : ''">
+              [style]="formVouchers.data?.subType == '0311' ? 'visibility: hidden;position: absolute;' : ''">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ObjectID"
@@ -289,7 +289,7 @@
 <ng-template #TmpTabLine>
   <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
     <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
-      [formName]="fmIssueVouchersLines.formName" [gridViewName]="fmIssueVouchersLines.gridViewName" [hideMoreFunc]="true"
+      [formName]="fmIssueVouchersLines.formName" [gridViewName]="fmIssueVouchersLines.gridViewName" [templateMore]="templateMore"
       [entityName]="fmIssueVouchersLines.entityName" predicates="TransID=@0" [dataValues]="formVouchers?.data?.recID"
       service="IV" [editOnClick]="true" rowNoField="rowNo" (gridInit)="beforeInitGrid($event)" (eventAction)="onActionGrid($event)"
       (actionCompleted)="onActionGrid($event)"
@@ -309,3 +309,8 @@
   </div>
 </ng-template>
 <!-- End: Grid Vouchers -->
+
+<ng-template #templateMore let-data>
+  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+    type="view"></codx-mfunc>
+</ng-template>
