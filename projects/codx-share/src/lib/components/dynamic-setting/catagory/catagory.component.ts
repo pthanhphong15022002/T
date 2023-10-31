@@ -30,12 +30,14 @@ import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { PopupAddDynamicProcessComponent } from 'projects/codx-dp/src/lib/dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { ActivatedRoute } from '@angular/router';
 import { JournalsAddIdimcontrolComponent } from 'projects/codx-ac/src/lib/journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
+import { FormatPipe } from '../pipes/format-string.pipe';
 
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
   styleUrls: ['./catagory.component.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [FormatPipe],
 })
 export class CatagoryComponent implements OnInit {
   private components = {
@@ -44,7 +46,7 @@ export class CatagoryComponent implements OnInit {
     cpnApprovals: CodxApproveStepsComponent,
     cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
-    idimControl:JournalsAddIdimcontrolComponent,
+    idimControl: JournalsAddIdimcontrolComponent,
     PopupAddDynamicProcessComponent: PopupAddDynamicProcessComponent,
   };
   category = '';
@@ -81,6 +83,7 @@ export class CatagoryComponent implements OnInit {
     private cache: CacheService,
     private inject: Injector,
     private activatedRoute: ActivatedRoute,
+    private formatDes: FormatPipe,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -94,6 +97,7 @@ export class CatagoryComponent implements OnInit {
       this.category = data.data?.category;
       this.function = data.data?.function;
       this.lineType = data.data?.lineType;
+      this.itemSelect = data.data?.itemSelect;
       //this.loadSettingValue();
     }
   }
@@ -107,7 +111,17 @@ export class CatagoryComponent implements OnInit {
         });
       }
       this.dialog.closed.subscribe((res) => {
+        //let dataValues = this.dataValue[this.itemSelect.transType];
+        if (this.itemSelect) {
+          let des = this.formatDes.transform(this.itemSelect, this.dataValue);
+          let ele = document.querySelector(
+            ".setting-description[data-id='" + this.itemSelect.recID + "']"
+          );
+          if (ele) (ele as HTMLElement).innerText = des;
+        }
+
         this.dialog = null;
+        this.itemSelect = {};
       });
     } else {
       this.lstFuncID = [];
@@ -170,6 +184,7 @@ export class CatagoryComponent implements OnInit {
     this.loadSettingValue();
   }
 
+  itemSelect: any = {};
   openPopup(evt: any, item: any, reference: string = '') {
     let value = item.fieldName,
       recID = item.recID;
@@ -202,6 +217,7 @@ export class CatagoryComponent implements OnInit {
         data['category'] = this.category;
         data['function'] = this.function;
         data['lineType'] = lineType;
+        data['itemSelect'] = item;
         width = 500;
         height = 100 * itemChild.length;
 
@@ -372,9 +388,12 @@ export class CatagoryComponent implements OnInit {
           let dataValue = this.dataValue['null'];
           if (dataValue) {
             let obj = {
-              lsselectidimcontrol: this.dataValue['null'][value] == '' ? [] :this.dataValue['null'][value].split(';'),
-              headerText : item.tilte,
-              showAll : true
+              lsselectidimcontrol:
+                this.dataValue['null'][value] == ''
+                  ? []
+                  : this.dataValue['null'][value].split(';'),
+              headerText: item.tilte,
+              showAll: true,
             };
             let dialog = this.callfc.openForm(
               JournalsAddIdimcontrolComponent,
@@ -389,13 +408,15 @@ export class CatagoryComponent implements OnInit {
             dialog.closed.subscribe((res) => {
               if (res.event != null) {
                 dataValue[value] = res.event;
-                let dt = this.settingValue.find(x => x.category == this.category && x.transType == item.transType);
+                let dt = this.settingValue.find(
+                  (x) =>
+                    x.category == this.category && x.transType == item.transType
+                );
                 if (dt) {
                   dt.dataValue = JSON.stringify(dataValue);
                   this.api
                     .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-                    .subscribe((res) => {
-                    });
+                    .subscribe((res) => {});
                 }
               }
             });
@@ -1006,7 +1027,7 @@ export class CatagoryComponent implements OnInit {
         .execAction('SYS_SettingValues', lstData, 'UpdateAsync')
         .subscribe((res) => {
           if (res) {
-            this.dialog.close();
+            this.dialog.close(lstData);
           }
           this.changeDetectorRef.detectChanges();
           console.log(res);

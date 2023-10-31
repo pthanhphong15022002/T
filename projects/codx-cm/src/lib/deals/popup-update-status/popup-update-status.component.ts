@@ -30,7 +30,10 @@ export class PopupUpdateStatusComponent
   formModel: FormModel;
   title: string = '';
   gridViewSetup: any;
+
   applyProcess: boolean = false;
+  isLockStep: boolean = false;
+
   @ViewChild('form') form: CodxFormComponent;
   statusDefault:string = '';
   statusCodecmt: string = '';
@@ -49,7 +52,6 @@ export class PopupUpdateStatusComponent
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    debugger;
     this.applyProcess = dialogData?.data.applyProcess;
     this.statusDefault = dialogData?.data.statusDefault;
     this.statusCodecmt = dialogData?.data.statusCodecmt;
@@ -68,7 +70,9 @@ export class PopupUpdateStatusComponent
     this.dialogRef.close();
   }
   saveForm() {
-    var datas = [this.recID, this.statusDefault, this.statusCodecmt];
+    if(this.isLockStep) return;
+    this.isLockStep = true;
+    let datas = [this.recID, this.statusDefault, this.statusCodecmt];
     this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
       if (res) {
         let obj = {
