@@ -7,6 +7,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import { firstValueFrom } from 'rxjs';
 import { StepService } from '../step.service';
@@ -317,13 +318,17 @@ export class CodxViewTaskComponent implements OnInit {
       step: this.instanceStep,
       isActivitie: this.isActivitie,
     };
+    let option = new DialogModel();
+    option.zIndex = 1020;
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,
       '',
       550,
       400,
       '',
-      dataInput
+      dataInput,
+      '',
+      option
     );
 
     let dataPopupOutput = await firstValueFrom(popupTask.closed);

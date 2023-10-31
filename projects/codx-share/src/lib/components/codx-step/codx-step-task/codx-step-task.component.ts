@@ -1705,6 +1705,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.startTaskAuto(data);
         }
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
   //#endregion
