@@ -88,6 +88,20 @@ export const fmIssueVouchersLines: FormModel = {
   entityPer: 'IV_VouchersLines',
 };
 
+export const fmGeneralJournalsLines: FormModel = {
+  entityName: 'AC_GeneralJournalsLines',
+  formName: 'GeneralJournalsLines',
+  gridViewName: 'grvGeneralJournalsLines',
+  entityPer: 'AC_GeneralJournalsLines',
+};
+
+export const fmGeneralJournalsLinesOne: FormModel = {
+  entityName: 'AC_GeneralJournalsLines',
+  formName: 'GeneralJournalsLinesOneAccount',
+  gridViewName: 'grvCashPaymentsLinesOneAccount',
+  entityPer: 'AC_GeneralJournalsLines',
+};
+
 export enum MorfuncCash {
   GhiSoPC = 'ACT041003',
   GhiSoUPC = 'ACT042905',

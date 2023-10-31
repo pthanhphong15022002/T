@@ -103,6 +103,9 @@ import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order
 import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
 import { JournalV2Component } from './journals/journal-v2.component';
 import { JournalsAddIdimcontrolComponent } from './journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
+import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
+import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
+import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -124,6 +127,11 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'generaljournals/:funcID',
+        component: GeneralJournalComponent,
         data: { noReuse: true },
       },
       {
@@ -385,6 +393,9 @@ export const routes: Routes = [
     PaymentOrderAddComponent,
     ReceiptTransactionsTableComponent,
     JournalsAddIdimcontrolComponent,
+    GeneralJournalComponent,
+    GeneralJournalAddComponent,
+    GeneralJournalDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
