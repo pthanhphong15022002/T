@@ -104,6 +104,7 @@ import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-
 import { ImportEInvoicesComponent } from './periodic/importeinvoices/importeinvoices.component';
 import { JournalV2Component } from './journals/journal-v2.component';
 import { JournalsAddIdimcontrolComponent } from './journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
+import { ImportinvoicesDetailComponent } from './periodic/importeinvoices/importinvoices-detail/importinvoices-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -386,6 +387,7 @@ export const routes: Routes = [
     PaymentOrderAddComponent,
     ReceiptTransactionsTableComponent,
     ImportEInvoicesComponent,
+    ImportinvoicesDetailComponent,
     JournalsAddIdimcontrolComponent,
   ],
   exports: [RouterModule],

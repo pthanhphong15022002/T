@@ -1,14 +1,88 @@
-<codx-views #view idField="recID" [views]="views" [button]="button" service="AC" (buttonClick)="toolBarClick($event)">
+<codx-views #view idField="recID" [views]="views" [button]="button" service="AC" (buttonClick)="toolBarClick($event)"
+    [moreFuncs]="moreFuncs">
 </codx-views>
 
-<ng-template #templateMore let-data>
-    <div>
-        <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-            type="view"></codx-mfunc>
+
+<ng-template #templateDetailLeft let-data>
+    <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+        [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+        (clickMF)="clickMF($event, data)">
+    </codx-temp-full>
+</ng-template>
+
+<ng-template #titleTmp let-data>
+    <div class="d-flex flex-column text-content flex-grow-1">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{
+                    data?.voucherNo
+                    }}</span>
+                <span *ngIf="
+              (data?.voucherNo == '' || data?.voucherNo == null) &&
+              view?.gridViewSetup
+            " class="place-holder line-clamp line-clamp-1 fs-6">
+                    {{ view?.gridViewSetup["VoucherNo"].headerText }}
+                </span>
+            </div>
+            <div>
+                <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
+                    [innerHTML]="(data?.totalAmt | tranformValueNumber :'S' | async)+' '+data?.currencyID"></span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <ejs-tooltip *ngIf="data?.memo" id="tooltip" target="#tipmemo">
+                    <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
+                    <ng-template #content>
+                        <span id="tipmemo">{{ data?.memo }}</span>
+                    </ng-template>
+                </ejs-tooltip>
+                <span *ngIf="
+              (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
+            " class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText
+                    }}</span>
+            </div>
+        </div>
+        <div style="height: 18px !important" class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <span class="text-gray-600 line-clamp line-clamp-1">{{data?.objectID}}</span>
+                <span *ngIf="
+              (data?.objectID == '' || data?.objectID == null) &&
+              view?.gridViewSetup
+            " class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["ObjectID"].headerText
+                    }}</span>
+            </div>
+        </div>
+        <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-end codx-badge">
+                <codx-vll [formModel]="view.formModel" [field]="'Status'" [value]="data?.status" [showText]="true"
+                    [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
+                </codx-vll>
+                <div class="d-flex align-items-center">
+                    <img style="width: 18px; height: 18px; margin-top: -1px"
+                        src="../assets/themes/ac/default/img/calendar.svg" class="me-2" />
+                    <span #voucherDate [innerHTML]="
+                data?.voucherDate
+                  | formatvalue : view.formModel : 'voucherDate' : voucherDate
+                  | async
+              " class="text-gray-600"></span>
+                </div>
+            </div>
+            <div class="d-flex mt-1">
+                <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
+                    [objectType]="'AD_Users'" [width]="25" [numberImages]="1">
+                </codx-imgs>
+            </div>
+        </div>
     </div>
 </ng-template>
-<ng-template #itemTemplate let-data>
-    <codx-card-center cardCss="dp-card-process border rounded-2 h-100" [rootData]="data" [dataItem]="data"
-        [formModel]="view.formModel" [typeMF]="'hover'" (clickMF)="clickMF($event, data)">
-    </codx-card-center>
+
+<ng-template #templateDetailRight>
+    <ng-container *ngIf="itemSelected">
+        <importinvoices-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
+            [dataItem]="itemSelected" [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [headerText]="headerText"
+            [gridViewSetup]="view?.gridViewSetup"></importinvoices-detail>
+    </ng-container>
 </ng-template>
+
+<input #xml type="file" class="d-none" (change)="readXml($event)">
