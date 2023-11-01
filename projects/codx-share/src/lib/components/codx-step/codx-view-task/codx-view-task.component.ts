@@ -391,7 +391,6 @@ export class CodxViewTaskComponent implements OnInit {
           case 'SYS001':
           case 'SYS002':
           case 'DP26': // chi tiêt
-          case 'DP31':
             res.disabled = true;
             break;
 
@@ -450,7 +449,7 @@ export class CodxViewTaskComponent implements OnInit {
             // } else {
             //   res.disabled = true;
             // }
-            // res.isblur = true;
+            res.disabled = true;
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(this.dataView?.taskType)) {
