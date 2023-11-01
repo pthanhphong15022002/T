@@ -1,0 +1,76 @@
+<div id="v-d-e" class="d-flex flex-column px-4 pt-4 h-100">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+</div>
+
+<ng-template #header>
+    <div id="v-d-e-header" class="d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex flex-column ">
+                <span class="fw-bold fs-4">{{dataItem?.toDate | date:'MM/yyyy'}}</span>
+                <span *ngIf="dataItem?.toDate">{{"FD006" | mssgReplace: (dataItem?.toDate | date:'MM/yyyy') |async }}</span>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+                <codx-vll 
+                    [name]="'FD021'" 
+                    [value]="dataItem?.status"  
+                    [showIcon]="true"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-light badge-square badge-md fs-7 p-2 mb-1">
+                </codx-vll>
+                <span class="fs-5-sm">{{dataItem?.totalAmt + ' VND'}}</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center mt-4">
+            <codx-label default="Người thanh toán" class="fw-bold"></codx-label>
+            <span>:</span>
+            <div class="ms-2 ">{{dataItem?.unbounds?.createdName}}</div>
+        </div>
+        <div class="d-flex align-items-center mt-1 mb-2">
+            <codx-label default="Ngày thanh toán" class="fw-bold"></codx-label>
+            <span>:</span>
+            <div class="ms-2">{{dataItem?.createdOn | date:'dd/MM/yyyy'}}</div>
+        </div> 
+    </div>
+   
+</ng-template>
+
+<ng-template #body>
+    <codx-gridview-v2
+        *ngIf="columnsGrid && columnsGrid.length > 0"
+        #grid
+        [dataSource]="listData"
+        [hideMoreFunc]="true"
+        [columnsGrid]="columnsGrid"
+        [autoLoad]="false"
+        rowHeight="40"
+        [height]="hGrid"
+        [allowFiltering]="false"
+        [editSettings]="{ mode: 'Dialog' }"
+        
+    >
+    </codx-gridview-v2> 
+</ng-template>
+
+<ng-template #dateColumn>
+    <codx-label default="Ngày" formName="fmevouctatisdate" fiedName="lblevouctatisdate"></codx-label>
+</ng-template>
+<ng-template #dateRow let-data>
+   <span>{{data?.createdOn | fmDT: "dmy"}}</span>
+</ng-template>
+<ng-template #createdColumn>
+    <codx-label default="Người đổi" formName="fmevouctatiscreated" fiedName="lblevouctatiscreated"></codx-label>
+</ng-template>
+<ng-template #nameVoucherColumn>
+    <codx-label default="Voucher" formName="fmevouctatisvoucherName" fiedName="lblevouctatisvoucherName"></codx-label>
+</ng-template>
+<ng-template #amountColumn>
+    <codx-label default="Amount" formName="fmevouctatisAmount" fiedName="lblevouctatisAmount"></codx-label>
+</ng-template>
+<ng-template #tmpInfor let-data>
+    <span>{{data?.unbounds?.userName}}</span>
+</ng-template>
+<ng-template #tmpInforVoucher let-data>
+    <span>{{data?.itemName}}</span>
+</ng-template>

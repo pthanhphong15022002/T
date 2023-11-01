@@ -1461,7 +1461,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       }
       if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; 
       setTimeout(() => {
-        let element = document.getElementById('btnAddCash');
+        let element = document.getElementById('btnAddVAT');
         element.focus();
       }, 100);
         break;

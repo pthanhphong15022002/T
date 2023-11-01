@@ -1,0 +1,25 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog">
+</codx-form>
+<ng-template #body>
+    <ng-container *ngIf="visibleIdimControls">
+        <div>
+            <ng-container *ngFor="let item of visibleIdimControls" >
+                <div class="form-group">
+                    <codx-input type="checkbox" class="check-circle me-5" [checked]="item.checked"
+                     (valueChange)="valueChange($event,item.value)"></codx-input>
+                    <span class="fs-6">{{item.text}}</span>
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+        <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
+          class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+          (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+          <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+        </button>
+      </div>
+</ng-template>

@@ -203,6 +203,22 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   }
 
   /**
+   * *Hàm click các morefunction của CashpaymentLines
+   * @param event
+   * @param data
+   */
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'SYS104':
+        this.copyRow(data);
+        break;
+      case 'SYS102':
+        this.deleteRow(data);
+        break;
+    }
+  }
+
+  /**
    * *Hàm xử lí change subtype
    * @param event 
    */
@@ -832,6 +848,51 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         event.cancel = true;
         return;
       }
+    }
+  }
+
+  /**
+   * *Hàm ẩn các morefunction trong lưới
+   * @param event
+   */
+  changeMF(event) {
+    event.forEach((element) => {
+      if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
+        element.disabled = false;
+        element.isbookmark = false;
+      }else{
+        element.disabled = true;
+      }
+    });
+  }
+
+  /**
+   * *Hàm sao chép dòng trong lưới
+   * @param data
+   */
+  copyRow(data) {
+    if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
+      data.recID = Util.uid();
+      data.index = this.eleGridPurchaseInvoice.dataSource.length;
+      this.eleGridPurchaseInvoice.addRow(data, this.eleGridPurchaseInvoice.dataSource.length);
+    }
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
+      data.recID = Util.uid();
+      data.index = this.eleGridVatInvoices.dataSource.length;
+      this.eleGridVatInvoices.addRow(data, this.eleGridVatInvoices.dataSource.length);
+    }
+  }
+
+  /**
+   * *Hàm xóa dòng trong lưới
+   * @param data
+   */
+  deleteRow(data) {
+    if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridPurchaseInvoice.deleteRow(data);
+    }
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
+      this.eleGridVatInvoices.deleteRow(data);
     }
   }
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   AccumulationTooltipService,
   ChartAllModule,
@@ -23,8 +23,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
 import { GroupShareComponent } from './journals/components/group-share/group-share.component';
 import { Group067Component } from './journals/components/group067/group067.component';
-import { JournalsComponent } from './journals/journals.component';
-import { MultiSelectPopupComponent } from './journals/components/multi-select-popup/multi-select-popup.component';
 import { JournalsAddComponent } from './journals/journals-add/journals-add.component';
 import { JournalspermissionEditComponent } from './journals/journalspermission-edit/journalspermission-edit.component';
 import { AllocateToolsComponent } from './periodic/allocate-tools/allocate-tools.component';
@@ -53,7 +51,6 @@ import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interes
 import { ClosingTransactionComponent } from './periodic/closing-transaction/closing-transaction.component';
 import { PopAddClosingTransactionComponent } from './periodic/closing-transaction/pop-add-closing-transaction/pop-add-closing-transaction.component';
 import { LayloutJournalComponent } from './laylout-journal/laylout-journal.component';
-import { JournalV2Component } from './journal-v2/journal-v2.component';
 import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { CalculatingCostOfProductComponent } from './periodic/calculating-cost-of-product/calculating-cost-of-product.component';
@@ -104,6 +101,11 @@ import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advanc
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
 import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
+import { JournalV2Component } from './journals/journal-v2.component';
+import { JournalsAddIdimcontrolComponent } from './journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
+import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
+import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
+import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -125,6 +127,11 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'generaljournals/:funcID',
+        component: GeneralJournalComponent,
         data: { noReuse: true },
       },
       {
@@ -310,14 +317,12 @@ export const routes: Routes = [
     LayoutComponent,
     CashPaymentsComponent,
     CashPaymentAddComponent,
-    JournalsComponent,
     CashtransfersComponent,
     CashtransfersAddComponent,
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
     JournalsAddComponent,
     DropdownDetailComponent,
-    MultiSelectPopupComponent,
     SettledInvoicesAdd,
     DashboardComponent,
     PeriodicComponent,
@@ -387,6 +392,10 @@ export const routes: Routes = [
     PaymentOrderComponent,
     PaymentOrderAddComponent,
     ReceiptTransactionsTableComponent,
+    JournalsAddIdimcontrolComponent,
+    GeneralJournalComponent,
+    GeneralJournalAddComponent,
+    GeneralJournalDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -410,6 +419,7 @@ export const routes: Routes = [
     TooltipModule,
     ChartAllModule,
     TranformValueNumberPipe,
+    NgbAccordionModule,
   ],
 })
 export class AcModule {}

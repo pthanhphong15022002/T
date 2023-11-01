@@ -1397,6 +1397,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           group['modifiedBy'] = data?.groupTask?.modifiedBy;
           group['durationDay'] = data?.groupTask?.durationDay;
           group['durationHour'] = data?.groupTask?.durationHour;
+          group['owner'] = data?.groupTask?.owner;
           if (!group?.isTaskDefault) {
             group['taskGroupName'] = data?.groupTask?.taskGroupName;
             group['memo'] = data?.groupTask?.memo;
@@ -1575,6 +1576,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     } else {
       data.progress = dataProgress?.progressTask;
       data.status = dataProgress?.progressTask == 100 ? '3' : '2';
+      this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       if (this.isMoveStage) {
         let index = this.moveStageData?.findIndex(
           (task) => task.taskID == dataProgress?.taskID
@@ -1705,6 +1707,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.startTaskAuto(data);
         }
       }
+      this.changeDetectorRef.detectChanges();
     }
   }
   //#endregion

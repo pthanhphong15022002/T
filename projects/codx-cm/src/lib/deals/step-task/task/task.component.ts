@@ -288,6 +288,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     let taskOutput = await this.openPopupTask('add', task);
     if (taskOutput?.event) {
       let data = taskOutput?.event?.task;
+      let isAddTask = taskOutput?.event?.isAddTask;
+      let isCreateMeeting = taskOutput?.event?.isCreateMeeting;
       this.copyData(data, this.activitie);
       let rolesTask = data?.roles;
       let roles: DP_Activities_Roles[] = [];
@@ -305,6 +307,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
           this.entityName,
+          isCreateMeeting,
+          isAddTask
         ])
         .subscribe((res) => {
           if (res) {
@@ -380,6 +384,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
     let taskOutput = await this.openPopupTask('copy', dataCopy);
     let data = taskOutput?.event?.task;
+    let isAddTask = taskOutput?.event?.isAddTask;
+    let isCreateMeeting = taskOutput?.event?.isCreateMeeting;
     if (data) {
       this.copyData(data, this.activitie);
       let rolesTask = data?.roles;
@@ -396,6 +402,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.api
         .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
           this.activitie,
+          this.entityName,
+          isCreateMeeting,
+          isAddTask
         ])
         .subscribe((res) => {
           if (res) {
