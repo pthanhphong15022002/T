@@ -1076,21 +1076,16 @@
 
     <div class="d-flex justify-content-center align-items-center">
       <div class="d-flex justify-content-center">
-        <div id="group6" class="btn-group">
+        <div id="group3" class="btn-group">
           <input
+            #ele1
             class="btn-check"
             type="radio"
             id="btSaleStages"
-            name="chartPy"
-            #ele1
+            name="align3"
+            value="left"
             checked
-            (change)="
-              changeGroupType(ele1, {
-                chart1: { pie1, gauge1 },
-                chart2: { pie2, gauge2 },
-                chart3: { pie3, gauge3 }
-              })
-            "
+            (change)="changeGroupType(ele1,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
           />
           <label class="btn btn-outline-primary" for="btSaleStages"
             ><codx-label
@@ -1100,40 +1095,29 @@
             ></codx-label
           ></label>
           <input
+            #ele2
             class="btn-check"
             type="radio"
             id="btSaleStatus"
-            name="chartPy"
-            #ele2
-            (change)="
-              changeGroupType(ele2, {
-                chart1: { pie1, gauge1 },
-                chart2: { pie2, gauge2 },
-                chart3: { pie3, gauge3 }
-              })
-            "
+            name="align3"
+            value="center"
+            (change)="changeGroupType(ele2,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
           />
           <label class="btn btn-outline-primary" for="btSaleStatus">
             <codx-label
               name="btSaleStatus"
               formName="sys"
               default="Status"
-            ></codx-label>
-          </label>
+            ></codx-label
+          ></label>
           <input
+            #ele3
             class="btn-check"
             type="radio"
             id="btSaleStatusCodes"
-            name="chartPy"
-            #ele3
-            checked
-            (change)="
-              changeGroupType(ele3, {
-                chart1: { pie1, gauge1 },
-                chart2: { pie2, gauge2 },
-                chart3: { pie3, gauge3 }
-              })
-            "
+            name="align3"
+            value="right"
+            (change)="changeGroupType(ele3,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
           />
           <label class="btn btn-outline-primary" for="btSaleStatusCodes"
             ><codx-label
@@ -1145,108 +1129,121 @@
         </div>
       </div>
     </div>
-    <div>
-      <div #gauge1 [ngClass]="statusPip == 'btSaleStages' ? '' : 'd-none'">
-        <div *ngIf="lstSalesStages?.length > 0; else noData"></div>
-        <ejs-accumulationchart
-          id="pyramidcontainer1"
-          #pie1
-          style="height: 90%"
-          [legendSettings]="legendSettings"
-          [enableSmartLabels]="false"
-          [tooltip]="{
-            header: '',
-            enable: true,
-            format: '${point.tooltip}'
-          }"
-          (pointRender)="formatCrrView($event)"
-        >
-          <e-accumulation-series-collection>
-            <e-accumulation-series
-              #accumulationPipe
-              name="ConversionRate"
-              [dataSource]="lstSalesStages"
-              xName="name"
-              yName="quantity"
-              width="60%"
-              height="50%"
-              [gapRatio]="gapRatio"
-              [explode]="explode"
-              [dataLabel]="datalabelAc"
-              [palettes]="palettePipsStages"
-              type="Funnel"
-            >
-            </e-accumulation-series>
-          </e-accumulation-series-collection>
-        </ejs-accumulationchart>
-      </div>
-      <div #gauge2 [ngClass]="statusPip == 'btSaleStatus' ? '' : 'd-none'">
-        <div *ngIf="lstSalesStatus?.length > 0; else noData"></div>
-        <ejs-accumulationchart
-          id="pyramidcontainer2"
-          #pie2
-          style="height: 90%"
-          [legendSettings]="legendSettings"
-          [enableSmartLabels]="false"
-          [tooltip]="{
-            header: '',
-            enable: true,
-            format: '${point.tooltip}'
-          }"
-          (pointRender)="formatCrrView($event)"
-        >
-          <e-accumulation-series-collection>
-            <e-accumulation-series
-              #accumulationPipe
-              name="ConversionRate"
-              [dataSource]="lstSalesStatus"
-              xName="name"
-              yName="quantity"
-              width="60%"
-              height="50%"
-              [gapRatio]="gapRatio"
-              [explode]="explode"
-              [dataLabel]="datalabelAc"
-              [palettes]="palettePipsStatus"
-              type="Funnel"
-            >
-            </e-accumulation-series>
-          </e-accumulation-series-collection>
-        </ejs-accumulationchart>
-      </div>
-      <div #gauge3 [ngClass]="statusPip == 'btSaleStatusCodes' ? '' : 'd-none'">
-        <div *ngIf="lstSalesStatusCodes?.length > 0; else noData"></div>
-        <ejs-accumulationchart
-          id="pyramidcontainer3"
-          #pie3
-          style="height: 90%"
-          [legendSettings]="legendSettings"
-          [enableSmartLabels]="false"
-          [tooltip]="{
-            header: '',
-            enable: true,
-            format: '${point.tooltip}'
-          }"
-          (pointRender)="formatCrrView($event)"
-        >
-          <e-accumulation-series-collection>
-            <e-accumulation-series
-              #accumulationPipe
-              name="ConversionRate"
-              [dataSource]="lstSalesStatusCodes"
-              xName="name"
-              yName="quantity"
-              width="60%"
-              height="50%"
-              [gapRatio]="gapRatio"
-              [explode]="explode"
-              [dataLabel]="datalabelAc"
-              type="Funnel"
-            >
-            </e-accumulation-series>
-          </e-accumulation-series-collection>
-        </ejs-accumulationchart>
-      </div>
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStages
+      [ngClass]="statusPip == 'btSaleStages' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStages?.length > 0; else noData"></div>
+      <ejs-accumulationchart
+        id="pyramidcontainer1"
+        #pie1
+        style="height: 90%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstSalesStages"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="50%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            [palettes]="palettePipsStages"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStatus
+      [ngClass]="statusPip == 'btSaleStatus' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStatus?.length > 0; else noData"></div>
+      <ejs-accumulationchart
+        id="pyramidcontainer2"
+        #pie2
+        style="height: 90%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstSalesStatus"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="50%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            [palettes]="palettePipsStatus"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStatusCodes
+      [ngClass]="statusPip == 'btSaleStatusCodes' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStatusCodes?.length > 0; else noData"></div>
+      <ejs-accumulationchart
+        id="pyramidcontainer3"
+        #pie3
+        style="height: 90%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstSalesStatusCodes"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="50%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
     </div>
   </div>
 </ng-template>
