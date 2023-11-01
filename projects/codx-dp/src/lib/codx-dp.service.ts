@@ -858,7 +858,7 @@ export class CodxDpService {
       this.api.exec<any>(
         'DP',
         'InstancesBusiness',
-        'CheckAdminDPAsync',
+        'IsAdminOrAdminRole',
         []
       )
     );
