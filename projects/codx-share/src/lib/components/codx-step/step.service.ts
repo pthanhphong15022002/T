@@ -371,15 +371,14 @@ export class StepService {
     location
   ) {
     let task = taskData || new DP_Instances_Steps_Tasks();
-    task['taskType'] = taskType?.value;
-    task['stepID'] = instanceStep ? instanceStep?.recID : task?.stepID;
     task['progress'] = 0;
-    task['taskGroupID'] = groupID || null;
     task['recID'] = Util.uid();
     task['refID'] = Util.uid();
-    task['isTaskDefault'] = false;
     task['dependRule'] = '0';
-    task['isTaskDefault'] = false;
+    task['taskType'] = taskType?.value;
+    task['taskGroupID'] = groupID || null;
+    task['stepID'] = instanceStep ? instanceStep?.recID : task?.stepID;
+    task['isTaskDefault'] = action == 'add' ? false : task?.isTaskDefault;
     let taskOutput = await this.openPopupTask(
       type,
       action,

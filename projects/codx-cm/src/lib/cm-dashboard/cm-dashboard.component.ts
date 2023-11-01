@@ -269,7 +269,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   lstStatusCodes = [];
   vllStatusDeals = [];
   vllSalesPiplines = [];
-  statusPip = 'btSaleStages';
   palettePipsStages = [];
   palettePipsStatus = [];
   palettePipsStatusCodes = [];
@@ -1589,6 +1588,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let lstUsers = [];
     let fromDate = new Date(currentDate);
     let toDate = new Date(currentDate);
+    this.statusPip = 'btSaleStages';
     //get lstQuarters
     if (data?.fromDate) {
       fromDate = new Date(data?.fromDate);
@@ -1803,13 +1803,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ).length;
 
     countDealValues =
-      leadCurrentCount > 0
-        ? countDealsConverts / leadCurrentCount * 100
-        : 0;
+      leadCurrentCount > 0 ? (countDealsConverts / leadCurrentCount) * 100 : 0;
     countDealValueOlds =
-      leadOldsCount > 0
-        ? countDealsConvertOlds / leadOldsCount * 100
-        : 0;
+      leadOldsCount > 0 ? (countDealsConvertOlds / leadOldsCount) * 100 : 0;
 
     isAsc =
       countDealValues - countDealValueOlds == 0
@@ -1819,7 +1815,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
-    tmp['countOld'] = (countDealValueOlds > 0 ?  countDealValues.toFixed(2) : 0) + '%';
+    tmp['countOld'] =
+      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
     tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
@@ -2002,57 +1999,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
-  changeGroupType(ele: any, obj: any) {
+  statusPip = 'btSaleStages';
+  changeGroupType(ele: any, chart: any) {
     if (ele.id == this.statusPip) return;
     this.statusPip = ele.id;
-    if (ele?.id == 'btSaleStages' && Object.keys(obj)?.length) {
-      !obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.add('d-none');
-      !obj.chart2.gauge2.classList.contains('d-none') &&
-        obj.chart2.gauge2.classList.add('d-none');
-      !obj.chart3.pie3.element.classList.contains('d-none') &&
-        obj.chart3.pie3.element.classList.add('d-none');
-      !obj.chart3.gauge3.classList.contains('d-none') &&
-        obj.chart3.gauge3.classList.add('d-none');
-
-      obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.remove('d-none');
-      obj.chart1.pie1.refresh();
-      obj.chart1.gauge1.classList.contains('d-none') &&
-        obj.chart1.gauge1.classList.remove('d-none');
-    }
-    if (ele?.id == 'btSaleStatus' && Object.keys(obj)?.length) {
-      !obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.add('d-none');
-      !obj.chart1.gauge1.classList.contains('d-none') &&
-        obj.chart1.gauge1.classList.add('d-none');
-      !obj.chart3.pie3.element.classList.contains('d-none') &&
-        obj.chart3.pie3.element.classList.add('d-none');
-      !obj.chart3.gauge3.classList.contains('d-none') &&
-        obj.chart3.gauge3.classList.add('d-none');
-
-      obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.remove('d-none');
-      obj.chart2.pie2.refresh();
-      obj.chart2.gauge2.classList.contains('d-none') &&
-        obj.chart2.gauge2.classList.remove('d-none');
-    }
-
-    if (ele?.id == 'btSaleStatusCodes' && Object.keys(obj)?.length) {
-      !obj.chart1.pie1.element.classList.contains('d-none') &&
-        obj.chart1.pie1.element.classList.add('d-none');
-      !obj.chart1.gauge1.classList.contains('d-none') &&
-        obj.chart1.gauge1.classList.add('d-none');
-      !obj.chart2.pie2.element.classList.contains('d-none') &&
-        obj.chart2.pie2.element.classList.add('d-none');
-      !obj.chart2.gauge2.classList.contains('d-none') &&
-        obj.chart2.gauge2.classList.add('d-none');
-
-      obj.chart3.pie3.element.classList.contains('d-none') &&
-        obj.chart3.pie3.element.classList.remove('d-none');
-      obj.chart3.pie3.refresh();
-      obj.chart3.gauge3.classList.contains('d-none') &&
-        obj.chart3.gauge3.classList.remove('d-none');
+    switch (ele.id) {
+      case 'btSaleStages':
+        chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.remove('d-none');
+        !chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.add('d-none');
+        !chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.add('d-none');
+        break;
+      case 'btSaleStatus':
+        !chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.add('d-none');
+        chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.remove('d-none');
+        !chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.add('d-none');
+        break;
+      case 'btSaleStatusCodes':
+        !chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.add('d-none');
+        !chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.add('d-none');
+        chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.remove('d-none');
+        break;
     }
     this.detectorRef.detectChanges();
   }
@@ -2140,14 +2115,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   poinSeriRender(args: IPointRenderEventArgs): void {
-    let index = this.lstMonthsSeries.findIndex(x => x.month == args.point.x);
+    let index = this.lstMonthsSeries.findIndex((x) => x.month == args.point.x);
 
-    if(index != -1){
-      args.point.tooltip = this.lstMonthsSeries[index]?.expected.toLocaleString();
+    if (index != -1) {
+      args.point.tooltip =
+        this.lstMonthsSeries[index]?.expected.toLocaleString();
     }
   }
 
-  tooltipSeriRender(e: ITooltipRenderEventArgs){
+  tooltipSeriRender(e: ITooltipRenderEventArgs) {
     console.log(e);
   }
   //end
@@ -2465,13 +2441,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   retrnValueAsc(count, countOlds) {
     let valueAsc = '0';
-    if (countOlds > 0) {
-      valueAsc =
-        Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
+    if (count > countOlds) {
+      if (countOlds > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros(
+            (Math.abs(count - countOlds) / countOlds) * 100
+          ) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     } else {
-      valueAsc = '- %';
+      if (count > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros(
+            (Math.abs(count - countOlds) / count) * 100
+          ) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     }
+
     return valueAsc;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   getCountDate(leads, deals) {

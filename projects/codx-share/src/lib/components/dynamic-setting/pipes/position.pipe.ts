@@ -23,7 +23,7 @@ export class PositionPipe implements PipeTransform {
                 } else {
                   let dataRequest = new DataRequest();
                   dataRequest.comboboxName = cbbName;
-                  dataRequest.pageLoading = true;
+                  dataRequest.pageLoading = false;
                   dataRequest.pageSize = 20;
                   dataRequest.page = 1;
                   return this.api

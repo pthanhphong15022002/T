@@ -3319,6 +3319,7 @@ codx-toolbar-report{
 
 #calendarTab .e-vertical-left{
   min-width: 85px;
+  margin-right: 5px;
 }
 .w-110px{
   width: 110px;
@@ -4085,11 +4086,18 @@ codx-report-view-detail{
   min-width: 18px;
 }
 
-// .ws-body{ 
-//   codx-views > .container-fluid.p-0{
-//     height: calc(100vh - 109px)!important;
-//   }
-// }
+codx-view-kanban{ 
+  .e-kanban .e-kanban-content {
+    margin-top: -12px!important;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(182, 182, 190) !important;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(130, 130, 146) !important;
+  }
+}
+
 //////////////
 // ipad and tablet
 /// /////////

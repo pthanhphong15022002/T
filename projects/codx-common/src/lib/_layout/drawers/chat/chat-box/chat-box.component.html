@@ -76,8 +76,7 @@
                                             #ngbPopover1="ngbPopover"
                                             placement="top"
                                             [autoClose]="true"
-                                            triggers="click"
-                                            container="body"
+                                            triggers="manual"
                                             [ngbPopover]="tooltipEmojiMssg"
                                             (click)="openTooltipEmoji(ngbPopover1,item)">
                                         </span>
@@ -243,7 +242,7 @@
                                         [autoClose]="true"
                                         triggers="manual"
                                         [ngbPopover]="tooltipEmojiMssg"
-                                        (click)="openTooltipEmoji(ngbPopover1,item)">
+                                        (click)="openTooltipEmoji(ngbPopover1,item)"> 
                                     </span>
                                     <ng-container *ngIf="item.refType != 'm'">
                                         <span class="icon-undo me-2 " (click)="clickReplyMssg(item)"></span>
@@ -377,16 +376,17 @@
 </ng-template>
 <!-- vote -->
 <ng-template #tooltipEmojiMssg let-mssg="mssg">
-    <div class="row">
+    <div class="row me-2">
         <ng-container *ngFor="let item of vllL1480">
-            <div (click)="clickVoteMssg(mssg,item)" class="col cursor-pointer" *ngIf="item.value">
-                <codx-vll 
+            <div (click)="clickVoteMssg(mssg,item)" class="col cursor-pointer" *ngIf="item.value" >
+                <img class="h-15px w-15px" [src]="'assets/themes/wp/default/img/' + item.icon" [ngbTooltip]="item.text">
+                <!-- <codx-vll 
                     [path]="'assets/themes/wp/default/img/'"
                     [name]="'L1480'" 
                     [value]="item.value" 
                     [showIcon]="true" 
                     [icoCss]="'w-15px h-15px'">
-                </codx-vll>
+                </codx-vll> -->
             </div>
         </ng-container>
     </div>

@@ -172,7 +172,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.allowMultiFile = this.customField.multiselect ? '1' : '0';
         break;
       case 'R':
-        this.currentRate = Number.parseInt(this.customField.dataValue) ?? 0;
+        this.currentRate = this.customField.dataValue
+          ? Number.parseInt(this.customField.dataValue)
+          : 0;
         break;
       case 'L':
         if (this.customField.dataFormat == 'V') this.loadDataVll();
