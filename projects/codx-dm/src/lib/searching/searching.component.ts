@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector } from '@angular/core';
 import { CodxDMService } from '../codx-dm.service';
-import { NotificationsService } from 'codx-core';
+import { CodxService, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'lib-searching',
@@ -15,17 +15,20 @@ export class SearchingComponent {
   visible= false;
   constructor(
     public dmSV: CodxDMService,
+    private codxService: CodxService,
     private notificationsService : NotificationsService,
     private changeDetectorRef: ChangeDetectorRef
    
-  ) {
+  ) 
+  {
     
   }
   onSelected(e:any)
-  {}
+  {
+
+  }
 
   dbView(data: any) {
-    debugger
     if (data.recID && data.fileName != null) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
@@ -43,5 +46,10 @@ export class SearchingComponent {
   dialogClosed() {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
+  }
+
+  openFileFolder()
+  {
+    // /this.codxService.navigate(this.funcID,)
   }
 }

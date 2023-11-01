@@ -281,6 +281,16 @@ export class CodxFdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+  
+  updateCache(keyRoot:any , key:any , data:any)
+  {
+    if (this.caches.has(keyRoot))
+    {
+      let c = this.caches.get(keyRoot);
+      c?.set(key, data);
+    }
+  }
+
   sendGift(
     recID: string, 
     status: string, 
