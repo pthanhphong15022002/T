@@ -1679,9 +1679,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           );
           if (groupView) {
             groupView.progress = dataProgress?.progressGroupTask;
+            groupView.actualEnd = groupView.progress == 100 ? new Date() : null;
           }
           if (groupData) {
             groupData.progress = dataProgress?.progressGroupTask;
+            groupView.actualEnd = groupView.progress == 100 ? new Date() : null;
           }
           this.currentStep.progress = dataProgress?.progressStep;
           this.isChangeProgress.emit(true);
