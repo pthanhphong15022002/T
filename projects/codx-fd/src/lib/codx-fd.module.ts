@@ -71,6 +71,8 @@ import { EVouchersComponent } from './evouchers/evouchers.component';
 import { EvoucherDetailComponent } from './evouchers/evoucher-detail/evoucher-detail.component';
 import { EvoucherAddComponent } from './evouchers/evoucher-add/evoucher-add.component';
 import { PopupSendGiftComponent } from './gift-trans/popup-send-gift/popup-send-gift.component';
+import { WalletsEmpComponent } from './wallets-emp/wallets-emp.component';
+import { WalletsListByOrgComponent } from './wallets-emp/wallets-list-by-org/wallets-list-by-org.component';
 
 export const routes: Routes = [
   {
@@ -83,7 +85,7 @@ export const routes: Routes = [
       },
       {
         path: 'coins/:funcID',
-        component: WalletsComponent,
+        component: WalletsEmpComponent,
       },
       {
         path: 'detailcoins/:funcID',
@@ -228,7 +230,9 @@ const Component: Type<any>[] = [
   ApprovalsComponent,
   EVouchersComponent,
   EvoucherDetailComponent,
-  EvoucherAddComponent
+  EvoucherAddComponent,
+  WalletsEmpComponent,
+  WalletsListByOrgComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -255,6 +259,8 @@ const T_Pipe: Type<any>[] = [];
     PopupApprovalComponent,
     ApprovalsComponent,
     PopupSendGiftComponent,
+    WalletsEmpComponent,
+    WalletsListByOrgComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
