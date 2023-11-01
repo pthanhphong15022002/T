@@ -400,7 +400,7 @@
   <div class="tabline-content scroll-ac header-table-ac position-relative">
     <codx-gridview-v2 #eleGridPurchaseInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
       [autoFitColumns]="false" [formName]="fmPurchaseInvoicesLines.formName"
-      [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [hideMoreFunc]="true"
+      [gridViewName]="fmPurchaseInvoicesLines.gridViewName" [templateMore]="templateMore"
       [entityName]="fmPurchaseInvoicesLines.entityName" predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowPurchase($event)"
       (gridInit)="beforeInitGridPurchaseInvoices($event)" [dataValues]="formPurchaseInvoices?.data?.recID" service="AC"
       [editOnClick]="true" (eventAction)="onActionGridPurchaseInvoice($event)" (cellChanged)="valueChangeLine($event)"
@@ -428,8 +428,8 @@
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName" [gridViewName]="fmVATInvoices.gridViewName"
         [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" [showEmptyRecord]="false" [editOnClick]="true"
-        predicates="TransID=@0" gridLines="Both" [autoFitColumns]="false" [dataValues]="formPurchaseInvoices?.data?.recID"
-        [hideMoreFunc]="true" service="AC" (eventAction)="onActionGridVatInvoice($event)"
+        [templateMore]="templateMore" predicates="TransID=@0" gridLines="Both" [autoFitColumns]="false"
+        [dataValues]="formPurchaseInvoices?.data?.recID" service="AC" (eventAction)="onActionGridVatInvoice($event)"
         (beforeSaveRow)="beforeSaveRowVATInvoice($event)" (cellChanged)="valueChangeLineVATInvoices($event)"
         (actionCompleted)="onActionGridVatInvoice($event)">
       </codx-gridview-v2>
@@ -451,7 +451,7 @@
 </ng-template>
 <!-- End: Grid VATInvoices -->
 
-<ng-template #morefunction let-data>
-  <!-- <codx-mfunc [dataItem]="data" [formModel]="form.formModel" (clickMF)="onClickMF($event, data)"
-    (changeDataMF)="onInitMF($event)" [isBookMark]="true" type="view"></codx-mfunc> -->
+<ng-template #templateMore let-data>
+  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+    type="view"></codx-mfunc>
 </ng-template>

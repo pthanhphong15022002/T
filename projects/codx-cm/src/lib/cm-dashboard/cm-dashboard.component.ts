@@ -1682,9 +1682,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     const tDate = new Date(toDate);
     let { frmDateOld, tDateOld, type } = this.setDateOlds(frmDate, tDate);
     this.textTitle = type;
-    // let frmDateOlds = this.setDateOlds(frmDate, tDate)?.frmDateOld;
-    // let tDateOlds = this.setDateOlds(frmDate, tDate)?.tDateOld;
-    // let type = this.setDateOlds(frmDate, tDate)?.type;
     const dealCurrents = deals.filter(
       (x) =>
         new Date(x?.expectedClosed) >= frmDate &&
@@ -1806,13 +1803,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ).length;
 
     countDealValues =
-      leadCurrentCount > 0
-        ? countDealsConverts / leadCurrentCount * 100
-        : 0;
+      leadCurrentCount > 0 ? (countDealsConverts / leadCurrentCount) * 100 : 0;
     countDealValueOlds =
-      leadOldsCount > 0
-        ? countDealsConvertOlds / leadOldsCount * 100
-        : 0;
+      leadOldsCount > 0 ? (countDealsConvertOlds / leadOldsCount) * 100 : 0;
 
     isAsc =
       countDealValues - countDealValueOlds == 0
@@ -1822,7 +1815,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
-    tmp['countOld'] = (countDealValueOlds > 0 ?  countDealValues.toFixed(2) : 0) + '%';
+    tmp['countOld'] =
+      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
     tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
@@ -1919,11 +1913,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         ' - ' +
         tDateOld.toLocaleDateString('en-GB');
     }
-
-    console.log('frmDateOld ', frmDateOld.toLocaleDateString('en-GB'));
-    console.log('tDateOld ', tDateOld.toLocaleDateString('en-GB'));
-    console.log('type ', type);
-
     return { frmDateOld, tDateOld, type };
   }
 
@@ -2103,7 +2092,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   settingChart(max) {
-    let interval = Math.ceil(max / 10);
+    let interval = this.formatMaxValue(Math.ceil(max / 10));
     let maximum = interval * 10;
 
     this.primaryXAxisY = {
@@ -2117,7 +2106,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       minorTickLines: { width: 0 },
       lineStyle: { width: 0 },
     };
-    // let labelFormat = this.labelFormat(max);
+    let labelFormat = this.labelFormat(max);
     this.primaryYAxisY = {
       title: this.currencyID,
       minimum: 0,
@@ -2128,13 +2117,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       majorGridLines: { width: 1 },
       minorGridLines: { width: 1 },
       minorTickLines: { width: 0 },
-      labelFormat: `{value}`,
+      labelFormat: labelFormat,
     };
 
     this.toolTipSeri = {
       enable: true,
       shared: true,
-      format: '${series.name} : <b>${point.y}</b>',
+      format: '${point.tooltip}',
     };
   }
 
@@ -2148,11 +2137,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   poinSeriRender(args: IPointRenderEventArgs): void {
-    let index = args.point.index;
-    args.point.tooltip = 100 + 'M';
+    let index = this.lstMonthsSeries.findIndex((x) => x.month == args.point.x);
+
+    if (index != -1) {
+      args.point.tooltip =
+        this.lstMonthsSeries[index]?.expected.toLocaleString();
+    }
   }
 
-  tooltipSeriRender(e: ITooltipRenderEventArgs){
+  tooltipSeriRender(e: ITooltipRenderEventArgs) {
     console.log(e);
   }
   //end
@@ -2470,13 +2463,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   retrnValueAsc(count, countOlds) {
     let valueAsc = '0';
-    if (countOlds > 0) {
-      valueAsc =
-        Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
+    if (count > countOlds) {
+      if (countOlds > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros((Math.abs(count - countOlds) / countOlds) * 100) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     } else {
-      valueAsc = '- %';
+      if (count > 0) {
+        valueAsc =
+        this.formatNumberWithoutTrailingZeros(((Math.abs(count - countOlds) / count) * 100)) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     }
+
     return valueAsc;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   getCountDate(leads, deals) {

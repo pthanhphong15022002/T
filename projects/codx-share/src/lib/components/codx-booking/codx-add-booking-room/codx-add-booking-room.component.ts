@@ -1495,7 +1495,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                         this.returnData.write = false;
                         this.returnData.delete = false;
                         (this.dialogRef.dataService as CRUDService)
-                          .update(this.returnData)
+                          .update(this.returnData,true)
                           .subscribe();
                         this.dialogRef && this.dialogRef.close(this.returnData);
                       } else {
@@ -1551,7 +1551,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                 this.returnData.write = false;
                 this.returnData.delete = false;
                 (this.dialogRef.dataService as CRUDService)
-                  .update(this.returnData)
+                  .update(this.returnData,true)
                   .subscribe();
                 this.notificationsService.notifyCode('SYS034');
                 if (

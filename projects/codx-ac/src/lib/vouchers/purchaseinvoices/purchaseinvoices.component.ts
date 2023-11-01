@@ -39,7 +39,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  @ViewChild('xml', { read: ElementRef }) private xml: ElementRef;
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
@@ -172,9 +171,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     switch (event.id) {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
-        break;
-      case 'btnImportXml':
-        this.xml.nativeElement.click();
         break;
     }
   }
@@ -685,31 +681,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
       this.journal,
       action,
     ]);
-  }
-
-  /**read xml from input file */
-  scanMail() {
-    let st = new Date('2023-01-01');
-    let ed = new Date('2023-10-01');
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ScanXMLFromMail', ['', st, ed])
-      .subscribe();
-  }
-
-  async readXml(event: any) {
-    const input = event.target.files[0];
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const bytes = (e.target.result as string).split('base64,')[1];
-      this.api
-        .exec('AC', 'PurchaseInvoicesBusiness', 'ReadXml', [
-          this.journalNo,
-          bytes,
-        ])
-        .subscribe();
-    };
-    reader.readAsDataURL(input);
   }
   //#endregion Function
 }

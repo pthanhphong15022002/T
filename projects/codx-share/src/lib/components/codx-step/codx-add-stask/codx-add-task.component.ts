@@ -169,7 +169,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.getBoughtTM();
     }
     this.getFormModel();
-   
   }
 
   //#region setting popup task
@@ -215,7 +214,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.isShowCbxGroup = false;
     }
     if(!this.isStart){
-      this.isStart = this.isActivitie = true ? true : this.isActivitie;
+      this.isStart = this.isActivitie == true ? true : this.isActivitie;
     }
     if (!this.listInsStep?.length) {
       this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
@@ -245,10 +244,10 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.status = '1';
       this.stepsTasks.createTask = this.isBoughtTM;
       this.stepsTasks.taskName = this.typeTask?.text;
-      this.stepsTasks.startDate = this.startDateParent;
+      this.stepsTasks.startDate = this.isStart ? this.startDateParent : null;
       let startDays = new Date(this.startDateParent);
       startDays.setDate(startDays?.getDate() + 1);
-      this.stepsTasks.endDate = startDays;
+      this.stepsTasks.endDate = this.isStart ? startDays : null;
     }
     if(this.action == 'edit' && this.type == 'calendar'){
       this.getParentTask(this.stepsTasks);
@@ -627,7 +626,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.checkStatusShowForm();
   }
   //#region save
-  async beforeSave(isCreateMeeting = false) {
+  async beforeSave(isCreateMeeting = false, isAddTask = false){
     this.stepsTasks['roles'] = [
       ...this.ownerDefaut,
       ...this.participant,
@@ -690,30 +689,30 @@ export class CodxAddTaskComponent implements OnInit {
 
     if (this.attachment && this.attachment.fileUploadList.length) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        this.save(this.stepsTasks, isCreateMeeting);
+        this.save(this.stepsTasks, isCreateMeeting, isAddTask);
       });
     } else {
-      this.save(this.stepsTasks, isCreateMeeting);
+      this.save(this.stepsTasks, isCreateMeeting, isAddTask);
     }
   }
 
-  save(task, isCreateMeeting = false) {
+  save(task, isCreateMeeting = false, isAddTask = false) {
     if (this.action == 'add' || this.action == 'copy') {
       if (isCreateMeeting) {
         task.actionStatus = '2';
         task.status = '2';
       }
-      this.addTask(task, isCreateMeeting);
+      this.addTask(task, isCreateMeeting, isAddTask);
     }
     if (this.action == 'edit') {
       this.editTask(task);
     }
   }
 
-  addTask(task, isCreateMeeting = false) {
+  addTask(task, isCreateMeeting = false, isAddTask = false) {
     if (this.isSave) {
       this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', task)
+        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [task, isCreateMeeting, isAddTask])
         .subscribe((res) => {
           if (res) {
             this.dialog.close({
@@ -725,7 +724,7 @@ export class CodxAddTaskComponent implements OnInit {
           }
         });
     } else {
-      this.dialog.close({task,isActivitie: this.isActivitie});
+      this.dialog.close({task,isActivitie: this.isActivitie, isCreateMeeting, isAddTask});
     }
   }
   editTask(task) {

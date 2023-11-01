@@ -57,6 +57,7 @@ import { CodxEmailComponent } from './components/codx-email/codx-email.component
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { T } from '@angular/cdk/keycodes';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
+import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 
 @Injectable({
   providedIn: 'root',
@@ -1320,11 +1321,11 @@ export class CodxShareService {
       [oldRecID, newRecID, objectType, referType, copyFileInfo]
     );
   }
-  genURLParamObject(object:any ){    
-    var json =JSON.stringify(object);
+  genURLParamObject(object: any) {
+    var json = JSON.stringify(object);
     //json = encode(json) Thêm bước mã hóa
     let paramURL = encodeURIComponent(json);
-    return paramURL;    
+    return paramURL;
   }
   getRpListByTemplateID(recID: any) {
     return this.api.execSv(
@@ -1380,10 +1381,24 @@ export class CodxShareService {
       [transID, isSettingMode, dynamicApprovers]
     );
   }
-  
-  getSettingValueWithOption(option, formName, transType=null, category=null) {
-    //option: Filter With 
-    //"F": FormName 
+
+  createNewESSF(sf: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'SignFilesBusiness',
+      'AddNewSignFileAsync',
+      [sf]
+    );
+  }
+  getSettingValueWithOption(
+    option,
+    formName,
+    transType = null,
+    category = null
+  ) {
+    //option: Filter With
+    //"F": FormName
     //"FT" FormName && TransType
     //"FC" FormName && Category
     //"FTC" FormName && TransType && Category
@@ -1936,68 +1951,6 @@ export class CodxShareService {
       }
     );
   }
-  //Gộp hàm
-  // apCreateExportFile(
-  //   approveProcess: ApproveProcess,
-  //   releaseCallback: (response: ResponseModel, component: any) => void,
-  //   exportUpload: ExportUpload
-  // ) {
-  //   this.exportTemplateData(approveProcess.module, exportUpload).subscribe(
-  //     (exportedFile: any) => {
-  //       //Nhận thông tin file trả lên sau khi export
-  //       if (exportedFile) {
-  //         switch (approveProcess?.category?.releaseControl) {
-  //           case '2': //Export và tạo ES_SignFiles để gửi duyệt
-  //             this.getFileByObjectID(approveProcess.recID).subscribe(
-  //               (lstFile: any) => {
-  //                 let signFile = this.apCreateSignFile(approveProcess, lstFile);
-  //                 if (lstFile?.length > 0) {
-  //                   this.apOpenPopupSignFile(
-  //                     approveProcess,
-  //                     releaseCallback,
-  //                     signFile,
-  //                     lstFile
-  //                   );
-  //                 } else {
-  //                   this.notificationsService.notify(
-  //                     'Không tìm thấy tài liệu!',
-  //                     '2'
-  //                   );
-  //                 }
-  //               }
-  //             );
-  //             break;
-
-  //           case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
-  //           case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-  //           //Kiểm tra file export có phải file pdf ko, nếu ko thì chuyển sang pdf để kí số
-  //             if (exportedFile?.extension != '.pdf') {
-  //               this.convertFileToPDF(
-  //                 exportedFile?.recID,
-  //                 exportedFile?.extension
-  //               ).subscribe((res) => {
-  //                 if(res){
-  //                   this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
-  //                 }
-  //                 else{
-  //                   this.notificationsService.notify(
-  //                     'Xuất tài liệu PDF thất bại!',
-  //                     '2'
-  //                   );
-  //                 }
-  //               });
-  //             }
-  //             else{
-  //               this.apReleaseWithoutSignFile(approveProcess,releaseCallback)
-  //             }
-  //             break;
-  //         }
-  //       } else {
-  //         this.notificationsService.notify('Xuất tài liệu thất bại!', '2');
-  //       }
-  //     }
-  //   );
-  // }
 
   apReleaseWithoutSignFile(
     approveProcess: ApproveProcess,
@@ -2023,11 +1976,19 @@ export class CodxShareService {
         break;
 
       case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-        this.apBaseRelease(approveProcess, releaseCallback);
+        this.getFileByObjectID(approveProcess.recID).subscribe(
+          (lstFile: any) => {
+            let signFile = this.apCreateSignFile(approveProcess, lstFile);
+            this.createNewESSF(signFile).subscribe((res) => {
+              if (res) {
+                this.apBaseRelease(approveProcess, releaseCallback);
+              }
+            });
+          }
+        );
         break;
     }
   }
-
   apOpenViewSignFile(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
@@ -2200,7 +2161,78 @@ export class CodxShareService {
       return of(this.user.employee);
     }
   }
+
+  getRPByIDAndType(reportID, reportType) {
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetListReportByIDandType',
+      [reportID, reportType]
+    );
+  }
+
+  codxPrintReport(
+    reportID: string,
+    reportType: string,
+    data: any,
+    formModel: any
+  ) {
+    this.getRPByIDAndType(reportID, reportType).subscribe((rpList: any) => {
+      if (rpList != null) {
+        let tenantName = this.tenant.getName();
+        let rpOpenReportUI = function (recID, module) {
+          let params = {
+            ReportID: reportID,
+            Recs: recID,
+          };
+          //let paramURL = this.shareService.genURLParamObject(params);
+          let paramURL = encodeURIComponent(JSON.stringify(params));
+          let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
+          window.open(url);
+        };
+        if (rpList?.length > 1) {
+          this.rpViewReportList(rpList, data, formModel, rpOpenReportUI);
+        } else if (rpList?.length == 1) {
+          rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
+        }
+      }
+    });
+  }
+
+  rpViewReportList(
+    reportList: any,
+    data: any,
+    formModel: any,
+    rpOpenReportUI: (recID: string, moduleID: string) => void
+  ) {
+    let moduleID = reportList[0]?.moduleID?.toLowerCase();
+    var obj = {
+      data: data,
+      reportList: reportList,
+      url: moduleID + '/report/detail/',
+      formModel: formModel,
+    };
+    let opt = new DialogModel();
+    let dialogViewRP = this.callfunc.openForm(
+      CodxListReportsComponent,
+      '',
+      400,
+      600,
+      '',
+      obj,
+      '',
+      opt
+    );
+    dialogViewRP.closed.subscribe((res) => {
+      if (res?.event) {
+        let tenantName = this.tenant.getName();
+        rpOpenReportUI(res?.event?.recID, moduleID);
+      }
+    });
+  }
 }
+
 //#region Model
 
 export class Approvers {

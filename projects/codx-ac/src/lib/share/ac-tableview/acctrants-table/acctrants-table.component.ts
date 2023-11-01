@@ -52,6 +52,7 @@ export class AcctrantsTableComponent extends UIComponent {
     this.api
       .exec('AC', 'AcctTransBusiness', 'GetAccountingAsync', [
         dataItem.recID,
+        dataItem.status
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {

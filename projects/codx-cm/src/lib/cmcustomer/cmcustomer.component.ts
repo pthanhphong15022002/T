@@ -340,7 +340,7 @@ export class CmCustomerComponent
         this.popupPermissions(data);
         break;
       case 'CM0101_7':
-        //this.convertCustomerToDeals(data);
+        this.convertCustomerToDeals(data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -719,7 +719,7 @@ export class CmCustomerComponent
                   JSON.stringify(this.dataSelected)
                 );
               // this.customerDetail.getOneCustomerDetail(this.dataSelected.recID, this.funcID);
-              this.view.dataService.update(this.dataSelected).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.notiService.notifyCode('SYS007');
               this.detectorRef.detectChanges();
             }
@@ -1052,7 +1052,8 @@ export class CmCustomerComponent
           );
           dialogCustomDeal.closed.subscribe((e) => {
             if (e && e.event != null) {
-              this.view.dataService.update(e.event).subscribe();
+              this.notiService.notifyCode('SYS007');
+          //    this.view.dataService.update(e.event).subscribe();
               //   this.detailViewDeal.promiseAllAsync();
               this.detectorRef.detectChanges();
             }
