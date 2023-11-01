@@ -245,10 +245,10 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.status = '1';
       this.stepsTasks.createTask = this.isBoughtTM;
       this.stepsTasks.taskName = this.typeTask?.text;
-      this.stepsTasks.startDate = this.startDateParent;
+      this.stepsTasks.startDate = this.isStart ? this.startDateParent : null;
       let startDays = new Date(this.startDateParent);
       startDays.setDate(startDays?.getDate() + 1);
-      this.stepsTasks.endDate = startDays;
+      this.stepsTasks.endDate = this.isStart ? startDays : null;
     }
     if(this.action == 'edit' && this.type == 'calendar'){
       this.getParentTask(this.stepsTasks);

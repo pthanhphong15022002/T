@@ -105,6 +105,9 @@ import { ImportEInvoicesComponent } from './periodic/importeinvoices/importeinvo
 import { JournalV2Component } from './journals/journal-v2.component';
 import { JournalsAddIdimcontrolComponent } from './journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
 import { ImportinvoicesDetailComponent } from './periodic/importeinvoices/importinvoices-detail/importinvoices-detail.component';
+import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
+import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
+import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -126,6 +129,11 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'generaljournals/:funcID',
+        component: GeneralJournalComponent,
         data: { noReuse: true },
       },
       {
@@ -389,6 +397,9 @@ export const routes: Routes = [
     ImportEInvoicesComponent,
     ImportinvoicesDetailComponent,
     JournalsAddIdimcontrolComponent,
+    GeneralJournalComponent,
+    GeneralJournalAddComponent,
+    GeneralJournalDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

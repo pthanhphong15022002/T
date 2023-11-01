@@ -1,0 +1,102 @@
+<codx-views
+        [views]="views"
+        [method]="'GetAsync'"
+        [assemblyName]="'FD'"
+        [service]="'FD'"
+        [className]="'PaymentsBusiness'"
+        idField="RecID"
+        (selectedChange)="valueChange($event)"
+    >
+    </codx-views>
+<ng-template #itemTmp let-data>
+    <div class="d-flex flex-column w-100 p-4">
+        <div class="d-flex justify-content-start fw-bold">
+            {{data.toDate | date:'MM/yyyy'}}
+        </div>
+        <div *ngIf="data?.toDate" class="d-flex justify-content-start">
+            {{"FD006" | mssgReplace: (data?.toDate | date:'MM/yyyy') |async }}
+        </div>
+        <div class="d-flex justify-content-end fs-5-sm">
+            {{data.totalAmt + ' VND'}}
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <codx-vll 
+                [name]="'FD021'" 
+                [value]="data.status"  
+                [showIcon]="true"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge">
+            </codx-vll>
+            <span>{{data.createdOn | date:'dd/MM/yyyy'}}</span>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tmpRight let-data>
+    <lib-view-detail 
+        [recID]="recID"
+    >
+    </lib-view-detail>
+</ng-template>
+<ng-template #tmpTree>
+    <div class="w-100 h-100 bg-white">
+        <codx-treeview
+        id="tree"
+        #treeView
+        [itemTemplate]="templateTreeView"
+        [data]="dataTree"
+        [enableCheck]="false"
+        idField="recID"
+        [autoLoad]="false"
+        [selectFirst]="true"
+        (selectionChange)="selectionChange($event)"
+    >
+    </codx-treeview>
+    </div>
+    
+</ng-template>
+<ng-template #templateTreeView let-data>
+    <div class="d-flex align-items-center" *ngIf="data?.hasChildren">
+        <div class="fw-bold"><span>{{data?.yearNo}}</span></div>
+        <div class="ms-2 fw-bold"><span>{{data?.totalAmt + ' VND'}}</span></div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between" *ngIf="!data?.hasChildren">
+        <div class="d-flex align-items-center" >
+            <div><span>{{data?.createdOn | fmDT: "dmy"}}</span></div>
+            <div class="ms-2">
+                <codx-vll 
+                    [name]="'FD021'" 
+                    [value]="data?.status"  
+                    [showIcon]="true"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge">
+                </codx-vll>
+            </div>
+            <div class="ms-2"><span>{{data?.unbounds?.userName}}</span></div>
+            <div class="ms-2"><span>{{data?.totalAmt + ' VND'}}</span></div>
+        </div>
+        <div ngbDropdown>
+            <button
+                ngbDropdownToggle
+                class="btn align-items-center mt-1"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+            >
+                <span class="icon-more_vert icon-18"></span>
+            </button>
+            <div
+                ngbDropdownMenu
+                class="dropdown-menu overflow-auto"
+                aria-labelledby="dropdownMenuButton"
+            >
+            <div class="d-flex align-items-center" (click)="openFormDetail(data?.recID)"><span class="icon-16 icon-i-file-earmark-text" style="color: rgb(102, 102, 102);"></span><span class="ms-2">Xem chi tiết</span></div>
+            </div>
+        </div>
+    </div>
+   
+</ng-template>
+

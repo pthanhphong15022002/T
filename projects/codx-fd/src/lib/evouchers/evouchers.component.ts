@@ -7,12 +7,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { CallFuncService, DataRequest, DialogData, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CallFuncService, DataRequest, DialogData, DialogModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Observable, isObservable } from 'rxjs';
 import { CodxFdService } from '../codx-fd.service';
 import { EvoucherDetailComponent } from './evoucher-detail/evoucher-detail.component';
 import { E } from '@angular/cdk/keycodes';
 import { EvoucherAddComponent } from './evoucher-add/evoucher-add.component';
+import { EvoucherStatisticalComponent } from './evoucher-statistical/evoucher-statistical.component';
 
 @Component({
   selector: 'lib-evouchers',
@@ -90,12 +91,12 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
         active: true,
         sameData: true,
       },
-      {
-        id: '2',
-        type: ViewType.list,
-        active: false,
-        sameData: true,
-      },
+      // {
+      //   id: '2',
+      //   type: ViewType.list,
+      //   active: false,
+      //   sameData: true,
+      // },
     ];
   
   }
@@ -182,5 +183,17 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
   onClickSave()
   {
     this.callFunc.openForm(EvoucherAddComponent,"",900,800)
+  }
+
+  statistical()
+  {
+    this.api.execSv("FD","FD","PaymentsBusiness","PaymentVouchersAsync").subscribe();
+  }
+
+  openFormStatistical()
+  {
+    var option = new DialogModel();
+    option.IsFull = true;
+    this.callFunc.openForm(EvoucherStatisticalComponent,"",900,800,"",null,"",option);
   }
 }

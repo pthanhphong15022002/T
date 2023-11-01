@@ -71,6 +71,12 @@ import { EVouchersComponent } from './evouchers/evouchers.component';
 import { EvoucherDetailComponent } from './evouchers/evoucher-detail/evoucher-detail.component';
 import { EvoucherAddComponent } from './evouchers/evoucher-add/evoucher-add.component';
 import { PopupSendGiftComponent } from './gift-trans/popup-send-gift/popup-send-gift.component';
+import { WalletsEmpComponent } from './wallets-emp/wallets-emp.component';
+import { WalletsListByOrgComponent } from './wallets-emp/wallets-list-by-org/wallets-list-by-org.component';
+import { EvoucherStatisticalComponent } from './evouchers/evoucher-statistical/evoucher-statistical.component';
+import { ViewDetailComponent } from './evouchers/evoucher-statistical/view-detail/view-detail.component';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-detail-popup/view-detail-popup.component';
 
 export const routes: Routes = [
   {
@@ -83,7 +89,7 @@ export const routes: Routes = [
       },
       {
         path: 'coins/:funcID',
-        component: WalletsComponent,
+        component: WalletsEmpComponent,
       },
       {
         path: 'detailcoins/:funcID',
@@ -109,6 +115,10 @@ export const routes: Routes = [
       {
         path: 'gifttrans/:funcID',
         component: GiftTransComponent,
+      },
+      {
+        path: 'payments/:funcID',
+        component: EvoucherStatisticalComponent,
       },
     ],
   },
@@ -179,6 +189,7 @@ export const routes: Routes = [
         path: 'setting/evouchers/:funcID',
         component: EVouchersComponent,
       },
+     
     ],
   },
 ];
@@ -228,7 +239,12 @@ const Component: Type<any>[] = [
   ApprovalsComponent,
   EVouchersComponent,
   EvoucherDetailComponent,
-  EvoucherAddComponent
+  EvoucherAddComponent,
+  WalletsEmpComponent,
+  WalletsListByOrgComponent,
+  EvoucherStatisticalComponent,
+  ViewDetailComponent,
+  ViewDetailPopupComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -245,7 +261,7 @@ const T_Pipe: Type<any>[] = [];
     ProgressBarModule,
     CircularGaugeModule,
     TreeMapModule,
-
+    DropDownListModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
@@ -255,6 +271,8 @@ const T_Pipe: Type<any>[] = [];
     PopupApprovalComponent,
     ApprovalsComponent,
     PopupSendGiftComponent,
+    WalletsEmpComponent,
+    WalletsListByOrgComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

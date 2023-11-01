@@ -34,6 +34,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.reportID = dialogData?.data?.reportID;
+    this.lstReport = dialogData?.data?.reportList;
     this.jsParameters = dialogData?.data?.parameters;
     this.formModel = dialogData?.data?.formModel
   }
@@ -49,8 +50,10 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   }
 
   // get report list
+  
   getReportList(reportID:string){
-    if(reportID)
+
+    if(this.lstReport?.length == 0 && reportID )
     {
       this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
@@ -62,6 +65,11 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
         this.loaded = true;
         this.loading = false;
       });
+    }
+    else {
+      this.dataSelected = this.lstReport != null ? this.lstReport[0] :null;
+      this.loaded = true;
+      this.loading = false;
     }
   }
 
