@@ -361,9 +361,22 @@ export class CodxViewTaskComponent implements OnInit {
   //#endregion
 
   //#region more functions
+  checRoleOwner(data) {
+    return this.user.userID == data?.owner;
+  }
+
   changeDataMFStep(event) {
-    let isGroup = true;
-    let isTask = true;
+    let isGroup = false;
+    let isTask = false;
+    if (this.type == 'G' && !this.isRoleAll) {
+      isGroup = this.checRoleOwner(this.dataView);
+    } else if (this.type != 'G' && this.type != 'P' && !this.isRoleAll) {
+      isGroup = this.checRoleOwner(this.groupTask);
+      if (!isGroup) {
+        isTask = this.checRoleOwner(this.dataView);
+      }
+    }
+
     if (event != null) {
       event.forEach((res) => {
         switch (res.functionID) {
@@ -378,6 +391,7 @@ export class CodxViewTaskComponent implements OnInit {
           case 'SYS001':
           case 'SYS002':
           case 'DP26': // chi tiêt
+          case 'DP31':
             res.disabled = true;
             break;
 
@@ -422,18 +436,23 @@ export class CodxViewTaskComponent implements OnInit {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            if (
-              this.dataView?.dependRule != '0' ||
-              this.dataView?.status != '1'
-            ) {
-              res.disabled = true;
-            } else if (
-              !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
-            ) {
-              res.isblur = true;
-            }
+            // if (this.type != 'P' && this.type != 'G') {
+            //   if (
+            //     this.dataView?.dependRule != '0' ||
+            //     this.dataView?.status != '1'
+            //   ) {
+            //     res.disabled = true;
+            //   } else if (
+            //     !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
+            //   ) {
+            //     res.isblur = true;
+            //   }
+            // } else {
+            //   res.disabled = true;
+            // }
+            // res.isblur = true;
             break;
-            case 'DP28': // Cập nhật
+          case 'DP28': // Cập nhật
             if (['B', 'M'].includes(this.dataView?.taskType)) {
               // this.convertMoreFunctions(event, res, this.dataView.taskType);
               if (this.dataView?.actionStatus != '2') res.disabled = true;
@@ -450,12 +469,6 @@ export class CodxViewTaskComponent implements OnInit {
             }
             break;
           case 'DP30': //Khôi phục
-            // if (['B', 'M'].includes(task.taskType)) {
-            //   this.convertMoreFunctions(event, res, task.taskType);
-            //   if (task.taskType == 'M') res.disabled = true;
-            // } else {
-            //   res.disabled = true;
-            // }
             res.disabled = true;
             break;
         }
@@ -540,7 +553,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
 
-  async addTask(type,dataType) {
+  async addTask(type, dataType) {
     let groupId = this.type == 'G' ? this.dataView?.refID : null;
     let taskOutput = await this.stepService.addTask(
       type,
