@@ -6,10 +6,50 @@
   [assemblyName]="assemblyName"
   [entityName]="entityName"
   [className]="className"
+  [button]="button"
   [method]="method"
   [autoLoad]="true"
   [selectedFirst]="true"
   (buttonClick)="click($event)"
   (selectedChange)="selectedChange($event)"
+  (onActions)="onActions($event)"
 >
 </codx-views>
+
+<!--grid view-->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #templateViewDetail let-popup>
+  <codx-form [body]="body" [dialog]="popup"> </codx-form>
+</ng-template>
+
+<ng-template #body>
+  <div class="h-100">
+    <codx-gridview-v2
+      #grid
+      [formModel]="formModelTemp"
+      [assemblyName]="assemblyName"
+      [entityName]="'tempImportParts'"
+      [service]="'WR'"
+      [className]="className"
+      [method]="method"
+      [idField]="idField"
+      [predicates]="predicatesTemp"
+      [dataValues]="dataValuesTemp"
+      rowHeight="40"
+      [height]="'100%'"
+      [hideMoreFunc]="true"
+    ></codx-gridview-v2>
+  </div>
+
+</ng-template>

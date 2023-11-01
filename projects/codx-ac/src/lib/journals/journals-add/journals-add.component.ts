@@ -64,6 +64,7 @@ export class JournalsAddComponent extends UIComponent {
     { icon: 'icon-settings', text: 'Thiết lập', name: 'Setting' },
     { icon: 'icon-people', text: 'Phân quyền', name: 'Roles' },
   ];
+  fiscalYears:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -83,7 +84,14 @@ export class JournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    
+    this.acService
+      .loadComboboxData$('FiscalPeriods', 'AC')
+      .subscribe((periods) => {
+        this.fiscalYears = [
+          ...new Set(periods.map((p) => Number(p.FiscalYear))),
+        ];
+        console.log(this.fiscalYears);
+      });
   }
 
   ngAfterViewInit() {
@@ -95,7 +103,6 @@ export class JournalsAddComponent extends UIComponent {
       )
       .subscribe((res) => {
         this.formJournal.form.setValue('idimControl',res,{onlySelf: true,emitEvent: false});
-        console.log(this.formJournal.form.data);
       });
   }
   //#endregion Init
@@ -123,9 +130,9 @@ export class JournalsAddComponent extends UIComponent {
     let i = this.formJournal.form.data.drAcctID.split(';');
   }
 
-  valueChange(event){
-    let field = event?.field || event?.ControlName;
-    let value = event?.data || event?.crrValue;
+  valueChange(event,fields:any = ''){
+    let field = event?.field || event?.ControlName || fields;
+    let value = event?.data || event?.crrValue || event?.value;
     if (event && value && this.formJournal.form.hasChange(this.formJournal.form.preData,this.formJournal.form.data)) { 
       this.formJournal.form.setValue(field,value,{onlySelf: true,emitEvent: false,});
       this.formJournal.form.data.updateColumns = '';
@@ -160,6 +167,10 @@ export class JournalsAddComponent extends UIComponent {
                 this.formJournal.form.setValue('journalDesc',res,{onlySelf: true,emitEvent: false,});
               }
             });
+          break;
+        case 'periodid':
+          let fiscalYear = parseInt(value.substring(0, 4));
+          this.formJournal.form.setValue('fiscalYear',fiscalYear,{onlySelf: true,emitEvent: false});
           break;
       }
     }
@@ -226,13 +237,11 @@ export class JournalsAddComponent extends UIComponent {
             this.image
               .updateFileDirectReload(this.formJournal?.form?.data?.recID)
               .subscribe((res) => {
-                if (res) {
                   if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
                       this.notification.notifyCode('SYS006');
                   else
                       this.notification.notifyCode('SYS007');
                   this.dialog.close();
-                }
               });
           }
         }

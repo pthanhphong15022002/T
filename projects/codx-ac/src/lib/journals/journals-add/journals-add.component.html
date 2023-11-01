@@ -22,13 +22,16 @@
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="FiscalYear" [formModel]="dialog.formModel"></codx-label>
-          <codx-input field="FiscalYear" [formModel]="dialog.formModel"
-            [Group]="formJournal?.form?.formGroup"></codx-input>
+          <!-- <codx-input field="FiscalYear" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup"></codx-input> -->
+            <!-- bùa fiscalyear -->
+            <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
+            </ejs-combobox>
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="PeriodID" [formModel]="dialog.formModel"></codx-label>
           <codx-input #periodID field="periodID" [formModel]="dialog.formModel"
-            [Group]="formJournal?.form?.formGroup"></codx-input>
+          (valueChange)="valueChange($event)" [Group]="formJournal?.form?.formGroup"></codx-input>
         </div>
       </div>
       <div class="col-4">
@@ -464,7 +467,7 @@
         <div class="d-flex align-items-center justify-content-end">
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>
@@ -485,7 +488,7 @@
           </div>
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>
@@ -503,7 +506,7 @@
         <div class="d-flex align-items-center justify-content-end">
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>
@@ -525,7 +528,7 @@
         <div class="d-flex align-items-center justify-content-end">
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>
@@ -547,7 +550,7 @@
         <div class="d-flex align-items-center justify-content-end">
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>
@@ -582,7 +585,7 @@
         <div class="d-flex align-items-center justify-content-end">
           <button [disabled]="true" type="button" class="btn btn-icon btn-light-primary" role="button"
           >
-            <span class="icon-connection-point icon-18"></span>
+            <span class="icon-i-person-plus icon-18"></span>
           </button>
         </div>  
       </div>

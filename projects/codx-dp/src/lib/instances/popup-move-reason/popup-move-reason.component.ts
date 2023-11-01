@@ -58,6 +58,7 @@ export class PopupMoveReasonComponent implements OnInit {
 
   isReason: boolean = true;
   isMoveProcess: boolean = false;
+  isLockStep: boolean = false;
   applyFor: string = '0';
 
   dataCM: any;
@@ -120,6 +121,7 @@ export class PopupMoveReasonComponent implements OnInit {
   ngOnInit(): void {}
 
   onSave() {
+    if(this.isLockStep) return;
     if (
       this.reasonStep.reasonControl === true &&
       this.listReasonClick.length === 0
@@ -139,6 +141,7 @@ export class PopupMoveReasonComponent implements OnInit {
       );
       return;
     }
+    this.isLockStep  = true;
     this.beforeSave();
   }
   beforeSave() {
@@ -183,6 +186,7 @@ export class PopupMoveReasonComponent implements OnInit {
           };
           this.dialog.close(obj);
         }
+        this.isLockStep  = false;
         this.notiService.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
       }
