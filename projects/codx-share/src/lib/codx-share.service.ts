@@ -2172,10 +2172,10 @@ export class CodxShareService {
     );
   }
 
-  codxPrintReport(
+  printReport(
     reportID: string,
     reportType: string,
-    data: any,
+    paras: any,
     formModel: any
   ) {
     this.getRPByIDAndType(reportID, reportType).subscribe((rpList: any) => {
@@ -2184,15 +2184,20 @@ export class CodxShareService {
         let rpOpenReportUI = function (recID, module) {
           let params = {
             ReportID: reportID,
-            Recs: recID,
           };
+          if(paras){
+            for(const p in paras){
+              params[p] = paras[p];
+            }
+          }
+
           //let paramURL = this.shareService.genURLParamObject(params);
           let paramURL = encodeURIComponent(JSON.stringify(params));
           let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
           window.open(url);
         };
         if (rpList?.length > 1) {
-          this.rpViewReportList(rpList, data, formModel, rpOpenReportUI);
+          this.rpViewReportList(rpList, formModel, rpOpenReportUI);
         } else if (rpList?.length == 1) {
           rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
         }
@@ -2202,13 +2207,11 @@ export class CodxShareService {
 
   rpViewReportList(
     reportList: any,
-    data: any,
     formModel: any,
     rpOpenReportUI: (recID: string, moduleID: string) => void
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
-      data: data,
       reportList: reportList,
       url: moduleID + '/report/detail/',
       formModel: formModel,
