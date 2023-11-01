@@ -172,28 +172,22 @@ export class CashreceiptsComponent extends UIComponent {
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
+      case 'ACT040104':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
+      case 'ACT040105':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
-        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+      case 'ACT040103':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
-        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT040106':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
+      case 'ACT040107':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT041010':
-      case 'ACT042907':
+      case 'ACT040108':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
@@ -617,29 +611,10 @@ export class CashreceiptsComponent extends UIComponent {
    * @param reportType 
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
   }
 
   /**

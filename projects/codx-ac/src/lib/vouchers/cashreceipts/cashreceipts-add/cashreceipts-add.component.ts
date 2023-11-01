@@ -1254,22 +1254,14 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
-    let lsterror = [];
-    if (data.dr == 0) {
-      lsterror.push({field:'dr',msgCode:'E0094'}); //? truyền field lỗi và msgcode
+  beforeSaveRow(event:any){
+    if (event.rowData) {
+      if (event.rowData.dr == 0 && event.rowData.dR2 == 0) {
+        this.eleGridCashReceipt.showErrorField('dr','E0094');
+        event.cancel = true;
+        return;
+      }
     }
-    // xử lí trường hợp call api để check validate
-    // let error = await new Promise((resolve, reject) => {
-    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
-    //     'USD'
-    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-    //     if (res) {
-    //       resolve({status: true});
-    //     }
-    //   });
-    //   });
-    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

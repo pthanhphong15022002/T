@@ -234,15 +234,11 @@ export class JournalsAddComponent extends UIComponent {
         if(!res) return;
         if (res || res.save || res.update) {
           if (res || !res.save.error || !res.update.error) {
-            this.image
-              .updateFileDirectReload(this.formJournal?.form?.data?.recID)
-              .subscribe((res) => {
-                  if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
-                      this.notification.notifyCode('SYS006');
-                  else
-                      this.notification.notifyCode('SYS007');
-                  this.dialog.close();
-              });
+            if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else
+              this.notification.notifyCode('SYS007');
+            this.dialog.close();
           }
         }
       })
