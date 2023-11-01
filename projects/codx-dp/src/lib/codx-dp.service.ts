@@ -853,6 +853,9 @@ export class CodxDpService {
     );
   }
 
+  async checkAdminInstance(){
+    return await firstValueFrom(this.api.exec<any>('CM', 'InstancesBusiness', 'IsAdminOrAdminRole', []))
+  }
   //#region  API FOR CM
   // startDeal(data) {
   //   return this.api.execSv<any>(

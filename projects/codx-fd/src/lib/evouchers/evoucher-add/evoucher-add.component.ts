@@ -25,6 +25,9 @@ export class EvoucherAddComponent implements OnInit{
 
   getData()
   {
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetByModuleAsync",["fdparameters","apikey"]).subscribe(item=>{
+
+    })
     this.api.execSv("FD","FD","VouchersBusiness","GetCategoriesERMAsync").subscribe((item:any)=>{
       if(item && item.length > 0)
       {

@@ -70,6 +70,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() isOnlyView: any;
   @Input() frmModelInstancesTask: FormModel;
   @Input() vllApprover = 'DP043';
+  @Input() isAdmin = false;
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
