@@ -63,6 +63,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  isPreventChange:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -235,6 +236,9 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param event 
    */
   valueChangeMaster(event: any) {
+    if(this.isPreventChange){
+      return;
+    }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
     if(event && value && this.formPurchaseInvoices.hasChange(this.formPurchaseInvoices.preData,this.formPurchaseInvoices.data)){
@@ -283,6 +287,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
+        oLine.updateColumns = '';
       }
     })
   }
@@ -512,6 +517,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
+        this.isPreventChange = true;
         if(this.formPurchaseInvoices.data.currencyID != res?.CurrencyID){
           this.formPurchaseInvoices.setValue('currencyID',(res?.CurrencyID || ''),{});
           this.showHideColumn();
@@ -538,6 +544,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.formPurchaseInvoices.setValue('delModeID',(res?.DelModeID || ''),{});
 
         this.detectorRef.detectChanges();
+        this.isPreventChange = false;
       }
     })
   }
