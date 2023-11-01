@@ -829,7 +829,7 @@ export class PdfComponent
           firstAreaOfSigner = this.lstAreas?.reduce((prev, curr) => {
             if (curr.signer != this.curSignerID) return null;
             else {
-              return prev.location.pageNumber < curr.location.pageNumber
+              return prev?.location?.pageNumber < curr?.location?.pageNumber
                 ? prev
                 : curr;
             }
