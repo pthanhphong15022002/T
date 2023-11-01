@@ -1803,13 +1803,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     ).length;
 
     countDealValues =
-      leadCurrentCount > 0
-        ? countDealsConverts / leadCurrentCount * 100
-        : 0;
+      leadCurrentCount > 0 ? (countDealsConverts / leadCurrentCount) * 100 : 0;
     countDealValueOlds =
-      leadOldsCount > 0
-        ? countDealsConvertOlds / leadOldsCount * 100
-        : 0;
+      leadOldsCount > 0 ? (countDealsConvertOlds / leadOldsCount) * 100 : 0;
 
     isAsc =
       countDealValues - countDealValueOlds == 0
@@ -1819,7 +1815,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
-    tmp['countOld'] = (countDealValueOlds > 0 ?  countDealValues.toFixed(2) : 0) + '%';
+    tmp['countOld'] =
+      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
     tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
@@ -2140,14 +2137,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   poinSeriRender(args: IPointRenderEventArgs): void {
-    let index = this.lstMonthsSeries.findIndex(x => x.month == args.point.x);
+    let index = this.lstMonthsSeries.findIndex((x) => x.month == args.point.x);
 
-    if(index != -1){
-      args.point.tooltip = this.lstMonthsSeries[index]?.expected.toLocaleString();
+    if (index != -1) {
+      args.point.tooltip =
+        this.lstMonthsSeries[index]?.expected.toLocaleString();
     }
   }
 
-  tooltipSeriRender(e: ITooltipRenderEventArgs){
+  tooltipSeriRender(e: ITooltipRenderEventArgs) {
     console.log(e);
   }
   //end
@@ -2465,13 +2463,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   retrnValueAsc(count, countOlds) {
     let valueAsc = '0';
-    if (countOlds > 0) {
-      valueAsc =
-        Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
+    if (count > countOlds) {
+      if (countOlds > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros((Math.abs(count - countOlds) / countOlds) * 100) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     } else {
-      valueAsc = '- %';
+      if (count > 0) {
+        valueAsc =
+        this.formatNumberWithoutTrailingZeros(((Math.abs(count - countOlds) / count) * 100)) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     }
+
     return valueAsc;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   getCountDate(leads, deals) {
