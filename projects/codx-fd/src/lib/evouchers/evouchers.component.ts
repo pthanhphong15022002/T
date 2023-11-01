@@ -91,12 +91,12 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
         active: true,
         sameData: true,
       },
-      {
-        id: '2',
-        type: ViewType.list,
-        active: false,
-        sameData: true,
-      },
+      // {
+      //   id: '2',
+      //   type: ViewType.list,
+      //   active: false,
+      //   sameData: true,
+      // },
     ];
   
   }

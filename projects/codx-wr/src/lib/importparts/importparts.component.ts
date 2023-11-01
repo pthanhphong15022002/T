@@ -1,5 +1,15 @@
-import { Component, Injector } from '@angular/core';
-import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ButtonModel,
+  CodxGridviewV2Component,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  UIComponent,
+  Util,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
@@ -8,6 +18,16 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
   styleUrls: ['./importparts.component.css'],
 })
 export class ImportpartsComponent extends UIComponent {
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
+  @ViewChild('templateViewDetail') templateViewDetail: TemplateRef<any>;
+  @ViewChild('grid') grid: CodxGridviewV2Component;
+
+  popupView: DialogRef;
+  formModelTemp: FormModel = {
+    formName: 'WRtempImportParts',
+    gridViewName: 'grvWRtempImportParts',
+    entityName: 'tempImportParts'
+  }
   views: Array<ViewModel> = [];
   titleAction = '';
   // config api get data
@@ -17,6 +37,10 @@ export class ImportpartsComponent extends UIComponent {
   className = 'DataBusiness';
   method = 'LoadDataAsync';
   idField = 'recID';
+  predicatesTemp = '';
+  dataValuesTemp = '';
+  dataSelected: any;
+  button?: ButtonModel;
 
   constructor(
     private inject: Injector,
@@ -25,7 +49,11 @@ export class ImportpartsComponent extends UIComponent {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.button = {
+      id: 'btnAdd',
+    };
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -33,7 +61,9 @@ export class ImportpartsComponent extends UIComponent {
         type: ViewType.grid,
         active: true,
         sameData: true,
-        model: {},
+        model: {
+          template2: this.templateMore,
+        },
       },
     ];
   }
@@ -42,25 +72,76 @@ export class ImportpartsComponent extends UIComponent {
 
   click(evt: ButtonModel) {
     // this.titleAction = evt.text;
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-      default:
-        let f = evt.data;
-        let data = evt.model;
-        if (!data) data = this.view.dataService.dataSelected;
+    // switch (evt.id) {
+    //   default:
+
+    //     break;
+    // }
+    let f = {functionID: 'SYS001'}; //bùa đã
+    let data = evt.model;
+    if (!data) data = this.view.dataService.dataSelected;
+    this.codxShareService.defaultMoreFunc(
+      f,
+      data,
+      null,
+      this.view.formModel,
+      this.view.dataService,
+      this
+    );
+  }
+
+  clickMF(e, data) {
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS003':
+      case 'SYS004':
+      case 'SYS001':
+      case 'SYS002':
         this.codxShareService.defaultMoreFunc(
-          f,
+          e,
           data,
           null,
           this.view.formModel,
           this.view.dataService,
           this
         );
+        // this.df.detectChanges();
         break;
     }
   }
 
-  add() {}
+  onActions(e) {
+    switch (e.type) {
+      case 'dbClick':
+        //xư lý dbClick
+        this.viewDetail(e);
+        break;
+    }
+  }
+
+  add(evt) {}
+
+  //#region view detail
+  viewDetail(data) {
+    this.dataSelected = data;
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 999;
+    if(this.grid){
+      this.grid.load();
+    }
+    this.popupView = this.callfc.openForm(
+      this.templateViewDetail,
+      '',
+      Util.getViewPort().width,
+      Util.getViewPort().height,
+      '',
+      null,
+      '',
+      option
+    );
+    this.popupView.closed.subscribe((e) => {});
+  }
+  //#endregion
 }

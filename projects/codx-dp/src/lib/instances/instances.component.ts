@@ -892,7 +892,7 @@ export class InstancesComponent
                   !isUpdate ||
                   data.status != '2' ||
                   data.closed ||
-                  !data.permissionCloseInstances
+                  !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
@@ -915,7 +915,7 @@ export class InstancesComponent
                   !isDelete ||
                   data.closed ||
                   data.status != '2' ||
-                  !data.permissionCloseInstances
+                  !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
@@ -977,7 +977,7 @@ export class InstancesComponent
               //edit
               case 'SYS03':
                 let isUpdate = data.write;
-                if (!isUpdate || data.closed || !data.permissionCloseInstances)
+                if (!isUpdate || data.closed || !data.permissionMoveInstances)
                   mf.disabled = true;
                 break;
               //Copy
@@ -987,7 +987,7 @@ export class InstancesComponent
               //xóa
               case 'SYS02':
                 let isDelete = data.delete;
-                if (!isDelete || data.closed || !data.permissionCloseInstances)
+                if (!isDelete || data.closed || !data.permissionMoveInstances)
                   mf.disabled = true;
                 break;
               case 'DP09':
