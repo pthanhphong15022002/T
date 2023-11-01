@@ -8,6 +8,7 @@ import {
   FormModel,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupWalletHistoryComponent } from '../popup-wallet-history/popup-wallet-history.component';
 
 @Component({
   selector: 'lib-wallets-list-by-org',
@@ -103,29 +104,26 @@ export class WalletsListByOrgComponent {
 
   clickMF(moreFunc: any, data: any) {
     this.itemSelected = data;
-    // switch (moreFunc.functionID) {
-    //   case 'SYS02': // xóa
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03': // sửa
-    //     this.edit(data, moreFunc);
-    //     break;
-    //   case 'SYS04': // sao chép
-    //     this.copy(data, moreFunc);
-    //     break;
-    //   case 'HRT03a1A07': // cập nhật tình trạng
-    //     this.updateStatus(data, moreFunc.functionID);
-    //     break;
-    //   default:
-    //     this.shareService.defaultMoreFunc(
-    //       moreFunc,
-    //       data,
-    //       null,
-    //       this.view.formModel,
-    //       this.view.dataService,
-    //       this
-    //     );
-    //     break;
-    // }
+    this.openPopupHistory(data);
+  }
+
+  openPopupHistory(item) {
+    var obj = {
+      userID: item.domainUser,
+      formModel: this.formModel,
+    };
+
+    let popup = this.callfc.openForm(
+      PopupWalletHistoryComponent,
+      '',
+      1000,
+      1500,
+      '',
+      obj,
+      ''
+    );
+    popup.closed.subscribe((res: any) => {
+      if (!res || res.closedBy == 'escape' || !res.event) return;
+    });
   }
 }
