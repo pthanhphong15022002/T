@@ -1,5 +1,7 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DataRequest, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxFdService } from '../../codx-fd.service';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-evoucher-add',
@@ -13,6 +15,7 @@ export class EvoucherAddComponent implements OnInit{
   constructor(
     private api : ApiHttpService,
     private notiService: NotificationsService,
+    private codxFdService: CodxFdService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -25,6 +28,7 @@ export class EvoucherAddComponent implements OnInit{
 
   getData()
   {
+    
     this.api.execSv("FD","FD","VouchersBusiness","GetCategoriesERMAsync").subscribe((item:any)=>{
       if(item && item.length > 0)
       {
@@ -49,7 +53,7 @@ export class EvoucherAddComponent implements OnInit{
       if(item)
       {
         this.notiService.notifyCode("SYS034"); 
-        this.dialog.close();
+        this.dialog.close(true);
       } 
       else this.notiService.notifyCode("AC0030" , 0 , "Thực thi "); 
     });

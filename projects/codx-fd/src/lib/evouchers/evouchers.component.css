@@ -22,3 +22,7 @@
 {
   height: calc(100% - 47px)
 }
+.mt-15per
+{
+  margin-top: -15%;
+}

@@ -169,7 +169,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.getBoughtTM();
     }
     this.getFormModel();
-   
   }
 
   //#region setting popup task
