@@ -2466,20 +2466,28 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (count > countOlds) {
       if (countOlds > 0) {
         valueAsc =
-          ((Math.abs(count - countOlds) / countOlds) * 100).toFixed(2) + '%';
+          this.formatNumberWithoutTrailingZeros((Math.abs(count - countOlds) / countOlds) * 100) + '%';
       } else {
         valueAsc = '- %';
       }
     } else {
       if (count > 0) {
         valueAsc =
-          ((Math.abs(count - countOlds) / count) * 100).toFixed(2) + '%';
+        this.formatNumberWithoutTrailingZeros(((Math.abs(count - countOlds) / count) * 100)) + '%';
       } else {
         valueAsc = '- %';
       }
     }
 
     return valueAsc;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   getCountDate(leads, deals) {
