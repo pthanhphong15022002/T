@@ -9,7 +9,7 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100" *ngIf="isLoaded">
+  <div class="w-100 h-100 cm-chart" *ngIf="isLoaded">
     <ng-container *ngIf="funcID == 'CMD001'">
       <codx-dashboard
         [templates]="dashBoardTaget"
@@ -122,7 +122,7 @@
   <div class="w-100 h-100 position-relative" id="5" style="overflow: hidden">
     <div>
       <codx-label
-        class="fs-5 fw-bold"
+        class="fw-bold"
         name="lblPercentageOfDeals"
         default="Tỷ lệ phân bổ cơ hội"
       ></codx-label>
@@ -228,7 +228,7 @@
   >
     <codx-label
       id="chartBusinessLinesHeader"
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblChartBusinessLines"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -344,7 +344,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="7" style="overflow-y: hiden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblChartOwners"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -449,7 +449,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="8" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblReasonSuscessFail"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -568,7 +568,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="9">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblConversionRate"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -700,7 +700,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="10" title="" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblEfficiency"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -770,7 +770,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="11" title="" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblProductivityOfOwners"
       default="Thống kê năng suất nhân viên"
     ></codx-label>
@@ -831,7 +831,7 @@
   <div class="w-100 h-100 p-2" id="1" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealValue"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -846,7 +846,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('1')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('1')">{{
             findTmpDeals("1")?.count
           }}</span>
         </div>
@@ -856,10 +856,10 @@
             [ngClass]="getIcon(findTmpDeals('1')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("1")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6">({{ findTmpDeals("1")?.valueAsc }})</span>
+          <span class="fw-bold">({{ findTmpDeals("1")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
@@ -879,7 +879,7 @@
   <div class="w-100 h-100 p-2" id="2" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDeals"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -894,7 +894,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('2')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('2')">{{
             findTmpDeals("2")?.count
           }}</span>
         </div>
@@ -904,10 +904,10 @@
             [ngClass]="getIcon(findTmpDeals('2')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("2")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6">({{ findTmpDeals("2")?.valueAsc }})</span>
+          <span class="fw-bold">({{ findTmpDeals("2")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
@@ -927,7 +927,7 @@
   <div class="w-100 h-100 p-2" id="3" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealWons"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -942,7 +942,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('3')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('3')">{{
             findTmpDeals("3")?.count
           }}</span>
         </div>
@@ -952,10 +952,10 @@
             [ngClass]="getIcon(findTmpDeals('3')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("3")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6">({{ findTmpDeals("3")?.valueAsc }})</span>
+          <span class="fw-bold">({{ findTmpDeals("3")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
@@ -975,7 +975,7 @@
   <div class="w-100 h-100 p-2" id="4" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealLosts"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -990,7 +990,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('4')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('4')">{{
             findTmpDeals("4")?.count
           }}</span>
         </div>
@@ -1000,10 +1000,10 @@
             [ngClass]="getIcon(findTmpDeals('4')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("4")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6">({{ findTmpDeals("4")?.valueAsc }})</span>
+          <span class="fw-bold">({{ findTmpDeals("4")?.valueAsc }})</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">
@@ -1023,7 +1023,7 @@
   <div class="w-100 h-100 p-2" id="5" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblLeadConvertDeals"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -1038,7 +1038,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('5')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('5')">{{
             findTmpDeals("5")?.count
           }}</span>
         </div>
@@ -1048,7 +1048,7 @@
             [ngClass]="getIcon(findTmpDeals('5')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6">{{ findTmpDeals("5")?.valueAsc }}</span>
+          <span class="fw-bold">{{ findTmpDeals("5")?.valueAsc }}</span>
         </div>
       </div>
       <div class="d-flex fw-bold fs-5">

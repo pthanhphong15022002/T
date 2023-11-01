@@ -199,7 +199,7 @@ export class SignFileComponent extends UIComponent {
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
-    if (event?.data?.recID) this.getDetailSignFile(event?.data.recID);
+    //if (event?.data?.recID) this.getDetailSignFile(event?.data.recID);
   }
 
   getDetailSignFile(id: any) {
