@@ -28,27 +28,3 @@
     ></codx-mfunc>
   </div>
 </ng-template>
-
-<ng-template #templateViewDetail let-popup>
-  <codx-form [body]="body" [dialog]="popup"> </codx-form>
-</ng-template>
-
-<ng-template #body>
-  <div class="h-100">
-    <codx-gridview-v2
-      #grid
-      [formModel]="formModelTemp"
-      [assemblyName]="assemblyName"
-      [entityName]="'WR_tempImportParts'"
-      [service]="'WR'"
-      [className]="className"
-      [method]="method"
-      [idField]="idField"
-      [predicates]="predicatesTemp"
-      [dataValues]="dataValuesTemp"
-      rowHeight="40"
-      [height]="'100%'"
-      [hideMoreFunc]="true"
-    ></codx-gridview-v2>
-  </div>
-</ng-template>

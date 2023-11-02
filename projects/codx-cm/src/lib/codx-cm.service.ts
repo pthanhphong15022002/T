@@ -207,6 +207,14 @@ export class CodxCmService {
       data
     );
   }
+  getViewDetailInstanceStep(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetViewDetailInstanceStepsAsync',
+      data
+    );
+  }
 
   getListAddress(entityName, recID) {
     return this.api.exec<any>('BS', 'AddressBookBusiness', 'LoadDataAsync', [
@@ -813,7 +821,7 @@ export class CodxCmService {
       data
     );
   }
-  changeStatusDeal(data) {
+  changeStatusDeal(data, business, method) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
@@ -1094,6 +1102,22 @@ export class CodxCmService {
     );
   }
 
+  getViewDetailDealAsync(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetViewDetailDealAsync',
+      data
+    );
+  }
+  getSettingViewDetailDealAsync() {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'GetSettingViewDetailDealAsync'
+    );
+  }
+
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(
       'CM',
@@ -1144,7 +1168,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   //#endregion -- Bao
 
@@ -1395,7 +1418,7 @@ export class CodxCmService {
     });
   }
 
-  //check Validate- Không hiểu thì hỏi ?
+  //check Validate
   checkValidateForm(
     grvSetup,
     model,
@@ -1433,7 +1456,7 @@ export class CodxCmService {
     return noValidCout;
   }
 
-  ///gen AutoNum - Không hiểu thì hỏi ?
+  ///gen AutoNum
   isExitsAutoCodeNumber(className, ID) {
     return this.api.execSv<any>(
       'CM',

@@ -33,6 +33,8 @@ import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/cod
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
+import { CodxCmService } from '../../../codx-cm.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -78,8 +80,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private authstore: AuthStore,
     private stepService: StepService,
     private callFunc: CallFuncService,
+    private codxCmService: CodxCmService,
     private detectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private codxShareService: CodxShareService,
   ) {
     this.user = this.authstore.get();
   }
@@ -231,7 +235,15 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            res.isblur =  !(task?.startDate && task?.endDate);
+            if (task?.status != '1') {
+              res.disabled = true;
+            }
+            break;
+          case 'DP32': // gởi duyệt 
+            res.disabled =  !(task?.approveRule);
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled =  true;
             break;
         }
       });
@@ -698,4 +710,88 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.dataTooltipDay = data;
     popup.open();
   }
+
+  //#region duyet
+  approvalTrans(dt) {
+    this.codxCmService
+      .getESCategoryByCategoryID('ES_CM0501')
+      .subscribe((res) => {
+        if (!res) {
+          this.notiService.notifyCode('ES028');
+          return;
+        }
+
+        if (res.eSign) {
+          //kys soos
+        } else {
+          this.release(dt, res);
+        }
+      });
+  }
+  //Gửi duyệt
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      "DP_Activities",
+      "CM0101",
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  //call Back
+  releaseCallback(res: any, t: any = null) {
+    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.itemSelected = q;
+    //         this.view.dataService.update(this.itemSelected).subscribe();
+    //       }
+    //       this.notiService.notifyCode('ES007');
+    //     });
+    // }
+  }
+
+  //Huy duyet
+  cancelApprover(dt) {
+    // this.notiService.alertCode('ES016').subscribe((x) => {
+    //   if (x.event.status == 'Y') {
+    //     this.codxCmService
+    //       .getESCategoryByCategoryID('ES_CM0501')
+    //       .subscribe((res2: any) => {
+    //         if (res2) {
+    //           if (res2?.eSign == true) {
+    //             //trình ký
+    //           } else if (res2?.eSign == false) {
+    //             //kí duyet
+    //             this.codxShareService
+    //               .codxCancel(
+    //                 'CM',
+    //                 dt?.recID,
+    //                 this.view.formModel.entityName,
+    //                 null,
+    //                 null
+    //               )
+    //               .subscribe((res3) => {
+    //                 if (res3) {
+    //                   this.itemSelected.approveStatus = '0';
+    //                   this.itemSelected.status = '0';
+    //                   this.view.dataService
+    //                     .update(this.itemSelected)
+    //                     .subscribe();
+    //                   this.notiService.notifyCode('SYS007');
+    //                 } else this.notiService.notifyCode('SYS021');
+    //               });
+    //           }
+    //         }
+    //       });
+    //   }
+    // });
+  }
+  //end duyet
+  //#endregion
 }
