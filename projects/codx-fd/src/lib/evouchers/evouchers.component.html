@@ -1,32 +1,145 @@
-<div class="d-flex flex-column bg-white">
-  <ng-container *ngTemplateOutlet="header"></ng-container>
-  <ng-container *ngTemplateOutlet="body"></ng-container>
-</div>
-<ng-template #header>
-</ng-template>
-<ng-template #body>
-  <div class="d-flex flex-wrap w-100 h-100">
-    <ng-container *ngFor="let item of data">
-      <codx-card-img
-          [imageSrc]="item?.productImg"
-          [dataItem]="item"
-          cardCss="border card-img-mwp img-storage w-225px h-250px ms-4 mt-2" 
-          [title]="item?.productNm"
-          [titleLine]="'2 w-200px'"
-          [contentCss]="'mt-2'" 
-          imgCss="h-150px w-100 mb-2"
-          [footer]="tmpFooter" 
-      >
-      </codx-card-img>
-      <ng-template #tmpFooter>
-        <div class="d-flex flex-column">
-            <div class="d-flex align-items-center">
-              <div class="rounded-circle bg-e-voucher-img" [style.background-image]="'url(' + item?.brandLogo + ')'"></div>
-              <div class="ms-2 text-gray-600 text-truncate" [title]="item?.brandNm">{{item?.brandNm}}</div>
-            </div>
+<ng-container *ngIf="settingModule">
+  <ng-container *ngIf="!checkGotit  , else elseCheckGotIt">
+    <div class="d-flex w-100 h-100 justify-content-center align-items-center flex-column">
+      <img class="mt-15per w-400px" src="./assets/themes/om/default/img/OKRs.svg" />
+      <div class="d-flex align-items-center">
+        <codx-label default="Vui lòng chọn" class="fs-5-sm ms-10"></codx-label>
+        <codx-label default=" đăng ký " class="fs-5-sm fw-bold cursor-pointer mx-1" (click)="onClickSave()"></codx-label>
+        <codx-label default="để đăng ký thương hiệu" class="fs-5-sm"></codx-label>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #elseCheckGotIt>
+    <div class="d-flex flex-column h-100">
+      <ng-container *ngTemplateOutlet="header"></ng-container>
+      <ng-container *ngTemplateOutlet="body"></ng-container>
+    </div>
+    <ng-template #header>
+      <div class="d-flex align-items-center justify-content-between bg-white px-4">
+        <div class="d-flex align-items-center py-2">     
+          <codx-input
+            field="categories"
+            type="combobox"
+            refValue="FDCategories"
+            placeholder="Nhãn hàng"
+            ngClass="me-2"
+            (valueChange)="changeValue($event)"
+          >
+          </codx-input>
+          <codx-input
+            field="brands"
+            type="combobox"
+            refValue="FDBrands"
+            placeholder="Thương hiệu"
+            (valueChange)="changeValue($event)"
+          >
+          </codx-input>
         </div>
-      </ng-template>
-    </ng-container>
-  </div>
-</ng-template>
-
+        <div class="d-flex align-items-center">
+          <!-- <button type="button" class="btn btn-primary mx-2" (click)="statistical()">
+            <i class="icon-add"></i>
+            <codx-label
+              [fiedName]="'lblSave'"
+              [formModel]=""
+              default="Thống kê ngầm"
+            ></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary mx-2" (click)="openFormStatistical()">
+            <i class="icon-add"></i>
+            <codx-label
+              [fiedName]="'lblSave'"
+              [formModel]=""
+              default="Thống kê"
+            ></codx-label>
+          </button> -->
+          <codx-toolbar-choose
+            class="mx-2"
+            [views]="viewList"
+            (viewChange)="viewChanged($event)"
+          >
+          </codx-toolbar-choose>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #body>
+      <ng-container *ngIf="viewId == 1 , else tmpList">
+        <div class="d-flex w-100 h-evoucher px-4 pt-4">
+          <div class="d-flex flex-wrap w-100 h-100 bg-white overflow-auto pt-2" (scroll)="scrollData($event)">
+            <ng-container *ngFor="let item of data">
+              <codx-card-img
+                  [imageSrc]="item?.productImg"
+                  [dataItem]="item"
+                  cardCss="border card-img-mwp img-storage w-225px h-222px ms-4 mt-2" 
+                  [title]="item?.productNm"
+                  [titleLine]="'1 w-200px'"
+                  [contentCss]="'mt-2'" 
+                  imgCss="h-150px w-100 border-bottom mb-2"
+                  [footer]="tmpFooter"
+                  (click)="openFormDetail(item?.productId , item?.productNm)" 
+              >
+              </codx-card-img>
+              <ng-template #tmpFooter>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                      <div class="rounded-circle bg-e-voucher-img" [style.background-image]="'url(' + item?.brandLogo + ')'"></div>
+                      <div class="ms-2 text-gray-600 text-truncate" [title]="item?.brandNm">{{item?.brandNm}}</div>
+                    </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    
+    </ng-template>
+    <ng-template #tmpList>
+      <div class="w-100 px-4 pt-4">
+        <codx-gridview-v2
+          *ngIf="columnsGrid && columnsGrid.length > 0"
+          #grid
+          [dataSource]="data"
+          [hideMoreFunc]="true"
+          [columnsGrid]="columnsGrid"
+          [autoLoad]="false"
+          rowHeight="40"
+          [height]="hList"
+          [allowFiltering]="false"
+          [editSettings]="{ mode: 'Dialog' }"
+          
+        >
+        </codx-gridview-v2>
+      </div>
+    </ng-template>
+    
+    <ng-template #productImg let-data>
+      <img
+        [src]="data?.productImg"
+        style="width: 50px; height: 50px; margin: 2px"
+      />
+    </ng-template>
+    <ng-template #tmpInfor let-data>
+      <div class="d-flex py-2">
+        <img
+          [src]="data?.productImg"
+          style="width: 50px; height: 50px; margin: 2px"
+        />
+        <div class="d-flex flex-column ms-2">
+          <span class="fw-bold pb-1">{{data?.productNm}}</span>
+          <div class="d-flex align-items-center">
+            <div class="rounded-circle bg-e-voucher-img-2" [style.background-image]="'url(' + data?.brandLogo + ')'"></div>
+            <div class="ms-2 text-gray-600 text-truncate" [title]="data?.brandNm">{{data?.brandNm}}</div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #voucherInFor>
+      <codx-label default="Thông tin quà tặng" fiedName="lblFDVoucherInFor" formName="fmFDVoucherInFor"></codx-label>
+    </ng-template>
+    <ng-template #voucherName>
+      <codx-label default="Tên quà tặng" fiedName="lblFDVoucherName" formName="fmFDVoucherName"></codx-label>
+    </ng-template>
+    <ng-template #brandName>
+      <codx-label default="Thương hiệu" fiedName="lblFDBrandName" formName="fmFDBrandName"></codx-label>
+    </ng-template>
+  </ng-template>
+</ng-container>

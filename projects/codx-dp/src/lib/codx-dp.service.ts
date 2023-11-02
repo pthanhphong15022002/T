@@ -853,6 +853,17 @@ export class CodxDpService {
     );
   }
 
+  async checkAdminInstance(): Promise<boolean> {
+    let data = await firstValueFrom(
+      this.api.exec<any>(
+        'DP',
+        'InstancesBusiness',
+        'IsAdminOrAdminRole',
+        []
+      )
+    );
+    return data ? true : false;
+  }
   //#region  API FOR CM
   // startDeal(data) {
   //   return this.api.execSv<any>(

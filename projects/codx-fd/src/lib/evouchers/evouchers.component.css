@@ -6,3 +6,23 @@
     background-position: center;
     background-size: contain;
 }
+.bg-e-voucher-img-2
+{
+  width: 25px;
+  height: 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.h-222px
+{
+    height: 222px;
+}
+.h-evoucher
+{
+  height: calc(100% - 47px)
+}
+.mt-15per
+{
+  margin-top: -15%;
+}

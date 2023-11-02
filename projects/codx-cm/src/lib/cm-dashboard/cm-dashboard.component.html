@@ -9,7 +9,7 @@
 </codx-views>
 
 <ng-template #template>
-  <div class="w-100 h-100" *ngIf="isLoaded">
+  <div class="w-100 h-100 cm-chart" *ngIf="isLoaded">
     <ng-container *ngIf="funcID == 'CMD001'">
       <codx-dashboard
         [templates]="dashBoardTaget"
@@ -122,7 +122,7 @@
   <div class="w-100 h-100 position-relative" id="5" style="overflow: hidden">
     <div>
       <codx-label
-        class="fs-5 fw-bold"
+        class="fw-bold"
         name="lblPercentageOfDeals"
         default="Tỷ lệ phân bổ cơ hội"
       ></codx-label>
@@ -228,7 +228,7 @@
   >
     <codx-label
       id="chartBusinessLinesHeader"
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblChartBusinessLines"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -344,7 +344,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="7" style="overflow-y: hiden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblChartOwners"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -449,7 +449,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="8" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblReasonSuscessFail"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -568,7 +568,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="9">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblConversionRate"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -700,7 +700,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="10" title="" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblEfficiency"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -770,7 +770,7 @@
 <ng-template #templateDeals>
   <div class="w-100 h-100" id="11" title="" style="overflow: hidden">
     <codx-label
-      class="fs-5 fw-bold"
+      class="fw-bold"
       name="lblProductivityOfOwners"
       default="Thống kê năng suất nhân viên"
     ></codx-label>
@@ -831,7 +831,7 @@
   <div class="w-100 h-100 p-2" id="1" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealValue"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -846,7 +846,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('1')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('1')">{{
             findTmpDeals("1")?.count
           }}</span>
         </div>
@@ -856,21 +856,19 @@
             [ngClass]="getIcon(findTmpDeals('1')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("1")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("1")?.valueAsc }})</span
-          >
+          <span class="fw-bold">({{ findTmpDeals("1")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
+          class="fw-bold mb-1 label-colon me-1"
+          [name]="textTitle"
           formName="CMMyDashboard"
           gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
+          [default]="textTitle"
         ></codx-label>
         <span>{{ findTmpDeals("1")?.countOld }}</span>
       </div>
@@ -881,7 +879,7 @@
   <div class="w-100 h-100 p-2" id="2" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDeals"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -896,7 +894,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('2')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('2')">{{
             findTmpDeals("2")?.count
           }}</span>
         </div>
@@ -906,21 +904,19 @@
             [ngClass]="getIcon(findTmpDeals('2')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("2")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("2")?.valueAsc }})</span
-          >
+          <span class="fw-bold">({{ findTmpDeals("2")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
+          class="fw-bold mb-1 label-colon me-1"
+          [name]="textTitle"
           formName="CMMyDashboard"
           gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
+          [default]="textTitle"
         ></codx-label>
         <span>{{ findTmpDeals("2")?.countOld }}</span>
       </div>
@@ -931,7 +927,7 @@
   <div class="w-100 h-100 p-2" id="3" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealWons"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -946,7 +942,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('3')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('3')">{{
             findTmpDeals("3")?.count
           }}</span>
         </div>
@@ -956,21 +952,19 @@
             [ngClass]="getIcon(findTmpDeals('3')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("3")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("3")?.valueAsc }})</span
-          >
+          <span class="fw-bold">({{ findTmpDeals("3")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
+          class="fw-bold mb-1 label-colon me-1"
+          [name]="textTitle"
           formName="CMMyDashboard"
           gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
+          [default]="textTitle"
         ></codx-label>
         <span>{{ findTmpDeals("3")?.countOld }}</span>
       </div>
@@ -981,7 +975,7 @@
   <div class="w-100 h-100 p-2" id="4" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblDealLosts"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -996,7 +990,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('4')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('4')">{{
             findTmpDeals("4")?.count
           }}</span>
         </div>
@@ -1006,21 +1000,19 @@
             [ngClass]="getIcon(findTmpDeals('4')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6 me-1">{{
+          <span class="fw-bold me-1">{{
             findTmpDeals("4")?.countAsc
           }}</span>
-          <span class="fw-bold fs-6"
-            >({{ findTmpDeals("4")?.valueAsc }})</span
-          >
+          <span class="fw-bold">({{ findTmpDeals("4")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
+          class="fw-bold mb-1 label-colon me-1"
+          [name]="textTitle"
           formName="CMMyDashboard"
           gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
+          [default]="textTitle"
         ></codx-label>
         <span>{{ findTmpDeals("4")?.countOld }}</span>
       </div>
@@ -1031,7 +1023,7 @@
   <div class="w-100 h-100 p-2" id="5" title="">
     <div class="d-flex flex-column">
       <codx-label
-        class="fw-bold mb-1 fs-5"
+        class="fw-bold"
         name="lblLeadConvertDeals"
         formName="CMMyDashboard"
         gridViewName="grvCMMyDashboard"
@@ -1046,7 +1038,7 @@
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bold fs-4" *ngIf="findTmpDeals('5')">{{
+          <span class="fw-bold" *ngIf="findTmpDeals('5')">{{
             findTmpDeals("5")?.count
           }}</span>
         </div>
@@ -1056,16 +1048,16 @@
             [ngClass]="getIcon(findTmpDeals('5')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold fs-6">{{ findTmpDeals("5")?.valueAsc }}</span>
+          <span class="fw-bold">{{ findTmpDeals("5")?.valueAsc }}</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
-          class="me-1 label-colon"
-          name="lblDateOlds"
+          class="fw-bold mb-1 label-colon me-1"
+          [name]="textTitle"
           formName="CMMyDashboard"
           gridViewName="grvCMMyDashboard"
-          [default]="'Tháng trước'"
+          [default]="textTitle"
         ></codx-label>
         <span>{{ findTmpDeals("5")?.countOld }}</span>
       </div>
@@ -1075,46 +1067,79 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="6" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesPipeline"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
       default="Sales pipline"
     ></codx-label>
-    <div class="d-flex justify-content-center align-items-center mb-1">
-      <div class="d-flex flex-row">
-        <div
-          *ngFor="let item of vllSalesPiplines"
-          class="w-130px text-center"
-          [ngClass]="
-            item.value == '1'
-              ? 'cm-rounded-pill-left'
-              : item.value == '3'
-              ? 'cm-rounded-pill-right'
-              : 'cm-rounded-pill-center'
-          "
-          (click)="viewPips(item.value)"
-        >
-          <div #myIsActiveEle
-            [id]="'isActive' + item"
-            [ngClass]="isActive(item.value) ? 'cm-bg-primary' : 'view-switch'"
-          >
-            <button
-              class="btn btn-32px min-w-60px"
-              type="button"
-              aria-expanded="false"
-            >
-              <span class="me-1">{{ item.text }}</span>
-            </button>
-          </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="d-flex justify-content-center">
+        <div id="group3" class="btn-group">
+          <input
+            #ele1
+            class="btn-check"
+            type="radio"
+            id="btSaleStages"
+            name="align3"
+            value="left"
+            checked
+            (change)="changeGroupType(ele1,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
+          />
+          <label class="btn btn-outline-primary" for="btSaleStages"
+            ><codx-label
+              name="btSaleStages"
+              formName="sys"
+              default="Sale Stages"
+            ></codx-label
+          ></label>
+          <input
+            #ele2
+            class="btn-check"
+            type="radio"
+            id="btSaleStatus"
+            name="align3"
+            value="center"
+            (change)="changeGroupType(ele2,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
+          />
+          <label class="btn btn-outline-primary" for="btSaleStatus">
+            <codx-label
+              name="btSaleStatus"
+              formName="sys"
+              default="Status"
+            ></codx-label
+          ></label>
+          <input
+            #ele3
+            class="btn-check"
+            type="radio"
+            id="btSaleStatusCodes"
+            name="align3"
+            value="right"
+            (change)="changeGroupType(ele3,{btSaleStages,btSaleStatus,btSaleStatusCodes})"
+          />
+          <label class="btn btn-outline-primary" for="btSaleStatusCodes"
+            ><codx-label
+              name="btSaleStatusCodes"
+              formName="sys"
+              default="Status codes"
+            ></codx-label
+          ></label>
         </div>
       </div>
     </div>
-    <ng-container *ngIf="lstAlls?.length > 0; else noData">
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStages
+      [ngClass]="statusPip == 'btSaleStages' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStages?.length > 0; else noData"></div>
       <ejs-accumulationchart
         id="pyramidcontainer1"
-        #pyramid
-        style="height: 100%; display: block; width: 100%"
+        #pie1
+        style="height: 90%"
         [legendSettings]="legendSettings"
         [enableSmartLabels]="false"
         [tooltip]="{
@@ -1128,33 +1153,104 @@
           <e-accumulation-series
             #accumulationPipe
             name="ConversionRate"
-            [dataSource]="lstAlls"
+            [dataSource]="lstSalesStages"
             xName="name"
             yName="quantity"
             width="60%"
-            height="80%"
+            height="50%"
             [gapRatio]="gapRatio"
             [explode]="explode"
             [dataLabel]="datalabelAc"
-            [palettes]="
-              statusPip == '1'
-                ? palettePipsStages
-                : statusPip == '2'
-                ? palettePipsStatus
-                : []
-            "
+            [palettes]="palettePipsStages"
             type="Funnel"
           >
           </e-accumulation-series>
         </e-accumulation-series-collection>
       </ejs-accumulationchart>
-    </ng-container>
+    </div>
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStatus
+      [ngClass]="statusPip == 'btSaleStatus' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStatus?.length > 0; else noData"></div>
+      <ejs-accumulationchart
+        id="pyramidcontainer2"
+        #pie2
+        style="height: 90%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstSalesStatus"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="50%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            [palettes]="palettePipsStatus"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+    <div
+      class="position-relative"
+      style="height: 90%"
+      #btSaleStatusCodes
+      [ngClass]="statusPip == 'btSaleStatusCodes' ? '' : 'd-none'"
+    >
+      <div *ngIf="lstSalesStatusCodes?.length > 0; else noData"></div>
+      <ejs-accumulationchart
+        id="pyramidcontainer3"
+        #pie3
+        style="height: 90%"
+        [legendSettings]="legendSettings"
+        [enableSmartLabels]="false"
+        [tooltip]="{
+          header: '',
+          enable: true,
+          format: '${point.tooltip}'
+        }"
+        (pointRender)="formatCrrView($event)"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            #accumulationPipe
+            name="ConversionRate"
+            [dataSource]="lstSalesStatusCodes"
+            xName="name"
+            yName="quantity"
+            width="60%"
+            height="50%"
+            [gapRatio]="gapRatio"
+            [explode]="explode"
+            [dataLabel]="datalabelAc"
+            type="Funnel"
+          >
+          </e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
   </div>
 </ng-template>
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="7" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesTrend"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1173,6 +1269,8 @@
           [legendSettings]="legendSeri"
           [tooltip]="toolTipSeri"
           (textRender)="textSeriRender($event)"
+          (pointRender)="poinSeriRender($event)"
+          (tooltipRender)="tooltipSeriRender($event)"
         >
           <e-series-collection>
             <e-series
@@ -1198,7 +1296,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="8" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesTargets"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1368,7 +1466,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="9" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSakerQuarters"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1413,7 +1511,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="10" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalePerformance"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"

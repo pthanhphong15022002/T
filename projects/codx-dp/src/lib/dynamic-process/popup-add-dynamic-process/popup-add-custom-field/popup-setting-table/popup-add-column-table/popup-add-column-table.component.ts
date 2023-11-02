@@ -115,6 +115,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   formModelColumn: FormModel;
 
   dialogAddColumn: DialogRef;
+  disable = false;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -132,6 +133,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.column = JSON.parse(JSON.stringify(dt?.data?.data));
     this.user = this.authstore.get();
     this.action = dt?.data?.action;
+    this.disable = dt?.data?.disable;
     this.titleAction = dt?.data?.titleAction;
     this.grvSetup = dt?.data?.grvSetup;
     this.processNo = dt?.data?.processNo; //de sinh vll
@@ -391,7 +393,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.column['refValue'] = value;
     if (!value) {
       // await this.getDefaultVll();
-      this.crrVll = null ;
+      this.crrVll = null;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];

@@ -21,6 +21,7 @@ export class CodxFilesAttachmentComponent {
   @Input() addPermissions: Permission[] = [];
   @Input() heightScroll :any;
   @Input() isScroll :any = true;
+  @Input() isFristVer :boolean = false;
   @Output() fileAdded = new EventEmitter<any>();
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileSave = new EventEmitter<any>();

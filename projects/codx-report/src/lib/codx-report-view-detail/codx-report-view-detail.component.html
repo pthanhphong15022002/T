@@ -42,7 +42,7 @@
           else reportBolder
         "
       >
-        <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true"></lib-pdf>
+        <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true" [hideThumbnail]="true"></lib-pdf>
       </ng-container>
       <ng-template #reportBolder>
         <codx-report-iframe
