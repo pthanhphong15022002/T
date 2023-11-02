@@ -266,7 +266,7 @@ export class DynamicProcessComponent
               this.isButton = true;
               if (!e?.event) this.view.dataService.clear();
               if (e && e.event != null) {
-                e.event.totalInstance = this.totalInstance;
+                e.event.totalInstance = 0;
                 this.view.dataService.update(e.event).subscribe();
                 this.detectorRef.detectChanges();
                 // this.detectorRef.markForCheck();
@@ -393,7 +393,7 @@ export class DynamicProcessComponent
       this.isButton = true;
       if (!e?.event) this.view.dataService.clear();
       if (e && e.event != null) {
-        e.event.totalInstance = this.totalInstance;
+        e.event.totalInstance = 0;
         this.detectorRef.detectChanges();
         // this.detectorRef.markForCheck();
       }

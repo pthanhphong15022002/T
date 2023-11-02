@@ -217,6 +217,10 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       return 'CRM042';
     } else if (value == '7') {
       return 'CRM015';
+    } else if (value == '9') {
+        return 'CRM015';
+    } else if (value == '11') {
+      return 'CRM015';
     }
     return '';
   }

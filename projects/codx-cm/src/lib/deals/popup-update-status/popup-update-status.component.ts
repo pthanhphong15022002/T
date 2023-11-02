@@ -37,6 +37,7 @@ export class PopupUpdateStatusComponent
   @ViewChild('form') form: CodxFormComponent;
   statusDefault:string = '';
   statusCodecmt: string = '';
+  applyFor: string = '';
   recID: string = '';
   data:any;
   valueListStatusCode:any[] =[];
@@ -57,9 +58,10 @@ export class PopupUpdateStatusComponent
     this.statusCodecmt = dialogData?.data.statusCodecmt;
     this.recID = dialogData?.data.recID;
     this.data = dialogData?.data;
-    this.title =  dialogData?.data.title;
+    this.title =  dialogData?.data?.title;
     this.valueListStatusCode = dialogData?.data.valueListStatusCode;
-    this.gridViewSetup = dialogData?.data.gridViewSetup;
+    this.gridViewSetup = dialogData?.data?.gridViewSetup;
+    this.applyFor = dialogData?.data?.category;
   }
 
   ngAfterViewInit(): void {}
@@ -73,7 +75,8 @@ export class PopupUpdateStatusComponent
     if(this.isLockStep) return;
     this.isLockStep = true;
     let datas = [this.recID, this.statusDefault, this.statusCodecmt];
-    this.codxCmService.changeStatusDeal(datas).subscribe((res) => {
+    let functionCM = this.getMethod(this.applyFor);
+    this.codxCmService.changeStatusDeal(datas,functionCM.business,functionCM.method).subscribe((res) => {
       if (res) {
         let obj = {
           statusDefault: this.statusDefault,
@@ -97,5 +100,18 @@ export class PopupUpdateStatusComponent
     } else {
       this.statusCodecmt = null;
     }
+  }
+  getMethod(applyFor){
+    let obj;
+    let business;
+    let method;
+    if(applyFor == '1') {
+      business = 'DealsBusiness';
+      method ='ChangeStatusDealAsync';
+    }
+    return obj = {
+      business: business,
+      method:method
+    };
   }
 }
