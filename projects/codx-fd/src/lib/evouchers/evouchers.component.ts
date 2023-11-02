@@ -27,7 +27,7 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
   @ViewChild('voucherName') voucherName: TemplateRef<any>;
   @ViewChild('brandName') brandName: TemplateRef<any>;
   @ViewChild('productImg', { static: true }) productImg: TemplateRef<any>;
-
+  
   dialog?: any;
   columnsGrid: any[] = [];
   data: any[] = [];
@@ -36,10 +36,13 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
   viewList : Array<ViewModel> = [];
   viewId = 1;
   hList = 0;
+  checkGotit = false;
+  settingModule:any;
   constructor(
     private inject: Injector,
     private FDService: CodxFdService,
     private callFunc: CallFuncService,
+    private codxFdService: CodxFdService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -98,7 +101,25 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
       //   sameData: true,
       // },
     ];
-  
+
+
+    let paras = ["fdparameters","apikey"];
+    let keyRoot = "FDSettingValue" + paras.join(";");
+    var dt = this.codxFdService.loadData(paras,keyRoot,"SYS","SYS","SettingValuesBusiness","GetByModuleAsync") as any
+    if(isObservable(dt))
+    {
+      dt.subscribe((item:any)=>{
+        this.settingModule = item;
+        var dataValue = JSON.parse(item.dataValue);
+        if(dataValue?.GOTIT && dataValue?.GOTIT == "0") this.checkGotit = true;
+      })
+    }
+    else
+    {
+      this.settingModule = dt;
+      var dataValue = JSON.parse(dt.dataValue);
+      if(dataValue?.GOTIT && dataValue?.GOTIT == "0") this.checkGotit = true;
+    }
   }
 
   getCount()
@@ -116,6 +137,7 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
   }
 
   loadData() {
+
     this.api
       .execSv<any>('FD', 'FD', 'VouchersBusiness', 'GotITProductList', [
         0,
@@ -179,10 +201,31 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
      else element.active = false;
    });
   }
-
+  
   onClickSave()
   {
-    this.callFunc.openForm(EvoucherAddComponent,"",900,800)
+    let dialog = this.callFunc.openForm(EvoucherAddComponent,"",900,800);
+    dialog.closed.subscribe(res=>{
+      if (res && res?.event) this.updateSettingModule();
+    })
+  }
+
+  updateSettingModule()
+  {
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","UpdateFieldAsync",["fdparameters","apikey","1","GOTIT","0"]).subscribe(item=>{
+      if(item)
+      {
+        var dataValue = JSON.parse(this.settingModule.dataValue);
+        dataValue.GOTIT = "0";
+        this.settingModule.dataValue = JSON.stringify(dataValue);
+        let paras = ["fdparameters","apikey"];
+        let keyRoot = "FDSettingValue" + paras.join(";");
+        let key = JSON.stringify(paras).toLowerCase();
+        this.codxFdService.updateCache(keyRoot,key,this.settingModule);
+        this.checkGotit = true;
+      }
+    });
+    
   }
 
   statistical()
