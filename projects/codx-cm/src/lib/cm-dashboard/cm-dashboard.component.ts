@@ -1684,21 +1684,29 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.textTitle = type;
     const dealCurrents = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDate &&
-        new Date(x?.expectedClosed) <= tDate
+        new Date(x?.createdOn) >= frmDate &&
+        new Date(x?.createdOn) <= tDate
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDateOld &&
-        new Date(x?.expectedClosed) <= tDateOld
+        new Date(x?.createdOn) >= frmDateOld &&
+        new Date(x?.createdOn) <= tDateOld
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      dealCurrents?.reduce((acc, x) => acc + x.dealValue, 0)
+      dealCurrents?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDate &&
+          new Date(x?.expectedClosed) <= tDate
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      dealOlds?.reduce((acc, x) => acc + x.dealValue, 0)
+      dealOlds?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDateOld &&
+          new Date(x?.expectedClosed) <= tDateOld
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
@@ -1963,8 +1971,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         tmp['quantity'] = dealsSteps?.length ?? 0;
         if (dealsSteps?.length > 0) {
           this.lstSalesStages.push(tmp);
-          this.palettePipsStages.push(item.backgroundColor);
         }
+      }
+      if(this.lstSalesStages != null && this.lstSalesStages.length > 0){
+        this.lstSalesStages.sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        this.palettePipsStages = this.lstSalesStages.map(x => x.backgroundColor);
       }
     }
     if (this.vllStatusDeals != null) {
@@ -1981,6 +1994,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.palettePipsStatus.push(item.color);
         }
       }
+      if(this.lstSalesStatus != null && this.lstSalesStatus.length > 0){
+        this.lstSalesStatus.sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        this.palettePipsStatus = this.lstSalesStatus.map(x => x.color);
+      }
     }
 
     if (this.lstStatusCodes != null) {
@@ -1994,6 +2013,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         if (countDeals > 0) {
           this.lstSalesStatusCodes.push(tmp);
         }
+      }
+      if(this.lstSalesStatusCodes != null && this.lstSalesStatusCodes.length > 0){
+        this.lstSalesStatusCodes.sort(
+          (a, b) => a.quantity - b.quantity
+        );
       }
     }
     this.detectorRef.detectChanges();
@@ -2242,7 +2266,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
 
     this.piedata = lstPiaData.sort((a, b) => {
-      return a.year - b.year;
+      return b.year > a.year ? b.year - a.year : b.quarter - a.quarter;
     });
   }
 
