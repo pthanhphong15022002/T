@@ -108,6 +108,7 @@ import { ImportinvoicesDetailComponent } from './periodic/importeinvoices/import
 import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
 import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
 import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
+import { TempPurchaseinvoicesTableComponent } from './periodic/importeinvoices/temp-purchaseinvoices-table/temp-purchaseinvoices-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -400,6 +401,7 @@ export const routes: Routes = [
     GeneralJournalComponent,
     GeneralJournalAddComponent,
     GeneralJournalDetailComponent,
+    TempPurchaseinvoicesTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
