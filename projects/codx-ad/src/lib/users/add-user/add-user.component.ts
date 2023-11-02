@@ -294,6 +294,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           dt.userID = this.adUser.userID;
         });
         this.adUser.chooseRoles = this.viewChooseRole;
+        this.dialog.dataService.idField = 'userID';
+        this.dialog.dataService.update(this.adUser).subscribe();
         this.changeDetector.detectChanges();
       }
     });
@@ -349,7 +351,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
             if (!this.isSaved) {
               this.getHTMLFirstPost(this.adUser);
               this.adService.createFirstPost(this.tmpPost).subscribe();
-
               if (res.save) {
                 this.dataAfterSave = res.save;
                 this.adUser.userID = res.save.userID;

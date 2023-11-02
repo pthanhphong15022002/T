@@ -101,8 +101,13 @@ import { AdvancePaymentRequestTableComponent } from './share/ac-tableview/advanc
 import { PaymentOrderComponent } from './vouchers/payment-order/payment-order.component';
 import { PaymentOrderAddComponent } from './vouchers/payment-order/payment-order-add/payment-order-add.component';
 import { ReceiptTransactionsTableComponent } from './share/ac-tableview/receipt-transactions-table/receipt-transactions-table.component';
+import { ImportEInvoicesComponent } from './periodic/importeinvoices/importeinvoices.component';
 import { JournalV2Component } from './journals/journal-v2.component';
 import { JournalsAddIdimcontrolComponent } from './journals/journals-add/journals-add-idimcontrol/journals-add-idimcontrol.component';
+import { ImportinvoicesDetailComponent } from './periodic/importeinvoices/importinvoices-detail/importinvoices-detail.component';
+import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
+import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
+import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -127,6 +132,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'generaljournals/:funcID',
+        component: GeneralJournalComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'cashreceipts/:funcID',
         component: CashreceiptsComponent,
         data: { noReuse: true },
@@ -136,11 +146,11 @@ export const routes: Routes = [
         component: PurchaseinvoicesComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: 'journalnames/:funcID',
-      //   component: JournalsComponent,
-      //   data: { noReuse: true },
-      // },
+      {
+        path: 'importeinvoices/:funcID',
+        component: ImportEInvoicesComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'cashtranfers/:funcID',
         component: CashtransfersComponent,
@@ -384,7 +394,12 @@ export const routes: Routes = [
     PaymentOrderComponent,
     PaymentOrderAddComponent,
     ReceiptTransactionsTableComponent,
+    ImportEInvoicesComponent,
+    ImportinvoicesDetailComponent,
     JournalsAddIdimcontrolComponent,
+    GeneralJournalComponent,
+    GeneralJournalAddComponent,
+    GeneralJournalDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
