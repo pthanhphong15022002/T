@@ -14,6 +14,7 @@ import {
   AuthService,
   AuthStore,
   ButtonModel,
+  CodxGridviewV2Component,
   DataRequest,
   DialogModel,
   FormModel,
@@ -47,6 +48,7 @@ export class TargetsComponent
   @Input() showButtonAdd = true;
   @Input() queryParams: any;
   @Input() viewDashboard = false;
+  @Input() viewMode = 16;
   //schedule view
   @ViewChild('codxInput') codxInput: any;
   @ViewChild('calendarDrop') calendarDrop: any;
@@ -105,6 +107,7 @@ export class TargetsComponent
   @ViewChild('templateMonth11') templateMonth11?: TemplateRef<any>;
   @ViewChild('headerMonth12', { static: true }) headerMonth12: TemplateRef<any>;
   @ViewChild('templateMonth12') templateMonth12?: TemplateRef<any>;
+  @ViewChild('gridBusiness') gridBusiness: CodxGridviewV2Component;
 
   lstDataTree = [];
   lstTreeSearchs = [];
@@ -157,7 +160,6 @@ export class TargetsComponent
   popoverList: any;
   viewCurrent = '1';
   viewDataValue = '1';
-  viewMode = 16;
   lstCurrentView = [];
   currencyID: any;
   exchangeRate: number;
@@ -548,7 +550,6 @@ export class TargetsComponent
       this.year = year;
       this.loadTreeData(year?.toString());
     }
-
   }
 
   async valueChange(e) {
@@ -981,8 +982,7 @@ export class TargetsComponent
           });
         }
       });
-      if (this.viewMode == 9)
-        this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
+      this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
       this.isShow = isShow;
     }
     this.changeDetec.detectChanges();

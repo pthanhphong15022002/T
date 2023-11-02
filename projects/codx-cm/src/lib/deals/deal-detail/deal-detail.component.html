@@ -323,6 +323,7 @@
                 <div class="d-flex flex-column">
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
+                    *ngIf="!isDataLoading"
                   >
 
                   <div
@@ -336,37 +337,34 @@
                   >
                 </div>
 
-
                   <div
                   *ngIf="
-                  dataSelected.status == '2';
+                  dataSelected.status == '2' && stepCurrent ;
                   else statusDefault
                 "
-
                     [ngStyle]="{
                       'background-color':
-                        dataSelected?.steps['backgroundColor']
+                      stepCurrent?.backgroundColor
                     }"
                     class="badge badge-sm d-flex align-items-center me-0"
                   >
                     <span
-                      [ngClass]="dataSelected?.steps['icon']"
+                      [ngClass]="stepCurrent?.icon"
                       [ngStyle]="{
-                        color: dataSelected?.steps['iconColor']
+                        color: stepCurrent?.iconColor
                       }"
                       class="me-1"
                     ></span>
                     <span
                       class="text-ellipsis line-clamp line-clamp-2"
-                      [ngbTooltip]="dataSelected?.currentStepName"
+                      [ngbTooltip]="stepCurrent?.stepName"
                       [ngStyle]="{
-                        color: dataSelected?.steps['textColor']
+                        color: stepCurrent.textColor
                       }"
-                      >{{ dataSelected?.currentStepName }}</span
+                      >{{ stepCurrent?.stepName }}</span
                     >
                   </div>
-
-                    <ng-template #statusDefault>
+                <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
@@ -376,7 +374,7 @@
                         class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
-                    </ng-template>
+                </ng-template>
                     <ng-container
                       *ngIf="
                         dataSelected?.approveStatus &&
@@ -859,7 +857,7 @@
                   </codx-show-more-less>
 
                 </div>
-                <div *ngIf="dataSelected?.steps?.isHaveField">
+                <div *ngIf="isHaveField">
                   <div class="d-flex flex-column mt-5">
                     <ng-container *ngFor="let item of listSteps">
                       <codx-fields-detail-temp
@@ -867,9 +865,7 @@
                         [dataStep]="item"
                         [showColumnControl]="showColumnControl(item.stepID)"
                         [isUpdate]="
-                          ['1', '2','15'].includes(dataSelected.status) &&
-                          dataSelected?.full &&
-                          !dataSelected.closed
+                          ['1', '2','15'].includes(dataSelected.status) &&  !dataSelected.closed
                         "
                         [objectIdParent]="dataSelected.recID"
                         [customerID]="dataSelected.customerID"
