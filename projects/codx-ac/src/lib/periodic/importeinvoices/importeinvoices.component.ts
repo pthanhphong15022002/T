@@ -34,6 +34,8 @@ export class ImportEInvoicesComponent extends UIComponent {
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   headerText: any;
   runmode: any;
+  selectedFirst = true;
+
   moreFuncs: Array<ButtonModel> = [
     {
       id: 'btnImportXml',

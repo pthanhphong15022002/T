@@ -2983,6 +2983,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             } else if (funcID == 'eAccidents') {
               this.hrService.deleteEAccident(data?.recID).subscribe((res) => {
                 if (res) {
+                  debugger
                   this.notify.notifyCode('SYS008');
                   this.updateGridView(this.eAccidentGridView, 'delete', null, data);
 
@@ -4030,6 +4031,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
+      dataService.clear();
       if (res?.event) {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
         this.df.detectChanges();
@@ -4072,7 +4074,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dataService.updateDatas.set(tempData.recID, tempData);
     this.hrService.getFormModel(this.ePartyFunc.functionID).then((res) => {
       let formM = res;
-      debugger
       this.openFormeParty(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal, formM);
     })
     // this.openFormeParty(actionHeaderText, 'edit', dataService, tempData, this.infoPersonal);
@@ -4370,7 +4371,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (!res?.event) dataService.clear();
       else {
         if (res.event.orgUnitID != this.infoPersonal.orgUnitID) {
           this.hrService
@@ -4467,7 +4468,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res.event.update.data) this.view.dataService.clear();
+      if (!res.event.update.data) dataService.clear();
       else {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
         this.df.detectChanges();
@@ -4534,7 +4535,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (!res.event.update.data) this.view.dataService.clear();
+      if (!res.event.update.data) dataService.clear();
       else {
         this.infoPersonal = JSON.parse(JSON.stringify(res.event.update.data));
         this.df.detectChanges();
@@ -4618,6 +4619,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   // handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eExperienceFunc?.formName,this.eExperienceFunc?.gridViewName,this.eExperienceFunc?.entityName);
   //   request.funcID = this.eExperienceFunc?.functionID;
@@ -4638,6 +4640,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //     })
   //   }
   //   else if(actionType == 'copy'){
+      // tempData.recID = Util.uid();
   //     dataService.addDatas.set(tempData.recID, tempData);
   //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
   //   }
@@ -4818,6 +4821,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //form động efamilies
   //   handleEFamilyInfo(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eFamiliesFunc?.formName,this.eFamiliesFunc?.gridViewName,this.eFamiliesFunc?.entityName);
   //   request.funcID = this.eFamiliesFunc?.functionID;
@@ -4838,6 +4842,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //     })
   //   }
   //   else if(actionType == 'copy'){
+      // tempData.recID = Util.uid();
   //     dataService.addDatas.set(tempData.recID, tempData);
   //     this.openFormEFamilies(actionHeaderText, actionType, dataService, tempData, data);
   //   }
@@ -4865,7 +4870,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //   );
 
   //   dialogAdd.closed.subscribe((res) => {
-  //     if (!res?.event) this.view.dataService.clear();
+  //     if (!res?.event) dataService.clear();
   //     else {
   //       if (actionType == 'add' || actionType == 'copy') {
   //         this.lstFamily.push(res.event.save.data);
@@ -4916,6 +4921,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // form động epassport
     handleEmployeePassportInfo(actionHeaderText, actionType: string, data: any) {
     let tempData = JSON.parse(JSON.stringify(data));
+
     var dataService = new CRUDService(this.inject);
     let request = new DataRequest(this.ePassportFunc?.formName, this.ePassportFunc?.gridViewName, this.ePassportFunc?.entityName);
     request.funcID = this.ePassportFunc?.functionID;
@@ -4936,6 +4942,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       })
     }
     else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -4965,6 +4972,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
           if (!res?.event) {
           } else {
+    dataService.clear();
+
             if (actionType == 'add' || actionType == 'copy') {
               if (
                 !this.crrPassport ||
@@ -5052,17 +5061,44 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     //form động e dayoff
   //   HandleEmployeeDayOffInfo(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.dayoffFunc?.formName,this.dayoffFunc?.gridViewName,this.dayoffFunc?.entityName);
   //   request.funcID = this.dayoffFunc?.functionID;
   //   dataService.service = 'HR';
   //   dataService.request = request;
+
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.dayoffFormModel.funcID,
+  //       this.dayoffFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   this.openFormDayOff(actionHeaderText, actionType, dataService, tempData, data);
+
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+      // tempData.recID = Util.uid();
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //   this.openFormDayOff(actionHeaderText, actionType, dataService, tempData, data);
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormDayOff(actionHeaderText, actionType, dataService, tempData, data);
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
     
-  //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormSelfInfo(actionHeaderText, actionType, dataService, tempData, data);
+  //   // dataService.updateDatas.set(tempData.recID, tempData);
+  //   // this.openFormDayOff(actionHeaderText, actionType, dataService, tempData, data);
   // }
 
-  // openFormSelfInfo(actionHeaderText, actionType,dataService, tempData, data){
+  // openFormDayOff(actionHeaderText, actionType,dataService, tempData, data){
   //   dataService.dataSelected = tempData;
   //   let option = new SidebarModel();
   //   option.FormModel = this.dayoffFormModel;
@@ -5081,6 +5117,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //   dialogAdd.closed.subscribe((res) => {
   //     if (res.event) {
+    // dataService.clear();
+
   //       if(actionType == 'edit'){
   //         this.updateGridView(this.dayoffGrid, actionType, res.event.update.data, null);
   //       }
@@ -5120,6 +5158,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // form động eworkpermit
     handleEmployeeWorkingPermitInfo(actionHeaderText, actionType: string, data: any) {
     let tempData = JSON.parse(JSON.stringify(data));
+
     var dataService = new CRUDService(this.inject);
     let request = new DataRequest(this.eWorkPermitFunc?.formName, this.eWorkPermitFunc?.gridViewName, this.eWorkPermitFunc?.entityName);
     request.funcID = this.eWorkPermitFunc?.functionID;
@@ -5139,6 +5178,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       })
     }
     else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5169,6 +5209,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
+    dataService.clear();
+
         if (actionType == 'add' || actionType == 'copy') {
           if (
             !this.crrWorkpermit ||
@@ -5264,6 +5306,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // Chỉ có mode edit, form động
   //   HandleEDocumentInfo(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eNeedToSubmitProfileFunc?.formName,this.eNeedToSubmitProfileFunc?.gridViewName,this.eNeedToSubmitProfileFunc?.entityName);
   //   request.funcID = this.eNeedToSubmitProfileFunc?.functionID;
@@ -5337,6 +5380,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // form động evisa
     handleEmployeeVisaInfo(actionHeaderText, actionType: string, data: any) {
     let tempData = JSON.parse(JSON.stringify(data));
+
     var dataService = new CRUDService(this.inject);
     let request = new DataRequest(this.eVisaFunc?.formName, this.eVisaFunc?.gridViewName, this.eVisaFunc?.entityName);
     request.funcID = this.eVisaFunc?.functionID;
@@ -5357,6 +5401,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       })
     }
     else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5387,6 +5432,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         // (this.passportGridview.dataService as CRUDService).clear();
       } else {
+        dataService.clear();
+
         if (actionType == 'add' || actionType == 'copy') {
           if (
             !this.crrVisa ||
@@ -5467,82 +5514,108 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // }
 
     // form động kỷ luật
-  //   HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
-  //   let tempData = JSON.parse(JSON.stringify(data));
-  //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.eDisciplineFunc?.formName,this.eDisciplineFunc?.gridViewName,this.eDisciplineFunc?.entityName);
-  //   request.funcID = this.eDisciplineFunc?.functionID;
-  //   dataService.service = 'HR';
-  //   dataService.request = request;
+    HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
+    let tempData = JSON.parse(JSON.stringify(data));
+
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(this.eDisciplineFunc?.formName,this.eDisciplineFunc?.gridViewName,this.eDisciplineFunc?.entityName);
+    request.funcID = this.eDisciplineFunc?.functionID;
+    dataService.service = 'HR';
+    dataService.request = request;
+
+    if(actionType == 'add'){
+      this.hrService.getDataDefault(
+        this.eDisciplineFormModel.funcID,
+        this.eDisciplineFormModel.entityName,
+        'RecID'
+      ).subscribe((res: any) => {
+        tempData = res?.data;
+        tempData.employeeID = this.employeeID;
+        dataService.addDatas.set(tempData.recID, tempData);
+        this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+      })
+    }
+    else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
+      dataService.addDatas.set(tempData.recID, tempData);
+      this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+    }
+    else if(actionType == 'edit'){
+      dataService.updateDatas.set(tempData.recID, tempData);
+      this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+    }
   
-  //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
-  // }
+    // dataService.updateDatas.set(tempData.recID, tempData);
+    // this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+  }
 
-  // openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
-  //   dataService.dataSelected = tempData;
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.eDisciplineFormModel;
-  //   option.Width = '550px';
-  //   let dialogAdd = this.callfunc.openSide(
-  //     CodxFormDynamicComponent,
-  //     {
-  //       formModel: option.FormModel,
-  //       data: tempData,
-  //       function: null,
-  //       dataService: dataService,
-  //       titleMore: actionHeaderText,
-  //     },
-  //     option
-  //   );
-
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if(actionType == 'edit'){
-  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.update.data, null);
-  //       }
-  //       else if(actionType == 'add' || actionType =='copy'){
-  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.save.data, null);
-  //       }
-  //     this.df.detectChanges();
-  //   }});
-  // }
-
-  //form custome kỷ luật
-  HandleEmployeeEDisciplinesInfo(
-    actionHeaderText,
-    actionType: string,
-    data: any
-  ) {
+  openFormEDiscipline(actionHeaderText, actionType,dataService, tempData, data){
+    dataService.dataSelected = tempData;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    option.FormModel = this.eDisciplineFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      PopupEDisciplinesComponent,
+      CodxFormDynamicComponent,
       {
-        actionType: actionType,
-        headerText:
-          actionHeaderText + ' ' + this.getFormHeader2(this.eDisciplineFuncID, this.lstFuncHRProcess),
-        employeeId: this.employeeID,
-        empObj: this.infoPersonal,
-        funcID: this.eDisciplineFuncID,
-        dataInput: data,
+        formModel: option.FormModel,
+        data: tempData,
+        function: null,
+        dataService: dataService,
+        titleMore: actionHeaderText,
       },
       option
     );
+
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event)
-        (this.eDisciplineGrid?.dataService as CRUDService).clear();
-      if (res.event)
-        this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
+      if (res.event) {
+        dataService.clear();
+
+        if(actionType == 'edit'){
+          this.updateGridView(this.eDisciplineGrid, actionType, res.event.update.data, null);
+        }
+        else if(actionType == 'add' || actionType =='copy'){
+          this.updateGridView(this.eDisciplineGrid, actionType, res.event.save.data, null);
+        }
       this.df.detectChanges();
-    });
+    }});
   }
+
+  //form custome kỷ luật
+  // HandleEmployeeEDisciplinesInfo(
+  //   actionHeaderText,
+  //   actionType: string,
+  //   data: any
+  // ) {
+  //   let option = new SidebarModel();
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEDisciplinesComponent,
+  //     {
+  //       actionType: actionType,
+  //       headerText:
+  //         actionHeaderText + ' ' + this.getFormHeader2(this.eDisciplineFuncID, this.lstFuncHRProcess),
+  //       employeeId: this.employeeID,
+  //       empObj: this.infoPersonal,
+  //       funcID: this.eDisciplineFuncID,
+  //       dataInput: data,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event)
+  //       (this.eDisciplineGrid?.dataService as CRUDService).clear();
+  //     if (res.event)
+  //       this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
+  //     this.df.detectChanges();
+  //   });
+  // }
 
       // form động tai nạn lđ
     HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
     let tempData = JSON.parse(JSON.stringify(data));
+
     var dataService = new CRUDService(this.inject);
     let request = new DataRequest(this.eAccidentsFunc?.formName,this.eAccidentsFunc?.gridViewName,this.eAccidentsFunc?.entityName);
     request.funcID = this.eAccidentsFunc?.functionID;
@@ -5562,6 +5635,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       })
     }
     else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5590,6 +5664,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+dataService.clear();
         if(actionType == 'edit'){
           this.updateGridView(this.eAccidentGridView, actionType, res.event.update.data, null);
         }
@@ -5895,6 +5970,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
    // HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eExperienceFunc?.formName,this.eExperienceFunc?.gridViewName,this.eExperienceFunc?.entityName);
   //   request.funcID = this.eExperienceFunc?.functionID;
@@ -5915,6 +5991,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //     })
   //   }
   //   else if(actionType == 'copy'){
+      // tempData.recID = Util.uid();
   //     dataService.addDatas.set(tempData.recID, tempData);
   //     this.openFormEExperience(actionHeaderText, actionType, dataService, tempData, data);
   //   }
@@ -5972,6 +6049,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     //form động khám sức khỏe
   //   HandleEmployeeEHealths(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eHealthFunc?.formName,this.eHealthFunc?.gridViewName,this.eHealthFunc?.entityName);
   //   request.funcID = this.eHealthFunc?.functionID;
@@ -6001,6 +6079,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //   dialogAdd.closed.subscribe((res) => {
   //     if (res.event) {
+    // dataService.clear();
+
   //       if(actionType == 'edit'){
   //         this.updateGridView(this.eHealthsGrid, actionType, res.event.update.data, null);
   //       }
@@ -6038,76 +6118,110 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   // form động khen thưởng
-  //   HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
-  //   let tempData = JSON.parse(JSON.stringify(data));
-  //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.awardFunc?.formName,this.awardFunc?.gridViewName,this.awardFunc?.entityName);
-  //   request.funcID = this.awardFunc?.functionID;
-  //   dataService.service = 'HR';
-  //   dataService.request = request;
+    HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
+    let tempData = JSON.parse(JSON.stringify(data));
+
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(this.awardFunc?.formName,this.awardFunc?.gridViewName,this.awardFunc?.entityName);
+    request.funcID = this.awardFunc?.functionID;
+    dataService.service = 'HR';
+    dataService.request = request;
+
+    if(actionType == 'add'){
+      this.hrService.getDataDefault(
+        this.awardFormModel.funcID,
+        this.awardFormModel.entityName,
+        'RecID'
+      ).subscribe((res: any) => {
+        tempData = res?.data;
+        tempData.employeeID = this.employeeID;
+        dataService.addDatas.set(tempData.recID, tempData);
+    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+
+        // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+      })
+    }
+    else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
+      dataService.addDatas.set(tempData.recID, tempData);
+    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+
+      // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+    }
+    else if(actionType == 'edit'){
+      dataService.updateDatas.set(tempData.recID, tempData);
+    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+
+      // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+    }
   
-  //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
-  // }
+    // dataService.updateDatas.set(tempData.recID, tempData);
+    // this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  }
 
-  // openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
-  //   dataService.dataSelected = tempData;
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.awardFormModel;
-  //   option.Width = '550px';
-  //   let dialogAdd = this.callfunc.openSide(
-  //     CodxFormDynamicComponent,
-  //     {
-  //       formModel: option.FormModel,
-  //       data: tempData,
-  //       function: null,
-  //       dataService: dataService,
-  //       titleMore: actionHeaderText,
-  //     },
-  //     option
-  //   );
-
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if(actionType == 'edit'){
-  //         this.updateGridView(this.AwardGrid, actionType, res.event.update.data, null);
-  //       }
-  //       else if(actionType == 'add' || actionType =='copy'){
-  //         this.updateGridView(this.AwardGrid, actionType, res.event.save.data, null);
-  //       }
-  //     this.df.detectChanges();
-  //   }});
-  // }
-
-  // form custome khen thưởng
-  HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
+  openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
+    dataService.dataSelected = tempData;
     let option = new SidebarModel();
-    option.DataService = this.AwardGrid?.dataService;
     option.FormModel = this.awardFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      PopupEAwardsComponent,
+      CodxFormDynamicComponent,
       {
-        actionType: actionType,
-        headerText:
-          actionHeaderText + ' ' + this.getFormHeader2(this.awardFuncID, this.lstFuncHRProcess),
-        employeeId: this.employeeID,
-        funcID: this.awardFuncID,
-        dataInput: data,
+        formModel: option.FormModel,
+        data: tempData,
+        function: null,
+        dataService: dataService,
+        titleMore: actionHeaderText,
       },
       option
     );
+
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-      if (res.event[0])
-        this.updateGridView(this.AwardGrid, actionType, res.event[0], data);
+      if (res.event) {
+    dataService.clear();
+
+        if(actionType == 'edit'){
+          this.updateGridView(this.AwardGrid, actionType, res.event.update.data, null);
+        }
+        else if(actionType == 'add' || actionType =='copy'){
+          this.updateGridView(this.AwardGrid, actionType, res.event.save.data, null);
+        }
       this.df.detectChanges();
-    });
+    }});
   }
+
+  // form custome khen thưởng
+  // HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
+  //   let option = new SidebarModel();
+  //   option.DataService = this.AwardGrid?.dataService;
+  //   option.FormModel = this.awardFormModel;
+  //   option.Width = '550px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEAwardsComponent,
+  //     {
+  //       actionType: actionType,
+  //       headerText:
+  //         actionHeaderText + ' ' + this.getFormHeader2(this.awardFuncID, this.lstFuncHRProcess),
+  //       employeeId: this.employeeID,
+  //       funcID: this.awardFuncID,
+  //       dataInput: data,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
+  //     if (res.event[0])
+  //       this.updateGridView(this.AwardGrid, actionType, res.event[0], data);
+  //     this.df.detectChanges();
+  //   });
+  // }
 
   //form động bệnh nghề nghiệp
     HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
+      console.log('recID nhan vao', data.recID);
+      
     let tempData = JSON.parse(JSON.stringify(data));
+
     var dataService = new CRUDService(this.inject);
     let request = new DataRequest(this.eDiseasesFunc?.formName,this.eDiseasesFunc?.gridViewName,this.eDiseasesFunc?.entityName);
     request.funcID = this.eDiseasesFunc?.functionID;
@@ -6126,6 +6240,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       })
     }
     else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
+      console.log('recID add data', tempData.recID);
+
       dataService.addDatas.set(tempData.recID, tempData);
     this.openFormEDiseases(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -6134,7 +6251,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.openFormEDiseases(actionHeaderText, actionType, dataService, tempData, data);
     }
   
-    dataService.updateDatas.set(tempData.recID, tempData);
+    // dataService.updateDatas.set(tempData.recID, tempData);
   }
 
   openFormEDiseases(actionHeaderText, actionType,dataService, tempData, data){
@@ -6156,10 +6273,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+    dataService.clear();
+
         if(actionType == 'edit'){
           this.updateGridView(this.eDiseasesGrid, actionType, res.event.update.data, null);
         }
         else if(actionType == 'add' || actionType =='copy'){
+          debugger
           this.updateGridView(this.eDiseasesGrid, actionType, res.event.save.data, null);
         }
       this.df.detectChanges();
@@ -6191,14 +6311,43 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       //form động công tác
   //   HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
   //   let tempData = JSON.parse(JSON.stringify(data));
+
   //   var dataService = new CRUDService(this.inject);
   //   let request = new DataRequest(this.eBusinessTravelFunc?.formName,this.eBusinessTravelFunc?.gridViewName,this.eBusinessTravelFunc?.entityName);
   //   request.funcID = this.eBusinessTravelFunc?.functionID;
   //   dataService.service = 'HR';
   //   dataService.request = request;
-    
-  //   dataService.updateDatas.set(tempData.recID, tempData);
+
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.EBusinessTravelFormodel.funcID,
+  //       this.EBusinessTravelFormodel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
   //   this.openFormEBusinessTravel(actionHeaderText, actionType, dataService, tempData, data);
+
+  //       // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+      // tempData.recID = Util.uid();
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //   this.openFormEBusinessTravel(actionHeaderText, actionType, dataService, tempData, data);
+
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEBusinessTravel(actionHeaderText, actionType, dataService, tempData, data);
+
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+    
+  //   // dataService.updateDatas.set(tempData.recID, tempData);
+  //   // this.openFormEBusinessTravel(actionHeaderText, actionType, dataService, tempData, data);
   // }
 
   // openFormEBusinessTravel(actionHeaderText, actionType,dataService, tempData, data){
@@ -6220,6 +6369,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //   dialogAdd.closed.subscribe((res) => {
   //     if (res.event) {
+    // dataService.clear();
+
   //       if(actionType == 'edit'){
   //         this.updateGridView(this.businessTravelGrid, actionType, res.event.update.data, null);
   //       }
@@ -6258,72 +6409,97 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   //form động evaccine
-  //   HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
-  //   let tempData = JSON.parse(JSON.stringify(data));
-  //   var dataService = new CRUDService(this.inject);
-  //   let request = new DataRequest(this.eVaccinesFunc?.formName,this.eVaccinesFunc?.gridViewName,this.eVaccinesFunc?.entityName);
-  //   request.funcID = this.eVaccinesFunc?.functionID;
-  //   dataService.service = 'HR';
-  //   dataService.request = request;
+    HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
+    let tempData = JSON.parse(JSON.stringify(data));
+    
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(this.eVaccinesFunc?.formName,this.eVaccinesFunc?.gridViewName,this.eVaccinesFunc?.entityName);
+    request.funcID = this.eVaccinesFunc?.functionID;
+    dataService.service = 'HR';
+    dataService.request = request;
+
+    if(actionType == 'add'){
+      this.hrService.getDataDefault(
+        this.eVaccineFormModel.funcID,
+        this.eVaccineFormModel.entityName,
+        'RecID'
+      ).subscribe((res: any) => {
+        tempData = res?.data;
+        tempData.employeeID = this.employeeID;
+        dataService.addDatas.set(tempData.recID, tempData);
+        this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+      })
+    }
+    else if(actionType == 'copy'){
+      tempData.recID = Util.uid();
+      dataService.addDatas.set(tempData.recID, tempData);
+      this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+    }
+    else if(actionType == 'edit'){
+      dataService.updateDatas.set(tempData.recID, tempData);
+      this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+    }
   
-  //   dataService.updateDatas.set(tempData.recID, tempData);
-  //   this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
-  // }
+    // dataService.updateDatas.set(tempData.recID, tempData);
+    // this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+  }
 
-  // openFormEVaccine(actionHeaderText, actionType,dataService, tempData, data){
-  //   dataService.dataSelected = tempData;
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.eVaccineFormModel;
-  //   option.Width = '850px';
-  //   let dialogAdd = this.callfunc.openSide(
-  //     CodxFormDynamicComponent,
-  //     {
-  //       formModel: option.FormModel,
-  //       data: tempData,
-  //       function: null,
-  //       dataService: dataService,
-  //       titleMore: actionHeaderText,
-  //     },
-  //     option
-  //   );
-
-  //   dialogAdd.closed.subscribe((res) => {
-  //     if (res.event) {
-  //       if(actionType == 'edit'){
-  //         this.updateGridView(this.eVaccinesGrid, actionType, res.event.update.data, null);
-  //       }
-  //       else if(actionType == 'add' || actionType =='copy'){
-  //         this.updateGridView(this.eVaccinesGrid, actionType, res.event.save.data, null);
-  //       }
-  //     this.df.detectChanges();
-  //   }});
-  // }
-
-  //form customize evaccine
-  HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
-    this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
+  openFormEVaccine(actionHeaderText, actionType,dataService, tempData, data){
+    dataService.dataSelected = tempData;
     let option = new SidebarModel();
-    option.Width = '550px';
-    // option.FormModel = this.eVaccinesGrid.formModel;
     option.FormModel = this.eVaccineFormModel;
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      PopupEVaccineComponent,
+      CodxFormDynamicComponent,
       {
-        actionType: actionType,
-        data: data,
-        headerText: actionHeaderText + ' ' + this.getFormHeader2(this.eVaccinesFuncID, this.lstFuncHealth),
-        employeeId: this.employeeID,
-        funcID: this.eVaccinesFuncID,
+        formModel: option.FormModel,
+        data: tempData,
+        function: null,
+        dataService: dataService,
+        titleMore: actionHeaderText,
       },
       option
     );
+
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
-        this.updateGridView(this.eVaccinesGrid, actionType, res.event, data);
-      }
+    dataService.clear();
+
+        if(actionType == 'edit'){
+          this.updateGridView(this.eVaccinesGrid, actionType, res.event.update.data, null);
+        }
+        else if(actionType == 'add' || actionType =='copy'){
+          this.updateGridView(this.eVaccinesGrid, actionType, res.event.save.data, null);
+        }
       this.df.detectChanges();
-    });
+    }});
   }
+
+  //form customize evaccine
+  // HandleEVaccinesInfo(actionHeaderText, actionType: string, data: any) {
+  //   this.eVaccinesGrid.dataService.dataSelected = this.infoPersonal;
+  //   let option = new SidebarModel();
+  //   option.Width = '550px';
+  //   // option.FormModel = this.eVaccinesGrid.formModel;
+  //   option.FormModel = this.eVaccineFormModel;
+  //   let dialogAdd = this.callfunc.openSide(
+  //     PopupEVaccineComponent,
+  //     {
+  //       actionType: actionType,
+  //       data: data,
+  //       headerText: actionHeaderText + ' ' + this.getFormHeader2(this.eVaccinesFuncID, this.lstFuncHealth),
+  //       employeeId: this.employeeID,
+  //       funcID: this.eVaccinesFuncID,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if (res.event) {
+  //       this.updateGridView(this.eVaccinesGrid, actionType, res.event, data);
+  //     }
+  //     this.df.detectChanges();
+  //   });
+  // }
 
   addSkill() {
     this.hrService.addSkill(null).subscribe();
