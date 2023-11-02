@@ -29,7 +29,8 @@ export class ImportpartsComponent extends UIComponent {
   formModelTemp: FormModel = {
     formName: 'WRtempImportParts',
     gridViewName: 'grvWRtempImportParts',
-    entityName: 'WR_tempImportParts'
+    entityName: 'WR_tempImportParts',
+    funcID: 'WR0105'
   }
   views: Array<ViewModel> = [];
   titleAction = '';
