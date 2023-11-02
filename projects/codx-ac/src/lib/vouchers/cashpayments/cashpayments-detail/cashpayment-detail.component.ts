@@ -607,7 +607,10 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.shareService.codxPrintReport(reportID,reportType,data,this.view?.formModel);    
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
   }
   
   /**
