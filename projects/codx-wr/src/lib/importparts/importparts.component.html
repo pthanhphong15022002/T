@@ -28,11 +28,3 @@
     ></codx-mfunc>
   </div>
 </ng-template>
-
-<ng-template #templateViewDetail let-popup>
-  <codx-form [body]="body" [dialog]="popup"> </codx-form>
-</ng-template>
-
-<ng-template #body>
-  <lib-grid-detail-importparts [dataSelected]="dataSelected" [formModel]="formModelTemp"></lib-grid-detail-importparts>
-</ng-template>

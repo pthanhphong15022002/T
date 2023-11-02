@@ -25,7 +25,7 @@ import { PopupAssignEngineerComponent } from './warranties/popup-assign-engineer
 import { ViewTabUpdateComponent } from './warranties/view-detail-wr/view-tab-update/view-tab-update.component';
 import { ViewTabPartsComponent } from './warranties/view-detail-wr/view-tab-parts/view-tab-parts.component';
 import { ImportpartsComponent } from './importparts/importparts.component';
-import { GridDetailImportpartsComponent } from './importparts/grid-detail-importparts/grid-detail-importparts.component';
+import { PopupDetailImportPartsComponent } from './importparts/popup-detail-import-parts/popup-detail-import-parts.component';
 
 var routes: Routes = [
   {
@@ -60,7 +60,7 @@ var routes: Routes = [
     ViewTabUpdateComponent,
     ViewTabPartsComponent,
     ImportpartsComponent,
-    GridDetailImportpartsComponent,
+    PopupDetailImportPartsComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

@@ -14,6 +14,7 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxWrService } from '../codx-wr.service';
+import { PopupDetailImportPartsComponent } from './popup-detail-import-parts/popup-detail-import-parts.component';
 
 @Component({
   selector: 'lib-importparts',
@@ -50,7 +51,7 @@ export class ImportpartsComponent extends UIComponent {
   constructor(
     private inject: Injector,
     private codxShareService: CodxShareService,
-    private wrSv: CodxWrService,
+    private wrSv: CodxWrService
   ) {
     super(inject);
   }
@@ -83,7 +84,7 @@ export class ImportpartsComponent extends UIComponent {
 
     //     break;
     // }
-    let f = {functionID: 'SYS001'}; //bùa đã
+    let f = { functionID: 'SYS001' }; //bùa đã
     let data = evt.model;
     if (!data) data = this.view.dataService.dataSelected;
     this.codxShareService.defaultMoreFunc(
@@ -130,23 +131,30 @@ export class ImportpartsComponent extends UIComponent {
 
   //#region view detail
   async viewDetail(data) {
-    let dt= data?.data?.rowData;
+    let dt = data?.data?.rowData;
     this.dataSelected = dt;
-    if(dt){
+    if (dt) {
       let option = new DialogModel();
       option.IsFull = true;
       option.zIndex = 999;
-      this.popupView = this.callfc.openForm(
-        this.templateViewDetail,
+      let formModel = new FormModel();
+      formModel.formName = this.formModelTemp.formName;
+      formModel.gridViewName = this.formModelTemp.gridViewName;
+      formModel.entityName = this.formModelTemp.entityName;
+      option.FormModel = formModel;
+      let obj = {
+        data: this.dataSelected,
+      };
+      this.callfc.openForm(
+        PopupDetailImportPartsComponent,
         '',
         Util.getViewPort().width,
         Util.getViewPort().height,
         '',
-        null,
+        obj,
         '',
         option
       );
-      this.popupView.closed.subscribe((e) => {});
     }
   }
   //#endregion
