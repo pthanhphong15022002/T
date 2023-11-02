@@ -21,7 +21,7 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"
+    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL" [showApproveButton]="true"
         [formModel]="view.formModel"  [cardType]="cardType" (approve)="accept($event)" (reject)="notAccept($event)"
     ></lib-view-detail-cards>
 </ng-template>

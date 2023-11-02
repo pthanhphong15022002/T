@@ -18,6 +18,7 @@ import {
 } from 'codx-core';
 import { OD_DispatchDashBoard } from './models/OD_DispatchDashBoard';
 import { AccumulationChartComponent } from '@syncfusion/ej2-angular-charts';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'oddashboard',
@@ -45,14 +46,29 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
     { moduleName: 'Trình ký', percentage: 15 },
     { moduleName: 'Khác', percentage: 10 },
   ];
-
+  primaryYAxis: Object = {
+    lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+};
+primaryXAxis: Object = {
+  majorGridLines: { width: 0 },
+  minorGridLines: { width: 0 },
+  majorTickLines: { width: 0 },
+  minorTickLines: { width: 0 },
+  interval: 1,
+  lineStyle: { width: 0 },
+  valueType: 'Category'
+};
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
     private routerActive: ActivatedRoute
   ) {
     super(inject);
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.reportID = this.router.snapshot.params['funcID'];
   }
 
   onInit() {
@@ -85,14 +101,16 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
         this.reportID = res.funcID;
         this.isLoaded = false;
         let reportItem: any = this.arrReport.find(
-          (x: any) => x.reportID == res.funcID
+          (x: any) => x.recID == res.funcID
         );
         if (reportItem) {
           let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
           if (pinnedParams) this.view.pinedReportParams = pinnedParams;
+          this.funcID = reportItem.reportID
         }
-        if (this.reportID === 'ODD001') {
-          this.api
+        if (this.funcID === 'ODD001') {
+          this.subscription && this.subscription.unsubscribe();
+         this.subscription =this.api
             .execSv(
               'rptod',
               'Codx.RptBusiness.OD',
@@ -131,6 +149,7 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
 
+  subscription:Subscription;
   onActions(e) {
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
@@ -142,9 +161,45 @@ export class ODDashboardComponent extends UIComponent implements AfterViewInit {
             path: 'od/dashboard/' + this.arrReport[i].recID,
           });
         }
-        this.pageTitle.setSubTitle(arrChildren[0].title);
-        this.pageTitle.setChildren(arrChildren);
-        this.codxService.navigate('', arrChildren[0].path);
+        if(this.reportID){
+          let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
+          if(idx>-1){
+            this.pageTitle.setSubTitle(arrChildren[idx].title);
+            this.pageTitle.setChildren(arrChildren);
+            this.codxService.navigate('', arrChildren[idx].path);
+            this.funcID = this.arrReport[idx].reportID;
+          }
+          else{
+            this.pageTitle.setSubTitle(arrChildren[0].title);
+            this.pageTitle.setChildren(arrChildren);
+            this.codxService.navigate('', arrChildren[0].path);
+            this.funcID = this.arrReport[0].reportID;
+          }
+        }
+        else{
+          this.pageTitle.setSubTitle(arrChildren[0].title);
+          this.pageTitle.setChildren(arrChildren);
+          this.codxService.navigate('', arrChildren[0].path);
+          this.funcID = this.arrReport[0].reportID;
+        }
+        if (this.funcID === 'ODD001') {
+          this.subscription && this.subscription.unsubscribe();
+         this.subscription = this.api
+            .execSv(
+              'rptod',
+              'Codx.RptBusiness.OD',
+              'DispatchDataSetBusiness',
+              'GetReportSourceAsync',
+              []
+            )
+            .subscribe((res: OD_DispatchDashBoard[]) => {
+              this.dataset = res;
+
+              setTimeout(() => {
+                this.isLoaded = true;
+              }, 500);
+            });
+        }
       }
     }
     this.isLoaded = false;

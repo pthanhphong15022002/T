@@ -54,6 +54,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() isHeightAuto = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -133,6 +134,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
         'SendMailNotificationAsync'
       )
       .subscribe((res) => {});
+    this.taskHeight = this.isHeightAuto ? 'auto' : 'this.taskHeight';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -143,6 +145,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+          this.isShowSuccess =  true;
       }
       if (this.listInstanceStep?.length > 0) {
         this.stepViews = [];
@@ -178,7 +181,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    this.setHeight();
+    !this.isHeightAuto && this.setHeight();
   }
   changeValue(e) {
     this.type = e.data;
@@ -196,11 +199,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (e.field == 'show' && e.data?.length > 0) {
       this.isShowElement = e.data[0] == '1' ? true : false;
-      this.isShowSuccess = this.isShowElement;
     } else {
       this.isShowElement = true;
-      this.isShowSuccess = this.isShowElement;
     }
+    this.isShowSuccess = this.isShowElement;
   }
 
   handelToggleStep() {
@@ -222,9 +224,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   addTask() {
-    this.indexAddTask = this.listInstanceStep.findIndex(
-      (step) => step.stepStatus == '1'
-    );
+    let index = this.listInstanceStep.findIndex((step) => step.stepStatus == '1');
+    this.indexAddTask = index >-1 ? index : 0;
     setTimeout(() => {
       this.indexAddTask = -1;
     }, 1000);
@@ -405,7 +406,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   @HostListener('window:resize', ['$event'])
   onWindowResize(event: Event) {
-    this.setHeight();
+    !this.isHeightAuto && this.setHeight();
   }
 
   setHeight() {

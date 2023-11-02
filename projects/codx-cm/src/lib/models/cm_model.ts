@@ -196,6 +196,7 @@ export class CM_Deals {
   expectedTo: Date;
   datas: string;
   industries: string;
+  shortName:string;
 }
 
 export class CM_Permissions {
@@ -362,7 +363,7 @@ export class BS_AddressBook {
   address: string;
   objectType: string;
   objectID: string;
-  street: string;
+  objectName: string;
   city: string;
   countryID: string;
   provinceID: string;
@@ -757,6 +758,7 @@ export class CM_Leads {
   exchangeRate: number;
   dealValue: number = 0;
   permissions: CM_Permissions[] = [];
+  datas:string;
 }
 
 export class CM_Targets {

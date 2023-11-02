@@ -1,12 +1,10 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   Injector,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -20,15 +18,9 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import {
-  BehaviorSubject,
-  Subject,
-  distinctUntilKeyChanged,
-  takeUntil,
-} from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
 import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
-import { PurchaseInvoiceService } from './purchaseinvoices.service';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -62,6 +54,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+  moreFuncs: Array<ButtonModel> = [
+    {
+      id: 'btnImportXml',
+      icon: '',
+      text: 'Đọc file xml',
+    },
+  ];
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -140,7 +139,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         },
       },
     ];
-    
+
     this.journalService.setChildLinks(this.journalNo);
 
     //* thiết lập cấu hình sidebar
@@ -166,9 +165,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
 
   /**
    * *Hàm xử lí click toolbar
-   * @param event 
+   * @param event
    */
-  toolbarClick(event){
+  toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
@@ -231,7 +230,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .addNew((o) => this.setDefault(this.dataDefault))
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res:any) => {
+      .subscribe((res: any) => {
         if (res != null) {
           res.isAdd = true;
           if (this.dataDefault == null) this.dataDefault = { ...res };
@@ -240,7 +239,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
             journal: { ...this.journal }, //?  data journal
             oData: { ...res }, //?  data của cashpayment
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-            baseCurr: this.baseCurr //?  đồng tiền hạch toán
+            baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           };
           let dialog = this.callfc.openSide(
             PurchaseinvoicesAddComponent,
@@ -338,7 +337,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [
+        data.recID,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -372,7 +373,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [
+        data.recID,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -507,10 +510,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
 
-   /**
+  /**
    * *Hàm mở form báo cáo
    */
-   openFormReportVoucher(data: any, reportList: any) {
+  openFormReportVoucher(data: any, reportList: any) {
     var obj = {
       data: data,
       reportList: reportList,
@@ -529,13 +532,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
       opt
     );
   }
-  
+
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
    * @param event
    * @returns
    */
-  onSelectedItem(event){
+  onSelectedItem(event) {
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -553,96 +556,103 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    let arrBookmark = event.filter(
-      // danh sách các morefunction
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT060103' || // MF ghi sổ
-        x.functionID == 'ACT060102' || // MF gửi duyệt
-        x.functionID == 'ACT060104' || // MF hủy yêu cầu duyệt
-        x.functionID == 'ACT060105' || // Mf khôi phục
-        x.functionID == 'ACT060107' || // Mf in
-        x.functionID == 'ACT060106'// MF kiểm tra tính hợp lệ
+    this.acService.changeMFPur(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
     );
-    if (arrBookmark.length > 0) {
-      if (type == 'viewgrid') {
-        arrBookmark.forEach((element) => {
-          element.isbookmark = false;
-        });
-      }
-      switch (data?.status) {
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (element.functionID == 'ACT060102' || element.functionID == 'ACT060107') {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060104' || element.functionID == 'ACT060107') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060105' || element.functionID == 'ACT060107') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '2':
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060106' || element.functionID == 'ACT060107') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        default:
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-      }
-    }
-    return;
+    // let arrBookmark = event.filter(
+    //   // danh sách các morefunction
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ACT060103' || // MF ghi sổ
+    //     x.functionID == 'ACT060102' || // MF gửi duyệt
+    //     x.functionID == 'ACT060104' || // MF hủy yêu cầu duyệt
+    //     x.functionID == 'ACT060105' || // Mf khôi phục
+    //     x.functionID == 'ACT060107' || // Mf in
+    //     x.functionID == 'ACT060106'// MF kiểm tra tính hợp lệ
+    // );
+    // if (arrBookmark.length > 0) {
+    //   if (type == 'viewgrid') {
+    //     arrBookmark.forEach((element) => {
+    //       element.isbookmark = false;
+    //     });
+    //   }
+    //   switch (data?.status) {
+    //     case '1':
+    //       if (this.journal.approvalControl == '0') {
+    //         arrBookmark.forEach((element) => {
+    //           if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       } else {
+    //         arrBookmark.forEach((element) => {
+    //           if (element.functionID == 'ACT060102' || element.functionID == 'ACT060107') {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       }
+    //       break;
+    //     case '3':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060104' || element.functionID == 'ACT060107') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '5':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '6':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060105' || element.functionID == 'ACT060107') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '2':
+    //     case '7':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060106' || element.functionID == 'ACT060107') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '9':
+    //       arrBookmark.forEach((element) => {
+    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     default:
+    //       arrBookmark.forEach((element) => {
+    //         element.disabled = true;
+    //       });
+    //       break;
+    //   }
+    // }
+    // return;
   }
 
   /**
@@ -661,11 +671,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
       });
   }
 
-   /**
+  /**
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
-   setDefault(data: any, action: any = '') {
+  setDefault(data: any, action: any = '') {
     return this.api.exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
       data,
       this.journal,

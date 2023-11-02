@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  CRUDService,
   CallFuncService,
   SidebarModel,
   UIComponent,
@@ -42,7 +43,7 @@ export class PatternComponent extends UIComponent implements OnInit {
   };
   environment = environment;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-
+  dataService: CRUDService;
   constructor(
     private change: ChangeDetectorRef,
     private patternSV: PatternService,
@@ -50,8 +51,14 @@ export class PatternComponent extends UIComponent implements OnInit {
     private callfunc: CallFuncService
   ) {
     super(injector);
+    this.dataService = new CRUDService(injector);
+    this.dataService.service = 'FD';
     this.cache.functionList('FDS026').subscribe((res) => {
-      if (res) this.functionList = res;
+      if (res) {
+        this.functionList = res;
+        this.dataService.request.entityName = res.entityName;
+        this.dataService.request.funcID = 'FDS026';
+      }
     });
     this.getCardType('FDS026');
     this.router.params.subscribe((params) => {
@@ -65,16 +72,16 @@ export class PatternComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     this.patternSV.component = this;
-    this.views = [
-      {
-        active: true,
-        type: ViewType.content,
-        sameData: true,
-        model: {
-          panelLeftRef: this.panelLeftRef,
-        },
-      },
-    ];
+    // this.views = [
+    //   {
+    //     active: true,
+    //     type: ViewType.content,
+    //     sameData: true,
+    //     model: {
+    //       panelLeftRef: this.panelLeftRef,
+    //     },
+    //   },
+    // ];
     this.detectorRef.detectChanges();
   }
 
@@ -160,11 +167,11 @@ export class PatternComponent extends UIComponent implements OnInit {
       formModel: this.functionList,
       funcID: this.funcID,
     };
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = 'Auto';
+    let option = new SidebarModel();
+    option.DataService = this.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = 'Auto';
+    this.dataService.addNew().subscribe((res: any) => {
       var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event?.data?.save) {
@@ -180,61 +187,107 @@ export class PatternComponent extends UIComponent implements OnInit {
             });
           }
           this.change.detectChanges();
-          var data = e?.event?.data?.save;
-          this.view.dataService.update(data).subscribe();
+          //var data = e?.event?.data?.save;
+          //this.view.dataService.update(data).subscribe();
         }
-        this.view.dataService.clear();
+        this.dataService.clear();
       });
     });
+
+    // this.view.dataService.addNew().subscribe((res: any) => {
+    //   let option = new SidebarModel();
+    //   option.DataService = this.dataService;
+    //   option.FormModel = this.view?.formModel;
+    //   option.Width = 'Auto';
+    //   var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+    //   dialog.closed.subscribe((e) => {
+    //     if (e?.event?.data?.save) {
+    //       this.lstPattern.splice(this.lstPattern.length - 1, 1);
+    //       this.change.detectChanges();
+    //       this.lstPattern.push(e.event?.data?.save);
+    //       this.lstPattern.push({});
+    //       if (e.event.data.save.isDefault) {
+    //         this.lstPattern.forEach((dt, index) => {
+    //           if (dt.recID == e.event.data.save.recID)
+    //             this.lstPattern[index].isDefault = true;
+    //           else this.lstPattern[index].isDefault = false;
+    //         });
+    //       }
+    //       this.change.detectChanges();
+    //       var data = e?.event?.data?.save;
+    //       this.view.dataService.update(data).subscribe();
+    //     }
+    //     this.view.dataService.clear();
+    //   });
+    // });
     this.change.detectChanges();
   }
 
   openFormEdit(item = null) {
     var arr = new Array();
-    if (item) {
-      this.view.dataService.dataSelected = item;
-    }
+    // if (item) {
+    //   this.view.dataService.dataSelected = item;
+    // }
     var obj = {
       formType: 'edit',
       dataUpdate: item,
       formModel: this.functionList,
       funcID: this.funcID,
     };
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = 'Auto';
-        var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
-        dialog.closed.subscribe((e) => {
-          if (e?.event?.data.update) {
-            this.lstPattern.forEach((dt, index) => {
-              if (dt.recID == e.event.data.update.recID) {
-                this.lstPattern[index] = e.event.data.update;
-                this.change.detectChanges();
-              } else this.lstPattern[index].isDefault = false;
-            });
-            var data = e?.event?.data?.update;
-            this.view.dataService.update(data).subscribe();
-          }
-          this.view.dataService.clear();
+    let option = new SidebarModel();
+    this.dataService.updateDatas.set(item._uuid, item);
+    option.DataService = this.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = 'Auto';
+    var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+    dialog.closed.subscribe((e) => {
+      if (e?.event?.data.update) {
+        this.lstPattern.forEach((dt, index) => {
+          if (dt.recID == e.event.data.update.recID) {
+            this.lstPattern[index] = e.event.data.update;
+            this.change.detectChanges();
+          } else this.lstPattern[index].isDefault = false;
         });
-      });
+        //var data = e?.event?.data?.update;
+        //this.view.dataService.update(data).subscribe();
+      }
+      this.dataService.clear();
+    });
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res: any) => {
+    //     let option = new SidebarModel();
+    //     option.DataService = this.dataService;
+    //     option.FormModel = this.view?.formModel;
+    //     option.Width = 'Auto';
+    //     var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
+    //     dialog.closed.subscribe((e) => {
+    //       if (e?.event?.data.update) {
+    //         this.lstPattern.forEach((dt, index) => {
+    //           if (dt.recID == e.event.data.update.recID) {
+    //             this.lstPattern[index] = e.event.data.update;
+    //             this.change.detectChanges();
+    //           } else this.lstPattern[index].isDefault = false;
+    //         });
+    //         var data = e?.event?.data?.update;
+    //         this.view.dataService.update(data).subscribe();
+    //       }
+    //       this.view.dataService.clear();
+    //     });
+    //   });
     this.change.detectChanges();
   }
 
   delete(item, index) {
-    this.view.dataService.dataSelected = item;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected])
-      .subscribe((res: any) => {
-        if (res.data) {
-          this.patternSV.deleteFile(res.data.recID).subscribe();
-          this.lstPattern.splice(index, 1);
-        }
-      });
+    this.patternSV.deleteFile(item.recID).subscribe();
+    this.lstPattern.splice(index, 1);
+    // this.view.dataService.dataSelected = item;
+    this.dataService.delete([item]).subscribe((res: any) => {
+      if (res.data) {
+        this.patternSV.deleteFile(res.data.recID).subscribe();
+        this.lstPattern.splice(index, 1);
+      }
+    });
     this.change.detectChanges();
   }
 }

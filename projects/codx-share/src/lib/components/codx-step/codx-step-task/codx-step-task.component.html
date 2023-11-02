@@ -423,7 +423,8 @@
         *ngIf="
           data?.value?.startDate &&
           data?.value?.endDate &&
-          data?.value?.status != '3'
+          data?.value?.status != '3' && 
+          data?.value?.progress != 100
         "
       >
         {{ data?.value?.startDate | date : dateFomat }} -
@@ -431,7 +432,7 @@
       >
       <span
         class="date text-nowrap text-gray-500"
-        *ngIf="data?.value?.actualEnd && data?.value?.status == '3'"
+        *ngIf="data?.value?.actualEnd && data?.value?.status == '3' && data?.value?.progress == 100 "
       >
         {{ data?.value?.actualEnd | date : dateFomat }}
       </span>

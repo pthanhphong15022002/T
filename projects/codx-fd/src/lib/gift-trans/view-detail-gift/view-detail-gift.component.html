@@ -5,7 +5,7 @@
 <ng-template #body>
     <div class="fd-giftdetail pt-3">
         <div class="d-flex flex-row-reverse">
-            <button class="btn btn-sm" [disabled]="data.status != '1'"
+            <button class="btn btn-sm" [disabled]="data.status != '1'" (click)="sendGift()"
                 [ngClass]="data.status == '1'? 'btn-light-primary' : 'btn-light-primary'">
                 <codx-label [formModel]="formModel" name="lblSendGift" default="Giao quà"></codx-label>
             </button>

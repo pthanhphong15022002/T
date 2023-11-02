@@ -131,6 +131,8 @@ export class PopupAddEmployeesComponent implements OnInit {
     let arrFieldUnValid: string = '';
     if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
+        if(field === 'EmployeeID') return;
+        
         let key = Util.camelize(field);
         if (!this.employee[key]) {
           arrFieldUnValid += this.grvSetup[field]['headerText'] + ';';
@@ -150,12 +152,15 @@ export class PopupAddEmployeesComponent implements OnInit {
   // update employee
   updateEmployeeAsync(employee: any) {
     if (employee) {
+      console.log('data chuan bi update', employee);
+      
       this.api
         .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'UpdateAsync', [
           employee,
           this.funcID,
         ])
         .subscribe((res: any) => {
+        console.log('data sau khi update du lieu', res);
           let _mssgCode = res ? 'SYS007' : 'SYS021';
           this.notifiSV.notifyCode(_mssgCode);
           this.dialogRef.close(res? res : false);

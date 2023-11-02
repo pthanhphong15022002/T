@@ -104,6 +104,22 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   /**
+   * *Hàm click các morefunction của CashpaymentLines
+   * @param event
+   * @param data
+   */
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'SYS104':
+        this.copyRow(data);
+        break;
+      case 'SYS102':
+        this.deleteRow(data);
+        break;
+    }
+  }
+
+  /**
    * *Hàm xử lí change subtype
    * @param event 
    */
@@ -219,44 +235,44 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
    * lưu chứng từ
    */
   saveVoucher(type){
-    // this.api
-    //   .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateVoucherAsync', [
-    //     this.formPurchaseInvoices.data,
-    //     this.journal,
-    //   ])
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res?.update) {
-    //       this.dialog.dataService.update(res.data).subscribe();
-    //       if (type == 'save') {
-    //         this.onDestroy();
-    //         this.dialog.close();
-    //       }else{
-    //         this.api
-    //         .exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-    //           this.dialogData.data?.oData,
-    //           this.journal,
-    //         ])
-    //         .subscribe((res: any) => {
-    //           if (res) {
-    //             res.data.isAdd = true;
-    //             this.formPurchaseInvoices.refreshData({...res.data});
-    //             setTimeout(() => {
-    //               this.refreshGrid();
-    //             }, 100);
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         });
-    //       }
-    //       if (this.formPurchaseInvoices.data.isAdd || this.formPurchaseInvoices.data.isCopy)
-    //         this.notification.notifyCode('SYS006');
-    //       else 
-    //         this.notification.notifyCode('SYS007');
+    this.api
+      .exec('IV', 'VouchersBusiness', 'UpdateVoucherAsync', [
+        this.formVouchers.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          }else{
+            this.api
+            .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
+              this.dialogData.data?.oData,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                res.data.isAdd = true;
+                this.formVouchers.refreshData({...res.data});
+                setTimeout(() => {
+                  this.eleGridVouchers.dataSource = [];
+                  this.eleGridVouchers.refresh();
+                }, 100);
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+          if (this.formVouchers.data.isAdd || this.formVouchers.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
           
-    //     }
-    //     if(this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
-    //     if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
-    //   });
+        }
+        if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
+      });
   }
   //#endregion Method
 
@@ -339,6 +355,43 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }
     this.formVouchers.setRequire(lstRequire);
+  }
+
+  /**
+   * *Hàm ẩn các morefunction trong lưới
+   * @param event
+   */
+  changeMF(event) {
+    event.forEach((element) => {
+      if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
+        element.disabled = false;
+        element.isbookmark = false;
+      }else{
+        element.disabled = true;
+      }
+    });
+  }
+
+  /**
+   * *Hàm sao chép dòng trong lưới
+   * @param data
+   */
+  copyRow(data) {
+    if (this.eleGridVouchers) {
+      data.recID = Util.uid();
+      data.index = this.eleGridVouchers.dataSource.length;
+      this.eleGridVouchers.addRow(data, this.eleGridVouchers.dataSource.length);
+    }
+  }
+
+  /**
+   * *Hàm xóa dòng trong lưới
+   * @param data
+   */
+  deleteRow(data) {
+    if (this.eleGridVouchers) {
+      this.eleGridVouchers.deleteRow(data);
+    }
   }
 
   @HostListener('click', ['$event']) //? focus out grid

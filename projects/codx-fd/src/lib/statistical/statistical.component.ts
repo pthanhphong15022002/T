@@ -42,6 +42,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   @ViewChild('chart') chart: ChartComponent;
   @ViewChildren('template') templates: QueryList<any>;
   @ViewChildren('template2') templates2: QueryList<any>;
+  @ViewChildren('templateKudos') templates3: QueryList<any>;
 
   //#region Đát Bo
 
@@ -53,9 +54,15 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   );
 
   panels2:any = JSON.parse(
-    '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":14,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":25,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+    '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":23,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
   );
   datas2:any = JSON.parse(
+    '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
+  );
+  panels3:any = JSON.parse(
+    '[{"header":"Điểm cộng thành tích tuyên dương","id":"0.4199281088325755_layout","row":0,"col":0,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"header":"Top nhân viên bị trừ điểm thành tích phiếu góp ý","id":"0.4592017601751599_layout","row":0,"col":18,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"header":"Bảng điểm thành tích theo bộ phận","id":"0.06496875406606994_layout","row":11,"col":0,"sizeX":36,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"header":"Top nhân viên có điểm thành tích cao nhất","id":"0.21519762020962552_layout","row":0,"col":36,"sizeX":12,"sizeY":23,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+  );
+  datas3:any = JSON.parse(
     '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
   );
 
@@ -75,16 +82,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   };
 
   //Column Chart
-  primaryXAxis: Object = {
-    valueType: 'Category',
-    interval: 1,
-    crosshairTooltip: { enable: true },
-  };
-
-  primaryYAxis: Object = {
-    title: '',
-    labelFormat: '{value}',
-  };
 
   tooltip: Object = { enable: true, shared: true };
 
@@ -276,8 +273,41 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     connectorStyle: { length: '20px', type: 'Curve'},
 
   };
+  dataLabelCoins: Object = {
+    visible: true,
+    position: 'Outside', name: 'transName',
+    font: {
+        fontWeight: '500'
+    },
+    connectorStyle: { length: '20px', type: 'Curve'},
+
+  };
   circleMarker: Object = { visible: true, height: 7, width: 7 , shape: 'Circle' , isFilled: true };
   palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
+
+    primaryXAxis: Object = {
+      majorGridLines: { width: 0 },
+      minorGridLines: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
+      interval: 1,
+      lineStyle: { width: 0 },
+      labelIntersectAction: 'Rotate45',
+      valueType: 'Category'
+  };
+  //Initializing Primary Y Axis
+  primaryYAxis: Object = {
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 },
+      majorGridLines: { width: 1 },
+      minorGridLines: { width: 1 },
+      minorTickLines: { width: 0 },
+  };
+chartArea: Object = {
+  border: {
+      width: 0
+  }
+};
   constructor(
     private injector: Injector,
     private cacheService: CacheService,
@@ -304,6 +334,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   dataset:any=[];
   vllFD017:any=[];
   vllFD018:any=[];
+  rangeLines:any=[];
   editSettings: any = {
     allowAdding: false,
     allowDeleting: false,
@@ -313,6 +344,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   columnGrids:any=[];
 
   onInit(): void {
+    this.getRangeLines();
     this.options.pageLoading = false;
     this.options.entityName = 'FD_Receivers';
     this.options.entityPermission = 'FD_Receivers';
@@ -349,6 +381,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   isLoaded:boolean=false;
   ngAfterViewInit() {
+
     this.views = [
       // {
       //   type: ViewType.content,
@@ -385,13 +418,14 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
           let idx =this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
           if(idx >-1){
             this.reportItem = this.arrReport[idx];
+            this.funcID = this.reportItem.reportID;
             if(this.reportItem.reportID == 'FDD001'){
               this.typeBallot='0';
             }
             if(this.reportItem.reportID == 'FDD002'){
               this.typeBallot='1';
             }
-            this.getDataChartB();
+            this.reloadAllChart();
           }
 
         }
@@ -467,9 +501,15 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   }
 
   reloadAllChart() {
-    this.setPredicate();
-    this.getDataChartA();
-    this.getDataChartB();
+
+    //this.setPredicate();
+    if(this.funcID == 'FDD001' || this.funcID == 'FDD002')
+      this.getDataChartB();
+    if(this.funcID == 'FDD003')
+      this.loadData();
+    if(this.funcID == 'FDD004')
+      this.loadKudos()
+    //this.getDataChartB();
   }
 
   open(content) {
@@ -480,6 +520,203 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  coinsIn:any=[];
+  coinsOut:any=[];
+  coinsByTypeIn:any=[];
+  coinsByTypeOut:any=[];
+  transferCoins:any=[];
+  coinsByEmp:any=[]
+  giftTrans:any=[];
+  loadData() {
+    this.coinsByTypeIn=[];
+    this.coinsByTypeOut=[];
+    this.isLoaded = false;
+    this.options.pageLoading = false;
+    this.options.entityName = 'FD_KudosTrans';
+    this.options.entityPermission = 'FD_KudosTrans';
+    this.options.gridViewName = 'grvKudosTrans';
+    this.options.formName = 'KudosTrans';
+    this.options.funcID = 'FDW011';
+    this.options.dataObj = 'Coins';
+    this.api
+      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
+        this.options, this.objParams ? this.objParams : {},
+      ])
+      .subscribe((res) => {
+        if (res) {
+
+          this.dataset = res[1];
+          let objGifts = this.groupBy(res[2],'departmentName');
+          for(let key in objGifts){
+            let obj:any={};
+            obj.departmentName=key;
+            obj.quantity=objGifts[key].length;
+            this.giftTrans.push(obj);
+          }
+
+          this.transferCoins = JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.transType=='2'))).map((x:any)=>{x.coins=-x.coins; return x;});
+          this.coinsIn = this.dataset.filter((x:any)=>x.coins >0);
+          this.coinsOut = JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.coins <0))).map((x:any)=>{x.coins=-x.coins; return x;});
+          let objEmp=this.groupBy(this.dataset,'userID');
+          for(let key in objEmp){
+            let  obj:any={};
+            obj.userID = key;
+            obj.username= objEmp[key][0].userName;
+            obj.positionName= objEmp[key][0].positionName;
+            obj.departmentName= objEmp[key][0].departmentName;
+            obj.coinsIn = this.sumByProp(objEmp[key].filter((x:any)=>x.coins >0),'coins');
+            let _coinOut =  this.sumByProp(objEmp[key].filter((x:any)=>x.coins <0),'coins');
+            obj.coinsOut = _coinOut != 0 && _coinOut < 0 ? -_coinOut : 0;
+            obj.percentageIn = this.toFixed((obj.coinsIn/this.sumByProp(this.coinsIn,'coins'))*100);
+            obj.percentageOut = obj.coinsOut > 0 ?this.toFixed((obj.coinsOut/this.sumByProp(this.coinsOut,'coins'))*100) : 0;
+            this.coinsByEmp.push(obj);
+          }
+          //this.coinsOut = this.coinsOut.map((x:any)=> x.coins = -x.coins);
+          let objIn = this.groupBy(this.coinsIn,'transType');
+          for(let key in objIn){
+            let  obj:any={};
+            obj.transType = key;
+            obj.transName= objIn[key][0].categoryName;
+            obj.coins = this.sumByProp(objIn[key],'coins');
+            obj.percentage = this.toFixed((obj.coins/this.sumByProp(this.coinsIn,'coins'))*100);
+            this.coinsByTypeIn.push(obj);
+          }
+          let objOut = this.groupBy(this.coinsOut,'transType');
+          for(let key in objOut){
+            let  obj:any={};
+            obj.transType = key;
+            obj.transName= objOut[key][0].categoryName;
+            obj.coins = this.sumByProp(objOut[key],'coins');
+            obj.percentage = this.toFixed((obj.coins/this.sumByProp(this.coinsOut,'coins'))*100);
+            this.coinsByTypeOut.push(obj);
+          }
+
+          this.detectorRef.detectChanges();
+          console.log(objEmp);
+          this.isLoaded = true;
+        }
+      });
+  }
+
+
+  statByRule:any=[];
+  statByBehavior:any=[];
+  statByMinusKudos:any=[];
+  loadKudos(){
+      this.statByRule = [];
+      this.statByBehavior = [];
+      this.statByMinusKudos=[];
+      this.statByEmps=[];
+      this.statByDepts=[];
+      this.options.pageLoading = false;
+      this.options.entityName = 'FD_KudosTrans';
+      this.options.entityPermission = 'FD_KudosTrans';
+      this.options.gridViewName = 'grvKudosTrans';
+      this.options.formName = 'KudosTrans';
+      this.options.funcID = 'FDW011';
+      this.options.dataObj = 'Coins';
+      this.api
+        .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+          this.options,"4", this.objParams ? this.objParams : {},
+        ])
+        .subscribe((res:any)=>{
+
+          this.dataset = res;
+          let objRule = this.groupBy(this.dataset.filter((x:any)=>x.isGroup == true),'competenceID');
+          for(let key in objRule){
+            let obj:any={};
+            obj.competenceID = key;
+            obj.competenceName= objRule[key][0].competenceName;
+            obj.quantity = this.sumByProp(objRule[key].filter((x:any)=>x.kudos>0),'kudos');
+            this.statByRule.push(obj)
+          }
+          let objBev = this.groupBy(this.dataset.filter((x:any)=>x.isGroup == false),'competenceID');
+          for(let key in objBev){
+            let obj:any={};
+            obj.competenceID = key;
+            obj.competenceName= objBev[key][0].competenceName;
+            obj.quantity = this.sumByProp(objBev[key],'kudos');
+            this.statByBehavior.push(obj)
+          }
+          let objMinus = this.groupBy(JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.kudos<0))),'userID');
+          for(let key in objMinus){
+            let obj:any={};
+            obj.userID = key;
+            obj.username= objMinus[key][0].employeeName;
+            obj.positionName = objMinus[key][0].positionName;
+            obj.departmentName = objMinus[key][0].departmentName;
+            obj.orgUnitName = objMinus[key][0].orgUnitName;
+
+            objMinus[key].map((x:any)=> {x.kudos = -x.kudos; return x});
+            obj.quantity = this.sumByProp(objMinus[key],'kudos')
+            this.statByMinusKudos.push(obj)
+          }
+          this.dataset = this.sortByProp(this.dataset,'quantity','desc');
+          let objEmp = this.groupBy(this.dataset,'userID');
+          let idx=0
+          for(let key in objEmp){
+            let obj:any ={};
+            obj.stt=idx+1;
+            idx++;
+            obj.userID = key;
+            obj.username = objEmp[key][0].employeeName;
+            obj.departmentID = objEmp[key][0].departmentID;
+            obj.departmentName =objEmp[key][0].departmentName;
+            obj.positionName =objEmp[key][0].positionName;
+            obj.quantity = this.sumByProp(objEmp[key],'kudos');
+            let rank = this.setRank(obj);
+            if(rank){
+              obj.rankName = rank.breakName;
+              obj.color = rank.color
+            }
+            this.statByEmps.push(obj);
+          }
+
+          let objDept = this.groupBy(this.statByEmps,'departmentID');
+          for(let key in objDept){
+            let obj:any={};
+            obj.departmentID = key;
+            obj.departmentName = objDept[key][0].departmentName;
+            obj.quantity = this.sumByProp(objDept[key],'quantity');
+            obj.avg = this.toFixed(obj.quantity/objDept[key].length)
+            for(let i=0;i<this.rangeLines.length;i++){
+              obj[`type${i}`] = objDept[key].filter((x:any)=>x.rankName== this.rangeLines[i].breakName).length;
+            }
+            this.statByDepts.push(obj)
+          }
+          this.isLoaded = true;
+        })
+  }
+
+
+  getRangeLines(){
+    let model:any = {
+      predicate:"RangeID=@0",
+      dataValue: "KUDOS",
+      sortColumns: "BreakValue",
+      sortDirections: "desc"
+     };
+    this.api
+        .execSv<any>('BS', 'ERM.Business.BS', 'RangeLinesBusiness', 'GetDataByPredicateAsync', [
+          model
+        ])
+        .subscribe((res:any)=>{
+          this.rangeLines = res;
+        })
+  }
+
+  setRank(user:any){
+    if(this.rangeLines?.length){
+      let items = this.rangeLines.filter((x:any)=>x.breakValue <= user.quantity);
+      if(items.length) return items[0];
+      else return this.rangeLines[this.rangeLines.length-1];
+    }
+    return null;
+  }
+  avaLoaded(ele:any , e:any){
+    console.log(e);
+    debugger
+  }
   ratingStats:any=[];
   cardsByRatingType:any={};
   cardByDepts:any={};
@@ -492,6 +729,11 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   statByEmps:any=[]
   subscription: Subscription;
   getDataChartB() {
+    this.options.pageLoading = false;
+    this.options.entityName = 'FD_Receivers';
+    this.options.entityPermission = 'FD_Receivers';
+    this.options.gridViewName = 'grvReceivers';
+    this.options.formName = 'Receivers';
     this.columnGrids = [
 
       {
@@ -533,7 +775,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     var dt = [];
     let i = 0;
     this.ratingStats=[];
-    this.statByDepts=[];
     this.listCardsPerBev=[];
     this.statByBevs=[];
     this.statByEmps=[];
@@ -557,8 +798,9 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
             obj.percentage = this.toFixed((obj.quantity/this.dataset.filter((x:any)=>x.cardType=='2' && x.ratingName).length)*100);
             this.ratingStats.push(obj);
           }
-          this.cardByDepts = this.groupBy(this.dataset,'departmentID');
+          this.cardByDepts = this.groupBy(this.dataset.filter((x:any)=>x.departmentID),'departmentID');
           for(let key in this.cardByDepts){
+
             let obj:any={};
             obj.recID= this.newGuid();
             obj.departmentID=key;
@@ -882,6 +1124,58 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       return data;
     })
   }
+
+  activeTab:any='btnCoinsIn'
+  changeDir(ele:any,id:any,obj:any){
+    if(ele.id == this.activeTab) return;
+    this.activeTab = ele.id;
+    if(ele.id=='btnCoinsOut'){
+      if(obj){
+        !obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.add('d-none');
+        !obj.chart1.gauge1.classList.contains('d-none')&& obj.chart1.gauge1.classList.add('d-none');
+
+        obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.remove('d-none');
+        obj.chart2.gauge2.classList.contains('d-none') && obj.chart2.gauge2.classList.remove('d-none');
+        obj.chart2.pie2.refresh()
+      }
+    }
+    if(ele.id=='btnCoinsIn'){
+      if(obj){
+        !obj.chart2.pie2.element.classList.contains('d-none') && obj.chart2.pie2.element.classList.add('d-none');
+        !obj.chart2.gauge2.classList.contains('d-none')&& obj.chart2.gauge2.classList.add('d-none');
+
+        obj.chart1.pie1.element.classList.contains('d-none') && obj.chart1.pie1.element.classList.remove('d-none');
+        obj.chart1.gauge1.classList.contains('d-none') && obj.chart1.gauge1.classList.remove('d-none');
+        obj.chart1.pie1.refresh()
+      }
+    }
+
+    this.detectorRef.detectChanges();
+  }
+
+  activePane:any='btnRule'
+  changeRule(ele:any,obj:any){
+    if(ele.id==this.activePane) return;
+    this.activePane = ele.id;
+    if(ele.id=='btnRule'){
+      obj.paneRule.classList.contains('d-none') && obj.paneRule.classList.remove('d-none');
+      !obj.paneBev.classList.contains('d-none') && obj.paneBev.classList.add('d-none')
+    }
+    if(ele.id=='btnBev'){
+      !obj.paneRule.classList.contains('d-none') && obj.paneRule.classList.add('d-none')
+      obj.paneBev.classList.contains('d-none') && obj.paneBev.classList.remove('d-none')
+    }
+  }
+
+  sumByProp(arr:any[],property:string){
+    if(arr && arr.length){
+      return arr.reduce((accumulator:any, object:any) => {
+        return accumulator + object[property];
+      }, 0);
+    }
+    return 0;
+  }
+
   newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
@@ -926,7 +1220,11 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   doubleClick(e:any){
     let dialogModel = new DialogModel;
-    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'',dialogModel)
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',[this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'1'],'',dialogModel)
+  }
+  doubleClick2(e:any){
+    let dialogModel = new DialogModel;
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',[this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'2'],'',dialogModel)
   }
 
 
@@ -988,7 +1286,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
                   if(this.reportItem.reportID == 'FDD002'){
                     this.typeBallot='1';
                   }
-                  this.getDataChartB();
+                  this.reloadAllChart();
                   //this.reloadAllChart();
                   //this.isLoaded = true
                 }
@@ -1003,8 +1301,9 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
 
   objParams:any;
   filterChange(e:any){
+    this.isLoaded = false;
     this.objParams=e[1];
-    this.reportItem &&  this.getDataChartB();
+    this.reportItem &&  this.reloadAllChart();
   }
 
   private groupBy(arr: any, key: any) {

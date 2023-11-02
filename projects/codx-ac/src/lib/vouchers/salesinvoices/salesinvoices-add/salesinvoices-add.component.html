@@ -352,8 +352,8 @@
   <div class="tabline-content scroll-ac header-table-ac position-relative">
     <codx-gridview-v2 #eleGridSalesInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
       [autoFitColumns]="false" [formName]="fmSalesInvoiceLines.formName"
-      [gridViewName]="fmSalesInvoiceLines.gridViewName" [hideMoreFunc]="true" [saveValidator]="saveValidationLine"
-      [entityName]="fmSalesInvoiceLines.entityName" predicates="TransID=@0"
+      [gridViewName]="fmSalesInvoiceLines.gridViewName" [templateMore]="templateMore"
+      [entityName]="fmSalesInvoiceLines.entityName" predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowSaleInvoice($event)"
       (gridInit)="beforeInitGridSalesInvoices($event)" [dataValues]="formSalesInvoice?.data?.recID" service="AC"
       [editOnClick]="true" (eventAction)="onActionGridSalesInvoice($event)" (cellChanged)="valueChangeLine($event)"
       (actionCompleted)="onActionGridSalesInvoice($event)" rowNoField="rowNo"></codx-gridview-v2>
@@ -373,3 +373,8 @@
   </div>
 </ng-template>
 <!-- End: Grid PurchaseInvoicesLines -->
+
+<ng-template #templateMore let-data>
+  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+    type="view"></codx-mfunc>
+</ng-template>

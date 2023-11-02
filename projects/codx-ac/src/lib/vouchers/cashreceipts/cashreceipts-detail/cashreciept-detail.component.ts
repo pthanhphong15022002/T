@@ -158,31 +158,22 @@ export class CashrecieptDetailComponent extends UIComponent {
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
+      case 'ACT040104':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
+      case 'ACT040105':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
+      case 'ACT040103':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
+      case 'ACT040106':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
+      case 'ACT040107':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT042901':
-        this.call();
-        break;
-      case 'ACT041010':
-      case 'ACT042907':
+      case 'ACT040108':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
@@ -216,137 +207,138 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    let arrBookmark = event.filter(
-      // danh sách các morefunction
-      (x: { functionID: string }) =>
-        x.functionID == 'ACT040106' || // MF ghi sổ (PT)
-        x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-        x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
-        x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-        x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
-        x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-        x.functionID == 'ACT040107' || // Mf khôi phục (PT)
-        x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
-        x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-        x.functionID == 'ACT040108' || // Mf in (PT)
-        x.functionID == 'ACT042907' || // Mf in (UNC)
-        x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
-        x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
-    );
-    if (arrBookmark.length > 0) {
-      if (type == 'viewgrid') {
-        arrBookmark.forEach((element) => {
-          element.isbookmark = false;
-        });
-      }
-      switch (data?.status) {
-        case '7':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040103' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042902' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '1':
-          if (this.journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT040106' ||
-                element.functionID == 'ACT040108' ||
-                element.functionID == 'ACT042905' ||
-                element.functionID == 'ACT042907'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == 'ACT040104' ||
-                element.functionID == 'ACT040108' ||
-                element.functionID == 'ACT042903' ||
-                element.functionID == 'ACT042907'
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-          break;
-        case '3':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040105' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042904' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '5':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040106' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042905' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '6':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040107' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042906' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        case '9':
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == 'ACT040106' ||
-              element.functionID == 'ACT040108' ||
-              element.functionID == 'ACT042905' ||
-              element.functionID == 'ACT042907'
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-          break;
-        default:
-          arrBookmark.forEach((element) => {
-            element.disabled = true;
-          });
-          break;
-      }
-    }
-    return;
+    this.acService.changeMFCashReceipt(event,data,type,this.journal,this.formModel);
+    // let arrBookmark = event.filter(
+    //   // danh sách các morefunction
+    //   (x: { functionID: string }) =>
+    //     x.functionID == 'ACT040106' || // MF ghi sổ (PT)
+    //     x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
+    //     x.functionID == 'ACT040104' || // MF gửi duyệt (PT)
+    //     x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
+    //     x.functionID == 'ACT040105' || // MF hủy yêu cầu duyệt (PT)
+    //     x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
+    //     x.functionID == 'ACT040107' || // Mf khôi phục (PT)
+    //     x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
+    //     x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
+    //     x.functionID == 'ACT040108' || // Mf in (PT)
+    //     x.functionID == 'ACT042907' || // Mf in (UNC)
+    //     x.functionID == 'ACT040103' || // MF kiểm tra tính hợp lệ (PT)
+    //     x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
+    // );
+    // if (arrBookmark.length > 0) {
+    //   if (type == 'viewgrid') {
+    //     arrBookmark.forEach((element) => {
+    //       element.isbookmark = false;
+    //     });
+    //   }
+    //   switch (data?.status) {
+    //     case '7':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040103' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042902' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '1':
+    //       if (this.journal.approvalControl == '0') {
+    //         arrBookmark.forEach((element) => {
+    //           if (
+    //             element.functionID == 'ACT040106' ||
+    //             element.functionID == 'ACT040108' ||
+    //             element.functionID == 'ACT042905' ||
+    //             element.functionID == 'ACT042907'
+    //           ) {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       } else {
+    //         arrBookmark.forEach((element) => {
+    //           if (
+    //             element.functionID == 'ACT040104' ||
+    //             element.functionID == 'ACT040108' ||
+    //             element.functionID == 'ACT042903' ||
+    //             element.functionID == 'ACT042907'
+    //           ) {
+    //             element.disabled = false;
+    //           } else {
+    //             element.disabled = true;
+    //           }
+    //         });
+    //       }
+    //       break;
+    //     case '3':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040105' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042904' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '5':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040106' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042905' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '6':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040107' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042906' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     case '9':
+    //       arrBookmark.forEach((element) => {
+    //         if (
+    //           element.functionID == 'ACT040106' ||
+    //           element.functionID == 'ACT040108' ||
+    //           element.functionID == 'ACT042905' ||
+    //           element.functionID == 'ACT042907'
+    //         ) {
+    //           element.disabled = false;
+    //         } else {
+    //           element.disabled = true;
+    //         }
+    //       });
+    //       break;
+    //     default:
+    //       arrBookmark.forEach((element) => {
+    //         element.disabled = true;
+    //       });
+    //       break;
+    //   }
+    // }
+    // return;
   }
   /**
    * *Hàm ẩn hiện các tab khi thay đổi chứng từ theo loại chứng từ
@@ -571,7 +563,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -588,7 +580,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -604,7 +596,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -649,29 +641,10 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
   }
 
   /**
@@ -717,24 +690,24 @@ export class CashrecieptDetailComponent extends UIComponent {
   //#endregion Function
 
   //#region Bankhub
-  call() {
-    jsBh.login('accNet', (o) => this.callback(o));
-  }
+  // call() {
+  //   jsBh.login('accNet', (o) => this.callback(o));
+  // }
 
-  callback(o: any) {
-    if (o) {
-      this.bhLogin = true;
-      localStorage.setItem('bh_tk', o);
-      this.getbank();
-    }
-  }
+  // callback(o: any) {
+  //   if (o) {
+  //     this.bhLogin = true;
+  //     localStorage.setItem('bh_tk', o);
+  //     this.getbank();
+  //   }
+  // }
 
-  getbank() {
-    this.acService
-      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
-      .subscribe((res) => {
-        console.log(res);
-      });
-  }
+  // getbank() {
+  //   this.acService
+  //     .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
+  //     .subscribe((res) => {
+  //       console.log(res);
+  //     });
+  // }
   //endregion Function
 }

@@ -1,0 +1,77 @@
+.avatar-center {
+	place-self: center !important;
+  }
+  
+  .nowrap {
+	white-space: nowrap !important;
+  }
+  
+  :host ::ng-deep codx-lead-detail .codx-detail-body ejs-tab .e-content {
+	overflow: hidden;
+  }
+  :host ::ng-deep codx-lead-detail .codx-detail-body {
+	overflow: hidden;
+  }
+  .color-theme {
+	background: var(--primary-active) !important;
+	border-radius: 10px;
+	padding: 5px;
+	color: white !important;
+  }
+  
+  :host ::ng-deep .codx-detail-main {
+	overflow: hidden;
+  }
+  
+  .view {
+	overflow: hidden;
+  }
+  
+  .left {
+	height: calc(100vh - 70px) !important;
+	overflow-y: scroll !important;
+  }
+  .right {
+	.body-right {
+	  height: calc(100vh - 110px) !important;
+	  overflow-y: auto !important;
+	  overflow-x: hidden;
+	}
+  
+  }
+  .button-close {
+	box-shadow: 0px -1px 5px 3px #e5e5e5 inset;
+	border: none;
+	outline: none;
+	background: none;
+	width: 26px;
+	height: 26px;
+	text-align: center;
+	padding: 4px;
+	margin: 0;
+	border-radius: 3px;
+  }
+  .button-close:hover {
+	box-shadow: 0px -1px 5px 3px #ff4c4c inset;
+  }
+  .show-step:hover {
+	border-radius: 3px;
+	box-shadow: 0px -0px 5px 0px var(--primary) inset;
+	cursor: pointer;
+  }
+  ::-webkit-scrollbar {
+	width: 20px;
+  }
+  ::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px rgb(177, 177, 177); 
+	border-radius: 5px;
+	background: rgb(255, 255, 255); 
+  }
+  
+  ::-webkit-scrollbar-thumb {
+	background: rgb(65, 65, 65); 
+	border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+	cursor: pointer; 
+  }

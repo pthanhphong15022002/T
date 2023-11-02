@@ -205,6 +205,22 @@ export class SalesinvoicesAddComponent extends UIComponent{
   }
 
   /**
+   * *Hàm click các morefunction của CashpaymentLines
+   * @param event
+   * @param data
+   */
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'SYS104':
+        this.copyRow(data);
+        break;
+      case 'SYS102':
+        this.deleteRow(data);
+        break;
+    }
+  }
+
+  /**
    * *Hàm xử lí change subtype
    * @param event 
    */
@@ -265,6 +281,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
       if (res) {
         Object.assign(oLine, res);
+        oLine = this.genFixedDims(oLine);
         this.detectorRef.detectChanges();
         this.eleGridSalesInvoice.endProcess();
       }
@@ -425,6 +442,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     oLine.transID = this.formSalesInvoice.data.recID;
     oLine.idiM4 = this.formSalesInvoice.data.warehouseID;
     oLine.note = this.formSalesInvoice.data.note;
+    oLine = this.genFixedDims(oLine);
     return oLine;
   }
   
@@ -645,25 +663,72 @@ export class SalesinvoicesAddComponent extends UIComponent{
     this.formSalesInvoice.setRequire(lstRequire);
   }
 
+  genFixedDims(line: any) {
+    let fixedDims: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i]) {
+        fixedDims[i] = '1';
+      }
+    }
+    line.fixedDIMs = fixedDims.join('');
+    return line;
+  }
+  
   /**
-   * *Hàm check validate trước khi save line (PurchaseInvoice)
+   * *Hàm check validate trước khi save line
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
-    let lsterror = [];
-    
-    // xử lí trường hợp call api để check validate
-    // let error = await new Promise((resolve, reject) => {
-    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
-    //     'USD'
-    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-    //     if (res) {
-    //       resolve({status: true});
-    //     }
-    //   });
-    //   });
-    return lsterror;
+  beforeSaveRowSaleInvoice(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridSalesInvoice.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      // if (event.rowData.purcPrice == 0 || event.rowData.purcPrice < 0) {
+      //   this.eleGridPurchaseInvoice.showErrorField('purcPrice','E0341');
+      //   event.cancel = true;
+      //   return;
+      // }
+    }
+  }
+
+  /**
+   * *Hàm ẩn các morefunction trong lưới
+   * @param event
+   */
+  changeMF(event) {
+    event.forEach((element) => {
+      if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
+        element.disabled = false;
+        element.isbookmark = false;
+      }else{
+        element.disabled = true;
+      }
+    });
+  }
+
+  /**
+   * *Hàm sao chép dòng trong lưới
+   * @param data
+   */
+  copyRow(data) {
+    if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+      data.recID = Util.uid();
+      data.index = this.eleGridSalesInvoice.dataSource.length;
+      this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+    }
+  }
+
+  /**
+   * *Hàm xóa dòng trong lưới
+   * @param data
+   */
+  deleteRow(data) {
+    if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridSalesInvoice.deleteRow(data);
+    }
   }
   
   @HostListener('click', ['$event']) //? focus out grid

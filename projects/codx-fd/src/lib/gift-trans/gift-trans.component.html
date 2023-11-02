@@ -25,5 +25,9 @@
 </ng-template>
 
 <ng-template #panelRightRef>
-    <fd-detail-gift [objectID]="selectedGiftID" [formModel]="view.formModel"></fd-detail-gift>
+    <fd-detail-gift 
+        [objectID]="selectedGiftID" 
+        [formModel]="view.formModel"
+        (changeStatus)="changeStatus($event)"
+    ></fd-detail-gift>
 </ng-template>

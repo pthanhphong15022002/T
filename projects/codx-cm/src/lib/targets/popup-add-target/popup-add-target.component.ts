@@ -10,6 +10,7 @@ import {
   AuthStore,
   CRUDService,
   CacheService,
+  CallFuncService,
   CodxDropdownCalendarComponent,
   DialogData,
   DialogRef,
@@ -17,7 +18,7 @@ import {
   Util,
 } from 'codx-core';
 import { CM_Targets, CM_TargetsLines } from '../../models/cm_model';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 
@@ -81,6 +82,7 @@ export class PopupAddTargetComponent {
     private authstore: AuthStore,
     private decimalPipe: DecimalPipe,
     private cmSv: CodxCmService,
+    private callFc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -165,7 +167,7 @@ export class PopupAddTargetComponent {
         this.lstTargetLines?.forEach((res) => {
           res.target =
             (res.target / exchangeRate?.exchRate) * this.exchangeRate;
-          res.currencyID =  currencyID;
+          res.currencyID = currencyID;
           res.exchangeRate = exchangeRate.exchRate;
         });
       }
@@ -309,13 +311,11 @@ export class PopupAddTargetComponent {
   valueChangeTarget(e, type) {
     switch (e?.field) {
       case 'target':
-        if (this.data.target !== e.data) {
-          this.data.target = e?.data;
-          this.setTargetOwner();
-          this.setListTargetLine();
-          // this.setQuartersByTargetOrLines('target');
-          // this.getListTimeCalendar(this.text);
-        }
+        this.data.target = e?.data;
+        this.setTargetOwner();
+        this.setListTargetLine();
+        // this.setQuartersByTargetOrLines('target');
+        // this.getListTimeCalendar(this.text);
         break;
       default:
         if (this[e?.field] !== e.data) {
@@ -356,56 +356,139 @@ export class PopupAddTargetComponent {
   //#endregion
 
   //#region TargetLine
-  openPopup() {
-    this.isPopup = !this.isPopup;
+  openPopup(share) {
+    this.callFc.openForm(share, '', 420, 600);
   }
   eventApply(e) {
     var id = '';
-    id = this.data?.salespersonID;
-    if (id != null && id?.trim() != '') {
-      e?.dataSelected?.forEach((user) => {
-        if (!id.split(';').includes(user?.UserID)) {
-          var tmp = {};
-          tmp['recID'] = Util.uid();
-          tmp['userID'] = user?.UserID;
-          tmp['userName'] = user?.UserName;
-          tmp['positionName'] = user?.PositionName;
-          tmp['isExit'] = false;
-          tmp['quarters'] = [];
-          tmp['target'] = 0;
-          tmp['weight'] = 0;
+    let lstUsers = [];
+    let lstUserIDs = '';
+    let lstDepartmentIDs = '';
+    let lstPositionIDs = '';
+    let lstRoleIDs = '';
+    if (!e || e?.length == 0) return;
+    e.forEach((obj) => {
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
+          case '1':
+          case 'U':
+            lstUserIDs =
+              lstUserIDs.trim() != '' ? lstUserIDs + ';' + obj.id : obj.id;
+            break;
+          case 'O':
+          case 'D':
+            lstDepartmentIDs =
+              lstDepartmentIDs.trim() != ''
+                ? lstDepartmentIDs + ';' + obj.id
+                : obj.id;
+            break;
+          case 'P':
+            lstPositionIDs =
+              lstPositionIDs.trim() != ''
+                ? lstPositionIDs + ';' + obj.id
+                : obj.id;
+            break;
+          case 'R':
+            lstRoleIDs =
+              lstRoleIDs.trim() != '' ? lstRoleIDs + ';' + obj.id : obj.id;
+            break;
+        }
+      }
+    });
 
-          id = id + ';' + user?.UserID;
-          this.lstOwners.push(Object.assign({}, tmp));
+    if (lstUserIDs != null && lstUserIDs.trim() != '') {
+      this.setListUsers(lstUserIDs);
+    }
+
+    if (lstDepartmentIDs != null && lstDepartmentIDs.trim() != '') {
+      this.cmSv.getUserByListDepartmentID(lstDepartmentIDs).subscribe((res) => {
+        if (res && res.trim() != '') {
+          this.setListUsers(res);
         }
       });
-      this.setTargetOwner('target');
-    } else {
-      e?.dataSelected?.forEach((user) => {
-        var tmp = {};
-        tmp['recID'] = Util.uid();
-        tmp['userID'] = user?.UserID;
-        tmp['userName'] = user?.UserName;
-        tmp['positionName'] = user?.PositionName;
-        tmp['isExit'] = false;
-        tmp['quarters'] = [];
-        tmp['target'] = 0;
-        tmp['weight'] = 0;
-        id =
-          id != null && id?.trim() != ''
-            ? id + ';' + user?.UserID
-            : user?.UserID;
-        this.lstOwners.push(Object.assign({}, tmp));
-      });
-      this.setTargetOwner('user');
     }
-    this.data.salespersonID = id;
-    this.countClick = 0;
-    // this.setQuarterInOwner();
-    // this.setTargetToLine(1, 4);
-    // this.getListTimeCalendar(this.text);
-    this.setListTargetLine();
+
+    if (lstPositionIDs != null && lstPositionIDs.trim() != '') {
+      this.cmSv
+        .getListUserIDByListPositionsID(lstPositionIDs)
+        .subscribe((res) => {
+          if (res && res[0] && res[0]?.trim() != '') {
+            this.setListUsers(res[0]);
+          }
+        });
+    }
+
+    if (lstRoleIDs != null && lstRoleIDs.trim() != '') {
+      this.cmSv.getListUserByRoleID(lstRoleIDs.split(';')).subscribe((res) => {
+        if (res && res.length > 0) {
+          let lstIDs = res.map((x) => x.userID)?.join(';');
+          this.setListUsers(lstIDs);
+        }
+      });
+    }
+
     this.changedetectorRef.detectChanges();
+  }
+
+  setListUsers(lstIDs) {
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(lstIDs.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          let id = this.data.salespersonID;
+          let lstUsers = res;
+          if (id != null && id?.trim() != '') {
+            lstUsers?.forEach((user) => {
+              if (!id.split(';').includes(user?.userID)) {
+                var tmp = {};
+                tmp['recID'] = Util.uid();
+                tmp['userID'] = user?.userID;
+                tmp['userName'] = user?.userName;
+                tmp['positionName'] = user?.positionName;
+                tmp['isExit'] = false;
+                tmp['quarters'] = [];
+                tmp['target'] = 0;
+                tmp['weight'] = 0;
+
+                id = id + ';' + user?.userID;
+                this.lstOwners.push(Object.assign({}, tmp));
+              }
+            });
+            this.setTargetOwner('target');
+          } else {
+            lstUsers?.forEach((user) => {
+              var tmp = {};
+              tmp['recID'] = Util.uid();
+              tmp['userID'] = user?.userID;
+              tmp['userName'] = user?.userName;
+              tmp['positionName'] = user?.positionName;
+              tmp['isExit'] = false;
+              tmp['quarters'] = [];
+              tmp['target'] = 0;
+              tmp['weight'] = 0;
+              id =
+                id != null && id?.trim() != ''
+                  ? id + ';' + user?.userID
+                  : user?.userID;
+              this.lstOwners.push(Object.assign({}, tmp));
+            });
+            this.setTargetOwner('user');
+          }
+          this.data.salespersonID = id;
+        }
+
+        this.countClick = 0;
+        // this.setQuarterInOwner();
+        // this.setTargetToLine(1, 4);
+        // this.getListTimeCalendar(this.text);
+        this.setListTargetLine();
+      });
   }
 
   setTargetOwner(type = 'target') {
@@ -1068,7 +1151,11 @@ export class PopupAddTargetComponent {
               }
             }
             let id = '';
-            for (var j = 0; j < this.data?.salespersonID?.split(';').length; j++) {
+            for (
+              var j = 0;
+              j < this.data?.salespersonID?.split(';').length;
+              j++
+            ) {
               let salespersonID = this.data?.salespersonID?.split(';')[j];
               if (salespersonID == item?.userID) {
                 this.data?.salespersonID?.split(';').splice(j, 1);

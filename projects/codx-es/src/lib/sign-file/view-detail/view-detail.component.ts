@@ -187,22 +187,22 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
-    if (this.recID) {
-      this.esService.getTask(this.recID).subscribe((res) => {
-        this.taskViews = res;
-        this.df.detectChanges();
-      });
-    }
+    // if (this.recID) {
+    //   this.esService.getTask(this.recID).subscribe((res) => {
+    //     this.taskViews = res;
+    //     this.df.detectChanges();
+    //   });
+    // }
     this.esService
       .getViewDetailSignFile(this.recID, this.funcID)
       .subscribe((res) => {
         this.dataReferences = [];
         if (res) {
           this.itemDetail = res;
-          this.isFristVer = this.itemDetail?.approveStatus =='5'? true :false;
-          if(this.runMode!=1){
+          this.isFristVer = this.itemDetail?.approveStatus =='5'? false :true;
+          if(this.runMode!= '1' && this.data?.unbounds){
             this.itemDetail.unbounds=this.data?.unbounds;
-            this.isFristVer = this.itemDetail?.unbounds?.statusApproval =='5'? true : false;
+            //this.isFristVer = this.itemDetail?.unbounds?.statusApproval =='5'? false : true;
           }
           this.files = [];
           this.df.detectChanges();
@@ -228,27 +228,27 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
             this.transID = this.itemDetail.recID;
           }
 
-          this.esService.getFormModel('EST04').then((res) => {
-            if (res) {
-              let fmApprovalStep = res;
-              let gridModels = new DataRequest();
-              gridModels.dataValue = this.transID;
-              gridModels.predicate = 'TransID=@0';
-              gridModels.funcID = fmApprovalStep.funcID;
-              gridModels.entityName = fmApprovalStep.entityName;
-              gridModels.gridViewName = fmApprovalStep.gridViewName;
-              // gridModels.pageSize = 20;
-              gridModels.pageLoading = false;
+          // this.esService.getFormModel('EST04').then((res) => {
+          //   if (res) {
+          //     let fmApprovalStep = res;
+          //     let gridModels = new DataRequest();
+          //     gridModels.dataValue = this.transID;
+          //     gridModels.predicate = 'TransID=@0';
+          //     gridModels.funcID = fmApprovalStep.funcID;
+          //     gridModels.entityName = fmApprovalStep.entityName;
+          //     gridModels.gridViewName = fmApprovalStep.gridViewName;
+          //     // gridModels.pageSize = 20;
+          //     gridModels.pageLoading = false;
 
-              if (gridModels.dataValue != null) {
-                this.esService.getApprovalSteps(gridModels).subscribe((res) => {
-                  if (res && res?.length >= 0) {
-                    this.lstStep = res;
-                  }
-                });
-              }
-            }
-          });
+          //     if (gridModels.dataValue != null) {
+          //       this.esService.getApprovalSteps(gridModels).subscribe((res) => {
+          //         if (res && res?.length >= 0) {
+          //           this.lstStep = res;
+          //         }
+          //       });
+          //     }
+          //   }
+          // });
           if (this.itemDetail != null) {
             this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
           }

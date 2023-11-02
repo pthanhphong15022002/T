@@ -417,7 +417,9 @@ export class PopupAddCmCustomerComponent implements OnInit {
   async setAddress(name) {
     if (name != null && name != '') {
       var tmp = new BS_AddressBook();
-
+      tmp.objectName = this.getNameCrm(this.data);
+      tmp.objectID = this.data.recID;
+      tmp.objectType = this.dialog?.formModel?.entityName;
       let json = await firstValueFrom(
         this.api.execSv<any>(
           'BS',
@@ -751,7 +753,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           'IsExitCoincideTaxCodeAsync',
           [
             this.data?.recID,
-            this.data?.taxCode,
+            this.data?.taxCode.trim(),
             this.dialog?.formModel?.entityName,
           ]
         )

@@ -31,6 +31,7 @@ import {
   AuthService,
   CRUDService,
   SortModel,
+  ResourceModel,
 } from 'codx-core';
 import { FD_Permissions } from '../models/FD_Permissionn.model';
 import { FED_Card } from '../models/FED_Card.model';
@@ -46,6 +47,7 @@ import { PopupApprovalComponent } from '../approvals/popup-approval/popup-approv
 })
 export class CardsComponent extends UIComponent {
   user = null;
+  grvSetup: any;
   buttonAdd: ButtonModel;
   views: Array<ViewModel> = [];
   itemSelected: any = null;
@@ -60,6 +62,11 @@ export class CardsComponent extends UIComponent {
 
   activeCoins: string;
   activeKudos: string;
+
+  months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+  @ViewChild('templateList') templateList?: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate?: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
 
@@ -86,6 +93,7 @@ export class CardsComponent extends UIComponent {
                 .gridViewSetup(func.formName, func.gridViewName)
                 .subscribe((grd: any) => {
                   if (grd) {
+                    this.grvSetup = grd;
                     this.ratingVLL = grd['Rating']['referedValue'];
                   }
                 });
@@ -101,8 +109,20 @@ export class CardsComponent extends UIComponent {
       id: 'btnAdd',
     };
 
+    // const request: ResourceModel = {
+    //   service: 'FD',
+    //   assemblyName: 'ERM.Business.FD',
+    //   className: 'CardsBusiness',
+    //   method: 'GetListCardByViewListAsync',
+    //   autoLoad: true,
+    //   // parentIDField :'ParentID',
+    //   // idField :'orgUnitID',
+    //   dataObj: '',
+    // };
+
     this.views = [
       {
+        id: '1',
         type: ViewType.listdetail,
         sameData: true,
         active: true,
@@ -111,7 +131,31 @@ export class CardsComponent extends UIComponent {
           panelRightRef: this.panelRightRef,
         },
       },
+      {
+        id: '2',
+        //request: request,
+        type: ViewType.list,
+        sameData: true,
+        // active: true,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplate,
+        },
+      },
     ];
+  }
+
+  viewChanged(e) {
+    if (e.view.type == ViewType.list) {
+      this.view.dataService.method = 'GetListCardByViewListAsync';
+      this.view.dataService.data = [];
+      this.view.dataService.refresh();
+      // this.view.loadData();
+    } else if (e.view.type == ViewType.listdetail) {
+      this.view.dataService.method = 'GetListCardAsync';
+      this.view.dataService.data = [];
+      this.view.dataService.refresh();
+    }
   }
 
   selectedItem(event: any) {

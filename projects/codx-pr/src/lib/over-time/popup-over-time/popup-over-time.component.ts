@@ -120,7 +120,7 @@ export class PopupOverTimeComponent extends UIComponent {
         }
       });
 
-    if (this.funcType == 'edit') {
+    if (this.funcType == 'edit' || this.funcType == 'copy') {
       this.getEmployeeInfoById(this.data.employeeID);
       this.registerForm = this.data.registerForm;
       this.fromTime = this.data.fromTime;
@@ -298,7 +298,7 @@ export class PopupOverTimeComponent extends UIComponent {
   }
 
   beforeSave(option: RequestOption) {
-    if (this.funcType === 'add') {
+    if (this.funcType === 'add' || this.funcType == 'copy') {
       this.data.requestType = 'OT';
       option.methodName = 'AddAsync';
       this.data.registerForm = this.registerForm;
@@ -327,7 +327,11 @@ export class PopupOverTimeComponent extends UIComponent {
         .save((opt: RequestOption) => this.beforeSave(opt), 0, null, null, true)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
-          this.dialogRef && this.dialogRef.close(res.save);
+          if(res?.save){
+            this.dialogRef && this.dialogRef.close(res.save);
+          }else{
+            this.dialogRef && this.dialogRef.close(res.update);
+          }
         });
     }
   }

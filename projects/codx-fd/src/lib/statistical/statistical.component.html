@@ -8,8 +8,19 @@
 ></codx-views>
 
 <ng-template #panelLeft>
-  <div class="container-fluid p-0" *ngIf="isLoaded">
+  <div class="container-fluid p-0" *ngIf="isLoaded && (funcID=='FDD001' || funcID=='FDD002')">
     <ng-container *ngTemplateOutlet="dashboard"> </ng-container>
+  </div>
+  <div class="container-fluid p-0" *ngIf="isLoaded && funcID=='FDD003'">
+    <ng-container *ngTemplateOutlet="dashboardWallet"> </ng-container>
+  </div>
+  <div class="container-fluid p-0" *ngIf="isLoaded && funcID=='FDD004'">
+    <ng-container *ngTemplateOutlet="dashboardKudos"> </ng-container>
+  </div>
+  <div class="container-fluid p-0" *ngIf="!isLoaded">
+    <div class="section"*ngIf="!isLoaded" [ngClass]="!isLoaded ? 'visible':'invisible'" >
+      <span class="loader"></span>
+    </div>
   </div>
 
 </ng-template>
@@ -131,12 +142,22 @@
     [cellSpacing]="[10, 10]"
   ></codx-dashboard>
 </ng-template>
-<ng-template #dashboard2>
+<ng-template #dashboardWallet>
   <codx-dashboard
     #dashboard2
     [templates]="templates2"
     [panels]="panels2"
     [datas]="datas2"
+    [isEditMode]="false"
+    [cellSpacing]="[10, 10]"
+  ></codx-dashboard>
+</ng-template>
+<ng-template #dashboardKudos>
+  <codx-dashboard
+    #dashboard2
+    [templates]="templates3"
+    [panels]="panels3"
+    [datas]="datas3"
     [isEditMode]="false"
     [cellSpacing]="[10, 10]"
   ></codx-dashboard>
@@ -196,13 +217,9 @@
       align="center"
       [tooltip]="tooltip"
       [legendSettings]="{visible:false}"
-      [primaryXAxis]=" {
-        valueType: 'Category',
-        majorGridLines: { width: 0},
-    } "
-      [primaryYAxis]="{
-        majorTickLines: { width: 0 }, lineStyle: { width: 0}, majorGridLines:{width:0}
-    }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
     [palettes]="['#0080ff']"
     [border]="{ width: 0, color: '#FF0000'}"
     >
@@ -431,11 +448,11 @@
 <ng-template #template let-data>
   <div class="container p-0 h-100" id="8">
     <div class="row" style="height:50px">
-      <div class="col-3">
+      <div class="col-6">
 
       </div>
       <div class="col-6 text-center">
-        <div class="d-flex w-100 h-100">
+        <div class="d-flex w-100 h-100 justify-content-end">
           <div class="float-start w-60 d-flex align-items-center">
             <span class="text-dark fw-bold fs-6">% Tỉ lệ số phiếu nhận/tổng số nhân viên</span>
           </div>
@@ -446,7 +463,7 @@
 
 
       </div>
-      <div class="col-3 text-center">
+      <!-- <div class="col-3 text-center">
          <div class="my-1 h-10 d-flex align-items-center">
         <div class="d-flex justify-content-center align-items-center">
           <div
@@ -483,12 +500,91 @@
           </div>
         </div>
       </div>
-      </div>
+      </div> -->
 
     </div>
     <div class="row" style="height:calc( 100% - 50px)">
       <div class="col h-100">
-        <div class="border w-100 h-100">
+        <div class=" w-100 h-100">
+          <table class="table table-hover" id="tableFD">
+            <thead class="bg-light h-40px">
+              <tr class="border">
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tên đơn vị</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tuyên dương</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Lời cảm ơn</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Góp ý thay đổi</div></th>
+                <th scope="col"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Đề xuất cải tiến</div></th>
+                <th scope="col border-0"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-bottom" *ngFor="let data of statByDepts;let i = index">
+
+                <td class="border">
+                  <div class="container p-0 h-50px  d-flex align-items-center">
+                    <div class="fw-bold">{{data.departmentName}}</div>
+                  </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 ">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType1}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType1/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType2/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType3/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                 </div>
+                </td>
+                <td class="border">
+                  <div class="container p-0 h-50px">
+                    <div class="row h-100 d-flex align-items-center">
+                      <div class="col-6 d-flex">
+                        <i class="icon-i-box-arrow-in-right icon-16">&nbsp;&nbsp;</i> <span class="fw-bold">{{data.cardType2}}</span>
+                      </div>
+                      <div class="col-6">
+                        <div [ngClass]="data.cardType4/data.quantity > 1 ? 'text-success':'text-danger'">{{toFixed((data.cardType4/data.quantity)*100)}}%</div>
+                      </div>
+                    </div>
+                 </div>
+                </td>
+                <td class="border w-50px">
+                  <div class="container text-hover-primary " (click)="doubleClick(data)" title="xem chi tiết">
+                    <div class="d-flex  align-items-center " >
+                      <i class="icon-i-box-arrow-up-right icon-20 mt-4 fw-bold" style="font-weight:500"></i>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+<!--
           <codx-gridview-v2 #eleGridCashPayment
           [editSettings]="editSettings" [allowSorting]="false"
           [columnsGrid]="columnGrids"
@@ -498,7 +594,7 @@
           (onEdit)="doubleClick($event)"
           [editOnClick]="true"
           [rowHeight]="50"
-         ></codx-gridview-v2>
+         ></codx-gridview-v2> -->
         </div>
       </div>
 
@@ -529,8 +625,8 @@
 </ng-template>
 <ng-template #template2 let-data>
   <div class="container h-100 p-0" id="1">
-    <div class="w-100 h-100 overflow-scroll">
-      <!-- <div class="my-5 h-10">
+    <div class="w-100 h-100 scroll-hover">
+      <div class="my-5 h-10">
         <div class="d-flex justify-content-center align-items-center">
           <div
             class="btn-group"
@@ -540,83 +636,110 @@
             <input
               type="radio"
               class="btn-check"
-              name="btnradio1"
-              id="btnQuantityRadio"
+              name="btnradio"
+              id="btnCoinsIn"
               autocomplete="off"
               checked
+              #eleAsc
+              (change)="changeDir(eleAsc,'8',{chart1: {pie1,gauge1}, chart2:{pie2,gauge2}})"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
-              for="btnQuantityRadio"
-              default="Số lượng"
-            ></codx-label>
+              for="btnCoinsIn"
+            ><codx-label default="Xu Nhận" [formName]="'sys'" [name]="'lblReceive'"></codx-label></label>
 
             <input
               type="radio"
               class="btn-check"
-              name="btnradio1"
-              id="btnTimeRadio"
+              name="btnradio"
+              id="btnCoinsOut"
               autocomplete="off"
+              #eleDesc
+
+              (change)="changeDir(eleDesc,'8',{chart1: {pie1,gauge1}, chart2:{pie2,gauge2}})"
             />
-            <codx-label
+            <label
               class="btn btn-outline-primary"
-              for="btnTimeRadio"
-              default="Thời gian"
-            ></codx-label>
+              for="btnCoinsOut"
+            ><codx-label default="Xu cho" [formName]="'sys'" [name]="'lblGiveaway'"></codx-label></label>
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="my-4" style="height: 45%">
         <ejs-accumulationchart
           #pie1
+          [id]="'btnCoinsIn'"
+          class="h-100 w-100"
+          style="display: block"
+          [tooltip]="tooltip"
+          [ngClass]="activeTab=='btnCoinsIn' ? '' : 'd-none'"
+          [centerLabel]="{
+            text:
+            sumByProp(coinsIn,'coins') + '<br>Xu Nhận'
+          }"
+          [legendSettings]="{ visible: false }"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              [dataSource]="coinsByTypeIn"
+              xName="transName"
+              yName="coins"
+              startAngle="0"
+              innerRadius="80%"
+              radius="70%"
+              [explode]="true"
+              [explodeOffset]="'10%'"
+              [dataLabel]="dataLabelCoins"
+              [palettes]="palettes"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+
+        <ejs-accumulationchart
+          #pie2
+          [ngClass]="activeTab=='btnCoinsOut' ? '' : 'd-none'"
           class="h-100 w-100"
           style="display: block"
           [tooltip]="tooltip"
 
           [centerLabel]="{
             text:
-            listCardsPerBev.length + '<br>Phiếu'
+            sumByProp(coinsOut,'coins') + '<br>Xu Cho'
           }"
           [legendSettings]="{ visible: false }"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="statByBevs"
-              xName="behaviorID"
-              yName="quantity"
+              [dataSource]="coinsByTypeOut"
+              xName="transName"
+              yName="coins"
               startAngle="0"
               innerRadius="80%"
               radius="70%"
               [explode]="true"
               [explodeOffset]="'10%'"
-              [dataLabel]="dataLabel"
+              [dataLabel]="dataLabelCoins"
               [palettes]="palettes"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
       </div>
-      <div class="h-50 container p-0">
+      <div class="h-45 container p-0" #gauge1 [ngClass]="activeTab=='btnCoinsIn' ? '' : 'd-none'">
         <div
           class="overflow-x-hidden"
           style="max-height: 100%; width: 100%"
         >
           <div
-            *ngFor="let ref of statByBevs"
+            *ngFor="let ref of coinsByTypeIn"
             class="mx-2 my-5"
           >
             <div class="d-flex justify-content-between">
-              <span>{{ ref.behaviorName }} ({{ ref.quantity }})</span>
+              <span>{{ ref.transName }} ({{ ref.coins }})</span>
               <span>
                 {{
-                  ((ref.quantity / listCardsPerBev.length) * 100) %
-                    1 ===
-                  0
-                    ? (ref.quantity / listCardsPerBev.length) * 100
-                    : (
-                        (ref.quantity / listCardsPerBev.length) *
-                        100
-                      ).toFixed(1)
+                  ref.percentage
                 }}%
               </span>
             </div>
@@ -626,7 +749,43 @@
                   class="rounded-4 h-5px"
                   role="progressbar"
                   [style.width]="
-                    (ref.quantity / listCardsPerBev.length) * 100 +
+                    ref.percentage +
+                    '%'
+                  "
+                  [style.background-color]="'#3699ff'"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-45 container p-0" #gauge2 [ngClass]="activeTab=='btnCoinsOut' ? '' : 'd-none'" >
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+        >
+          <div
+            *ngFor="let ref of coinsByTypeOut"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.transName }} ({{ ref.coins }})</span>
+              <span>
+                {{
+                  ref.percentage
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    ref.percentage +
                     '%'
                   "
                   [style.background-color]="'#3699ff'"
@@ -648,20 +807,16 @@
       align="center"
       width="100%"
       height="100%"
-      [id]="newGuid()"
       [tooltip]="{ enable: true }"
-      [primaryXAxis]=" {
-        valueType: 'Category',
-        majorGridLines: { width: 0 },
-    } "
-      [primaryYAxis]="{
-        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
-    }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
     [palettes]="palettes"
+    [legendSettings]=" { visible: true, position: 'Top' }"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="statByDepts"
+          [dataSource]="giftTrans"
           type="Line"
           [xName]="'departmentName'"
           [yName]="'quantity'"
@@ -670,10 +825,10 @@
         >
         </e-series>
         <e-series
-          [dataSource]="statByDepts"
+          [dataSource]="transferCoins"
           type="Column"
           [xName]="'departmentName'"
-          [yName]="'quantity'"
+          [yName]="'coins'"
           name="Xu đổi quà"
           columnSpacing="0.1"
           columnWidth="0.25"
@@ -686,9 +841,9 @@
 <ng-template #template2 let-data>
   <div class="container p-0 h-100" id="3">
     <div class="w-100 h-100">
-      <div class="my-5 h-10">
+      <!-- <div class="my-5 h-10">
         <div class="d-flex justify-content-center align-items-center">
-          <!-- <div
+          <div
             class="btn-group"
             role="group"
             aria-label="Basic radio toggle button group"
@@ -721,18 +876,18 @@
               for="btnHighestRadio"
               default="Cao nhất"
             ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
-          </div> -->
+          </div>
         </div>
-      </div>
-      <div class="container p-0" style="height: 90%" *ngIf="statByEmps.length">
+      </div> -->
+      <div class="container p-0" style="height: 100%" *ngIf="coinsByEmp.length">
         <div
-          class="overflow-scroll overflow-x-hidden"
+          class="overflow-x-hidden scroll-hover"
           style="max-height: 95%; width: 100%"
 
         >
           <div
             class="mx-2 my-4"
-            *ngFor="let data of sortByProp(statByEmps,'quantity','desc',5)"
+            *ngFor="let data of coinsByEmp "
           >
             <div class="row w-100">
               <div class="col-1 d-flex align-items-center">
@@ -749,19 +904,33 @@
                 <div class="w-100 text-start fs-7">
                   <span class="text-muted">{{ data.departmentName}} | {{data.positionName}}</span>
                 </div>
-                <div class="w-100">
-                  <div class="h-15px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                <div class="w-100" *ngIf="data.coinsIn">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
                     <div
-                      class="h-15px rounded-4 float-start "
+                      class="h-10px rounded-4 float-start "
                       role="progressbar"
-                      [style.width]="data.percentage + '%'"
+                      [style.width]="data.percentageIn + '%'"
                       [style.background-color]="'#00cc99'"
+                      title="xu nhận: {{data.coinsIn}}"
                     ></div>
-                    <div class="text-start ms-3 fw-bold fs-7 float-end "  [style.width]="(100-data.percentage) + '%'">
-                      <span>{{data.quantity}}</span>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageIn) + '%'">
+                      <span>{{data.coinsIn}}</span>
                     </div>
                   </div>
-
+                </div>
+                <div class="w-100  py-1" *ngIf="data.coinsOut">
+                  <div class="h-10px w-100 rounded-4 d-flex" style="background-color:#fff ">
+                    <div
+                      class="h-10px rounded-4 float-start "
+                      role="progressbar"
+                      [style.width]="data.percentageOut + '%'"
+                      [style.background-color]="'#1BA3C6'"
+                      title="xu cho: {{data.coinsOut}}"
+                    ></div>
+                    <div class="text-start ms-3 fw-bold fs-8 float-end d-flex align-items-center"  [style.width]="(110-data.percentageOut) + '%'">
+                      <span>{{data.coinsOut}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -818,34 +987,30 @@
       align="center"
       width="100%"
       height="100%"
-      [id]="newGuid()"
       [tooltip]="{ enable: true }"
-      [primaryXAxis]=" {
-        valueType: 'Category',
-        majorGridLines: { width: 0 },
-    } "
-      [primaryYAxis]="{
-        majorTickLines: { width: 0 }, lineStyle: { width: 0 }
-    }"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [chartArea]="chartArea"
     [palettes]="palettes"
+    [legendSettings]=" { visible: true, position: 'Top' }"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="statByDepts"
+          [dataSource]="coinsIn"
           type="Column"
           [xName]="'departmentName'"
-          [yName]="'cardType1'"
-          name="Xu cho"
+          [yName]="'coins'"
+          name="Xu nhận"
           columnSpacing="0.1"
           columnWidth="0.25"
         >
         </e-series>
         <e-series
-          [dataSource]="statByDepts"
+          [dataSource]="coinsOut"
           type="Column"
           [xName]="'departmentName'"
-          [yName]="'quantity'"
-          name="Xu nhận"
+          [yName]="'coins'"
+          name="Xu cho"
           columnSpacing="0.1"
           columnWidth="0.25"
         >
@@ -853,4 +1018,412 @@
       </e-series-collection>
     </ejs-chart>
   </div>
+</ng-template>
+<ng-template #templateKudos let-data>
+ <div class="container p-3 h-100" id="1">
+  <!-- <div class="row h-200px">
+    <div class="col-4">
+      <div class="h-35px w-100"></div>
+      <div class="headshot headshot-3"  #img3>
+        <codx-img
+
+        [objectType]="'AD_Users'"
+        [objectId]="sortByProp(statByEmps,'quantity','desc')[2]?.userID"
+        [cssClass]="'w-100px h-100px rounded'"
+        (dataLoaded)="avaLoaded(img3,$event)"
+      ></codx-img>
+      </div>
+      <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[2]?.userName? sortByProp(statByEmps,'quantity','desc')[2]?.userName : sortByProp(statByEmps,'quantity','desc')[2]?.userID }}</div>
+    </div>
+    <div class="col-4">
+      <div class="headshot headshot-1"  #img1>
+        <codx-img
+        [objectType]="'AD_Users'"
+        [objectId]="sortByProp(statByEmps,'quantity','desc')[0]?.userID"
+        [cssClass]="'w-100 h-100'"
+        (dataLoaded)="avaLoaded(img1,$event)"
+      ></codx-img>
+      </div>
+      <div class="w-100 text-center  fw-bold">{{sortByProp(statByEmps,'quantity','desc')[0]?.userName? sortByProp(statByEmps,'quantity','desc')[0]?.userName : sortByProp(statByEmps,'quantity','desc')[0]?.userID }}</div>
+    </div>
+    <div class="col-4">
+      <div class="h-20px w-100"></div>
+      <div class="headshot headshot-2"  #img2>
+        <codx-img
+        [objectType]="'AD_Users'"
+        [objectId]="sortByProp(statByEmps,'quantity','desc')[1]?.userID"
+        [cssClass]="'w-100 h-100'"
+        (dataLoaded)="avaLoaded(img2,$event)"
+      ></codx-img>
+      </div>
+      <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[1]?.userName? sortByProp(statByEmps,'quantity','desc')[1]?.userName : sortByProp(statByEmps,'quantity','desc')[1]?.userID }}</div>
+    </div>
+  </div> -->
+  <div class="w-100 h-10px">
+    <!-- <div class="btn-group flex-start" role="group" >
+      <input type="radio" class="btn-check" name="btnradio" id="chkAll" autocomplete="off" checked>
+      <label class="btn btn-outline-primary" for="chkAll">Tất cả</label>
+      <div *ngFor="let item of rangeLines">
+        <input type="radio" class="btn-check" name="btnradio" [id]="item.recID" autocomplete="off">
+        <label class="btn btn-outline-primary" [for]="item.recID">{{item.breakName}}</label>
+      </div>
+
+
+
+    </div> -->
+  </div>
+  <div class="row" style="height:calc(100% - 0px)">
+    <div
+    class="w-100 h-100 scroll-hover p-3"
+    style="width: 100%"
+    #paneHighest
+  >
+    <div
+      class="mx-2 my-3"
+      *ngFor="let data of sortByProp(statByEmps,'quantity','desc',20);let idx =index"
+    >
+      <div class="d-flex align-items-center">
+        <div class="fw-bold fs-5 d-flex justify-content-center w-15">
+          <div class="quiz-medal" *ngIf="idx==0">
+            <div class="quiz-medal__circle quiz-medal__circle--gold">
+              <span>
+                1
+              </span>
+            </div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          </div>
+          <div class="quiz-medal" *ngIf="idx==1">
+            <div class="quiz-medal__circle quiz-medal__circle--silver">
+              <span>
+                2
+              </span>
+            </div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          </div>
+          <div class="quiz-medal" *ngIf="idx==2">
+            <div class="quiz-medal__circle quiz-medal__circle--bronze">
+              <span>
+                3
+              </span>
+            </div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          </div>
+          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#ddd'}" *ngIf="idx>2">
+            <div class="rounded-circle h-25px w-25px d-flex align-items-center justify-content-center" style="background-color:#fff">{{idx+1}}</div>
+          </div>
+        </div>
+        <div class="d-flex ms-3 align-items-center" style="width:60%">
+          <codx-img
+            *ngIf="data.userID"
+            [objectType]="'AD_Users'"
+            [objectId]="data.userID"
+          ></codx-img>
+          <div class="ms-2">
+            <div class="text-dark fw-bold">{{ data.username }}</div>
+            <div class="text-muted fs-7">{{data.positionName}}</div>
+            <div class="text-muted fs-7">{{ data.departmentName }}</div>
+          </div>
+        </div>
+        <div class="progress-container">
+            <div class="container text-dark">
+              <div class="rounded-pill h-15px d-flex align-items-center fs-8 p-2" [ngStyle]="{'background-color': data.color ? data.color : '#ddd'}">{{data.rankName}}</div>
+              <div class="text-center fw-bold pt-1">{{data.quantity}}</div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ </div>
+</ng-template>
+<ng-template #templateKudos let-data>
+  <div class="container h-100 p-3" id="2">
+    <div class="w-100 h-100 scroll-hover">
+      <div class="h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnRule"
+              autocomplete="off"
+              #eleRule
+              checked
+              (change)="changeRule(eleRule,{paneRule,paneBev})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnRule"
+
+            >Quy tắc ứng xử</label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio1"
+              id="btnBev"
+              #eleBev
+              autocomplete="off"
+              (change)="changeRule(eleBev,{paneRule,paneBev})"
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnBev"
+              default="Thời gian"
+            >Hành vi ứng xử</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="container p-3" style="height:90%">
+        <div
+          class="overflow-x-hidden"
+          style="max-height: 100%; width: 100%"
+          #paneRule
+          [ngClass]="activePane=='btnRule'? '' : 'd-none' "
+        >
+          <div
+            *ngFor="let ref of statByRule;let idx = index"
+            class="mx-2 my-5"
+          >
+            <div class="d-flex justify-content-between">
+              <span>{{ ref.competenceName }} ({{ ref.quantity }})</span>
+              <span>
+                {{
+                  ((ref.quantity / sumByProp(dataset,'kudos')) * 100) %
+                    1 ===
+                  0
+                    ? (ref.quantity /  sumByProp(dataset,'kudos')) * 100
+                    : (
+                        (ref.quantity /  sumByProp(dataset,'kudos')) *
+                        100
+                      ).toFixed(1)
+                }}%
+              </span>
+            </div>
+            <div class="d-flex align-items-center min-w-200px">
+              <div class="h-5px w-100 bg-gray-200 rounded-4">
+                <div
+                  class="rounded-4 h-5px"
+                  role="progressbar"
+                  [style.width]="
+                    (ref.quantity /  sumByProp(dataset,'kudos')) * 100 +
+                    '%'
+                  "
+                  [style.background-color]="palettes[idx]"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+        class="overflow-x-hidden"
+        style="max-height: 100%; width: 100%"
+        #paneBev
+        [ngClass]="activePane=='btnBev'? '' : 'd-none' "
+      >
+        <div
+          *ngFor="let ref of statByBehavior;let idx = index"
+          class="mx-2 my-5"
+        >
+          <div class="d-flex justify-content-between">
+            <span>{{ ref.competenceName }} ({{ ref.quantity }})</span>
+            <span>
+              {{
+                ((ref.quantity / sumByProp(dataset,'kudos')) * 100) %
+                  1 ===
+                0
+                  ? (ref.quantity /  sumByProp(dataset,'kudos')) * 100
+                  : (
+                      (ref.quantity /  sumByProp(dataset,'kudos')) *
+                      100
+                    ).toFixed(1)
+              }}%
+            </span>
+          </div>
+          <div class="d-flex align-items-center min-w-200px">
+            <div class="h-5px w-100 bg-gray-200 rounded-4">
+              <div
+                class="rounded-4 h-5px"
+                role="progressbar"
+                [style.width]="
+                  (ref.quantity /  sumByProp(dataset,'kudos')) * 100 +
+                  '%'
+                "
+                [style.background-color]="palettes[idx]"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateKudos let-data>
+  <div class="w-100 h-100" id="3">
+    <div class="w-100 h-100">
+      <!-- <div class="my-5 h-10">
+        <div class="d-flex justify-content-center align-items-center">
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic radio toggle button group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnLowestRadio"
+              autocomplete="off"
+
+              #eleAsc
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnLowestRadio"
+            ><codx-label default="Thấp nhất" [formName]="'sys'" [name]="'lblLowest'"></codx-label></label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnHighestRadio"
+              autocomplete="off"
+              #eleDesc
+              checked
+            />
+            <label
+              class="btn btn-outline-primary"
+              for="btnHighestRadio"
+              default="Cao nhất"
+            ><codx-label default="Cao nhất" [formName]="'sys'" [name]="'lblHighest'"></codx-label></label>
+          </div>
+        </div>
+      </div> -->
+      <div class="container p-0" style="height: 100%" >
+        <div
+          class="w-100 h-100 scroll-hover p-3"
+          style="width: 100%"
+          #paneHighest
+        >
+          <div
+            class="mx-2 my-3"
+            *ngFor="let data of sortByProp(statByMinusKudos,'quantity','desc')"
+          >
+            <div class="d-flex justify-content-between">
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-img
+                  *ngIf="data.userID"
+                  [objectType]="'AD_Users'"
+                  [objectId]="data.userID"
+                ></codx-img>
+                <div class="ms-2">
+                  <div class="text-dark fw-bold">{{ data.username }}</div>
+                  <div class="text-muted fs-7">{{data.positionName}} | {{ data.departmentName }}</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                  <div class="d-flex justify-content-center text-dark fw-bold fs-5">
+                    {{data.quantity}}
+                  </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateKudos let-data>
+  <div class="container h-100 p-3" id="4">
+    <div class=" w-100 h-100 scroll-hover">
+      <table class="table table-hover" id="tableFD">
+        <thead class="bg-light h-40px border" style="position: sticky;top: 0">
+          <tr class="border">
+            <th scope="col" style="position:sticky"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tên đơn vị</div></th>
+            <th scope="col" style="position:sticky"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tổng điểm thành tích</div></th>
+            <th scope="col" style="position:sticky"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">Tổng điểm trung bình</div></th>
+            <th scope="col" style="position:sticky" *ngFor="let item of rangeLines;let idx=index"><div class="d-flex justify-content-center align-items-center fw-bold fs-6 h-100">{{item.breakName}}</div></th>
+            <th scope="col border-0" style="position:sticky"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-bottom" *ngFor="let data of statByDepts;let i = index">
+
+            <td class="border">
+              <div class="container p-0 h-50px  d-flex align-items-center">
+                <div class="fw-bold">{{data.departmentName ? data.departmentName : 'Khác' }}</div>
+              </div>
+            </td>
+            <td class="border">
+              <div class="container p-0 h-50px">
+                <div class="row h-100 ">
+                  <div class="col d-flex align-items-center justify-content-center">
+                    <span class="fw-bold">{{data.quantity}}</span>
+                  </div>
+
+                </div>
+              </div>
+            </td>
+            <td class="border">
+              <div class="container p-0 h-50px">
+                <div class="row h-100 ">
+                  <div class="col d-flex align-items-center justify-content-center">
+                    <span class="fw-bold text-success">{{data.avg}}</span>
+                  </div>
+
+                </div>
+              </div>
+
+            </td>
+            <td class="border" *ngFor="let item of rangeLines;let idx=index">
+              <div class="container p-0 h-50px">
+                <div class="row h-100 ">
+                  <div class="col d-flex align-items-center justify-content-center">
+                    <span class="fw-bold">{{data['type'+idx]}}</span>&nbsp;&nbsp; <i class="icon-people icon-16"></i>
+                  </div>
+
+                </div>
+             </div>
+            </td>
+
+            <td class="border w-50px">
+              <div class="container text-hover-primary " (click)="doubleClick2(data)" title="xem chi tiết">
+                <div class="d-flex  d-flex align-items-center justify-content-center " >
+                  <i class="icon-i-box-arrow-up-right icon-20 mt-4 fw-bold" style="font-weight:500"></i>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  <!--
+      <codx-gridview-v2 #eleGridCashPayment
+      [editSettings]="editSettings" [allowSorting]="false"
+      [columnsGrid]="columnGrids"
+      [height]="'100%'"
+      [dataSource]="statByDepts"
+      [hideMoreFunc]="true"
+      (onEdit)="doubleClick($event)"
+      [editOnClick]="true"
+      [rowHeight]="50"
+     ></codx-gridview-v2> -->
+    </div>
+  </div>
+
 </ng-template>

@@ -23,7 +23,7 @@ import {
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
-import { tmpInstancesStepsRoles } from '../../models/tmpModel';
+import { tmpInstances, tmpInstancesStepsRoles } from '../../models/tmpModel';
 import { CM_Permissions } from '../../models/cm_model';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
@@ -47,6 +47,7 @@ export class PopupAssginDealComponent
   employeeName: any;
   gridViewSetup: any;
   applyProcess: boolean = false;
+  isLockStep: boolean = false;
 
   @ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -73,7 +74,7 @@ export class PopupAssginDealComponent
     previous: { effect: "", duration: 0, easing: "" },
     next: { effect: "", duration: 0, easing: "" }
   };
-
+  instance:tmpInstances;
   listUser: any[] = [];
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly viewBUID: string = 'ViewBUID';
@@ -133,7 +134,10 @@ export class PopupAssginDealComponent
     this.codxCmService.getListPermissionOwner(data).subscribe(async (res) => {
       if (res) {
         this.listParticipants = await this.getListPermissionInGroup(res[0]);
-        this.data?.owner && this.assignToProcess(this.data?.owner);
+        if(this.data?.owner){
+          let user = this.listParticipants.filter(x=>x.userID == this.data?.owner)[0];
+          this.employeeName = user?.userName;
+        }
       }
     });
   }
@@ -146,6 +150,7 @@ export class PopupAssginDealComponent
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {
         this.assignToSetting(user);
+        this.searchOwner('1', 'O', '0', objectID,this.employeeName,this.data?.permissions);
       }
       else {
         this.notificationsService.notifyCode('Nhân viên không còn tồn tại');
@@ -219,7 +224,11 @@ export class PopupAssginDealComponent
       this.getInformationUser(this.owner);
 
       //this.searchOwner('1', 'O', '0', this.owner, ownerName);
+    } else if (evt?.data == null || evt?.data == '' || !evt?.data) {
+      this.deleteOwner('1', 'O', '0','owner',this.data);
     }
+
+
   }
 
   searchOwner(
@@ -250,7 +259,7 @@ export class PopupAssginDealComponent
     }
   }
   addOwner(owner, ownerName, roleType, objectType, dataPermission) {
-    var permission = new CM_Permissions();
+    let permission = new CM_Permissions();
     permission.objectID = owner;
     permission.objectName = ownerName;
     permission.objectType = objectType;
@@ -266,35 +275,63 @@ export class PopupAssginDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
-
+    dataPermission = !dataPermission ? [] : dataPermission;
     dataPermission.push(permission);
   }
 
-  cbxEmpChange(evt: any) {
-    if (evt?.data && !this.applyProcess) {
-      this.objectID = evt.data;
-      this.owner = evt?.data;
-      this.data.owner = this.owner;
+  cbxEmpChange($event: any) {
+    // if (evt?.data && !this.applyProcess) {
+    //   this.objectID = evt.data;
+    //   this.owner = evt?.data;
+    //   this.data.owner = this.owner;
+    //     this.codxCmService
+    //       .getEmployeesByDomainID(this.objectID)
+    //       .subscribe((user) => {
+    //         if (user) {
+    //           this.assignToSetting(user);
+    //         }
+    //       });
 
-        this.codxCmService
-          .getEmployeesByDomainID(this.objectID)
-          .subscribe((user) => {
-            if (user) {
-              this.assignToSetting(user);
-            }
-          });
+    //   this.detectorRef.detectChanges();
+    // } else if(evt && this.applyProcess) {
+    //   this.owner = evt;
+    //   this.assignToProcess(this.owner);
+    // }
 
-      this.detectorRef.detectChanges();
-    } else if(evt && this.applyProcess) {
-      this.owner = evt;
-      this.assignToProcess(this.owner);
+    if ($event) {
+      this.owner = $event;
+
+      let ownerName = '';
+      if (this.listParticipants.length > 0 && this.listParticipants) {
+        ownerName = this.listParticipants.filter(
+          (x) => x.userID === this.owner
+        )[0]?.userName;
+
+        this.employeeName = ownerName;
+      }
+      this.searchOwner('1', 'O', '0', this.owner, ownerName,this.data?.permissions);
+    }
+    else if ($event == null || $event == '') {
+      this.deleteOwner('1', 'O', '0','owner',this.data);
     }
   }
-  assignToProcess(owner: any) {
-    let user = this.listParticipants.filter(x=>x.userID == owner)[0];
-    this.employeeName = user?.userName;
-    this.searchOwner('1', 'O', '0', owner, this.employeeName,this.data?.permissions);
+  deleteOwner( objectType: any,roleType: any, memberType: any,field:any, data:any) {
+    if(data?.permissions && data?.permissions.length > 0) {
+      let index = data?.permissions.findIndex(
+        (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.allowUpdateStatus =="1" );
+      if(index != -1) {
+        if(field === 'owner' ){
+          data.owner = null;
+          this.owner= null;
+          if(this.applyFor == "1") {
+            data.salespersonID = null;
+          }
+        }
+        data.permissions.splice(index, 1);
+      }
+    }
   }
+
   assignToSetting(user: any) {
     this.employeeName = user?.employeeName;
     // this.orgUnitName = user?.orgUnitName;
@@ -322,18 +359,21 @@ export class PopupAssginDealComponent
   }
 
   onSaveForm() {
-    if (!this.owner?.trim() && !this.owner && this.applyFor == '1') {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
-      );
-      return;
-    }
+    // if (!this.owner?.trim() && !this.owner && this.applyFor == '1') {
+    //   this.notificationsService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['Owner']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+    if(this.isLockStep) return;
     this.saveOwner();
   }
 
-  saveOwner() {
+
+  async saveOwner() {
+    this.isLockStep = true;
     if(this.applyFor == '0') {
       let datas = [this.recID, this.owner];
       this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
@@ -342,22 +382,70 @@ export class PopupAssginDealComponent
         }
       });
     }
-    let datas = [this.recID, this.owner, this.startControl, this.buid];
-    if (this.applyFor == '1') {
-      this.data.owner = this.owner;
-      let datas = [this.data, this.startControl];
-      this.codxCmService.updateOwnerDeal(datas).subscribe((res) => {
-        if (res) {
-          this.dialogRef.close(res);
-        }
-      });
-    } else if (this.applyFor == '5') {
-      this.codxCmService.updateOwnerLead(datas).subscribe((res) => {
-        if (res) {
-          this.dialogRef.close(res);
-        }
-      });
+    else {
+      if(this.applyProcess) {
+        let obj = new tmpInstances();
+        obj.recID = this.data?.refID;
+        obj.owner = this.owner;
+        let instance = await firstValueFrom(
+          this.codxCmService.editInstance([obj])
+        );
+        this.data.owner = instance.owner;
+        this.data.status = instance.status;
+        this.data.permissions = this.data.permissions.filter(x=>x.memberType != '2');
+        this.addPermission(instance?.permissions,this.data);
+      }
+      else {
+        this.data.owner = this.owner;
+      }
+
+      if (this.applyFor == '1') {
+        this.codxCmService.editDeal([this.data]).subscribe((res) => {
+          if (res) {
+            this.dialogRef.close(res);
+          }
+        });
+      }
+      else if (this.applyFor == '5') {
+        this.codxCmService.editLead([this.data]).subscribe((res) => {
+          if (res) {
+            this.dialogRef.close(res);
+          }
+        });
+      }
+
     }
+
+  }
+  addPermission(permissionDP,data) {
+    if (permissionDP && permissionDP?.length > 0 ) {
+      data.permissions = data?.permissions ? data.permissions : [];
+      for (let item of permissionDP) {
+        data.permissions.push(this.copyPermission(item));
+      }
+    }
+  }
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.isActive = permissionDP.isActive;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
+    return permission;
   }
   disableViewTab(actionType: any) {
     return true;

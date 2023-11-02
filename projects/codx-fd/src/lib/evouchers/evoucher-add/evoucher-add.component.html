@@ -1,0 +1,45 @@
+<codx-form
+    [headerText]="'Đăng ký thương hiệu'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-wrap">
+        <ng-container *ngFor="let item of data">
+            <div class="d-flex align-items-center me-4 mt-2">
+                <codx-input type="checkbox" [checked]="true" (valueChange)="changeValue($event,item?.recID)"></codx-input>
+                <codx-card-img
+                    [imageSrc]="item?.image"
+                    cardCss="border card-img-mwp img-storage w-225px h-222px ms-4" 
+                    [title]="item?.categoryName"
+                    [titleLine]="'1 w-200px'"
+                    [contentCss]="'mt-2'" 
+                    imgCss="h-150px w-100 border-bottom mb-2"
+                    [footer]="tmpFooter"
+                >
+                </codx-card-img>
+            </div>
+         
+            <ng-template #tmpFooter>
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-e-voucher-img" [style.background-image]="'url(' + item?.brandLogo + ')'"></div>
+                        <div class="ms-2 text-gray-600 text-truncate" [title]="item?.brandNm">{{item?.brandNm}}</div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
+          <codx-label
+            name="lblSave"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+</ng-template>

@@ -145,10 +145,10 @@
               | formatvalue : view.formModel : 'companyID'
               | async
           "
-        ></span> -->
+        ></span> -->  
 
         <div class="text-gray-700">
-          <span *ngIf="data.departmentID">
+          <span *ngIf="data.departmentID && data.departmentID != data.orgUnitID">
             {{data.departmentName? data.departmentName :data.departmentID}}</span>
           <span *ngIf="data.divisionID">
             <span class="text-gray-400 mx-1">|</span>

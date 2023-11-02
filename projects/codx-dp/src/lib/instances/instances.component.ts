@@ -598,7 +598,6 @@ export class InstancesComponent
           .gridViewSetup(fun.formName, fun.gridViewName)
           .subscribe((grvSt) => {
             if (res) {
-
               var formMD = new FormModel();
               formMD.funcID = funcIDApplyFor;
               formMD.entityName = fun.entityName;
@@ -647,11 +646,11 @@ export class InstancesComponent
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
     };
-    this.detailViewInstance
+    this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
           // this.kanban.updateCard(data);  //core mới lỗi chô này
@@ -660,13 +659,13 @@ export class InstancesComponent
           }
         }
         if (this.detailViewInstance) {
-          this.detailViewInstance.dataSelect = this.dataSelected
-          this.detailViewInstance.getStageByStep()
+          this.detailViewInstance.dataSelect = this.dataSelected;
+          this.detailViewInstance.getStageByStep();
         }
 
         if (this.detailViewPopup) {
           this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.loadChangeData()
+          this.detailViewPopup.loadChangeData();
         }
         this.detectorRef.detectChanges();
       }
@@ -695,12 +694,12 @@ export class InstancesComponent
     let dialogEditInstance = await this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.dataSelected  = JSON.parse(JSON.stringify(e.event));
+        this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view.dataService.update(e.event).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }else  this.kanban.updateCard(this.dataSelected);
+          } else this.kanban.updateCard(this.dataSelected);
         }
 
         if (this.detailViewInstance) {
@@ -710,7 +709,7 @@ export class InstancesComponent
 
         if (this.detailViewPopup) {
           this.detailViewPopup.dataSelect = this.dataSelected;
-          this.detailViewPopup.loadChangeData()
+          this.detailViewPopup.loadChangeData();
         }
 
         this.detectorRef.detectChanges();
@@ -893,7 +892,7 @@ export class InstancesComponent
                   !isUpdate ||
                   data.status != '2' ||
                   data.closed ||
-                  !data.permissionCloseInstances
+                  !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
@@ -916,7 +915,7 @@ export class InstancesComponent
                   !isDelete ||
                   data.closed ||
                   data.status != '2' ||
-                  !data.permissionCloseInstances
+                  !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
@@ -941,9 +940,9 @@ export class InstancesComponent
                   res.disabled = true;
                 }
                 break;
-              //an khi aprover rule
+              //an khi aprover rule || data.approveStatus == '5' xoa di
               case 'DP17':
-                if (!data.write || data.closed || data.approveStatus == '5') {
+                if (!data.write || data.closed) {
                   res.disabled = true;
                 } else if (!this.process?.approveRule) {
                   res.isblur = true;
@@ -978,7 +977,7 @@ export class InstancesComponent
               //edit
               case 'SYS03':
                 let isUpdate = data.write;
-                if (!isUpdate || data.closed || !data.permissionCloseInstances)
+                if (!isUpdate || data.closed || !data.permissionMoveInstances)
                   mf.disabled = true;
                 break;
               //Copy
@@ -988,7 +987,7 @@ export class InstancesComponent
               //xóa
               case 'SYS02':
                 let isDelete = data.delete;
-                if (!isDelete || data.closed || !data.permissionCloseInstances)
+                if (!isDelete || data.closed || !data.permissionMoveInstances)
                   mf.disabled = true;
                 break;
               case 'DP09':
@@ -1693,7 +1692,7 @@ export class InstancesComponent
               if (this.detailViewPopup) {
                 this.detailViewPopup.dataSelect = this.dataSelected;
                 this.detailViewPopup.listSteps = this.listStepInstances;
-                this.detailViewPopup.loadChangeData()
+                this.detailViewPopup.loadChangeData();
               }
 
               this.detectorRef.detectChanges();
@@ -1831,14 +1830,12 @@ export class InstancesComponent
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
-      // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
-      //   e.event?.ownerMove,
-      //   e.event?.instance,
-      //   'testttt'
-      //   );
-
-       }
-
+        // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
+        //   e.event?.ownerMove,
+        //   e.event?.instance,
+        //   'testttt'
+        //   );
+      }
     });
   }
 
@@ -2456,6 +2453,13 @@ export class InstancesComponent
       this.dataSelected.approveStatus = '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      // if (this.detailViewInstance) {
+      //   this.detailViewInstance.getViewApprove();
+      // }
+      // if (this.detailViewPopup) {
+      //   this.detailViewPopup.getViewApprove();
+      // }
+
       //da cap nhat tai BE
       // this.codxDpService
       //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
@@ -2594,10 +2598,10 @@ export class InstancesComponent
       return this.callfc.openSide(PopupAddDealComponent, obj, option);
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
-    }else if (applyFor == '4') {
+    } else if (applyFor == '4') {
       option.isFull = true;
       option.FormModel = obj?.formMD;
-      obj = {...obj, type: 'DP', contractRefID: this.oldIdInstance}
+      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
@@ -2665,82 +2669,82 @@ export class InstancesComponent
     }
   }
 
-  addMoveProcess(processMove,applyForMove,ownerMove,instance,titleAction) {
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          const funcIDApplyFor = this.checkFunctionID(applyForMove);
-          const applyFor = applyForMove;
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-            if (this.addFieldsControl == '2') {
-              let customName = fun.customName || fun.description;
-              if (this.autoName) customName = this.autoName;
-              titleAction =
-                titleAction +
-                ' ' +
-                customName.charAt(0).toLocaleLowerCase() +
-                customName.slice(1);
-            }
-            let instanceReason = {
-              applyForMove: applyForMove,
-              processMove:processMove,
-              ownerMove:ownerMove,
-              instance:instance
-            };
-            this.cache
-              .gridViewSetup(fun.formName, fun.gridViewName)
-              .subscribe((grvSt) => {
-                var formMD = new FormModel();
-                formMD.funcID = funcIDApplyFor;
-                formMD.entityName = fun.entityName;
-                formMD.formName = fun.formName;
-                formMD.gridViewName = fun.gridViewName;
-                option.Width =
-                  this.addFieldsControl == '1' || applyFor != '0'
-                    ? '800px'
-                    : '550px';
-                option.zIndex = 1001;
-                if (applyFor != '0') {
-                  this.openPopupMove(
-                    applyFor,
-                    formMD,
-                    option,
-                    'add',
-                    instanceReason
-                  );
-                }
-              });
-          });
-        });
-    }
-    openPopupMove(applyFor,formMD,option,action,instanceReason) {
-        var obj = {
-          action: action === 'add' ? 'add' : 'copy',
-          applyFor: applyFor,
-          titleAction: this.titleAction,
-          formMD: formMD,
-          endDate: this.HandleEndDate(this.listStepsCbx, action, null),
-          lstParticipants: this.lstOrg,
-          oldIdInstance: this.oldIdInstance,
-          autoName: this.autoName,
-          isAdminRoles: this.isAdminRoles,
-          addFieldsControl: this.addFieldsControl,
-          isLoad: applyFor != '0',
-          processID: this.processID,
-          instanceNoSetting: this.process.instanceNoSetting,
-          dataCM: this.dataCM,
-          categoryCustomer: this.categoryCustomer,
-          instanceReason:instanceReason
-        };
-        this.detailViewInstance
-        let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
-        dialogCustomField.closed.subscribe((e) => {
-          if (e && e.event != null) {
-            this.detectorRef.detectChanges();
+  addMoveProcess(processMove, applyForMove, ownerMove, instance, titleAction) {
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        const funcIDApplyFor = this.checkFunctionID(applyForMove);
+        const applyFor = applyForMove;
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+          if (this.addFieldsControl == '2') {
+            let customName = fun.customName || fun.description;
+            if (this.autoName) customName = this.autoName;
+            titleAction =
+              titleAction +
+              ' ' +
+              customName.charAt(0).toLocaleLowerCase() +
+              customName.slice(1);
           }
+          let instanceReason = {
+            applyForMove: applyForMove,
+            processMove: processMove,
+            ownerMove: ownerMove,
+            instance: instance,
+          };
+          this.cache
+            .gridViewSetup(fun.formName, fun.gridViewName)
+            .subscribe((grvSt) => {
+              var formMD = new FormModel();
+              formMD.funcID = funcIDApplyFor;
+              formMD.entityName = fun.entityName;
+              formMD.formName = fun.formName;
+              formMD.gridViewName = fun.gridViewName;
+              option.Width =
+                this.addFieldsControl == '1' || applyFor != '0'
+                  ? '800px'
+                  : '550px';
+              option.zIndex = 1001;
+              if (applyFor != '0') {
+                this.openPopupMove(
+                  applyFor,
+                  formMD,
+                  option,
+                  'add',
+                  instanceReason
+                );
+              }
+            });
         });
+      });
+  }
+  openPopupMove(applyFor, formMD, option, action, instanceReason) {
+    var obj = {
+      action: action === 'add' ? 'add' : 'copy',
+      applyFor: applyFor,
+      titleAction: this.titleAction,
+      formMD: formMD,
+      endDate: this.HandleEndDate(this.listStepsCbx, action, null),
+      lstParticipants: this.lstOrg,
+      oldIdInstance: this.oldIdInstance,
+      autoName: this.autoName,
+      isAdminRoles: this.isAdminRoles,
+      addFieldsControl: this.addFieldsControl,
+      isLoad: applyFor != '0',
+      processID: this.processID,
+      instanceNoSetting: this.process.instanceNoSetting,
+      dataCM: this.dataCM,
+      categoryCustomer: this.categoryCustomer,
+      instanceReason: instanceReason,
+    };
+    this.detailViewInstance;
+    let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
+    dialogCustomField.closed.subscribe((e) => {
+      if (e && e.event != null) {
+        this.detectorRef.detectChanges();
       }
+    });
+  }
 }

@@ -1,8 +1,10 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Inject, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthService, ButtonModel, CRUDService, NotificationsService, RequestModel, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ApiHttpService, AuthService, ButtonModel, CRUDService, DialogRef, NotificationsService, RequestModel, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { mode } from 'crypto-js';
 import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component';
+import { PopupSendGiftComponent } from './popup-send-gift/popup-send-gift.component';
+import { CodxFdService } from '../codx-fd.service';
 
 @Component({
     selector: 'lib-gift-trans',
@@ -19,9 +21,10 @@ export class GiftTransComponent extends UIComponent {
     predicate: string = "";
     dataValue: string = "";
     entityName: string = "FD_GiftTrans";
-    //
+    dialogConfirmStatus!: DialogRef;
     listGiftTran: any[] = [];
     selectedGiftID: string = "";
+    dataSelected: any;
     @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
     @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
     @ViewChild("panelLefRef") panelLefRef: TemplateRef<any>;
@@ -32,7 +35,8 @@ export class GiftTransComponent extends UIComponent {
         private auth: AuthService,
         private notifiSV: NotificationsService,
         private route: ActivatedRoute,
-        private dt: ChangeDetectorRef
+        private dt: ChangeDetectorRef,
+        private serviceFD: CodxFdService
     ) {
         super(injector);
     }
@@ -60,7 +64,47 @@ export class GiftTransComponent extends UIComponent {
     }
 
     clickMF(event: any, data: any) {
+        console.log('clickMF:', event, data);
+        switch (event.functionID) {
+            case "FDT0911": // giao quà
+                this.sendGift(data);
+                break;
+        }
     }
+
+    sendGift(item: any) {
+        var data = {
+            moreFunc: {
+                formName: "GiftTrans",
+                gridViewName: "grvGiftTrans",
+            },
+            fieldDefault: "GiftTrans",
+            valueDefault: "2"
+        };
+        this.dialogConfirmStatus = this.callfc.openForm(
+            PopupSendGiftComponent,
+            '',
+            500,
+            350,
+            '',
+            data
+        );
+        this.dialogConfirmStatus.closed.subscribe((e) => {
+            if (e && e.event == "oke") {
+                this.serviceFD.sendGift(
+                    item.recID,
+                    "2",
+                    e.event,
+                    this.funcID
+                ).subscribe((res: any) => {
+                if(res){
+                    item.status = "2";
+                    this.view.dataService.update(item).subscribe();
+                }
+                });
+            }
+        });
+      }
 
 
     clickShowAssideRight() {
@@ -72,7 +116,13 @@ export class GiftTransComponent extends UIComponent {
     }
     selectedChange(event: any) {
         if (!event || !event.data) return;
+        this.dataSelected = event.data;
         this.selectedGiftID = event.data.recID;
         this.dt.detectChanges();
+    }
+
+    changeStatus(event: string) {
+        this.dataSelected.status = event;
+        this.view.dataService.update(this.dataSelected).subscribe();
     }
 }

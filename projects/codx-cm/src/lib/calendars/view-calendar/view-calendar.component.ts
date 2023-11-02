@@ -194,7 +194,7 @@ export class ViewCalendarComponent
       });
   }
   //#region view
-  viewTask(data) {
+  viewTask(data,customerName = '',dealName ='',contractName='',leadName='') {
     if (data) {
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -217,10 +217,10 @@ export class ViewCalendarComponent
         isActivitie: true,
         // sessionID: this.sessionID, // session giao việc
         // formModelAssign: this.formModelAssign, // formModel của giao việc
-        // customerName: this.customerName,
-        // dealName: this.dealName,
-        // contractName: this.contractName,
-        // leadName: this.leadName,
+        customerName,
+        dealName,
+        contractName,
+        leadName,
       };
       let option = new SidebarModel();
       option.Width = '550px';
@@ -405,12 +405,39 @@ export class ViewCalendarComponent
   //------------------More Func-----------------//
 
   onAction(e) {
-    console.log(e);
     if (e?.type == 'doubleClick' && e?.data) {
-      this.viewTask(e?.data);
+      this.getParentTask(e?.data);
     }
     if (e?.type == 'fav' && e?.data) {
       this.beforeAddTask(e?.data);
+    }
+  }
+
+  getParentTask(task){
+    if(task){
+      let recID = task?.recID;
+      let taskGroupID = task?.taskGroupID;
+      let stepID = task?.stepID;
+      let instanceID = task?.instanceID;
+      let objectID = task?.objectID;
+      let objectType = task?.objectType;
+      this.api.exec<any>(
+        'DP',
+        'ActivitiesBusiness',
+        'GetParentOfTaskAsync',
+        [recID, taskGroupID, stepID, instanceID , objectID, objectType]
+      ).subscribe((res) => {
+        if(res){
+          let customerName =  res?.customerName;
+          let dealName =  res?.applyFor == '1' ? res?.parentTaskName : '';
+          let contractName = res?.applyFor == '4' ? res?.parentTaskName : '';
+          let leadName = res?.applyFor == '5' ? res?.parentTaskName : '';
+          this.viewTask(task,customerName,dealName,contractName,leadName);
+        }else{
+          this.viewTask(task);
+        }
+        
+      })
     }
   }
 
@@ -475,7 +502,7 @@ export class ViewCalendarComponent
     this.isActivitie = taskOutput?.isActivitie;
     if (task && action == 'add') {
       this.isActivitie && this.addActivitie(task);
-      this.isStepTask && this.addStepTask(task);
+      !this.isActivitie && this.addStepTask(task);
     }
     return task;
   }
@@ -483,8 +510,6 @@ export class ViewCalendarComponent
     task['progress'] = 0;
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
-    task['objectID'] = this.objectID;
-    task['objectType'] = this.entityName;
     this.api
       .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
         task,

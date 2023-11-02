@@ -236,6 +236,7 @@ export class DP_Steps_Tasks {
   createTask: boolean;
   createTaskControl: string;
   stop: boolean;
+  approveRule: boolean;
   attachments: number;
   callType: string;
   isOnline: boolean;
