@@ -409,6 +409,16 @@ export class CodxTMService {
     );
   }
 
+  getDataDetailsDashboard(model: Object) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetDataDetailsDashboardAsync',
+      [model]
+    );
+  }
+
   getTeamDBData(model: Object) {
     return this.api.execSv(
       'TM',

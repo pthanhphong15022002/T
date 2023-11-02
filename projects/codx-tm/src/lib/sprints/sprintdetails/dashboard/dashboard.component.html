@@ -1,4 +1,4 @@
-<div class="page-content d-flex flex-row h-100 border-top">
+<div class="page-content d-flex flex-row h-100 border-top" *ngIf="loaded">
   <div class="w-100 scroll-y h-100 pe-5">
     <div class="d-flex mb-3 mt-5">
       <div
@@ -17,23 +17,24 @@
             <div class="text-dark fw-bold">
               <codx-label
                 name="lblOverdueTask"
+                formName="'sys'"
                 default="Đã quá hạn"
               ></codx-label>
             </div>
           </div>
         </div>
         <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-          {{ data?.status.overdueTasks }}
+          {{ statistical?.overdueTasks || 0 }}
         </div>
       </div>
       <div
         class="d-flex justify-content-between p-5 me-3"
-        style="background-color: #e3e7ec"
+        [ngStyle]="{ 'background-color': getColors('00', 'color') }"
       >
         <div class="d-flex justify-content-between">
           <div
             class="icon-28 icon-access_time me-2"
-            style="color: rgb(176, 188, 201)"
+            [ngStyle]="{ color: getColors('00', 'textColor') }"
           ></div>
           <div>
             <div class="text-gray-600">
@@ -42,23 +43,24 @@
             <div class="text-dark fw-bold">
               <codx-label
                 name="lblNewTask"
+                formName="'sys'"
                 default="Chưa thực hiện"
               ></codx-label>
             </div>
           </div>
         </div>
         <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-          {{ data?.status.newTasks || 0 }}
+          {{ statistical?.newTasks || 0 }}
         </div>
       </div>
       <div
         class="d-flex justify-content-between p-5 me-3"
-        style="background-color: #5578da"
+        [ngStyle]="{ 'background-color': getColors('20', 'color') }"
       >
         <div class="d-flex justify-content-between">
           <div
             class="icon-28 icon-access_time me-2"
-            style="color: rgb(26, 23, 177)"
+            [ngStyle]="{ color: getColors('20', 'textColor') }"
           ></div>
           <div>
             <div class="text-gray-600">
@@ -67,23 +69,24 @@
             <div class="text-dark fw-bold">
               <codx-label
                 name="lblProcessingTask"
+                formName="'sys'"
                 default="Đang thực hiện"
               ></codx-label>
             </div>
           </div>
         </div>
         <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-          {{ data?.status.processingTasks || 0 }}
+          {{ statistical?.processingTasks || 0 }}
         </div>
       </div>
       <div
         class="d-flex justify-content-between p-5 me-3"
-        style="background-color: #7be79c"
+        [ngStyle]="{ 'background-color': getColors('90', 'color') }"
       >
         <div class="d-flex justify-content-between">
           <div
             class="icon-28 icon-access_time me-2"
-            style="color: rgb(18, 122, 58)"
+            [ngStyle]="{ color: getColors('90', 'textColor') }"
           ></div>
           <div>
             <div class="text-gray-600">
@@ -92,23 +95,24 @@
             <div class="text-dark fw-bold">
               <codx-label
                 name="lblCompletedTask"
+                formName="'sys'"
                 default="Hoàn tất"
               ></codx-label>
             </div>
           </div>
         </div>
         <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-          {{ data?.status.overdueTasks || 0 }}
+          {{ statistical?.completed || 0 }}
         </div>
       </div>
       <div
         class="d-flex justify-content-between p-5 me-3"
-        style="background-color: #fff8e6"
+        [ngStyle]="{ 'background-color': getColors('50', 'color') }"
       >
         <div class="d-flex justify-content-between">
           <div
             class="icon-28 icon-access_time me-2"
-            style="color: rgb(255, 128, 8)"
+            [ngStyle]="{ color: getColors('50', 'textColor') }"
           ></div>
           <div>
             <div class="text-gray-600">
@@ -117,18 +121,25 @@
             <div class="text-dark fw-bold">
               <codx-label
                 name="lblPostponeTask"
+                formName="'sys'"
                 default="Hoãn lại"
               ></codx-label>
             </div>
           </div>
         </div>
         <div class="text-gray-900 fw-bolder fs-2 mt-1 me-2">
-          {{ data?.status.canceledTasks || 0 }}
+          {{ statistical?.canceledTasks || 0 }}
         </div>
       </div>
     </div>
     <div class="row m-0 bg-body rounded-2 mb-3">
-      <div class="fs-4 fw-bold mt-4">Thống kê theo nhóm công việc</div>
+      <div class="fs-4 fw-bold mt-4">
+        <codx-label
+          name="lblDashBoardTGs"
+          formName="'sys'"
+          default="Thống kê theo nhóm công việc"
+        ></codx-label>
+      </div>
       <!-- ti lệ -->
       <div class="col-4">
         <ejs-accumulationchart
@@ -136,28 +147,34 @@
           width="100%"
           height="250"
           [legendSettings]="{ visible: false }"
+          [centerLabel]="centerLabel"
           [tooltip]="{
-            enable: true
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
           }"
+          (pointRender)="formatCrrView($event)"
         >
           <e-accumulation-series-collection>
             <e-accumulation-series
-              [dataSource]="tasksByGroup ? tasksByGroup : {}"
-              xName="taskGroupName"
-              yName="percentage"
+              [dataSource]="lstTaskByTGroups"
+              xName="x"
+              yName="y"
+              [startAngle]="0"
+              [endAngle]="360"
               innerRadius="82%"
             >
             </e-accumulation-series>
           </e-accumulation-series-collection>
         </ejs-accumulationchart>
-        <div class="d-flex flex-column" *ngFor="let item of vltasksByGroup">
+        <div class="d-flex flex-column" *ngFor="let item of lstTaskByTGroups">
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center justify-content-end">
               <span class="me-3">{{ item?.taskGroupName }}</span>
             </div>
             <div class="d-flex align-items-center mb-5">
               <span class="fw-bold w-75px me-3 text-end">{{
-                item?.qtyTasks
+                item?.countTasks
               }}</span>
               <div class="progress w-100">
                 <div
@@ -462,103 +479,113 @@
 <!-- Khối lượng công việc -->
 <ng-template #volumeWork>
   <div class="pe-3 pt-3">
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-icon btn-light" style="z-index: 99" (click)="sort()">
-      <div *ngIf="isDesc; then Desc; else Asc"></div>
-      <ng-template #Desc
-        ><span class="text-right icon-sort_Z-A"></span
-      ></ng-template>
-      <ng-template #Asc>
-        <span class="text-right icon-sort_A-Z"></span>
-      </ng-template>
-    </button>
-  </div>
-  <div class="mt-3">
-    <div class="d-flex flex-column" *ngFor="let item of vlWork">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-end">
-          <span class="me-3">{{ item?.employeeName }}</span>
-          <codx-img
-            [width]="25"
-            [objectId]="item?.id"
-            [objectName]="item?.id"
-            [objectType]="'AD_Users'"
-          ></codx-img>
-        </div>
-        <div class="d-flex align-items-center mb-5">
-          <span class="fw-bold w-75px me-3 text-end">{{ item?.qtyTasks }}</span>
-          <div class="progress w-100">
-            <div
-              class="progress-bar progress-bar-done"
-              role="progressbar"
-              [style.width.%]="item?.status?.done"
-            ></div>
-            <div
-              class="progress-bar progress-bar-processing"
-              role="progressbar"
-              [style.backgroundColor]=""
-              [style.width.%]="item?.status?.processing"
-            ></div>
-            <div
-              class="progress-bar progress-bar-postpone"
-              role="progressbar"
-              [style.width.%]="item?.status?.postpone"
-            ></div>
-            <div
-              class="progress-bar progress-bar-cancel"
-              role="progressbar"
-              [style.width.%]="item?.status?.cancel"
-            ></div>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-icon btn-light"
+        style="z-index: 99"
+        (click)="sort()"
+      >
+        <div *ngIf="isDesc; then Desc; else Asc"></div>
+        <ng-template #Desc
+          ><span class="text-right icon-sort_Z-A"></span
+        ></ng-template>
+        <ng-template #Asc>
+          <span class="text-right icon-sort_A-Z"></span>
+        </ng-template>
+      </button>
+    </div>
+    <div class="mt-3">
+      <div class="d-flex flex-column" *ngFor="let item of vlWork">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center justify-content-end">
+            <span class="me-3">{{ item?.employeeName }}</span>
+            <codx-img
+              [width]="25"
+              [objectId]="item?.id"
+              [objectName]="item?.id"
+              [objectType]="'AD_Users'"
+            ></codx-img>
+          </div>
+          <div class="d-flex align-items-center mb-5">
+            <span class="fw-bold w-75px me-3 text-end">{{
+              item?.qtyTasks
+            }}</span>
+            <div class="progress w-100">
+              <div
+                class="progress-bar progress-bar-done"
+                role="progressbar"
+                [style.width.%]="item?.status?.done"
+              ></div>
+              <div
+                class="progress-bar progress-bar-processing"
+                role="progressbar"
+                [style.backgroundColor]=""
+                [style.width.%]="item?.status?.processing"
+              ></div>
+              <div
+                class="progress-bar progress-bar-postpone"
+                role="progressbar"
+                [style.width.%]="item?.status?.postpone"
+              ></div>
+              <div
+                class="progress-bar progress-bar-cancel"
+                role="progressbar"
+                [style.width.%]="item?.status?.cancel"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </ng-template>
 
 <!-- Thời gian thực hiện -->
 <ng-template #workHours>
   <div class="pe-3 pt-3">
-  <div class="d-flex justify-content-end">
-    <button class="btn btn-icon btn-light" style="z-index: 99" (click)="sort()">
-      <div *ngIf="isDesc; then Desc; else Asc"></div>
-      <ng-template #Desc
-        ><span class="text-right icon-sort_Z-A"></span
-      ></ng-template>
-      <ng-template #Asc>
-        <span class="text-right icon-sort_A-Z"></span>
-      </ng-template>
-    </button>
-  </div>
-  <div class="mt-3">
-    <div class="d-flex flex-column" *ngFor="let item of hrWork">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-end">
-          <span class="me-3">{{ item?.employeeName }}</span>
-          <codx-img
-            [width]="25"
-            [objectId]="item?.id"
-            [objectName]="item?.id"
-            [objectType]="'AD_Users'"
-          ></codx-img>
-        </div>
-        <div class="d-flex align-items-center mb-5">
-          <span class="fw-bold w-75px me-3 text-end">{{
-            item?.completed
-          }}</span>
-          <div class="progress w-100">
-            <div
-              class="progress-bar progress-bar-processing"
-              role="progressbar"
-              [style.width.%]="item?.percentage"
-            ></div>
+    <div class="d-flex justify-content-end">
+      <button
+        class="btn btn-icon btn-light"
+        style="z-index: 99"
+        (click)="sort()"
+      >
+        <div *ngIf="isDesc; then Desc; else Asc"></div>
+        <ng-template #Desc
+          ><span class="text-right icon-sort_Z-A"></span
+        ></ng-template>
+        <ng-template #Asc>
+          <span class="text-right icon-sort_A-Z"></span>
+        </ng-template>
+      </button>
+    </div>
+    <div class="mt-3">
+      <div class="d-flex flex-column" *ngFor="let item of hrWork">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center justify-content-end">
+            <span class="me-3">{{ item?.employeeName }}</span>
+            <codx-img
+              [width]="25"
+              [objectId]="item?.id"
+              [objectName]="item?.id"
+              [objectType]="'AD_Users'"
+            ></codx-img>
+          </div>
+          <div class="d-flex align-items-center mb-5">
+            <span class="fw-bold w-75px me-3 text-end">{{
+              item?.completed
+            }}</span>
+            <div class="progress w-100">
+              <div
+                class="progress-bar progress-bar-processing"
+                role="progressbar"
+                [style.width.%]="item?.percentage"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </ng-template>
 
 <!-- Thời gian thực hiện -->
@@ -569,7 +596,10 @@
     </div>
     <div>
       <ng-container *ngFor="let item of kpiTop; let i = index">
-        <div *ngIf="i <= top - 1" class="d-flex justify-content-between py-2 border-bottom">
+        <div
+          *ngIf="i <= top - 1"
+          class="d-flex justify-content-between py-2 border-bottom"
+        >
           <codx-temp-full
             [imageId]="item.id"
             [imageWidth]="30"

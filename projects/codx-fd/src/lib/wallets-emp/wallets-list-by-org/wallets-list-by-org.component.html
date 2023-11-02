@@ -34,6 +34,12 @@
             [default]="'CoCoins'"></codx-label>
     </div>
 </ng-template>
+<ng-template #colKudosHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="lblKudos" [setRequire]="false" [formModel]="view.formModel"
+            [default]="'Kudos'"></codx-label>
+    </div>
+</ng-template>
 <!-- #endregion -->
 
 <!-- #region column nhân viên -->
@@ -143,6 +149,30 @@
             <ng-template #noCoCoins>
                 <span class="place-holder"><codx-label [fiedName]="'lblCoCoins'" [setRequire]="false"
                         [formModel]="view.formModel" [default]="'CoCoins'"></codx-label></span>
+            </ng-template>
+        </div>
+        <div class="align-self-center">
+            <div style="height: 35px" class="has-action-menu">
+                <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
+                     [dataItem]="data" type="hover">
+                </codx-mfunc>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+<!-- #endregion -->
+
+<!-- #region column kudos -->
+<ng-template #colKudos let-data>
+    <div class="d-flex has-action-menu justify-content-between w-100">
+        <div class="d-flex align-items-center p-3 fw-500">
+            <ng-container *ngIf="data?.kudos || data?.kudos == 0; else noKudos">
+                <span class="data-text-color">{{ data?.kudos}}</span>
+            </ng-container>
+            <ng-template #noKudos>
+                <span class="place-holder"><codx-label [fiedName]="'lblKudos'" [setRequire]="false"
+                        [formModel]="view.formModel" [default]="'Kudos'"></codx-label></span>
             </ng-template>
         </div>
         <div class="align-self-center">
