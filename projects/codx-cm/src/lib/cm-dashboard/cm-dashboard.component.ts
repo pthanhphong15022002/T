@@ -2069,16 +2069,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         m >= (y === year - 1 ? month : 1);
         m--
       ) {
-        let dealMonths = deals?.find(
+        let dealMonths = deals?.filter(
           (x) =>
             new Date(x.expectedClosed).getFullYear() == y &&
             new Date(x.expectedClosed).getMonth() + 1 == m &&
             x.status == '3'
-        ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
+        ) ?? [] //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
         let tmp = {};
         tmp['month'] = m + '/' + y;
         tmp['year'] = y;
-        let maxProductivity = dealMonths ? dealMonths?.dealValue : 0;
+        let maxProductivity = dealMonths.reduce((acc, x) => acc + x.dealValue, 0);
         tmp['expected'] = maxProductivity;
         max = maxProductivity > max ? maxProductivity : max;
         listMonths.push(tmp);
