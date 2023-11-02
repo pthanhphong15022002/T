@@ -1,7 +1,9 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CodxGridviewV2Component,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -11,6 +13,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxWrService } from '../codx-wr.service';
 
 @Component({
   selector: 'lib-importparts',
@@ -26,7 +29,7 @@ export class ImportpartsComponent extends UIComponent {
   formModelTemp: FormModel = {
     formName: 'WRtempImportParts',
     gridViewName: 'grvWRtempImportParts',
-    entityName: 'tempImportParts'
+    entityName: 'WR_tempImportParts'
   }
   views: Array<ViewModel> = [];
   titleAction = '';
@@ -41,10 +44,12 @@ export class ImportpartsComponent extends UIComponent {
   dataValuesTemp = '';
   dataSelected: any;
   button?: ButtonModel;
-
+  lstImportParts = [];
+  loaded: boolean;
   constructor(
     private inject: Injector,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private wrSv: CodxWrService,
   ) {
     super(inject);
   }
@@ -84,7 +89,7 @@ export class ImportpartsComponent extends UIComponent {
       f,
       data,
       null,
-      this.view.formModel,
+      this.formModelTemp,
       this.view.dataService,
       this
     );
@@ -102,7 +107,7 @@ export class ImportpartsComponent extends UIComponent {
           e,
           data,
           null,
-          this.view.formModel,
+          this.formModelTemp,
           this.view.dataService,
           this
         );
@@ -123,25 +128,25 @@ export class ImportpartsComponent extends UIComponent {
   add(evt) {}
 
   //#region view detail
-  viewDetail(data) {
-    this.dataSelected = data;
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 999;
-    if(this.grid){
-      this.grid.load();
+  async viewDetail(data) {
+    let dt= data?.data?.rowData;
+    this.dataSelected = dt;
+    if(dt){
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.popupView = this.callfc.openForm(
+        this.templateViewDetail,
+        '',
+        Util.getViewPort().width,
+        Util.getViewPort().height,
+        '',
+        null,
+        '',
+        option
+      );
+      this.popupView.closed.subscribe((e) => {});
     }
-    this.popupView = this.callfc.openForm(
-      this.templateViewDetail,
-      '',
-      Util.getViewPort().width,
-      Util.getViewPort().height,
-      '',
-      null,
-      '',
-      option
-    );
-    this.popupView.closed.subscribe((e) => {});
   }
   //#endregion
 }

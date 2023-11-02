@@ -1,0 +1,11 @@
+<div class="h-100" *ngIf="loaded">
+  <codx-gridview-v2
+    #grid
+    service="WR"
+    [formModel]="formModel"
+    [dataSource]="lstImportParts"
+    rowHeight="40"
+    [height]="'100%'"
+    [hideMoreFunc]="true"
+  ></codx-gridview-v2>
+</div>

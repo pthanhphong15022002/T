@@ -117,7 +117,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
       const height = textElement.clientHeight;
       const lineCount = Math.round(height / lineHeight);
-      if(lineCount && lineCount > 3){
+      if(lineCount && lineCount > 10){
         this.showSM = true;
         this.showmore = true;
       } else {
