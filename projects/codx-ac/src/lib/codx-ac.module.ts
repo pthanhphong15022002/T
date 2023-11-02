@@ -265,7 +265,6 @@ export const routes: Routes = [
   //       component: JournalV2Component,
   //       data: { noReuse: true },
   //     },
-  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
   //   ],
   // },
   {

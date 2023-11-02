@@ -3,13 +3,19 @@
 </codx-form>
 
 <ng-template #body>
+    <div>
+        <codx-dropdown-select style="width: 200px;display: inline-block;margin-right: 5px;" type="valuelist" field="transType" [refValue]="grvSetup?.TransType?.referedValue"
+            [emptyText]="grvSetup?.TransType?.headerText" [value]="transType" [isMulti]="false"
+            (valueChange)="selectDropdown($event)"></codx-dropdown-select>
+        <codx-dropdown-calendar style="display: inline-block;" #calendarDrop cssPopup="h-350px w-550px" [selectedType]="'m'" [dataValue]=""
+            (change)="changeCalendar($event)"></codx-dropdown-calendar>
+    </div>
     <div class="container mt-2 h-100 w-100">
-
         <div *ngIf="columnsGrid" class="h-100 employee-grid my-gridview" [ngClass]="'no-manager-gridview'">
             <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
                 [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
                 [dataValues]="userID" [autoLoad]="true" [showRowNumber]="false" [predicates]="predicates"
-                [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true" [allowFiltering]="false"
+                [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true" [allowFiltering]="true"
                 [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
         </div>
     </div>
@@ -38,12 +44,17 @@
 </ng-template>
 <ng-template #colCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="lblCoins" [setRequire]="false" [default]="'Coins'"></codx-label>
+        <codx-label fiedName="lblCoins" [setRequire]="false" [default]="'Ví nhân viên'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colCoCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
-        <codx-label fiedName="lblCoCoins" [setRequire]="false" [default]="'CoCoins'"></codx-label>
+        <codx-label fiedName="lblCoCoins" [setRequire]="false" [default]="'Quỹ cho'"></codx-label>
+    </div>
+</ng-template>
+<ng-template #colKudosHeader>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label fiedName="lblKudos" [setRequire]="false" [default]="'Điểm thành tích'"></codx-label>
     </div>
 </ng-template>
 <!-- #endregion -->
@@ -67,7 +78,7 @@
 <ng-template #colTransType let-data>
     <div class="d-flex align-items-center p-3 fw-500">
         <ng-container *ngIf="data?.transType; else noTransType">
-            <span class="data-text-color">{{ data?.transType}}</span>
+            <span class="data-text-color">{{ data?.transType | vll : 'FD014' : 'text' | async}}</span>
         </ng-container>
         <ng-template #noTransType>
             <span class="place-holder"><codx-label [fiedName]="'lblTransType'" [setRequire]="false"
@@ -98,8 +109,10 @@
             </div>
             <div class="line-clamp line-clamp-3 mb-1">
                 <span class="fw-bold fs-6 me-3 item-active text-nowrap">
-                    <codx-label *ngIf="data?.cardType && data?.coins > 0" fiedName="lblCardReceive" [setRequire]="false" [default]="'Phiếu nhận'"></codx-label>
-                    <codx-label *ngIf="!data?.cardType || data?.coins < 0" fiedName="lblCardSend" [setRequire]="false" [default]="'Phiếu Gửi'"></codx-label>
+                    <codx-label *ngIf="data?.cardType && data?.coins > 0" fiedName="lblCardReceive" [setRequire]="false"
+                        [default]="'Phiếu nhận'"></codx-label>
+                    <codx-label *ngIf="!data?.cardType || data?.coins < 0" fiedName="lblCardSend" [setRequire]="false"
+                        [default]="'Phiếu Gửi'"></codx-label>
                 </span>
             </div>
         </div>
@@ -199,6 +212,23 @@
             <ng-template #noCoCoins>
                 <span class="place-holder"><codx-label [fiedName]="'lblCoCoins'" [setRequire]="false"
                         [default]="'CoCoins'"></codx-label></span>
+            </ng-template>
+        </div>
+    </div>
+
+</ng-template>
+<!-- #endregion -->
+
+<!-- #region column kudos -->
+<ng-template #colKudos let-data>
+    <div class="d-flex has-action-menu justify-content-between w-100">
+        <div class="d-flex align-items-center p-3 fw-500">
+            <ng-container *ngIf="data?.kudos || data?.kudos == 0; else noKudos">
+                <span class="data-text-color">{{ data?.kudos}}</span>
+            </ng-container>
+            <ng-template #noKudos>
+                <span class="place-holder"><codx-label [fiedName]="'lblKudos'" [setRequire]="false"
+                        [default]="'Kudos'"></codx-label></span>
             </ng-template>
         </div>
     </div>

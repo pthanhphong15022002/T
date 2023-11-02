@@ -214,7 +214,7 @@ export class ViewDealDetailComponent implements OnInit {
         this.dataSelected.recID,
         this.dataSelected?.categoryCustomer
       );
-      await this.getHistoryByDeaID();
+     await this.getHistoryByDeaID();
     } catch (error) {}
   }
   reloadListStep(listSteps: any) {

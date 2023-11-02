@@ -65,8 +65,8 @@ export class PopupAddResourcesComponent implements OnInit {
   onSave() {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'UpdateResourcesMeetingAsync', [
-        this.meeting.meetingID,
-        this.meeting.permissions,
+        this.meeting,
+        this.lstPermissions,
       ])
       .subscribe((res) => {
         if (res.msgBodyData[0] != null) {
@@ -75,16 +75,6 @@ export class PopupAddResourcesComponent implements OnInit {
             this.meeting.recID,
             this.meeting.permissions
           );
-          if (this.lstPermissions != null && this.lstPermissions.length > 0) {
-            this.tmSv
-              .SendMailNewResources(
-                this.meeting.recID,
-                'TM_0023',
-                this.funcID,
-                this.lstPermissions
-              )
-              .subscribe();
-          }
           this.noti.notifyCode('SYS034');
         } else {
           this.dialog.close();

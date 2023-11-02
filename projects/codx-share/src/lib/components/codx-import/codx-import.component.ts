@@ -125,6 +125,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
+    debugger
     if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
     if (this.importGroup.invalid) return;

@@ -146,10 +146,10 @@ export class EditPatternComponent implements OnInit {
   valueChange(e) {
     if (e) {
       this.pattern[e.field] = e.data;
-      if(e.field == 'stop' && e.data == true){
+      if (e.field == 'stop' && e.data == true) {
         this.pattern['isDefault'] = false;
       }
-      if(e.field == 'isDefault' && e.data == true){
+      if (e.field == 'isDefault' && e.data == true) {
         this.pattern['stop'] = false;
       }
     }
@@ -179,7 +179,7 @@ export class EditPatternComponent implements OnInit {
 
   savePattern() {
     if (!this.pattern.patternName.trim()) {
-      this.notificationsService.notify('Vui lòng nhập mô tả','2');
+      this.notificationsService.notify('Vui lòng nhập mô tả', '2');
       return;
     }
     if (this.formType == 'edit' && this.checkFileUpload && this.checkGetFile) {
@@ -198,6 +198,7 @@ export class EditPatternComponent implements OnInit {
         if (res.save || res.update) {
           var dt = res.save ? res.save : res.update;
           if (this.listFile && this.listFile.length > 0) {
+            this.patternSV.deleteFile(this.pattern.recID).subscribe();
             this.listFile[0].objectID = dt.recID;
             this.listFile[0].objectId = dt.recID;
             this.attachment.objectId = dt.recID;
@@ -235,8 +236,10 @@ export class EditPatternComponent implements OnInit {
     op.assemblyName = 'ERM.Business.FD';
     op.className = 'PatternsBusiness';
     op.methodName = 'SaveAsync';
-    if (this.formType == 'add') data = [this.pattern, false];
-    else data = [this.pattern, true];
+    let dt = JSON.parse(JSON.stringify(this.pattern));
+    dt.imageSrc = null;
+    if (this.formType == 'add') data = [dt, false];
+    else data = [dt, true];
     op.data = data;
     return true;
   }

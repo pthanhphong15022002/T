@@ -30,9 +30,9 @@ export class WalletsEmpComponent extends UIComponent {
   request: ResourceModel;
   idField = 'employeeID';
   entityName = 'HR_Employees';
-  entityPermission = 'HR_Employees';
-  formName = 'EmployeeInfomation';
-  gridViewName = 'grvEmployeeInfomation';
+  // entityPermission = 'HR_Employees';
+  // formName = 'EmployeeInfomation';
+  // gridViewName = 'grvEmployeeInfomation';
   service = 'HR';
   assemblyName = 'ERM.Business.HR';
   className = 'EmployeesBusiness';
@@ -55,8 +55,7 @@ export class WalletsEmpComponent extends UIComponent {
     this.user = this.auth.userValue;
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
     this.request = new ResourceModel();

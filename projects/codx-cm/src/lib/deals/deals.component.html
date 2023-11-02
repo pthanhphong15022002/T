@@ -173,7 +173,7 @@
     </div>
     <div class="d-flex justify-content-between align-items-center mt-1">
       <div class="d-flex align-items-end codx-badge">
-        <div
+        <!-- <div
           *ngIf="data?.status == '2'; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
@@ -191,8 +191,8 @@
             [ngStyle]="{ color: data?.steps['textColor'] }"
             >{{ data?.currentStepName }}</span
           >
-        </div>
-        <ng-template #statusDefault>
+        </div> -->
+        <!-- <ng-template #statusDefault>
           <codx-vll
             [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
@@ -202,7 +202,18 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
-        </ng-template>
+        </ng-template> -->
+
+        <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
+
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
@@ -453,7 +464,7 @@
     </div>
     <div class="d-flex justify-content-between align-items-top mt-1">
       <div class="d-flex align-items-end codx-badge">
-        <div
+        <!-- <div
           *ngIf="data.status == '2'; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
@@ -482,7 +493,16 @@
             class="badge badge-light badge-sm"
           >
           </codx-vll>
-        </ng-template>
+        </ng-template> -->
+        <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
