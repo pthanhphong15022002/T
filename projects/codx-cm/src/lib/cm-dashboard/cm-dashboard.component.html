@@ -32,8 +32,8 @@
       ></codx-dashboard>
     </ng-container>
 
-    <ng-container *ngIf="funcID == 'CMD004'">
-      <cm-targets [viewDashboard]="true"></cm-targets>
+    <ng-container *ngIf="funcID == 'CMD004' && isLoaded">
+      <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
     </ng-container>
   </div>
 
