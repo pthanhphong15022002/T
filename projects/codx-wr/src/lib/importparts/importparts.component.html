@@ -34,18 +34,12 @@
 </ng-template>
 
 <ng-template #body>
-  <div class="h-100">
+  <div class="h-100" *ngIf="loaded">
     <codx-gridview-v2
       #grid
       [formModel]="formModelTemp"
       [assemblyName]="assemblyName"
-      [entityName]="'WR_tempImportParts'"
-      [service]="'WR'"
-      [className]="className"
-      [method]="method"
-      [idField]="idField"
-      [predicates]="predicatesTemp"
-      [dataValues]="dataValuesTemp"
+      [dataSource]="lstImportParts"
       rowHeight="40"
       [height]="'100%'"
       [hideMoreFunc]="true"

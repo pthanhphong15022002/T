@@ -1,7 +1,9 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CodxGridviewV2Component,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -11,6 +13,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxWrService } from '../codx-wr.service';
 
 @Component({
   selector: 'lib-importparts',
@@ -41,10 +44,12 @@ export class ImportpartsComponent extends UIComponent {
   dataValuesTemp = '';
   dataSelected: any;
   button?: ButtonModel;
-
+  lstImportParts = [];
+  loaded: boolean;
   constructor(
     private inject: Injector,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private wrSv: CodxWrService,
   ) {
     super(inject);
   }
@@ -123,15 +128,14 @@ export class ImportpartsComponent extends UIComponent {
   add(evt) {}
 
   //#region view detail
-  viewDetail(data) {
+  async viewDetail(data) {
     let dt= data?.data?.rowData;
     this.dataSelected = dt;
     if(dt){
       let option = new DialogModel();
       option.IsFull = true;
       option.zIndex = 999;
-      this.predicatesTemp = 'SessionID=@0';
-      this.dataValuesTemp = dt?.recID;
+      this.loadData();
       this.popupView = this.callfc.openForm(
         this.templateViewDetail,
         '',
@@ -144,7 +148,25 @@ export class ImportpartsComponent extends UIComponent {
       );
       this.popupView.closed.subscribe((e) => {});
     }
+  }
 
+  async loadData(){
+    this.loaded = false;
+    let request = new DataRequest();
+    request.entityName = 'WR_tempImportParts';
+    this.predicatesTemp = 'SessionID=@0';
+    this.dataValuesTemp = this.dataSelected?.recID;
+    request.pageLoading = false;
+    request.predicates = this.predicatesTemp;
+    request.dataValues = this.dataValuesTemp;
+    this.wrSv.fetch('WR', this.assemblyName, this.className, this.method, request).subscribe((res) => {
+      this.lstImportParts = res;
+      this.loaded = true;
+      if(this.grid){
+        this.grid.refresh();
+      }
+      this.detectorRef.detectChanges();
+    });
   }
   //#endregion
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService, NotificationsService } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, finalize, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -57,5 +57,25 @@ export class CodxWrService {
       }
     }
     return countValidate;
+  }
+
+  fetch(service, assemblyName, className, method, request): Observable<any[]> {
+    return this.api
+      .execSv<Array<any>>(
+        service,
+        assemblyName,
+        className,
+        method,
+        request
+      )
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response ? response[0] : [];
+        })
+      );
   }
 }
