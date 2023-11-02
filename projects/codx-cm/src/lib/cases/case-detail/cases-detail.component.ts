@@ -33,6 +33,7 @@ export class CasesDetailComponent
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
   @Input() gridViewSetup: any;
+  @Input() valueListStatusCode: any;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
@@ -412,5 +413,14 @@ export class CasesDetailComponent
 
     // this.listSteps = e;
     // this.outDataStep.emit(this.dataStep);
+  }
+  getStatusCode(status) {
+    if(status) {
+      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+      if(result) {
+        return result?.text;
+      }
+    }
+    return '';
   }
 }

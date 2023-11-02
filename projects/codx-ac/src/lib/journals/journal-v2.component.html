@@ -1,4 +1,4 @@
-<codx-views [toolbarDisplay]="false" #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
+<codx-views #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
   [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true" class="ac-views">
 </codx-views>
 
@@ -38,19 +38,19 @@
     <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
       <div style="overflow: auto !important;"   class="h-100" [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT" service="AC" [entityName]="view.entityName"
+        <codx-listview class="py-5" type="listView" funcId="ACT" service="AC" [entityName]="view.entityName"
           [dataService]="view.dataService" [itemTemplate]="listItemTemplate">
         </codx-listview>
       </div>
 
       <div class="h-100" [ngStyle]="viewActive == ViewType.smallcard ? '' : { display: 'none' }">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
+        <codx-listview class="py-5" [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
         [entityName]="view.entityName" [dataService]="view.dataService">
         </codx-listview>
       </div>
 
       <div class="h-100" *ngIf="viewActive == ViewType.grid">
-        <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight py-5" #grid [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName"
+        <codx-gridview-v2 class="py-5" #grid [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName"
           [entityName]="view.formModel.entityName" [templateMore]="moreTemplate" service="AC" [isMainView]="true"
           [dataSource]="view.dataService.data">
         </codx-gridview-v2>

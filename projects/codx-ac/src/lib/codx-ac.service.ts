@@ -799,11 +799,9 @@ export class CodxAcService {
     
     switch (data?.status) {
       case '1':
-      case '5':
-      case '9':
         if (journal.approvalControl == '0') {
           arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncPur.GhiSo || MorfuncPur.In) {
+            if (element.functionID == MorfuncPur.GhiSo || element.functionID == MorfuncPur.In) {
               element.disabled = false;
             }else{
               element.disabled = true;
@@ -827,6 +825,16 @@ export class CodxAcService {
             element.disabled = true;
           }
         })
+        break;
+      case '5':
+      case '9':
+        arrBookmark.forEach(element => {
+          if (element.functionID == MorfuncPur.GhiSo || element.functionID == MorfuncPur.In) {
+            element.disabled = false;
+          }else{
+            element.disabled = true;
+          }
+        });
         break;
       case '6':
         arrBookmark.forEach((element) => {

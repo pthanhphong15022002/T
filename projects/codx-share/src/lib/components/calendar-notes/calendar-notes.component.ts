@@ -657,21 +657,27 @@ export class CalendarNotesComponent
   }
 
   getRequestCO(predicate, dataValue, param, showEvent) {
+    debugger
     if (showEvent == '0' || showEvent == 'false') return;
     this.CO_Meetings = [];
     this.onSwitchCountEven('CO_Meetings');
-    let requestDataCO: DataRequest = new DataRequest();
-    requestDataCO.predicates = predicate;
-    requestDataCO.dataValues = dataValue;
-    requestDataCO.funcID = 'TMT0501';
-    requestDataCO.formName = 'TMMeetings';
-    requestDataCO.gridViewName = 'grvTMMeetings';
-    requestDataCO.pageLoading = true;
-    requestDataCO.page = 1;
-    requestDataCO.pageSize = 10;
-    requestDataCO.entityName = 'CO_Meetings';
-    requestDataCO.entityPermission = 'CO_TMMeetings';
-    this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
+    // let requestDataCO: DataRequest = new DataRequest();
+    // requestDataCO.predicates = predicate;
+    // requestDataCO.dataValues = dataValue;
+    // requestDataCO.funcID = 'TMT0501';
+    // requestDataCO.formName = 'TMMeetings';
+    // requestDataCO.gridViewName = 'grvTMMeetings';
+    // requestDataCO.pageLoading = true;
+    // requestDataCO.page = 1;
+    // requestDataCO.pageSize = 10;
+    // requestDataCO.entityName = 'CO_Meetings';
+    // requestDataCO.entityPermission = 'CO_TMMeetings';
+    let funcID = "COT03"; // lịch cá nhân
+    let predicates = predicate;
+    let date = new Date();
+    let startDate = new Date(date.getFullYear(),date.getMonth(),1);
+    let endDate = moment(date).add(1, 'M').add(-1,'s').toDate();
+    this.codxShareSV.getDataCO_Meetings(funcID,predicates,"","",startDate,endDate).subscribe((res) => {
       if (res) {
         this.getModelShare(res[0], param.Template, 'CO_Meetings');
       }

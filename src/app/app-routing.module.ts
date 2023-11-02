@@ -124,6 +124,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'fde',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-fd/src/lib/codx-fd.module').then(
+        (m) => m.CodxFdModule
+      ),
+  },
+  {
     path: 'hr',
     canActivate: [AuthGuard],
     loadChildren: () =>

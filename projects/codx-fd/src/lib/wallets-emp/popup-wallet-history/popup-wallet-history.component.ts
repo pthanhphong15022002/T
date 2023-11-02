@@ -33,6 +33,7 @@ export class PopupWalletHistoryComponent implements OnInit {
   @Input() rowHeight: string = '50';
   @Input() showRowNumber: boolean = true;
   @Input() formModel: FormModel = null;
+  @Input() modeView: 'wallet' | 'achievement' = 'wallet';
 
   @ViewChild('grid') grid: CodxGridviewV2Component;
 
@@ -43,6 +44,7 @@ export class PopupWalletHistoryComponent implements OnInit {
   @ViewChild('colEmployeeHeader') colEmployeeHeader: TemplateRef<any>;
   @ViewChild('colCoinsHeader') colCoinsHeader: TemplateRef<any>;
   @ViewChild('colCoCoinsHeader') colCoCoinsHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeader') colKudosHeader: TemplateRef<any>;
 
   @ViewChild('colTransDate') colTransDate: TemplateRef<any>;
   @ViewChild('colTransType') colTransType: TemplateRef<any>;
@@ -50,6 +52,7 @@ export class PopupWalletHistoryComponent implements OnInit {
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colCoins') colCoins: TemplateRef<any>;
   @ViewChild('colCoCoins') colCoCoins: TemplateRef<any>;
+  @ViewChild('colKudos') colKudos: TemplateRef<any>;
   /* #endregion */
 
   entityName = 'FD_KudosTrans';
@@ -75,55 +78,85 @@ export class PopupWalletHistoryComponent implements OnInit {
     this.dialogRef = dialogRef;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    this.cache.valueList('FD015').subscribe(res => {
-      const listCardType = res;
-    });
     this.setData();
     this.initColumnGrid();
   }
 
   setData() {
     if (this.dialogData) {
-      ({ userID: this.userID, formModel: this.formModel } = this.dialogData);
+      ({
+        userID: this.userID,
+        formModel: this.formModel,
+        modeView: this.modeView,
+      } = this.dialogData);
     }
   }
 
   initColumnGrid() {
-    this.columnsGrid = [
-      {
-        headerTemplate: this.colTransDateHeader,
-        template: this.colTransDate,
-        width: '150',
-      },
-      {
-        headerTemplate: this.colTransTypeHeader,
-        template: this.colTransType,
-        width: '100',
-      },
-      {
-        headerTemplate: this.colCardHeader,
-        template: this.colCard,
-        width: '200',
-      },
-      {
-        headerTemplate: this.colEmployeeHeader,
-        template: this.colEmployee,
-        width: '200',
-      },
-      {
-        headerTemplate: this.colCoinsHeader,
-        template: this.colCoins,
-        width: '100',
-      },
-      {
-        headerTemplate: this.colCoCoinsHeader,
-        template: this.colCoCoins,
-        width: '100',
-      },
-    ];
+    if (this.modeView == 'wallet') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colTransDateHeader,
+          template: this.colTransDate,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colTransTypeHeader,
+          template: this.colTransType,
+          width: '100',
+        },
+        {
+          headerTemplate: this.colCardHeader,
+          template: this.colCard,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colCoinsHeader,
+          template: this.colCoins,
+          width: '100',
+        },
+        {
+          headerTemplate: this.colCoCoinsHeader,
+          template: this.colCoCoins,
+          width: '100',
+        },
+      ];
+    } else if (this.modeView == 'achievement') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colTransDateHeader,
+          template: this.colTransDate,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colTransTypeHeader,
+          template: this.colTransType,
+          width: '100',
+        },
+        {
+          headerTemplate: this.colCardHeader,
+          template: this.colCard,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colKudosHeader,
+          template: this.colKudos,
+          width: '100',
+        },
+      ];
+    }
   }
 }

@@ -1,6 +1,10 @@
 {
   "apiUrl": "http://172.16.7.34:8011",
+<<<<<<< HEAD
   "reportUrl": "http://172.16.7.34:4203/report",
+=======
+  "reportUrl": "http://localhost:4203/report",
+>>>>>>> 0f32d93d1fc5ab2c34284d7b8c29135d43967e20
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.91/lvfile",
   "office365": "",
