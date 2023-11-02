@@ -175,11 +175,11 @@
       </div>
     </div>
     <div class="w-100 position-absolute" style="bottom: 0 px">
-      <div #viewBus>
+      <div #viewBus class="d-block">
         <ejs-treemap
           #pie1
-          class="h-100 w-100"
-          style="height: 90% !important; width: 100% !important"
+          class="d-block"
+          style="height: 95%; width: 100%"
           [dataSource]="dataSourceBussnessLine"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -195,11 +195,12 @@
         >
         </ejs-treemap>
       </div>
-      <div #viewIndus class="d-none">
+      <div #viewIndus class="d-none d-block">
         <ejs-treemap
           #pie2
-          class="h-100 w-100 d-none"
-          style="height: 90% !important; width: 100% !important"
+          class="d-block"
+          class="d-none"
+          style="height: 95%; width: 100%"
           [dataSource]="dataSourceIndustry"
           weightValuePath="quantity"
           rangeColorValuePath="quantity"
@@ -289,6 +290,7 @@
             #lineSuc
             id="chart-container"
             class="w-100"
+            class="d-block"
             [primaryXAxis]="primaryXAxis"
             [primaryYAxis]="primaryYAxis"
             [title]=""
@@ -297,6 +299,7 @@
             <e-series-collection>
               <ng-container *ngFor="let item of chartBussnessLine">
                 <e-series
+                  class="d-block"
                   [dataSource]="item?.chartDataSuscess"
                   type="Line"
                   xName="month"
@@ -312,6 +315,7 @@
         <div #viewLineFail class="d-none">
           <ejs-chart
             #lineFail
+            class="d-block"
             id="chart-container"
             class="w-100"
             [primaryXAxis]="primaryXAxis"
@@ -323,6 +327,7 @@
               <ng-container *ngFor="let item of chartBussnessLine">
                 <e-series
                   #lineFail
+                  class="d-block"
                   [dataSource]="item?.chartDataFail"
                   type="Line"
                   xName="month"
@@ -862,7 +867,7 @@
           <span class="fw-bold">({{ findTmpDeals("1")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
           [name]="textTitle"
@@ -910,7 +915,7 @@
           <span class="fw-bold">({{ findTmpDeals("2")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
           [name]="textTitle"
@@ -958,7 +963,7 @@
           <span class="fw-bold">({{ findTmpDeals("3")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
           [name]="textTitle"
@@ -1006,7 +1011,7 @@
           <span class="fw-bold">({{ findTmpDeals("4")?.valueAsc }})</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
           [name]="textTitle"
@@ -1051,7 +1056,7 @@
           <span class="fw-bold">{{ findTmpDeals("5")?.valueAsc }}</span>
         </div>
       </div>
-      <div class="d-flex fw-bold fs-5">
+      <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
           [name]="textTitle"
@@ -1067,7 +1072,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="6" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesPipeline"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1250,7 +1255,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="7" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesTrend"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1296,7 +1301,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="8" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalesTargets"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1466,7 +1471,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="9" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSakerQuarters"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"
@@ -1511,7 +1516,7 @@
 <ng-template #templateTarget>
   <div class="w-100 h-100 p-2" id="10" title="">
     <codx-label
-      class="fs-5 fw-bold mb-3"
+      class="fw-bold mb-3"
       name="lblSalePerformance"
       formName="CMMyDashboard"
       gridViewName="grvCMMyDashboard"

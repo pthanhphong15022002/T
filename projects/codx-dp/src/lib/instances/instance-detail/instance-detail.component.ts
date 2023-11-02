@@ -335,10 +335,10 @@ export class InstanceDetailComponent implements OnInit {
         return;
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
-      this.loadChangeData();
-      this.isChangeData = false;
       let isAdmin = await this.dpSv.checkAdminInstance();
       this.isAdmin = isAdmin ? true : changes['dataSelect'].currentValue?.owner == this.user?.userID; 
+      this.loadChangeData();
+      this.isChangeData = false;
     }
   }
 

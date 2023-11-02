@@ -77,6 +77,7 @@ import { EvoucherStatisticalComponent } from './evouchers/evoucher-statistical/e
 import { ViewDetailComponent } from './evouchers/evoucher-statistical/view-detail/view-detail.component';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-detail-popup/view-detail-popup.component';
+import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/popup-wallet-history.component';
 
 export const routes: Routes = [
   {
@@ -88,7 +89,7 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
-        path: 'coins/:funcID',
+        path: 'wallets/:funcID',
         component: WalletsEmpComponent,
       },
       {
@@ -244,7 +245,8 @@ const Component: Type<any>[] = [
   WalletsListByOrgComponent,
   EvoucherStatisticalComponent,
   ViewDetailComponent,
-  ViewDetailPopupComponent
+  ViewDetailPopupComponent,
+  PopupWalletHistoryComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -273,6 +275,7 @@ const T_Pipe: Type<any>[] = [];
     PopupSendGiftComponent,
     WalletsEmpComponent,
     WalletsListByOrgComponent,
+    PopupWalletHistoryComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
