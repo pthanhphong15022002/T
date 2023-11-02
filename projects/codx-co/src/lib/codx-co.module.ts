@@ -11,7 +11,7 @@ import { COPopupAddBookingRoomComponent } from './popup/popup-add-booking-room/p
 import { COCalendarComponent } from './calendar/calendar.component';
 import { CalendarCenterComponent } from './calendar/calendar-center/calendar-center.component';
 import { ScheduleCenterComponent } from './calendar/schedule-center/schedule-center.component';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 export const routes: Routes = [
   {
@@ -42,6 +42,7 @@ export const routes: Routes = [
     CodxShareModule,
     SpeedDialModule,
     NgbAccordionModule,
+    NgbPopoverModule
   ],
 })
 export class CodxCoModule {

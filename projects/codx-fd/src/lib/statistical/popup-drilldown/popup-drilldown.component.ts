@@ -9,6 +9,7 @@ import { CodxFdService } from "../../codx-fd.service";
 })
 export class DrilldownComponent extends UIComponent implements OnInit,AfterViewInit {
   @ViewChild('username') username!: TemplateRef<any>;
+  @ViewChild('stt') stt!: TemplateRef<any>;
   formModel: any;
   dialog!: DialogRef;
   dataUpdate: any;
@@ -22,6 +23,7 @@ export class DrilldownComponent extends UIComponent implements OnInit,AfterViewI
     allowEditing: true,
     mode: 'Dialog',
   };
+  type:string;
   override onInit(): void {
 
   }
@@ -36,42 +38,76 @@ export class DrilldownComponent extends UIComponent implements OnInit,AfterViewI
   ) {
     super(injector);
     this.dialog = dt;
-    this.dataSource=data.data;
+    this.dataSource=data.data[0];
+    this.type = data.data[1]
     this.header = this.dataSource[0]?.departmentName
   }
   ngAfterViewInit(): void {
-    this.columnGrids= [
+    if(this.type=='1'){
+      this.columnGrids= [
 
-      {
-        field: 'username',
-        headerText: "Tên nhân viên",
-        //width: '25%',
-        template: this.username
-      },
-      {
-        headerText: "Tuyên dương",
-        //width: '15%', //width: gv['Location'].width,
-        field: 'cardType1',
-      },
-      {
-        headerText: "Lời cảm ơn",
-        //width: '10%', //gv['Equipments'].width,
-        field: 'cardType2',
-      },
-      {
-        headerText: "Góp ý thay đổi",
-        //width: '20%', //width: gv['Note'].width,
-        field: 'cardType3',
-      },
-      {
-        headerText: "Đề xuất cải tiến",
-        //width: '15%',
-        field:'cardType4'
-      },
+        {
+          field: 'username',
+          headerText: "Tên nhân viên",
+          //width: '25%',
+          template: this.username
+        },
+        {
+          headerText: "Tuyên dương",
+          //width: '15%', //width: gv['Location'].width,
+          field: 'cardType1',
+        },
+        {
+          headerText: "Lời cảm ơn",
+          //width: '10%', //gv['Equipments'].width,
+          field: 'cardType2',
+        },
+        {
+          headerText: "Góp ý thay đổi",
+          //width: '20%', //width: gv['Note'].width,
+          field: 'cardType3',
+        },
+        {
+          headerText: "Đề xuất cải tiến",
+          //width: '15%',
+          field:'cardType4'
+        },
 
-    ];
+      ];
+    }
+    if(this.type=='2'){
+      this.columnGrids= [
+        {
+          field: 'stt',
+          headerText: "STT",
+          width:"50px",
+          template: this.stt
+        },
+        {
+          field: 'username',
+          headerText: "Tên nhân viên",
+          template: this.username
+        },
+        {
+          headerText: "Tổng điểm thành tích",
+          width: "100px",
+          field: 'quantity',
+        },
+        {
+          headerText: "Xếp hạng thành tích",
+          width:'100px',
+          field: 'stt',
+        },
+
+
+      ];
+    }
+
   }
   onSave(){
     this.dialog && this.dialog.close()
+  }
+  countStt(data:any){
+    return parseInt(data.index) +1;
   }
 }
