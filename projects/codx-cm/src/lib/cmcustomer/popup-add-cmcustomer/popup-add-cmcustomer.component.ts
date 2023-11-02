@@ -753,7 +753,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           'IsExitCoincideTaxCodeAsync',
           [
             this.data?.recID,
-            this.data?.taxCode,
+            this.data?.taxCode.trim(),
             this.dialog?.formModel?.entityName,
           ]
         )

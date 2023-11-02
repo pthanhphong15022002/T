@@ -14,7 +14,7 @@
       <codx-input type="text" [crrValue]="dataIEMapping?.mappingName" (valueChange)="changeValue($event)"></codx-input>
     </div>
   </div>
-  <div class="h-feildImport">
+  <div class="h-feildImport" *ngIf="rendered">
     <codx-gridview-v2
       #gridView2
       [formName]="formModels.formName"

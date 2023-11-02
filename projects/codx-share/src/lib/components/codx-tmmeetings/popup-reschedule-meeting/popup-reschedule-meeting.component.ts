@@ -173,9 +173,6 @@ export class PopupRescheduleMeetingComponent implements OnInit {
           this.dialog.close(res);
           //chưa có mssgcode dời lịch
           this.notiService.notifyCode('SYS034');
-          this.tmSv
-            .sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID)
-            .subscribe();
           //dời phòng bên EP
           this.api
             .execSv(

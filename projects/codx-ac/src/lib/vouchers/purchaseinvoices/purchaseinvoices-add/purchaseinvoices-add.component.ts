@@ -285,9 +285,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       if (res) {
         Object.assign(oLine, res);
         oLine = this.genFixedDims(oLine);
+        oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
-        oLine.updateColumns = '';
+        
       }
     })
   }
