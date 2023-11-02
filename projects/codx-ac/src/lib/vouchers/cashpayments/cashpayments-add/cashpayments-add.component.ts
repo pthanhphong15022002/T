@@ -830,14 +830,14 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           }, 50);
           this.isPreventChange = false;
         }
-        // if (this.formCashPayment.data.journalType == 'BP') {
-        //   let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-        //   if (indexCashBook > -1) {
-        //     this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
-        //   }
-        //   this.bankNamePay = res?.BankName || '';
-        //   this.detectorRef.detectChanges();
-        // }
+        if (this.formCashPayment.data.journalType == 'BP') {
+          let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
+          if (indexCashBook > -1) {
+            this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
+          }
+          this.bankNamePay = res?.BankPayName || '';
+          this.detectorRef.detectChanges();
+        }
       }
     });
   }

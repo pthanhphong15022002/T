@@ -1684,21 +1684,29 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.textTitle = type;
     const dealCurrents = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDate &&
-        new Date(x?.expectedClosed) <= tDate
+        new Date(x?.createdOn) >= frmDate &&
+        new Date(x?.createdOn) <= tDate
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDateOld &&
-        new Date(x?.expectedClosed) <= tDateOld
+        new Date(x?.createdOn) >= frmDateOld &&
+        new Date(x?.createdOn) <= tDateOld
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      dealCurrents?.reduce((acc, x) => acc + x.dealValue, 0)
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDate &&
+          new Date(x?.expectedClosed) <= tDate
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      dealOlds?.reduce((acc, x) => acc + x.dealValue, 0)
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDateOld &&
+          new Date(x?.expectedClosed) <= tDateOld
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
@@ -1816,9 +1824,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countOld'] =
-      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
+      (countDealValueOlds > 0 ? countDealValueOlds.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
-    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
+    tmp['valueAsc'] = (Math.abs(countDealValues - countDealValueOlds) > 0 ? Math.abs(countDealValues - countDealValueOlds).toFixed(2) : 0) + '%'; // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1981,6 +1989,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.palettePipsStatus.push(item.color);
         }
       }
+      if(this.lstSalesStatus != null && this.lstSalesStatus.length > 0){
+        this.lstSalesStatus.sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        this.palettePipsStatus = this.lstSalesStatus.map(x => x.color);
+      }
     }
 
     if (this.lstStatusCodes != null) {
@@ -1994,6 +2008,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         if (countDeals > 0) {
           this.lstSalesStatusCodes.push(tmp);
         }
+      }
+      if(this.lstSalesStatusCodes != null && this.lstSalesStatusCodes.length > 0){
+        this.lstSalesStatusCodes.sort(
+          (a, b) => a.quantity - b.quantity
+        );
       }
     }
     this.detectorRef.detectChanges();
@@ -2050,16 +2069,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         m >= (y === year - 1 ? month : 1);
         m--
       ) {
-        let dealMonths = deals?.find(
+        let dealMonths = deals?.filter(
           (x) =>
             new Date(x.expectedClosed).getFullYear() == y &&
             new Date(x.expectedClosed).getMonth() + 1 == m &&
             x.status == '3'
-        ); //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
+        ) ?? [] //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
         let tmp = {};
         tmp['month'] = m + '/' + y;
         tmp['year'] = y;
-        let maxProductivity = dealMonths ? dealMonths?.dealValue : 0;
+        let maxProductivity = dealMonths.reduce((acc, x) => acc + x.dealValue, 0);
         tmp['expected'] = maxProductivity;
         max = maxProductivity > max ? maxProductivity : max;
         listMonths.push(tmp);
@@ -2242,7 +2261,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
 
     this.piedata = lstPiaData.sort((a, b) => {
-      return a.year - b.year;
+      return b.year > a.year ? b.year - a.year : b.quarter - a.quarter;
     });
   }
 

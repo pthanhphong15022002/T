@@ -70,7 +70,6 @@ export class StagesDetailComponent implements OnInit {
   @Input() isOnlyView: any;
   @Input() frmModelInstancesTask: FormModel;
   @Input() vllApprover = 'DP043';
-  @Input() isAdmin = false;
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
@@ -702,7 +701,7 @@ export class StagesDetailComponent implements OnInit {
 
   checkRole(listRoleStep) {
     if (
-      this.isAdmin ||
+      this.instance?.full ||
       this.listUserIdRole?.some((id) => id == this.user.userID) ||
       listRoleStep?.some(
         (role) => role.objectID == this.user.userID && role.roleType == 'S'
