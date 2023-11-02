@@ -34,15 +34,5 @@
 </ng-template>
 
 <ng-template #body>
-  <div class="h-100" *ngIf="loaded">
-    <codx-gridview-v2
-      #grid
-      [formModel]="formModelTemp"
-      [assemblyName]="assemblyName"
-      [dataSource]="lstImportParts"
-      rowHeight="40"
-      [height]="'100%'"
-      [hideMoreFunc]="true"
-    ></codx-gridview-v2>
-  </div>
+  <lib-grid-detail-importparts [dataSelected]="dataSelected" [formModel]="formModelTemp"></lib-grid-detail-importparts>
 </ng-template>

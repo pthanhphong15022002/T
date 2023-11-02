@@ -27,7 +27,7 @@ export class RequestReviewComponent
   @Input() tmpDetail?: TemplateRef<any>;
   @Output() selectedChange = new EventEmitter<any>();
 
-  private components = componentsDetail;
+  components = componentsDetail;
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];
@@ -102,7 +102,6 @@ export class RequestReviewComponent
   openFormFuncID(e: any) {}
   
   valueChange(dt: any) {
-
     this.dataItem = dt?.data;
     let component:Type<any> = null;
     let funcID = null;
@@ -123,7 +122,7 @@ export class RequestReviewComponent
     }
   
     this.content.clear();
-    this.loadContent(component,dt?.data?.transID,funcID)
+    if(component) this.loadContent(component,dt?.data?.transID,funcID)
   }
 
 
