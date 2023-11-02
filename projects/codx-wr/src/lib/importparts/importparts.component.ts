@@ -89,7 +89,7 @@ export class ImportpartsComponent extends UIComponent {
       f,
       data,
       null,
-      this.view.formModel,
+      this.formModelTemp,
       this.view.dataService,
       this
     );
@@ -107,7 +107,7 @@ export class ImportpartsComponent extends UIComponent {
           e,
           data,
           null,
-          this.view.formModel,
+          this.formModelTemp,
           this.view.dataService,
           this
         );
@@ -135,7 +135,6 @@ export class ImportpartsComponent extends UIComponent {
       let option = new DialogModel();
       option.IsFull = true;
       option.zIndex = 999;
-      this.loadData();
       this.popupView = this.callfc.openForm(
         this.templateViewDetail,
         '',
@@ -148,25 +147,6 @@ export class ImportpartsComponent extends UIComponent {
       );
       this.popupView.closed.subscribe((e) => {});
     }
-  }
-
-  async loadData(){
-    this.loaded = false;
-    let request = new DataRequest();
-    request.entityName = 'WR_tempImportParts';
-    this.predicatesTemp = 'SessionID=@0';
-    this.dataValuesTemp = this.dataSelected?.recID;
-    request.pageLoading = false;
-    request.predicates = this.predicatesTemp;
-    request.dataValues = this.dataValuesTemp;
-    this.wrSv.fetch('WR', this.assemblyName, this.className, this.method, request).subscribe((res) => {
-      this.lstImportParts = res;
-      this.loaded = true;
-      if(this.grid){
-        this.grid.refresh();
-      }
-      this.detectorRef.detectChanges();
-    });
   }
   //#endregion
 }
