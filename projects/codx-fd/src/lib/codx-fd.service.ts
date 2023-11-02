@@ -305,4 +305,35 @@ export class CodxFdService {
       [recID, status, comment, funcID]
     );
   }
+
+  activeWallet(userID: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'WalletsBusiness',
+      'ActiveWalletAsync',
+      [userID]
+    );
+  }
+
+  getListPolicyByPredicate(predicate: string, dataValue: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'PoliciesBusiness',
+      'GetListPolicyByPredicateAsync',
+      [predicate, dataValue]
+    );
+  }
+
+  // refreshType = (1: Coins, 2: coCoins, 3: kudos)
+  refreshWallet(refreshType: string, policyID: string, userID: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'PoliciesBusiness',
+      'RefreshWalletAsync',
+      [refreshType, policyID, userID]
+    );
+  }
 }

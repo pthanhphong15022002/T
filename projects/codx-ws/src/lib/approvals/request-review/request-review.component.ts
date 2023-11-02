@@ -6,7 +6,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { componentsDetail } from '../routing';
+import { componentsDetail } from './routing';
 
 @Component({
   selector: 'lib-request-review',
@@ -27,7 +27,7 @@ export class RequestReviewComponent
   @Input() tmpDetail?: TemplateRef<any>;
   @Output() selectedChange = new EventEmitter<any>();
 
-  private components = componentsDetail;
+  components = componentsDetail;
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];
@@ -102,10 +102,10 @@ export class RequestReviewComponent
   openFormFuncID(e: any) {}
   
   valueChange(dt: any) {
-
     this.dataItem = dt?.data;
     let component:Type<any> = null;
     let funcID = null;
+    debugger
     switch(dt?.data?.module)
     {
       case "ES":
@@ -123,7 +123,7 @@ export class RequestReviewComponent
     }
   
     this.content.clear();
-    this.loadContent(component,dt?.data?.transID,funcID)
+    if(component) this.loadContent(component,dt?.data?.transID,funcID)
   }
 
 
