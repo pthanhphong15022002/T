@@ -610,7 +610,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     let params = {
       Recs:data?.recID,
     }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+    this.shareService.printReport(reportID,reportType,params,this.formModel);    
   }
   
   /**
