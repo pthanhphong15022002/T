@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, SimpleChanges, ViewChild } from '@angular/core';
 import { Column, EditService, FreezeService, GridComponent, SelectionService, SelectionSettingsModel, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CodxGridviewV2Component, DataRequest, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { DropDownList } from '@syncfusion/ej2-angular-dropdowns';
   styleUrls: ['./add-import-details.component.scss'],
   providers: [FreezeService, SelectionService, EditService, ToolbarService]
 })
-export class AddImportDetailsComponent implements OnInit{
+export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   @ViewChild('grid') grid: GridComponent;
   service = 'SYS';
   dialog: any;
@@ -48,6 +48,7 @@ export class AddImportDetailsComponent implements OnInit{
   public rowIndex: number;
   public cellIndex: number;
   public isDropdown = true;
+  rendered:boolean=false;
   @ViewChild('gridView2') gridView2: CodxGridviewV2Component;
   constructor(
     private cache: CacheService,
@@ -65,7 +66,10 @@ export class AddImportDetailsComponent implements OnInit{
     if (dt.data?.[2]) this.sourceField = dt.data?.[2];
     if (dt.data?.[3]) this.ieMappingRec = dt.data?.[3];
     if (dt.data?.[4]) this.type = dt.data?.[4];
-   
+
+  }
+  ngAfterViewInit(): void {
+    this.rendered = true
   }
 
   ngOnInit(): void {
@@ -73,7 +77,7 @@ export class AddImportDetailsComponent implements OnInit{
       formName: 'ImportFieldMapping',
       gridViewName: 'grvFieldMapping',
     };
-   
+
     this.customerIDRules = { required: true };
     this.contextMenuItems = [
       'AutoFit',
@@ -91,7 +95,7 @@ export class AddImportDetailsComponent implements OnInit{
       { text: 'Copy', target: '.e-content', id: 'customCopy' },
       { text: 'Paste', target: '.e-content', id: 'customPaste' },
     ];
-  
+
     if (this.type == 'new') {
       this.getGridViewSetup();
     } else if (this.type == 'edit') {
@@ -110,7 +114,7 @@ export class AddImportDetailsComponent implements OnInit{
         };
         cbb.push(obj);
       }
-     
+
     }
     else if(this.sourceField && typeof this.sourceField == 'object')
     {
@@ -187,8 +191,8 @@ export class AddImportDetailsComponent implements OnInit{
     //   this.dataIETable.sessionID = this.dataIEConnection.recID;
     // }
   }
- 
- 
+
+
   ngOnChanges(changes: SimpleChanges) {}
 
   fileAdded(event: any) {
@@ -265,7 +269,7 @@ export class AddImportDetailsComponent implements OnInit{
     )
     .subscribe((item2) => {
       if (item2) {
-       
+
       } else this.notifySvr.notifyCode('SYS021');
     });
   }
@@ -301,7 +305,7 @@ export class AddImportDetailsComponent implements OnInit{
     )
     .subscribe((item2) => {
       if (item2) {
-        
+
       } else this.notifySvr.notifyCode('SYS021');
     });
   }
@@ -370,7 +374,7 @@ export class AddImportDetailsComponent implements OnInit{
   }
 
 
-  
+
   valueAccess = (field: string, data: object, column: object) => {
     var text = field.charAt(0).toUpperCase() + field.slice(1);
     if (
