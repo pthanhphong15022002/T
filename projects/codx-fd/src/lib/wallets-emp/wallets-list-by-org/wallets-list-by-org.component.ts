@@ -14,9 +14,11 @@ import {
   CodxGridviewV2Component,
   CodxService,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupWalletHistoryComponent } from '../popup-wallet-history/popup-wallet-history.component';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'lib-wallets-list-by-org',
@@ -59,6 +61,7 @@ export class WalletsListByOrgComponent {
 
   columnsGrid: any[];
   itemSelected: any;
+  policyID: string;
 
   constructor(
     private cache: CacheService,
@@ -66,7 +69,9 @@ export class WalletsListByOrgComponent {
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
     private shareService: CodxShareService,
-    private codxService: CodxService
+    private codxService: CodxService,
+    private fdService: CodxFdService,
+    private notiService: NotificationsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,8 +86,29 @@ export class WalletsListByOrgComponent {
     }
   }
 
+  ngOnInit(): void {
+    this.getPolicy();
+  }
+
   ngAfterViewInit(): void {
     this.initColumnGrid();
+  }
+
+  getPolicy() {
+    const predicates = 'Category = @0 and ApplyFor = @1 and ItemType = @2';
+    let dataValue = '';
+    if (this.modeView == 'wallet') {
+      dataValue = '3;5;4';
+    } else if (this.modeView == 'achievement') {
+      dataValue = '3;4;4';
+    }
+    this.fdService
+      .getListPolicyByPredicate(predicates, dataValue)
+      .subscribe((res) => {
+        if (res) {
+          this.policyID = res[0]?.policyID;
+        }
+      });
   }
 
   initColumnGrid() {
@@ -132,7 +158,33 @@ export class WalletsListByOrgComponent {
 
   clickMF(moreFunc: any, data: any) {
     this.itemSelected = data;
-    this.openPopupHistory(data);
+    if (moreFunc.functionID == 'FDK0111' || moreFunc.functionID == 'FDW0111') {
+      // xem lịch sử xu hoặc điểm
+      this.openPopupHistory(data);
+    } else if (moreFunc.functionID == 'FDW0112') {
+      // kích hoạt ví
+      this.fdService
+        .activeWallet(this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    } else if (
+      moreFunc.functionID == 'FDW0113' ||
+      moreFunc.functionID == 'FDK0112'
+    ) {
+      // chạy lại số dư
+      let refreshType = '';
+      if (this.modeView == 'wallet') {
+        refreshType = '2';
+      } else if (this.modeView == 'achievement') {
+        refreshType = '3';
+      }
+      this.fdService
+        .refreshWallet(refreshType, this.policyID, this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    }
   }
 
   openPopupHistory(item) {
@@ -145,7 +197,7 @@ export class WalletsListByOrgComponent {
     let popup = this.callfc.openForm(
       PopupWalletHistoryComponent,
       '',
-      1000,
+      1400,
       1500,
       '',
       obj,

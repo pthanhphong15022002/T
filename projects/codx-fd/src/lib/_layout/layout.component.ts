@@ -1,4 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
 
 @Component({
@@ -12,14 +13,18 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector,
     private callfc: CallFuncService,
+    private router: Router
     ) {
     super(inject);
-    this.module = 'FD';
+    this.getModule();
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
+  }
   onAfterViewInit(): void { }
 
   

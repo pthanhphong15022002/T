@@ -440,7 +440,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     this.panelsDeals1 = JSON.parse(
-      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":48,"sizeX":12,"sizeY":4,"minSizeX":12,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":4,"col":0,"sizeX":20,"sizeY":12,"minSizeX":20,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":4,"col":20,"sizeX":40,"sizeY":12,"minSizeX":40,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":16,"col":0,"sizeX":40,"sizeY":12,"minSizeX":40,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":16,"col":40,"sizeX":20,"sizeY":12,"minSizeX":20,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":28,"col":0,"sizeX":60,"sizeY":12,"minSizeX":60,"minSizeY":12,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"11.1636284528927885_layout","row":0,"col":0,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"21.5801149283702021_layout","row":0,"col":12,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"31.6937258303982936_layout","row":0,"col":24,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"41.5667390469747078_layout","row":0,"col":36,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"51.4199281088325755_layout","row":0,"col":48,"sizeX":12,"sizeY":3,"minSizeX":12,"minSizeY":3,"maxSizeX":null,"maxSizeY":null},{"id":"61.4592017601751599_layout","row":4,"col":0,"sizeX":20,"sizeY":13,"minSizeX":20,"minSizeY":13,"maxSizeX":null,"maxSizeY":null},{"id":"71.14683256767762543_layout","row":4,"col":20,"sizeX":40,"sizeY":13,"minSizeX":40,"minSizeY":13,"maxSizeX":null,"maxSizeY":null},{"id":"81.21519762020964252_layout","row":16,"col":0,"sizeX":40,"sizeY":12,"minSizeX":40,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"91.21519762020964252_layout","row":16,"col":40,"sizeX":20,"sizeY":12,"minSizeX":20,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"101.21519762020964252_layout","row":28,"col":0,"sizeX":60,"sizeY":12,"minSizeX":60,"minSizeY":12,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals1 = JSON.parse(
       '[{"panelId":"11.1636284528927885_layout","data":"1"},{"panelId":"21.5801149283702021_layout","data":"2"},{"panelId":"31.6937258303982936_layout","data":"3"},{"panelId":"41.5667390469747078_layout","data":"4"},{"panelId":"51.4199281088325755_layout","data":"5"},{"panelId":"61.4592017601751599_layout","data":"6"},{"panelId":"71.14683256767762543_layout","data":"7"},{"panelId":"81.21519762020964252_layout","data":"8"},{"panelId":"91.21519762020964252_layout","data":"9"},{"panelId":"101.21519762020964252_layout","data":"10"}]'
@@ -1684,21 +1684,29 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.textTitle = type;
     const dealCurrents = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDate &&
-        new Date(x?.expectedClosed) <= tDate
+        new Date(x?.createdOn) >= frmDate &&
+        new Date(x?.createdOn) <= tDate
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
-        new Date(x?.expectedClosed) >= frmDateOld &&
-        new Date(x?.expectedClosed) <= tDateOld
+        new Date(x?.createdOn) >= frmDateOld &&
+        new Date(x?.createdOn) <= tDateOld
     ); // đổi field createdOn -> ExpectedClosed
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      dealCurrents?.reduce((acc, x) => acc + x.dealValue, 0)
+      dealCurrents?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDate &&
+          new Date(x?.expectedClosed) <= tDate
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      dealOlds?.reduce((acc, x) => acc + x.dealValue, 0)
+      dealOlds?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDateOld &&
+          new Date(x?.expectedClosed) <= tDateOld
+      ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
@@ -1963,8 +1971,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         tmp['quantity'] = dealsSteps?.length ?? 0;
         if (dealsSteps?.length > 0) {
           this.lstSalesStages.push(tmp);
-          this.palettePipsStages.push(item.backgroundColor);
         }
+      }
+      if(this.lstSalesStages != null && this.lstSalesStages.length > 0){
+        this.lstSalesStages.sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        this.palettePipsStages = this.lstSalesStages.map(x => x.backgroundColor);
       }
     }
     if (this.vllStatusDeals != null) {
@@ -1981,6 +1994,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.palettePipsStatus.push(item.color);
         }
       }
+      if(this.lstSalesStatus != null && this.lstSalesStatus.length > 0){
+        this.lstSalesStatus.sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        this.palettePipsStatus = this.lstSalesStatus.map(x => x.color);
+      }
     }
 
     if (this.lstStatusCodes != null) {
@@ -1994,6 +2013,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         if (countDeals > 0) {
           this.lstSalesStatusCodes.push(tmp);
         }
+      }
+      if(this.lstSalesStatusCodes != null && this.lstSalesStatusCodes.length > 0){
+        this.lstSalesStatusCodes.sort(
+          (a, b) => a.quantity - b.quantity
+        );
       }
     }
     this.detectorRef.detectChanges();
@@ -2242,7 +2266,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     });
 
     this.piedata = lstPiaData.sort((a, b) => {
-      return a.year - b.year;
+      return b.year > a.year ? b.year - a.year : b.quarter - a.quarter;
     });
   }
 

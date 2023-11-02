@@ -1,4 +1,5 @@
 import { Component, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 
 @Component({
@@ -8,12 +9,21 @@ import { CallFuncService, DialogRef, LayoutBaseComponent } from 'codx-core';
 })
 export class LayoutNotoolbar extends LayoutBaseComponent {
   dialog!: DialogRef;
-  constructor(inject: Injector, private callfc: CallFuncService) {
+  constructor(
+    inject: Injector,
+    private router : Router, 
+    private callfc: CallFuncService
+    ) {
     super(inject);
-    this.module = 'FD';
+    this.getModule();
   }
 
-  onInit(): void {}
+  onInit(): void { }
+
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
+  }
 
   onAfterViewInit(): void {}
 }
