@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -23,7 +31,7 @@ export class WalletsListByOrgComponent {
   @Input() view: any;
   @Input() grvSetup: any;
   @Input() editable: boolean = false;
-  @Input() modeView: string = 'employee';
+  @Input() modeView: 'wallet' | 'achievement' = 'wallet';
   @Input() rowHeight: string = '50';
   @Input() showRowNumber: boolean = true;
   @Input() funcID: string = 'HRT03a1';
@@ -34,10 +42,12 @@ export class WalletsListByOrgComponent {
   @ViewChild('colJoinedOnHeader') colJoinedOnHeader: TemplateRef<any>;
   @ViewChild('colCoinsHeader') colCoinsHeader: TemplateRef<any>;
   @ViewChild('colCoCoinsHeader') colCoCoinsHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeader') colKudosHeader: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colJoinedOn') colJoinedOn: TemplateRef<any>;
   @ViewChild('colCoins') colCoins: TemplateRef<any>;
   @ViewChild('colCoCoins') colCoCoins: TemplateRef<any>;
+  @ViewChild('colKudos') colKudos: TemplateRef<any>;
 
   entityName = 'FD_Wallets';
   service = 'FD';
@@ -50,7 +60,6 @@ export class WalletsListByOrgComponent {
   columnsGrid: any[];
   itemSelected: any;
 
-
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -61,7 +70,7 @@ export class WalletsListByOrgComponent {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID.currentValue){
+    if (changes.orgUnitID.currentValue) {
       this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.grid) {
         this.grid.dataService.rowCount = 0;
@@ -70,7 +79,6 @@ export class WalletsListByOrgComponent {
         this.grid.refresh();
       }
     }
-
   }
 
   ngAfterViewInit(): void {
@@ -78,28 +86,48 @@ export class WalletsListByOrgComponent {
   }
 
   initColumnGrid() {
-    this.columnsGrid = [
-      {
-        headerTemplate: this.colEmployeeHeader,
-        template: this.colEmployee,
-        width: '200',
-      },
-      {
-        headerTemplate: this.colJoinedOnHeader,
-        template: this.colJoinedOn,
-        width: '150',
-      },
-      {
-        headerTemplate: this.colCoinsHeader,
-        template: this.colCoins,
-        width: '150',
-      },
-      {
-        headerTemplate: this.colCoCoinsHeader,
-        template: this.colCoCoins,
-        width: '150',
-      },
-    ];
+    if (this.modeView == 'wallet') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colJoinedOnHeader,
+          template: this.colJoinedOn,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colCoinsHeader,
+          template: this.colCoins,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colCoCoinsHeader,
+          template: this.colCoCoins,
+          width: '150',
+        },
+      ];
+    } else if (this.modeView == 'achievement') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colJoinedOnHeader,
+          template: this.colJoinedOn,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colKudosHeader,
+          template: this.colKudos,
+          width: '150',
+        },
+      ];
+    }
   }
 
   clickMF(moreFunc: any, data: any) {
@@ -111,6 +139,7 @@ export class WalletsListByOrgComponent {
     var obj = {
       userID: item.domainUser,
       formModel: this.formModel,
+      modeView: this.modeView,
     };
 
     let popup = this.callfc.openForm(
