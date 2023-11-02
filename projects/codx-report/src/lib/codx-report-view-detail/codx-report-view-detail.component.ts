@@ -399,7 +399,14 @@ export class CodxReportViewDetailComponent
         else
          objParam[key] = e[1][key];
       });
+      if(this.params)
+      {
+        for(const key in this.params){
+          objParam[key] = this.params[key]
+        }
+      }
       this._paramString = JSON.stringify(objParam);
+
     }
     // labels
     if (e[2]) {

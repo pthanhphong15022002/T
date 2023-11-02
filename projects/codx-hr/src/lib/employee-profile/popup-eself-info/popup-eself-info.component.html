@@ -34,11 +34,11 @@
 <ng-template #selfInfo>
 <ng-container *ngIf="form.formGroup">
   <div class="form-group">
-    <codx-label *ngIf="form.form.gridviewSetup.EmployeeID.allowPopup == true" 
+    <codx-label  
       fiedName="EmployeeID"
       [formModel]="form.formModel"
     ></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.EmployeeID.allowPopup == true"
+    <codx-input 
       [Group]="form.formGroup"
       [disabled]="true"
       [formModel]="form.formModel"
@@ -48,11 +48,11 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-        <codx-label *ngIf="form.form.gridviewSetup.EmployeeName.allowPopup == true"
+        <codx-label 
           fiedName="EmployeeName"
           [formModel]="form.formModel"
         ></codx-label>
-        <codx-input *ngIf="form.form.gridviewSetup.EmployeeName.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="employeeName"
@@ -61,11 +61,11 @@
     </div>
     <div class="col-6">
       <div class="form-group">
-        <codx-label *ngIf="form.form.gridviewSetup.EmployeeName2.allowPopup == true"
+        <codx-label 
           fiedName="EmployeeName2"
           [formModel]="form.formModel"
         ></codx-label>
-        <codx-input *ngIf="form.form.gridviewSetup.EmployeeName2.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="employeeName2"
@@ -78,12 +78,12 @@
   
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Gender.allowPopup == true"
+      <codx-label 
         fiedName="Gender"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.Gender.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="gender"
@@ -91,12 +91,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.MaritalStatus.allowPopup == true"
+      <codx-label 
         fiedName="MaritalStatus"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.MaritalStatus.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="maritalStatus"
@@ -107,12 +107,12 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Birthday.allowPopup == true"
+      <codx-label 
         fiedName="Birthday"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.Birthday.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="birthday"
@@ -120,12 +120,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.BirthPlace.allowPopup == true"
+      <codx-label 
         fiedName="BirthPlace"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.BirthPlace.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="birthPlace"
@@ -136,12 +136,12 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Domicile.allowPopup == true"
+      <codx-label 
         fiedName="Domicile"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.Domicile.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="domicile"
@@ -149,12 +149,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Nationality.allowPopup == true"
+      <codx-label 
         fiedName="Nationality"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.Nationality.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="nationality"
@@ -165,12 +165,12 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.EthnicGroup.allowPopup == true"
+      <codx-label 
         fiedName="EthnicGroup"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.EthnicGroup.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="ethnicGroup"
@@ -178,12 +178,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Religion.allowPopup == true"
+      <codx-label 
         fiedName="Religion"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.Religion.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="religion"
@@ -198,7 +198,7 @@
         <span
           class="text-primary text-hover-primary_darker fw-bold me-1"
         >
-          <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+          <codx-label 
           [name]="'lblCMND/CCCD'"
             default="CMND/CCCD"
             [formModel]="form.formModel"
@@ -218,12 +218,12 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.IDCardNo.allowPopup == true"
+      <codx-label 
         fiedName="IDCardNo"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.IDCardNo.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           (valueChange)="HandleValueChangeIDCard($event)"
@@ -232,12 +232,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.IssuedOn.allowPopup == true"
+      <codx-label 
         fiedName="IssuedOn"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.IssuedOn.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="issuedOn"
@@ -248,12 +248,12 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.IDExpiredOn.allowPopup == true"
+      <codx-label 
         fiedName="IDExpiredOn"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.IDExpiredOn.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="idExpiredOn"
@@ -261,12 +261,12 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.IssuedBy.allowPopup == true"
+      <codx-label 
         fiedName="IssuedBy"
         [formModel]="form.formModel"
       ></codx-label>
       <div>
-        <codx-input *ngIf="form.form.gridviewSetup.IssuedBy.allowPopup == true"
+        <codx-input 
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="issuedBy"
@@ -276,12 +276,12 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.Distinguishing.allowPopup == true"
+    <codx-label 
       fiedName="Distinguishing"
       [formModel]="form.formModel"
     ></codx-label>
     <div>
-      <codx-input *ngIf="form.form.gridviewSetup.Distinguishing.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="distinguishing"
@@ -296,7 +296,7 @@
         <span
           class="text-primary text-hover-primary_darker fw-bold me-1"
         >
-          <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+          <codx-label 
           [name]="'lblStudy'"
             default="Học vấn"
             [formModel]="form.formModel"
@@ -316,20 +316,20 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Education.allowPopup == true" fiedName="Education" [formModel]="form.formModel">
+      <codx-label  fiedName="Education" [formModel]="form.formModel">
       </codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.Education.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="education"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.EducationTrainForm.allowPopup == true"
+      <codx-label 
         fiedName="EducationTrainForm"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.EducationTrainForm.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="educationTrainForm"
@@ -339,11 +339,11 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.TrainFieldID.allowPopup == true"
+      <codx-label 
         fiedName="TrainFieldID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.TrainFieldID.allowPopup == true"
+      <codx-input 
       (render)="renderTrainFieldID($event)"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -353,11 +353,11 @@
         <!-- (keyup)="updateDegreeName()" -->
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.TrainLevel.allowPopup == true"
+      <codx-label 
         fiedName="TrainLevel"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.TrainLevel.allowPopup == true"
+      <codx-input 
       (render)="renderTrainLevel($event)"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -369,11 +369,11 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.DegreeName.allowPopup == true"
+    <codx-label 
       fiedName="DegreeName"
       [formModel]="form.formModel"
     ></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.DegreeName.allowPopup == true"
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="degreeName"
@@ -381,11 +381,11 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.Achievement.allowPopup == true"
+    <codx-label 
       fiedName="Achievement"
       [formModel]="form.formModel"
     ></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.Achievement.allowPopup == true"
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="achievement"
@@ -393,8 +393,8 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.Forte.allowPopup == true" fiedName="Forte" [formModel]="form.formModel"></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.Forte.allowPopup == true"
+    <codx-label  fiedName="Forte" [formModel]="form.formModel"></codx-label>
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="forte"
@@ -402,8 +402,8 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.Hobby.allowPopup == true" fiedName="Hobby" [formModel]="form.formModel"></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.Hobby.allowPopup == true"
+    <codx-label  fiedName="Hobby" [formModel]="form.formModel"></codx-label>
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="hobby"
@@ -418,22 +418,22 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Email.allowPopup == true"
+      <codx-label 
         fiedName="Email"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.Email.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="email"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Phone.allowPopup == true"
+      <codx-label 
         fiedName="Phone"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.Phone.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="phone"
@@ -443,11 +443,11 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.PersonalEmail.allowPopup == true"
+      <codx-label 
         fiedName="PersonalEmail"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.PersonalEmail.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="personalEmail"
@@ -455,11 +455,11 @@
     </div>
 
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Mobile.allowPopup == true"
+      <codx-label 
         fiedName="Mobile"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.Mobile.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="mobile"
@@ -467,7 +467,7 @@
     </div>
   </div>
   <!-- 
-  <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" default="Thường trú" [formModel]="form.formModel">
+  <codx-label  default="Thường trú" [formModel]="form.formModel">
   </codx-label> -->
 
   <!-- <div class="extend-function">
@@ -477,7 +477,7 @@
         <span
           class="text-primary text-hover-primary_darker fw-bold me-1"
         >
-          <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+          <codx-label 
             [name]="'lblThuongTru'"
             default="Thường trú"
             [formModel]="form.formModel"
@@ -496,11 +496,11 @@
   </div>
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.Address.allowPopup == true"
+    <codx-label 
       fiedName="Address"
       [formModel]="form.formModel"
     ></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.Address.allowPopup == true"
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="address"
@@ -509,11 +509,11 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.ProvinceID.allowPopup == true"
+      <codx-label 
         fiedName="ProvinceID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.ProvinceID.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="provinceID"
@@ -522,11 +522,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.DistrictID.allowPopup == true"
+      <codx-label 
         fiedName="DistrictID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.DistrictID.allowPopup == true"
+      <codx-input 
         #districtID
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -539,22 +539,22 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.WardID.allowPopup == true"
+      <codx-label 
         fiedName="WardID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.WardID.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="wardID"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.Hamlet.allowPopup == true"
+      <codx-label 
         fiedName="Hamlet"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.Hamlet.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="hamlet"
@@ -569,7 +569,7 @@
         <span
           class="text-primary text-hover-primary_darker fw-bold me-1"
         >
-          <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+          <codx-label 
           [name]="'lblTamTru'"
             default="Tạm trú"
             [formModel]="form.formModel"
@@ -586,14 +586,14 @@
       [formModel]="form.formModel"
     ></codx-label>
   </div>
-  <!-- <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" default="Tạm trú" [formModel]="form.formModel"> </codx-label> -->
+  <!-- <codx-label  default="Tạm trú" [formModel]="form.formModel"> </codx-label> -->
 
   <div class="form-group row">
-    <codx-label *ngIf="form.form.gridviewSetup.TAddress.allowPopup == true"
+    <codx-label 
       fiedName="TAddress"
       [formModel]="form.formModel"
     ></codx-label>
-    <codx-input *ngIf="form.form.gridviewSetup.TAddress.allowPopup == true"
+    <codx-input 
       [Group]="form.formGroup"
       [formModel]="form.formModel"
       field="tAddress"
@@ -602,11 +602,11 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.TProvinceID.allowPopup == true"
+      <codx-label 
         fiedName="TProvinceID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.TProvinceID.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="tProvinceID"
@@ -614,11 +614,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.TDistrictID.allowPopup == true"
+      <codx-label 
         fiedName="TDistrictID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.TDistrictID.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="tDistrictID"
@@ -629,22 +629,22 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.TWardID.allowPopup == true"
+      <codx-label 
         fiedName="TWardID"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.TWardID.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="tWardID"
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label *ngIf="form.form.gridviewSetup.THamlet.allowPopup == true"
+      <codx-label 
         fiedName="THamlet"
         [formModel]="form.formModel"
       ></codx-label>
-      <codx-input *ngIf="form.form.gridviewSetup.THamlet.allowPopup == true"
+      <codx-input 
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="tHamlet"
@@ -677,18 +677,18 @@
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
-            <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+            <codx-label 
               class="fw-bold fs-6"
               default="Thông tin bản thân"
             ></codx-label>
           </ng-template>
           <ng-template #content class="pb-4">
             <div class="form-group pt-5">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="EmployeeID"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [disabled]="true"
                 [formModel]="form.formModel"
@@ -696,22 +696,22 @@
               ></codx-input>
             </div>
             <div class="form-group">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="EmployeeName"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="employeeName"
               ></codx-input>
             </div>
             <div class="form-group">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="EmployeeName2"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="employeeName2"
@@ -720,12 +720,12 @@
             </div>
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Gender"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="gender"
@@ -733,12 +733,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="MaritalStatus"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="maritalStatus"
@@ -749,12 +749,12 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Birthday"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="birthday"
@@ -762,12 +762,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="BirthPlace"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="birthPlace"
@@ -778,12 +778,12 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Domicile"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="domicile"
@@ -791,12 +791,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Nationality"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="nationality"
@@ -807,12 +807,12 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="EthnicGroup"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="ethnicGroup"
@@ -820,12 +820,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Religion"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="religion"
@@ -840,7 +840,7 @@
                   <span
                     class="text-primary text-hover-primary_darker fw-bold me-1"
                   >
-                    <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                    <codx-label 
                       default="CMND/CCCD"
                       [formModel]="form.formModel"
                     ></codx-label>
@@ -851,12 +851,12 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="IDCardNo"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     (valueChange)="HandleValueChangeIDCard($event)"
@@ -865,12 +865,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="IssuedOn"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="issuedOn"
@@ -881,12 +881,12 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="IDExpiredOn"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="idExpiredOn"
@@ -894,12 +894,12 @@
                 </div>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="IssuedBy"
                   [formModel]="form.formModel"
                 ></codx-label>
                 <div>
-                  <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                  <codx-input 
                     [Group]="form.formGroup"
                     [formModel]="form.formModel"
                     field="issuedBy"
@@ -909,12 +909,12 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="Distinguishing"
                 [formModel]="form.formModel"
               ></codx-label>
               <div>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="distinguishing"
@@ -929,7 +929,7 @@
                   <span
                     class="text-primary text-hover-primary_darker fw-bold me-1"
                   >
-                    <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                    <codx-label 
                       default="Học vấn"
                       [formModel]="form.formModel"
                     ></codx-label>
@@ -940,20 +940,20 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" fiedName="Education" [formModel]="form.formModel">
+                <codx-label  fiedName="Education" [formModel]="form.formModel">
                 </codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="education"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="EducationTrainForm"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="educationTrainForm"
@@ -963,11 +963,11 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="TrainFieldID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="trainFieldID"
@@ -975,11 +975,11 @@
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="TrainLevel"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="trainLevel"
@@ -989,11 +989,11 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="DegreeName"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="degreeName"
@@ -1001,11 +1001,11 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="Achievement"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="achievement"
@@ -1013,8 +1013,8 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" fiedName="Forte" [formModel]="form.formModel"></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label  fiedName="Forte" [formModel]="form.formModel"></codx-label>
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="forte"
@@ -1022,8 +1022,8 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" fiedName="Hobby" [formModel]="form.formModel"></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label  fiedName="Hobby" [formModel]="form.formModel"></codx-label>
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="hobby"
@@ -1034,28 +1034,28 @@
 
         <e-tabitem>
           <ng-template #headerText>
-            <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true" class="fw-bold fs-6" default="Liên hệ"></codx-label>
+            <codx-label  class="fw-bold fs-6" default="Liên hệ"></codx-label>
           </ng-template>
 
           <ng-template #content>
             <div class="form-group row pt-5">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Email"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="email"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Phone"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="phone"
@@ -1065,11 +1065,11 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="PersonalEmail"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="personalEmail"
@@ -1077,11 +1077,11 @@
               </div>
 
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Mobile"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="mobile"
@@ -1096,7 +1096,7 @@
                   <span
                     class="text-primary text-hover-primary_darker fw-bold me-1"
                   >
-                    <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                    <codx-label 
                       default="Thường trú"
                       [formModel]="form.formModel"
                     ></codx-label>
@@ -1106,11 +1106,11 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="Address"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="address"
@@ -1119,22 +1119,22 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="ProvinceID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="provinceID"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="DistrictID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   #districtID
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
@@ -1146,22 +1146,22 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="WardID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="wardID"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="Hamlet"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="hamlet"
@@ -1176,7 +1176,7 @@
                   <span
                     class="text-primary text-hover-primary_darker fw-bold me-1"
                   >
-                    <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                    <codx-label 
                       default="Tạm trú"
                       [formModel]="form.formModel"
                     ></codx-label>
@@ -1186,11 +1186,11 @@
             </div>
 
             <div class="form-group row">
-              <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-label 
                 fiedName="TAddress"
                 [formModel]="form.formModel"
               ></codx-label>
-              <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+              <codx-input 
                 [Group]="form.formGroup"
                 [formModel]="form.formModel"
                 field="tAddress"
@@ -1199,22 +1199,22 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="TProvinceID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="tProvinceID"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="TDistrictID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="tDistrictID"
@@ -1224,22 +1224,22 @@
 
             <div class="form-group row">
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="TWardID"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="tWardID"
                 ></codx-input>
               </div>
               <div class="col-6">
-                <codx-label *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-label 
                   fiedName="THamlet"
                   [formModel]="form.formModel"
                 ></codx-label>
-                <codx-input *ngIf="form.form.gridviewSetup.ALStandard.allowPopup == true"
+                <codx-input 
                   [Group]="form.formGroup"
                   [formModel]="form.formModel"
                   field="tHamlet"

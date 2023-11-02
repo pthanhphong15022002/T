@@ -702,7 +702,7 @@ export class StagesDetailComponent implements OnInit {
 
   checkRole(listRoleStep) {
     if (
-      this.permissionCloseInstances ||
+      this.isAdmin ||
       this.listUserIdRole?.some((id) => id == this.user.userID) ||
       listRoleStep?.some(
         (role) => role.objectID == this.user.userID && role.roleType == 'S'

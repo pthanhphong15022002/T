@@ -96,7 +96,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     private notifiSV: NotificationsService,
     private cache: CacheService,
     private callFC: CallFuncService,
-    private dt: ChangeDetectorRef
+    private dt: ChangeDetectorRef,
+    private notification: NotificationsService,
   ) {
     this.user = this.auth.get();
     this.formModel = new FormModel();
@@ -117,11 +118,11 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     permisison.isActive = true;
     this.permissions.push(permisison);
   }
-
+  
   ngAfterViewInit(): void {
     //receiver message
     this.signalR.chat.subscribe((res: any) => {
-      debugger;
+      // debugger;
       if (res?.action && res?.groupID == this.groupID) {
         if (res.action === 'deletedMessage') {
           let mssgID = res.mssg;
@@ -132,6 +133,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
               mssg.messageType = '5';
               // this.arrMessages[index].messageType = "5";
               this.arrMessages[index] = JSON.parse(JSON.stringify(mssg));
+              if(this.user.userID == res?.userID){
+                this.notification.notifyCode('SYS008');
+              }
             }
           }
         } else {
@@ -174,6 +178,12 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if(this.signalR.chat){
+      this.signalR.chat.unsubscribe();
+    }
   }
   getSetting() {
     // get function
@@ -295,7 +305,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   }
   // get group infor
   getGroupInfo() {
-    this.api
+    if(this.groupID){
+      this.api
       .execSv('WP', 'ERM.Business.WP', 'GroupBusiness', 'GetGroupByIDAsync', [
         this.groupID,
       ])
@@ -308,6 +319,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
             .join(';');
         }
       });
+    }
   }
   // get history chat
   getMessage() {

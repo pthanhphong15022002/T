@@ -82,7 +82,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
         let mssg = res.mssg;
         let lstData = this.codxListView.dataService.data;
         let idx = lstData.findIndex((x: any) => x.groupID === res.groupID);
-        if (idx != -1) {
+        if (idx != -1 && mssg?.message) {
           let group = JSON.parse(JSON.stringify(lstData[idx]));
           mssg.message =
             mssg.messageType === '3' || mssg.messageType === '5'
