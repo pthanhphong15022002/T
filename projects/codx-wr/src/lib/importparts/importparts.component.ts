@@ -26,7 +26,7 @@ export class ImportpartsComponent extends UIComponent {
   formModelTemp: FormModel = {
     formName: 'WRtempImportParts',
     gridViewName: 'grvWRtempImportParts',
-    entityName: 'tempImportParts'
+    entityName: 'WR_tempImportParts'
   }
   views: Array<ViewModel> = [];
   titleAction = '';
@@ -124,24 +124,27 @@ export class ImportpartsComponent extends UIComponent {
 
   //#region view detail
   viewDetail(data) {
-    this.dataSelected = data;
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 999;
-    if(this.grid){
-      this.grid.load();
+    let dt= data?.data?.rowData;
+    this.dataSelected = dt;
+    if(dt){
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 999;
+      this.predicatesTemp = 'SessionID=@0';
+      this.dataValuesTemp = dt?.recID;
+      this.popupView = this.callfc.openForm(
+        this.templateViewDetail,
+        '',
+        Util.getViewPort().width,
+        Util.getViewPort().height,
+        '',
+        null,
+        '',
+        option
+      );
+      this.popupView.closed.subscribe((e) => {});
     }
-    this.popupView = this.callfc.openForm(
-      this.templateViewDetail,
-      '',
-      Util.getViewPort().width,
-      Util.getViewPort().height,
-      '',
-      null,
-      '',
-      option
-    );
-    this.popupView.closed.subscribe((e) => {});
+
   }
   //#endregion
 }
