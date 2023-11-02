@@ -879,13 +879,14 @@ export class CodxShareService {
     );
   }
 
-  getDataCO_Meetings(requestData) {
+  getDataCO_Meetings(...args) {
+    debugger
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
-      'GetListMeetingsCalendarAsync',
-      requestData
+      'GetCalendarEventsAsync',
+      args
     );
   }
 
