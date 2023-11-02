@@ -271,7 +271,6 @@ export class InstanceDetailComponent implements OnInit {
   approveStatus = '0';
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
-  isAdmin = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -335,8 +334,6 @@ export class InstanceDetailComponent implements OnInit {
         return;
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
-      let isAdmin = await this.dpSv.checkAdminInstance();
-      this.isAdmin = isAdmin ? true : changes['dataSelect'].currentValue?.owner == this.user?.userID; 
       this.loadChangeData();
       this.isChangeData = false;
     }

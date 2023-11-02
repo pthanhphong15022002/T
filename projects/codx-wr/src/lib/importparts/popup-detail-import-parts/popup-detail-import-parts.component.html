@@ -1,0 +1,19 @@
+<codx-form [headerText]="data?.fileName" [body]="body" [dialog]="dialog">
+  <ng-template #body>
+    <div class="h-100">
+      <codx-gridview-v2
+        #grid
+        service="WR"
+        [formModel]="dialog.formModel"
+        [formName]="dialog.formModel.formName"
+        [gridViewName]="dialog.formModel.gridViewName"
+        [entityName]="dialog.formModel.entityName"
+        [dataSource]="lstImportParts"
+        rowHeight="40"
+        [height]="'100%'"
+        [hideMoreFunc]="true"
+      ></codx-gridview-v2>
+    </div>
+  </ng-template>
+</codx-form>
+

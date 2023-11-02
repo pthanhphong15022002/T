@@ -236,8 +236,10 @@ export class EditPatternComponent implements OnInit {
     op.assemblyName = 'ERM.Business.FD';
     op.className = 'PatternsBusiness';
     op.methodName = 'SaveAsync';
-    if (this.formType == 'add') data = [this.pattern, false];
-    else data = [this.pattern, true];
+    let dt = JSON.parse(JSON.stringify(this.pattern));
+    dt.imageSrc = null;
+    if (this.formType == 'add') data = [dt, false];
+    else data = [dt, true];
     op.data = data;
     return true;
   }

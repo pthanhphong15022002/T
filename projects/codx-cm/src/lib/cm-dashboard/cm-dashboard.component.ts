@@ -1695,14 +1695,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      dealCurrents?.filter(
+      deals?.filter(
         (x) =>
           new Date(x?.expectedClosed) >= frmDate &&
           new Date(x?.expectedClosed) <= tDate
       ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      dealOlds?.filter(
+      deals?.filter(
         (x) =>
           new Date(x?.expectedClosed) >= frmDateOld &&
           new Date(x?.expectedClosed) <= tDateOld
@@ -1824,9 +1824,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countOld'] =
-      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
+      (countDealValueOlds > 0 ? countDealValueOlds.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
-    tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
+    tmp['valueAsc'] = (Math.abs(countDealValues - countDealValueOlds) > 0 ? Math.abs(countDealValues - countDealValueOlds).toFixed(2) : 0) + '%'; // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1971,13 +1971,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         tmp['quantity'] = dealsSteps?.length ?? 0;
         if (dealsSteps?.length > 0) {
           this.lstSalesStages.push(tmp);
+          this.palettePipsStages.push(item.backgroundColor);
         }
-      }
-      if(this.lstSalesStages != null && this.lstSalesStages.length > 0){
-        this.lstSalesStages.sort(
-          (a, b) => a.quantity - b.quantity
-        );
-        this.palettePipsStages = this.lstSalesStages.map(x => x.backgroundColor);
       }
     }
     if (this.vllStatusDeals != null) {

@@ -1,7 +1,9 @@
+import { firstValueFrom } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CodxGridviewV2Component,
+  DataRequest,
   DialogModel,
   DialogRef,
   FormModel,
@@ -11,6 +13,8 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxWrService } from '../codx-wr.service';
+import { PopupDetailImportPartsComponent } from './popup-detail-import-parts/popup-detail-import-parts.component';
 
 @Component({
   selector: 'lib-importparts',
@@ -26,8 +30,8 @@ export class ImportpartsComponent extends UIComponent {
   formModelTemp: FormModel = {
     formName: 'WRtempImportParts',
     gridViewName: 'grvWRtempImportParts',
-    entityName: 'WR_tempImportParts'
-  }
+    entityName: 'WR_tempImportParts',
+  };
   views: Array<ViewModel> = [];
   titleAction = '';
   // config api get data
@@ -41,10 +45,12 @@ export class ImportpartsComponent extends UIComponent {
   dataValuesTemp = '';
   dataSelected: any;
   button?: ButtonModel;
-
+  lstImportParts = [];
+  loaded: boolean;
   constructor(
     private inject: Injector,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private wrSv: CodxWrService
   ) {
     super(inject);
   }
@@ -77,14 +83,14 @@ export class ImportpartsComponent extends UIComponent {
 
     //     break;
     // }
-    let f = {functionID: 'SYS001'}; //bùa đã
+    let f = { functionID: 'SYS001' }; //bùa đã
     let data = evt.model;
     if (!data) data = this.view.dataService.dataSelected;
     this.codxShareService.defaultMoreFunc(
       f,
       data,
       null,
-      this.view.formModel,
+      this.formModelTemp,
       this.view.dataService,
       this
     );
@@ -102,7 +108,7 @@ export class ImportpartsComponent extends UIComponent {
           e,
           data,
           null,
-          this.view.formModel,
+          this.formModelTemp,
           this.view.dataService,
           this
         );
@@ -123,28 +129,32 @@ export class ImportpartsComponent extends UIComponent {
   add(evt) {}
 
   //#region view detail
-  viewDetail(data) {
-    let dt= data?.data?.rowData;
+  async viewDetail(data) {
+    let dt = data?.data?.rowData;
     this.dataSelected = dt;
-    if(dt){
+    if (dt) {
       let option = new DialogModel();
       option.IsFull = true;
       option.zIndex = 999;
-      this.predicatesTemp = 'SessionID=@0';
-      this.dataValuesTemp = dt?.recID;
-      this.popupView = this.callfc.openForm(
-        this.templateViewDetail,
+      let formModel = new FormModel();
+      formModel.formName = this.formModelTemp.formName;
+      formModel.gridViewName = this.formModelTemp.gridViewName;
+      formModel.entityName = this.formModelTemp.entityName;
+      option.FormModel = formModel;
+      let obj = {
+        data: this.dataSelected,
+      };
+      this.callfc.openForm(
+        PopupDetailImportPartsComponent,
         '',
         Util.getViewPort().width,
         Util.getViewPort().height,
         '',
-        null,
+        obj,
         '',
         option
       );
-      this.popupView.closed.subscribe((e) => {});
     }
-
   }
   //#endregion
 }

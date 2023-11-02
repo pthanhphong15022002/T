@@ -37,6 +37,7 @@ import { EmployeeQuitComponent } from 'projects/codx-hr/src/lib/employee-quit/em
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { COCalendarComponent } from 'projects/codx-co/src/lib/calendar/calendar.component';
 import { ApprovalsComponent } from 'projects/codx-ac/src/lib/approvals/approvals.component';
+import { ApprovalsComponent as ApprovalsComponentWS} from './approvals/approvals.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 import { InformationComponent } from './personal/master-detail/information/information.component';
@@ -86,7 +87,7 @@ const routes: Routes = [
       
       {
         path: 'approvals/:funcID',
-        component: ApprovalsComponent,
+        component: ApprovalsComponentWS,
       },
       {
         path: 'bookingrooms/:funcID',
@@ -251,6 +252,7 @@ const routes: Routes = [
     MenuListComponent,
     MasterDetailComponent,
     ApprovalsComponent,
+    ApprovalsComponentWS,
     MenuListApprovalComponent,
     DashboardComponent,
     ReportComponent,
@@ -268,7 +270,7 @@ const routes: Routes = [
     ImgComponent,
     VideoComponent,
     CvInformationComponent,
-    CvEvaluateComponent
+    CvEvaluateComponent,
   ],
   imports: [
     CommonModule,
