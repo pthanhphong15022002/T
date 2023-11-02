@@ -125,7 +125,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
-    this.preside = dt?.data?.preside; // người chủ trì, không hiểu please not edit !
+    this.preside = dt?.data?.preside; // người chủ trì, please not edit !
     this.reminder = this.meeting.reminder;
     if (this.preside) this.defaultRoleA = this.preside;
 
