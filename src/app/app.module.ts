@@ -87,7 +87,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppComponent,
     FileComponent,
     SosComponent,
-    LayoutTenantComponent
+    LayoutTenantComponent,
   ],
   imports: [
     BrowserModule,

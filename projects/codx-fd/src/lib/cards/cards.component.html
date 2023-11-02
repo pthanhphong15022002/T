@@ -1,27 +1,131 @@
-<codx-views #view 
-    [views]="views" 
-    [idField]="'recID'" 
-    [autoLoad]="true" 
-    [button]="buttonAdd" 
-    [entityName]="'FD_Cards'"
-    [service]="service"
-    [assemblyName]="assemblyName"
-    [className]="className"
-    [method]="method"
-    [selectedFirst]="true" 
-    (selectedChange)="selectedItem($event)" 
-    (buttonClick)="clickShowAssideRight()">
+<codx-views #view [views]="views" [idField]="'recID'" [autoLoad]="true" [button]="buttonAdd" [entityName]="'FD_Cards'"
+  [service]="service" [assemblyName]="assemblyName" [className]="className" [method]="method" [selectedFirst]="true"
+  (selectedChange)="selectedItem($event)" (buttonClick)="clickShowAssideRight()" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #itemTemplate let-data>
-    <codx-temp-full [dataItem]="data" [typeMF]="'hover'" [formModel]="view.formModel" imgCss="me-3"
-        (clickMF)="clickMF($event,data)" [imageId]="data.sender" imageObjType="AD_Users" (changeDataMF)="changeDataMF($event)"
-        cardCss="card-template border-bottom p-3" [title]="data.senderName" [titleCss]="'fs-6'" [subTitle]="data.situation" [subTitleCss]="'my-1 text-gray-600 line-clamp-2'"
-        [date]="data.createdOn" [status]="data.status" [statusVll]="'L1420'" [bookmark]="false">
-    </codx-temp-full>
+  <codx-temp-full [dataItem]="data" [typeMF]="'hover'" [formModel]="view.formModel" imgCss="me-3"
+    (clickMF)="clickMF($event,data)" [imageId]="data.sender" imageObjType="AD_Users"
+    (changeDataMF)="changeDataMF($event)" cardCss="card-template border-bottom p-3" [title]="data.senderName"
+    [titleCss]="'fs-6'" [subTitle]="data.situation" [subTitleCss]="'my-1 text-gray-600 line-clamp-2'"
+    [date]="data.createdOn" [status]="data.status" [statusVll]="'L1420'" [bookmark]="false">
+  </codx-temp-full>
 </ng-template>
 
 <ng-template #panelRightRef>
-    <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL"
-        [formModel]="view.formModel"  [cardType]="cardType"
-    ></lib-view-detail-cards>
+  <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL" [formModel]="view.formModel"
+    [cardType]="cardType"></lib-view-detail-cards>
+</ng-template>
+
+<ng-template #headerTemplate let-data>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="lblEmployeeName" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Thông tin nhân viên'"></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label fiedName="lblJoinOn" [setRequire]="false" [formModel]="view.formModel"
+        [default]="'Ngày Vào làm'"></codx-label>
+    </div>
+    <div *ngFor="let month of months" class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label [fiedName]="'lblMonth' + month" [setRequire]="false" [formModel]="view.formModel"
+        [default]="month"></codx-label>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center border-bottom">
+    <!-- Nhân viên -->
+    <div class="w-20 p-3 ps-5">
+      <div class="d-flex align-items-center cursor-pointer hover-active">
+        <div class="d-flex flex-column me-4">
+          <codx-img [funcId]="funcID" [objectId]="data.emp?.employeeID" [objectName]="data.emp?.employeeName"
+            objectType="HR_Employees" [width]="40">
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column">
+          <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
+            class="align-items-center line-clamp line-clamp-1 mb-1">
+            <span class="fw-bold fs-6 me-3 text-wrap item-active">
+              {{data.emp?.employeeName}}</span>
+            <ng-template #nameTooltip>
+              <div class="inline-tooltip">
+                <span class="fw-bold fs-6 me-3 text-nowrap">
+                  {{data.emp?.employeeName}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <div #positionField *ngIf="data.emp?.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+            <span [ngbTooltip]="positionTooltip">{{data.emp?.positionName? data.emp?.positionName :
+              data.emp?.positionID}}</span>
+            <ng-template #positionTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
+                  class="text-gray-600">{{data.emp?.positionName? data.emp?.positionName : data.emp?.positionID}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <div #orgUnitField *ngIf="data.emp?.orgUnitID" class="text-gray-700 mb-1 line-clamp line-clamp-1">
+            <span [ngbTooltip]="orgUnitTooltip">{{data.emp?.orgUnitName? data.emp?.orgUnitName :
+              data.emp?.orgUnitID}}</span>
+            <ng-template #orgUnitTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['OrgUnitID'].headerText}}</span>
+                <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
+                  class="text-gray-600">{{data.emp?.orgUnitName? data.emp?.orgUnitName : data.emp?.orgUnitID}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <div #departmentField [ngbTooltip]="departmentTooltip"
+            class="text-gray-600 align-items-center line-clamp line-clamp-1">
+            <span *ngIf="data.emp?.departmentID != data.emp?.orgUnitID">
+              {{data.emp?.departmentName? data.emp?.departmentName :data.emp?.departmentID}}</span>
+            <span *ngIf="data.emp?.departmentID && data.emp?.divisionID" class="text-gray-400 mx-1">,</span>
+            <span *ngIf="data.emp?.divisionID">{{data.emp?.divisionName? data.emp?.divisionName: data.emp?.divisionID
+              }}</span>
+            <ng-template #departmentTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['DepartmentID'].headerText}}</span>
+                <span *ngIf="data.emp?.departmentID != data.emp?.orgUnitID 
+                    && departmentField.scrollHeight > departmentField.clientHeight">
+                  {{data.emp?.departmentName? data.emp?.departmentName :
+                  data.emp?.departmentID}}</span>
+                <span *ngIf="data.emp?.divisionID && departmentField.scrollHeight > departmentField.clientHeight">
+                  {{data.emp?.divisionName? data.emp?.divisionName: data.emp?.divisionID }}</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Ngày vào làm-->
+    <div class="w-10 p-3">
+      <div class="d-flex flex-column">
+        <div class="align-items-center1 mb-1">
+          <ng-container *ngIf="data.emp?.joinedOn; else noJoinOn">
+            <span class="data-text-color">{{ data.emp?.joinedOn | fmDT}}</span>
+          </ng-container>
+          <ng-template #noJoinOn>
+            <span class="place-holder"><codx-label [fiedName]="'lblJoinOn'" [setRequire]="false"
+                [formModel]="view.formModel" [default]="'Ngày vào làm'"></codx-label></span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <!-- Đếm phiếu -->
+    <div *ngFor="let month of months" class="w-10 p-3">
+      <div class="d-flex flex-column">
+        <!-- <div class="align-items-center1 mb-1"> -->
+          <ng-container *ngIf="data?.listCount">
+            <ng-container *ngIf="data?.listCount[month] || data?.listCount[month] == 0">
+              <span class="data-text-color">{{ data.listCount[month] | number}}</span>
+            </ng-container>
+          </ng-container>
+        <!-- </div> -->
+      </div>
+    </div>
+
+  </div>
 </ng-template>

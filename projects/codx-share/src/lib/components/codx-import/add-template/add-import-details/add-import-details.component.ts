@@ -108,9 +108,14 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     if (this.sourceField && Array.isArray(this.sourceField)) {
       var cbb = [];
       for (var i = 0; i < this.sourceField.length; i++) {
+        var textStr = this.sourceField[i].normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //In hoa
+        textStr = textStr.toUpperCase();
+        //Thay ký tự rỗng thành _
+        textStr = textStr.replaceAll(" ","_");
         var obj = {
-          text: this.sourceField[i],
-          value: this.sourceField[i],
+          text: textStr,
+          value: textStr,
         };
         cbb.push(obj);
       }
@@ -254,6 +259,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     this.dataImport2.forEach(elm => {
       elm.recID = Util.uid();
       elm.mappingTemplate = this.dataIEMapping.recID;
+      elm.sessionID =  this.dataIETable?.sessionID;
       delete elm._oldData;
       delete elm._rowIndex;
       delete elm._rowNo;

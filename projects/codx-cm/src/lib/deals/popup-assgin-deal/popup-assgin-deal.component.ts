@@ -47,6 +47,7 @@ export class PopupAssginDealComponent
   employeeName: any;
   gridViewSetup: any;
   applyProcess: boolean = false;
+  isLockStep: boolean = false;
 
   @ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -366,11 +367,13 @@ export class PopupAssginDealComponent
     //   );
     //   return;
     // }
+    if(this.isLockStep) return;
     this.saveOwner();
   }
 
 
   async saveOwner() {
+    this.isLockStep = true;
     if(this.applyFor == '0') {
       let datas = [this.recID, this.owner];
       this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
@@ -380,7 +383,6 @@ export class PopupAssginDealComponent
       });
     }
     else {
-
       if(this.applyProcess) {
         let obj = new tmpInstances();
         obj.recID = this.data?.refID;

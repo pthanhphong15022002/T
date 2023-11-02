@@ -397,7 +397,8 @@
     </div>
     <div id="step-task" class="main p-5" [ngClass]="'show-main'">
       <codx-step-task
-        [dataSources]="step"
+        [instanceStep]="step"
+        [ownerInstance]="instance?.owner"
         [isShowMore]="true"
         [isDeepCopy]="false"
         [isShowButton]="true"

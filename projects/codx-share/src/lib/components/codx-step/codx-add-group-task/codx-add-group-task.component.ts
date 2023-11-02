@@ -70,6 +70,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     this.setRole(role);
     if (this.action == 'add' || this.action == 'copy') {
       this.taskGroup['roles'] = [role];
+      this.taskGroup.owner = role?.objectID
     }
     if (this.action == 'copy') {
       let listTast = this.taskGroup?.['task'];
@@ -90,7 +91,7 @@ export class CodxAddGroupTaskComponent implements OnInit {
     role['objectID'] = this.user['userID'];
     role['createdOn'] = new Date();
     role['createdBy'] = this.user['userID'];
-    role['roleType'] = 'O';
+    role['roleType'] = 'U';
     return role;
   }
 

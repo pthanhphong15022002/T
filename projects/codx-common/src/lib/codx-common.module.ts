@@ -72,6 +72,7 @@ import { MessageSystemPipe } from './pipe/mssgSystem.pipe';
 import { ScrollPipe } from './pipe/scrollPipe.pipe';
 import { FilterPipe } from './pipe/filterObject.pipe';
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
+import { MessageReplacePipe } from './pipe/mssgReplace.pipe';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -128,6 +129,7 @@ const T_Pipe: Type<any>[] = [
   TruncatePipe,
   FillterReferType,
   MessageSystemPipe,
+  MessageReplacePipe,
   ScrollPipe,
   FilterPipe,
   TimeFromPipe,

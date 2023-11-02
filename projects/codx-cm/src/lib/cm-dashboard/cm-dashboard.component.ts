@@ -30,6 +30,8 @@ import {
   IAccTextRenderEventArgs,
   IBulletLoadedEventArgs,
   IPointRenderEventArgs,
+  ITextRenderEventArgs,
+  ITooltipRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
 import { filter, reduce } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
@@ -267,7 +269,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   lstStatusCodes = [];
   vllStatusDeals = [];
   vllSalesPiplines = [];
-  statusPip = '1';
   palettePipsStages = [];
   palettePipsStatus = [];
   palettePipsStatusCodes = [];
@@ -402,6 +403,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   vllUpDowns = [];
   currencyID: any;
   exchangeRate: number;
+  vllTextYears = [];
   //new
   arrReport: any = [];
   viewCategory: any;
@@ -777,6 +779,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.vllStatusDeals = vll?.datas;
       }
     });
+
+    this.cache.valueList('SYS058').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.vllTextYears = vll?.datas;
+      }
+    });
+
     this.cache.valueList('CRM071').subscribe((vll) => {
       if (vll && vll?.datas) {
         this.vllSalesPiplines = vll?.datas;
@@ -1579,6 +1588,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let lstUsers = [];
     let fromDate = new Date(currentDate);
     let toDate = new Date(currentDate);
+    this.statusPip = 'btSaleStages';
     //get lstQuarters
     if (data?.fromDate) {
       fromDate = new Date(data?.fromDate);
@@ -1672,9 +1682,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     const tDate = new Date(toDate);
     let { frmDateOld, tDateOld, type } = this.setDateOlds(frmDate, tDate);
     this.textTitle = type;
-    // let frmDateOlds = this.setDateOlds(frmDate, tDate)?.frmDateOld;
-    // let tDateOlds = this.setDateOlds(frmDate, tDate)?.tDateOld;
-    // let type = this.setDateOlds(frmDate, tDate)?.type;
     const dealCurrents = deals.filter(
       (x) =>
         new Date(x?.expectedClosed) >= frmDate &&
@@ -1776,20 +1783,29 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       .filter((value, index, self) => self.indexOf(value) === index);
 
     const countDealsConverts =
-      dealCurrents.filter((x) => lstDealsIDs.some((y) => y == x.recID))
-        ?.length ?? 0;
+      dealCurrents.filter(
+        (x) => lstDealsIDs.some((y) => y == x.recID) && x.status == '3'
+      )?.length ?? 0;
     const countDealsConvertOlds =
-      dealOlds.filter((x) => lstDealsIDs.some((y) => y == x.recID))?.length ??
-      0;
+      dealOlds.filter(
+        (x) => lstDealsIDs.some((y) => y == x.recID) && x.status == '3'
+      )?.length ?? 0;
+
+    const leadCurrentCount = leads.filter(
+      (x) =>
+        new Date(x?.createdOn) >= frmDate && new Date(x?.createdOn) <= tDate
+    ).length;
+
+    const leadOldsCount = leads.filter(
+      (x) =>
+        new Date(x?.createdOn) >= frmDateOld &&
+        new Date(x?.createdOn) <= tDateOld
+    ).length;
 
     countDealValues =
-      dealCurrents.length > 0
-        ? Math.round(countDealsConverts / dealCurrents.length) * 100
-        : 0;
+      leadCurrentCount > 0 ? (countDealsConverts / leadCurrentCount) * 100 : 0;
     countDealValueOlds =
-      dealOlds.length > 0
-        ? Math.round(countDealsConvertOlds / dealOlds.length) * 100
-        : 0;
+      leadOldsCount > 0 ? (countDealsConvertOlds / leadOldsCount) * 100 : 0;
 
     isAsc =
       countDealValues - countDealValueOlds == 0
@@ -1798,8 +1814,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         ? '1'
         : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
     tmp['value'] = '5';
-    tmp['count'] = countDealValues + '%';
-    tmp['countOld'] = countDealValueOlds + '%';
+    tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
+    tmp['countOld'] =
+      (countDealValueOlds > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
     tmp['valueAsc'] = this.retrnValueAsc(countDealValues, countDealValueOlds); // %
     tmp['isAsc'] = isAsc;
@@ -1840,15 +1857,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         frmDateOld.setMonth(9);
         tDateOld.setFullYear(tDateOld.getFullYear() - 1);
         tDateOld.setMonth(11);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (dateFd == 1 && monthFd == 4 && monthTd == 6 && dateTd == 30) {
         frmDateOld.setMonth(0);
         tDateOld.setMonth(2);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (dateFd == 1 && monthFd == 7 && monthTd == 9 && dateTd == 30) {
         frmDateOld.setMonth(3);
         tDateOld.setMonth(5);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (
         dateFd == 1 &&
         monthFd == 10 &&
@@ -1857,21 +1874,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       ) {
         frmDateOld.setMonth(6);
         tDateOld.setMonth(8);
-        type = this.language == 'vn' ? 'Quý trước' : 'Last Quarter';
+        type = this.vllTextYears?.find((x) => x.value == 'TY23')?.text;
       } else if (monthFd == monthTd) {
         if (dateFd == dateTd) {
           frmDateOld.setDate(frmDateOld.getDate() - 1);
           tDateOld.setDate(tDateOld.getDate() - 1);
-          type = this.language == 'vn' ? 'Ngày trước' : 'Yesterday';
+          type = this.vllTextYears?.find((x) => x.value == 'TY20')?.text;
         } else {
           frmDateOld.setMonth(frmDateOld.getMonth() - 1);
           tDateOld.setMonth(tDateOld.getMonth() - 1);
-          type = this.language == 'vn' ? 'Tháng trước' : 'Last month';
+          type = this.vllTextYears?.find((x) => x.value == 'TY22')?.text;
         }
       } else if (monthFd == 1 && monthTd == 12) {
         frmDateOld.setFullYear(frmDateOld.getFullYear() - 1);
         tDateOld.setFullYear(tDateOld.getFullYear() - 1);
-        type = this.language == 'vn' ? 'Năm trước' : 'Last year';
+        type = this.vllTextYears?.find((x) => x.value == 'TY24')?.text;
       } else {
         let day = Math.floor(
           Math.abs(frmDateOld.getTime() - tDateOld.getTime()) /
@@ -1896,11 +1913,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         ' - ' +
         tDateOld.toLocaleDateString('en-GB');
     }
-
-    console.log('frmDateOld ', frmDateOld.toLocaleDateString('en-GB'));
-    console.log('tDateOld ', tDateOld.toLocaleDateString('en-GB'));
-    console.log('type ', type);
-
     return { frmDateOld, tDateOld, type };
   }
 
@@ -1929,92 +1941,93 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     deals = deals.filter(
       (x) => new Date(x.createdOn) >= frmDate && new Date(x.createdOn) <= tDate
     );
-    if (this.statusPip != null && this.statusPip.trim() != '') {
-      this.lstSalesStages = [];
-      this.lstSalesStatus = [];
-      this.lstSalesStatusCodes = [];
-      this.palettePipsStages = [];
-      this.palettePipsStatus = [];
-      this.palettePipsStatusCodes = [];
-      if (this.tmpProcessDefault) {
-        const lstSteps = this.tmpProcessDefault?.steps ?? [];
-        for (var item of lstSteps) {
-          var tmp = {};
-          tmp['name'] = item.stepName;
-          tmp['value'] = item.recID;
-          tmp['color'] = item.textColor;
-          tmp['backgroundColor'] = item.backgroundColor;
-          const dealsSteps = deals.filter(
-            (x) =>
-              x.processID == this.tmpProcessDefault?.recID &&
-              item.recID == x.stepID
-          );
-          tmp['quantity'] = dealsSteps?.length ?? 0;
-          if (dealsSteps?.length > 0) {
-            this.lstSalesStages.push(tmp);
-            this.palettePipsStages.push(item.backgroundColor);
-          }
+    this.lstSalesStages = [];
+    this.lstSalesStatus = [];
+    this.lstSalesStatusCodes = [];
+    this.palettePipsStages = [];
+    this.palettePipsStatus = [];
+    this.palettePipsStatusCodes = [];
+    if (this.tmpProcessDefault) {
+      const lstSteps = this.tmpProcessDefault?.steps ?? [];
+      for (var item of lstSteps) {
+        var tmp = {};
+        tmp['name'] = item.stepName;
+        tmp['value'] = item.recID;
+        tmp['color'] = item.textColor;
+        tmp['backgroundColor'] = item.backgroundColor;
+        const dealsSteps = deals.filter(
+          (x) =>
+            x.processID == this.tmpProcessDefault?.recID &&
+            item.recID == x.stepID
+        );
+        tmp['quantity'] = dealsSteps?.length ?? 0;
+        if (dealsSteps?.length > 0) {
+          this.lstSalesStages.push(tmp);
+          this.palettePipsStages.push(item.backgroundColor);
         }
       }
-      if (this.vllStatusDeals != null) {
-        for (var item of this.vllStatusDeals) {
-          var tmp = {};
-          tmp['name'] = item.text;
-          tmp['value'] = item.value;
-          tmp['color'] = item.color;
-          const countDeals =
-            deals.filter((x) => item.value == x.status)?.length ?? 0;
-          tmp['quantity'] = countDeals;
-          if (countDeals > 0) {
-            this.lstSalesStatus.push(tmp);
-            this.palettePipsStatus.push(item.color);
-          }
+    }
+    if (this.vllStatusDeals != null) {
+      for (var item of this.vllStatusDeals) {
+        var tmp = {};
+        tmp['name'] = item.text;
+        tmp['value'] = item.value;
+        tmp['color'] = item.color;
+        const countDeals =
+          deals.filter((x) => item.value == x.status)?.length ?? 0;
+        tmp['quantity'] = countDeals;
+        if (countDeals > 0) {
+          this.lstSalesStatus.push(tmp);
+          this.palettePipsStatus.push(item.color);
         }
       }
+    }
 
-      if (this.lstStatusCodes != null) {
-        for (var item of this.lstStatusCodes) {
-          var tmp = {};
-          tmp['name'] = item.StatusName;
-          tmp['value'] = item.StatusID;
-          const countDeals =
-            deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
-          tmp['quantity'] = countDeals;
-          if (countDeals > 0) {
-            this.lstSalesStatusCodes.push(tmp);
-          }
+    if (this.lstStatusCodes != null) {
+      for (var item of this.lstStatusCodes) {
+        var tmp = {};
+        tmp['name'] = item.StatusName;
+        tmp['value'] = item.StatusID;
+        const countDeals =
+          deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
+        tmp['quantity'] = countDeals;
+        if (countDeals > 0) {
+          this.lstSalesStatusCodes.push(tmp);
         }
       }
-
-      this.lstAlls =
-        this.statusPip == '1'
-          ? JSON.parse(JSON.stringify(this.lstSalesStages))
-          : this.statusPip == '2'
-          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
-          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
     }
     this.detectorRef.detectChanges();
   }
 
-  viewPips(value) {
-    if (value != this.statusPip) {
-      this.statusPip = value;
-      this.lstAlls =
-        this.statusPip == '1'
-          ? JSON.parse(JSON.stringify(this.lstSalesStages))
-          : this.statusPip == '2'
-          ? JSON.parse(JSON.stringify(this.lstSalesStatus))
-          : JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
-      const element = this.myIsActiveEle?.nativeElement;
-      if (element) {
-        if (this.isActive(value)) {
-          this.renderer?.removeClass(element, 'view-switch');
-          this.renderer?.addClass(element, 'cm-bg-primary');
-        } else {
-          this.renderer?.removeClass(element, 'cm-bg-primary');
-          this.renderer?.addClass(element, 'view-switch');
-        }
-      }
+  statusPip = 'btSaleStages';
+  changeGroupType(ele: any, chart: any) {
+    if (ele.id == this.statusPip) return;
+    this.statusPip = ele.id;
+    switch (ele.id) {
+      case 'btSaleStages':
+        chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.remove('d-none');
+        !chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.add('d-none');
+        !chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.add('d-none');
+        break;
+      case 'btSaleStatus':
+        !chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.add('d-none');
+        chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.remove('d-none');
+        !chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.add('d-none');
+        break;
+      case 'btSaleStatusCodes':
+        !chart.btSaleStages.classList.contains('d-none') &&
+          chart.btSaleStages.classList.add('d-none');
+        !chart.btSaleStatus.classList.contains('d-none') &&
+          chart.btSaleStatus.classList.add('d-none');
+        chart.btSaleStatusCodes.classList.contains('d-none') &&
+          chart.btSaleStatusCodes.classList.remove('d-none');
+        break;
     }
     this.detectorRef.detectChanges();
   }
@@ -2057,7 +2070,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   settingChart(max) {
-    let interval = Math.ceil(max / 10);
+    let interval = this.formatMaxValue(Math.ceil(max / 10));
     let maximum = interval * 10;
 
     this.primaryXAxisY = {
@@ -2071,6 +2084,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       minorTickLines: { width: 0 },
       lineStyle: { width: 0 },
     };
+    let labelFormat = this.labelFormat(max);
     this.primaryYAxisY = {
       title: this.currencyID,
       minimum: 0,
@@ -2081,18 +2095,36 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       majorGridLines: { width: 1 },
       minorGridLines: { width: 1 },
       minorTickLines: { width: 0 },
-      labelFormat: `{value}`,
+      labelFormat: labelFormat,
     };
 
     this.toolTipSeri = {
       enable: true,
       shared: true,
-      format: '${series.name} : <b>${point.y}</b>',
+      format: '${point.tooltip}',
     };
   }
 
-  textSeriRender(args: IAccTextRenderEventArgs) {
-    console.log(args);
+  textSeriRender(args: ITextRenderEventArgs) {
+    const text = args.series['resultData']?.find((x) => x.y == args.point.y);
+    let value = text?.text ?? 0;
+    let retrn = '0';
+    if (value === null || isNaN(value)) {
+      retrn = '0';
+    }
+  }
+
+  poinSeriRender(args: IPointRenderEventArgs): void {
+    let index = this.lstMonthsSeries.findIndex((x) => x.month == args.point.x);
+
+    if (index != -1) {
+      args.point.tooltip =
+        this.lstMonthsSeries[index]?.expected.toLocaleString();
+    }
+  }
+
+  tooltipSeriRender(e: ITooltipRenderEventArgs) {
+    console.log(e);
   }
   //end
 
@@ -2409,13 +2441,35 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   retrnValueAsc(count, countOlds) {
     let valueAsc = '0';
-    if (countOlds > 0) {
-      valueAsc =
-        Math.round(Math.abs(count - countOlds) / countOlds) * 100 + '%';
+    if (count > countOlds) {
+      if (countOlds > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros(
+            (Math.abs(count - countOlds) / countOlds) * 100
+          ) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     } else {
-      valueAsc = '- %';
+      if (count > 0) {
+        valueAsc =
+          this.formatNumberWithoutTrailingZeros(
+            (Math.abs(count - countOlds) / count) * 100
+          ) + '%';
+      } else {
+        valueAsc = '- %';
+      }
     }
+
     return valueAsc;
+  }
+
+  formatNumberWithoutTrailingZeros(num) {
+    if (num % 1 === 0) {
+      return num.toString();
+    } else {
+      return num.toFixed(2);
+    }
   }
 
   getCountDate(leads, deals) {
@@ -2537,11 +2591,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   labelFormat(value: number) {
     if (value >= 1000000) {
-      return '${value}M';
+      return '{value}M';
     } else if (value >= 1000) {
-      return '${value}K';
+      return '{value}K';
     } else {
-      return '${0}';
+      return '{0}';
     }
   }
 

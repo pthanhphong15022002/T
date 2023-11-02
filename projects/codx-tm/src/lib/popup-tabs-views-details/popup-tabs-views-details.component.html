@@ -138,22 +138,27 @@
           <ng-container *ngTemplateOutlet="templateMeeting"> </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'AssignTo'">
-          <div *ngIf="dataObjAssign">
+          <div *ngIf="dataObjAssign && data?.meetingID">
             <ng-container *ngTemplateOutlet="templateAssign"> </ng-container>
+          </div>
+          <!-- isue ngày 31/10/2023 -->
+          <div *ngIf="dataObjAssign && data?.iterationID">
+            <ng-container *ngTemplateOutlet="templateAssignProject">
+            </ng-container>
           </div>
         </ng-container>
         <ng-container *ngIf="name == 'Tasks'">
           <ng-container *ngIf="dataObj">
             <div class="tm-detail">
-            <codx-tasks-share
-              [dataObj]="dataObj"
-              [showButtonAdd]="showButtonAdd"
-              [showMoreFunc]="showMoreFunc"
-              [funcID]="'TMT03011'"
-              (resourceNew)="addNewResource($event)"
-            >
-            </codx-tasks-share>
-          </div>
+              <codx-tasks-share
+                [dataObj]="dataObj"
+                [showButtonAdd]="showButtonAdd"
+                [showMoreFunc]="showMoreFunc"
+                [funcID]="'TMT03011'"
+                (resourceNew)="addNewResource($event)"
+              >
+              </codx-tasks-share>
+            </div>
           </ng-container>
         </ng-container>
 
@@ -231,5 +236,16 @@
     [refType]="'CO_Meetings'"
     [sessionID]="data.meetingID"
     [isResourceAssignSession]="true"
+  ></codx-tasks-share>
+</ng-template>
+
+<ng-template #templateAssignProject>
+  <codx-tasks-share
+    [funcID]="'TMT0203'"
+    [dataObj]="dataObjAssign"
+    [refID]="data?.recID"
+    [refType]="'TM_Sprints'"
+    [sessionID]="data.iterationID"
+    [showButtonAdd]="true"
   ></codx-tasks-share>
 </ng-template>
