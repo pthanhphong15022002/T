@@ -176,7 +176,6 @@ export class CodxTmmeetingsComponent
     this.requestSchedule.idField = 'meetingID';
 
     this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
   }
 
   receiveMF(e: any) {

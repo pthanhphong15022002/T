@@ -406,3 +406,15 @@
 }
 
 /* css custom animation gridviewv2 */
+
+.ac-hide-toolbar{
+    margin-top: -4rem;
+    position: fixed;
+    height: calc(100vh - 75px);
+    background-color: white;
+    background-clip: content-box;
+    width: 94%;
+    codx-toolbar{
+        display: none !important;
+    }
+}
