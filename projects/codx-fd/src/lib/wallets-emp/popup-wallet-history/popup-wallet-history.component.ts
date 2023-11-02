@@ -13,7 +13,10 @@ import {
   CodxGridviewV2Component,
   DialogData,
   DialogRef,
+  FilterModel,
   FormModel,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
 import { CodxFdService } from '../../codx-fd.service';
 
@@ -23,7 +26,7 @@ import { CodxFdService } from '../../codx-fd.service';
   styleUrls: ['./popup-wallet-history.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PopupWalletHistoryComponent implements OnInit {
+export class PopupWalletHistoryComponent implements OnInit  {
   dialogData: any = null;
   dialogRef: DialogRef = null;
 
@@ -67,6 +70,11 @@ export class PopupWalletHistoryComponent implements OnInit {
   userID: string;
   headerText: string = 'Lịch sử';
 
+  transType: string;
+  fromDate: string;
+  toDate: string;
+  filters: FilterModel[] = [];
+
   constructor(
     private api: ApiHttpService,
     private fdService: CodxFdService,
@@ -78,7 +86,19 @@ export class PopupWalletHistoryComponent implements OnInit {
     this.dialogRef = dialogRef;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cache.functionList('FDK011').subscribe((func: any) => {
+      if (func) {
+        this.cache
+          .gridViewSetup(func.formName, func.gridViewName)
+          .subscribe((grd: any) => {
+            if (grd) {
+              this.grvSetup = grd;
+            }
+          });
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.setData();
@@ -158,5 +178,44 @@ export class PopupWalletHistoryComponent implements OnInit {
         },
       ];
     }
+  }
+
+  changeCalendar(e) {
+    this.fromDate = new Date(e.fromDate).toISOString();
+    this.toDate = new Date(e.toDate).toISOString();
+    this.setPreDicates();
+  }
+
+  selectDropdown(e) {
+    if(e.data){
+      this.transType = e.data
+    } else {
+      this.transType = null;
+    }
+    this.setPreDicates();
+  }
+
+  setPreDicates() {
+    let predicatesArray: string[] = [];
+    let dataValuesArray: string[] = [];
+    let predicates = '';
+    let dataValues = '';
+
+    let count = 0;
+    if (this.fromDate && this.toDate) {
+      predicatesArray.push(`TransDate >= @${count++} && TransDate < @${count++}`);
+      dataValuesArray.push(`${this.fromDate};${this.toDate}`);
+    }
+
+    if(this.transType) {
+      predicatesArray.push(`TransType = @${count++}`);
+      dataValuesArray.push(`${this.transType}`);
+    }
+
+    predicates = predicatesArray.join(' && ');
+    dataValues = dataValuesArray.join(';');
+    this.grid.predicates = predicates;
+    this.grid.dataValues = dataValues;
+    this.grid.refresh();
   }
 }

@@ -5,7 +5,7 @@
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
             [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
             [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true"
-            [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
+            [allowFiltering]="true" [allowSorting]="false" [hideMoreFunc]="true"></codx-gridview-v2>
     </div>
 </div>
 
@@ -25,19 +25,19 @@
 <ng-template #colCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblCoins" [setRequire]="false" [formModel]="view.formModel"
-            [default]="'Coins'"></codx-label>
+            [default]="'Ví nhân viên'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colCoCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblCoCoins" [setRequire]="false" [formModel]="view.formModel"
-            [default]="'CoCoins'"></codx-label>
+            [default]="'Quỹ cho'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colKudosHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblKudos" [setRequire]="false" [formModel]="view.formModel"
-            [default]="'Kudos'"></codx-label>
+            [default]="'Điểm thành tích'"></codx-label>
     </div>
 </ng-template>
 <!-- #endregion -->
@@ -79,14 +79,14 @@
                 <ng-template #orgUnitTooltip>
                     <div class="d-flex flex-column">
                         <span class="label-text-color"><codx-label fiedName="lblOrgID"
-                                [default]="'Mã công ty'"></codx-label></span>
+                                [default]="'Bộ phận'"></codx-label></span>
                         <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
                             class="text-gray-600">{{data.orgUnitName? data.orgUnitName :
                             data.orgUnitID}}</span>
                     </div>
                 </ng-template>
             </div>
-            <div #departmentField [ngbTooltip]="departmentTooltip"
+            <div #departmentField *ngIf="data.departmentName" [ngbTooltip]="departmentTooltip"
                 class="text-gray-600 align-items-center line-clamp line-clamp-1">
                 <span *ngIf="data.departmentID != data.orgUnitID">
                     {{data.departmentName? data.departmentName :data.departmentID}}</span>
@@ -95,7 +95,7 @@
                 <ng-template #departmentTooltip>
                     <div class="d-flex flex-column">
                         <span class="label-text-color"><codx-label fiedName="lblDepartmentID"
-                                [default]="'Mã phòng ban'"></codx-label></span>
+                                [default]="'Phòng ban'"></codx-label></span>
                         <span *ngIf="data.departmentID != data.orgUnitID 
                   && departmentField.scrollHeight > departmentField.clientHeight">
                             {{data.departmentName? data.departmentName :
