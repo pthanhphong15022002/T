@@ -1695,14 +1695,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      dealCurrents?.filter(
+      deals?.filter(
         (x) =>
           new Date(x?.expectedClosed) >= frmDate &&
           new Date(x?.expectedClosed) <= tDate
       ).reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      dealOlds?.filter(
+      deals?.filter(
         (x) =>
           new Date(x?.expectedClosed) >= frmDateOld &&
           new Date(x?.expectedClosed) <= tDateOld
