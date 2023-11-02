@@ -176,7 +176,6 @@ export class CodxTmmeetingsComponent
     this.requestSchedule.idField = 'meetingID';
 
     this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
   }
 
   receiveMF(e: any) {
@@ -556,8 +555,8 @@ export class CodxTmmeetingsComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       if (this.projectID) {
         this.disabledProject = true;

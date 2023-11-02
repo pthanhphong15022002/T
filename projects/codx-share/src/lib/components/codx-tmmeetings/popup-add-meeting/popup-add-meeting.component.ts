@@ -339,12 +339,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             if (this.isRoom && this.meeting.location != null) {
               this.bookingRoomEP(res.save);
             }
-            this.tmSv
-              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-              .subscribe();
-            // this.tmSv
-            //   .RPASendMailAlert('TM_0024', this.functionID)
-            //   .subscribe();
           } else this.dialog.close();
         });
     } else {
@@ -360,9 +354,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             if (this.isRoom && this.meeting.location != null) {
               this.bookingRoomEP(res);
             }
-            this.tmSv
-              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-              .subscribe();
             this.dialog.close(res);
           } else this.dialog.close();
         });
