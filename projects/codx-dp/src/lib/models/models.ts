@@ -488,6 +488,7 @@ export class DP_Instances_Steps_Tasks {
   modifiedOn: Date;
   modifiedBy: string;
   callType: boolean;
+  approveRule: boolean;
   isOnline: boolean;
   isTaskDefault: boolean;
   actionStatus: string;

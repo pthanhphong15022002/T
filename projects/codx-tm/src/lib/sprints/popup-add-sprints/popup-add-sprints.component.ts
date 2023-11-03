@@ -136,16 +136,20 @@ export class PopupAddSprintsComponent implements OnInit {
       this.master.iterationType == '1' &&
       (this.master.projectID == null || this.master.projectID.trim() == '')
     ) {
-      return this.notiService.notifyCode('TM035');
-      // let headerText = this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
-      // return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+      // return this.notiService.notifyCode('TM035');
+      let headerText =
+        this.gridViewSetup['ProjectID']?.headerText ?? 'ProjectID';
+      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
     }
     if (
-      this.master.iterationType == '0' &&
-      (this.master.iterationName == null ||
-        this.master.iterationName.trim() == '')
-    )
-      return this.notiService.notifyCode('TM035');
+      this.master.iterationName == null ||
+      this.master.iterationName.trim() == ''
+    ) {
+      let headerText =
+        this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
+      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+    }
+
     if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
     if (!this.master.isShared) this.master.resources = null;
@@ -278,13 +282,18 @@ export class PopupAddSprintsComponent implements OnInit {
   changeProject(e) {
     if (e.field == 'projectID' && e?.data && e?.data.trim() != '') {
       this.master[e.field] = e?.data;
-      var service = e.component?.service;
+      let projectName = e.component?.itemsSelected[0]?.ProjectName;
+      if (projectName) this.master.iterationName = projectName;
+      //
+      // var service = e.component?.service;
+      // this.api
+      //   .exec<any>(service, 'ProjectsBusiness', 'GetProjectByIDAsync', e?.data)
+      //   .subscribe((res) => {
+      //     if (res) this.master.iterationName = res?.projectName;
+      //   });
 
-      this.api
-        .exec<any>(service, 'ProjectsBusiness', 'GetProjectByIDAsync', e?.data)
-        .subscribe((res) => {
-          if (res) this.master.iterationName = res?.projectName;
-        });
+      // this.form.formGroup.patchValue(this.master);
+      this.changeDetectorRef.detectChanges();
     }
   }
 
@@ -330,4 +339,41 @@ export class PopupAddSprintsComponent implements OnInit {
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
+
+  // checkValidateForm(
+  //   grvSetup,
+  //   model,
+  //   noValidCout,
+  //   ignoredFields: string[] = []
+  // ) {
+  //   ignoredFields = ignoredFields.map((i) => i.toLowerCase()); ///1 so truogn hợp ko check bên ngoai là bỏ qua
+  //   var keygrid = Object.keys(grvSetup);
+  //   var keymodel = Object.keys(model);
+  //   for (let index = 0; index < keygrid.length; index++) {
+  //     if (grvSetup[keygrid[index]].isRequire == true) {
+  //       if (ignoredFields.includes(keygrid[index].toLowerCase())) {
+  //         continue;
+  //       }
+  //       for (let i = 0; i < keymodel.length; i++) {
+  //         if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+  //           if (
+  //             model[keymodel[i]] === null ||
+  //             String(model[keymodel[i]]).match(/^ *$/) !== null ||
+  //             model[keymodel[i]] == 0 ||
+  //             model[keymodel[i]].trim() == ''
+  //           ) {
+  //             this.notiService.notifyCode(
+  //               'SYS009',
+  //               0,
+  //               '"' + grvSetup[keygrid[index]].headerText + '"'
+  //             );
+  //             noValidCout++;
+  //             return noValidCout;
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return noValidCout;
+  // }
 }

@@ -37,9 +37,6 @@ export class CalendarCenterComponent
   @Input() popupEventTemplate:TemplateRef<any>;
   @Input() resourceTemplate:TemplateRef<any>;
 
-
-  @Output() evtChangeEvent = new EventEmitter();
-  @Output() evtChangeDateSchedule = new EventEmitter();
   @Output() evtChangeDate = new EventEmitter();
   @Output() evtChangeMonth = new EventEmitter();
   
