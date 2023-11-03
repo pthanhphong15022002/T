@@ -551,10 +551,10 @@ export class PopupAddCardsComponent implements OnInit {
           break;
       }
     }
-    if (!this.myWallet) {
+    if (!this.myWallet && (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))) {
       this.notifySV.notify('Bạn chưa tích hợp ví');
       return;
-    } else if (this.myWallet.coins < this.amount) {
+    } else if (this.myWallet && (this.myWallet?.coins < this.amount)) {
       this.notifySV.notify('Số dư ví của bạn không đủ');
       return;
     } else {
