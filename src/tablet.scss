@@ -79,7 +79,27 @@
   .aside-detail.w-250px{
     width: 200px!important;
   }
-
+  .col-7.ac-left{
+    width: 100%!important;
+    .mw-850{
+      max-width: 100%!important;
+    }
+  }
+  .col-5.ac-right{
+    width: 100%!important;
+    margin-top: 15px;
+    .mw-350px{
+      max-width: 100%!important;
+    }
+  }
+}
+@media (max-width: 1200px) {
+  .dt-card{
+    display: block!important;
+    .dt-card-left{
+      width: 100%!important;
+    }
+  }
 }
 /*********** ipad ************/
 
