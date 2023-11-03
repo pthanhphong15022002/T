@@ -79,6 +79,8 @@ export class IncommingAddComponent implements OnInit {
   employees: any;
   organizationUnits: any;
   defaultValue: any;
+  readOnly = false;
+
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -387,6 +389,9 @@ export class IncommingAddComponent implements OnInit {
 
   valueChangeDate(event: any) {
     this.dispatch[event?.field] = event?.data.fromDate;
+  }
+  valueChangeTags(e) {
+    this.dispatch.tags = e.data;
   }
   /////// lưu/câp nhật công văn
   async onSave() {
