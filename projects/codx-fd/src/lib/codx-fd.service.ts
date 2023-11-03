@@ -355,4 +355,14 @@ export class CodxFdService {
       ['FDParameters', cardtype]
     );
   }
+
+  CheckAvalidReceiver(cardtype: string, receiverID: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CheckAvalidReceiver',
+      ['FDParameters', cardtype, receiverID]
+    );
+  }
 }
