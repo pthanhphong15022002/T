@@ -79,6 +79,7 @@ import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-detail-popup/view-detail-popup.component';
 import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/popup-wallet-history.component';
 import { AchievementsComponent } from './achievements/achievements.component';
+import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
 
 export const routes: Routes = [
   {
@@ -253,6 +254,7 @@ const Component: Type<any>[] = [
   ViewDetailPopupComponent,
   PopupWalletHistoryComponent,
   AchievementsComponent,
+  PersonalAchievementComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
