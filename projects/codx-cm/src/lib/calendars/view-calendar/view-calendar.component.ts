@@ -46,8 +46,7 @@ import { PopupAddTaskCalendarComponent } from './popup-add-task-calendar/popup-a
 })
 export class ViewCalendarComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges
-{
+  implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('cellTemplate') cellTemplate!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp!: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>; //ressouce cuar schedule
@@ -194,7 +193,7 @@ export class ViewCalendarComponent
       });
   }
   //#region view
-  viewTask(data,customerName = '',dealName ='',contractName='',leadName='') {
+  viewTask(data, customerName = '', dealName = '', contractName = '', leadName = '') {
     if (data) {
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -381,11 +380,11 @@ export class ViewCalendarComponent
     }
   }
 
-  settingViews() {}
+  settingViews() { }
 
   //------------------More Func-----------------//
   //chua goi tho phan quyền -- đang full true
-  changeDataMF(e, data) {}
+  changeDataMF(e, data) { }
 
   clickMF(e, data) {
     this.actionName = e.text;
@@ -413,8 +412,8 @@ export class ViewCalendarComponent
     }
   }
 
-  getParentTask(task){
-    if(task){
+  getParentTask(task) {
+    if (task) {
       let recID = task?.recID;
       let taskGroupID = task?.taskGroupID;
       let stepID = task?.stepID;
@@ -425,18 +424,18 @@ export class ViewCalendarComponent
         'DP',
         'ActivitiesBusiness',
         'GetParentOfTaskAsync',
-        [recID, taskGroupID, stepID, instanceID , objectID, objectType]
+        [recID, taskGroupID, stepID, instanceID, objectID, objectType]
       ).subscribe((res) => {
-        if(res){
-          let customerName =  res?.customerName;
-          let dealName =  res?.applyFor == '1' ? res?.parentTaskName : '';
+        if (res) {
+          let customerName = res?.customerName;
+          let dealName = res?.applyFor == '1' ? res?.parentTaskName : '';
           let contractName = res?.applyFor == '4' ? res?.parentTaskName : '';
           let leadName = res?.applyFor == '5' ? res?.parentTaskName : '';
-          this.viewTask(task,customerName,dealName,contractName,leadName);
-        }else{
+          this.viewTask(task, customerName, dealName, contractName, leadName);
+        } else {
           this.viewTask(task);
         }
-        
+
       })
     }
   }
@@ -472,27 +471,27 @@ export class ViewCalendarComponent
     return task;
   }
 
-   async chooseTask(){
+  async chooseTask() {
     let typeTask = await this.stepService.chooseTypeTask(false);
     console.log(typeTask);
-    if(typeTask){
+    if (typeTask) {
       this.beforeAddTask(typeTask);
     }
   }
 
   async beforeAddTask(taskType) {
-    this.handleTask('calendar',taskType, "add");
+    this.handleTask('calendar', taskType, "add");
   }
 
   async handleTask(type, dataType, action, taskData = null, listInsStep = null) {
-    let taskOutput = await this.stepService.addTask(
+    let taskOutput = await this.stepService.openPopupTask(
       type,
       action,
       '',
-      taskData,
       dataType,
       this.insStep,
       listInsStep,
+      taskData,
       null,
       false,
       null,
@@ -500,12 +499,13 @@ export class ViewCalendarComponent
     );
     let task = taskOutput?.task;
     this.isActivitie = taskOutput?.isActivitie;
-    if (task && action == 'add') {
+    if (task && (action == 'add' || action == 'copy')) {
       this.isActivitie && this.addActivitie(task);
       !this.isActivitie && this.addStepTask(task);
     }
-    return task;
+    return taskOutput;
   }
+
   addActivitie(task) {
     task['progress'] = 0;
     task['refID'] = Util.uid();
@@ -561,39 +561,41 @@ export class ViewCalendarComponent
       const type = this.listTaskType?.find((t) => t?.value === data?.taskType);
       let task = await this.getTask(data);
       if (task) {
-        let dataEdit = await this.handleTask('calendar',type, 'edit', task);
-        let taskEdit = dataEdit?.task;
-        let fields = taskEdit.fields;
-        if (this.isStepTask) {
-          this.api
-            .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
-              taskEdit,
-              fields,
-            ])
-            .subscribe((res) => {
-              if (res) {
-                this.convertDataCalendar(res);
-                this.view.dataService.update(res).subscribe();
-                this.view.currentView['schedule'].refresh();
-                this.detectorRef.detectChanges();
-                this.notiService.notifyCode('SYS007');
-              }
-            });
-        }
-        if (this.isActivitie) {
-          this.api
-            .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
-              taskEdit,
-            ])
-            .subscribe((res) => {
-              if (res) {
-                this.convertDataCalendar(res);
-                this.view.dataService.update(res).subscribe();
-                this.view.currentView['schedule'].refresh();
-                this.detectorRef.detectChanges();
-                this.notiService.notifyCode('SYS007');
-              }
-            });
+        let dataEdit = await this.handleTask('calendar', type, 'edit', task);
+        if (dataEdit) {
+          let taskEdit = dataEdit?.task;
+          let fields = taskEdit.fields;
+          if (!this.isActivitie) {
+            this.api
+              .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
+                taskEdit,
+                fields,
+              ])
+              .subscribe((res) => {
+                if (res) {
+                  this.convertDataCalendar(res);
+                  this.view.dataService.update(res).subscribe();
+                  this.view.currentView['schedule'].refresh();
+                  this.detectorRef.detectChanges();
+                  this.notiService.notifyCode('SYS007');
+                }
+              });
+          }
+          if (this.isActivitie) {
+            this.api
+              .exec<any>('DP', 'ActivitiesBusiness', 'EditActivitiesAsync', [
+                taskEdit,
+              ])
+              .subscribe((res) => {
+                if (res) {
+                  this.convertDataCalendar(res);
+                  this.view.dataService.update(res).subscribe();
+                  this.view.currentView['schedule'].refresh();
+                  this.detectorRef.detectChanges();
+                  this.notiService.notifyCode('SYS007');
+                }
+              });
+          }
         }
       } else {
         this.notiService.notifyCode('');
@@ -609,7 +611,7 @@ export class ViewCalendarComponent
       let task = await this.getTask(data, 'copy');
       if (task) {
         delete task?.id;
-        await this.handleTask('calendar',type, 'add', task);
+        await this.handleTask('calendar', type, 'copy', task);
       } else {
         this.notiService.notifyCode('Bạn không có quyền thêm công việc');
       }
@@ -667,50 +669,50 @@ export class ViewCalendarComponent
   //#endregion
 }
 // async beforeAddTask(taskType) {
-  //   let option = new DialogModel();
-  //   let data = {
-  //     taskType,
-  //     isAdmin: this.isAdmin,
-  //   };
-  //   option.zIndex = 1001;
-  //   this.popupTypeCM = this.callfc.openForm(
-  //     PopupAddTaskCalendarComponent,
-  //     '',
-  //     650,
-  //     500,
-  //     '',
-  //     data,
-  //     '',
-  //     option
-  //   );
-  //   let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
-  //   if (dataOuput?.event) {
-  //     let taskType = dataOuput?.event?.taskType;
-  //     let dataTypeCM = dataOuput?.event?.dataCheck;
-  //     let listInsStep = [];
-  //     if (dataTypeCM && taskType) {
-  //       this.isStepTask = dataTypeCM?.applyProcess;
-  //       this.isActivitie = !this.isStepTask;
-  //       if (this.isStepTask) {
-  //         this.api
-  //           .exec<any>(
-  //             'DP',
-  //             'InstancesStepsBusiness',
-  //             'GetInscestepCalendarAsync',
-  //             [dataTypeCM?.refID, dataTypeCM?.full]
-  //           )
-  //           .subscribe((res) => {
-  //             if (res) {
-  //               if (res?.length > 0) {
-  //                 this.handleTask(taskType, 'add', null, res);
-  //               }
-  //             }
-  //           });
-  //       } else {
-  //         this.entityName = dataTypeCM?.entityName;
-  //         this.objectID = dataTypeCM?.recID;
-  //         this.handleTask(taskType, 'add', null);
-  //       }
-  //     }
-  //   }
-  // }
+//   let option = new DialogModel();
+//   let data = {
+//     taskType,
+//     isAdmin: this.isAdmin,
+//   };
+//   option.zIndex = 1001;
+//   this.popupTypeCM = this.callfc.openForm(
+//     PopupAddTaskCalendarComponent,
+//     '',
+//     650,
+//     500,
+//     '',
+//     data,
+//     '',
+//     option
+//   );
+//   let dataOuput = await firstValueFrom(this.popupTypeCM.closed);
+//   if (dataOuput?.event) {
+//     let taskType = dataOuput?.event?.taskType;
+//     let dataTypeCM = dataOuput?.event?.dataCheck;
+//     let listInsStep = [];
+//     if (dataTypeCM && taskType) {
+//       this.isStepTask = dataTypeCM?.applyProcess;
+//       this.isActivitie = !this.isStepTask;
+//       if (this.isStepTask) {
+//         this.api
+//           .exec<any>(
+//             'DP',
+//             'InstancesStepsBusiness',
+//             'GetInscestepCalendarAsync',
+//             [dataTypeCM?.refID, dataTypeCM?.full]
+//           )
+//           .subscribe((res) => {
+//             if (res) {
+//               if (res?.length > 0) {
+//                 this.handleTask(taskType, 'add', null, res);
+//               }
+//             }
+//           });
+//       } else {
+//         this.entityName = dataTypeCM?.entityName;
+//         this.objectID = dataTypeCM?.recID;
+//         this.handleTask(taskType, 'add', null);
+//       }
+//     }
+//   }
+// }

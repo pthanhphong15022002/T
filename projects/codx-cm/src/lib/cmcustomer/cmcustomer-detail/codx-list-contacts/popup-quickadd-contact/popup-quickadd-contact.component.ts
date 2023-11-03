@@ -167,7 +167,6 @@ export class PopupQuickaddContactComponent implements OnInit {
           : this.data.refID;
     }
     if (this.type == 'formDetail') {
-      this.data.contactType = this.contactType;
       this.data.isDefault = this.isDefault;
       this.data.objectID = this.recIDCm;
       this.data.objectType = this.objectType;
@@ -199,7 +198,6 @@ export class PopupQuickaddContactComponent implements OnInit {
         if (res) {
           this.data = res;
           this.data.isDefault = this.isDefault;
-          this.data.contactType = this.contactType;
           this.data.objectID = this.recIDCm;
           this.data.objectType = this.objectType;
           this.data.objectName = this.objectName;
@@ -217,7 +215,6 @@ export class PopupQuickaddContactComponent implements OnInit {
     } else {
       this.data.recID = Util.uid();
       this.data.isDefault = this.isDefault;
-      this.data.contactType = this.contactType;
       this.data.objectID = this.recIDCm;
       this.data.objectType = this.objectType;
       this.data.objectName = this.objectName;
@@ -240,7 +237,6 @@ export class PopupQuickaddContactComponent implements OnInit {
         if (res) {
           this.data = res;
           this.data.isDefault = this.isDefault;
-          this.data.contactType = this.contactType;
           this.data.objectID = this.recIDCm;
           this.data.objectType = this.objectType;
           this.data.objectName = this.objectName;
@@ -257,7 +253,6 @@ export class PopupQuickaddContactComponent implements OnInit {
       });
     } else {
       this.data.isDefault = this.isDefault;
-      this.data.contactType = this.contactType;
       this.data.objectID = this.recIDCm;
       this.data.objectType = this.objectType;
       this.data.objectName = this.objectName;
@@ -272,6 +267,7 @@ export class PopupQuickaddContactComponent implements OnInit {
   }
 
   onSave(type) {
+    this.data.contactType = this.contactType;
     this.count = this.cmSv.checkValidate(this.gridViewSetup, this.data);
     if (this.count > 0) return;
     if (this.data.mobile != null && this.data.mobile.trim() != '') {

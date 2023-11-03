@@ -3,12 +3,15 @@
     <div class="h-100">
       <codx-gridview-v2
         #grid
-        service="WR"
-        [formModel]="dialog.formModel"
         [formName]="dialog.formModel.formName"
         [gridViewName]="dialog.formModel.gridViewName"
         [entityName]="dialog.formModel.entityName"
-        [dataSource]="lstImportParts"
+        [service]="service"
+        [assemblyName]="assemblyName"
+        [className]="className"
+        [method]="method"
+        [predicates]="predicates"
+        [dataValues]="dataValues"
         rowHeight="40"
         [height]="'100%'"
         [hideMoreFunc]="true"

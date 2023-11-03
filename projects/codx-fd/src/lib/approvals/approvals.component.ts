@@ -145,13 +145,14 @@ export class ApprovalsComponent extends UIComponent {
             this.activeCoins = dataValue?.ManualCoins || '0';
             this.activeKudos = dataValue?.ManualPoints || '0';
           }
-          this.openPopupApproval(item);
+          this.openPopupApproval(item, 1);
         });
     }
   }
 
   notAccept(item) {
-    this.update(item, 2);
+    // this.update(item, 2);
+    this.openPopupApproval(item, 2);
   }
 
   update(item, status) {
@@ -178,7 +179,7 @@ export class ApprovalsComponent extends UIComponent {
   }
 
   // popup chọn điểm và ý kiến
-  openPopupApproval(item) {
+  openPopupApproval(item, status) {
     var obj = {
       recID: item.recID,
       activeCoins: this.activeCoins,
@@ -197,7 +198,7 @@ export class ApprovalsComponent extends UIComponent {
     );
     popup.closed.subscribe((res: any) => {
       if (!res || res.closedBy == 'escape' || !res.event) return;
-      this.update(item, 1);
+      this.update(item, status);
     });
   }
 

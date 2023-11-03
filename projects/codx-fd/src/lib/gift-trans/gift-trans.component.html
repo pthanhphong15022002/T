@@ -29,7 +29,7 @@
     <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3 px-4" [typeMF]="'hover'"
         [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
         imageObjType="AD_Users" imgCss="me-3" [title]="data.userName" [baseHeaderRightTmp]="baseHeaderRightTmp"
-        [subTitle]="data.positionID" [footer]="footer" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
+        [subTitle]="data.positionID | positionName | async " [footer]="footer" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
     </codx-temp-full>
 </ng-template>
 
