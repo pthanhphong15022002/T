@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService, ButtonModel, CRUDService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CRUDService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component';
 import { PopupSendGiftComponent } from './popup-send-gift/popup-send-gift.component';
 import { CodxFdService } from '../codx-fd.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
     selector: 'lib-gift-trans',
