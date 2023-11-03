@@ -36,7 +36,8 @@
                         [crrValue]="form.controls['receiver'].value" [loadFull]="true" field="receiver"
                         (valueChange)="valueChange($event)" refValue="Users">
                     </codx-input> -->
-                    <codx-input ControlName="receiver" [formModel]="dialog.formModel" [Group]="form">
+                    <codx-input #inputReceiver ControlName="receiver" [formModel]="dialog.formModel" [Group]="form"
+                        (valueChange)="valueChange($event)" field="receiver">
                     </codx-input>
                 </div>
             </ng-container>

@@ -36,6 +36,7 @@ export class ImportinvoicesDetailComponent extends UIComponent {
   itemSelected: any;
   dataCategory: any; //? data của category
   optionSidebar: SidebarModel = new SidebarModel();
+  id: string;
   tabInfo: TabModel[] = [
     //? danh sách các tab footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -65,8 +66,18 @@ export class ImportinvoicesDetailComponent extends UIComponent {
     this.optionSidebar.isFull = true;
   }
 
-  ngOnChanges(value: SimpleChange) {
-    this.getDataDetail(this.dataItem.recID);
+  ngOnChanges(changes: SimpleChange) {
+    if (changes['recID']) {
+      if (
+        changes['recID'].currentValue === this.id ||
+        changes['recID'].currentValue == null
+      )
+        return;
+      this.id = changes['recID'].currentValue;
+      // this.loadedHisPro = false;
+      // this.getTaskDetail();
+      this.getDataDetail(this.dataItem,this.id);
+    }
   }
 
   //#endregion Init
@@ -80,10 +91,10 @@ export class ImportinvoicesDetailComponent extends UIComponent {
    * *Hàm get data chi tiết
    * @param data
    */
-  getDataDetail(recID) {
+  getDataDetail(data,recID) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'GetTempInvoicesDetailAsync', [
-        recID,
+        data,recID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -93,4 +104,39 @@ export class ImportinvoicesDetailComponent extends UIComponent {
   }
 
   //#endregion
+  
+  /**
+   * *Hàm ẩn hiện các tab khi thay đổi chứng từ theo loại chứng từ
+   * @param event
+   * @param ele
+   */
+  showHideTab(type: any, ele?: TabComponent) {
+    ele = this.elementTabDetail;
+    if (ele) {
+      ele.hideTab(0, false);
+      ele.select(0);
+      switch (type) {
+        case '2':
+          ele.hideTab(0, false);
+          ele.hideTab(1, false);
+          ele.hideTab(2, false);
+          break;
+        case '1':
+        case '3':
+          ele.hideTab(1, false);
+          ele.hideTab(2, false);
+          ele.hideTab(2, true);
+          break;
+      }
+    }
+  }
+  /**
+   * *Hàm khởi tạo các tab detail
+   * @param e
+   * @param ele
+   */
+  createTab(e: any, ele: TabComponent) {
+    this.showHideTab(this.itemSelected?.subType, ele);
+  }
+  //#endregion Init
 }

@@ -174,6 +174,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       hideFields.push('VATBase'); 
       hideFields.push('VATAmt2');
       hideFields.push('VATBase2');
+      hideFields.push('VATID');
     }else{
       if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){
         hideFields.push('VATAmt2');

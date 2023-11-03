@@ -1,10 +1,12 @@
 <codx-views #view [views]="views" [idField]="'recID'" [button]="buttonAdd" [autoLoad]="true" [selectedFirst]="true"
-    (selectedChange)="selectedChange($event)" [entityName]="entityName" (buttonClick)="clickShowAssideRight()">
+    (selectedChange)="selectedChange($event)" [entityName]="entityName" (buttonClick)="clickShowAssideRight()"
+    (viewChanged)="viewChanged($event)"
+>
 </codx-views>
 
 <ng-template #panelLefRef>
 </ng-template>
-<ng-template #itemTemplate let-data>
+<ng-template #itemTemplateGift let-data>
     <ng-container *ngIf="data.transType == '1'; else transType2">
         <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3 px-4" [typeMF]="'hover'"
             [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
@@ -21,13 +23,33 @@
             [date]="data.createdOn" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
         </codx-temp-full>
     </ng-template>
+</ng-template>
 
+<ng-template #itemTemplateEVoucher let-data>
+    <codx-temp-full [dataItem]="data" cardCss="card-template border-bottom p-3 px-4" [typeMF]="'hover'"
+        [formModel]="view.formModel" (clickMF)="clickMF($event,data)" [imageId]="data.userID"
+        imageObjType="AD_Users" imgCss="me-3" [title]="data.userName" [baseHeaderRightTmp]="baseHeaderRightTmp"
+        [subTitle]="data.positionID | positionName | async " [footer]="footer" [bookmark]="false" [subTitleCss]="'pb-2 subgift'">
+    </codx-temp-full>
 </ng-template>
 
 <ng-template #panelRightRef>
     <fd-detail-gift 
         [objectID]="selectedGiftID" 
         [formModel]="view.formModel"
+        [functionID]="funcID"
         (changeStatus)="changeStatus($event)"
     ></fd-detail-gift>
+</ng-template>
+
+<ng-template #baseHeaderRightTmp let-data>
+    <p>{{data.transType | vll:'L1437':'text' | async}} </p>  
+</ng-template>
+
+<ng-template #footer let-data>
+    <p class="mgb-0">{{data?.itemName}}</p>
+    <div class="footer-e">
+        <p class="mgb-0">{{data?.createdOn | date: 'dd/MM/yyyy'}}</p>
+        <p class="mgb-0">{{data?.price}} xu</p>
+    </div>
 </ng-template>

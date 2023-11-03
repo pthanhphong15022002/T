@@ -74,7 +74,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   //#region variable
   user:any = null;
   views: Array<ViewModel> = [];
-  calendarParams:any[] = [];
+  settingCalendars:any[] = [];
   typeNavigate = 'Month';
   defaultFuncID:string = 'COT03'; // lịch cá nhân
   locale:string = 'vi';
@@ -127,9 +127,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   constructor(
     private injector: Injector,
     private coService: CodxCoService,
-    private cacheService: CacheService,
-    private notificationsService: NotificationsService,
-    private cfService: CallFuncService,
+    private notiService: NotificationsService,
     private authStore:AuthStore
   ) {
     super(injector);
@@ -271,25 +269,23 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         if (res?.length > 0) {
           let arrParam = [];
           res.forEach((element) => {
-            let obj = JSON.parse(element);
-            this.statusColor.push({
-              color: obj.ShowBackground,
-              borderColor: obj.ShowColor,
-              text: obj.Template.TransType,
-              status: obj.Template.TransType,
-              textColor: obj.TextColor ?? "#1F1717" // textColor chưa có thiết lập - gắn để test
-            });
-            this.dResources[obj.Template.TransType] = {
-              color: obj.ShowColor,
-              backgroundColor: obj.ShowBackground,
-              borderColor: obj.ShowColor,
-              text: obj.Template.TransType,
-              status: obj.Template.TransType,
-            }
-            this.dPredicate[obj.Template.TransType] = obj.Predicate;
-            arrParam.push(obj);
+            let param = JSON.parse(element);
+            if(!param["TextColor"])
+              param["TextColor"] = "#1F1717"; // textColor chưa có thiết lập - gắn để test
+            let obj = {
+              color: param.ShowBackground,
+              borderColor: param.ShowColor,
+              showColor: param.ShowColor,
+              text: param.Template.TransType,
+              status: param.Template.TransType,
+              textColor: param.TextColor 
+            };
+            this.statusColor.push(obj);
+            this.dResources[param.Template.TransType] = obj;
+            this.dPredicate[param.Template.TransType] = param.Predicate;
+            arrParam.push(param);
           });
-          this.calendarParams = arrParam;
+          this.settingCalendars = arrParam;
           this.getEventData();
           this.detectorRef.detectChanges();
         }
@@ -386,7 +382,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   valueChange(e) {
     let transType = e.field;
     let value = e.data === false ? "0" : "1";
-    this.calendarParams.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
+    this.settingCalendars.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
     if(value == "0")
     {
       this.lstEvents = this.lstEvents.filter(x => x.transType != transType);
@@ -440,17 +436,35 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   //open popup setting
   openPopupSetting() {
-    let option = new DialogModel();
-    this.cfService.openForm(
-      PopupSettingsComponent,
-      '',
-      600,
-      550,
-      '',
-      this.calendarParams,
-      '',
-      option
-    );
+    if(this.settingCalendars)
+    {
+      let option = new DialogModel();
+      this.callfc.openForm(
+        PopupSettingsComponent,
+        '',
+        600,
+        550,
+        '',
+        this.settingCalendars,
+        '',
+        option
+      ).closed.subscribe((res:any) =>
+      {
+        if(res?.event)
+        {
+          debugger
+          let settings = [];
+          res.event.forEach(element => {
+            let setting = JSON.parse(element);
+            if(!setting["TextColor"])
+              setting["TextColor"] = "#1F1717";
+              settings.push(setting);
+          });
+          this.settingCalendars = settings;
+        }
+      });
+    }
+    
   }
 
   //render day cell ej2Calendar
@@ -466,7 +480,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           let span: HTMLElement;
           span = document.createElement('span');
           span.setAttribute('class', 'e-icons highlight');
-          span.setAttribute('style', `color:${this.dResources[e.transType].color}`);
+          span.setAttribute('style', `color:${this.dResources[e.transType].showColor}`);
           addClass([args.element], ['special', 'e-day']);
           if((args.element as HTMLElement).children.length > 3)
           {
@@ -539,7 +553,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // get event TM
   getEventTM(transType){
-    let param = this.calendarParams.find(x => x.Template.TransType == transType);
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
     if(param.ShowEvent == "1")
     {
       var grdModel = new DataRequest();
@@ -567,16 +581,17 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
 // get event CO
   getEventCO(transType){
-    let param = this.calendarParams.find(x => x.Template.TransType == transType);
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
     if(param.ShowEvent == "1"){
       return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",
       [this.calendarID,param.Predicate,this.groupID,this.orgUnitID,this.startDate,this.endDate]).pipe(map((res:any) => {
         let eventMeetings = [];
         if(res?.length > 0 && res[0]?.length > 0)
         {
-          eventMeetings = res[0].map((note:any) => {
-            return this.convertModelEvent(note,transType);
-          });
+          // eventMeetings = res[0].map((note:any) => {
+          //   return this.convertModelEvent(note,transType);
+          // });
+          eventMeetings = res[0];
         }
         return {transType:transType, data:eventMeetings};
       }));
@@ -587,7 +602,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // get event EP
   getEventEP(transType){
-    let param = this.calendarParams.find(x => x.Template.TransType == transType);
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
     if(param.ShowEvent == "1"){
       var grdModel = new DataRequest();
       grdModel.funcID = param.Template.FunctionID;
@@ -612,7 +627,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // get event WP
   getEventWP(transType){
-    let param = this.calendarParams.find(x => x.Template.TransType == transType);
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
     if(param.ShowEvent == "1"){
       return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync",
       [this.calendarID,param.Predicate,this.groupID,this.orgUnitID,this.startDate,this.endDate]).pipe(map((res:any) => {
@@ -681,7 +696,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               if(res2?.event)
               {
                 let booking = this.convertModelEvent(res2.event,"EP_BookingCars");
-                let month = booking.startDate.getMonth() + 1;
+                let month = new Date(booking.startDate)?.getMonth() + 1;
                 if(!this.dEventMonth[month])
                   this.dEventMonth[month] = [];
                 this.dEventMonth[month].push(booking);
@@ -694,7 +709,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         });
       }
       else
-        this.notificationsService.notify("Lỗi đặt xe");
+        this.notiService.notify("Lỗi đặt xe");
     });
   }
 
@@ -718,7 +733,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               if(res2?.event)
               {
                 let booking = this.convertModelEvent(res2.event,"EP_BookingRooms");
-                let month = booking.startDate.getMonth() + 1;
+                let month = new Date(booking.startDate)?.getMonth() + 1;
                 if(!this.dEventMonth[month])
                   this.dEventMonth[month] = [];
                 this.dEventMonth[month].push(booking);
@@ -731,7 +746,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         });
       }
       else
-        this.notificationsService.notify("Lỗi đặt phòng");
+        this.notiService.notify("Lỗi đặt phòng");
     });
   }
 
@@ -764,7 +779,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             if(event)
             {
               let note = this.convertModelEvent(event,"WP_Notes");
-              let month = note.startDate.getMonth() + 1;
+              let month = new Date(note.startDate)?.getMonth() + 1;
               this.lstEvents.push(note);
               this.dEventMonth[month].push(note);
               this.ejCalendar && this.ejCalendar.refresh();
@@ -800,7 +815,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             if (res2?.event) 
             {
               let meeting = this.convertModelEvent(res2.event,"CO_Meetings");
-              let month = meeting.startDate.getMonth() + 1;
+              let month = new Date(meeting.startDate)?.getMonth() + 1;
               if(!this.dEventMonth[month])
                 this.dEventMonth[month] = [];
               this.dEventMonth[month].push(meeting);
@@ -812,7 +827,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           });
         }
         else
-          this.notificationsService.notify("Lỗi thêm sự kiện");
+          this.notiService.notify("Lỗi thêm sự kiện");
       });
   }
 
@@ -844,7 +859,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           if(res2.event)
           {
             let task = this.convertModelEvent(res2.event[0],"TM_MyTasks")
-            let month = task.startDate.getMonth() + 1;
+            let month = new Date(task.startDate)?.getMonth() + 1;
             if(!this.dEventMonth[month])
               this.dEventMonth[month] = [];
             this.dEventMonth[month].push(task);
@@ -856,7 +871,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         });
       }
       else
-        this.notificationsService.notify("Lỗi thêm công việc");
+        this.notiService.notify("Lỗi thêm công việc");
     });
   }
 
@@ -886,7 +901,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           if(res2?.event?.length > 0)
           {
             let task = this.convertModelEvent(res2.event[0],"TM_AssignTasks")
-            let month = task.startDate.getMonth() + 1;
+            let month = new Date(task.startDate)?.getMonth() + 1;
             if(!this.dEventMonth[month])
               this.dEventMonth[month] = [];
             this.dEventMonth[month].push(task);
@@ -898,7 +913,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         });
       }
       else
-        this.notificationsService.notify("Lỗi thêm giao việc");
+        this.notiService.notify("Lỗi thêm giao việc");
     });
   }
 
@@ -991,7 +1006,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // convert Event to Event CO
   convertModelEvent(obj:any,transType:string){
-    let template = this.calendarParams.find(x => x.Template.TransType == transType)?.Template;
+    let template = this.settingCalendars.find(x => x.Template.TransType == transType)?.Template;
     let event = new CO_EventModel();
     for(const field in template)
     {
