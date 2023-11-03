@@ -1267,22 +1267,11 @@ export class PopupAddSignFileComponent implements OnInit {
             this.currentTab == 0 && this.currentTab++;
             this.processTab == 0 && this.processTab++;
           }
-
-          //}
         } else {
           this.notify.notifyCode('ES006');
         }
 
         break;
-      // case 1:
-      //   // if (this.isAddNew) {
-
-      //   // } else {
-      //   //   this.updateNodeStatus(oldNode, newNode);
-      //   //   this.processTab == 1 && this.processTab++;
-      //   //   this.currentTab++;
-      //   // }
-      //   break;
 
       case 1:
         if (this.data.approveControl == '3') {
@@ -1292,11 +1281,6 @@ export class PopupAddSignFileComponent implements OnInit {
         this.newNode = newNode;
         this.onSaveSignFile();
         this.nextClick = true;
-        //this.viewApprovalStep.updateApprovalStep();
-        // this.updateNodeStatus(oldNode, newNode);
-        // this.currentTab++;
-        // this.processTab == 1 && this.processTab++;
-        // this.cr.detectChanges();
         break;
       case 2:
         if (this.esService.getApprovalStep) break;
@@ -1565,31 +1549,6 @@ export class PopupAddSignFileComponent implements OnInit {
       }
     }
   }
-  // fileCount(event) {
-  //   if (event?.length == 0) {
-  //     this.disableContinue = true;
-  //   } else {
-  //     this.disableContinue = false;
-  //     if (this.data.title == null && event?.data[0]?.fileName != null) {
-  //       let title = JSON.parse(JSON.stringify(event?.data[0].fileName));
-  //       for (let i = event?.data[0].fileName.length; i >= 0; i--) {
-  //         title = title.slice(0, i - 1);
-  //         if (event?.data[0].fileName[i - 1] === '.') break;
-  //       }
-  //       this.data.title = title;
-  //       this.dialogSignFile.patchValue({ title: title });
-  //       this.cr.detectChanges();
-  //     }
-  //     // this.attachment?.fileUploadList.forEach((file :any) => {
-  //     //   file.esESign=this.eSign;
-  //     //   file.esIndex=this.fileIndex;
-  //     //   this.fileIndex++;
-  //     // });
-  //   }
-  //   console.log('file upload', this.attachment?.fileUploadList);
-
-  //   //console.log('count sf', event);
-  // }
   dowloadTemplate() {
     //console.log('download');
   }
@@ -1610,9 +1569,6 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       if (this.attachment?.fileUploadList?.length > 0) {
         this.disableContinue = true;
-        // for (let i = 0; i < this.attachment.fileUploadList.length; i++) {
-        //   this.attachment.fileUploadList[i].referType = 'sign';
-        // }
         (await this.attachment.saveFilesObservable()).subscribe(
           (item2: any) => {
             this.disableContinue = false;
@@ -1632,9 +1588,6 @@ export class PopupAddSignFileComponent implements OnInit {
         );
       }
     }
-    //console.log('file upload',this.attachment?.fileUploadList);
-
-    //console.log('count sf', event);
   }
   fileCheckChange(evt: any, file: any) {
     if (evt && this.eSign && this.data?.files && this.data?.files?.length > 0) {
@@ -1672,17 +1625,6 @@ export class PopupAddSignFileComponent implements OnInit {
     }
     return false;
   }
-  // fileCheckChange(evt:any,file:any){
-  //   if(evt && this.eSign){
-  //     this.attachment?.fileUploadList.forEach((f :any) => {
-  //       if(f?.esIndex==file?.esIndex){
-  //         f.esESign = evt?.data;
-  //         f.referType = f.esESign? 'sign' : 'source'
-  //         this.cr.detectChanges();
-  //       }
-  //     });
-  //   }
-  // }
 
   chooseTemplateType(type: string) {
     let tempTemplateType = '';
@@ -1917,6 +1859,8 @@ export class PopupAddSignFileComponent implements OnInit {
                         }
                         //
                         this.data.files = lstFile;
+                        this.dialogSignFile?.patchValue({ files: this.data.files });
+                        this.disableContinue=false;
                         this.showAttachment = true;
                         this.cr.detectChanges();
                       } else {
@@ -1972,6 +1916,8 @@ export class PopupAddSignFileComponent implements OnInit {
                   }
                   //
                   this.data.files = lstFile;
+                  this.dialogSignFile?.patchValue({ files: this.data.files });
+                  this.disableContinue=false;
                   this.loadedTemplateFile = true;
                   this.cr.detectChanges();
                 } else {
@@ -2033,6 +1979,8 @@ export class PopupAddSignFileComponent implements OnInit {
                   }
                   //
                   this.data.files = lstFile;
+                  this.dialogSignFile?.patchValue({ files: this.data.files });
+                  this.disableContinue=false;
                   this.showAttachment = true;
                   this.cr.detectChanges();
                 } else {

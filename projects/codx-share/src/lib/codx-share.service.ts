@@ -881,7 +881,6 @@ export class CodxShareService {
   }
 
   getDataCO_Meetings(...args) {
-    debugger
     return this.api.execSv(
       'CO',
       'CO',
@@ -1759,65 +1758,6 @@ export class CodxShareService {
     }
   }
 
-  // apExportFileWithTemplate(
-  //   approveProcess: ApproveProcess,
-  //   releaseCallback: (response: ResponseModel, component: any) => void,
-  //   template: any,
-  //   releaseBackground: boolean = false
-  // ) {
-  //   approveProcess.template = template;
-  //   if (template?.templateID == null && template?.templateType == null) {
-  //     //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
-  //     this.notificationsService.alertCode('AP0001').subscribe((x) => {
-  //       if (x.event?.status == 'Y') {
-  //         this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
-  //       } else {
-  //         return;
-  //       }
-  //     });
-  //   } else if (template?.templateID != null && template?.templateID != null) {
-  //     let exportUpload = new ExportUpload();
-  //     //exportUpload.templateRecID = template?.templateID;
-  //     //exportUpload.templateType = template?.templateType;
-  //     exportUpload.convertToPDF = false;
-  //     exportUpload.title = approveProcess.title;
-  //     exportUpload.entityName = approveProcess.entityName;
-  //     exportUpload.module = approveProcess.module;
-  //     exportUpload.objectID = approveProcess.recID;
-  //     exportUpload.objectType = approveProcess.entityName;
-  //     exportUpload.referType = 'source';
-  //     exportUpload.functionID = approveProcess.funcID;
-  //     exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-
-  //     // this.getRpListByTemplateID(template?.templateID).subscribe(
-  //     //   (rpList: any) => {
-  //     //     if (rpList) {
-  //     //       exportUpload.reportRecID = rpList?.recID;
-  //     //       exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-  //     //       this.apCreateExportFile(
-  //     //         approveProcess,
-  //     //         releaseCallback,
-  //     //         exportUpload
-  //     //       );
-  //     //     } else {
-  //     //       exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
-  //     //       this.apCreateExportFile(
-  //     //         approveProcess,
-  //     //         releaseCallback,
-  //     //         exportUpload
-  //     //       );
-  //     //     }
-  //     //   }
-  //     // );
-  //   } else {
-  //     this.notificationsService.notify(
-  //       'Vui lòng kiểm tra lại mẫu thiết lập',
-  //       '2'
-  //     );
-  //     return;
-  //   }
-  // }
-
   apExportFileWithMultiTemplate(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
@@ -1826,8 +1766,6 @@ export class CodxShareService {
   ) {
     approveProcess.template = templates;
     let exportUpload = new ExportUpload();
-    //exportUpload.templateRecID = templates?.templateID;
-    //exportUpload.templateType = templates?.templateType;
     exportUpload.convertToPDF = false;
     exportUpload.title = approveProcess.title;
     exportUpload.entityName = approveProcess.entityName;

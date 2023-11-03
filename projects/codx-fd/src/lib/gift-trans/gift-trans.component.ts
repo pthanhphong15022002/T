@@ -1,7 +1,6 @@
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, Inject, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthService, ButtonModel, CRUDService, DialogRef, NotificationsService, RequestModel, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
-import { mode } from 'crypto-js';
+import { AuthService, ButtonModel, CRUDService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupAddGiftComponent } from './popup-add-gift/popup-add-gift.component';
 import { PopupSendGiftComponent } from './popup-send-gift/popup-send-gift.component';
 import { CodxFdService } from '../codx-fd.service';
@@ -25,15 +24,15 @@ export class GiftTransComponent extends UIComponent {
     listGiftTran: any[] = [];
     selectedGiftID: string = "";
     dataSelected: any;
-    @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
+    currFuncID: string = "";
+    @ViewChild("itemTemplateGift") itemTemplateGift: TemplateRef<any>;
+    @ViewChild("itemTemplateEVoucher") itemTemplateEVoucher: TemplateRef<any>;
     @ViewChild("panelRightRef") panelRightRef: TemplateRef<any>;
     @ViewChild("panelLefRef") panelLefRef: TemplateRef<any>;
 
 
     constructor(
         private injector: Injector,
-        private auth: AuthService,
-        private notifiSV: NotificationsService,
         private route: ActivatedRoute,
         private dt: ChangeDetectorRef,
         private serviceFD: CodxFdService
@@ -43,6 +42,7 @@ export class GiftTransComponent extends UIComponent {
 
     onInit() {
         this.funcID = this.route.snapshot.paramMap.get('funcID');
+        this.currFuncID = this.funcID;
         //console.log('funcID:', this.funcID);
     }
 
@@ -55,9 +55,8 @@ export class GiftTransComponent extends UIComponent {
             active: true,
             sameData: true,
             model: {
-                template: this.itemTemplate,
-                panelRightRef: this.panelRightRef,
-                panelLeftRef: this.panelLefRef
+                template: this.funcID === "FDT091" ? this.itemTemplateGift: this.itemTemplateEVoucher,
+                panelRightRef: this.panelRightRef
             }
         }];
         this.dt.detectChanges();
@@ -124,5 +123,24 @@ export class GiftTransComponent extends UIComponent {
     changeStatus(event: string) {
         this.dataSelected.status = event;
         this.view.dataService.update(this.dataSelected).subscribe();
+    }
+
+    viewChanged(event: any) {
+        if(event){
+            this.funcID = this.route.snapshot.paramMap.get('funcID');
+            if(this.funcID !== this.currFuncID){
+                this.currFuncID = this.funcID;
+                this.views = [{
+                    type: ViewType.listdetail,
+                    active: true,
+                    sameData: true,
+                    model: {
+                        template: this.funcID === "FDT091" ? this.itemTemplateGift: this.itemTemplateEVoucher,
+                        panelRightRef: this.panelRightRef
+                    }
+                }];
+                this.view.load();
+            }
+        }
     }
 }
