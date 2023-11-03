@@ -2,37 +2,37 @@
     <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200 table-thead-ac">
             <tr class="border-bottom">
-                <th class="w-40 border-bottom">
+                <th class="w-30 border-bottom">
                     <div class="d-flex align-items-center justify-content-start ps-3">
                         <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
                         </codx-label>
                     </div>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-10 border-bottom">
                     <div class="d-flex align-items-center justify-content-end ps-3">
                         <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ">
                         </codx-label>
                     </div>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-10 border-bottom">
                     <div class="d-flex align-items-center justify-content-end ps-3">
                         <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ, HT">
                         </codx-label>
                     </div>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom">
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-10 border-bottom">
                     <div class="d-flex align-items-center justify-content-end ps-3">
                         <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có">
                         </codx-label>
                     </div>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-10 border-bottom">
                     <div class="d-flex align-items-center justify-content-end ps-3">
                         <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
                         </codx-label>
                     </div>
                 </th>
-                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-10 border-bottom">
                     <div class="d-flex align-items-center justify-content-end ps-3">
                         <codx-label class="fw-bold" fiedName="lblDR2" default="Số tiền, NT">
                         </codx-label>
@@ -205,44 +205,47 @@
         </tbody>
     </table>
     <div *ngIf="listAcctrants && listAcctrants.length == 0" class="ac-empty">
-        <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+        <!-- <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
             <div class="d-flex flex-column flex-center justify-content-center">
                 <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
                 <div class="fs-6 text-dark mt-2 text-center">
                     {{ "SYS011" | mssg | async }}
                 </div>
             </div>
-        </div>
+        </div> -->
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+                <div class="fs-6 text-dark mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                </div>
     </div>
 </div>
 <table style="table-layout: fixed;" class="table mb-0">
     <tfoot class="table-footer-ac">
-        <td class="w-40">
-            <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+        <td class="w-30">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
                 <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
                     default="Tổng cộng">
                 </codx-label>
             </div>
         </td>
-        <td class="w-15">
+        <td class="w-10">
             <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
                 <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctDR
                   | tranformValueNumber : 'B' | async"></span>
             </div>
         </td>
-        <td class="w-15">
+        <td class="w-10">
             <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
                 <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctCR
                   | tranformValueNumber : 'B' | async"></span>
             </div>
         </td>
-        <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15">
+        <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-10">
             <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
                 <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalTransAmt
                   | tranformValueNumber : 'S' | async"></span>
             </div>
         </td>
-        <td class="w-15"></td>
-        <td class="w-15"></td>
+        <td class="w-30"></td>
     </tfoot>
 </table>

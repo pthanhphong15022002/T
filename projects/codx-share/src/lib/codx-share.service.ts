@@ -881,7 +881,6 @@ export class CodxShareService {
   }
 
   getDataCO_Meetings(...args) {
-    debugger
     return this.api.execSv(
       'CO',
       'CO',

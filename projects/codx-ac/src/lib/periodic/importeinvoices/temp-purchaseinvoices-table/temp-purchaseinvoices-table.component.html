@@ -10,6 +10,12 @@
           </th>
           <th class="w-15 border-bottom">
             <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="umid" default="ĐVT">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
               <codx-label class="fw-bold" fiedName="lblQuantity" default="Số lượng">
               </codx-label>
             </div>
@@ -23,6 +29,12 @@
           <th class="w-15 border-bottom">
             <div class="d-flex align-items-center justify-content-end ps-3">
               <codx-label class="fw-bold" fiedName="lblPrice" default="Thành tiền">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế suất">
               </codx-label>
             </div>
           </th>
@@ -73,7 +85,7 @@
                       </div>                                     
                     </ng-container>
                   </div>
-                  <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
+                  <!-- <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
                                       (item.idiM5 != null && item.idiM5 != '') || 
                                       (item.idiM6 != null && item.idiM6 != '') ||
                                       (item.idiM7 != null && item.idiM7 != '') ||
@@ -117,8 +129,8 @@
                         </div>
                       </div>                    
                     </ng-container>
-                  </div>
-                  <div *ngIf="item?.lineType != '1'" class="d-flex justify-content-start">
+                  </div> -->
+                  <div *ngIf="item?.lineType && item?.lineType != '1'" class="d-flex justify-content-start">
                     <span class="badge ac-badge-light-primary">
                       {{item?.lineType | vll : 'AC089' : 'text' | async}}
                     </span>
@@ -127,12 +139,14 @@
               </div>
             </td>
             <td class="text-center">
+              <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
+              </div>
+            </td>
+            <td class="text-center">
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.quantity
                       | tranformValueNumber : 'B' | async"></span>
-              </div>
-              <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
-                <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
               </div>
             </td>
             <td class="text-center">
@@ -148,12 +162,14 @@
               </div>
             </td>
             <td class="text-center">
+                <div *ngIf="item?.vatPct" class="d-flex justify-content-end ps-3">
+                  <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
+                </div>
+              </td>
+            <td class="text-center">
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.vatAmt
                       | tranformValueNumber : 'B' | async"></span>
-              </div>
-              <div *ngIf="item?.taxRate" class="d-flex justify-content-end ps-3">
-                <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
               </div>
             </td>
           </tr>
@@ -161,18 +177,14 @@
       </tbody>
     </table>
     <div *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length == 0" class="ac-empty">
-      <!-- <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+      <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
         <div class="d-flex flex-column flex-center justify-content-center">
           <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
           <div class="fs-6 text-dark mt-2 text-center">
             {{ "SYS011" | mssg | async }}
           </div>
         </div>
-      </div> -->
-      <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
-                <div class="fs-6 text-dark mt-2 text-center">
-                    {{ "SYS011" | mssg | async }}
-                </div>
+      </div>
     </div>
   </div>
   <table style="table-layout: fixed;" class="table mb-0">
@@ -183,6 +195,7 @@
           </codx-label>
         </div>
       </td>
+      <td class="w-15"></td>
       <td class="w-15">
         <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalQuantity
@@ -193,6 +206,12 @@
       <td class="w-15">
         <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
+                  | tranformValueNumber : 'B' | async"></span>
+        </div>
+      </td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatPct
                   | tranformValueNumber : 'B' | async"></span>
         </div>
       </td>

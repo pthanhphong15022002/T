@@ -50,6 +50,8 @@ import { AdvancePaymentRequestComponent } from 'projects/codx-ac/src/lib/voucher
 import { LayoutNoasideAcComponent } from 'projects/codx-ac/src/lib/_layout-noaside-ac/layout-noaside-ac.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/vouchers/payment-order/payment-order.component';
+import { PersonalAchievementComponent } from 'projects/codx-fd/src/lib/personal-achievement/personal-achievement.component';
+
 
 import { MyPageComponent } from './personal/master-detail/my-page/my-page.component';
 import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
@@ -216,6 +218,10 @@ const routes: Routes = [
       {
         path: 'tm/dashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      {
+        path: 'mykudostrans/:funcID',
+        component: PersonalAchievementComponent,
       },
       //-----------Khai báo routing Dashboard---------------
       {

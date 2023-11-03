@@ -429,7 +429,6 @@ export class DealsComponent
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
-        (data.processID && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
     };
     // let isUpdateBANT = (eventItem, data) => {
