@@ -333,7 +333,26 @@ export class CodxFdService {
       'FD',
       'PoliciesBusiness',
       'RefreshWalletAsync',
-      [refreshType, policyID, userID]
+      [refreshType, policyID, userID])
+  }
+
+  getEmployeesByUserID(data) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmpByUserIDAsync',
+      data
+    );
+  }
+
+  checkValidAdd(cardtype: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CheckAvalidAdd',
+      ['FDParameters', cardtype]
     );
   }
 }

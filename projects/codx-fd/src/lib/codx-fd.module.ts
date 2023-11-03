@@ -80,6 +80,7 @@ import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-
 import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/popup-wallet-history.component';
 import { AchievementsComponent } from './achievements/achievements.component';
 import { PositionName } from './pipes/positionName.pipe';
+import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
 
 export const routes: Routes = [
   {
@@ -254,6 +255,7 @@ const Component: Type<any>[] = [
   ViewDetailPopupComponent,
   PopupWalletHistoryComponent,
   AchievementsComponent,
+  PersonalAchievementComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
