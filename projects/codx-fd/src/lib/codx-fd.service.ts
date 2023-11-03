@@ -336,4 +336,14 @@ export class CodxFdService {
       [refreshType, policyID, userID]
     );
   }
+
+  checkValidAdd(cardtype: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CheckAvalidAdd',
+      ['FDParameters', cardtype]
+    );
+  }
 }
