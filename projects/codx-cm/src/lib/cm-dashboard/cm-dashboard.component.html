@@ -861,9 +861,7 @@
             [ngClass]="getIcon(findTmpDeals('1')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold me-1">{{
-            findTmpDeals("1")?.countAsc
-          }}</span>
+          <span class="fw-bold me-1">{{ findTmpDeals("1")?.countAsc }}</span>
           <span class="fw-bold">({{ findTmpDeals("1")?.valueAsc }})</span>
         </div>
       </div>
@@ -909,9 +907,7 @@
             [ngClass]="getIcon(findTmpDeals('2')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold me-1">{{
-            findTmpDeals("2")?.countAsc
-          }}</span>
+          <span class="fw-bold me-1">{{ findTmpDeals("2")?.countAsc }}</span>
           <span class="fw-bold">({{ findTmpDeals("2")?.valueAsc }})</span>
         </div>
       </div>
@@ -957,9 +953,7 @@
             [ngClass]="getIcon(findTmpDeals('3')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold me-1">{{
-            findTmpDeals("3")?.countAsc
-          }}</span>
+          <span class="fw-bold me-1">{{ findTmpDeals("3")?.countAsc }}</span>
           <span class="fw-bold">({{ findTmpDeals("3")?.valueAsc }})</span>
         </div>
       </div>
@@ -1005,9 +999,7 @@
             [ngClass]="getIcon(findTmpDeals('4')?.isAsc, 'icon')"
           >
           </span>
-          <span class="fw-bold me-1">{{
-            findTmpDeals("4")?.countAsc
-          }}</span>
+          <span class="fw-bold me-1">{{ findTmpDeals("4")?.countAsc }}</span>
           <span class="fw-bold">({{ findTmpDeals("4")?.valueAsc }})</span>
         </div>
       </div>
@@ -1135,120 +1127,178 @@
       </div>
     </div>
     <div
-      class="position-relative"
+      class="position-relative row"
       style="height: 90%"
       #btSaleStages
       [ngClass]="statusPip == 'btSaleStages' ? '' : 'd-none'"
     >
-      <div *ngIf="lstSalesStages?.length > 0; else noData"></div>
-      <ejs-accumulationchart
-        id="pyramidcontainer1"
-        #pie1
-        style="height: 90%"
-        [legendSettings]="legendSettings"
-        [enableSmartLabels]="false"
-        [tooltip]="{
-          header: '',
-          enable: true,
-          format: '${point.tooltip}'
-        }"
-        (pointRender)="formatCrrView($event)"
-      >
-        <e-accumulation-series-collection>
-          <e-accumulation-series
-            #accumulationPipe
-            name="ConversionRate"
-            [dataSource]="lstSalesStages"
-            xName="name"
-            yName="quantity"
-            width="60%"
-            height="50%"
-            [gapRatio]="gapRatio"
-            [explode]="explode"
-            [dataLabel]="datalabelAc"
-            [palettes]="palettePipsStages"
-            type="Funnel"
-          >
-          </e-accumulation-series>
-        </e-accumulation-series-collection>
-      </ejs-accumulationchart>
+      <div *ngIf="lstSalesStages?.length == 0">
+        <ng-container [ngTemplateOutlet]="noData"></ng-container>
+      </div>
+      <div class="col-8">
+        <ejs-accumulationchart
+          id="pyramidcontainer1"
+          #pie2
+          style="height: 100%; width: 100%"
+          [legendSettings]="legendSettings"
+          [enableSmartLabels]="false"
+          [tooltip]="{
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
+          }"
+          (pointRender)="formatCrrView($event)"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              #accumulationPipe
+              name="ConversionRate"
+              [dataSource]="lstSalesStages"
+              xName="name"
+              yName="quantity"
+              width="60%"
+              height="50%"
+              [gapRatio]="gapRatio"
+              [explode]="explode"
+              [dataLabel]="datalabelAc"
+              [palettes]="palettePipsStages"
+              type="Funnel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+
+      <div class="col-4 d-flex align-items-center">
+        <div class="d-flex flex-column">
+          <ng-container *ngFor="let item of lstNamesStages">
+            <div class="d-flex justify-content-start">
+              <div
+                class="me-2"
+                style="height: 15px; width: 15px; border-radius: 10%"
+                [ngStyle]="{ 'background-color': item.backgroundColor }"
+              ></div>
+              <div>{{ item.name }}</div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
     <div
-      class="position-relative"
+      class="position-relative row"
       style="height: 90%"
       #btSaleStatus
       [ngClass]="statusPip == 'btSaleStatus' ? '' : 'd-none'"
     >
-      <div *ngIf="lstSalesStatus?.length > 0; else noData"></div>
-      <ejs-accumulationchart
-        id="pyramidcontainer2"
-        #pie2
-        style="height: 90%"
-        [legendSettings]="legendSettings"
-        [enableSmartLabels]="false"
-        [tooltip]="{
-          header: '',
-          enable: true,
-          format: '${point.tooltip}'
-        }"
-        (pointRender)="formatCrrView($event)"
-      >
-        <e-accumulation-series-collection>
-          <e-accumulation-series
-            #accumulationPipe
-            name="ConversionRate"
-            [dataSource]="lstSalesStatus"
-            xName="name"
-            yName="quantity"
-            width="60%"
-            height="50%"
-            [gapRatio]="gapRatio"
-            [explode]="explode"
-            [dataLabel]="datalabelAc"
-            [palettes]="palettePipsStatus"
-            type="Funnel"
-          >
-          </e-accumulation-series>
-        </e-accumulation-series-collection>
-      </ejs-accumulationchart>
+      <div *ngIf="lstSalesStatus?.length == 0">
+        <ng-container [ngTemplateOutlet]="noData"></ng-container>
+      </div>
+      <div class="col-8">
+        <ejs-accumulationchart
+          id="pyramidcontainer2"
+          #pie2
+          style="height: 90%;"
+          [legendSettings]="legendSettings"
+          [enableSmartLabels]="false"
+          [tooltip]="{
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
+          }"
+          (pointRender)="formatCrrView($event)"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              #accumulationPipe
+              name="ConversionRate"
+              [dataSource]="lstSalesStatus"
+              xName="name"
+              yName="quantity"
+              width="60%"
+              height="50%"
+              [gapRatio]="gapRatio"
+              [explode]="explode"
+              [dataLabel]="datalabelAc"
+              [palettes]="palettePipsStatus"
+              type="Funnel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+
+      <div class="col-4 d-flex align-items-center">
+        <div class="d-flex flex-column">
+          <ng-container *ngFor="let item of lstNamesStatus">
+            <div class="d-flex justify-content-start">
+              <div
+                class="me-2"
+                style="height: 15px; width: 15px; border-radius: 10%"
+                [ngStyle]="{ 'background-color': item.color }"
+              ></div>
+              <div>{{ item.name }}</div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
     <div
-      class="position-relative"
+      class="position-relative row"
       style="height: 90%"
       #btSaleStatusCodes
       [ngClass]="statusPip == 'btSaleStatusCodes' ? '' : 'd-none'"
     >
-      <div *ngIf="lstSalesStatusCodes?.length > 0; else noData"></div>
-      <ejs-accumulationchart
-        id="pyramidcontainer3"
-        #pie3
-        style="height: 90%"
-        [legendSettings]="legendSettings"
-        [enableSmartLabels]="false"
-        [tooltip]="{
-          header: '',
-          enable: true,
-          format: '${point.tooltip}'
-        }"
-        (pointRender)="formatCrrView($event)"
-      >
-        <e-accumulation-series-collection>
-          <e-accumulation-series
-            #accumulationPipe
-            name="ConversionRate"
-            [dataSource]="lstSalesStatusCodes"
-            xName="name"
-            yName="quantity"
-            width="60%"
-            height="50%"
-            [gapRatio]="gapRatio"
-            [explode]="explode"
-            [dataLabel]="datalabelAc"
-            type="Funnel"
-          >
-          </e-accumulation-series>
-        </e-accumulation-series-collection>
-      </ejs-accumulationchart>
+      <div *ngIf="lstSalesStatusCodes?.length == 0">
+        <ng-container [ngTemplateOutlet]="noData"></ng-container>
+      </div>
+      <div class="col-8">
+        <ejs-accumulationchart
+          id="pyramidcontainer3"
+          #pie2
+          style="height: 90%;"
+          [legendSettings]="legendSettings"
+          [enableSmartLabels]="false"
+          [tooltip]="{
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
+          }"
+          (pointRender)="formatCrrView($event)"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              #accumulationPipe
+              name="ConversionRate"
+              [dataSource]="lstSalesStatusCodes"
+              xName="name"
+              yName="quantity"
+              width="60%"
+              height="50%"
+              [gapRatio]="gapRatio"
+              [explode]="explode"
+              [dataLabel]="datalabelAc"
+              [palettes]="palettePipsStatusCodes"
+              type="Funnel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+
+      <div class="col-4 d-flex align-items-center">
+        <div class="d-flex flex-column">
+          <ng-container *ngFor="let item of lstNamesStatusCodes">
+            <div class="d-flex justify-content-start">
+              <div
+                class="me-2"
+                style="height: 15px; width: 15px; border-radius: 10%"
+                [ngStyle]="{ 'background-color': item.color }"
+              ></div>
+              <div>{{ item.name }}</div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>

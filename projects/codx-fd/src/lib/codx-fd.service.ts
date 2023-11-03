@@ -345,4 +345,24 @@ export class CodxFdService {
       data
     );
   }
+
+  checkValidAdd(cardtype: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CheckAvalidAdd',
+      ['FDParameters', cardtype]
+    );
+  }
+
+  CheckAvalidReceiver(cardtype: string, receiverID: string) {
+    return this.api.execSv(
+      'FD',
+      'FD',
+      'CardsBusiness',
+      'CheckAvalidReceiver',
+      ['FDParameters', cardtype, receiverID]
+    );
+  }
 }
