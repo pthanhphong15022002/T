@@ -48,6 +48,10 @@
     justify-content: center !important;
     display: flex;
     align-items: center;
+    flex-direction: column !important;
+    img{
+        width: 20% !important;
+    }
 }
 
 .tabline-content .e-content {
@@ -413,7 +417,8 @@
     height: calc(100vh - 75px);
     background-color: white;
     background-clip: content-box;
-    width: 94%;
+    width: 100%;
+    padding-right: 9.5rem;
     codx-toolbar{
         display: none !important;
     }
