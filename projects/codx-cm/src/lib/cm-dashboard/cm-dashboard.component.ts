@@ -2034,9 +2034,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         }
       }
       if (this.lstSalesStatus != null && this.lstSalesStatus.length > 0) {
-        this.lstNamesStatus = JSON.parse(JSON.stringify(this.lstSalesStatus));
         this.lstSalesStatus.sort((a, b) => a.quantity - b.quantity);
         this.palettePipsStatus = this.lstSalesStatus.map((x) => x.color);
+        let lst = JSON.parse(JSON.stringify(this.lstSalesStatus));
+        this.lstNamesStatus = lst.reverse();
       }
     }
 
@@ -2058,9 +2059,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.lstSalesStatusCodes != null &&
         this.lstSalesStatusCodes.length > 0
       ) {
-        this.lstNamesStatusCodes = JSON.parse(JSON.stringify(this.lstSalesStatusCodes));
         this.lstSalesStatusCodes.sort((a, b) => a.quantity - b.quantity);
         this.palettePipsStatusCodes = this.lstSalesStatusCodes.map(x => x.color);
+        let lst = this.lstSalesStatusCodes;
+        this.lstNamesStatusCodes = JSON.parse(JSON.stringify(lst.reverse()));
       }
     }
     this.detectorRef.detectChanges();
