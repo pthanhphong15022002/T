@@ -1229,31 +1229,8 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          if (!isCheck) {
-            let datas = [data, isCheck];
-            this.getApiUpdateProcess(datas, []);
-          } else {
-            let datas = [
-              data.leadName,
-              data.leadID,
-              this.processId,
-              this.applyForLead,
-            ];
-            this.codxCmService.addInstanceNoRecId(datas).subscribe((res) => {
-              if (res) {
-                data.stepID = res[0].stepID;
-                data.refID = res[0].recID;
-                data.nextStep = res[0].nextStep;
-                data.processID = res[0].processID;
-                data.datas = res[0].datas;
-                data.status = res[0].status;
-                data.owner = res[0]?.owner;
-                this.addPermission(res[0].permissions, data);
-                let datas = [data, isCheck];
-                this.getApiUpdateProcess(datas, res[1]);
-              }
-            });
-          }
+          let datas = [data.recID,data.status,this.processId,isCheck];
+          this.getApiUpdateProcess(datas);
         }
       });
   }
@@ -1288,17 +1265,16 @@ export class LeadsComponent
     return permission;
   }
 
-  getApiUpdateProcess(datas, listStep) {
+  getApiUpdateProcess(datas) {
     this.codxCmService.updateProcess(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        if (listStep.length > 0 && listStep) {
-          this.detailViewLead.reloadListStep(listStep);
-        }
-        //   this.detailViewLead.resetTab(this.dataSelected.applyProcess);
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected,true).subscribe();
+        if(this.dataSelected.applyProcess)  {
+          this.detailViewLead.promiseAllLoad();
+        }
       }
       this.detectorRef.detectChanges();
     });

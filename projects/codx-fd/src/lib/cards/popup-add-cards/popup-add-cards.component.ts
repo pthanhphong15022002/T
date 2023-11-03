@@ -16,6 +16,7 @@ import {
   AuthService,
   CacheService,
   CallFuncService,
+  CodxInputComponent,
   CRUDService,
   DialogData,
   DialogRef,
@@ -29,6 +30,7 @@ import { FED_Card } from '../../models/FED_Card.model';
 import { CardType, Valuelist } from '../../models/model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { tmpPost } from '../../models/tmpPost.model';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -39,6 +41,8 @@ import { tmpPost } from '../../models/tmpPost.model';
 export class PopupAddCardsComponent implements OnInit {
   @ViewChild('popupViewCard') popupViewCard: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('inputReceiver') inputReceiver: CodxInputComponent;
+
 
   dialog: DialogRef;
   form: FormGroup;
@@ -137,6 +141,7 @@ export class PopupAddCardsComponent implements OnInit {
     private callfc: CallFuncService,
     private auth: AuthService,
     private notifySV: NotificationsService,
+    private fdService: CodxFdService,
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?: DialogData
   ) {
@@ -448,6 +453,7 @@ export class PopupAddCardsComponent implements OnInit {
         //     }
         //   });
         // this.form.patchValue(obj);
+        this.industry = data;
         const onwer = e?.component.itemsSelected[0]?.Owner;
         if(onwer) {
           this.userReciver = onwer;
@@ -475,13 +481,26 @@ export class PopupAddCardsComponent implements OnInit {
 
       case 'receiver':
         if (data) {
-          this.userReciver = data;
-          this.userReciverName = e.component.itemsSelected[0].UserName;
-          this.form.patchValue({ receiver: this.userReciver });
-          if (this.parameter.MaxReceiveControl == '1') {
-            this.getCountCardRecive(data, this.cardType);
-          }
-          this.checkValidateWallet(this.userReciver);
+          this.fdService.CheckAvalidReceiver(this.cardType, data).subscribe((res:any)=> {
+            if(res.error) {
+              this.userReciver = null;
+              this.userReciverName = null;
+              this.form.patchValue({ receiver: this.userReciver });
+              this.inputReceiver.value = null;
+              this.notifySV.notifyCode('FD002');
+            } else {
+              this.userReciver = data;
+              this.userReciverName = e.component.itemsSelected[0].UserName;
+            }
+          })
+          // this.userReciver = data;
+          // this.userReciverName = e.component.itemsSelected[0].UserName;
+          // this.form.patchValue({ receiver: this.userReciver });
+          // if (this.parameter.MaxReceiveControl == '1') {
+          //   this.getCountCardRecive(data, this.cardType);
+          // }
+          // this.checkValidateWallet(this.userReciver);
+          
         }
 
         break;
@@ -551,10 +570,10 @@ export class PopupAddCardsComponent implements OnInit {
           break;
       }
     }
-    if (!this.myWallet) {
+    if (!this.myWallet && (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))) {
       this.notifySV.notify('Bạn chưa tích hợp ví');
       return;
-    } else if (this.myWallet.coins < this.amount) {
+    } else if (this.myWallet && (this.myWallet?.coins < this.amount)) {
       this.notifySV.notify('Số dư ví của bạn không đủ');
       return;
     } else {
