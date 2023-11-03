@@ -366,7 +366,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res.update);
         });
     } else {
       this.api
@@ -376,7 +376,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ])
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res);
         });
     }
   }
