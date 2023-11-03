@@ -586,13 +586,6 @@ export class PopupAddCardsComponent implements OnInit {
       this.card.cardType = this.cardType;
       this.card.shareControl = this.shareControl;
       this.card.objectType = this.objectType;
-      if (this.lstShare.length === 0) {
-        let p = new FD_Permissions();
-        p.objectType = '1'; // chỉ mình tôi
-        p.objectID = this.user.userID;
-        p.objectName = this.user.userName;
-        this.lstShare.push(p);
-      }
       this.card.listShare = this.lstShare;
 
       if (
