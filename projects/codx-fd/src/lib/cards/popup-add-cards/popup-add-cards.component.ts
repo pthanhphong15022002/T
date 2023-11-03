@@ -488,6 +488,9 @@ export class PopupAddCardsComponent implements OnInit {
               this.form.patchValue({ receiver: this.userReciver });
               this.inputReceiver.value = null;
               this.notifySV.notifyCode('FD002');
+            } else {
+              this.userReciver = data;
+              this.userReciverName = e.component.itemsSelected[0].UserName;
             }
           })
           // this.userReciver = data;
