@@ -525,7 +525,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -547,7 +547,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -564,7 +564,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
