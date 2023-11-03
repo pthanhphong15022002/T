@@ -79,6 +79,7 @@ import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-detail-popup/view-detail-popup.component';
 import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/popup-wallet-history.component';
 import { AchievementsComponent } from './achievements/achievements.component';
+import { PositionName } from './pipes/positionName.pipe';
 import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
 
 export const routes: Routes = [
@@ -276,6 +277,7 @@ const T_Pipe: Type<any>[] = [];
   ],
   exports: [RouterModule],
   declarations: [
+    PositionName,
     Component,
     T_Pipe,
     PopupApprovalComponent,
