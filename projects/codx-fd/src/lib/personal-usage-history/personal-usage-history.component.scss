@@ -9,8 +9,19 @@
 }
 .pic-2
 {
-  background-image: url(/src/assets/themes/fd/default/img/Advise.svg);
-  height: 250px;
+  background-image: url(/src/assets/themes/fd/default/img/CardWallet.svg);
+  height: 148px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.pic-3
+{
+  background-image: url(/assets/themes/wp/default/img/WP.svg);
+  width: 70px;
+  height: 28px;
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: contain;
@@ -64,4 +75,8 @@
   {
     padding: 0 !important;
   }
+}
+.div-per-usage-his:hover , .div-per-usage-his.active
+{
+  background-color: var(--primary-lighter);
 }

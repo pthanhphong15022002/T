@@ -30,7 +30,7 @@
           <img class="w-18px" [src]="'../../../assets/themes/fd/default/img/CurrentRange.svg'"/>
         </div>
         <div class="process-performance d-flex justify-content-center" >
-          <div class="process-item position-relative" [class.margin-left-fd-3]="i>0" [ngClass]="'z-'+item.zIndex" [style.width]="item.width" *ngFor="let item of ranges , let i = index">
+          <div class="process-item position-relative" [title]="item.breakName + ' : ' + item.breakValue" [class.margin-left-fd-3]="i>0" [ngClass]="'z-'+item.zIndex" [style.width]="item.width" *ngFor="let item of ranges , let i = index">
             <div class="process-bar w-100 rounded position-absolute" [style.background-color]="item.color"
               [style.height]="'10px'">
             </div>

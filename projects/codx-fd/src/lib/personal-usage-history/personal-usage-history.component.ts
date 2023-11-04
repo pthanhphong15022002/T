@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges
 import { AuthStore, ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxFdService } from '../codx-fd.service';
 import { isObservable } from 'rxjs';
-import { pointLadder } from './personal-usage-history';
+import { listFunction, pointLadder } from './personal-usage-history';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -25,6 +25,7 @@ implements AfterViewInit, OnChanges{
   pointLadder = pointLadder;
   crrIndex: number = 0;
   infoPersonal: any;
+  wallets:any;
   ranges:any;
   user:any;
   orgUnitStr: any;
@@ -42,11 +43,8 @@ implements AfterViewInit, OnChanges{
   columnsGrid = [];
   rate: any;
   totalCoreEmp: any;
-  pointAndRanking:any;
-  rangsUser:any;
-  wRangs:any;
-  mssFD007:any;
-  mssAdvice:any;
+  listFunc = listFunction;
+  active=1;
   constructor(
     inject: Injector,
     private authStore : AuthStore,
@@ -60,10 +58,9 @@ implements AfterViewInit, OnChanges{
   ngOnChanges(changes: SimpleChanges): void {}
 
   onInit(): void {
-    this.getMessage();
     //load infor user
     this.getImformationUser();
-    this.getPointAndRangking();
+    this.getWallet();
     this.loadAchivement().subscribe((res) => {
       if(res){
         this.rate = res[0];
@@ -71,11 +68,6 @@ implements AfterViewInit, OnChanges{
         this.df.detectChanges();
       }
     })
-  }
-
-  getMessage()
-  {
-    this.cache.message("FD007").subscribe(item=>this.mssFD007 = item)
   }
 
   getImformationUser()
@@ -88,68 +80,15 @@ implements AfterViewInit, OnChanges{
     else this.infoPersonal = data
   }
 
-  getRangs()
+  getWallet()
   {
-    let paras = ["KUDOS"];
-    let keyRoot = "FDRangesKUDOS";
-    var data = this.fdService.loadData(paras,keyRoot,"BS","BS",'RangeLinesBusiness','GetByRankForTMByID');
-    if(isObservable(data)) data.subscribe(item=>{
-      if(item) 
-        this.ranges = this.formatRangs(item)
-    });
-    else this.ranges = this.formatRangs(data)
-  }
+    let paras = [this.user?.userID];
+    let keyRoot = "FDWallets" + this.user?.userID;
+    var data = this.fdService.loadData(paras,keyRoot,"FD","FD",'WalletsBusiness','GetWalletsAsync');
 
-  getPointAndRangking()
-  {
-    let keyRoot = "FDPointAndRanking" + this.user?.userID;
-    var data = this.fdService.loadData(null,keyRoot,"FD","FD",'WalletsBusiness','GetPointsAndRankingsByUserIDAsync');
-    if(isObservable(data)) data.subscribe(item=>{
-      if(item)
-      {
-        this.pointAndRanking = item
-        this.getRangs();
-      } 
-    });
-    else {
-      this.pointAndRanking = data;
-      this.getRangs();
-    }
-  }
-  formatRangs(data:any)
-  {
-    let check = false;
-    for(var i = 0 ; i < data.length ; i++)
-    {
-      if(this.pointAndRanking[0].myKudos <= data[i].breakValue && !check)
-      {
-        check = true;
-        this.rangsUser = {
-          name: data[i].breakName,
-          index: i == (data.length - 1) ? -1 : (i + 1)
-        }
-      }
-      data[i].width = pointLadder[i].width;
-      data[i].zIndex = pointLadder[i].zIndex;
-    }
-
-    this.wRangs = (this.pointAndRanking[0].myKudos / data[data.length-1].breakValue) *100;
-    this.fmMessage(data);
-    return data;
-  }
-
-  fmMessage(data:any)
-  {
-    if(this.rangsUser.index >= 0)
-    {
-      var point = data[this.rangsUser.index].breakValue - this.pointAndRanking[0].myKudos;
-      if(this.mssFD007?.customName) {
-        this.mssAdvice = JSON.parse(JSON.stringify(this.mssFD007?.customName));
-        this.mssAdvice = this.mssAdvice.replace("{0}",point);
-        this.mssAdvice =this.mssAdvice.replace("{1}",data[this.rangsUser.index].breakName);
-        this.mssAdvice = this.sanitizer.bypassSecurityTrustHtml(this.mssAdvice);
-      }
-    }
+    if(isObservable(data)) data.subscribe(item=>{if(item) this.wallets = item});
+    else this.wallets = data
+    
   }
   
   ngAfterViewInit(): void {
@@ -198,5 +137,10 @@ implements AfterViewInit, OnChanges{
       'KudosTransBusiness',
       'GetDataMyAchievementAsync'
     );
+  }
+
+  clickActive(id:any)
+  {
+    this.active = id;
   }
 }

@@ -21,3 +21,18 @@ export var pointLadder =
         width: "35%"
     }
 ];
+export var listFunction =
+[
+    {
+        id: "1",
+        name: "Lịch sử xu",
+    },
+    {
+        id: "2",
+        name: "Quà tặng",
+    },
+    {
+        id: "3",
+        name: "E-Voucher",
+    }
+];
