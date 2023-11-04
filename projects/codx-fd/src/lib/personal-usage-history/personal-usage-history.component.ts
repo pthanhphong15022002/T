@@ -2,16 +2,16 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges
 import { AuthStore, ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxFdService } from '../codx-fd.service';
 import { isObservable } from 'rxjs';
-import { pointLadder } from './personal-achievement';
+import { pointLadder } from './personal-usage-history';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'lib-personal-achievement',
-  templateUrl: './personal-achievement.component.html',
-  styleUrls: ['./personal-achievement.component.scss'],
+  selector: 'lib-personal-usage-history',
+  templateUrl:'./personal-usage-history.component.html',
+  styleUrls: ['./personal-usage-history.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PersonalAchievementComponent extends UIComponent
+export class PersonalUsageHistoryComponent extends UIComponent
 implements AfterViewInit, OnChanges{
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('rowTransDate') rowTransDate: TemplateRef<any>;

@@ -67,6 +67,7 @@ import { PopupAddPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/l
 import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 import { CvInformationComponent } from './workspace/AITool/cv-information/cv-information.component';
 import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
+import { PersonalUsageHistoryComponent } from 'projects/codx-fd/src/lib/personal-usage-history/personal-usage-history.component';
 const routes: Routes = [
   {
     path: '',
@@ -219,9 +220,11 @@ const routes: Routes = [
         path: 'tm/dashboard/:funcID',
         component: TMDashboardComponent,
       },
+      //FD
       {
         path: 'mykudostrans/:funcID',
         component: PersonalAchievementComponent,
+        //component: PersonalUsageHistoryComponent,
       },
       //-----------Khai báo routing Dashboard---------------
       {
