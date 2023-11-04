@@ -81,7 +81,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endTimeWork: any;
   dayOnWeeks = [];
   selectedDate: Date;
-  listTime = [];
   gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
@@ -174,7 +173,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.loadTime();
   }
   ngAfterViewInit(): void {
     if (this.action == 'add') {
@@ -211,15 +209,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadTime() {
-    this.api
-      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'GetListTimeAsync')
-      .subscribe((res) => {
-        if (res) {
-          this.listTime = res[0];
-        }
-      });
-  }
+
 
   loadRoomAvailable() {
     this.api
@@ -366,7 +356,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res.update);
         });
     } else {
       this.api
@@ -376,7 +366,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ])
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res);
         });
     }
   }
