@@ -279,6 +279,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       case 'DP31':
         this.startActivitie(task);
         break;
+      case 'DP32':
+        this.approvalTrans(task);
+        break;
     }
   }
   convertMoreFunctions(listMore, more, type) {
@@ -741,19 +744,18 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     );
   }
   //call Back
-  releaseCallback(res: any, t: any = null) {
-    // if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    // else {
-    //   this.codxCmService
-    //     .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-    //     .subscribe((q) => {
-    //       if (q) {
-    //         this.itemSelected = q;
-    //         this.view.dataService.update(this.itemSelected).subscribe();
-    //       }
-    //       this.notiService.notifyCode('ES007');
-    //     });
-    // }
+  releaseCallback(res: any, t: any = null, data) {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    else {
+      this.codxCmService
+        .getOneObject(data, 'ActivitiesBusiness')
+        .subscribe((q) => {
+          if (q) {
+            
+          }
+          this.notiService.notifyCode('ES007');
+        });
+    }
   }
 
   //Huy duyet

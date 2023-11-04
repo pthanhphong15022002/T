@@ -21,9 +21,9 @@
                 </div>
             </div>
             <div class="container p-5">
-                <div class="d-flex">
+                <div class="d-flex dt-card">
                     <ng-container>
-                        <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail" id="pattern-img"
+                        <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail dt-card-left" id="pattern-img"
                             [style.background]="data.backgroundColor?data.backgroundColor:'url('+backgroundImg+')'">
                             <h2 class="card-title fw-bolderer mb-5 mt-8 text-center" [style.color]="data.headerColor">
                                 {{data?.cardType | vll:'L1422':'text'|async}}
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </ng-container>
-                    <div class="w-100">
+                    <div class="w-100 dt-card-right">
                         <div class="text-primary fw-bold mb-2 mt-2">
                             <codx-label [formModel]="formModel" name="lblSender" default="Người gửi"></codx-label>
                         </div>

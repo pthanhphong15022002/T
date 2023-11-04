@@ -68,6 +68,39 @@
     </div>
   </div>
 
+
+  <!-- <div class="row mt-5 mb-3">
+    <div class="col-6">
+      <codx-vll
+        *ngIf="EBasicSalaryObj.status"
+        [formModel]="form.formModel"
+        [field]="'Status'"
+        [value]="EBasicSalaryObj?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="true"
+        ngClass="badge badge-sm badge-light"
+      >
+      </codx-vll>
+    </div>
+    <div class="col-6">
+      <div class="d-flex align-items-center">
+        <span class="me-3">
+          <codx-input
+            field="isCurrent"
+            [formModel]="form.formModel"
+            [disabled]="true"
+            [Group]="form.formGroup"
+          ></codx-input>
+        </span>
+        <codx-label
+          class="text-dark"
+          fiedName="IsCurrent"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </div>
+    </div>
+  </div> -->
   <div class="d-flex my-5">
     <div class="me-4">
       <codx-vll
@@ -130,39 +163,6 @@
       class="icon-queue_play_next icon-18"
     ></div>
   </div>
-  <!-- <div class="row mt-5 mb-3">
-    <div class="col-6">
-      <codx-vll
-        *ngIf="EBasicSalaryObj.status"
-        [formModel]="form.formModel"
-        [field]="'Status'"
-        [value]="EBasicSalaryObj?.status"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="true"
-        ngClass="badge badge-sm badge-light"
-      >
-      </codx-vll>
-    </div>
-    <div class="col-6">
-      <div class="d-flex align-items-center">
-        <span class="me-3">
-          <codx-input
-            field="isCurrent"
-            [formModel]="form.formModel"
-            [disabled]="true"
-            [Group]="form.formGroup"
-          ></codx-input>
-        </span>
-        <codx-label
-          class="text-dark"
-          fiedName="IsCurrent"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </div>
-    </div>
-  </div> -->
-
   <div class="form-group row">
     <div class="col-6">
       <codx-label fiedName="BSalary" [formModel]="form.formModel"></codx-label>

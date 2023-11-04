@@ -29,12 +29,13 @@ export class PopupDetailImportPartsComponent {
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.dataValues = this.data?.recID;
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.loadData();
+    // this.loadData();
   }
 
   async loadData() {
