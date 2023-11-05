@@ -19,6 +19,8 @@ implements AfterViewInit, OnChanges{
   @ViewChild('rowCard') rowCard: TemplateRef<any>;
   @ViewChild('rowPolicy') rowPolicy: TemplateRef<any>;
   @ViewChild('rowCoins') rowCoins: TemplateRef<any>;
+  @ViewChild('rowTransType') rowTransType: TemplateRef<any>;
+  @ViewChild('rowObjectName') rowObjectName: TemplateRef<any>;
   @Input() vllRefType = 'FD016';
   
   views: Array<ViewModel> = [];
@@ -64,13 +66,6 @@ implements AfterViewInit, OnChanges{
     //load infor user
     this.getImformationUser();
     this.getPointAndRangking();
-    this.loadAchivement().subscribe((res) => {
-      if(res){
-        this.rate = res[0];
-        this.totalCoreEmp = res[1];
-        this.df.detectChanges();
-      }
-    })
   }
 
   getMessage()
@@ -153,21 +148,133 @@ implements AfterViewInit, OnChanges{
   }
   
   ngAfterViewInit(): void {
-    this.columnsGrid = [
-      { field: 'createdOn', headerText: 'Ngày phát sinh', width: 150 , template: this.rowTransDate},
-      { headerText: "Thông điệp", template: this.rowRefType , width: 150 , textAlign: 'center'},
-      { headerText: "Nội dung", template: this.rowCard , textAlign: 'center'},
-      { headerText: "Chính sách", template: this.rowPolicy ,textAlign: 'center'},
-      { headerText: "Điểm" , template: this.rowCoins , textAlign: 'center' , width: 100},
-      // { field: 'projectName', headerText: 'Danh sách dự án', width: 120 },
-      // { field: 'resource', headerText: 'Nguồn lực', template: this.itemOwner, width: 100 },
-      // { field: 'totalTask', headerText: 'Tổng số công việc', width: 80 },
-      // { field: 'taskCompleted', headerText: 'Đã hoàn tất', width: 80 },
-      // { field: 'taskUnComplete', headerText: 'Chưa thực hiện', width: 80 },
-      // { field: 'rateTaskDone', headerText: 'Tỉ lệ hoàn thành', template: this.itemRateTaskDone, width: 80 },
-      // { field: 'rateTaskDoneTime', headerText: 'Tỉ lệ hoàn thành đúng hạn', template: this.itemRateTaskDoneTime, width: 80 },
-      // { field: '', headerText: '', template: this.buttonPupop, width: 30 }
-    ];
+    this.getSetting();
+    // this.columnsGrid = [
+    //   { field: 'transDate', headerText: 'Ngày phát sinh', width: 150 , template: this.rowTransDate},
+    //   { headerText: "Thông điệp", template: this.rowRefType , width: 150 , textAlign: 'center'},
+    //   { headerText: "Nội dung", template: this.rowCard , textAlign: 'center'},
+    //   { headerText: "Chính sách", template: this.rowPolicy ,textAlign: 'center'},
+    //   { headerText: "Điểm" , template: this.rowCoins , textAlign: 'center' , width: 100},
+    // ];
+    // this.views = [
+    //   {
+    //     type: ViewType.grid,
+    //     active: true,
+    //     sameData: true,
+    //     model: {
+    //       hideMoreFunc:true,
+    //       resources: this.columnsGrid,
+    //     },
+    //   },
+    // ];
+  }
+
+  getSetting()
+  {
+    var funcList = this.fdService.loadFunctionList(this.view.funcID) as any;
+    if(isObservable(funcList))
+    {
+      funcList.subscribe((item:any)=>{
+        this.getGridView(item.formName , item.gridViewName)
+      })
+    }
+    else this.getGridView(funcList.formName , funcList.gridViewName);
+  }
+
+  getGridView(formName,gridViewName)
+  {
+    var gridView = this.fdService.loadGridView(formName,gridViewName) as any;
+    if(isObservable(gridView))
+    {
+      gridView.subscribe((item:any)=>{
+       var dt = this.formatColumn(item);
+       this.setColumnGrid(dt);
+      })
+    }
+    else {
+      var dt = this.formatColumn(gridView);
+      this.setColumnGrid(dt);
+    }
+  }
+
+  formatColumn(item:any)
+  {
+    let data = [];
+    var key = Object.keys(item);
+    for (var i = 0; i < key.length; i++) {
+      if (item[key[i]]?.isVisible) {
+        var obj = {
+          field: this.capitalizeFirstLetter(key[i]),
+          headerText: item[key[i]].headerText,
+          columnOrder: item[key[i]].columnOrder,
+        };
+        data.push(obj);
+      }
+    }
+
+    data = data.sort((a:any,b:any)=> a?.columnOrder - b?.columnOrder);
+    return data;
+  }
+
+  setColumnGrid(data:any)
+  {
+    this.columnsGrid = [];
+    data.forEach(elm => {
+      var obj = 
+      {
+        field: elm.field, 
+        headerText: elm.headerText
+      } as any;
+
+      switch(elm.field)
+        {
+          case "transDate":
+            {
+              obj.width = 150;
+              obj.template = this.rowTransDate;
+              obj.matchCase = false
+              break;
+            }
+          case "transType":
+            {
+              obj.template = this.rowTransType;
+              obj.textAlign = "center";
+              break;
+            }
+          case "refType":
+            {
+              obj.width = 150;
+              obj.template = this.rowRefType;
+              obj.textAlign = "center";
+              break;
+            }
+          case "situation":
+            {
+              obj.template = this.rowCard;
+              obj.textAlign = "center";
+              break;
+            }
+          case "policyID":
+            {
+              obj.template = this.rowPolicy;
+              obj.textAlign = "center";
+              break;
+            }
+          case "kudos":
+            {
+              obj.template = this.rowCoins;
+              obj.textAlign = "center";
+              break;
+            }
+          case "objectName":
+          {
+            obj.template = this.rowObjectName;
+            break;
+          }
+        }
+      this.columnsGrid.push(obj);
+
+    });
     this.views = [
       {
         type: ViewType.grid,
@@ -179,24 +286,10 @@ implements AfterViewInit, OnChanges{
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
-
-  loadEmpFullInfo(userID){
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetOneByDomainUserAsync',
-      userID
-    );
-  }
-  
-  loadAchivement(){
-    return this.api.execSv<any>(
-      'FD',
-      'FD',
-      'KudosTransBusiness',
-      'GetDataMyAchievementAsync'
-    );
+  //Chữ đầu thành chữ thường
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 }

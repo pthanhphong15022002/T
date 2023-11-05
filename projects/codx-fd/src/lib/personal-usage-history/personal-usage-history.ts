@@ -26,13 +26,22 @@ export var listFunction =
     {
         id: "1",
         name: "Lịch sử xu",
+        formName: "MyWallet",
+        gridViewName: "grvMyWallet",
+        entityName: "FD_KudosTrans"
     },
     {
         id: "2",
         name: "Quà tặng",
+        formName: "MyGifts",
+        gridViewName: "grvMyGifts",
+        entityName: "FD_GiftTrans"
     },
     {
         id: "3",
         name: "E-Voucher",
+        formName: "MyEVouchers",
+        gridViewName: "grvMyEVouchers",
+        entityName: "FD_GiftTrans"
     }
 ];

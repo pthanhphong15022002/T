@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthStore, ButtonModel, CacheService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, CacheService, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxFdService } from '../codx-fd.service';
 import { isObservable } from 'rxjs';
 import { listFunction, pointLadder } from './personal-usage-history';
@@ -13,15 +13,24 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class PersonalUsageHistoryComponent extends UIComponent
 implements AfterViewInit, OnChanges{
+  @ViewChild('view2') view2: ViewsComponent;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('rowTransDate') rowTransDate: TemplateRef<any>;
+  @ViewChild('rowTransType') rowTransType: TemplateRef<any>;
   @ViewChild('rowRefType') rowRefType: TemplateRef<any>;
   @ViewChild('rowCard') rowCard: TemplateRef<any>;
   @ViewChild('rowPolicy') rowPolicy: TemplateRef<any>;
   @ViewChild('rowCoins') rowCoins: TemplateRef<any>;
+  @ViewChild('rowObjectName') rowObjectName: TemplateRef<any>;
+  @ViewChild('rowStatusMyGift') rowStatusMyGift: TemplateRef<any>;
+  @ViewChild('rowItemID') rowItemID: TemplateRef<any>;
+  @ViewChild('rowItemID2') rowItemID2: TemplateRef<any>;
+  
   @Input() vllRefType = 'FD016';
   
   views: Array<ViewModel> = [];
+  views2: Array<ViewModel> = [];
+  views3: Array<ViewModel> = [];
   pointLadder = pointLadder;
   crrIndex: number = 0;
   infoPersonal: any;
@@ -44,7 +53,8 @@ implements AfterViewInit, OnChanges{
   rate: any;
   totalCoreEmp: any;
   listFunc = listFunction;
-  active=1;
+  active="1";
+  exchangerate=0;
   constructor(
     inject: Injector,
     private authStore : AuthStore,
@@ -60,16 +70,83 @@ implements AfterViewInit, OnChanges{
   onInit(): void {
     //load infor user
     this.getImformationUser();
+    //Lấy thông tin setting value
+    this.getSettingValue();
     this.getWallet();
-    this.loadAchivement().subscribe((res) => {
-      if(res){
-        this.rate = res[0];
-        this.totalCoreEmp = res[1];
-        this.df.detectChanges();
-      }
-    })
   }
 
+  getSettingValue()
+  {
+    let paras = ["fdparameters","apikey"];
+    let keyRoot = "FDSettingValue" + paras.join(";");
+    var data = this.fdService.loadData(paras,keyRoot,"SYS","SYS","SettingValuesBusiness","GetByModuleAsync") as any;
+    if(isObservable(data))
+    {
+      data.subscribe((item:any)=>{
+        var dtv = JSON.parse(item.dataValue);
+        this.exchangerate = Number(dtv.ExchangeRate);
+      })
+    }
+    else
+    {
+      var dtv = JSON.parse(data.dataValue);
+      this.exchangerate = Number(dtv.ExchangeRate);
+    }
+  }
+
+  getSetting()
+  {
+    var funcList = this.fdService.loadFunctionList(this.view.funcID) as any;
+    if(isObservable(funcList))
+    {
+      funcList.subscribe((item:any)=>{
+        this.getGridView(item.formName , item.gridViewName)
+      })
+    }
+    else this.getGridView(funcList.formName , funcList.gridViewName);
+
+
+    //Setting của quà tặng
+    this.getGridView(this.listFunc[1].formName,this.listFunc[1].gridViewName,2)
+    //Setting của EVouchher
+    this.getGridView(this.listFunc[2].formName,this.listFunc[2].gridViewName,3)
+  }
+
+  getGridView(formName,gridViewName,type=1)
+  {
+    var gridView = this.fdService.loadGridView(formName,gridViewName) as any;
+    if(isObservable(gridView))
+    {
+      gridView.subscribe((item:any)=>{
+       var dt = this.formatColumn(item);
+       this.setColumnGrid(dt,type);
+      })
+    }
+    else {
+      var dt = this.formatColumn(gridView);
+      this.setColumnGrid(dt,type);
+    }
+  }
+
+  formatColumn(item:any)
+  {
+    let data = [];
+    var key = Object.keys(item);
+    for (var i = 0; i < key.length; i++) {
+      if (item[key[i]]?.isVisible) {
+        var obj = {
+          field: this.capitalizeFirstLetter(key[i]),
+          headerText: item[key[i]].headerText,
+          columnOrder: item[key[i]].columnOrder,
+        };
+        data.push(obj);
+      }
+    }
+
+    data = data.sort((a:any,b:any)=> a?.columnOrder - b?.columnOrder);
+    return data;
+  }
+  
   getImformationUser()
   {
     let paras = [this.user?.userID];
@@ -91,56 +168,140 @@ implements AfterViewInit, OnChanges{
     
   }
   
-  ngAfterViewInit(): void {
-    this.columnsGrid = [
-      { field: 'createdOn', headerText: 'Ngày phát sinh', width: 150 , template: this.rowTransDate},
-      { headerText: "Thông điệp", template: this.rowRefType , width: 150 , textAlign: 'center'},
-      { headerText: "Nội dung", template: this.rowCard , textAlign: 'center'},
-      { headerText: "Chính sách", template: this.rowPolicy ,textAlign: 'center'},
-      { headerText: "Điểm" , template: this.rowCoins , textAlign: 'center' , width: 100},
-      // { field: 'projectName', headerText: 'Danh sách dự án', width: 120 },
-      // { field: 'resource', headerText: 'Nguồn lực', template: this.itemOwner, width: 100 },
-      // { field: 'totalTask', headerText: 'Tổng số công việc', width: 80 },
-      // { field: 'taskCompleted', headerText: 'Đã hoàn tất', width: 80 },
-      // { field: 'taskUnComplete', headerText: 'Chưa thực hiện', width: 80 },
-      // { field: 'rateTaskDone', headerText: 'Tỉ lệ hoàn thành', template: this.itemRateTaskDone, width: 80 },
-      // { field: 'rateTaskDoneTime', headerText: 'Tỉ lệ hoàn thành đúng hạn', template: this.itemRateTaskDoneTime, width: 80 },
-      // { field: '', headerText: '', template: this.buttonPupop, width: 30 }
-    ];
-    this.views = [
-      {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          hideMoreFunc:true,
-          resources: this.columnsGrid,
-        },
-      },
-    ];
-  }
-
-  loadEmpFullInfo(userID){
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetOneByDomainUserAsync',
-      userID
-    );
-  }
-  
-  loadAchivement(){
-    return this.api.execSv<any>(
-      'FD',
-      'FD',
-      'KudosTransBusiness',
-      'GetDataMyAchievementAsync'
-    );
-  }
-
-  clickActive(id:any)
+  setColumnGrid(data:any,type:any)
   {
-    this.active = id;
+    this.columnsGrid = [];
+    data.forEach(elm => {
+      var obj = 
+      {
+        field: elm.field, 
+        headerText: elm.headerText
+      } as any;
+
+      switch(elm.field)
+        {
+          case "transDate":
+            {
+              obj.width = 150;
+              obj.template = this.rowTransDate;
+              obj.matchCase = false
+              break;
+            }
+          case "refType":
+            {
+              obj.width = 150;
+              obj.template = this.rowRefType;
+              obj.textAlign = "center";
+              break;
+            }
+          case "transType":
+            {
+              obj.template = this.rowTransType;
+              obj.textAlign = "center";
+              break;
+            }
+          case "situation":
+            {
+              obj.template = this.rowCard;
+              obj.textAlign = "center";
+              break;
+            }
+          case "policyID":
+            {
+              obj.template = this.rowPolicy;
+              obj.textAlign = "center";
+              break;
+            }
+          case "kudos":
+            {
+              obj.template = this.rowCoins;
+              obj.textAlign = "center";
+              break;
+            }
+          case "objectName":
+            {
+              obj.template = this.rowObjectName;
+              break;
+            }
+          case "status":
+            {
+              if(type == 2 || type == 3) obj.template = this.rowStatusMyGift;
+              break;
+            }
+          case "itemName":
+            {
+              obj.width = 150;
+              if(type == 2) obj.template = this.rowItemID;
+              else if(type==3) obj.template = this.rowItemID2;
+              break;
+            }
+          case "quantity":
+          case "amount":
+            {
+              obj.textAlign = "center";
+              break;
+            }
+          }
+      
+      this.columnsGrid.push(obj);
+
+    });
+    if(type == 1)
+    {
+      this.views = [
+        {
+          type: ViewType.grid,
+          active: true,
+          sameData: true,
+          model: {
+            hideMoreFunc:true,
+            resources: this.columnsGrid,
+          },
+        },
+      ];
+    }
+    else if(type == 2)
+    {
+      this.views2 = [
+        {
+          type: ViewType.grid,
+          active: true,
+          sameData: true,
+          model: {
+            hideMoreFunc:true,
+            resources: this.columnsGrid,
+          },
+        },
+      ];
+    }
+    else if(type == 3)
+    {
+      this.views3 = [
+        {
+          type: ViewType.grid,
+          active: true,
+          sameData: true,
+          model: {
+            hideMoreFunc:true,
+            resources: this.columnsGrid,
+          },
+        },
+      ];
+    }
+    this.detectorRef.detectChanges();
+  }
+  ngAfterViewInit(): void {
+    this.getSetting();
+  }
+
+  clickActive(item:any)
+  {
+    if(this.active == item.id) return;
+    this.active = item.id;
+  }
+
+  //Chữ đầu thành chữ thường
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 }

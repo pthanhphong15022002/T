@@ -223,7 +223,10 @@ const routes: Routes = [
       //FD
       {
         path: 'mykudostrans/:funcID',
-        //component: PersonalAchievementComponent,
+        component: PersonalAchievementComponent,
+      },
+      {
+        path: 'mywallet/:funcID',
         component: PersonalUsageHistoryComponent,
       },
       //-----------Khai báo routing Dashboard---------------

@@ -69,12 +69,16 @@
 </ng-template>
 
 <ng-template #rowTransDate let-data>
-<span>{{data.transDate | fmDT : 'dmy'}}</span>
+  <span>{{data.transDate | fmDT : 'dmy'}}</span>
+</ng-template>
+
+<ng-template #rowTransType let-data>
+  <codx-vll [name]="'FD014'" [value]="data.transType" [showText]="true"></codx-vll>
 </ng-template>
 
 <ng-template #rowRefType let-data>
 <div class="d-flex flex-column">
-  <span>{{data.refType}}</span>
+  <codx-vll [name]="'FD015'" [value]="data.refType" [showText]="true" class="fw-bold mb-1"></codx-vll>
   <span>{{data.refNo}}</span>
 </div>
 </ng-template>
@@ -95,5 +99,12 @@
 </ng-template>
 
 <ng-template #rowCoins let-data>
-<span class="fw-bold" [ngClass]="(data?.coins >= 0) ?'text-success' : 'text-danger'">{{(data?.coins >= 0 ? "+" : "") +data?.coins}}</span>
+  <span class="fw-bold" [ngClass]="(data?.kudos >= 0) ?'text-success' : 'text-danger'">{{(data?.kudos >= 0 ? "+" : "") +data?.kudos}}</span>
+</ng-template>
+
+<ng-template #rowObjectName let-data>
+  <div class="d-flex align-items-center" *ngIf="data?.objectName">
+    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'"></codx-img>
+    <span class="ms-2">{{data?.objectName}}</span>
+  </div>
 </ng-template>
