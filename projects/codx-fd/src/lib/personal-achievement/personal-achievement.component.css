@@ -1,7 +1,7 @@
 
 .pic
 {
-  background-image: url(/src/assets/themes/fd/default/img/GrandChampion.svg);
+  background-image: url('../../../../../src/assets/themes/fd/default/img/GrandChampion.svg');
   height: 150px;
   background-position: center;
   background-repeat: no-repeat;
@@ -9,7 +9,7 @@
 }
 .pic-2
 {
-  background-image: url(/src/assets/themes/fd/default/img/Advise.svg);
+  background-image: url('../../../../../src/assets/themes/fd/default/img/Advise.svg');
   height: 250px;
   background-position: bottom;
   background-repeat: no-repeat;
