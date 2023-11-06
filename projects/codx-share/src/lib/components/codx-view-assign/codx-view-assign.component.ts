@@ -100,6 +100,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
       case 'SYS03':
         //Thuong chưa mapping nên chưa làm
         // this.edit(e, data);
+        // this.editByService(e, data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
