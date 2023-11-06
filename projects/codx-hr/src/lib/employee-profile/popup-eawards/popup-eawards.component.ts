@@ -252,10 +252,10 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     }
 
     //Check valid
-    if (this.form.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
-      return;
-    }
+    // if (this.form.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
+    //   return;
+    // }
     if (this.actionType === 'copy') delete this.awardObj.recID;
 
     if (this.actionType === 'add' || this.actionType === 'copy') {

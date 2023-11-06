@@ -854,6 +854,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-more-popup-wrapper .e-more-event-content {
   max-height: 210px !important;
+  padding: 10px 5px 0!important;
 }
 
 .e-more-popup-wrapper {
@@ -3610,7 +3611,7 @@ codx-view-list-tree{
   position: relative;
 
   .codx-detail-main{
-    height: calc(100vh - 60px);
+    //height: calc(100vh - 60px);
     overflow: auto;
     padding-bottom: 60px;
   }
@@ -4097,6 +4098,18 @@ codx-view-kanban{
     background-color: rgb(130, 130, 146) !important;
   }
 }
+
+.okr-tasklist{
+  codx-toolbar .container-fluid{
+      padding: 0;
+  }
+  codx-tasks-share{
+    height: 100%!important;
+    .container-fluid.p-0{
+      height: calc(100% - 60px)!important;
+    }
+  }
+} 
 
 //////////////
 // ipad and tablet

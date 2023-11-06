@@ -84,6 +84,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'dme',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-dm/src/lib/codx-dm.module').then(
+        (m) => m.CodxDmModule
+      ),
+  },
+  {
     path: 'ei',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -93,6 +101,14 @@ var childAuthRoutes: Routes = [
   },
   {
     path: 'ep',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ep/src/lib/codx-ep.module').then(
+        (m) => m.CodxEPModule
+      ),
+  },
+  {
+    path: 'epe',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-ep/src/lib/codx-ep.module').then(
@@ -116,7 +132,23 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'ese',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-es/src/lib/codx-es.module').then(
+        (m) => m.CodxEsModule
+      ),
+  },
+  {
     path: 'fd',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-fd/src/lib/codx-fd.module').then(
+        (m) => m.CodxFdModule
+      ),
+  },
+  {
+    path: 'fde',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-fd/src/lib/codx-fd.module').then(

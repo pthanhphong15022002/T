@@ -186,10 +186,14 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [
-        dataItem,
-        recID,
+        recID
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -198,6 +202,7 @@ export class CashrecieptDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
+    }
   }
 
   /**
@@ -563,7 +568,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -580,7 +585,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -596,7 +601,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -644,7 +649,7 @@ export class CashrecieptDetailComponent extends UIComponent {
     let params = {
       Recs:data?.recID,
     }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+    this.shareService.printReport(reportID,reportType,params,this.formModel);    
   }
 
   /**

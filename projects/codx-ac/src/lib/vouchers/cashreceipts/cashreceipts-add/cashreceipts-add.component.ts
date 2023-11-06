@@ -296,11 +296,14 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
 
         //* Đối tượng
         case 'objectid':
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formCashReceipt.setValue('objectType',objectType,{});
           this.objectIDChange();
           break;
 
         //* Tên người gửi
         case 'payor':
+          this.formCashReceipt.setValue('payeeID',event?.component?.itemsSelected[0]?.ContactID || '',{});
           this.payorChange();
           break;
 
@@ -1125,7 +1128,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   getMemoMaster() {
     let newMemo = ''; //? tên ghi chú mới
-    let reasonName = ''; //? tên lí do chi
+    let reasonName = ''; //? tên lí do thu
     let objectName = ''; //? tên đối tượng
     let payName = ''; //? tên người nhận
 
@@ -1142,19 +1145,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
 
-    let indexPayor =
-      this.eleCbxPayor?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ContactID == this.eleCbxPayor?.ComponentCurrent?.value
-      );
-    if (indexPayor > -1) {
-      payName =
-        this.eleCbxPayor?.ComponentCurrent?.dataService?.data[indexPayor]
-          .ContactName + ' - ';
-    } else {
-      if (this.eleCbxPayor?.ComponentCurrent?.value) {
-        payName = this.eleCbxPayor?.ComponentCurrent?.value + ' - ';
-      }
-    }
+    if(this.formCashReceipt?.data?.payor) payName = this.formCashReceipt?.data?.payor  + ' - ';
+    
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }

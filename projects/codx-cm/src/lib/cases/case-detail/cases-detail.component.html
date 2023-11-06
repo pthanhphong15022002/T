@@ -46,7 +46,18 @@
           <div class="ms-3">
             <div class="d-flex justify-content-end">
               <div
-                *ngIf="dataSelected.status != '1'"
+              *ngIf="dataSelected?.statusCodeID"
+              class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+            >
+              <span
+                class="text-ellipsis line-clamp line-clamp-2"
+                [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
+                > {{getStatusCode(dataSelected?.statusCodeID)}}</span
+              >
+            </div>
+
+              <div
+                *ngIf="dataSelected.status == '1'"
                 [ngStyle]="{
                   'background-color':
                     dataSelected.status == '3' || dataSelected.status == '4'
@@ -69,7 +80,7 @@
                   >{{ dataSelected?.currentStepName }}</span
                 >
               </div>
-              <div *ngIf="dataSelected.status == '1'">
+              <div *ngIf="dataSelected.status != '1'">
                 <codx-vll
                   [name]="'DP028'"
                   [field]="'Status'"

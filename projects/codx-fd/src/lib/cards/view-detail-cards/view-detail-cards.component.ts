@@ -107,7 +107,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
         if(!this.data.backgroundColor && res?.pattern?.recID){
           this.api.execSv('DM','ERM.Business.DM','FileBussiness','GetFilesByIbjectIDAsync',res.pattern.recID).subscribe((img: any) => {
             if(img && img.length > 0){
-              this.backgroundImg = environment.urlUpload + "/" + img[0].url;
+              this.backgroundImg = encodeURI(environment.urlUpload + "/" + img[0].url);
             }
           })
         };
@@ -117,7 +117,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
       const height = textElement.clientHeight;
       const lineCount = Math.round(height / lineHeight);
-      if(lineCount && lineCount > 3){
+      if(lineCount && lineCount > 10){
         this.showSM = true;
         this.showmore = true;
       } else {

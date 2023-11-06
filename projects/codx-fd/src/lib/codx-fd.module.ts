@@ -78,6 +78,10 @@ import { ViewDetailComponent } from './evouchers/evoucher-statistical/view-detai
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { ViewDetailPopupComponent } from './evouchers/evoucher-statistical/view-detail-popup/view-detail-popup.component';
 import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/popup-wallet-history.component';
+import { AchievementsComponent } from './achievements/achievements.component';
+import { PositionName } from './pipes/positionName.pipe';
+import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
+import { PersonalUsageHistoryComponent } from './personal-usage-history/personal-usage-history.component';
 
 export const routes: Routes = [
   {
@@ -101,9 +105,13 @@ export const routes: Routes = [
         path: 'dashboard/:funcID',
         component: StatisticalComponent,
       },
+      // {
+      //   path: 'achievement/:funcID',
+      //   component: AchievementComponent,
+      // },
       {
         path: 'achievement/:funcID',
-        component: AchievementComponent,
+        component: AchievementsComponent,
       },
       {
         path: 'cards/:funcID',
@@ -247,6 +255,9 @@ const Component: Type<any>[] = [
   ViewDetailComponent,
   ViewDetailPopupComponent,
   PopupWalletHistoryComponent,
+  AchievementsComponent,
+  PersonalAchievementComponent,
+  PersonalUsageHistoryComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -268,6 +279,7 @@ const T_Pipe: Type<any>[] = [];
   ],
   exports: [RouterModule],
   declarations: [
+    PositionName,
     Component,
     T_Pipe,
     PopupApprovalComponent,
@@ -276,6 +288,7 @@ const T_Pipe: Type<any>[] = [];
     WalletsEmpComponent,
     WalletsListByOrgComponent,
     PopupWalletHistoryComponent,
+    AchievementsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

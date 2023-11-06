@@ -145,7 +145,7 @@ export class CashreceiptsComponent extends UIComponent {
    * * Hàm click button thêm mới
    * @param event 
    */
-  btnAddClick(event) {
+  toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
@@ -525,7 +525,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -547,7 +547,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -564,7 +564,7 @@ export class CashreceiptsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;

@@ -487,7 +487,7 @@
       <codx-label class="fs-3 fw-bold" default="Danh sách công việc" name="lblTasks"></codx-label>
       <span class="icon-close cusor-pointer" (click)="dialog.close()"></span>
     </div>
-    <div class="overflow-auto px-5 pb-5" style="height: 680px">
+    <div class="overflow-auto px-5 pb-5 okr-tasklist" style="height: calc(100% - 60px)">
       <codx-tasks-share class="tasks-share-content w-100" [funcID]="'OMT014'" [dataValue]="selectOKR?.recID"
         [predicate]="'RefID==@0'" [showButtonAdd]="false" [showMoreFunc]="true"></codx-tasks-share>
     </div>

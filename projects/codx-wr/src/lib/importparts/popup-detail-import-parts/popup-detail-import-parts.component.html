@@ -1,0 +1,22 @@
+<codx-form [headerText]="title" [body]="body" [dialog]="dialog">
+  <ng-template #body>
+    <div class="h-100">
+      <codx-gridview-v2
+        #grid
+        [formName]="dialog.formModel.formName"
+        [gridViewName]="dialog.formModel.gridViewName"
+        [entityName]="dialog.formModel.entityName"
+        [service]="service"
+        [assemblyName]="assemblyName"
+        [className]="className"
+        [method]="method"
+        [predicates]="predicates"
+        [dataValues]="dataValues"
+        rowHeight="40"
+        [height]="'100%'"
+        [hideMoreFunc]="true"
+      ></codx-gridview-v2>
+    </div>
+  </ng-template>
+</codx-form>
+

@@ -44,6 +44,7 @@ export class PatternComponent extends UIComponent implements OnInit {
   environment = environment;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   dataService: CRUDService;
+  date = new Date();
   constructor(
     private change: ChangeDetectorRef,
     private patternSV: PatternService,
@@ -172,6 +173,9 @@ export class PatternComponent extends UIComponent implements OnInit {
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
     this.dataService.addNew().subscribe((res: any) => {
+      res.cardType = this.type;
+      this.dataService.addDatas.clear();
+      this.dataService.addDatas.set(res._uuid, res);
       var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event?.data?.save) {
@@ -242,14 +246,17 @@ export class PatternComponent extends UIComponent implements OnInit {
     var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
     dialog.closed.subscribe((e) => {
       if (e?.event?.data.update) {
+        this.date = new Date();
         this.lstPattern.forEach((dt, index) => {
           if (dt.recID == e.event.data.update.recID) {
-            this.lstPattern[index] = e.event.data.update;
+            this.lstPattern.splice(index, 1);
+            this.lstPattern.splice(index, 0, e.event.data.update);
+            //this.lstPattern[index] = e.event.data.update;
             this.change.detectChanges();
           } else this.lstPattern[index].isDefault = false;
         });
         //var data = e?.event?.data?.update;
-        //this.view.dataService.update(data).subscribe();
+        //this.dataService.update(data).subscribe();
       }
       this.dataService.clear();
     });
@@ -279,8 +286,8 @@ export class PatternComponent extends UIComponent implements OnInit {
   }
 
   delete(item, index) {
-    this.patternSV.deleteFile(item.recID).subscribe();
-    this.lstPattern.splice(index, 1);
+    // this.patternSV.deleteFile(item.recID).subscribe();
+    // this.lstPattern.splice(index, 1);
     // this.view.dataService.dataSelected = item;
     this.dataService.delete([item]).subscribe((res: any) => {
       if (res.data) {

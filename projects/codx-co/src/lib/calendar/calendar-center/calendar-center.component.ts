@@ -10,7 +10,7 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { FormModel, ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
+import { CodxScheduleComponent, FormModel, ResourceModel, UIComponent, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { CodxCoService } from '../../codx-co.service';
 
 @Component({
@@ -18,274 +18,159 @@ import { CodxCoService } from '../../codx-co.service';
   templateUrl: './calendar-center.component.html',
   styleUrls: ['./calendar-center.component.scss'],
 })
+
 export class CalendarCenterComponent
   extends UIComponent
-  implements AfterViewInit,OnChanges
+  implements AfterViewInit
 {
-  @ViewChild('contentTmp') contentTmp: TemplateRef<any>;
-  // @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  
 
 
   @Input() resources: any;
-  @Input() eventData: any;
+  @Input() events: any;
   @Input() eventModel:any;
   @Input() resourceModel: any;
   @Input() isOutSource:boolean = false;
   @Input() statusColor:any;
-  @Input() selectedDate:any;
+  @Input() selectedDate:Date = new Date();
   @Input() eventTemplate:TemplateRef<any>;
+  @Input() popupEventTemplate:TemplateRef<any>;
   @Input() resourceTemplate:TemplateRef<any>;
 
-  @Output() evtResourceClick = new EventEmitter();
-  @Output() evtAction = new EventEmitter();
-  @Output() evtDateSelectChange = new EventEmitter();
-
-
-  views: Array<ViewModel> | any = [];
+  @Output() evtChangeDate = new EventEmitter();
+  @Output() evtChangeMonth = new EventEmitter();
   
-  startTime: any;
-  month: any;
-  day: any;
-  btnAdd = {
-    id: 'btnAdd',
-  };
-  codxSchedule: any;
-  dayoff: any;
+  views: Array<ViewModel> | any = [];
+  codxSchedule: CodxScheduleComponent;
+  lstDayOff:any[] = []; // danh sách ngày nghỉ
   calendarID = 'STD';
   
-
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
   
 
-  onInit(): void {
-    this.getDayOff();
-    // set statusColor & isOutSource for Schedule
-    var itv = setInterval(()=> {
-      if((this.view?.currentView as any)?.schedule)
-      {
-        (this.view.currentView as any).schedule.isOutSource = this.isOutSource;
-        (this.view.currentView as any).statusColor = this.statusColor;
-        clearInterval(itv);
-      }
-    },1000)
+  onInit() 
+  {
+    this.getListDayOff();
   }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes["eventData"])
-    {
-      this.changeEvents(this.eventData);
-    }
-    if(changes["resources"])
-    {
-      if((this.view?.currentView as any)?.schedule)
-      {
-        (this.view.currentView as any).schedule.resourceDataSource = [...this.resources];
-        (this.view.currentView as any).schedule.setEventSettings();
-        this.detectorRef.detectChanges();
-      }
-    }
-    if(changes["selectedDate"])
-    {
-      if((this.view?.currentView as any)?.schedule)
-      {
-        (this.view.currentView as any).schedule.selectedDate = this.selectedDate;
-        (this.view.currentView as any).schedule.setEventSettings();
-        this.detectorRef.detectChanges();
-      }
-    }
-  }
-
-  // init schedule
   
   ngAfterViewInit(): void {
-    // setting mode view
     this.views = [
       {
         type: ViewType.schedule,
         active:true,
         showSearchBar: false,
-        showFilter: true,
+        showFilter: false,
         model: {
           eventModel: this.eventModel,// mapping của event schedule
           resourceModel: this.resourceModel, // mapping của resource schedule
-          // template: , //template popup event
-          template3: this.cellTemplate,
-          template4: this.resourceTemplate,//template của resource schedule
+          template: this.eventTemplate, // template event
+          template4: this.resourceTemplate,//template resource 
           template6: this.mfButton,
+          template8: this.popupEventTemplate //template popup event
         },
       },
     ];
-    this.evtAction.emit();
-    this.detectorRef.detectChanges();
-  }
-
-  
-
-
-  changeResource(datas:any[]){
-    if(this.view)
-    {
-      (this.view.currentView as any).schedule.resourceDataSource = datas;
-      (this.view.currentView as any).schedule.setEventSettings();
-    }
-  }
-  //navigate scheduler
-  onAction(event: any) {
-    if (
-      event.data.fromDate === 'Invalid Date' &&
-      event.data.toDate === 'Invalid Date'
-    ) {
-      return;
-    }
-    if (
-      (event?.type === 'navigate' &&
-        event.data.fromDate &&
-        event.data.toDate) ||
-      event?.data?.type === undefined
-    ) {
-      let obj;
-      if (event?.data.type === 'Week') {
-        let fromDate = new Date(
-          event.data.fromDate.setDate(event.data.fromDate.getDate() + 1)
-        );
-        let toDate = new Date(
-          event.data.toDate.setDate(event.data.toDate.getDate() + 1)
-        );
-        obj = {
-          fromDate: fromDate,
-          toDate: toDate,
-          type: event?.data.type,
-        };
-      } else {
-        obj = {
-          fromDate: event.data.fromDate,
-          toDate: event.data.toDate,
-          type: event?.data.type,
-        };
-      }
-      this.evtDateSelectChange.emit(obj);
-    }
-  }
-
-  changeEvents(dataSource: any) {
-    let ivt = setInterval(() => 
-    {
-      this.codxSchedule = (this.view?.currentView as any)?.schedule;
-      if (this.codxSchedule) 
+    // set statusColor & isOutSource for Schedule
+    var itv = setInterval(()=> {
+      if((this.view?.currentView as any)?.schedule)
       {
-        clearInterval(ivt);
-        for (const data of dataSource) 
-        {
-          if (
-            data.transType === 'TM_AssignTasks' || data.transType === 'TM_MyTasks') {
-            let tempStartDate = new Date(data.startDate);
-            let tempEndDate = new Date(data.endDate);
-            data.startDate = new Date(
-              tempStartDate.getFullYear(),
-              tempStartDate.getMonth(),
-              tempStartDate.getDate(),
-              tempStartDate.getHours(),
-              tempStartDate.getMinutes()
-            ).toString();
-            data.endDate = new Date(
-              tempEndDate.getFullYear(),
-              tempEndDate.getMonth(),
-              tempEndDate.getDate(),
-              tempEndDate.getHours(),
-              tempEndDate.getMinutes()
-            ).toString();
-          }
-        }
-        this.codxSchedule.dataSource = dataSource;
+        this.codxSchedule = (this.view?.currentView as any)?.schedule;
+        this.codxSchedule.isOutSource = this.isOutSource;
+        this.codxSchedule.dataSource = this.events;
+        this.codxSchedule.resourceDataSource = this.resources;
+        this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
+        (this.view.currentView as any).statusColor = this.statusColor;
         this.codxSchedule.setEventSettings();
-        this.detectorRef.detectChanges();
+        clearInterval(itv);
       }
-    });
-  }
-
-  showHour(stringDate: any) {
-    const date: Date = new Date(stringDate);
-    const hours: number = date.getHours();
-    const minutes: number = date.getMinutes();
-
-    const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-
-    return timeString;
+    },500)
   }
 
 
-  getDate(data) {
-    if (data.startDate) {
-      let date = new Date(data.startDate);
-      this.month = this.addZero(date.getMonth() + 1);
-      this.day = this.addZero(date.getDate());
-      let endDate = new Date(data.endDate);
-      let start =
-        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
-      let end =
-        this.addZero(endDate.getHours()) +
-        ':' +
-        this.addZero(endDate.getMinutes());
-      this.startTime = start + ' - ' + end;
+  //Change date
+  changeDate(date:Date){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.selectedDate = date;
+      this.codxSchedule.setEventSettings();
+      this.detectorRef.detectChanges();
     }
-    return this.startTime;
   }
-
-  addZero(i) {
-    if (i < 10) {
-      i = '0' + i;
+  
+  // change events
+  changeEvents(dataSource:any[]) {
+    if (this.codxSchedule) 
+    {
+      this.codxSchedule.dataSource = dataSource;
+      this.codxSchedule.setEventSettings();
+      this.detectorRef.detectChanges();
     }
-    return i;
+  }
+  
+  // change resource
+  changeResource(resources:any[]){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.resourceDataSource = resources;
+      this.codxSchedule.onGroupingChange(resources);
+      this.codxSchedule.setEventSettings();
+      this.detectorRef.detectChanges();
+    }
   }
 
-  getResourceID(data) {
-    const permissions = data.permissions;
-    const permisstionIDs = permissions
-      ? permissions.map((r) => r.objectID)
-      : [];
-    const res = permisstionIDs.join(';');
-    return res;
+  // remove resource
+  removeResource(){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.resourceDataSource = null;
+      this.codxSchedule.onGroupingChange(null);
+      this.codxSchedule.setEventSettings();
+      this.detectorRef.detectChanges();
+    }
   }
 
-  getCellContent(evt: any) {
+  //change date scheduler
+  onAction(event: any) {
+    if(event) 
+    {
+      let date = event.data.currentDate as Date;
+      if(this.selectedDate.getMonth() != date.getMonth())
+        this.evtChangeMonth.emit({date:date});
+      else
+        this.evtChangeDate.emit({value:date});
+    }
+  }
+
+  // render html day off schedule
+  getDayOffHTML(evt: any) {
     let obj = evt.date;
-    if (this.dayoff && this.dayoff.length > 0) {
-      for (let i = 0; i < this.dayoff.length; i++) {
-        let day = new Date(this.dayoff[i].startDate);
-        if (
-          day &&
-          obj.getFullYear() === day.getFullYear() &&
-          obj.getMonth() === day.getMonth() &&
-          obj.getDate() === day.getDate()
-        ) {
-          let time = obj.getTime();
-          let ele = document.querySelectorAll('[data-date="' + time + '"]');
-          if (ele.length > 0) {
-            ele.forEach((item) => {
-              (item as any).style.backgroundColor = this.dayoff[i].color;
-            });
-            return (
-              `<icon class="'${this.dayoff[i].symbol}'"></icon>
-              <span>${this.dayoff[i].note}</span>`
-            );
-          } else {
-            return '';
-          }
-        }
+    let cellDay = evt.date;
+    let html = "";
+    if (this.lstDayOff?.length > 0) 
+    {
+      let dayOff = this.lstDayOff.find(x => new Date(x.startDate).toLocaleDateString() === cellDay.toLocaleDateString());
+      if(dayOff)
+      {
+        debugger
+        let time = obj.getTime();
+        let ele = document.querySelectorAll('[data-date="' + time + '"]');
+        if (ele?.length > 0) 
+        {
+          ele.forEach((item) => { (item as any).style.backgroundColor = dayOff.color; });
+          html =`<icon class="${dayOff.symbol}"></icon><span>${dayOff.note}</span>`;
+        } 
       }
     }
-
-    return ''; // Return a default value if no conditions are met
+    return html;
   }
 
-  getDayOff(id = null) {
+  //get list day off
+  getListDayOff(id = null) {
     if (id) this.calendarID = id;
     this.api
       .execSv<any>(
@@ -296,27 +181,20 @@ export class CalendarCenterComponent
         [this.calendarID]
       )
       .subscribe((res) => {
-        if (res) {
-          this.dayoff = res;
+        if(res) 
+        {
+          this.lstDayOff = res;
         }
       });
   }
+}
 
-  valueChangeCB(e, note, index) {
-    for (let i = 0; i < note.checkList.length; i++) {
-      if (index == i) note.checkList[i].status = e.data;
-    }
-    note.createdOn = note.calendarDate;
-
-    // if ((note as any).data != null) {
-    //   note.createdOn = (note as any).data.createdOn;
-    // }
-    this.api
-      .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        note?.transID,
-        note,
-      ])
-      .subscribe();
-  }
-
+enum TimelineSchedule {
+  TimelineDay = 0,
+  TimelineWeek = 1,
+  TimelineWorkWeek = 2,
+  TimelineMonth = 3,
+  TimelineYear = 4,
+  Agenda = 5,
+  MonthAgenda = 6
 }

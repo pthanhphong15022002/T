@@ -358,6 +358,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
 
         //* Đối tượng
         case 'objectid':
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formCashPayment.setValue('objectType',objectType,{});
           this.objectIDChange();
           break;
 
@@ -368,6 +370,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
 
         //* Tên người nhận
         case 'payee':
+          this.formCashPayment.setValue('payeeID',event?.component?.itemsSelected[0]?.ContactID || '',{});
           this.payeeChange();
           break;
 
@@ -830,14 +833,14 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           }, 50);
           this.isPreventChange = false;
         }
-        // if (this.formCashPayment.data.journalType == 'BP') {
-        //   let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-        //   if (indexCashBook > -1) {
-        //     this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
-        //   }
-        //   this.bankNamePay = res?.BankName || '';
-        //   this.detectorRef.detectChanges();
-        // }
+        if (this.formCashPayment.data.journalType == 'BP') {
+          let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
+          if (indexCashBook > -1) {
+            this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
+          }
+          this.bankNamePay = res?.BankPayName || '';
+          this.detectorRef.detectChanges();
+        }
       }
     });
   }
@@ -1418,20 +1421,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     if (indexObject > -1) {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
-
-    let indexPayee =
-      this.eleCbxPayee?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ContactID == this.eleCbxPayee?.ComponentCurrent?.value
-      );
-    if (indexPayee > -1) {
-      payName =
-        this.eleCbxPayee?.ComponentCurrent?.dataService?.data[indexPayee]
-          .ContactName + ' - ';
-    } else {
-      if (this.eleCbxPayee?.ComponentCurrent?.value) {
-        payName = this.eleCbxPayee?.ComponentCurrent?.value + ' - ';
-      }
-    }
+    if(this.formCashPayment?.data?.payee) payName = this.formCashPayment?.data?.payee  + ' - ';
+    
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }

@@ -361,9 +361,9 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        const functionID = eventItem.functionID;
-        const mappingFunction = this.getRoleMoreFunction(functionID);
-        mappingFunction && mappingFunction(eventItem, data);
+       const functionID = eventItem.functionID;
+       const mappingFunction = this.getRoleMoreFunction(functionID);
+       mappingFunction && mappingFunction(eventItem, data);
       }
     }
   }
@@ -412,7 +412,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1'
+       data?.alloweStatus == '1'
           ? !['1', '2', '15'].includes(data.status) ||
             data.closed ||
             ['1', '0'].includes(data.status)
@@ -421,7 +421,7 @@ export class DealsComponent
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1'
+        data?.alloweStatus == '1'
           ? !['0'].includes(data.status)
           : true;
     };
@@ -429,7 +429,6 @@ export class DealsComponent
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
-        (data.processID && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
     };
     // let isUpdateBANT = (eventItem, data) => {
@@ -456,7 +455,7 @@ export class DealsComponent
     };
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1' ? false : true;
+        data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -545,12 +544,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(tmpPermission) {
-    return (
-      !tmpPermission?.roleMore?.isReasonSuccess &&
-      !tmpPermission?.roleMore?.isReasonFail &&
-      !tmpPermission?.roleMore?.isMoveStage
-    );
+  checkMoreReason(data) {
+    return data?.status != "1" && data?.status != "2" && data?.status != "15";
   }
   clickMF(e, data) {
     this.dataSelected = data;
@@ -1936,6 +1931,7 @@ export class DealsComponent
       recID: this.dataSelected.recID,
       valueListStatusCode: this.valueListStatusCode,
       gridViewSetup: this.gridViewSetup,
+      category: '1'
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,

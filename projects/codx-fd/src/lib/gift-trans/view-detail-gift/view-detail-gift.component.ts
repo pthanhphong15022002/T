@@ -12,6 +12,7 @@ import { CodxFdService } from '../../codx-fd.service';
 export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnChanges {
 
   @Input() objectID: string = "";
+  @Input() functionID: string = "";
   @Input() formModel: FormModel;
   @Output() changeStatus: EventEmitter<string> = new EventEmitter<string>();
   dialogConfirmStatus!: DialogRef;
