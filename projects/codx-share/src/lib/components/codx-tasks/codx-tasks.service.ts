@@ -185,7 +185,6 @@ export class CodxTasksService {
   editTask(
     recID, // recID data Tasks
     funcID, // func nghiep vu
-    isAssignTask, // la giao viec
     titleAction, // tiêu đề form
     afterSave?: Function, // hàm trả kết quả về
     data = null // data Tasks - nếu có thể truyền thằng như vậy
@@ -203,7 +202,7 @@ export class CodxTasksService {
         return;
       }
       if (data.category == '1' || data.category == '2') {
-        this.editConfirm(data, funcID, isAssignTask, titleAction);
+        this.editConfirm(data, funcID, false, titleAction);
       } else {
         var isCanEdit = true;
         this.api
@@ -226,13 +225,7 @@ export class CodxTasksService {
               if (!isCanEdit) {
                 this.notiService.notifyCode('TM016');
               } else {
-                this.editConfirm(
-                  data,
-                  funcID,
-                  isAssignTask,
-                  titleAction,
-                  afterSave
-                );
+                this.editConfirm(data, funcID, true, titleAction, afterSave);
               }
             }
           });
@@ -255,7 +248,7 @@ export class CodxTasksService {
             this.editConfirm(
               task,
               funcID,
-              isAssignTask,
+              task.category == '3',
               titleAction,
               afterSave,
               true,
@@ -270,7 +263,7 @@ export class CodxTasksService {
   editConfirm(
     data,
     funcID,
-    isAssignTask,
+    isAssignTask, //la giao việc
     titleAction,
     afterSave?: Function,
     isLoadedData = false,
