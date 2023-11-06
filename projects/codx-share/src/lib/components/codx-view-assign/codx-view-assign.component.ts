@@ -293,4 +293,22 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  //edit goi service
+  editByService(moreFunc, data) {
+    this.tmSv.editTask(
+      data.recID,
+      data.category == '3'
+        ? 'TMT0203'
+        : data.category == '2'
+        ? 'TMT0202 '
+        : 'TMT0201',
+      moreFunc.customName,
+      this.afterSaveTask.bind(this)
+    );
+  }
+
+  afterSaveTask(data) {
+    //data tra ve
+  }
 }
