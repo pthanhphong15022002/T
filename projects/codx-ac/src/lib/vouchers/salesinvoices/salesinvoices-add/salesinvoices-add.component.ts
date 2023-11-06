@@ -57,6 +57,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  isPreventChange:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -168,6 +169,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
       hideFields.push('VATBase'); 
       hideFields.push('VATAmt2');
       hideFields.push('VATBase2');
+      hideFields.push('VATID');
     }else{
       if(this.formSalesInvoice?.data?.currencyID == this.baseCurr){
         hideFields.push('VATAmt2');
@@ -239,6 +241,9 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param event 
    */
   valueChangeMaster(event: any) {
+    if (this.isPreventChange) {
+      return;
+    }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
     if(event && value && this.formSalesInvoice.hasChange(this.formSalesInvoice.preData,this.formSalesInvoice.data)){
@@ -484,13 +489,14 @@ export class SalesinvoicesAddComponent extends UIComponent{
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {
+        this.isPreventChange = true;
         if(this.formSalesInvoice.data.currencyID != res?.CurrencyID){
-          this.formSalesInvoice.setValue('currencyID',(res?.CurrencyID || ''),{onlySelf: true,emitEvent: false});
+          this.formSalesInvoice.setValue('currencyID',(res?.CurrencyID || ''),{});
           this.showHideColumn();
         } 
         if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
+          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
           setTimeout(() => {
             if(this.eleGridSalesInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
               this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
@@ -500,18 +506,19 @@ export class SalesinvoicesAddComponent extends UIComponent{
           }, 100);
           
         }
-        this.formSalesInvoice.setValue('objectName',(res?.ObjectName || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('objectType',(res?.ObjectType || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('address',(res?.Address || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('taxCode',(res?.TaxCode || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('warehouseID',(res?.WarehouseID || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('pmtMethodID',(res?.PmtMethodID || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('pmtTermID',(res?.PmtTermID || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('delModeID',(res?.DelModeID || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('consultantID',(res?.ConsultantID || ''),{onlySelf: true,emitEvent: false});
-        this.formSalesInvoice.setValue('salespersonID',(res?.salespersonID || ''),{onlySelf: true,emitEvent: false});
+        this.formSalesInvoice.setValue('objectName',(res?.ObjectName || ''),{});
+        this.formSalesInvoice.setValue('objectType',(res?.ObjectType || ''),{});
+        this.formSalesInvoice.setValue('address',(res?.Address || ''),{});
+        this.formSalesInvoice.setValue('taxCode',(res?.TaxCode || ''),{});
+        this.formSalesInvoice.setValue('warehouseID',(res?.WarehouseID || ''),{});
+        this.formSalesInvoice.setValue('pmtMethodID',(res?.PmtMethodID || ''),{});
+        this.formSalesInvoice.setValue('pmtTermID',(res?.PmtTermID || ''),{});
+        this.formSalesInvoice.setValue('delModeID',(res?.DelModeID || ''),{});
+        this.formSalesInvoice.setValue('consultantID',(res?.ConsultantID || ''),{});
+        this.formSalesInvoice.setValue('salespersonID',(res?.salespersonID || ''),{});
 
         this.detectorRef.detectChanges();
+        this.isPreventChange = false;
       }
     })
   }
@@ -529,8 +536,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
     .subscribe((res: any) => {
       if (res) {      
         if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
+          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
         }
         this.showHideColumn();
         setTimeout(() => {
@@ -574,8 +581,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param field 
    */
   voucherDateChange(field){
-    this.formSalesInvoice.setValue('postedDate',this.formSalesInvoice.data.voucherDate,{onlySelf: true,emitEvent: false});
-    this.formSalesInvoice.setValue('invoiceDate',this.formSalesInvoice.data.voucherDate,{onlySelf: true,emitEvent: false});
+    this.formSalesInvoice.setValue('postedDate',this.formSalesInvoice.data.voucherDate,{});
+    this.formSalesInvoice.setValue('invoiceDate',this.formSalesInvoice.data.voucherDate,{});
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formSalesInvoice.data,
@@ -584,8 +591,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
     .subscribe((res: any) => {
       if (res) {      
         if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{onlySelf: true,emitEvent: false});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{onlySelf: true,emitEvent: false});
+          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
+          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
           if(this.eleGridSalesInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
             this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
             this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();

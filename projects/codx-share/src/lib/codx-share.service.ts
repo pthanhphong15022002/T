@@ -1372,6 +1372,15 @@ export class CodxShareService {
       [companyID, roleType]
     );
   }
+  getRPList(ids: any,option :string, isLite :boolean = false,reportType :string = null) {
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetRPAsync',
+      [ids,option,isLite,reportType]
+    );
+  }
   viewApprovalStep(transID, isSettingMode = true, dynamicApprovers = null) {
     return this.api.execSv<any>(
       'ES',

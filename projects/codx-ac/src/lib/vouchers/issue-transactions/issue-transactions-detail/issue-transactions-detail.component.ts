@@ -531,7 +531,11 @@ export class IssueTransactionsDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('IV', 'VouchersBusiness', 'GetDataDetailAsync', [
         dataItem,
         recID,
@@ -541,6 +545,7 @@ export class IssueTransactionsDetailComponent extends UIComponent {
         this.itemSelected = res;
         this.detectorRef.detectChanges();
       });
+    }
   }
 
   /**
