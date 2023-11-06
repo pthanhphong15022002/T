@@ -250,7 +250,7 @@ export class WalletsListByOrgComponent {
     if(number <= 0) number = 0;
     for (let index = 0; index < this.dataRangeLine.length; index++) {
       if(number < this.dataRangeLine[0].breakValue) {
-        return "no data";
+        return "chưa có hạng";
       }
       if(number > this.dataRangeLine[this.dataRangeLine.length - 1].breakValue) {
         return this.dataRangeLine[this.dataRangeLine.length - 1].breakName;
