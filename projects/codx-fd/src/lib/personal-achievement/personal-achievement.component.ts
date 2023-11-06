@@ -114,6 +114,7 @@ implements AfterViewInit, OnChanges{
   formatRangs(data:any)
   {
     let check = false;
+    var sum = data.reduce((n, {breakValue}) => n + breakValue, 0)
     for(var i = 0 ; i < data.length ; i++)
     {
       if(this.pointAndRanking[0].myKudos <= data[i].breakValue && !check)
@@ -124,11 +125,10 @@ implements AfterViewInit, OnChanges{
           index: i == (data.length - 1) ? -1 : (i + 1)
         }
       }
-      data[i].width = pointLadder[i].width;
+      data[i].width = (data[i].breakValue / sum) * 100,
       data[i].zIndex = pointLadder[i].zIndex;
     }
-
-    this.wRangs = (this.pointAndRanking[0].myKudos / data[data.length-1].breakValue) *100;
+    this.wRangs = (this.pointAndRanking[0].myKudos / sum) *100;
     this.fmMessage(data);
     return data;
   }
@@ -149,24 +149,6 @@ implements AfterViewInit, OnChanges{
   
   ngAfterViewInit(): void {
     this.getSetting();
-    // this.columnsGrid = [
-    //   { field: 'transDate', headerText: 'Ngày phát sinh', width: 150 , template: this.rowTransDate},
-    //   { headerText: "Thông điệp", template: this.rowRefType , width: 150 , textAlign: 'center'},
-    //   { headerText: "Nội dung", template: this.rowCard , textAlign: 'center'},
-    //   { headerText: "Chính sách", template: this.rowPolicy ,textAlign: 'center'},
-    //   { headerText: "Điểm" , template: this.rowCoins , textAlign: 'center' , width: 100},
-    // ];
-    // this.views = [
-    //   {
-    //     type: ViewType.grid,
-    //     active: true,
-    //     sameData: true,
-    //     model: {
-    //       hideMoreFunc:true,
-    //       resources: this.columnsGrid,
-    //     },
-    //   },
-    // ];
   }
 
   getSetting()
@@ -207,6 +189,7 @@ implements AfterViewInit, OnChanges{
           field: this.capitalizeFirstLetter(key[i]),
           headerText: item[key[i]].headerText,
           columnOrder: item[key[i]].columnOrder,
+          width: item[key[i]].width,
         };
         data.push(obj);
       }
@@ -223,14 +206,14 @@ implements AfterViewInit, OnChanges{
       var obj = 
       {
         field: elm.field, 
-        headerText: elm.headerText
+        headerText: elm.headerText,
+        width: elm.width
       } as any;
 
       switch(elm.field)
         {
           case "transDate":
             {
-              obj.width = 150;
               obj.template = this.rowTransDate;
               obj.matchCase = false
               break;
@@ -238,32 +221,26 @@ implements AfterViewInit, OnChanges{
           case "transType":
             {
               obj.template = this.rowTransType;
-              obj.textAlign = "center";
               break;
             }
           case "refType":
             {
-              obj.width = 150;
               obj.template = this.rowRefType;
-              obj.textAlign = "center";
               break;
             }
           case "situation":
             {
               obj.template = this.rowCard;
-              obj.textAlign = "center";
               break;
             }
           case "policyID":
             {
               obj.template = this.rowPolicy;
-              obj.textAlign = "center";
               break;
             }
           case "kudos":
             {
               obj.template = this.rowCoins;
-              obj.textAlign = "center";
               break;
             }
           case "objectName":

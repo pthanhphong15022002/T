@@ -80,8 +80,31 @@
   {
     padding: 0 !important;
   }
+ 
 }
 .div-per-usage-his:hover , .div-per-usage-his.active
 {
   background-color: var(--primary-lighter);
+}
+.p-achie
+{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+}
+.p-achie > p
+{
+  display: none;
+}
+.p-achie > p:first-child
+{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
 }
