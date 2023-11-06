@@ -50,6 +50,8 @@ import { AdvancePaymentRequestComponent } from 'projects/codx-ac/src/lib/voucher
 import { LayoutNoasideAcComponent } from 'projects/codx-ac/src/lib/_layout-noaside-ac/layout-noaside-ac.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { PaymentOrderComponent } from 'projects/codx-ac/src/lib/vouchers/payment-order/payment-order.component';
+import { PersonalAchievementComponent } from 'projects/codx-fd/src/lib/personal-achievement/personal-achievement.component';
+
 
 import { MyPageComponent } from './personal/master-detail/my-page/my-page.component';
 import { TabAllModule } from '@syncfusion/ej2-angular-navigations';
@@ -65,6 +67,7 @@ import { PopupAddPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/l
 import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 import { CvInformationComponent } from './workspace/AITool/cv-information/cv-information.component';
 import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
+import { PersonalUsageHistoryComponent } from 'projects/codx-fd/src/lib/personal-usage-history/personal-usage-history.component';
 const routes: Routes = [
   {
     path: '',
@@ -216,6 +219,15 @@ const routes: Routes = [
       {
         path: 'tm/dashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      //FD
+      {
+        path: 'mykudostrans/:funcID',
+        component: PersonalAchievementComponent,
+      },
+      {
+        path: 'mywallet/:funcID',
+        component: PersonalUsageHistoryComponent,
       },
       //-----------Khai báo routing Dashboard---------------
       {

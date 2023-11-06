@@ -38,6 +38,7 @@ import { FED_Card } from '../models/FED_Card.model';
 import { CardType, FunctionName, Valuelist } from '../models/model';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
 import { PopupApprovalComponent } from '../approvals/popup-approval/popup-approval.component';
+import { CodxFdService } from '../codx-fd.service';
 
 @Component({
   selector: 'lib-cards',
@@ -75,7 +76,8 @@ export class CardsComponent extends UIComponent {
     private notifiSV: NotificationsService,
     private auth: AuthService,
     private notiService: NotificationsService,
-    private callFC: CallFuncService
+    private callFC: CallFuncService,
+    private fdService: CodxFdService
   ) {
     super(inject);
     this.user = this.auth.userValue;
@@ -89,6 +91,7 @@ export class CardsComponent extends UIComponent {
           this.funcID = funcID;
           this.cache.functionList(funcID).subscribe((func: any) => {
             if (func) {
+              this.cardType = func.dataValue;
               this.cache
                 .gridViewSetup(func.formName, func.gridViewName)
                 .subscribe((grd: any) => {
@@ -168,15 +171,19 @@ export class CardsComponent extends UIComponent {
   }
 
   clickShowAssideRight() {
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    option.Width = '550px';
-    this.callfc.openSide(
-      PopupAddCardsComponent,
-      { funcID: this.funcID },
-      option
-    );
+    this.fdService.checkValidAdd(this.cardType).subscribe((res: any) => {
+      if (!res.error) {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '550px';
+        this.callfc.openSide(
+          PopupAddCardsComponent,
+          { funcID: this.funcID },
+          option
+        );
+      } else this.notiService.notifyCode('FD001');
+    });
   }
 
   clickMF(event: any, data: any) {

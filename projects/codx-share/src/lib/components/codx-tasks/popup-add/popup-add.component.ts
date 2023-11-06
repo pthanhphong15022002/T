@@ -162,6 +162,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   titleViewTask = 'Xem';
   crrRole: any;
   isOtherModule = false;
+  isLoadedData = false; //da load data
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -190,15 +191,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.taskCopy = dt?.data?.taskCopy;
     this.disabledProject = dt?.data?.disabledProject;
     this.isOtherModule = dt?.data?.isOtherModule;
+    this.isLoadedData = dt?.data?.isLoadedData;
+    if (this.isLoadedData) {
+      this.listUserDetail = dt?.data?.listUserDetail ?? [];
+      this.listTodo = dt?.data?.listTodo ?? [];
+      this.listTaskResources = dt?.data?.listTaskResources ?? [];
+    }
 
-    //da doi lai cho phu hop
-    // this.action = dt?.data[1];
-    // this.showAssignTo = dt?.data[2];
-    // this.titleAction = dt?.data[3];
-    // this.functionID = dt?.data[4];
-    // this.taskCopy = dt?.data[5];
-    // this.disabledProject = dt?.data[6];
-    // this.isOtherModule = dt?.data[7]
     this.dialog = dialog;
     this.user = this.authStore.get();
 
@@ -275,7 +274,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.readOnly = true;
         this.viewTask = true;
       }
-      this.openInfo(this.task.taskID, this.action);
+      this.openInfo(this.task.taskID);
     }
     if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
     else if (this.task.startDate || this.task.endDate) this.changTimeCount = 1;
@@ -423,33 +422,43 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  openInfo(id, action) {
-    this.tmSv.getTask(id).subscribe((res) => {
-      if (res && res.length) {
-        this.task = res[0] as TM_Tasks;
-        this.listUserDetail = res[1] || [];
-        this.listTodo = res[2];
-        this.listTaskResources = res[3];
-        this.listUser = this.task.assignTo?.split(';') || [];
-        this.showLabelAttachment = this.task.attachments > 0 ? true : false;
-
-        if (this.action == 'edit' && this.task.category == '2') {
-          //them điều kiện ngày  08/06/2023 tho ý thuong
-          // if (
-          //   this.task.owner == this.task.createdBy &&
-          //   this.task.verifyControl == '0'
-          // ) {
-          //   this.disableDueDate = false;
-          //   this.readOnly = false;
-          // } else {
-          this.disableDueDate = true;
-          if (this.param?.EditControl != '1') this.readOnly = true;
-          // }
+  openInfo(id) {
+    if (this.action == 'edit' && this.task.category == '2') {
+      //them điều kiện ngày  08/06/2023 tho ý thuong
+      // if (
+      //   this.task.owner == this.task.createdBy &&
+      //   this.task.verifyControl == '0'
+      // ) {
+      //   this.disableDueDate = false;
+      //   this.readOnly = false;
+      // } else {
+      this.disableDueDate = true;
+      if (this.param?.EditControl != '1') this.readOnly = true;
+      // }
+    }
+    if (this.isLoadedData) {
+      this.changeForm();
+    } else {
+      this.tmSv.getTask(id).subscribe((res) => {
+        if (res && res?.length) {
+          this.task = res[0] as TM_Tasks;
+          this.listUserDetail = res[1] || [];
+          this.listTodo = res[2];
+          this.listTaskResources = res[3];
+          this.changeForm();
+        } else {
+          this.notiService.notifyCode('SYS001');
+          this.dialog.close();
         }
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+      });
+    }
   }
+  changeForm() {
+    this.listUser = this.task.assignTo?.split(';') || [];
+    this.showLabelAttachment = this.task.attachments > 0 ? true : false;
+    this.changeDetectorRef.detectChanges();
+  }
+
   getTaskCoppied(id) {
     const t = this;
     this.listUser = [];
@@ -652,6 +661,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.isClickSave = false;
           this.attachment?.clearData();
           this.dialog.close(res);
+          if (res) {
+            this.notiService.notifyCode('SYS006');
+          } else this.notiService.notifyCode('SYS023');
         });
     } else {
       this.dialog.dataService
@@ -679,46 +691,69 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.category == '3') {
       this.notiService.alertCode('TM015').subscribe((res) => {
         if (res?.event && res?.event?.status == 'Y') {
-          this.dialog.dataService
-            .save((option: any) => this.beforeSave(option))
-            .subscribe((res) => {
-              if (res) {
-                this.dialog.dataService.addDatas.clear();
-                if (res.update) {
-                  var task = res.update;
-                  this.dialog.close(res.update);
+          if (this.isOtherModule) {
+            this.updateOtherModule();
+          } else {
+            this.dialog.dataService
+              .save((option: any) => this.beforeSave(option))
+              .subscribe((res) => {
+                if (res) {
+                  this.dialog.dataService.addDatas.clear();
+                  if (res.update) {
+                    var task = res.update;
+                    this.dialog.close(res.update);
+                    this.attachment?.clearData();
+                  }
+                } else {
+                  this.dialog.close();
                   this.attachment?.clearData();
-                  //send mail FE
-                  // this.tmSv
-                  //   .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
-                  //   .subscribe();
                 }
-              } else {
-                this.dialog.close();
-                this.attachment?.clearData();
-              }
-            });
+              });
+          }
         } else {
           this.dialog.close();
           this.attachment?.clearData();
         }
       });
     } else {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSave(option))
-        .subscribe((res) => {
-          if (res) {
-            if (res.update) {
-              this.dialog.dataService.addDatas.clear();
-              this.dialog.close(res.update);
+      if (this.isOtherModule) this.updateOtherModule();
+      else {
+        this.dialog.dataService
+          .save((option: any) => this.beforeSave(option))
+          .subscribe((res) => {
+            if (res) {
+              if (res.update) {
+                this.dialog.dataService.addDatas.clear();
+                this.dialog.close(res.update);
+                this.attachment?.clearData();
+              }
+            } else {
+              this.dialog.close();
               this.attachment?.clearData();
             }
-          } else {
-            this.dialog.close();
-            this.attachment?.clearData();
-          }
-        });
+          });
+      }
     }
+  }
+  //updateOtherModule
+  updateOtherModule() {
+    this.api
+      .exec('TM', 'TaskBusiness', 'UpdateTaskAsync', [
+        this.task,
+        this.functionID,
+        this.listTaskResources,
+        this.listTodo,
+        null,
+        this.recIDTodoDelete.join(';'),
+      ])
+      .subscribe((res: any) => {
+        this.isClickSave = false;
+        this.attachment?.clearData();
+        this.dialog.close(res);
+        if (res) {
+          this.notiService.notifyCode('SYS007');
+        } else this.notiService.notifyCode('SYS021');
+      });
   }
 
   eventApply(e: any) {

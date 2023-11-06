@@ -1,3 +1,4 @@
+import { label } from './../../../../codx-ws/src/lib/personal/master-detail/information/infomation.variable';
 import { Browser } from '@syncfusion/ej2-base';
 import {
   AfterViewInit,
@@ -263,8 +264,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //chart sales pipeline
   lstAlls = [];
   lstSalesStages = [];
+  lstNamesStages = [];
   lstSalesStatus = [];
+  lstNamesStatus = [];
   lstSalesStatusCodes = [];
+  lstNamesStatusCodes = [];
   tmpProcessDefault: any;
   lstStatusCodes = [];
   vllStatusDeals = [];
@@ -388,10 +392,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   explodeIndex: number = 2;
   endAngle: number = 360;
   legendSettings: Object = {
-    visible: true,
+    visible: false,
     toggleVisibility: false,
     position: 'Right',
     textWrap: 'Wrap',
+    label: [],
   };
   vllQuaters = [];
   //end
@@ -1684,8 +1689,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.textTitle = type;
     const dealCurrents = deals.filter(
       (x) =>
-        new Date(x?.createdOn) >= frmDate &&
-        new Date(x?.createdOn) <= tDate
+        new Date(x?.createdOn) >= frmDate && new Date(x?.createdOn) <= tDate
     ); // đổi field createdOn -> ExpectedClosed
     const dealOlds = deals.filter(
       (x) =>
@@ -1695,18 +1699,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     //Doanh số bán hàng
     let countDealValues = Math.round(
-      deals?.filter(
-        (x) =>
-          new Date(x?.expectedClosed) >= frmDate &&
-          new Date(x?.expectedClosed) <= tDate
-      ).reduce((acc, x) => acc + x.dealValue, 0)
+      deals
+        ?.filter(
+          (x) =>
+            new Date(x?.expectedClosed) >= frmDate &&
+            new Date(x?.expectedClosed) <= tDate
+        )
+        .reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealValueOlds = Math.round(
-      deals?.filter(
-        (x) =>
-          new Date(x?.expectedClosed) >= frmDateOld &&
-          new Date(x?.expectedClosed) <= tDateOld
-      ).reduce((acc, x) => acc + x.dealValue, 0)
+      deals
+        ?.filter(
+          (x) =>
+            new Date(x?.expectedClosed) >= frmDateOld &&
+            new Date(x?.expectedClosed) <= tDateOld
+        )
+        .reduce((acc, x) => acc + x.dealValue, 0)
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
@@ -1746,8 +1754,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //end
 
     //Won deals
-    countDealValues = dealCurrents.filter((x) => x.status == '3')?.length ?? 0;
-    countDealValueOlds = dealOlds.filter((x) => x.status == '3')?.length ?? 0;
+    countDealValues = Math.round(
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDate &&
+          new Date(x?.expectedClosed) <= tDate &&
+          x.status == '3'
+      ).length
+    );
+    countDealValueOlds = Math.round(
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDateOld &&
+          new Date(x?.expectedClosed) <= tDateOld &&
+          x.status == '3'
+      ).length
+    );
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
     isAsc =
@@ -1766,8 +1788,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //end
 
     //Lost deals
-    countDealValues = dealCurrents.filter((x) => x.status == '5')?.length ?? 0;
-    countDealValueOlds = dealOlds.filter((x) => x.status == '5')?.length ?? 0;
+    countDealValues = Math.round(
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDate &&
+          new Date(x?.expectedClosed) <= tDate &&
+          x.status == '5'
+      ).length
+    );
+    countDealValueOlds = Math.round(
+      deals?.filter(
+        (x) =>
+          new Date(x?.expectedClosed) >= frmDateOld &&
+          new Date(x?.expectedClosed) <= tDateOld &&
+          x.status == '5'
+      ).length
+    );
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
     isAsc =
@@ -1826,7 +1862,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     tmp['countOld'] =
       (countDealValueOlds > 0 ? countDealValueOlds.toFixed(2) : 0) + '%';
     tmp['countAsc'] = 0; //số
-    tmp['valueAsc'] = (Math.abs(countDealValues - countDealValueOlds) > 0 ? Math.abs(countDealValues - countDealValueOlds).toFixed(2) : 0) + '%'; // %
+    tmp['valueAsc'] =
+      (Math.abs(countDealValues - countDealValueOlds) > 0
+        ? Math.abs(countDealValues - countDealValueOlds).toFixed(2)
+        : 0) + '%'; // %
     tmp['isAsc'] = isAsc;
     this.tmpDashBoardDeals.push(JSON.parse(JSON.stringify(tmp)));
     //end
@@ -1971,8 +2010,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         tmp['quantity'] = dealsSteps?.length ?? 0;
         if (dealsSteps?.length > 0) {
           this.lstSalesStages.push(tmp);
-          this.palettePipsStages.push(item.backgroundColor);
         }
+      }
+      if (this.lstSalesStages?.length > 0) {
+        this.lstNamesStages = JSON.parse(JSON.stringify(this.lstSalesStages));
+        this.lstSalesStages.reverse();
+        this.palettePipsStages = this.lstSalesStages.map(
+          (x) => x.backgroundColor
+        );
       }
     }
     if (this.vllStatusDeals != null) {
@@ -1986,14 +2031,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         tmp['quantity'] = countDeals;
         if (countDeals > 0) {
           this.lstSalesStatus.push(tmp);
-          this.palettePipsStatus.push(item.color);
         }
       }
-      if(this.lstSalesStatus != null && this.lstSalesStatus.length > 0){
-        this.lstSalesStatus.sort(
-          (a, b) => a.quantity - b.quantity
-        );
-        this.palettePipsStatus = this.lstSalesStatus.map(x => x.color);
+      if (this.lstSalesStatus != null && this.lstSalesStatus.length > 0) {
+        this.lstSalesStatus.sort((a, b) => a.quantity - b.quantity);
+        this.palettePipsStatus = this.lstSalesStatus.map((x) => x.color);
+        let lst = JSON.parse(JSON.stringify(this.lstSalesStatus));
+        this.lstNamesStatus = lst.reverse();
       }
     }
 
@@ -2002,6 +2046,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         var tmp = {};
         tmp['name'] = item.StatusName;
         tmp['value'] = item.StatusID;
+        tmp['color'] = this.random_bg_color();
+
         const countDeals =
           deals.filter((x) => item.StatusID == x.statusCodeID)?.length ?? 0;
         tmp['quantity'] = countDeals;
@@ -2009,10 +2055,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.lstSalesStatusCodes.push(tmp);
         }
       }
-      if(this.lstSalesStatusCodes != null && this.lstSalesStatusCodes.length > 0){
-        this.lstSalesStatusCodes.sort(
-          (a, b) => a.quantity - b.quantity
-        );
+      if (
+        this.lstSalesStatusCodes != null &&
+        this.lstSalesStatusCodes.length > 0
+      ) {
+        this.lstSalesStatusCodes.sort((a, b) => a.quantity - b.quantity);
+        this.palettePipsStatusCodes = this.lstSalesStatusCodes.map(x => x.color);
+        let lst = this.lstSalesStatusCodes;
+        this.lstNamesStatusCodes = JSON.parse(JSON.stringify(lst.reverse()));
       }
     }
     this.detectorRef.detectChanges();
@@ -2069,17 +2119,22 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         m >= (y === year - 1 ? month : 1);
         m--
       ) {
-        let dealMonths = deals?.filter(
-          (x) =>
-            new Date(x.expectedClosed).getFullYear() == y &&
-            new Date(x.expectedClosed).getMonth() + 1 == m &&
-            x.status == '3'
-        ) ?? [] //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
+        let dealMonths =
+          deals?.filter(
+            (x) =>
+              new Date(x.expectedClosed).getFullYear() == y &&
+              new Date(x.expectedClosed).getMonth() + 1 == m &&
+              x.status == '3'
+          ) ?? []; //ExpectedClosed sẽ lấy field này để so sánh. Vì field này chưa có data nên dùng tạm createdOn để test
         let tmp = {};
         tmp['month'] = m + '/' + y;
         tmp['year'] = y;
-        let maxProductivity = dealMonths.reduce((acc, x) => acc + x.dealValue, 0);
-        tmp['expected'] = maxProductivity;
+        let maxProductivity = dealMonths.reduce(
+          (acc, x) => acc + x.dealValue,
+          0
+        );
+        tmp['expected'] = this.formatMaxValue(maxProductivity);
+        tmp['dealValue'] = maxProductivity;
         max = maxProductivity > max ? maxProductivity : max;
         listMonths.push(tmp);
       }
@@ -2138,7 +2193,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
     if (index != -1) {
       args.point.tooltip =
-        this.lstMonthsSeries[index]?.expected.toLocaleString();
+        this.lstMonthsSeries[index]?.dealValue.toLocaleString();
     }
   }
 

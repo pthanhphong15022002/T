@@ -109,6 +109,10 @@ export class PopupUpdateStatusComponent
       business = 'DealsBusiness';
       method ='ChangeStatusDealAsync';
     }
+    else if(applyFor == '2' ||applyFor == '3'  ) {
+      business = 'CasesBusiness';
+      method ='ChangeStatusCasesAsync';
+    }
     return obj = {
       business: business,
       method:method

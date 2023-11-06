@@ -15,6 +15,7 @@ import {
   CodxService,
   FormModel,
   NotificationsService,
+  SortModel,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupWalletHistoryComponent } from '../popup-wallet-history/popup-wallet-history.component';
@@ -45,11 +46,13 @@ export class WalletsListByOrgComponent {
   @ViewChild('colCoinsHeader') colCoinsHeader: TemplateRef<any>;
   @ViewChild('colCoCoinsHeader') colCoCoinsHeader: TemplateRef<any>;
   @ViewChild('colKudosHeader') colKudosHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeaderRank') colKudosHeaderRank: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colJoinedOn') colJoinedOn: TemplateRef<any>;
   @ViewChild('colCoins') colCoins: TemplateRef<any>;
   @ViewChild('colCoCoins') colCoCoins: TemplateRef<any>;
   @ViewChild('colKudos') colKudos: TemplateRef<any>;
+  @ViewChild('colKudosRank') colKudosRank: TemplateRef<any>;
 
   entityName = 'FD_Wallets';
   service = 'FD';
@@ -145,12 +148,17 @@ export class WalletsListByOrgComponent {
         {
           headerTemplate: this.colJoinedOnHeader,
           template: this.colJoinedOn,
-          width: '150',
+          width: '100',
         },
         {
           headerTemplate: this.colKudosHeader,
           template: this.colKudos,
-          width: '150',
+          width: '100',
+        },
+        {
+          headerTemplate: this.colKudosHeaderRank,
+          template: this.colKudosRank,
+          width: '200',
         },
       ];
     }
