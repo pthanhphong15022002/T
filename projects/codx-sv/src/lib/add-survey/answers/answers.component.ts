@@ -15,6 +15,7 @@ import { isObservable } from 'rxjs';
 import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 import moment from 'moment';
 import { palettes } from '../setting/setting.data';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'app-answers',
@@ -114,6 +115,7 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
   constructor(
     private injector: Injector,
     private awserSV :CodxSVAnswerService,
+    private codxShareService :CodxShareService,
   ) {
     super(injector);
   }
@@ -634,6 +636,14 @@ export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
     elementDivIcon.style.backgroundColor = "#F5F9FA";
   }
 
+  //Print Report
+  printReport(){   
+    let params = {
+      SurveyID:this.dataSV?.recID,
+    }
+    this.codxShareService.printReport('SVR001',"R",params,this.view?.formModel);
+        
+  }
   //Export 
   export()
   {

@@ -173,6 +173,9 @@ export class PatternComponent extends UIComponent implements OnInit {
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto';
     this.dataService.addNew().subscribe((res: any) => {
+      res.cardType = this.type;
+      this.dataService.addDatas.clear();
+      this.dataService.addDatas.set(res._uuid, res);
       var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event?.data?.save) {
