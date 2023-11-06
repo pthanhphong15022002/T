@@ -21,6 +21,7 @@ export class PopupDetailImportPartsComponent {
   lstImportParts = [];
   dialog: DialogRef;
   loaded: boolean;
+  title = '';
   constructor(
     private api: ApiHttpService,
     private detectoref: ChangeDetectorRef,
@@ -30,6 +31,7 @@ export class PopupDetailImportPartsComponent {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.dataValues = this.data?.recID;
+    this.title = dt?.data?.titleAction;
   }
 
   ngAfterViewInit(): void {

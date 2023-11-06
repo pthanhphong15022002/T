@@ -99,6 +99,10 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
     });
   }
 
+  dataChange(evt){
+    debugger
+  }
+
   onChangeSwitch(evt, fieldName) {
     let res = evt.data;
     if (res == true) {
@@ -164,6 +168,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async addFiles(evt) {
+    debugger
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
     this.form.formGroup.patchValue(this.documentObj);
@@ -174,6 +179,8 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async onSaveForm() {
+    debugger
+
     if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false);
