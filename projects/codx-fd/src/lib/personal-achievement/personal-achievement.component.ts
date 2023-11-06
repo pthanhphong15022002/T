@@ -48,6 +48,7 @@ implements AfterViewInit, OnChanges{
   rangsUser:any;
   wRangs:any;
   mssFD007:any;
+  mssFD008:any;
   mssAdvice:any;
   constructor(
     inject: Injector,
@@ -70,7 +71,8 @@ implements AfterViewInit, OnChanges{
 
   getMessage()
   {
-    this.cache.message("FD007").subscribe(item=>this.mssFD007 = item)
+    this.cache.message("FD007").subscribe(item=>this.mssFD007 = item);
+    this.cache.message("FD008").subscribe(item=>this.mssFD008 = item);
   }
 
   getImformationUser()
@@ -135,7 +137,7 @@ implements AfterViewInit, OnChanges{
 
   fmMessage(data:any)
   {
-    if(this.rangsUser.index >= 0)
+    if(this.rangsUser.index >= 0 && this.rangsUser.index < (data.length - 1))
     {
       var point = data[this.rangsUser.index].breakValue - this.pointAndRanking[0].myKudos;
       if(this.mssFD007?.customName) {
@@ -145,6 +147,13 @@ implements AfterViewInit, OnChanges{
         this.mssAdvice = this.sanitizer.bypassSecurityTrustHtml(this.mssAdvice);
       }
     }
+    else if(this.rangsUser.index == (data.length - 1))
+    {
+      this.mssAdvice = JSON.parse(JSON.stringify(this.mssFD008?.customName));
+      this.mssAdvice = this.mssAdvice.replace("{0}",data[this.rangsUser.index].breakName);
+      this.mssAdvice = this.sanitizer.bypassSecurityTrustHtml(this.mssAdvice);
+    }
+    
   }
   
   ngAfterViewInit(): void {
