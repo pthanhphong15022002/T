@@ -1,26 +1,43 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthService,
+  CacheService,
+  FormModel,
+} from 'codx-core';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-view-detail-cards',
   templateUrl: './view-detail-cards.component.html',
-  styleUrls: ['./view-detail-cards.component.scss']
+  styleUrls: ['./view-detail-cards.component.scss'],
 })
 export class ViewDetailCardsComponent implements OnInit, OnChanges {
-  @Input() cardID: string = "";
-  @Input() cardType: string = "";
+  @Input() cardID: string = '';
+  @Input() cardType: string = '';
   @Input() formModel: FormModel;
-  @Input() ratingVLL: string = "";
+  @Input() ratingVLL: string = '';
   @Input() showApproveButton: boolean = false;
 
   @Output() approve = new EventEmitter();
   @Output() reject = new EventEmitter();
+  @Output() changeStatus = new EventEmitter();
+
 
   isShowCard: boolean = true;
 
   data: any = null;
+  user = null;
   behavior: any[] = [];
   showmore: boolean = false;
   showSM: boolean = false;
@@ -59,8 +76,14 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   objectID: string;
   backgroundImg: string;
 
-  constructor(private api: ApiHttpService, private route: ActivatedRoute, private cache: CacheService, private dt: ChangeDetectorRef) {
-
+  constructor(
+    private api: ApiHttpService,
+    private route: ActivatedRoute,
+    private cache: CacheService,
+    private dt: ChangeDetectorRef,
+    private auth: AuthService
+  ) {
+    this.user = this.auth.userValue;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,53 +104,87 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.api.execSv("FD", "ERM.Business.FD", "CardsBusiness", "GetCardInforAsync", [this.cardID]).subscribe((res: any) => {
-      if (res) {
-        console.log(res);
-        this.data = res;
-        this.behavior = [];
-        if (this.data.behaviorName) {
-          if (this.data.behaviorName.includes(';')) {
-            let lstB = this.data.behaviorName.split(';');
-            for (let i = 0; i < lstB.length; i++) {
-              const element = lstB[i];
-              this.behavior.push(element);
+    this.api
+      .execSv('FD', 'ERM.Business.FD', 'CardsBusiness', 'GetCardInforAsync', [
+        this.cardID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          console.log(res);
+          this.data = res;
+          this.behavior = [];
+          if (this.data.behaviorName) {
+            if (this.data.behaviorName.includes(';')) {
+              let lstB = this.data.behaviorName.split(';');
+              for (let i = 0; i < lstB.length; i++) {
+                const element = lstB[i];
+                this.behavior.push(element);
+              }
+            } else {
+              this.behavior.push(this.data.behaviorName);
             }
-          } else {
-            this.behavior.push(this.data.behaviorName);
           }
+
+          /* #region change status */
+          if (
+            this.data.status == '1' &&
+            this.user?.userID == this.data.receiverID &&
+            this.data.cardType != '7'
+          ) {
+            this.data.status = '2';
+            this.changeStatus.emit({recID: this.data.recID, status: this.data.status});
+          }
+          /* #endregion */
+
+          this.api
+            .execSv<any>(
+              'WP',
+              'WP',
+              'CommentsBusiness',
+              'GetPostByCardIDAsync',
+              [res.recID]
+            )
+            .subscribe((postRes) => {
+              if (postRes && postRes.attachments > 0) {
+                this.objectID = postRes.recID;
+              } else {
+                this.objectID = undefined;
+              }
+            });
+          if (!this.data.backgroundColor && res?.pattern?.recID) {
+            this.api
+              .execSv(
+                'DM',
+                'ERM.Business.DM',
+                'FileBussiness',
+                'GetFilesByIbjectIDAsync',
+                res.pattern.recID
+              )
+              .subscribe((img: any) => {
+                if (img && img.length > 0) {
+                  this.backgroundImg = encodeURI(
+                    environment.urlUpload + '/' + img[0].url
+                  );
+                }
+              });
+          }
+          this.dt.detectChanges();
         }
-        this.api.execSv<any>('WP', 'WP', 'CommentsBusiness', 'GetPostByCardIDAsync', [res.recID]).subscribe((postRes) => {
-        if (postRes && postRes.attachments > 0) {
-          this.objectID = postRes.recID;
+        const textElement = document.getElementById('situation');
+        const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
+        const height = textElement.clientHeight;
+        const lineCount = Math.round(height / lineHeight);
+        if (lineCount && lineCount > 10) {
+          this.showSM = true;
+          this.showmore = true;
         } else {
-          this.objectID = undefined;
+          this.showmore = false;
+          this.showSM = false;
         }
-        });
-        if(!this.data.backgroundColor && res?.pattern?.recID){
-          this.api.execSv('DM','ERM.Business.DM','FileBussiness','GetFilesByIbjectIDAsync',res.pattern.recID).subscribe((img: any) => {
-            if(img && img.length > 0){
-              this.backgroundImg = encodeURI(environment.urlUpload + "/" + img[0].url);
-            }
-          })
-        };
-        this.dt.detectChanges();
-      }
-      const textElement = document.getElementById('situation');
-      const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
-      const height = textElement.clientHeight;
-      const lineCount = Math.round(height / lineHeight);
-      if(lineCount && lineCount > 10){
-        this.showSM = true;
-        this.showmore = true;
-      } else {
-        this.showmore = false;
-        this.showSM = false;
-      }
-    });
+      });
   }
 
-  showMore(){
+  showMore() {
     this.showmore = false;
     this.showSM = false;
   }
