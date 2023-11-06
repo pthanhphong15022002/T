@@ -495,6 +495,7 @@ export class DP_Instances_Steps_Tasks {
   fieldID: string;
   objectID: string;
   objectType: string;
+  approvedBy: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {
