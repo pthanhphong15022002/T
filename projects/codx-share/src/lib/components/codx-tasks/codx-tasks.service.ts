@@ -240,7 +240,7 @@ export class CodxTasksService {
           recID
         )
         .subscribe((res: any) => {
-          if (res && res?.lenght > 0) {
+          if (res && res?.length > 0) {
             let task = res[0];
             let listUserDetail = res[1] || [];
             let listTodo = res[2];

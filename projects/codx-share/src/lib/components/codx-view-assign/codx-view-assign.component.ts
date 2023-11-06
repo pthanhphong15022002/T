@@ -99,7 +99,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         break;
       case 'SYS03':
         //Thuong chưa mapping nên chưa làm
-        // this.edit(e, data);
+        this.edit(e, data);
         // this.editByService(e, data);
         break;
       default: {
@@ -146,7 +146,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         data.recID
       )
       .subscribe((res: any) => {
-        if (res && res?.lenght > 0) {
+        if (res && res?.length > 0) {
           let task = res[0];
           let listUserDetail = res[1] || [];
           let listTodo = res[2];
