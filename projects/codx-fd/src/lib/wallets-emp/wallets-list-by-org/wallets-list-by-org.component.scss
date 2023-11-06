@@ -32,3 +32,27 @@
     color: #b4b6b8;
     font-style: italic;
 }
+
+.w-100 {
+    width: 100%;
+}
+
+.line-100 {
+    width: 100%;
+    height: 25px;
+    border-radius: 15px;
+    background-color: #b4b6b8;
+}
+
+.line-kudos {
+    height: 25px;
+    border-radius: 15px;
+    background-color: #006bd6;
+}
+
+.number-kudos {
+    position: relative;
+    top: 5px;
+    left: 105%;
+    width: 100px;
+}

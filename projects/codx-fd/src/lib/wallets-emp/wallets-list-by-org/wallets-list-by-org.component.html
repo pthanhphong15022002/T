@@ -25,19 +25,24 @@
 <ng-template #colCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblCoins" [setRequire]="false" [formModel]="view.formModel"
-            [default]="'Ví nhân viên'"></codx-label>
+            [default]="'Xu quỹ nhận'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colCoCoinsHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblCoCoins" [setRequire]="false" [formModel]="view.formModel"
-            [default]="'Quỹ cho'"></codx-label>
+            [default]="'Xu quỹ cho'"></codx-label>
     </div>
 </ng-template>
 <ng-template #colKudosHeader>
     <div class="text-dark fw-bold p-3 fw-500">
         <codx-label fiedName="lblKudos" [setRequire]="false" [formModel]="view.formModel"
             [default]="'Điểm thành tích'"></codx-label>
+    </div>
+</ng-template>
+<ng-template #colKudosHeaderRank>
+    <div class="text-dark fw-bold p-3 fw-500">
+        <codx-label [default]="'Hạng thành tích'"></codx-label>
     </div>
 </ng-template>
 <!-- #endregion -->
@@ -174,6 +179,23 @@
                 <span class="place-holder"><codx-label [fiedName]="'lblKudos'" [setRequire]="false"
                         [formModel]="view.formModel" [default]="'Kudos'"></codx-label></span>
             </ng-template>
+        </div>
+    </div>
+
+</ng-template>
+<!-- #endregion -->
+
+<!-- #region column kudos rank -->
+<ng-template #colKudosRank let-data>
+    <div class="d-flex has-action-menu justify-content-between w-100">
+        <div class="d-flex align-items-center p-3 fw-500 w-100">
+            <ng-container *ngIf="data?.kudos || data?.kudos == 0">
+                <div class="line-100">
+                    <div class="line-kudos" [style]="'width: ' + widthOfGrid(data.kudos) + 'px;'">
+                        <p class="number-kudos">{{ data?.kudos}}</p>
+                    </div>
+                </div>
+            </ng-container>
         </div>
         <div class="align-self-center">
             <div style="height: 35px" class="has-action-menu">

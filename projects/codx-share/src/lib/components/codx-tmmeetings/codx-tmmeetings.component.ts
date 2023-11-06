@@ -604,7 +604,7 @@ export class CodxTmmeetingsComponent
     var itemSelected = opt.data[0];
     opt.methodName = 'DeleteMeetingsAsync';
 
-    opt.data = itemSelected.meetingID;
+    opt.data = itemSelected.recID;
     return true;
   }
 

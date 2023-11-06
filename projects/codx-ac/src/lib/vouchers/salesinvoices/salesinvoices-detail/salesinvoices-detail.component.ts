@@ -514,7 +514,11 @@ export class SalesinvoicesDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('AC', 'SalesInvoicesBusiness', 'GetDataDetailAsync', [
         dataItem,
         recID,
@@ -526,6 +530,7 @@ export class SalesinvoicesDetailComponent extends UIComponent {
         //this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
+    }
   }
 
   /**

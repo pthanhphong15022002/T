@@ -84,6 +84,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'dme',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-dm/src/lib/codx-dm.module').then(
+        (m) => m.CodxDmModule
+      ),
+  },
+  {
     path: 'ei',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -100,6 +108,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'epe',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ep/src/lib/codx-ep.module').then(
+        (m) => m.CodxEPModule
+      ),
+  },
+  {
     path: 'co',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -109,6 +125,14 @@ var childAuthRoutes: Routes = [
   },
   {
     path: 'es',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-es/src/lib/codx-es.module').then(
+        (m) => m.CodxEsModule
+      ),
+  },
+  {
+    path: 'ese',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-es/src/lib/codx-es.module').then(

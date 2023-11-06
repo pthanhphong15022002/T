@@ -15,6 +15,7 @@ import {
   CodxService,
   FormModel,
   NotificationsService,
+  SortModel,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupWalletHistoryComponent } from '../popup-wallet-history/popup-wallet-history.component';
@@ -45,11 +46,13 @@ export class WalletsListByOrgComponent {
   @ViewChild('colCoinsHeader') colCoinsHeader: TemplateRef<any>;
   @ViewChild('colCoCoinsHeader') colCoCoinsHeader: TemplateRef<any>;
   @ViewChild('colKudosHeader') colKudosHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeaderRank') colKudosHeaderRank: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colJoinedOn') colJoinedOn: TemplateRef<any>;
   @ViewChild('colCoins') colCoins: TemplateRef<any>;
   @ViewChild('colCoCoins') colCoCoins: TemplateRef<any>;
   @ViewChild('colKudos') colKudos: TemplateRef<any>;
+  @ViewChild('colKudosRank') colKudosRank: TemplateRef<any>;
 
   entityName = 'FD_Wallets';
   service = 'FD';
@@ -62,6 +65,7 @@ export class WalletsListByOrgComponent {
   columnsGrid: any[];
   itemSelected: any;
   policyID: string;
+  dataRangeLine: any[] = [];
 
   constructor(
     private cache: CacheService,
@@ -88,6 +92,12 @@ export class WalletsListByOrgComponent {
 
   ngOnInit(): void {
     this.getPolicy();
+    this.fdService.LoadDataRangeLine().subscribe((res: any) => {
+      if(res && res[0].length > 0) {
+        this.dataRangeLine = res[0];
+        console.log(this.dataRangeLine)
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -145,12 +155,17 @@ export class WalletsListByOrgComponent {
         {
           headerTemplate: this.colJoinedOnHeader,
           template: this.colJoinedOn,
-          width: '150',
+          width: '100',
         },
         {
           headerTemplate: this.colKudosHeader,
           template: this.colKudos,
-          width: '150',
+          width: '100',
+        },
+        {
+          headerTemplate: this.colKudosHeaderRank,
+          template: this.colKudosRank,
+          width: '200',
         },
       ];
     }
@@ -206,5 +221,12 @@ export class WalletsListByOrgComponent {
     popup.closed.subscribe((res: any) => {
       if (!res || res.closedBy == 'escape' || !res.event) return;
     });
+  }
+
+  widthOfGrid(data: any) {
+    const number = Number.parseInt(data);
+    if(number <= 0) return 0;
+    return (number * 100) / this.dataRangeLine[this.dataRangeLine.length - 1].breakValue;
+
   }
 }
