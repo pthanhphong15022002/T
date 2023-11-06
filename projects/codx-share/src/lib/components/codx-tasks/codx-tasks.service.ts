@@ -263,7 +263,7 @@ export class CodxTasksService {
   editConfirm(
     data,
     funcID,
-    isAssignTask,
+    isAssignTask, //la giao việc
     titleAction,
     afterSave?: Function,
     isLoadedData = false,
