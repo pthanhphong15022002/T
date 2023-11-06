@@ -306,9 +306,9 @@ export class CodxTasksService {
                   option
                 );
                 dialog.closed.subscribe((e) => {
-                  if (e?.event && e?.event != null) {
-                    afterSave(e.event);
-                  }
+                  // if (e?.event && e?.event != null) {
+                  afterSave(e?.event);
+                  // }
                 });
               }
             });
