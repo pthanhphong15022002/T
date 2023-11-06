@@ -345,7 +345,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.bookingRoomEP(res);
             }
             this.dialog.close(res);
-          } else this.dialog.close();
+            this.notiService.notifyCode('SYS006');
+          } else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS023');
+          }
         });
     }
   }
@@ -367,6 +371,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           this.attachment?.clearData();
           this.dialog.close(res);
+          this.notiService.notifyCode('SYS007');
         });
     }
   }

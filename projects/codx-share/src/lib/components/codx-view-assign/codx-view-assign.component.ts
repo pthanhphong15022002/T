@@ -20,6 +20,7 @@ import { CodxShareService } from '../../codx-share.service';
 import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
+import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
 
 @Component({
   selector: 'codx-view-assign',
@@ -93,10 +94,13 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   clickMF(e, data) {
     switch (e.functionID) {
       case 'SYS02':
-        this.delete(data);
+        //Thuong chưa mapping nên chưa làm
+        // this.delete(data);
         break;
       case 'SYS03':
-        this.edit(e, data);
+        //Thuong chưa mapping nên chưa làm
+        //this.edit(e, data);
+        //this.editByService(e, data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -133,7 +137,88 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   // edit(e, data) {}
 
   edit(moreFunc, data) {
-    //Thuong chưa mapping nên chưa làm
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskBusiness',
+        'GetTaskUpdateByRecIDAsync',
+        data.recID
+      )
+      .subscribe((res: any) => {
+        if (res && res?.length > 0) {
+          let task = res[0];
+          let listUserDetail = res[1] || [];
+          let listTodo = res[2];
+          let listTaskResources = res[3];
+          this.editConfirm(
+            task,
+            task.category == '3' ? 'TMT0203' : 'TMT0201',
+            task.category == '3',
+            moreFunc.text,
+            true,
+            listUserDetail,
+            listTodo,
+            listTaskResources
+          );
+        }
+      });
+  }
+
+  editConfirm(
+    data,
+    funcID,
+    isAssignTask, //la giao việc
+    titleAction,
+    isLoadedData = false,
+    listUserDetail = [],
+    listTodo = [],
+    listTaskResources = []
+  ) {
+    this.cache.functionList(funcID).subscribe((f) => {
+      if (f) {
+        let formModel = new FormModel();
+        let option = new SidebarModel();
+        this.cache.gridView(f.gridViewName).subscribe((res) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .subscribe((grvSetup) => {
+              if (grvSetup) {
+                formModel.funcID = funcID;
+                formModel.entityName = f.entityName;
+                formModel.formName = f.formName;
+                formModel.gridViewName = f.gridViewName;
+                option.FormModel = formModel;
+                option.Width = '800px';
+                option.zIndex = 1001;
+
+                let obj = {
+                  data: data,
+                  action: 'edit',
+                  isAssignTask: isAssignTask,
+                  titleAction: titleAction,
+                  functionID: funcID,
+                  isOtherModule: true,
+                  isLoadedData: isLoadedData,
+                  listUserDetail: listUserDetail,
+                  listTodo: listTodo,
+                  listTaskResources: listTaskResources,
+                };
+                let dialog = this.callfc.openSide(
+                  PopupAddComponent,
+                  obj,
+                  option
+                );
+                dialog.closed.subscribe((e) => {
+                  if (e?.event && e?.event != null) {
+                    //afterSave(e.event);
+                  }
+                });
+              }
+            });
+        });
+      }
+    });
   }
 
   delete(data: any) {
@@ -204,5 +289,19 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         var idx = this.dataTree.findIndex((t) => t.taskID == x.taskID);
       }
     }
+  }
+
+  //edit goi service
+  editByService(moreFunc, data) {
+    this.tmSv.editTask(
+      data.recID,
+      data.category == '3' ? 'TMT0203' : 'TMT0201',
+      moreFunc.text,
+      this.afterSaveTask.bind(this)
+    );
+  }
+
+  afterSaveTask(data) {
+    //data tra ve
   }
 }
