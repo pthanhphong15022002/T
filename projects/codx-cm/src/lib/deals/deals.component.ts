@@ -38,6 +38,7 @@ import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.compon
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'lib-deals',
@@ -180,7 +181,8 @@ export class DealsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private stepService: StepService,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -570,6 +572,7 @@ export class DealsComponent
       // SYS002: () => this.exportFiles(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
+      CM0201_18: () => this.addTask(data),
     };
 
     const executeFunction = functionMapping[e.functionID];
@@ -1966,5 +1969,27 @@ export class DealsComponent
       }
     }
     return '';
+  }
+
+  async addTask(data){
+    let taskType = await this.stepService.chooseTypeTask();
+    if(taskType){
+      let dataDeal = {
+        typeCM:'5',
+        parentTaskID: data.recID,
+      }
+      let dataAddTask = {
+        type: 'notStep',
+        action: 'add',
+        taskType: taskType,
+        titleName:  this.titleAction,
+        ownerInstance: data?.owner,// owner of Parent
+        dataParentTask: dataDeal,
+        instanceID: data.refID,
+        isStart: data.status == '2',
+      }
+      let task = await this.stepService.openPopupTask2(dataAddTask, 'right');
+    }
+    
   }
 }
