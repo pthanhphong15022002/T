@@ -1,4 +1,5 @@
 import { Component, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   CallFuncService,
   DialogRef,
@@ -15,13 +16,21 @@ import {
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
 
-  constructor(inject: Injector, private callfc: CallFuncService) {
+  constructor(
+    inject: Injector, 
+    private callfc: CallFuncService,
+    private router: Router
+  ) {
     super(inject);
-    this.module = 'EP';
+    this.getModule();
   }
   onInit(): void {}
 
   onAfterViewInit(): void {}
-
+  
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
+  }
   
 }
