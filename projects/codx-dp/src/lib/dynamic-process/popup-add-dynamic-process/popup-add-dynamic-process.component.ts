@@ -1601,7 +1601,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           }
           this.updateStepChange(this.step?.recID);
         }
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
       }
     });
   }
