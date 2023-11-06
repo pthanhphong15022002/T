@@ -1,269 +1,110 @@
-<codx-views
-  #view
-  [views]="views"
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [className]="className"
-  [method]="method"
->
-</codx-views>
-<ng-template #panelLeftRef>
-  <div class="page-profile me-4">
-    <div class="border bg-white">
-      <!-- <div class="bg-sidebar"> -->
-      <div class="d-flex flex-column text-center mx-4">
-        <div class="mb-3 d-flex justify-content-between align-items-top">
-          <div class="w-30px min-w-30px">
-            <span
-              *ngIf="crrIndex > 0"
-              type="button"
-              class="btn btn-icon btn-light-primary rounded-circle"
-            >
-              <i class="icon-arrow_back_ios icon-16"></i>
-            </span>
-          </div>
-          <div class="d-flex justify-content-center">
-            <div class="position-relative mt-1">
-              <codx-img
-                [funcId]="funcID"
-                [objectId]="infoPersonal?.employeeID"
-                [objectName]="infoPersonal?.employeeName"
-                [objectType]="'HR_Employees'"
-                [imageType]="'circle'"
-                class="pic-emloyee"
-                [width]="100"
-              >
-              </codx-img>
-            </div>
-          </div>
-          <div class="w-30px min-w-30px"></div> 
-        </div>
-        <div class="d-flex flex-center">
-          <div class="fs-5-sm d-flex align-items-center">
-            <span class="fw-bold" placement="bottom">{{
-              infoPersonal?.employeeName
-            }}</span>
-          </div>
-        </div>
-        <div placement="bottom" class="text-gray-500 mb-1" *ngIf="infoPersonal">
-          {{ this.infoPersonal.positionName }}
-        </div>
-        <div class="d-flex flex-column flex-center">
-          <div class="text-gray-500 mb-1" *ngIf="infoPersonal">
-            {{ infoPersonal.orgUnitName }}
-          </div>
+<div class="d-flex w-100 h-100 fd-personal-achieve">
+  <ng-container *ngTemplateOutlet="info"></ng-container>  
+  <ng-container *ngTemplateOutlet="content"></ng-container>  
+</div>
+<ng-template #info>
+<div class="d-flex flex-column w-320px h-100 pt-2 ps-2 pe-4 fd-achieve-info">
+  <div class="d-flex flex-column h-100 bg-white justify-content-between">
+    <div class="d-flex flex-column">
+      <div class="d-flex flex-column justify-content-center align-items-center py-8 mx-8 border-bottom-dotted">
+        <codx-img [objectId]="user?.userID" [objectType]="'AD_Users'" [width]="90"></codx-img>
+        <div class="py-2 d-flex flex-column align-items-center">
+          <span class="fw-bold fs-5-sm">{{user?.userName}}</span>
+          <span class="">{{infoPersonal?.positionName}}</span>
+          <span class="">{{infoPersonal?.departmentName}}</span>
         </div>
       </div>
-
-      <div class="border-top">
-        <div class="mb-1">
-          <codx-label class="fw-bold" default="Thành tích cá nhân"></codx-label>
-        </div>
-        <div class="text-gray-500 mb-1">
-          <codx-label
-            default="Danh sách danh hiệu đã đạt được đến thời gian hiện tại"
-          ></codx-label>
-        </div>
-        <div class="d-flex">
-          <div class="w-30 p-2">
-            <div class="top-item top1">
-              <div class="top-pic w-100 d-flex justify-content-center">
-                <div class="w-50px pic-top1">
-                  <div class="text-gray-500 mb-1 d-flex flex-center ps-5 symbol">
-                    <span>Top {{ rate }}</span>
-                  </div>
-                  <div class="text-gray-500 mb-1 d-flex flex-center ps-5 symbol">
-                    <span>{{ totalCoreEmp }} Point</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="d-flex flex-column px-8">
+        <codx-label default="Thành tích cá nhân" class="pt-4 fs-5-sm fw-bold"></codx-label>
+        <div class="d-flex pic my-4 position-relative justify-content-center align-items-center">
+          <div class="d-flex flex-column justify-content-center align-items-center w-100">
+            <span class="fs-8 mt-5">{{rangsUser?.name}}</span>
+            <span class="fw-bold fs-1" *ngIf="pointAndRanking && pointAndRanking[1]">{{pointAndRanking[1]}}</span>
           </div>
-          <div class="w-70 p-2">
-            <div class="text-gray-500 mb-1 d-flex flex-center">
-              <span>List Achievement</span>
+          <div class="d-flex align-items-center justify-content-center w-100 position-absolute bottom-0 text-white">
+            <span class="fs-5" *ngIf="pointAndRanking && pointAndRanking[0]">{{pointAndRanking[0]?.myKudos}}</span>
+            <span class="ms-2 fs-7">điểm</span>
+          </div>
+        </div>
+        <div *ngIf="wRangs" class="pt-4" [style.margin-left]="wRangs+ '%'">
+          <img class="w-18px" [src]="'../../../assets/themes/fd/default/img/CurrentRange.svg'"/>
+        </div>
+        <div class="process-performance d-flex justify-content-center" >
+          <div class="process-item position-relative" [title]="item.breakName + ' : ' + item.breakValue" [class.margin-left-fd-3]="i>0" [ngClass]="'z-'+item.zIndex" [style.width]="item.width" *ngFor="let item of ranges , let i = index">
+            <div class="process-bar w-100 rounded position-absolute" [style.background-color]="item.color"
+              [style.height]="'10px'">
+            </div>
+            <div *ngIf="i==rangsUser?.index" class="d-flex flex-column align-items-center span-break position-absolute start-0 fs-9">
+              <span class="fw-bold">{{item.breakName}}</span>
+              <span class="text-gray-500">{{item.breakValue}}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="pt-4 px-4">
+      <div class="d-flex align-items-center justify-content-center pic-2">
+        <div class="text-center" [style.margin-top]="'-14%'" [innerHtml]="mssAdvice"></div>
+      </div>
+    </div>
   </div>
+</div>
 </ng-template>
-<ng-template #panelRightRef>
-  <codx-listview
-    #viewList
-    [headerTemplate]="headerTemplate"
-    [itemTemplate]="templateList"
-    [dataService]="this.view.dataService"
-    [typeMF]="'hover'"
-    load
+
+<ng-template #content>
+<div class="w-right pt-2 h-100">
+  <codx-views
+    #view
+    idField="recID"
+    [views]="views"
+    [funcID]="funcID"
+    [service]="service"
+    [assemblyName]="assemblyName"
+    [entityName]="entityName"
+    [className]="className"
+    [method]="method"
   >
-  </codx-listview>
+  </codx-views>
+</div>
 </ng-template>
 
-<!-- header -->
-<ng-template #headerTemplate>
-  <div class="d-flex align-items-center border-bottom w-100">
-    <!-- Ngày phát sinh -->
-    <div class="w-15 p-3 ps-5">
-      <div class="d-flex align-items-center cursor-pointer hover-active">
-        <div class="align-items-center1 mb-1">
-          <codx-label
-            fiedName="lblCreatOn"
-            [setRequire]="false"
-            [formModel]="view.formModel"
-            [default]="'Ngày phát sinh'"
-          ></codx-label>
-        </div>
-      </div>
-    </div>
-    <!-- Thông điệp -->
-    <div class="w-20 p-3">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center1 mb-1">
-          <codx-label
-            fiedName=""
-            [setRequire]="false"
-            [formModel]="view.formModel"
-            [default]="'Thông điệp'"
-          ></codx-label>
-        </div>
-      </div>
-    </div>
-    <!-- Nội dung -->
-    <div class="w-35 p-3">
-      <div class="d-flex flex-column">
-        <div class="align-items-center1 mb-1">
-          <codx-label
-            fiedName="lblSituation"
-            [setRequire]="false"
-            [formModel]="view.formModel"
-            [default]="'Nội dung'"
-          ></codx-label>
-        </div>
-      </div>
-    </div>
-    <!-- chính sách -->
-    <div class="w-20 p-3">
-      <div class="d-flex has-action-menu justify-content-between w-100">
-        <div class="d-flex flex-column">
-          <div class="align-items-center1 mb-1">
-            <codx-label
-              fiedName="lblPolicyName"
-              [setRequire]="false"
-              [formModel]="view.formModel"
-              [default]="'chính sách'"
-            ></codx-label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Điểm -->
-    <div class="w-10 p-3">
-      <div class="d-flex has-action-menu justify-content-between w-100">
-        <div class="d-flex flex-column">
-          <div class="align-items-center1 mb-1">
-            <codx-label
-              fiedName="lblKudos"
-              [setRequire]="false"
-              [formModel]="view.formModel"
-              [default]="'Điểm'"
-            ></codx-label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<ng-template #rowTransDate let-data>
+  <span>{{data.transDate | fmDT : 'dmy'}}</span>
 </ng-template>
 
-<!-- template list -->
-<ng-template #templateList let-data>
-  <div class="d-flex align-items-center border-bottom">
-    <!-- Ngày phát sinh -->
-    <div class="w-15 p-3 ps-5">
-      <div class="d-flex align-items-center cursor-pointer hover-active">
-        <div class="align-items-center1 mb-1">
-          <span class="data-text-color">{{ data.createdOn | fmDT }}</span>
-        </div>
-      </div>
-    </div>
-    <!-- Thông điệp -->
-    <div class="w-20 p-3">
-      <div class="d-flex flex-column">
-        <div class="d-flex align-items-center1 mb-1">
-          <div class="d-flex p-2 flex-column me-4">
-            <codx-img
-              [funcId]="funcID"
-              [objectId]="data.employeeID"
-              [objectName]="data.employeeName"
-              objectType="HR_Employees"
-              [width]="40"
-            >
-            </codx-img>
-          </div>
-          <div class="d-flex p-2 flex-column">
-            <div class="align-items-center line-clamp line-clamp-1 mb-1">
-              <span class="fw-bold fs-6 me-3 text-nowrap item-active">
-                {{ data.refType | vll : vllRefType : "text" | async }}</span
-              >
-            </div>
-            <div class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
-              <span>{{ data.refNo }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Nội dung -->
-    <div class="w-35 p-3">
-      <div class="d-flex flex-column">
-        <div class="align-items-center1 mb-1">
-          <ng-container *ngIf="data.card">
-            <span
-              class="data-text-color"
-              [innerHTML]="data.card.situation"
-            ></span>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-    <!-- chính sách -->
-    <div class="w-20 p-3">
-      <div class="d-flex has-action-menu justify-content-between w-100">
-        <div class="d-flex flex-column">
-          <div class="align-items-center1 mb-1">
-            <ng-container *ngIf="data.policy">
-              <span class="data-text-color">{{ data.policy.policyName }}</span>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Điểm -->
-    <div class="w-10 p-3">
-      <div class="d-flex has-action-menu justify-content-between w-100">
-        <div class="d-flex flex-column">
-          <div class="align-items-center1 mb-1">
-            <span
-              class="data-text-color"
-              [ngClass]="data.kudos > 0 ? 'text-success' : 'text-danger'"
-            >
-              {{ data.kudos }}</span
-            >
-          </div>
-          <div class="align-items-center1 mb-1">
-            <codx-mfunc
-              [dataItem]="data"
-              [formModel]="view.formModel"
-              [isBookMark]="true"
-              type="view"
-            ></codx-mfunc>
-          </div>
-        </div>
-      </div>
-    </div>
+<ng-template #rowTransType let-data>
+  <codx-vll [name]="'FD014'" [value]="data.transType" [showText]="true"></codx-vll>
+</ng-template>
+
+<ng-template #rowRefType let-data>
+<div class="d-flex flex-column">
+  <codx-vll [name]="'FD015'" [value]="data.refType" [showText]="true" class="fw-bold mb-1"></codx-vll>
+  <span>{{data.refNo}}</span>
+</div>
+</ng-template>
+
+<ng-template #rowRefType let-data>
+<div class="d-flex flex-column">
+  <span>{{data.refType}}</span>
+  <span>{{data.refNo}}</span>
+</div>
+</ng-template>
+
+<ng-template #rowCard let-data>
+<div class="p-2 text-start" [innerHtml]="data?.card?.situation"></div>
+</ng-template>
+
+<ng-template #rowPolicy let-data>
+<span>{{data?.policy?.policyName}}</span>
+</ng-template>
+
+<ng-template #rowCoins let-data>
+  <span class="fw-bold" [ngClass]="(data?.kudos >= 0) ?'text-success' : 'text-danger'">{{(data?.kudos >= 0 ? "+" : "") +data?.kudos}}</span>
+</ng-template>
+
+<ng-template #rowObjectName let-data>
+  <div class="d-flex align-items-center" *ngIf="data?.objectName">
+    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'"></codx-img>
+    <span class="ms-2">{{data?.objectName}}</span>
   </div>
 </ng-template>
-<!-- end template list -->

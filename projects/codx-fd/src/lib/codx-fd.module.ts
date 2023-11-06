@@ -81,6 +81,7 @@ import { PopupWalletHistoryComponent } from './wallets-emp/popup-wallet-history/
 import { AchievementsComponent } from './achievements/achievements.component';
 import { PositionName } from './pipes/positionName.pipe';
 import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
+import { PersonalUsageHistoryComponent } from './personal-usage-history/personal-usage-history.component';
 
 export const routes: Routes = [
   {
@@ -255,7 +256,8 @@ const Component: Type<any>[] = [
   ViewDetailPopupComponent,
   PopupWalletHistoryComponent,
   AchievementsComponent,
-  PersonalAchievementComponent
+  PersonalAchievementComponent,
+  PersonalUsageHistoryComponent
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({

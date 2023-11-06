@@ -105,7 +105,6 @@ export class RequestReviewComponent
     this.dataItem = dt?.data;
     let component:Type<any> = null;
     let funcID = null;
-    debugger
     switch(dt?.data?.module)
     {
       case "ES":
