@@ -514,6 +514,56 @@
         <div class="d-flex align-items-center mb-2">
           <codx-label
             class="fw-bold fs-4 text-dark me-3"
+            name="lblCreatedBy"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Người tạo"
+          >
+          </codx-label>
+          <button
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="clickRoles('C')"
+          >
+            <i class="icon-settings icon-16"></i>
+          </button>
+       </div>
+        <!-- <div class="text-gray-500">
+          <codx-label
+            name="lblLocationControl"
+            default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+            viên trong quy trình"
+          >
+          </codx-label>
+        </div>  -->
+      </div>
+      <div
+        class="d-flex flex-wrap"
+        *ngIf="process.permissions != null && process.permissions?.length > 0"
+      >
+        <ng-container *ngFor="let perm of process.permissions; index as i">
+          <div
+            *ngIf="perm.roleType == 'C'"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+          >
+            <div class="me-2">
+              <codx-img
+                [width]="20"
+                [objectId]="perm.objectID"
+                [objectName]="perm.objectName"
+                objectType="AD_Users"
+              >
+              </codx-img>
+            </div>
+            <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+          </div>
+        </ng-container>
+      </div>
+      <hr />
+      <div class="d-flex flex-column mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <codx-label
+            class="fw-bold fs-4 text-dark me-3"
             name="lblSupervisor"
             [formName]="'DPProcesses'"
             [gridViewName]="'grvDPProcesses'"
