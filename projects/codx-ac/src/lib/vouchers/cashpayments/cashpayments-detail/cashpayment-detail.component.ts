@@ -169,10 +169,14 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
-        dataItem,
-        recID,
+        recID
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -180,6 +184,7 @@ export class CashpaymentDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
+    }
   }
 
   /**
@@ -533,7 +538,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -550,7 +555,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -566,7 +571,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();

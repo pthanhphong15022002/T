@@ -69,35 +69,17 @@ export class PopupRolesDynamicComponent implements OnInit {
     ) {
       var index = -1;
       switch (this.roleType) {
-        case 'O':
-          index = this.process.permissions.findIndex(
-            (x) => x.roleType == 'O'
-          );
-          if(index != -1){
-            this.currentPemission = index;
-            this.changePermission(index);
-          }
-          break;
-        case 'P':
-          index = this.process.permissions.findIndex(
-            (x) => x.roleType == 'P'
-          );
-          if(index != -1){
-            this.currentPemission = index;
-            this.changePermission(index);
-          }
-          break;
-        case 'F':
-          index = this.process.permissions.findIndex(
-            (x) => x.roleType == 'F'
-          );
-          if(index != -1){
-            this.currentPemission = index;
-            this.changePermission(index);
-          }
-          break;
         case 'full':
           this.changePermission(0);
+          break;
+        default:
+          index = this.process.permissions.findIndex(
+            (x) => x.roleType == this.roleType
+          );
+          if (index != -1) {
+            this.currentPemission = index;
+            this.changePermission(index);
+          }
           break;
       }
     }
@@ -211,7 +193,7 @@ export class PopupRolesDynamicComponent implements OnInit {
   }
 
   checkAdminUpdate() {
-    if (this.process.permissions[this.currentPemission].objectType == '1')
+    if (this.process.permissions[this.currentPemission].objectType == '1' || this.process.permissions[this.currentPemission].roleType == 'C')
       return true;
     return false;
   }
