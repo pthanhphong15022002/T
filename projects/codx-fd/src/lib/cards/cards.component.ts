@@ -238,4 +238,10 @@ export class CardsComponent extends UIComponent {
       }
     }
   }
+
+  changeStatus(event: any) {
+    const {recID, status} = event;
+    this.view.dataService.dataSelected.status = status;
+    this.detectorRef.detectChanges();
+  }
 }

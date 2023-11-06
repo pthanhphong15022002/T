@@ -292,7 +292,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       minorTickLines: { width: 0 },
       interval: 1,
       lineStyle: { width: 0 },
-      labelIntersectAction: 'Rotate45',
       valueType: 'Category'
   };
   //Initializing Primary Y Axis
@@ -702,6 +701,7 @@ chartArea: Object = {
         ])
         .subscribe((res:any)=>{
           this.rangeLines = res;
+          this.rangeLines = this.sortByProp(this.rangeLines,'breakValue','desc');
         })
   }
 

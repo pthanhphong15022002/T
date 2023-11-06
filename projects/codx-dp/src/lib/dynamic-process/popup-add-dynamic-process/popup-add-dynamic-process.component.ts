@@ -524,6 +524,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
+    this.setDefaultCreatedBy();
   }
 
   ngAfterViewInit(): void {}
@@ -542,6 +543,40 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     perm.roleType = 'O';
     this.permissions = this.checkUserPermission(this.permissions, perm);
     this.process.permissions = this.permissions;
+  }
+
+  async setDefaultCreatedBy() {
+    let perm = new DP_Processes_Permission();
+    let userID = '';
+    let userName = '';
+    let check = false;
+    if (this.action == 'edit') {
+      check = this.permissions.some(
+        (x) => x.objectID == this.process.createdBy && x.roleType == 'C'
+      );
+      if (!check) {
+        userID = this.process.createdBy;
+        const user = await firstValueFrom(this.dpService.getUserByID(userID));
+        userName = user?.userName;
+      }
+    } else {
+      userID = this.user?.userID;
+      userName = this.user?.userName;
+    }
+    perm.objectID = userID;
+    perm.objectName = userName;
+    perm.objectType = 'U';
+    perm.full = false;
+    perm.create = false;
+    perm.read = false;
+    perm.assign = true;
+    perm.edit = true;
+    perm.delete = true;
+    perm.roleType = 'C'; //Gắn tạm C là người tạo
+    if (!check) {
+      this.permissions = this.checkUserPermission(this.permissions, perm);
+      this.process.permissions = this.permissions;
+    }
   }
 
   GetListProcessGroups() {
@@ -4340,13 +4375,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.stepSuccess.icon = this.iconReasonSuccess?.icon;
         this.stepFail.icon = this.iconReasonFail?.icon;
 
-        this.stepSuccess.backgroundColor = this.iconReasonSuccess?.color;;
+        this.stepSuccess.backgroundColor = this.iconReasonSuccess?.color;
         this.stepFail.backgroundColor = this.iconReasonFail?.color;
 
-        this.stepSuccess.textColor = this.iconReasonSuccess?.textColor;;
+        this.stepSuccess.textColor = this.iconReasonSuccess?.textColor;
         this.stepFail.textColor = this.iconReasonFail?.textColor;
 
-        this.stepSuccess.iconColor = this.iconReasonSuccess?.textColor;;
+        this.stepSuccess.iconColor = this.iconReasonSuccess?.textColor;
         this.stepFail.iconColor = this.iconReasonFail?.textColor;
 
         this.stepSuccess.stepName = this.iconReasonSuccess?.textColor;

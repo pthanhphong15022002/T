@@ -1021,44 +1021,77 @@
 </ng-template>
 <ng-template #templateKudos let-data>
  <div class="container p-3 h-100" id="1">
-  <!-- <div class="row h-200px">
-    <div class="col-4">
+  <div class="row h-200px">
+    <div class="col-4 position-relative">
       <div class="h-35px w-100"></div>
-      <div class="headshot headshot-3"  #img3>
+      <div class="headshot headshot-3 position-absolute  start-50 translate-middle"  style="top:30%;left:40% !important"   #img3>
         <codx-img
 
         [objectType]="'AD_Users'"
         [objectId]="sortByProp(statByEmps,'quantity','desc')[2]?.userID"
-        [cssClass]="'w-100px h-100px rounded'"
+        [cssClass]="'w-100 h-100 rounded-3'"
         (dataLoaded)="avaLoaded(img3,$event)"
+        [isFull]="true"
+        [imgClass]="'w-100 h-100 rounded-3'"
       ></codx-img>
       </div>
-      <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[2]?.userName? sortByProp(statByEmps,'quantity','desc')[2]?.userName : sortByProp(statByEmps,'quantity','desc')[2]?.userID }}</div>
+      <div class="quiz-medal position-absolute  start-50 translate-middle-x mt-5 ms-2" style="top:40%;left:40% !important">
+        <div class="quiz-medal__circle quiz-medal__circle--bronze">
+          <span>
+            3
+          </span>
+        </div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+      </div>
+      <!-- <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[2]?.userName? sortByProp(statByEmps,'quantity','desc')[2]?.userName : sortByProp(statByEmps,'quantity','desc')[2]?.userID }}</div> -->
     </div>
-    <div class="col-4">
-      <div class="headshot headshot-1"  #img1>
+    <div class="col-4 position-relative">
+      <div class="headshot headshot-1 position-absolute  start-50 translate-middle"  style="top:10%;left:40% !important"  #img1>
         <codx-img
         [objectType]="'AD_Users'"
         [objectId]="sortByProp(statByEmps,'quantity','desc')[0]?.userID"
-        [cssClass]="'w-100 h-100'"
+        [cssClass]="'w-100 h-100 rounded-3'"
         (dataLoaded)="avaLoaded(img1,$event)"
+        [isFull]="true"
+        [imgClass]="'w-100 h-100 rounded-3'"
       ></codx-img>
+
       </div>
-      <div class="w-100 text-center  fw-bold">{{sortByProp(statByEmps,'quantity','desc')[0]?.userName? sortByProp(statByEmps,'quantity','desc')[0]?.userName : sortByProp(statByEmps,'quantity','desc')[0]?.userID }}</div>
+      <div class="quiz-medal position-absolute  start-50 translate-middle-x mt-5 ms-2" style="top:20%;left:40% !important">
+        <div class="quiz-medal__circle quiz-medal__circle--gold">
+          <span>
+            1
+          </span>
+        </div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+      </div>
+      <!-- <div class="w-100 text-center  fw-bold">{{sortByProp(statByEmps,'quantity','desc')[0]?.userName? sortByProp(statByEmps,'quantity','desc')[0]?.userName : sortByProp(statByEmps,'quantity','desc')[0]?.userID }}</div> -->
     </div>
-    <div class="col-4">
-      <div class="h-20px w-100"></div>
-      <div class="headshot headshot-2"  #img2>
+    <div class="col-4 position-relative">
+      <div class="headshot headshot-2  position-absolute  start-50 translate-middle"  style="top:20%;left:40% !important"   #img2>
         <codx-img
         [objectType]="'AD_Users'"
         [objectId]="sortByProp(statByEmps,'quantity','desc')[1]?.userID"
-        [cssClass]="'w-100 h-100'"
+        [cssClass]="'w-100 h-100 rounded-3'"
         (dataLoaded)="avaLoaded(img2,$event)"
+        [isFull]="true"
+        [imgClass]="'w-100 h-100 rounded-3'"
       ></codx-img>
       </div>
-      <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[1]?.userName? sortByProp(statByEmps,'quantity','desc')[1]?.userName : sortByProp(statByEmps,'quantity','desc')[1]?.userID }}</div>
+      <div class="quiz-medal position-absolute  start-50 translate-middle-x mt-5 ms-2" style="top:30%;left:40% !important">
+        <div class="quiz-medal__circle quiz-medal__circle--silver">
+          <span>
+            2
+          </span>
+        </div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
+        <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+      </div>
+      <!-- <div class="w-100 text-center">{{sortByProp(statByEmps,'quantity','desc')[1]?.userName? sortByProp(statByEmps,'quantity','desc')[1]?.userName : sortByProp(statByEmps,'quantity','desc')[1]?.userID }}</div> -->
     </div>
-  </div> -->
+  </div>
   <div class="w-100 h-10px">
     <!-- <div class="btn-group flex-start" role="group" >
       <input type="radio" class="btn-check" name="btnradio" id="chkAll" autocomplete="off" checked>
@@ -1072,7 +1105,7 @@
 
     </div> -->
   </div>
-  <div class="row" style="height:calc(100% - 0px)">
+  <div class="row" style="height:calc(100% - 210px)">
     <div
     class="w-100 h-100 scroll-hover p-3"
     style="width: 100%"
@@ -1084,34 +1117,16 @@
     >
       <div class="d-flex align-items-center">
         <div class="fw-bold fs-5 d-flex justify-content-center w-15">
-          <div class="quiz-medal" *ngIf="idx==0">
-            <div class="quiz-medal__circle quiz-medal__circle--gold">
-              <span>
-                1
-              </span>
-            </div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#f9ad0e'}" *ngIf="idx==0">
+            <div class="rounded-circle h-25px w-25px d-flex align-items-center justify-content-center" style="background-color:#fff">{{idx+1}}</div>
           </div>
-          <div class="quiz-medal" *ngIf="idx==1">
-            <div class="quiz-medal__circle quiz-medal__circle--silver">
-              <span>
-                2
-              </span>
-            </div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#d1d7da'}" *ngIf="idx==1">
+            <div class="rounded-circle h-25px w-25px d-flex align-items-center justify-content-center" style="background-color:#fff">{{idx+1}}</div>
           </div>
-          <div class="quiz-medal" *ngIf="idx==2">
-            <div class="quiz-medal__circle quiz-medal__circle--bronze">
-              <span>
-                3
-              </span>
-            </div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--left"></div>
-            <div class="quiz-medal__ribbon quiz-medal__ribbon--right"></div>
+          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#df7e08'}" *ngIf="idx==2">
+            <div class="rounded-circle h-25px w-25px d-flex align-items-center justify-content-center" style="background-color:#fff">{{idx+1}}</div>
           </div>
-          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#ddd'}" *ngIf="idx>2">
+          <div class="rounded-circle h-30px w-30px d-flex align-items-center justify-content-center" [ngStyle]="{'background-color':  '#a7c7f8'}" *ngIf="idx>2">
             <div class="rounded-circle h-25px w-25px d-flex align-items-center justify-content-center" style="background-color:#fff">{{idx+1}}</div>
           </div>
         </div>
