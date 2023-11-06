@@ -27,14 +27,14 @@
 <ng-template #username let-data>
   <div class="container p-1 h-60px">
   <div class="row w-auto h-100">
-    <div class="col-2 d-flex align-items-center">
+    <div class="d-flex align-items-center" style="width:50px">
       <codx-img
         *ngIf="data.userID"
         [objectType]="'AD_Users'"
         [objectId]="data.userID"
       ></codx-img>
     </div>
-    <div class="col-10 my-1 d-flex justify-content-start">
+    <div class="my-1" style="width:calc( 100% - 50px)">
       <div class="w-100 text-start fs-6 ms-3">
         <span class="fw-bold">{{ data.username}}</span>
       </div>

@@ -62,7 +62,7 @@ export class CashPaymentsComponent extends UIComponent {
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
-  
+
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -139,6 +139,29 @@ export class CashPaymentsComponent extends UIComponent {
         model: {
           template2: this.templateGrid,
         },
+      },
+      {
+        type: ViewType.grid_detail, //? thiết lập view lưới
+        active: false,
+        sameData: false,
+        model: {
+          template2: this.templateGrid,
+
+        },
+
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_CashPaymentsLines',
+          formName:'CashPaymentsLines',
+          gridviewName:'grvCashPaymentsLines',
+          parentField:'TransID',
+          parentNameField:'JournalNo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
@@ -385,7 +408,7 @@ export class CashPaymentsComponent extends UIComponent {
     );
   }
 
-  
+
   /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
    * @param event : danh sách morefunction
@@ -711,7 +734,7 @@ export class CashPaymentsComponent extends UIComponent {
     let params = {
       Recs:data?.recID,
     }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);
   }
 
   /**
@@ -743,8 +766,8 @@ export class CashPaymentsComponent extends UIComponent {
 
   /**
    * *Hàm chuyển tiền ngân hàng điện tử
-   * @param text 
-   * @param data 
+   * @param text
+   * @param data
    */
   transferToBank(text,data) {
     this.checkLogin((o) => {
@@ -778,7 +801,7 @@ export class CashPaymentsComponent extends UIComponent {
               }
             }else{
               this.notification.notifyCode('AC0030', 0, text);
-            }  
+            }
           });
       }
     });
