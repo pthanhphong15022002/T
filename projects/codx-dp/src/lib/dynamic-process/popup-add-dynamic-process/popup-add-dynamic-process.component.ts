@@ -1543,6 +1543,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 if (i > -1) {
                   this.lstParticipants.splice(i, 1);
                 }
+                this.changeDetectorRef.markForCheck();
               }
             });
           } else {
