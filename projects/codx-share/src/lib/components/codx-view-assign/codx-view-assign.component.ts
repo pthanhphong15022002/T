@@ -99,8 +99,8 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         break;
       case 'SYS03':
         //Thuong chưa mapping nên chưa làm
-        this.edit(e, data);
-        // this.editByService(e, data);
+        //this.edit(e, data);
+        //this.editByService(e, data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -153,13 +153,9 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
           let listTaskResources = res[3];
           this.editConfirm(
             task,
-            task.category == '3'
-              ? 'TMT0203'
-              : task.category == '2'
-              ? 'TMT0202 '
-              : 'TMT0201',
+            task.category == '3' ? 'TMT0203' : 'TMT0201',
             task.category == '3',
-            moreFunc.customName,
+            moreFunc.text,
             true,
             listUserDetail,
             listTodo,
@@ -299,12 +295,8 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   editByService(moreFunc, data) {
     this.tmSv.editTask(
       data.recID,
-      data.category == '3'
-        ? 'TMT0203'
-        : data.category == '2'
-        ? 'TMT0202 '
-        : 'TMT0201',
-      moreFunc.customName,
+      data.category == '3' ? 'TMT0203' : 'TMT0201',
+      moreFunc.text,
       this.afterSaveTask.bind(this)
     );
   }
