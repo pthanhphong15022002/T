@@ -169,20 +169,25 @@
 	background-clip: content-box, border-box;
 	background-size: cover;
 	box-sizing: border-box;
-	box-shadow: 0 0 8px 8px rgba(240, 223, 175, 0.5);
+	//box-shadow: 0 0 8px 8px rgba(240, 223, 175, 0.5);
+  //box-shadow: 0 0 10px 5px;
+  box-shadow: 0px -5px 0px 3px;
 	border-bottom: 0
 }
 
 .headshot-1 {
-	border-radius: 30%;
+	border-radius: 15%;
+  color: #f3f704;
 	background-image: linear-gradient(#f1dc08,#eae574, #e0e1a0);
 }
 .headshot-2 {
-	border-radius: 30%;
+	border-radius: 15%;
+  color: #d4d4ce;
 	background-image:  linear-gradient(#888782,#cacabe, #e0e1a0);
 }
 .headshot-3 {
-	border-radius: 30%;
+	border-radius: 15%;
+  color: #df7e08;
 	background-image:  linear-gradient(#d48c07,#f3ca9c, #e0e1a0);
 }
 

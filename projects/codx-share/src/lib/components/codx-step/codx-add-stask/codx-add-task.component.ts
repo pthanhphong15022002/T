@@ -28,7 +28,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 @Component({
-  selector: 'codx-add-stask',
+  selector: 'codx-add-task',
   templateUrl: './codx-add-task.component.html',
   styleUrls: ['./codx-add-task.component.scss'],
 })
@@ -137,7 +137,7 @@ export class CodxAddTaskComponent implements OnInit {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialog?: DialogRef,
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
@@ -228,6 +228,7 @@ export class CodxAddTaskComponent implements OnInit {
       let role = new DP_Instances_Steps_Tasks_Roles();
       this.setRole(role);
       this.owner = [role];
+      this.stepsTasks.roles = [role];
       this.stepsTasks.owner = this.owner?.[0].objectID;
       this.stepsTasks.status = '1';
       this.stepsTasks.createTask = this.isBoughtTM;
