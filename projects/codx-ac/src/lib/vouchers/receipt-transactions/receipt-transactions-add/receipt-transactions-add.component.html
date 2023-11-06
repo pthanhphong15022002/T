@@ -19,7 +19,7 @@
         </div>
         <div class="input-circle input-sm" *ngIf="formVouchers?.formGroup">
           <span class="me-2">
-            <codx-vll [name]="'AC040'" [formModel]="formVouchers.formModel" [field]="'Status'"
+            <codx-vll [name]="'AC040'" [formModel]="dialog.formModel" [field]="'Status'"
               [value]="formVouchers.data?.status" [showText]="true" [showBgColor]="true"
               class="badge badge-light badge-sm">
             </codx-vll>
@@ -44,7 +44,7 @@
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="formVouchers.data?._isEdit && formVouchers.data?.status != '7'">
-        <codx-vll [name]="formVouchers?.gridviewSetup['SubType'].referedValue" [formModel]="formVouchers.formModel"
+        <codx-vll [name]="formVouchers?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
           [field]="'SubType'" [value]="formVouchers.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-lg mt-1">
         </codx-vll>
@@ -56,7 +56,7 @@
 
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
-  <div style="height: 180px !important">
+  <div style="height: 250px !important">
     <ejs-tab>
       <e-tabitems>
         <e-tabitem>
@@ -76,7 +76,7 @@
   </div>
 
   <!-- Start: Tab Detail -->
-  <div style="height: calc(100vh - 365px) !important">
+  <div style="height: calc(100vh - 400px) !important">
     <ejs-tab>
       <e-tabitems>
         <e-tabitem>
@@ -96,17 +96,6 @@
   </div>
   <!-- End: Tab Detail -->
   <div class="row ac-empty-record"></div>
-  <div style="height: 35px !important" class="listcash-content row">
-    <div class="row align-items-center">
-      <div *ngIf="formVouchers.formGroup" id="ac-column-def"
-        class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
-        <i class="w-20px h-20px me-2 icon-sticky_note_2 icon-18"></i>
-        <codx-input tab-index="13" #cbxRefdoc style="width: 100%" class="fw-bold" [Group]="formVouchers.formGroup"
-          field="memo" [formModel]="formVouchers.formModel">
-        </codx-input>
-      </div>
-    </div>
-  </div>
 </ng-template>
 <!-- End: TmpBody -->
 
@@ -150,7 +139,7 @@
 
 <!-- Start: TmpTabGeneral -->
 <ng-template #TmpTabGeneral>
-  <ng-container *ngIf="formVouchers.formGroup">
+  <ng-container *ngIf="formVouchers?.formGroup">
     <div class="p-3 tab-basic ac-form-master">
       <div class="row">
         <div class="col-7 ac-left">
@@ -159,11 +148,11 @@
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="WarehouseID"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
                     <codx-input [Group]="formVouchers.formGroup" field="warehouseID"
-                      [formModel]="formVouchers.formModel">
+                      [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
@@ -171,25 +160,24 @@
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
                     <codx-input #eleCbxReasonID [Group]="formVouchers.formGroup" field="reasonID"
-                      [formModel]="formVouchers.formModel" (valueChange)="valueChangeMaster($event)">
+                      [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row"
-              [style]="formVouchers.data?.subType == '0302' ? 'visibility: hidden;position: absolute;' : ''">
+            <div class="row" [ngStyle]="formVouchers?.data?.subType == '0301' ? '' : {display:'none'}">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="DIM1"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
-                  <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" field="diM1" [formModel]="formVouchers.formModel">
+                  <div *ngIf="formVouchers?.data?.subType == '0301'"  class="ac-input">
+                    <codx-input [Group]="formVouchers.formGroup" field="diM1" [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
@@ -197,24 +185,23 @@
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="DIM2"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" field="diM2" [formModel]="formVouchers.formModel">
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0301'" [Group]="formVouchers.formGroup" field="diM2" [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row"
-              [style]="formVouchers.data?.subType == '0301' ? 'visibility: hidden;position: absolute;' : ''">
+            <div class="row" [ngStyle]="formVouchers?.data?.subType == '0302' ? '' : {display:'none'}">
               <div class="col-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ObjectID"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
-                  <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" field="objectID" [formModel]="formVouchers.formModel">
+                  <div class="ac-input" >
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0302'" [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
@@ -222,10 +209,10 @@
               <div class="col-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="Requester"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" field="requester" [formModel]="formVouchers.formModel">
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0302'" [Group]="formVouchers.formGroup" field="requester" [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
@@ -233,14 +220,24 @@
               <div class="col-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" field="requestDate"
-                      [formModel]="formVouchers.formModel">
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0302'" [Group]="formVouchers.formGroup" field="requestDate"
+                      [formModel]="dialog.formModel">
                     </codx-input>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <codx-label style="white-space: nowrap !important" fiedName="Memo"
+                [formModel]="dialog.formModel">
+              </codx-label>
+              <div class="ac-input">
+                <codx-input [Group]="formVouchers.formGroup" field="memo"
+                  [formModel]="dialog.formModel">
+                </codx-input>
               </div>
             </div>
           </div>
@@ -251,10 +248,10 @@
               <div class="col-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input">
-                    <codx-input [Group]="formVouchers.formGroup" [formModel]="formVouchers.formModel"
+                    <codx-input [Group]="formVouchers.formGroup" [formModel]="dialog.formModel"
                       field="voucherDate">
                     </codx-input>
                   </div>
@@ -263,14 +260,14 @@
               <div class="col-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                    [formModel]="formVouchers.formModel">
+                    [formModel]="dialog.formModel">
                   </codx-label>
                   <div [class]="
                       journal?.assignRule != '0'
                         ? 'ac-input-disable'
                         : 'ac-input'
                     ">
-                    <codx-input [Group]="formVouchers.formGroup" field="voucherNo" [formModel]="formVouchers.formModel"
+                    <codx-input [Group]="formVouchers.formGroup" field="voucherNo" [formModel]="dialog.formModel"
                       [disabled]="journal?.assignRule != '0'">
                     </codx-input>
                   </div>

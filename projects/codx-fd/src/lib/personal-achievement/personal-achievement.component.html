@@ -26,18 +26,20 @@
             <span class="ms-2 fs-7">điểm</span>
           </div>
         </div>
-        <div *ngIf="wRangs" class="pt-4" [style.margin-left]="wRangs+ '%'">
+        <div *ngIf="wRangs" class="pt-4 d-flex flex-column" [style.margin-left]="wRangs+ '%'">
           <img class="w-18px" [src]="'../../../assets/themes/fd/default/img/CurrentRange.svg'"/>
+          <span class="position-absolute z-10 text-center text-white p-achie-line">|</span>
         </div>
         <div class="process-performance d-flex justify-content-center" >
-          <div class="process-item position-relative" [title]="item.breakName + ' : ' + item.breakValue" [class.margin-left-fd-3]="i>0" [ngClass]="'z-'+item.zIndex" [style.width]="item.width" *ngFor="let item of ranges , let i = index">
+          <div class="process-item position-relative" [title]="item.breakName + ' : ' + item.breakValue" [class.margin-left-fd-3]="i>0" [ngClass]="'z-'+((ranges.length - 1) - i)" [style.width]="item.width + '%'" *ngFor="let item of ranges , let i = index">
             <div class="process-bar w-100 rounded position-absolute" [style.background-color]="item.color"
               [style.height]="'10px'">
             </div>
-            <div *ngIf="i==rangsUser?.index" class="d-flex flex-column align-items-center span-break position-absolute start-0 fs-9">
+            <div *ngIf="i==rangsUser?.index" class="d-flex flex-column span-break position-absolute start-0 fs-9">
               <span class="fw-bold">{{item.breakName}}</span>
               <span class="text-gray-500">{{item.breakValue}}</span>
             </div>
+           
           </div>
         </div>
       </div>
@@ -77,21 +79,20 @@
 </ng-template>
 
 <ng-template #rowRefType let-data>
-<div class="d-flex flex-column">
-  <codx-vll [name]="'FD015'" [value]="data.refType" [showText]="true" class="fw-bold mb-1"></codx-vll>
-  <span>{{data.refNo}}</span>
-</div>
-</ng-template>
-
-<ng-template #rowRefType let-data>
-<div class="d-flex flex-column">
-  <span>{{data.refType}}</span>
-  <span>{{data.refNo}}</span>
-</div>
+  <div class="d-flex align-items-center">
+    <codx-vll [name]="'FD015'" [value]="data.refType" [path]="'../assets/themes/fd/default/img/'" [showIcon]="true"></codx-vll>
+    <div class="d-flex flex-column ms-2">
+      <codx-vll [name]="'FD015'" [value]="data.refType" [showText]="true" class="fw-bold mb-1"></codx-vll>
+      <span>{{data.refNo}}</span>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #rowCard let-data>
-<div class="p-2 text-start" [innerHtml]="data?.card?.situation"></div>
+  <div class="p-2 text-start p-achie" [innerHtml]="data?.card?.situation" [ngbTooltip]="tipContent"></div>
+  <ng-template #tipContent>
+    <div [innerHtml]="data?.card?.situation"></div>
+  </ng-template>
 </ng-template>
 
 <ng-template #rowPolicy let-data>
@@ -99,12 +100,12 @@
 </ng-template>
 
 <ng-template #rowCoins let-data>
-  <span class="fw-bold" [ngClass]="(data?.kudos >= 0) ?'text-success' : 'text-danger'">{{(data?.kudos >= 0 ? "+" : "") +data?.kudos}}</span>
+  <span class="fw-bold" [ngClass]="(data?.kudos > 0) ?'text-success' : (data?.kudos == 0) ? 'text-gray-500' :'text-danger'">{{(data?.kudos > 0 ? "+" : "") +data?.kudos}}</span>
 </ng-template>
 
 <ng-template #rowObjectName let-data>
   <div class="d-flex align-items-center" *ngIf="data?.objectName">
-    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'"></codx-img>
+    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'" [width]="25"></codx-img>
     <span class="ms-2">{{data?.objectName}}</span>
   </div>
 </ng-template>

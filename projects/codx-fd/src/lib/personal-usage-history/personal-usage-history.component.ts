@@ -138,6 +138,7 @@ implements AfterViewInit, OnChanges{
           field: this.capitalizeFirstLetter(key[i]),
           headerText: item[key[i]].headerText,
           columnOrder: item[key[i]].columnOrder,
+          width: item[key[i]].width
         };
         data.push(obj);
       }
@@ -175,47 +176,41 @@ implements AfterViewInit, OnChanges{
       var obj = 
       {
         field: elm.field, 
-        headerText: elm.headerText
+        headerText: elm.headerText,
+        width: elm.width
       } as any;
 
       switch(elm.field)
         {
           case "transDate":
             {
-              obj.width = 150;
               obj.template = this.rowTransDate;
               obj.matchCase = false
               break;
             }
           case "refType":
             {
-              obj.width = 150;
               obj.template = this.rowRefType;
-              obj.textAlign = "center";
               break;
             }
           case "transType":
             {
               obj.template = this.rowTransType;
-              obj.textAlign = "center";
               break;
             }
           case "situation":
             {
               obj.template = this.rowCard;
-              obj.textAlign = "center";
               break;
             }
           case "policyID":
             {
               obj.template = this.rowPolicy;
-              obj.textAlign = "center";
               break;
             }
           case "kudos":
             {
               obj.template = this.rowCoins;
-              obj.textAlign = "center";
               break;
             }
           case "objectName":
@@ -233,12 +228,6 @@ implements AfterViewInit, OnChanges{
               obj.width = 150;
               if(type == 2) obj.template = this.rowItemID;
               else if(type==3) obj.template = this.rowItemID2;
-              break;
-            }
-          case "quantity":
-          case "amount":
-            {
-              obj.textAlign = "center";
               break;
             }
           }

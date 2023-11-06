@@ -48,6 +48,7 @@ export class ImportpartsComponent extends UIComponent {
   button?: ButtonModel;
   lstImportParts = [];
   loaded: boolean;
+  titleView = '';
   constructor(
     private inject: Injector,
     private codxShareService: CodxShareService,
@@ -60,6 +61,12 @@ export class ImportpartsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+    this.cache.moreFunction('IELogs', 'grvIELogs').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'WR0105_1');
+        if (m) this.titleView = m.customName;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -101,6 +108,9 @@ export class ImportpartsComponent extends UIComponent {
     this.dataSelected = data;
     this.titleAction = e.text;
     switch (e.functionID) {
+      case 'WR0105_1':
+        this.viewDetail(data);
+        break;
       case 'SYS003':
       case 'SYS004':
       case 'SYS001':
@@ -122,7 +132,8 @@ export class ImportpartsComponent extends UIComponent {
     switch (e.type) {
       case 'dbClick':
         //xư lý dbClick
-        this.viewDetail(e);
+        this.dataSelected = e?.data?.rowData;
+        this.viewDetail(e?.data?.rowData);
         break;
     }
   }
@@ -131,9 +142,7 @@ export class ImportpartsComponent extends UIComponent {
 
   //#region view detail
   async viewDetail(data) {
-    let dt = data?.data?.rowData;
-    this.dataSelected = dt;
-    if (dt) {
+    if (data) {
       let option = new DialogModel();
       option.IsFull = true;
       option.zIndex = 999;
@@ -143,7 +152,8 @@ export class ImportpartsComponent extends UIComponent {
       formModel.entityName = this.formModelTemp.entityName;
       option.FormModel = formModel;
       let obj = {
-        data: this.dataSelected,
+        titleAction: this.titleView,
+        data: data,
       };
       this.callfc.openForm(
         PopupDetailImportPartsComponent,
