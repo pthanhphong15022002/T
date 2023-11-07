@@ -2244,7 +2244,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 if (e.event[1] && !this.process.processNo) {
                   this.process.processNo = e.event[1];
                 }
-                this.fieldCrr.sorting = this.step.fields.length + 1;
+                this.fieldCrr.sorting = (this.step?.fields?.length ?? 0) + 1;
 
                 this.stepList.forEach((x) => {
                   if (x.recID == this.fieldCrr.stepID) {
@@ -2305,7 +2305,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               if (e.event[1] && !this.process.processNo) {
                 this.process.processNo = e.event[1];
               }
-              this.fieldCrr.sorting = this.step.fields.length;
+              this.fieldCrr.sorting = (this.step?.fields?.length ?? 0) + 1;
               this.stepList.forEach((x) => {
                 if (x.recID == this.fieldCrr.stepID) {
                   x.fields.push(this.fieldCrr);
@@ -2532,14 +2532,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       let check = this.listStepEdit.some((id) => id == stepIDContain);
       if (!check) {
         this.listStepEdit.push(stepIDContain);
-        this.updateSorting(stepIDContain);
       }
     }
     if (this.action == 'edit') {
       let check = this.listStepEdit.some((id) => id == stepIDPrevious);
       if (!check) {
         this.listStepEdit.push(stepIDPrevious);
-        this.updateSorting(stepIDPrevious);
       }
     }
 
@@ -2551,6 +2549,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
+    this.updateSorting(stepIDContain);
+    this.updateSorting(stepIDPrevious);
   }
 
   updateSorting(stepID) {
