@@ -167,7 +167,7 @@ export class CardsComponent extends UIComponent {
     } else {
       this.selectedID = event.data.recID;
     }
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();
   }
 
   clickShowAssideRight() {
@@ -237,5 +237,11 @@ export class CardsComponent extends UIComponent {
         mf.disabled = true;
       }
     }
+  }
+
+  changeStatus(event: any) {
+    const {recID, status} = event;
+    this.view.dataService.dataSelected.status = status;
+    this.detectorRef.detectChanges();
   }
 }

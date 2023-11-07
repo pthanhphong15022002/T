@@ -65,6 +65,7 @@ export class WalletsListByOrgComponent {
   columnsGrid: any[];
   itemSelected: any;
   policyID: string;
+  dataRangeLine: any[] = [];
 
   constructor(
     private cache: CacheService,
@@ -91,6 +92,12 @@ export class WalletsListByOrgComponent {
 
   ngOnInit(): void {
     this.getPolicy();
+    this.fdService.LoadDataRangeLine().subscribe((res: any) => {
+      if(res && res[0].length > 0) {
+        this.dataRangeLine = res[0];
+        console.log(this.dataRangeLine)
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -214,5 +221,43 @@ export class WalletsListByOrgComponent {
     popup.closed.subscribe((res: any) => {
       if (!res || res.closedBy == 'escape' || !res.event) return;
     });
+  }
+
+  widthOfGrid(data: any) {
+    const number = Number.parseInt(data);
+    if(number <= 0) return 0;
+    return (number * 100) / this.dataRangeLine[this.dataRangeLine.length - 1].breakValue;
+  }
+
+  getColorRank(data: any) {
+    let number = Number.parseInt(data);
+    if(number <= 0) number = 0;
+    for (let index = 0; index < this.dataRangeLine.length; index++) {
+      if(number < this.dataRangeLine[0].breakValue) {
+        return "#dbdbdb";
+      }
+      if(number > this.dataRangeLine[this.dataRangeLine.length - 1].breakValue) {
+        return this.dataRangeLine[this.dataRangeLine.length - 1].color;
+      }
+      if((this.dataRangeLine[index].breakValue <= number) && (number < this.dataRangeLine[index + 1].breakValue)) {
+        return this.dataRangeLine[index].color;
+      }
+    }
+  }
+
+  getNameRank(data: any) {
+    let number = Number.parseInt(data);
+    if(number <= 0) number = 0;
+    for (let index = 0; index < this.dataRangeLine.length; index++) {
+      if(number < this.dataRangeLine[0].breakValue) {
+        return "chưa có hạng";
+      }
+      if(number > this.dataRangeLine[this.dataRangeLine.length - 1].breakValue) {
+        return this.dataRangeLine[this.dataRangeLine.length - 1].breakName;
+      }
+      if((this.dataRangeLine[index].breakValue <= number) && (number < this.dataRangeLine[index + 1].breakValue)) {
+        return this.dataRangeLine[index].breakName;
+      }
+    }
   }
 }

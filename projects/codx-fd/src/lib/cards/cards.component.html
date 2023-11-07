@@ -13,7 +13,7 @@
 
 <ng-template #panelRightRef>
   <lib-view-detail-cards [cardID]="selectedID" [ratingVLL]="ratingVLL" [formModel]="view.formModel"
-    [cardType]="cardType"></lib-view-detail-cards>
+    [cardType]="cardType" (changeStatus)="changeStatus($event)"></lib-view-detail-cards>
 </ng-template>
 
 <ng-template #headerTemplate let-data>

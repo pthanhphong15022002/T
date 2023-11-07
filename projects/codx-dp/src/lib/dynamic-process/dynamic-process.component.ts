@@ -36,7 +36,7 @@ import { PopupViewsDetailsProcessComponent } from './popup-views-details-process
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { environment } from 'src/environments/environment';
 import { PopupPropertiesComponent } from './popup-properties/popup-properties.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -133,7 +133,7 @@ export class DynamicProcessComponent
   totalInstance: number = 0;
   lstGroup: any = [];
   isSaveName: boolean = true;
-
+  lstVllRoles = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -170,6 +170,11 @@ export class DynamicProcessComponent
       this.crrFunID = this.funcID;
     }
     this.afterLoad();
+    this.cache.valueList('DP010').subscribe((vll) => {
+      if (vll && vll?.datas) {
+        this.lstVllRoles = vll.datas;
+      }
+    });
   }
 
   afterLoad() {
@@ -819,15 +824,6 @@ export class DynamicProcessComponent
       this.viewDetailProcess(data);
     }
   }
-  getNameUsersStr(data) {
-    if (data?.length > 0 && data !== null) {
-      var ids = data.map((obj) => obj.objectID);
-      ids = [...new Set(ids)];
-      var listStr = ids?.join(';');
-    }
-    // listStr = [...new Set(listStr)];
-    return listStr || null || '';
-  }
 
   //#region Của Bảo
   getListAppyFor() {
@@ -1208,4 +1204,131 @@ export class DynamicProcessComponent
   }
 
   //----------------------------End-------------------------//
+
+  //popover permissions
+  dataImgs: any;
+  positionName: any;
+  popoverOld: any;
+  allTooltips: any[] = [];
+  async popoverTempImgs(p: any, perm = null) {
+    if (this.popoverOld?.popoverClass !== p?.popoverClass) {
+      this.popoverOld?.close();
+    }
+    this.closeAllTooltips();
+
+    if (perm != null) {
+      if (p) {
+        var element = document.getElementById(perm?.recID);
+        if (element) {
+          var t = this;
+          this.dataImgs = perm;
+          if (
+            this.dataImgs?.objectID &&
+            this.dataImgs?.objectID?.trim() != '' &&
+            (this.dataImgs?.objectType == 'U' ||
+              this.dataImgs?.objectType == '1')
+          ) {
+            const users = await firstValueFrom(
+              this.dpService.getUserByID(this.dataImgs?.objectID)
+            );
+            if (users != null) {
+              this.positionName = users?.positionName;
+            }
+          }
+          p.open();
+        }
+      }
+    } else p?.close();
+
+    this.popoverOld = p;
+    this.allTooltips.push(p);
+  }
+
+  closeAllTooltips() {
+    for (const tooltip of this.allTooltips) {
+      if (tooltip !== this.popoverOld && tooltip?.isOpen()) {
+        tooltip.close();
+      }
+    }
+  }
+
+  popoverCrr: any;
+  popoverDataSelected: any;
+  lstPermissions = [];
+  dataPermissions: any;
+  lstUsersPositions = [];
+  async popoverEmpList(p: any, data = null) {
+    if (this.popoverCrr && this.popoverCrr?.isOpen()) {
+      this.popoverCrr.close();
+      this.lstPermissions = [];
+    }
+    if (this.popoverDataSelected) {
+      if (this.popoverDataSelected.isOpen()) {
+        this.lstPermissions = [];
+        this.popoverDataSelected.close();
+      }
+    }
+
+    if (p) {
+      var element = document.getElementById(data?.recID);
+      if (element) {
+        var t = this;
+        this.dataPermissions = data;
+        this.lstPermissions = data?.permissions ?? [];
+        let lstIDs = this.lstPermissions
+          .filter(
+            (x) =>
+              x.objectID &&
+              x.objectID.trim() !== '' &&
+              (x.objectType == 'U' || x.objectType == '1')
+          )
+          .map((q) => q.objectID)
+          .filter((value, index, self) => self.indexOf(value) === index);
+        this.lstUsersPositions = await firstValueFrom(
+          this.dpService.getPositionsByUserID(lstIDs)
+        );
+        //
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  searchName(e) {
+    if (this.dataPermissions?.permissions) {
+      if (e == null || e?.trim() == '') {
+        this.lstPermissions = this.dataPermissions?.permissions ?? [];
+        return;
+      }
+
+      this.lstPermissions = this.dataPermissions?.permissions.filter(
+        (x) =>
+          (x.objectName &&
+            x.objectName?.trim() != '' &&
+            this.fuzzySearch(e, x.objectName)) ||
+          (x.objectID &&
+            x.objectID?.trim() != '' &&
+            this.fuzzySearch(e, x.objectID))
+      );
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  fuzzySearch(needle: string, haystack: string): boolean {
+    const haystackLower = haystack
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s/g, '');
+
+    const needleLower = needle
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s/g, '');
+
+    const regex = new RegExp([...needleLower].join('.*'));
+
+    return regex.test(haystackLower);
+  }
+  //end
 }

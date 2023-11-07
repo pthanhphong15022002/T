@@ -495,6 +495,43 @@ export class StepService {
   //   return taskOutput;
   // }
 
+  async openPopupTask2(data,location){
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    let dataPopupOutput;
+    let popupAddTask;
+    if (location == 'right') {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      popupAddTask = this.callFunc.openSide(
+        CodxAddTaskComponent,
+        data,
+        option
+      );
+    } else {
+      let opt = new DialogModel();
+      opt.FormModel = frmModel;
+      popupAddTask = this.callFunc.openForm(
+        CodxAddTaskComponent,
+        '',
+        600,
+        800,
+        '',
+        data,
+        '',
+        opt
+      );
+    }
+    dataPopupOutput = await firstValueFrom(popupAddTask.closed);
+    let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
+    return taskOutput;
+  }
+
   async addBookingCar(isOpenSide = false) {
     let addCarTitle = await firstValueFrom(this.cache.functionList('EPT21'));
     let title = addCarTitle ? addCarTitle?.customName?.toString() : '';

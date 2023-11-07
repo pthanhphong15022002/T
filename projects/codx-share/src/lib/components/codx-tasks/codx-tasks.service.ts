@@ -240,7 +240,7 @@ export class CodxTasksService {
           recID
         )
         .subscribe((res: any) => {
-          if (res && res?.lenght > 0) {
+          if (res && res?.length > 0) {
             let task = res[0];
             let listUserDetail = res[1] || [];
             let listTodo = res[2];
@@ -306,9 +306,9 @@ export class CodxTasksService {
                   option
                 );
                 dialog.closed.subscribe((e) => {
-                  if (e?.event && e?.event != null) {
-                    afterSave(e.event);
-                  }
+                  // if (e?.event && e?.event != null) {
+                  afterSave(e?.event);
+                  // }
                 });
               }
             });

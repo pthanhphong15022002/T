@@ -358,6 +358,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
 
         //* Đối tượng
         case 'objectid':
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formCashPayment.setValue('objectType',objectType,{});
           this.objectIDChange();
           break;
 
@@ -368,10 +370,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
 
         //* Tên người nhận
         case 'payee':
-          this.isPreventChange = true;
           this.formCashPayment.setValue('payeeID',event?.component?.itemsSelected[0]?.ContactID || '',{});
           this.payeeChange();
-          this.isPreventChange = false;
           break;
 
         //* Tiền tệ
@@ -1421,7 +1421,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     if (indexObject > -1) {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
-    payName = this.formCashPayment?.data?.payee + ' - ';
+    if(this.formCashPayment?.data?.payee) payName = this.formCashPayment?.data?.payee  + ' - ';
+    
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }

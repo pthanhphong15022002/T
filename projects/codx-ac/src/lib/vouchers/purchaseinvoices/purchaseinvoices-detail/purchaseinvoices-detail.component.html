@@ -116,6 +116,15 @@
             class="place-holder text-gray-600">{{gridViewSetup['PmtMethodID'].headerText}}</span>
           <!-- Hình thức thanh toán  -->
         </div>
+        <div class="d-flex align-items-center me-6">
+          <!-- Điều khoản thanh toán  -->
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="PmtTermID" [formModel]="formModel">
+          </codx-label>
+          <span *ngIf="itemSelected?.pmtTermName" class="text-gray-600">{{itemSelected?.pmtTermName}}</span>
+          <span *ngIf="(itemSelected?.pmtTermName == '' || itemSelected?.pmtTermName == null) && gridViewSetup"
+            class="place-holder text-gray-600">{{gridViewSetup['PmtTermID'].headerText}}</span>
+          <!-- Điều khoản thanh toán  -->
+        </div>
       </div>
       
     </div>

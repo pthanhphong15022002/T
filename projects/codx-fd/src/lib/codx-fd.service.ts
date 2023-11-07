@@ -432,4 +432,43 @@ export class CodxFdService {
       ['FDParameters', cardtype, receiverID]
     );
   }
+
+  LoadDataRangeLine(){
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'RangeLinesBusiness',
+      'LoadDataRangeLinesAsync',
+      [
+        {
+          "pageLoading": true,
+          "page": 1,
+          "pageSize": 20,
+          "formName": "FEDRangeLines",
+          "gridViewName": "grvFEDRangeLines",
+          "entityName": "BS_RangeLines",
+          "predicate": "RangeID=@0",
+          "dataValue": "KUDOS",
+          "funcID": "FDS04",
+          "entityPermission": "BS_FEDRangeLines",
+          "treeField": "",
+          "treeIDValue": "",
+          "predicates": "",
+          "dataValues": "",
+          "entryMode": "",
+          "selector": ""
+        }
+      ]
+    );
+  }
+
+  countFavorite(favsID: string, funcID: string, paraValues: string) {
+    return this.api.execSv(
+      'FD', 
+      'FD', 
+      'CardsBusiness',
+      'CountFavoriteAsync',
+      [favsID, funcID, paraValues]
+    );
+  }
 }
