@@ -133,7 +133,6 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
         ])
         .subscribe((res: any) => {
           if (!res) return;
-          debugger
           var gridview = res.gridview;
           this.cache.setGridView('grvWordTemplates', gridview);
           this.gridViewSetupWord  = res.gridviewSetup;
