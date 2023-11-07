@@ -4026,6 +4026,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
+        isView: actionType == 'view' ? true: false,
       },
       option
     );
@@ -4092,6 +4093,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
+        isView: actionType == 'view' ? true: false,
       },
       option
     );
@@ -4162,6 +4164,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         data: tempData,
         function: null,
         dataService: dataService,
+        isView: actionType == 'view' ? true: false,
         titleMore: actionHeaderText,
       },
       option
@@ -4231,6 +4234,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         data: tempData,
         function: null,
         dataService: dataService,
+        isView: actionType == 'view' ? true: false,
         titleMore: actionHeaderText,
       },
       option
@@ -4296,6 +4300,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         data: tempData,
         function: null,
         dataService: dataService,
+        isView: actionType == 'view' ? true: false,
         titleMore: actionHeaderText,
       },
       option
@@ -4366,6 +4371,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
+        isView: actionType == 'view' ? true: false,
       },
       option
     );
@@ -4463,6 +4469,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
+        isView: actionType == 'view' ? true: false,
       },
       option
     );
@@ -4530,6 +4537,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
+        isView: actionType == 'view' ? true: false,
       },
       option
     );
@@ -4662,6 +4670,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //       data: tempData,
   //       function: null,
   //       dataService: dataService,
+  // isView: actionType == 'view' ? true: false,
   //       titleMore: actionHeaderText,
   //     },
   //     option
@@ -4863,6 +4872,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //       formModel: option.FormModel,
   //       data: tempData,
   //       function: null,
+  // isView: actionType == 'view' ? true: false,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
   //     },
@@ -4963,6 +4973,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         formModel: option.FormModel,
         data: tempData,
         function: null,
+  isView: actionType == 'view' ? true: false,
         dataService: dataService,
         titleMore: actionHeaderText,
       },
@@ -5108,6 +5119,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //     {
   //       formModel: option.FormModel,
   //       data: tempData,
+  // isView: actionType == 'view' ? true: false,
   //       function: null,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
@@ -5198,6 +5210,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       {
         formModel: option.FormModel,
         data: tempData,
+  isView: actionType == 'view' ? true: false,
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
@@ -5328,6 +5341,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //       formModel: option.FormModel,
   //       data: tempData,
   //       function: null,
+  // isView: actionType == 'view' ? true: false,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
   //     },
@@ -5421,6 +5435,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       {
         formModel: option.FormModel,
         data: tempData,
+        isView: actionType == 'view' ? true : false,
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
@@ -5559,6 +5574,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       {
         formModel: option.FormModel,
         data: tempData,
+        isView: actionType == 'view' ? true : false,
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
@@ -5657,6 +5673,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         data: tempData,
         function: null,
         dataService: dataService,
+        isView: actionType == 'view' ? true : false,
         titleMore: actionHeaderText,
       },
       option
@@ -6012,6 +6029,7 @@ dataService.clear();
   //       formModel: option.FormModel,
   //       data: tempData,
   //       function: null,
+  // isView: actionType == 'view' ? true : false,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
   //     },
@@ -6070,6 +6088,7 @@ dataService.clear();
   //     {
   //       formModel: option.FormModel,
   //       data: tempData,
+  // isView: actionType == 'view' ? true : false,
   //       function: null,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
@@ -6170,6 +6189,7 @@ dataService.clear();
         formModel: option.FormModel,
         data: tempData,
         function: null,
+        isView: actionType == 'view' ? true : false,
         dataService: dataService,
         titleMore: actionHeaderText,
       },
@@ -6264,6 +6284,7 @@ dataService.clear();
       {
         formModel: option.FormModel,
         data: tempData,
+        isView: actionType == 'view' ? true : false,
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,
@@ -6360,6 +6381,7 @@ dataService.clear();
   //     {
   //       formModel: option.FormModel,
   //       data: tempData,
+  // isView: actionType == 'view' ? true : false,
   //       function: null,
   //       dataService: dataService,
   //       titleMore: actionHeaderText,
@@ -6454,6 +6476,7 @@ dataService.clear();
       {
         formModel: option.FormModel,
         data: tempData,
+        isView: actionType == 'view' ? true : false,
         function: null,
         dataService: dataService,
         titleMore: actionHeaderText,

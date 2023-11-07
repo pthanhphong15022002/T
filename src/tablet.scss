@@ -81,6 +81,14 @@
   }
 
 }
+@media (max-width: 1200px) {
+  .dt-card{
+    display: block!important;
+    .dt-card-left{
+      width: 100%!important;
+    }
+  }
+}
 /*********** ipad ************/
 
 @media (max-width: 991px) {

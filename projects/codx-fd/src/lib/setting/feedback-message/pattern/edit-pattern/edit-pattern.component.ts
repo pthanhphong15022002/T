@@ -78,6 +78,7 @@ export class EditPatternComponent implements OnInit {
       this.header = 'Cập nhật thiệp';
       this.pattern = JSON.parse(JSON.stringify(data.data?.dataUpdate));
     } else {
+      this.pattern = JSON.parse(JSON.stringify(data.data?.dataAdd));
       this.pattern.backgroundColor = '#caf7e3';
       this.pattern.textColor = '#a4aca4';
       this.pattern.headerColor = '#a4aca4';

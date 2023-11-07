@@ -51,6 +51,7 @@ export class TemplateInfo {
   templateID: string;
   templateType: string;
   reportID: string;
+  exportFileName: string;
 }
 
 export class ExportData {

@@ -37,6 +37,8 @@ import { ViewFileComponent } from './add-survey/questions/view-file/view-file.co
 import { PopupViewFileComponent } from './add-survey/questions/view-file/popup-view-file/popup-view-file.component';
 import { CarouselAllModule } from '@syncfusion/ej2-angular-navigations';
 import { PopupViewFileFullComponent } from './add-survey/questions/view-file/popup-view-file/popup-view-file-full/popup-view-file-full.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -49,6 +51,14 @@ export const routes: Routes = [
       {
         path: 'review',
         component: ReviewComponent,
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
     ],
   },

@@ -13,6 +13,21 @@
     *ngIf="isAfterRender" -->
 <ng-template #body>
 <ng-container *ngIf="form.formGroup">
+        <!-- <content-dynamic
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            [data]="documentObj"
+            [keyField]="'RecID'"
+            [isView]="disabledInput"
+            [functionID]="funcID"
+            [formName]="form.formModel.formName"
+            [gridViewName]="form.formModel.gridViewName"
+            [entityName]="form.formModel.entityName"
+            (dataChanged)="dataChange($event)"
+        >
+        </content-dynamic> -->
+
+    
     <div class="form-group row mt-5">
        <div class="form-group mt-5">
         <codx-label
@@ -42,12 +57,6 @@
                     | async
                 "
             ></span>
-            <!-- <codx-input
-            [disabled]="disabledInput"
-                field="submitWhen"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-            ></codx-input> -->
         </div>   
     </div>
 
@@ -84,10 +93,6 @@
                 ></codx-input>
             </div>
             <div>
-                <!-- <codx-label class="fw-normal text-gray-600"
-                    fiedName="SubmittedDate"
-                    [formModel]="form.formModel"
-                ></codx-label> -->
                 <codx-input
                 [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
                     field="submittedDate"
@@ -131,10 +136,6 @@
                 ></codx-input>
             </div>
             <div>
-                <!-- <codx-label
-                    fiedName="ReturnedDate"
-                    [formModel]="form.formModel"
-                ></codx-label> -->
                 <codx-input
                     [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
                     field="returnedDate"

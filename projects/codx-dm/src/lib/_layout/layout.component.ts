@@ -29,6 +29,7 @@ import { CreateFolderComponent } from '../createFolder/createFolder.component';
 
 import { Browser } from '@syncfusion/ej2-base';
 import { IAccPointRenderEventArgs } from '@syncfusion/ej2-angular-charts';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'codx-layout',
@@ -97,10 +98,11 @@ db.DM_FolderInfo.updateMany(
     private renderer: Renderer2,
     private cache: CacheService,
     private elRef: ElementRef,
+    private router: Router
   ) {
     super(injector);
-    this.module = 'DM';
-   
+
+    this.getModule();
 
     this.fileService.getTotalHdd().subscribe((item) => {
       //  totalUsed: any;
@@ -117,6 +119,11 @@ db.DM_FolderInfo.updateMany(
     //  this.funcs$= this.codxService.getFuncs('OD');
   }
 
+  getModule()
+  {
+    this.module = this.router?.url.split("/")[2].toUpperCase();
+  }
+  
   onInit(): void {
     this.layoutModel.asideDisplay = true;
     this.user = this.auth.userValue;

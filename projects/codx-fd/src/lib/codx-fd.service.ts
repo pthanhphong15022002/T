@@ -281,7 +281,74 @@ export class CodxFdService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  
+  loadGridView(formName:any, gridViewName:any): Observable<any>
+  {
+    let paras = [formName,gridViewName];
+    let keyRoot = formName + gridViewName;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.gridViewSetup(formName,gridViewName)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+  loadFunctionList(funcID:any): Observable<any>
+  {
+    let paras = ["FuncID",funcID];
+    let keyRoot = "FuncID" + funcID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    else {
+      this.caches.set(keyRoot, new Map<any, any>());
+    }
+
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.functionList(funcID)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
   updateCache(keyRoot:any , key:any , data:any)
   {
     if (this.caches.has(keyRoot))
@@ -363,6 +430,35 @@ export class CodxFdService {
       'CardsBusiness',
       'CheckAvalidReceiver',
       ['FDParameters', cardtype, receiverID]
+    );
+  }
+
+  LoadDataRangeLine(){
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'RangeLinesBusiness',
+      'LoadDataRangeLinesAsync',
+      [
+        {
+          "pageLoading": true,
+          "page": 1,
+          "pageSize": 20,
+          "formName": "FEDRangeLines",
+          "gridViewName": "grvFEDRangeLines",
+          "entityName": "BS_RangeLines",
+          "predicate": "RangeID=@0",
+          "dataValue": "KUDOS",
+          "funcID": "FDS04",
+          "entityPermission": "BS_FEDRangeLines",
+          "treeField": "",
+          "treeIDValue": "",
+          "predicates": "",
+          "dataValues": "",
+          "entryMode": "",
+          "selector": ""
+        }
+      ]
     );
   }
 }
