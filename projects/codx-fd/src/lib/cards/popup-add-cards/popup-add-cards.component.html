@@ -1,15 +1,8 @@
 <!-- <codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form> -->
 
 
-<codx-form
-
-  headerText="{{ title }}"
-  [subHeader]="subheader"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="dialog.formModel"
-></codx-form>
+<codx-form headerText="{{ title }}" [subHeader]="subheader" [body]="body" [footer]="footer" [dialog]="dialog"
+    [formModel]="dialog.formModel"></codx-form>
 
 
 <ng-template #subheader>
@@ -28,7 +21,8 @@
 <ng-template #body>
     <div class="content d-flex flex-column flex-column-fluid py-0">
         <div class="extend-main">
-            <ng-container *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio">
+            <ng-container
+                *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement && cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio">
                 <div class="form-group">
                     <codx-label [formModel]="dialog.formModel" name="Receiver" default="Người nhận">
                     </codx-label>
@@ -72,8 +66,8 @@
                     <!-- <codx-input type="combobox" name="Industries" field="industry" [refValue]="'Industries'"
                         [crrValue]="form.controls['industry'].value" (valueChange)="valueChange($event)">
                     </codx-input> -->
-                    
-                    <codx-input ControlName="industry" [formModel]="dialog.formModel" [Group]="form" 
+
+                    <codx-input ControlName="industry" [formModel]="dialog.formModel" [Group]="form"
                         (valueChange)="valueChange($event)" field="industry">
                     </codx-input>
                 </div>
@@ -99,9 +93,8 @@
                         *ngIf="objectType == '1' || objectType == '2' || objectType == '3' || objectType == '4' || objectType == '5' || objectType == '6' || objectType == '9' ;else tmpShare">
                         <div class="d-flex mt-2">
                             <div class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser">
-                                <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true"
-                                    [showText]="true" [path]="'assets/themes/sys/default/img/'"
-                                    [showBgColor]="true">
+                                <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true" [showText]="true"
+                                    [path]="'assets/themes/sys/default/img/'" [showBgColor]="true">
                                 </codx-vll>
                             </div>
                         </div>
@@ -112,8 +105,8 @@
                                 <div class="user-mini-group float-left">
                                     <div class="user-mini-item me-3 mb-1" *ngFor="let item of lstShare">
                                         <div class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px">
-                                            <codx-img class="me-2 h-20px" [width]="20" [isDefaulImg]="true" [objectId]="item.objectID"
-                                                objectType="AD_Users">
+                                            <codx-img class="me-2 h-20px" [width]="20" [isDefaulImg]="true"
+                                                [objectId]="item.objectID" objectType="AD_Users">
                                             </codx-img>
                                             <div class="text-gray-700 line-clamp line-clamp-1">{{item.objectName}}</div>
                                             <span class="icon-close icon-16 ms-3 text-danger"
@@ -129,7 +122,7 @@
             <div class=" form-group">
                 <codx-label [formModel]="dialog.formModel" name="Situation" default="Nội dung">
                 </codx-label>
-                
+
                 <codx-input ControlName="situation" [formModel]="dialog.formModel" [Group]="form">
                 </codx-input>
                 <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
@@ -160,9 +153,8 @@
                         *ngIf="objectType == '1' || objectType == '2' || objectType == '3' || objectType == '4' || objectType == '5' || objectType == '6' || objectType == '9' ;else tmpShare">
                         <div class="d-flex mt-2">
                             <div class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser">
-                                <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true"
-                                    [showText]="true" [path]="'assets/themes/sys/default/img/'"
-                                    [showBgColor]="true">
+                                <codx-vll [name]="'FD001'" [value]="shareControl" [showIcon]="true" [showText]="true"
+                                    [path]="'assets/themes/sys/default/img/'" [showBgColor]="true">
                                 </codx-vll>
                             </div>
                         </div>
@@ -173,8 +165,8 @@
                                 <div class="user-mini-group float-left">
                                     <div class="user-mini-item me-3 mb-1" *ngFor="let item of lstShare">
                                         <div class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px">
-                                            <codx-img class="me-2 h-20px" [width]="20" [isDefaulImg]="true" [objectId]="item.objectID"
-                                                objectType="AD_Users">
+                                            <codx-img class="me-2 h-20px" [width]="20" [isDefaulImg]="true"
+                                                [objectId]="item.objectID" objectType="AD_Users">
                                             </codx-img>
                                             <div class="text-gray-700 line-clamp line-clamp-1">{{item.objectName}}</div>
                                             <span class="icon-close icon-16 ms-3 text-danger"
@@ -238,7 +230,7 @@
                 <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
                     <div class="form-group mt-6">
                         <codx-label [formModel]="dialog.formModel" name="HasGifts" default="Quà tặng"></codx-label>
-                        
+
                         <!-- <codx-input ControlName="giftID" [formModel]="dialog.formModel" [Group]="form">
                         </codx-input> -->
                         <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0"
@@ -251,7 +243,7 @@
                             <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="Số lượng">
                             </codx-label>
                             <codx-input ControlName="number" [min]="min" [formModel]="dialog.formModel" [Group]="form"
-                                [crrValue]="form.controls['quantity'].value" field="quantity" (valueChange)="valueChange($event)">
+                                type="number" field="quantity" (valueChange)="valueChange($event)">
                             </codx-input>
                             <!-- <codx-input type="number" [min]="min" class="form-control" [max]="max"
                                 [crrValue]="form.controls['quantity'].value" field="quantity"
@@ -272,7 +264,7 @@
                         <div class="col-6 form-group">
                             <codx-label [formModel]="dialog.formModel" name="HasPoints" default="Tặng xu">
                             </codx-label>
-                            <div class="d-flex justify-content-evenly align-items-center rounded-1 border border-gray-200">
+                            <!-- <div class="d-flex justify-content-evenly align-items-center rounded-1 border border-gray-200">
                                 <button class="btn btn-icon btn-sm btn-white" type="button" (click)="subPoint()">
                                     <span class="icon-remove icon-18"></span>
                                 </button>
@@ -282,7 +274,10 @@
                                 <button class="btn btn-icon btn-sm btn-white" type="button" (click)="addPoint()">
                                     <span class="icon-add icon-18 "></span>
                                 </button>
-                            </div>
+                            </div> -->
+                            <codx-input type="number" [crrValue]="givePoint" [min]="0"
+                                [step]="1" field="coins" (valueChange)="valueChange($event)">
+                            </codx-input>
                         </div>
 
                     </div>
@@ -292,20 +287,20 @@
     </div>
     <div class="d-flex align-items-center nav-item w-100 mb-1" *ngIf="showLabelAttachment">
         <div class="d-flex align-items-center mb-2">
-          <span class="icon-attach_file icon-18 me-2 text-primary"></span>
-          <div class="fw-bold text-primary">
-            <codx-label name="lblAttachments" default="Tài liệu đính kèm">
-            </codx-label>
-          </div>
+            <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+            <div class="fw-bold text-primary">
+                <codx-label name="lblAttachments" default="Tài liệu đính kèm">
+                </codx-label>
+            </div>
         </div>
-      </div>
+    </div>
     <div>
         <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="card?.recID" hideFolder="1"
-          hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1" type="inline"
-          allowMultiFile="1" referType="application" [formModel]="dialog.formModel" [functionID]="funcID"
-          (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
+            hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1" type="inline"
+            allowMultiFile="1" referType="application" [formModel]="dialog.formModel" [functionID]="funcID"
+            (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
         </codx-attachment>
-      </div>
+    </div>
 </ng-template>
 
 <ng-template #footer>
@@ -313,9 +308,9 @@
         <div class="d-flex align-items-center justify-content-between">
             <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
                 <i class="icon-cloud_upload fs-5"></i><span>
-                  <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
+                    <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
                 </span>
-              </button>
+            </button>
             <button type="button" class="btn btn-primary" (click)="Save()">
                 <codx-label [formModel]="dialog.formModel" name="lblFDSumbit" default="Thêm"></codx-label>
             </button>
@@ -346,14 +341,14 @@
             </div>
             <div class="py-3 px-6">
                 <div class="d-flex align-items-center justify-content-center mb-4 mt-6">
-                    <codx-img class="symbol-circle" [objectId]="user.userID" [objectName]="user.userName" [objectType]="'AD_Users'"
-                        [width]="35" [imageType]="'circle'">
+                    <codx-img class="symbol-circle" [objectId]="user.userID" [objectName]="user.userName"
+                        [objectType]="'AD_Users'" [width]="35" [imageType]="'circle'">
                     </codx-img>
                     <span class="pic-send mx-4">
                         <img alt="Pic" src="/assets/themes/fd/default/img/img_SendCard.svg">
                     </span>
-                    <codx-img class="symbol-circle" [objectId]="userReciver" [objectType]="'AD_Users'" [objectName]="userReciverName"
-                        [isDefaulImg]="true" [width]="35">
+                    <codx-img class="symbol-circle" [objectId]="userReciver" [objectType]="'AD_Users'"
+                        [objectName]="userReciverName" [isDefaulImg]="true" [width]="35">
                     </codx-img>
                 </div>
                 <div class="d-flex justify-content-center text-feed">
