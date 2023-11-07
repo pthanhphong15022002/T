@@ -4,35 +4,33 @@ import {
   Component,
   Injector,
   OnInit,
-  Optional,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  ViewModel,
   ButtonModel,
-  UIComponent,
   CallFuncService,
-  ViewType,
   DialogRef,
-  SidebarModel,
   RequestOption,
+  SidebarModel,
+  UIComponent,
   Util,
+  ViewModel,
+  ViewType,
 } from 'codx-core';
-import { CustomersAddComponent } from './customers-add/customers-add.component';
+import { VendorsAddComponent } from './vendors-add/vendors-add.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 
 @Component({
-  selector: 'lib-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.css','../../codx-ac.component.scss'],
+  selector: 'lib-vendors',
+  templateUrl: './vendors.component.html',
+  styleUrls: ['./vendors.component.css', '../../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomersComponent extends UIComponent {
-
+export class VendorsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = []; //? model view
@@ -43,9 +41,9 @@ export class CustomersComponent extends UIComponent {
   funcName = ''; //? tên truyền vào headertext
   headerText: any;
   optionSidebar: SidebarModel = new SidebarModel();
-  dataDefault:any;
+  dataDefault: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-  
+
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -56,7 +54,7 @@ export class CustomersComponent extends UIComponent {
   //#endregion Contructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void { }
   ngAfterViewInit() {
     this.cache
       .functionList(this.view.funcID)
@@ -119,7 +117,7 @@ export class CustomersComponent extends UIComponent {
     }
   }
 
-  
+
   //#endregion Event
 
   //#region Function
@@ -127,26 +125,26 @@ export class CustomersComponent extends UIComponent {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     let data = {
       headerText: this.headerText,
-      dataDefault:{...this.dataDefault}
+      dataDefault: { ...this.dataDefault }
     };
-    if(!this.dataDefault){
+    if (!this.dataDefault) {
       this.view.dataService.addNew().subscribe((res: any) => {
-        if(res){
+        if (res) {
           res.isAdd = true;
-          this.dataDefault = {...res};
-          data.dataDefault = {...this.dataDefault};
+          this.dataDefault = { ...res };
+          data.dataDefault = { ...this.dataDefault };
           let dialog = this.callfunc.openSide(
-            CustomersAddComponent,
+            VendorsAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-        }       
+        }
       });
-    }else{
+    } else {
       data.dataDefault.recID = Util.uid();
       let dialog = this.callfunc.openSide(
-        CustomersAddComponent,
+        VendorsAddComponent,
         data,
         this.optionSidebar,
         this.view.funcID
@@ -161,48 +159,48 @@ export class CustomersComponent extends UIComponent {
     this.view.dataService
       .edit(dataEdit)
       .subscribe((res: any) => {
-        if(res){
+        if (res) {
           res.isEdit = true;
           let data = {
             headerText: this.headerText,
-            dataDefault:{...res}
+            dataDefault: { ...res }
           };
           let dialog = this.callfunc.openSide(
-            CustomersAddComponent,
+            VendorsAddComponent,
             data,
             this.optionSidebar,
             this.view.funcID
           );
-        }    
+        }
       });
   }
-  
+
   copy(e, dataCopy) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
     if (dataCopy) {
       this.view.dataService.dataSelected = dataCopy;
     }
     this.view.dataService.copy().subscribe((res: any) => {
-      if(res){
+      if (res) {
         res.isCopy = true;
         let data = {
           headerText: this.headerText,
-          dataDefault:{...res}
+          dataDefault: { ...res }
         };
         let dialog = this.callfunc.openSide(
-          CustomersAddComponent,
+          VendorsAddComponent,
           data,
           this.optionSidebar,
           this.view.funcID
         );
-      }   
+      }
     });
   }
   delete(dataDelete) {
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => { });
   }
   //#endregion Function
 }
