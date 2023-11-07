@@ -2440,8 +2440,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         }
 
         // if(!this.isChange) this.isChange=true ;
-        // this.changeDetectorRef.detectChanges();
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
+        //this.changeDetectorRef.markForCheck();
       }
     });
   }
@@ -2501,8 +2501,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
 
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
-    // this.changeDetectorRef.detectChanges();
-    // this.updateSorting(this.stepList[crrIndex].recID);
+    this.updateSorting(recID);
+    //this.changeDetectorRef.detectChanges();
+
     this.changeDetectorRef.markForCheck();
   }
 
@@ -2549,11 +2550,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-    // this.updateSorting(stepIDContain, stepIDPrevious);
+
+    this.updateSorting(stepIDContain, stepIDPrevious);
   }
 
   updateSorting(stepID, stepID2 = null) {
-    //dang lỗi- cmt lại cũng ko sai
+    //dang lỗi- ko hiểu vì sao lỗi ok thì xóa luôn
     // var idx = this.stepList.findIndex((x) => (x.recID = stepID));
     // if (idx == -1) return;
     // let fields = this.stepList[idx].fields;
@@ -2563,7 +2565,27 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     //   });
     //   this.stepList[idx].fields = fields;
     // }
+    // if (this.step && this.step.recID == stepID) {
+    //   this.step = this.stepList[idx];
+    // }
+
     // if (stepID2 != null) this.updateSorting(stepID2);
+    this.stepList.forEach((st) => {
+      if (st.recID == stepID || (stepID2 != null && st.recID == stepID2)) {
+        if (st?.fields?.length > 0) {
+          st?.fields.forEach((x, index) => {
+            x.sorting = index + 1;
+          });
+        }
+        if (
+          this.step &&
+          (this.step.recID == stepID ||
+            (stepID2 != null && st.recID == stepID2))
+        ) {
+          this.step = st;
+        }
+      }
+    });
   }
   //#endregion
 
