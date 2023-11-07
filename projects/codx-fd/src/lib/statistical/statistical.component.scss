@@ -295,31 +295,30 @@ $neutral-medal: #d1d7da;
 
 .quiz-medal {
   position: relative;
-  margin-bottom: 16px;
-  margin-right: 20px;
+  margin-bottom: 0px;
+  margin-left: 10px !important;
 }
 
 .quiz-medal__circle {
-  font-family: 'Roboto', sans-serif;
-  font-size: 28px;
+  font-family: "Roboto", sans-serif;
+  font-size: 21px;
   font-weight: 500;
   width: 200%;
   height: 100%;
   border-radius: 100%;
   color: white;
   text-align: center;
-  line-height: 46px;
+  /* line-height: 46px; */
   vertical-align: middle;
   position: relative;
   border-width: 0.2em;
   border-style: solid;
   z-index: 1;
 
+
   // Default colors
   box-shadow: inset 0 0 0 darken($neutral-medal, 15%), 2px 2px 0 rgba(0, 0, 0, 0.08);
-  border-color: lighten(adjust-hue($neutral-medal, 10), 10%);
   text-shadow: 2px 2px 0 darken($neutral-medal, 20%);
-  background: linear-gradient(to bottom right, $neutral-medal 50%, darken($neutral-medal, 5%) 50%);
 
   &.quiz-medal__circle--gold {
     box-shadow: inset 0 0 0 darken($gold-medal, 15%), 2px 2px 0 rgba(0, 0, 0, 0.08);
@@ -351,17 +350,18 @@ $neutral-medal: #d1d7da;
   border-width: 6px 10px;
   width: 0;
   height: 20px;
-  top: 50px;
+  top: 30px;
 }
 
 .quiz-medal__ribbon--left {
   border-color: #FC402D #FC402D transparent #FC402D;
-  left: 8px;
+  left: 0px;
   transform: rotate(20deg) translateZ(-32px);
 }
 
 .quiz-medal__ribbon--right {
-  left: 28px;
-  border-color: darken(#FC402D, 10%) darken(#FC402D, 10%) transparent darken(#FC402D, 10%);
+  left: 20px;
+  border-color: #f31903 #f31903 transparent #f31903;
   transform: rotate(-20deg) translateZ(-48px);
 }
+
