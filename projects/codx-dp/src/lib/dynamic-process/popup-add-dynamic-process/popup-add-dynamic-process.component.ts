@@ -2554,15 +2554,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   updateSorting(stepID) {
-    var idx = this.stepList.findIndex((x) => (x.recID = stepID));
-    if (idx == -1) return;
-    let fields = this.stepList[idx].fields;
-    if (fields?.length > 0) {
-      fields.forEach((x, index) => {
-        x.sorting = index + 1;
-      });
-      this.stepList[idx].fields = fields;
-    }
+    // var idx = this.stepList.findIndex((x) => (x.recID = stepID));
+    // if (idx == -1) return;
+    // let fields = this.stepList[idx].fields;
+    // if (fields?.length > 0) {
+    //   fields.forEach((x, index) => {
+    //     x.sorting = index + 1;
+    //   });
+    //   this.stepList[idx].fields = fields;
+    // }
   }
   //#endregion
 
