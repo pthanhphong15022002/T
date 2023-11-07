@@ -187,13 +187,14 @@
 
 <!-- #region column kudos rank -->
 <ng-template #colKudosRank let-data>
+    <p class="p-3 mb-0">{{getNameRank(data.kudos)}}</p>
     <div class="d-flex has-action-menu justify-content-between w-100">
         <div class="d-flex align-items-center p-3 fw-500 w-100">
             <ng-container *ngIf="data?.kudos || data?.kudos == 0">
                 <div class="line-100">
-                    <div class="line-kudos" [style]="'width: ' + widthOfGrid(data.kudos) + 'px;'">
-                        <p class="number-kudos">{{ data?.kudos}}</p>
+                    <div class="line-kudos" [style]="'width: ' + widthOfGrid(data.kudos) + '%; background-color: ' + getColorRank(data.kudos) + ';'">
                     </div>
+                    <p class="number-kudos">{{ data?.kudos}}</p>
                 </div>
             </ng-container>
         </div>

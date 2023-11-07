@@ -1223,6 +1223,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isStart: this.isStart,
       isBoughtTM: this.isBoughtTM,
       ownerInstance: this.ownerInstance,
+      listInsStep:[this.currentStep],
+      isRoleFull: this.isRoleAll,
+      type:'step',
     };
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',

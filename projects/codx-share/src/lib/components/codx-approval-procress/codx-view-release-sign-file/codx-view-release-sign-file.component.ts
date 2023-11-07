@@ -67,8 +67,7 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
     }    
   }
 
-  closePopup(){
-    this.codxShareService.deleteByObjectsWithAutoCreate(this.approveProcess.recID, "",true,'3').subscribe();    
+  closePopup(){  
     this.dialogRef && this.dialogRef.close();
   }
   ngAfterViewInit() {}

@@ -100,8 +100,11 @@
   <!-- <button type="button" class="btn btn-ml btn-outline-primary">
     <codx-label [formModel]="dialog.formModel" name="lblExportFile" default="Thêm"></codx-label>
   </button> -->
-  <button [disabled]="loading" type="button" class="btn btn-primary" (click)="clickExport()">
+  <button [disabled]="loading" type="button" class="btn btn-primary mx-1" (click)="clickExport()">
     <codx-label [formModel]="dialog.formModel" name="lblExportFile" default="In"></codx-label>
+  </button>
+  <button [disabled]="loading" type="button" class="btn btn-primary mx-1" (click)="submit()">
+    <codx-label [formModel]="dialog.formModel" name="lblSubmit" default="Xác nhận"></codx-label>
   </button>
 </div>
 </ng-template> 
