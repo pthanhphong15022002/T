@@ -29,8 +29,7 @@ declare var jsBh: any;
 @Component({
   selector: 'cashreciept-detail',
   templateUrl: './cashreciept-detail.component.html',
-  styleUrls: [
-    './cashreciept-detail.component.css'],
+  styleUrls: ['./cashreciept-detail.component.css'],
 })
 export class CashrecieptDetailComponent extends UIComponent {
   //#region Constructor
@@ -179,7 +178,6 @@ export class CashrecieptDetailComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.call();
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -216,7 +214,13 @@ export class CashrecieptDetailComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFCashReceipt(event,data,type,this.journal,this.formModel);
+    this.acService.changeMFCashReceipt(
+      event,
+      data,
+      type,
+      this.journal,
+      this.formModel
+    );
     // let arrBookmark = event.filter(
     //   // danh sách các morefunction
     //   (x: { functionID: string }) =>
@@ -716,26 +720,4 @@ export class CashrecieptDetailComponent extends UIComponent {
     return item.recID;
   }
   //#endregion Function
-
-  //#region Bankhub
-  call() {
-    jsBh.login('accNet', (o) => this.callback(o));
-  }
-
-  callback(o: any) {
-    if (o) {
-      this.bhLogin = true;
-      localStorage.setItem('bh_tk', o);
-      this.getbank();
-    }
-  }
-
-  getbank() {
-    this.acService
-      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
-      .subscribe((res) => {
-        console.log(res);
-      });
-  }
-  //endregion Function
 }

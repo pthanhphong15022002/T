@@ -62,7 +62,6 @@ export class CashPaymentsComponent extends UIComponent {
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
-  
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -120,7 +119,7 @@ export class CashPaymentsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'25%'
+          widthLeft: '25%',
           //separatorSize:3
         },
       },
@@ -217,7 +216,7 @@ export class CashPaymentsComponent extends UIComponent {
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT042901':
-        this.transferToBank(e.text,data); //? chuyển tiền ngân hàng điện tử
+        this.transferToBank(e.text, data); //? chuyển tiền ngân hàng điện tử
         break;
       case 'ACT041010':
       case 'ACT042907':
@@ -385,7 +384,6 @@ export class CashPaymentsComponent extends UIComponent {
     );
   }
 
-  
   /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)
    * @param event : danh sách morefunction
@@ -393,7 +391,13 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
+    this.acService.changeMFCashPayment(
+      event,
+      data,
+      type,
+      this.journal,
+      this.view.formModel
+    );
     // let arrBookmark = event.filter(
     //   // danh sách các morefunction
     //   (x: { functionID: string }) =>
@@ -757,18 +761,16 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   //#endregion
-
   //#region Bankhub
-
   /**
    * *Hàm chuyển tiền ngân hàng điện tử
-   * @param text 
-   * @param data 
+   * @param text
+   * @param data
    */
-  transferToBank(text,data) {
+  transferToBank(text, data) {
     this.checkLogin((o) => {
       if (o) {
-        let tk = jsBh.decodeCookie('bh');
+        let tk = jsBh.decodeCookie('bankhub');
         this.api
           .execSv<any>(
             'AC',
@@ -779,25 +781,12 @@ export class CashPaymentsComponent extends UIComponent {
           )
           .subscribe((res) => {
             if (res) {
-              let result = JSON.parse(res);
-              if (result?.Status.toLowerCase() == 'success') {
-                data.eBankingID = result?.Data?.BulkId;
-                data.status = '8';
-                this.view.dataService.updateDatas.set(data['_uuid'], data);
-                this.view.dataService
-                  .save(null, 0, '', '', false)
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe((res: any) => {
-                    if (res && !res.update.error) {
-                      this.notification.notifyCode('AC0029', 0, text);
-                    }
-                  });
-              }else{
-                this.notification.notifyCode('AC0030', 0, text);
-              }
-            }else{
+              this.view.dataService.update(res).subscribe((o) => {
+                if (o) this.notification.notifyCode('AC0029', 0, text);
+              });
+            } else {
               this.notification.notifyCode('AC0030', 0, text);
-            }  
+            }
           });
       }
     });
@@ -814,17 +803,6 @@ export class CashPaymentsComponent extends UIComponent {
 
   afterLogin(o: any) {
     return true;
-  }
-
-  /**
-   * *Hàm call api ngân hàng điện tử
-   */
-  getbank() {
-    this.acService
-      .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
-      .subscribe((res) => {
-        console.log(res);
-      });
   }
   //#endregion
 }
