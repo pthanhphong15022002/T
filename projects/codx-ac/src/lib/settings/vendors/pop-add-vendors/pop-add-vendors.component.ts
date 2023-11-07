@@ -20,15 +20,11 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { PopAddAddressComponent } from '../../customers/pop-add-address/pop-add-address.component';
-import { PopAddBankComponent } from '../../customers/pop-add-bank/pop-add-bank.component';
-import { PopAddContactComponent } from '../../customers/pop-add-contact/pop-add-contact.component';
 import { Vendors } from '../../../models/Vendors.model';
-import { Contact } from '../../../models/Contact.model';
-import { Objects } from '../../../models/Objects.model';
-import { BankAccount } from '../../../models/BankAccount.model';
-import { Address } from '../../../models/Address.model';
 import { CodxAcService } from '../../../codx-ac.service';
+import { BankAddComponent } from '../../customers-categories/bank-add/bank-add.component';
+import { ContactAddComponent } from '../../customers-categories/contact-add/contact-add.component';
+import { AddressAddComponent } from '../../customers-categories/address-add/address-add.component';
 
 @Component({
   selector: 'lib-pop-add-vendors',
@@ -43,16 +39,16 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog!: DialogRef;
   vendors: Vendors;
-  contact: Contact;
-  objects: Objects = new Objects();
-  objectBankaccount: Array<BankAccount> = [];
-  objectBankaccountDelete: Array<BankAccount> = [];
-  objectContact: Array<Contact> = [];
-  objectContactDelete: Array<Contact> = [];
-  objectAddress: Array<Address> = [];
-  objectAddressDelete: Array<Address> = [];
-  objectContactAddress: Array<Contact> = [];
-  objectContactAddressDelete: Array<Contact> = [];
+  contact: any;
+  objects: any;
+  objectBankaccount: Array<any> = [];
+  objectBankaccountDelete: Array<any> = [];
+  objectContact: Array<any> = [];
+  objectContactDelete: Array<any> = [];
+  objectAddress: Array<any> = [];
+  objectAddressDelete: Array<any> = [];
+  objectContactAddress: Array<any> = [];
+  objectContactAddressDelete: Array<any> = [];
   objecttype: string = '2';
   gridViewSetup: any;
   gridViewSetupBank: any;
@@ -272,7 +268,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogbank = this.callfc.openForm(
-            PopAddBankComponent,
+            BankAddComponent,
             '',
             500,
             400,
@@ -327,7 +323,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogcontact = this.callfc.openForm(
-            PopAddContactComponent,
+            ContactAddComponent,
             '',
             650,
             570,
@@ -364,7 +360,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogaddress = this.callfc.openForm(
-            PopAddAddressComponent,
+            AddressAddComponent,
             '',
             550,
             650,
@@ -421,7 +417,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogbank = this.callfc.openForm(
-            PopAddBankComponent,
+            BankAddComponent,
             '',
             500,
             400,
@@ -461,7 +457,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogaddress = this.callfc.openForm(
-            PopAddAddressComponent,
+            AddressAddComponent,
             '',
             550,
             650,
@@ -525,7 +521,7 @@ export class PopAddVendorsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogcontact = this.callfc.openForm(
-            PopAddContactComponent,
+            ContactAddComponent,
             '',
             650,
             550,

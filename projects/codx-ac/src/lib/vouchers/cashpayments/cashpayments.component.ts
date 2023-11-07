@@ -143,7 +143,7 @@ export class CashPaymentsComponent extends UIComponent {
       {
         type: ViewType.grid_detail, //? thiết lập view lưới
         active: false,
-        sameData: false,
+        sameData: true,
         model: {
           template2: this.templateGrid,
 
