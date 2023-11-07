@@ -435,9 +435,11 @@ export class AddNoteComponent implements OnInit {
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
     this.note.fileCount = this.listFileUpload?.length;
+    debugger
+    let recID = this.note?.transID ?? this.note?.recID; // where recID mà truyền transID what?
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.note?.transID,
+        recID,
         this.note,
       ])
       .subscribe(async (res) => {
@@ -481,9 +483,13 @@ export class AddNoteComponent implements OnInit {
             else object = [{ data: dtNew, type: 'edit-currentDate' }];
           }
           this.noteService.data.next(object);
+          this.dialog.close(dtNew);
+        }
+        else
+        {
+          this.dialog.close(null);
         }
       });
-    this.dialog.close();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -564,7 +570,7 @@ export class AddNoteComponent implements OnInit {
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesByObjectIDImageAsync',
-        this.note.transID
+        this.note.transID ?? this.note.recID
       )
       .subscribe((res) => {});
   }

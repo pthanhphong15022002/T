@@ -24,8 +24,6 @@ export class CalendarCenterComponent
   implements AfterViewInit
 {
   
-
-
   @Input() resources: any;
   @Input() events: any;
   @Input() eventModel:any;
@@ -36,17 +34,25 @@ export class CalendarCenterComponent
   @Input() eventTemplate:TemplateRef<any>;
   @Input() popupEventTemplate:TemplateRef<any>;
   @Input() resourceTemplate:TemplateRef<any>;
+  @Input() moreFuncTemplate:TemplateRef<any>;
+  @Input() currentView:string;
+  @Input() dFormModel:TemplateRef<any>;
+
 
   @Output() evtChangeDate = new EventEmitter();
   @Output() evtChangeMonth = new EventEmitter();
+  
+
   
   views: Array<ViewModel> | any = [];
   codxSchedule: CodxScheduleComponent;
   lstDayOff:any[] = []; // danh sách ngày nghỉ
   calendarID = 'STD';
   
+
+  workDays: [1, 2, 3, 4, 5, 6];
+  
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
@@ -70,7 +76,7 @@ export class CalendarCenterComponent
           resourceModel: this.resourceModel, // mapping của resource schedule
           template: this.eventTemplate, // template event
           template4: this.resourceTemplate,//template resource 
-          template6: this.mfButton,
+          template6: this.moreFuncTemplate, // template more funtion
           template8: this.popupEventTemplate //template popup event
         },
       },
@@ -79,14 +85,14 @@ export class CalendarCenterComponent
     var itv = setInterval(()=> {
       if((this.view?.currentView as any)?.schedule)
       {
-        this.codxSchedule = (this.view?.currentView as any)?.schedule;
+        clearInterval(itv);
+        this.codxSchedule = (this.view?.currentView as any).schedule;
         this.codxSchedule.isOutSource = this.isOutSource;
         this.codxSchedule.dataSource = this.events;
         this.codxSchedule.resourceDataSource = this.resources;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
         (this.view.currentView as any).statusColor = this.statusColor;
         this.codxSchedule.setEventSettings();
-        clearInterval(itv);
       }
     },500)
   }
@@ -108,7 +114,6 @@ export class CalendarCenterComponent
     {
       this.codxSchedule.dataSource = dataSource;
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
   
@@ -118,8 +123,9 @@ export class CalendarCenterComponent
     {
       this.codxSchedule.resourceDataSource = resources;
       this.codxSchedule.onGroupingChange(resources);
+      this.codxSchedule.onGridlinesChange(true);
+      this.codxSchedule.onTimelineViewChange(true);
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
 
@@ -127,10 +133,35 @@ export class CalendarCenterComponent
   removeResource(){
     if(this.codxSchedule)
     {
-      this.codxSchedule.resourceDataSource = null;
-      this.codxSchedule.onGroupingChange(null);
+      this.codxSchedule.resourceDataSource = [];
+      this.codxSchedule.onGroupingChange(false);
+      this.codxSchedule.onGridlinesChange(false);
+      this.codxSchedule.onTimelineViewChange(false);
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
+    }
+  }
+
+  changeStatusColor(statusColor:any[]){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.statusColor = statusColor;
+      this.codxSchedule.setEventSettings();
+    }
+  }
+
+  // add event
+  addEvent(event:any){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.addData(event);
+    }
+  }
+
+  // edit event
+  editEvent(event:any){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.updateData(event);
     }
   }
 
@@ -189,12 +220,3 @@ export class CalendarCenterComponent
   }
 }
 
-enum TimelineSchedule {
-  TimelineDay = 0,
-  TimelineWeek = 1,
-  TimelineWorkWeek = 2,
-  TimelineMonth = 3,
-  TimelineYear = 4,
-  Agenda = 5,
-  MonthAgenda = 6
-}
