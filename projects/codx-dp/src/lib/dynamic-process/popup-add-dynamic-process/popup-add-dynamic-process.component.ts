@@ -2417,24 +2417,28 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.fieldCrr = field;
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        // this.step.fields.splice(field.sorting - 1, 1);
-        // this.step.fields.forEach((x) => {
-        //   if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
-        // });
-        this.stepList.forEach((obj) => {
-          if (obj.recID == this.fieldCrr.stepID) {
-            obj.fields.splice(field.sorting - 1, 1);
-            obj.fields.forEach((x) => {
-              if (x.sorting > field.sorting) x.sorting = x.sorting - 1;
-            });
+        let idxStep = this.stepList.findIndex(
+          (x) => x.recID == this.fieldCrr.stepID
+        );
+        if (idxStep == -1) return;
+        let step = this.stepList[idxStep];
+        let fields = step.fields;
+        if (fields?.length > 0) {
+          var idx = fields.findIndex((x) => x.recID == field.recID);
+          if (idx != -1) {
+            fields.splice(idx, 1);
+            this.stepList[idxStep].fields = fields;
+            this.updateSorting(step.recID);
+
             if (this.action == 'edit') {
-              let check = this.listStepEdit.some((id) => id == obj?.recID);
+              let check = this.listStepEdit.some((id) => id == step?.recID);
               if (!check) {
-                this.listStepEdit.push(obj?.recID);
+                this.listStepEdit.push(step?.recID);
               }
             }
           }
-        });
+        }
+
         // if(!this.isChange) this.isChange=true ;
         // this.changeDetectorRef.detectChanges();
         this.changeDetectorRef.markForCheck();
@@ -2495,8 +2499,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.listStepEdit.push(recID);
       }
     }
+
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     // this.changeDetectorRef.detectChanges();
+    this.updateSorting(recID);
     this.changeDetectorRef.markForCheck();
   }
 
@@ -2511,13 +2517,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.dropFieldsToStep(event, stepID);
     }
   }
+
   dropFieldsToStep(event, stepID) {
     let stepIDContain = event.container.id;
     let stepIDPrevious = event.previousContainer.id;
     if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
       stepIDContain = stepIDContain.substring(2);
     }
-
     if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
       stepIDPrevious = stepIDPrevious.substring(2);
     }
@@ -2526,12 +2532,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       let check = this.listStepEdit.some((id) => id == stepIDContain);
       if (!check) {
         this.listStepEdit.push(stepIDContain);
+        this.updateSorting(stepIDContain);
       }
     }
     if (this.action == 'edit') {
       let check = this.listStepEdit.some((id) => id == stepIDPrevious);
       if (!check) {
         this.listStepEdit.push(stepIDPrevious);
+        this.updateSorting(stepIDPrevious);
       }
     }
 
@@ -2543,6 +2551,18 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
+  }
+
+  updateSorting(stepID) {
+    var idx = this.stepList.findIndex((x) => (x.recID = stepID));
+    if (idx == -1) return;
+    let fields = this.stepList[idx].fields;
+    if (fields?.length > 0) {
+      fields.forEach((x, index) => {
+        x.sorting = index + 1;
+      });
+      this.stepList[idx].fields = fields;
+    }
   }
   //#endregion
 
