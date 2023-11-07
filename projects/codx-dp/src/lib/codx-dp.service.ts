@@ -452,6 +452,16 @@ export class CodxDpService {
     );
   }
 
+  getPositionsByUserID(userID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
+
   //   getStepByStepIDAndInID(data) {
   //   return this.api.exec<any>(
   //     'DP',
