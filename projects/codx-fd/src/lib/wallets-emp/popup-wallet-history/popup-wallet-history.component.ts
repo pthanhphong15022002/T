@@ -187,8 +187,8 @@ export class PopupWalletHistoryComponent implements OnInit  {
   }
 
   selectDropdown(e) {
-    if(e.data){
-      this.transType = e.data
+    if(e.data && e.data?.lenght != 0){
+      this.transType = e.data[0];
     } else {
       this.transType = null;
     }

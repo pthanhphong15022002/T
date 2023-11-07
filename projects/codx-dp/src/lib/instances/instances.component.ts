@@ -1206,7 +1206,6 @@ export class InstancesComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          debugger;
           this.dataSelected.owner = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);

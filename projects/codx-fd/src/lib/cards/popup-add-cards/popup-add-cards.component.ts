@@ -404,11 +404,14 @@ export class PopupAddCardsComponent implements OnInit {
           this.notifySV.notify('Vui lòng chọn quà tặng');
           return;
         } else if (data > this.gifts[0].availableQty) {
-          this.form.patchValue({ quantity: this.quantityOld });
+          this.quantity = 1;
+          this.amount = this.quantity * this.gifts[0].price;
+          this.gifts[0].quantity = this.quantity;
+          this.form.patchValue({ quantity: this.quantity });
           this.notifySV.notify('Vượt quá số dư quà tặng');
           return;
         } else {
-          this.quantityOld = data - 1;
+          // this.quantityOld = data - 1;
           this.quantity = data;
           this.amount = this.quantity * this.gifts[0].price;
           this.gifts[0].quantity = this.quantity;
@@ -503,7 +506,21 @@ export class PopupAddCardsComponent implements OnInit {
           // }
           // this.checkValidateWallet(this.userReciver);
         }
-
+        break;
+      case 'coins':
+        if (data) {
+          if (this.parameter.MaxPointPerOnceControl === '1') {
+            if (data > this.parameter.MaxPointPerOnce) {
+              this.notifySV.notify('Vượt quá số xu cho phép tặng');
+              data = this.givePoint;
+            }
+          }
+          this.givePoint = data;
+          this.dt.detectChanges();
+        } else {
+          this.givePoint = 0;
+          this.dt.detectChanges();
+        }
         break;
       default:
         break;

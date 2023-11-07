@@ -58,7 +58,6 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   lblEdit: any;
   lblExChangeRate:any;
   lblExChangeRateSetting:any;
-  moreFuncNameEdit: any;
   funcName: any;
   multiplication:any;
   division:any;

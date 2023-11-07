@@ -31,10 +31,12 @@
     <div class="form-group row mt-5">
        <div class="form-group mt-5">
         <codx-label
+        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
             fiedName="DocumentTypeID"
             [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
         [disabled]="disabledInput"
             field="documentTypeID"
             [formModel]="form.formModel"
@@ -46,11 +48,13 @@
     <div class="form-group row">
         <div class="col-12" *ngIf="documentObj.submitWhen != null">
             <codx-label
+            *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true"
                 fiedName="SubmitWhen"
                 [formModel]="form.formModel"
             ></codx-label>
             <span>: </span>
             <span class="text-gray-600"
+            *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true"
                 [innerHTML]="
                 documentObj.submitWhen
                     | formatvalue : formModel : 'submitWhen'
@@ -64,12 +68,14 @@
         <div class="col-6">
             <div class="">
                 <codx-label
+                *ngIf="form.gridviewSetup.IsRequired.allowPopup == true"
                     fiedName="IsRequired"
                     [formModel]="form.formModel"
                 ></codx-label>
             </div>
             <div class="mt-2">
                 <codx-input
+                *ngIf="form.gridviewSetup.IsRequired.allowPopup == true"
                 [disabled]="disabledInput"
                     field="isRequired"
                     [formModel]="form.formModel"
@@ -81,10 +87,12 @@
         <div class="col-6">
             <div class="d-flex align-items-center justify-content-between">
                 <codx-label
+                *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true"
                     fiedName="IsSubmitted"
                     [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
+                *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true"
                 [disabled]="disabledInput"
                     field="isSubmitted"
                     [formModel]="form.formModel"
@@ -94,6 +102,7 @@
             </div>
             <div>
                 <codx-input
+                *ngIf="form.gridviewSetup.SubmittedDate.allowPopup == true"
                 [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
                     field="submittedDate"
                     [formModel]="form.formModel"
@@ -107,12 +116,14 @@
         <div class="col-6">
             <div>
                 <codx-label
+                *ngIf="form.gridviewSetup.HasReturn.allowPopup == true"
                     fiedName="HasReturn"
                     [formModel]="form.formModel"
                 ></codx-label>
             </div>
             <div class="mt-2">
                 <codx-input
+                *ngIf="form.gridviewSetup.HasReturn.allowPopup == true"
                 [disabled]="disabledInput"
                     field="hasReturn"
                     [formModel]="form.formModel"
@@ -124,10 +135,12 @@
         <div class="col-6">
             <div class="d-flex align-items-center justify-content-between">
                 <codx-label
+                *ngIf="form.gridviewSetup.IsReturned.allowPopup == true"
                     fiedName="IsReturned"
                     [formModel]="form.formModel"
                 ></codx-label>
                 <codx-input
+                *ngIf="form.gridviewSetup.IsReturned.allowPopup == true"
                 [disabled]="disabledInput"
                     field="isReturned"
                     (valueChange)="onChangeSwitch($event, 'isReturned')"
@@ -137,6 +150,7 @@
             </div>
             <div>
                 <codx-input
+                *ngIf="form.gridviewSetup.ReturnedDate.allowPopup == true"
                     [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
                     field="returnedDate"
                     [formModel]="form.formModel"
@@ -148,10 +162,12 @@
 
     <div class="form-group row">
             <codx-label
+            *ngIf="form.gridviewSetup.Note.allowPopup == true"
                 fiedName="Note"
                 [formModel]="form.formModel"
             ></codx-label>
             <codx-input
+            *ngIf="form.gridviewSetup.Note.allowPopup == true"
             [disabled]="disabledInput"
                 field="note"
                 [formModel]="form.formModel"

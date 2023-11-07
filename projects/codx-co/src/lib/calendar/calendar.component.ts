@@ -25,11 +25,7 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
-import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
-import { FormGroup } from '@angular/forms';
 import {
-  SpeedDialComponent,
-  SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
 import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
@@ -37,11 +33,12 @@ import { AddNoteComponent } from 'projects/codx-share/src/lib/components/calenda
 import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
 import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
-import { CodxCoService } from '../codx-co.service';
 import { CO_EventModel } from './model/CO_EventModel';
-import {  elementAt, forkJoin, map, of } from 'rxjs';
+import { Observable, forkJoin, map, of } from 'rxjs';
 import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
-import { Month } from '@syncfusion/ej2-angular-schedule';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { env } from 'process';
+import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
 
 
 @Component({
@@ -50,27 +47,9 @@ import { Month } from '@syncfusion/ej2-angular-schedule';
   styleUrls: ['./calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class COCalendarComponent extends UIComponent implements AfterViewInit {
   
-  roomFM: FormModel;
-  roomFG: FormGroup;
-  addRoomTitle = '';
-
-  carFM: FormModel;
-  carFG: FormGroup;
-  addCarTitle = '';
-
-  meetingFM: FormModel;
-  meetingFG: FormGroup;
-
-
-  myTaskFM: FormModel;
-  myTaskFG: FormGroup;
-
-
-  assignTaskFM: FormModel;
-  assignTaskFG: FormGroup;
-
   //#region variable
   user:any = null;
   views: Array<ViewModel> = [];
@@ -101,6 +80,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   mapEvents:any[] = [];
   loaded:boolean = false;
   loadUserGroup:boolean = false;
+  dFormModel:any = {};
   resourceModel:any = {
     Name: 'resourceName',
     Field: 'resourceID',
@@ -116,6 +96,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     resourceId: { name: 'resourceID' },// field mapping với resource Schedule
     status: 'transType',
   };
+  roomFM: FormModel;
+  addRoomTitle = '';
+  carFM: FormModel;
+  addCarTitle = '';
+  meetingFM: FormModel;
+  myTaskFM: FormModel;
+  assignTaskFM: FormModel;
+  noteFM: FormModel;
+
   //
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
@@ -126,8 +115,9 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   
   constructor(
     private injector: Injector,
-    private coService: CodxCoService,
     private notiService: NotificationsService,
+    private codxShareService: CodxShareService,
+    private TMService: CodxTasksService,
     private authStore:AuthStore
   ) {
     super(injector);
@@ -173,58 +163,96 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       }
     });
 
-    this.coService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
-      this.roomFM = res;
-      this.roomFG = this.codxService.buildFormGroup(
-        this.roomFM?.formName,
-        this.roomFM?.gridViewName
-      );
-    });
-
-    this.cache.functionList(EPCONST.FUNCID.R_Bookings).subscribe((res) => {
-      if (res) {
-        this.addRoomTitle = res?.customName?.toString();
+    // get formModel EP
+    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGROOMS).subscribe((res) => {
+      if (res) 
+      {
+        let formModel = new FormModel();
+        this.addRoomTitle = res.customName;
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.roomFM = formModel;
+        this.dFormModel["EP_BookingRooms"] = formModel;
       }
     });
 
-    this.coService.getFormModel(EPCONST.FUNCID.C_Bookings).then((res) => {
-      this.carFM = res;
-      this.carFG = this.codxService.buildFormGroup(
-        this.carFM?.formName,
-        this.carFM?.gridViewName
-      );
+    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGCARS).subscribe((res) => {
+      if (res) 
+      {
+        this.addCarTitle = res?.customName;
+        let formModel = new FormModel();
+        this.addCarTitle = res.customName;
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.carFM = formModel;
+        this.dFormModel["EP_BookingCars"] = formModel;
+      }
     });
-
-    this.cache.functionList(EPCONST.FUNCID.C_Bookings).subscribe((res) => {
-      if (res) {
-        this.addCarTitle = res?.customName?.toString();
+    //get formModel CO
+    this.cache.functionList(BUSSINESS_FUNCID.CO_MEETINGS).subscribe((res) => {
+      if (res) 
+      {
+        let formModel = new FormModel();
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.meetingFM = formModel;
+        this.dFormModel["CO_Meetings"] = formModel;
       }
     });
 
-    this.coService.getFormModel('TMT0501').then((res) => {
-      this.meetingFM = res;
-      this.meetingFG = this.codxService.buildFormGroup(
-        this.meetingFM?.formName,
-        this.meetingFM?.gridViewName
-      );
+    // get formModel TM
+    this.cache.functionList(BUSSINESS_FUNCID.TM_MyTasks).subscribe((res) => {
+      if (res) 
+      {
+        let formModel = new FormModel();
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.myTaskFM = formModel;
+        this.dFormModel["TM_MyTasks"] = formModel;
+      }
     });
 
-    this.coService.getFormModel('TMT0201').then((res) => {
-      this.myTaskFM = res;
-      this.myTaskFG = this.codxService.buildFormGroup(
-        this.myTaskFM?.formName,
-        this.myTaskFM?.gridViewName
-      );
+    this.cache.functionList(BUSSINESS_FUNCID.TM_AssignTasks).subscribe((res) => {
+      if (res) 
+      {
+        let formModel = new FormModel();
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.assignTaskFM = formModel;
+        this.dFormModel["TM_AssignTasks"] = formModel;
+      }
     });
-
-    this.coService.getFormModel('TMT0203').then((res) => {
-      this.assignTaskFM = res;
-      this.assignTaskFG = this.codxService.buildFormGroup(
-        this.assignTaskFM?.formName,
-        this.assignTaskFM?.gridViewName
-      );
+    
+    // get formModel WP
+    this.cache.functionList(BUSSINESS_FUNCID.WP_NOTES).subscribe((res) => {
+      if (res) 
+      {
+        let formModel = new FormModel();
+        formModel.entityName = res.entityName;
+        formModel.formName = res.formName;
+        formModel.gridViewName = res.gridViewName;
+        formModel.funcID = res.functionID;
+        formModel.entityPer = res.entityPer;
+        this.noteFM = formModel;
+        this.dFormModel["WP_Notes"] = formModel;
+      }
     });
-
+    // get function HR_Organization
     this.cache.functionList('HRT01')
     .subscribe((func:any) => {
       if(func)
@@ -240,7 +268,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.hrRequest.parentIdField = "parentID";
       }
     });
-
       
   }
 
@@ -248,8 +275,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   getSeedDialitem(){
     this.api.execSv("CO","CO","CalendarsBusiness","GetListFunctionEventAsync")
     .subscribe((res:any)=>{
-      if(res){
-        for (const key in res) {
+      if(res)
+      {
+        for (const key in res) 
+        {
           this.speedDialItems.push({id:key,text:res[key]})
         } 
       }
@@ -278,7 +307,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               showColor: param.ShowColor,
               text: param.Template.TransType,
               status: param.Template.TransType,
-              textColor: param.TextColor 
+              textColor: param.TextColor ?? "1F1717"
             };
             this.statusColor.push(obj);
             this.dResources[param.Template.TransType] = obj;
@@ -385,9 +414,13 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.settingCalendars.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
     if(value == "0")
     {
+      for (const month in this.dEventMonth) {
+        if(this.dEventMonth[month])
+        {
+          this.dEventMonth[month] = this.dEventMonth[month].filter(x => x.transType != transType);
+        }
+      }
       this.lstEvents = this.lstEvents.filter(x => x.transType != transType);
-      // this.dEventMonth[this.month] = this.lstEvents;
-      // this.mapEvents[transType] = [];
       this.ejCalendar && this.ejCalendar.refresh();
       this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       this.detectorRef.detectChanges();
@@ -453,14 +486,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         if(res?.event)
         {
           debugger
-          let settings = [];
+          let settingCalendars = [];
+          let statusColors = [];
           res.event.forEach(element => {
-            let setting = JSON.parse(element);
-            if(!setting["TextColor"])
-              setting["TextColor"] = "#1F1717";
-              settings.push(setting);
+            let param = JSON.parse(element);
+            settingCalendars.push(param);
+            let obj = {
+              color: param.ShowBackground,
+              borderColor: param.ShowColor,
+              showColor: param.ShowColor,
+              text: param.Template.TransType,
+              status: param.Template.TransType,
+              textColor: param.TextColor ?? "1F1717"
+            };
+            statusColors.push(obj);
           });
-          this.settingCalendars = settings;
+          this.statusColor = statusColors;
+          this.settingCalendars = settingCalendars;
+          this.calendarCenter && this.calendarCenter.changeStatusColor(this.statusColor);
         }
       });
     }
@@ -579,7 +622,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     
   }
 
-// get event CO
+  // get event CO
   getEventCO(transType){
     let param = this.settingCalendars.find(x => x.Template.TransType == transType);
     if(param.ShowEvent == "1"){
@@ -588,9 +631,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let eventMeetings = [];
         if(res?.length > 0 && res[0]?.length > 0)
         {
-          // eventMeetings = res[0].map((note:any) => {
-          //   return this.convertModelEvent(note,transType);
-          // });
           eventMeetings = res[0];
         }
         return {transType:transType, data:eventMeetings};
@@ -634,287 +674,12 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let eventNotes = [];
         if(res?.length > 0 && res[0]?.length > 0)
         {
-          let eventNotes = res[0].map((note:any) => {
-            return this.convertModelEvent(note,transType);
-          });
+          eventNotes = res[0];
         }
         return {transType:transType, data:eventNotes};
      }));
     }
     else return of({transType:transType, data:[]});
-  }
-
-  // add event
-  addEvent(args: SpeedDialItemEventArgs) {
-    if(args?.item?.id){
-      switch (args?.item?.id) 
-      {
-        case 'EP_BookingCars':
-          this.addBookingCar();
-          break;
-
-        case 'EP_BookingRooms':
-          this.addBookingRoom();
-          break;
-
-        case 'WP_Notes':
-          this.addNote();
-          break;
-
-        case 'CO_Meetings':
-          this.addMeeting();
-          break;
-
-        case 'TM_MyTasks':
-          this.addMyTask();
-          break;
-
-        case 'TM_AssignTasks':
-          this.addAssignTask();
-          break;
-      }
-    }
-  }
-
-  // add EP_BookingCars
-  addBookingCar() {
-    this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT21','EP_Bookings'])
-    .subscribe((model:any) => {
-      if(model?.data)
-      {
-        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
-        .subscribe((res:boolean) => {
-          let option = new SidebarModel();
-          option.FormModel = this.carFM;
-          option.Width = '800px';
-          this.callfc
-            .openSide(
-              CodxAddBookingCarComponent,
-              [model.data, 'SYS01', this.addCarTitle, null, null, false,res],
-              option
-            ).closed.subscribe((res2:any) => {
-              if(res2?.event)
-              {
-                let booking = this.convertModelEvent(res2.event,"EP_BookingCars");
-                let month = new Date(booking.startDate)?.getMonth() + 1;
-                if(!this.dEventMonth[month])
-                  this.dEventMonth[month] = [];
-                this.dEventMonth[month].push(booking);
-                this.lstEvents.push(booking);
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-                this.detectorRef.detectChanges();
-              }
-            });
-        });
-      }
-      else
-        this.notiService.notify("Lỗi đặt xe");
-    });
-  }
-
-  //add EP_BookingRooms
-  addBookingRoom() {
-    this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT11','EP_Bookings'])
-    .subscribe((model:any) => {
-      if(model?.data)
-      {
-        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
-        .subscribe((res:boolean) => {
-          let option = new SidebarModel();
-          option.FormModel = this.roomFM;
-          option.Width = '800px';
-          this.callfc
-            .openSide(
-              CodxAddBookingRoomComponent,
-              [model.data, 'SYS01', this.addRoomTitle, null, null,false,res],
-              option
-            ).closed.subscribe((res2:any) => {
-              if(res2?.event)
-              {
-                let booking = this.convertModelEvent(res2.event,"EP_BookingRooms");
-                let month = new Date(booking.startDate)?.getMonth() + 1;
-                if(!this.dEventMonth[month])
-                  this.dEventMonth[month] = [];
-                this.dEventMonth[month].push(booking);
-                this.lstEvents.push(booking);
-                this.ejCalendar && this.ejCalendar.refresh();
-                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-                this.detectorRef.detectChanges();
-              }
-            });
-        });
-      }
-      else
-        this.notiService.notify("Lỗi đặt phòng");
-    });
-  }
-
-  // add WP_Notes
-  addNote() {
-    let obj = {
-      formType: 'add',
-      currentDate: new Date(),
-      component: 'calendar-notes',
-      maxPinNotes: '5',
-    };
-    let option = new DialogModel();
-    //let moreFuc = this.sysMoreFunc.find(x => x.functionID == "SYS01")?.customName ?? "Thêm";
-    this.callfc
-      .openForm(
-        AddNoteComponent,
-        'Thêm ghi chú',
-        700,
-        500,
-        '',
-        obj,
-        '',
-        option
-      )
-      .closed.subscribe((res:any) => {
-        if(res?.event)
-        {
-          this.api.execSv("WP","ERM.Business.WP","NotesBusiness","ConvertNoteToEventAsync",[res.event])
-          .subscribe((event:any) => {
-            if(event)
-            {
-              let note = this.convertModelEvent(event,"WP_Notes");
-              let month = new Date(note.startDate)?.getMonth() + 1;
-              this.lstEvents.push(note);
-              this.dEventMonth[month].push(note);
-              this.ejCalendar && this.ejCalendar.refresh();
-              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-              this.detectorRef.detectChanges();
-            }
-          });
-        }
-      });
-  }
-
-  // add CO_Mettings
-  addMeeting() {
-    let option = new SidebarModel();
-    option.FormModel = this.meetingFM;
-    option.Width = 'Auto';
-    this.api
-      .execSv<any>('CO', 'Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0501','CO_Meetings'])
-      .subscribe((res) => {
-        if (res) {
-          let obj = {
-            action: 'add',
-            titleAction: 'Thêm',
-            disabledProject: true,
-            listPermissions: '',
-            data: res.data,
-            isOtherModule: true,
-          };
-          this.callfc.openSide(
-          PopupAddMeetingComponent,
-          obj,
-          option).closed.subscribe((res2:any) => {
-            if (res2?.event) 
-            {
-              let meeting = this.convertModelEvent(res2.event,"CO_Meetings");
-              let month = new Date(meeting.startDate)?.getMonth() + 1;
-              if(!this.dEventMonth[month])
-                this.dEventMonth[month] = [];
-              this.dEventMonth[month].push(meeting);
-              this.lstEvents.push(meeting);
-              this.ejCalendar && this.ejCalendar.refresh();
-              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-              this.detectorRef.detectChanges();
-            }
-          });
-        }
-        else
-          this.notiService.notify("Lỗi thêm sự kiện");
-      });
-  }
-
-  // add TM_Tasks
-  addMyTask() {
-    let option = new SidebarModel();
-    option.FormModel = this.myTaskFM;
-    option.Width = '800px';
-    option.zIndex = 1001;
-    this.api
-    .execSv<any>('TM', 'ERM.Business.Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0201','TM_Tasks'])
-    .subscribe((res:any) => {
-      if(res)
-      {
-        let obj = {
-          data: res.data,
-          action: 'add',
-          isAssignTask: false,
-          titleAction: 'Thêm', 
-          functionID: 'TMT0201',
-          disabledProject: false,
-          isOtherModule: true
-        };
-        this.callfc.openSide(
-          PopupAddComponent,
-          obj,
-          option
-        ).closed.subscribe((res2:any) => {
-          if(res2.event)
-          {
-            let task = this.convertModelEvent(res2.event[0],"TM_MyTasks")
-            let month = new Date(task.startDate)?.getMonth() + 1;
-            if(!this.dEventMonth[month])
-              this.dEventMonth[month] = [];
-            this.dEventMonth[month].push(task);
-            this.lstEvents.push(task);
-            this.ejCalendar && this.ejCalendar.refresh();
-            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
-      else
-        this.notiService.notify("Lỗi thêm công việc");
-    });
-  }
-
-  // add TM_Tasks Assign Task
-  addAssignTask() {
-    let option = new SidebarModel();
-    option.FormModel = this.assignTaskFM;
-    option.Width = '800px';
-    this.api.execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', ['TMT0203','TM_Tasks'])
-    .subscribe((res:any) => {
-      if(res)
-      {
-        let obj = {
-          data: res.data,
-          action: 'add',
-          isAssignTask: true,
-          titleAction: 'Thêm', 
-          functionID: 'TMT0203',
-          disabledProject: false,
-          isOtherModule: true
-        };
-        this.callfc.openSide(
-          PopupAddComponent,
-          obj,
-          option
-        ).closed.subscribe((res2:any) => {
-          if(res2?.event?.length > 0)
-          {
-            let task = this.convertModelEvent(res2.event[0],"TM_AssignTasks")
-            let month = new Date(task.startDate)?.getMonth() + 1;
-            if(!this.dEventMonth[month])
-              this.dEventMonth[month] = [];
-            this.dEventMonth[month].push(task);
-            this.lstEvents.push(task);
-            this.ejCalendar && this.ejCalendar.refresh();
-            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-            this.detectorRef.detectChanges();
-          }
-        });
-      }
-      else
-        this.notiService.notify("Lỗi thêm giao việc");
-    });
   }
 
   // selected HR_OrganziUnits
@@ -930,14 +695,21 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     .subscribe((res:any) => { 
       if(res)
       {
-        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.calendarCenter && this.calendarCenter.changeResource(res[0].length > 0 ? res[0] : []);
         this.getEventData();
       }
     });
   }
 
   // select AD_UserGroup
-  selectGroupUser(item:any){
+  selectGroupUser(item:any,eleGroup:HTMLElement,eleItem:HTMLElement){
+    Array.from(eleGroup.children).forEach((ele:HTMLElement) => {
+      if(ele.classList.contains("active"))
+      {
+        ele.classList.remove("active");
+      }
+    });
+    eleItem.classList.add("active");
     this.lstEvents = [];
     this.groupID = item.groupID;
     this.getListGroupMember(item.groupID);
@@ -949,7 +721,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     .subscribe((res:any) => {
       if(res)
       {
-        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.calendarCenter && this.calendarCenter.changeResource(res[0].length > 0 ? res[0] : []);
         this.getEventData();
       }
     });
@@ -1038,4 +810,574 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     event["resourceID"] = obj["createdBy"] ?? "";
     return event;
   }
+
+  // data change more function
+  dataChangeMF(event:any[]){
+    if(event?.length > 0)
+    {
+      event.map(x => {
+        x.disabled = (x.functionID == "SYS01" || x.functionID == "SYS02" || x.functionID == "SYS03") ? false : true; 
+      });
+    }
+  }
+
+  // click more function
+  clickMF(event:any,data:any){
+    switch(event.functionID)
+    {
+      case"SYS01":
+      case"SYS03":
+        this.addEditEvent(event.functionID,data);
+        break;
+      case"SYS02":
+        this.deleteEvent(data);
+        break;
+    }
+  }
+
+  // add && edit event
+  addEditEvent(funcID:string,event:any) {
+    if(event.transType)
+    {
+      switch (event.transType) 
+      {
+        case 'EP_BookingCars':
+          this.addEditBookingCar(funcID,event);
+          break;
+
+        case 'EP_BookingRooms':
+          this.addEditBookingRoom(funcID,event);
+          break;
+
+        case 'WP_Notes':
+          this.addEditNote(funcID,event);
+          break;
+
+        case 'CO_Meetings':
+          this.addEditMetting(funcID,event);
+          break;
+
+        case 'TM_MyTasks':
+          this.addEditMyTask(funcID,event);
+          break;
+
+        case 'TM_AssignTasks':
+          this.addEditAssignTask(funcID,event);
+          break;
+      }
+    }
+  }
+
+  // get model EP_Bookings
+  getModelEP(funcID:string,business_FuncID:string, event :any= null){
+    if(funcID == "SYS01")
+    {
+      return this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', [business_FuncID,'EP_Bookings'])
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model.data : null;
+      }));
+    }
+    else if(funcID == "SYS03")
+    {
+      return this.codxShareService.getBookingByRecID(event?.transID)
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model : null;
+      }));
+    }
+    else return of(null);
+  }
+
+  // add & edit booking car
+  addEditBookingCar(funcID:string,event:any = null){
+    this.getModelEP(funcID,BUSSINESS_FUNCID.EP_BOOKINGCARS,event).subscribe((model:any) => 
+    {
+      if(model)
+      {
+        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
+        .subscribe((res:boolean) => {
+          let option = new SidebarModel();
+          option.FormModel = this.carFM;
+          option.Width = '800px';
+          this.callfc
+            .openSide(
+              CodxAddBookingCarComponent,
+              [model, funcID, this.addCarTitle, null, null, false,res],
+              option
+            ).closed.subscribe((res:any) => {
+              if(res?.event)
+              {
+                let booking = this.convertModelEvent(res.event,"EP_BookingCars");
+                let month = new Date(booking.startDate)?.getMonth() + 1;
+                if(funcID == "SYS03")
+                {
+                  let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
+                  if(idx > -1)
+                    this.lstEvents.splice(idx,1);
+                }
+                if(!this.dEventMonth[month])
+                  this.dEventMonth[month] = [];
+                this.lstEvents.push(booking);
+                this.dEventMonth[month] = this.lstEvents;
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+                this.detectorRef.detectChanges();
+              }
+            });
+        });
+      }
+      else this.notiService.notify("Lỗi đặt xe");
+    });
+  }
+  
+  // add & edit booking room
+  addEditBookingRoom(funcID:string,event:any = null){
+    this.getModelEP(funcID,BUSSINESS_FUNCID.EP_BOOKINGROOMS,event).subscribe((model:any) => 
+    {
+      if(model)
+      {
+        this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
+        .subscribe((res:boolean) => {
+          let option = new SidebarModel();
+          option.FormModel = this.roomFM;
+          option.Width = '800px';
+          this.callfc
+            .openSide(
+              CodxAddBookingRoomComponent,
+              [model, funcID, this.addRoomTitle, null, null,false,res],
+              option
+            ).closed.subscribe((res:any) => {
+              if(res?.event)
+              {
+                let booking = this.convertModelEvent(res.event,"EP_BookingRooms");
+                let month = new Date(booking.startDate)?.getMonth() + 1;
+                if(funcID == "SYS03")
+                {
+                  let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
+                  if(idx > -1)
+                    this.lstEvents.splice(idx,1);
+                }
+                if(!this.dEventMonth[month])
+                  this.dEventMonth[month] = [];
+                this.lstEvents.push(booking);
+                this.dEventMonth[month] = this.lstEvents;
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+                this.detectorRef.detectChanges();
+              }
+            });
+        });
+      }
+      else this.notiService.notify("Lỗi đặt phòng");
+    });
+  }  
+
+  // get model CO
+  getModelCO(funcID:string,event:any = null){
+    if(funcID == "SYS01")
+    {
+      return this.api.execSv<any>('CO', 'Core', 'DataBusiness', 'GetDefaultAsync', [BUSSINESS_FUNCID.CO_MEETINGS,'CO_Meetings'])
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model.data : null;
+      }));
+    }
+    else if(funcID == "SYS03")
+    {
+      return this.api.execSv<any>('CO', 'ERM.Business.CO', 'MeetingsBusiness', 'GetOneByRecIDAsync', event.transID)
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model : null;
+      }));
+    }
+    else return of(null);
+  }
+
+  // add & edit CO
+  addEditMetting(funcID:string,event:any = null){
+    this.getModelCO(funcID,event).subscribe((model:any) => {
+      if(model)
+      {
+        let option = new SidebarModel();
+        option.FormModel = this.meetingFM;
+        option.Width = 'Auto';
+        let obj = {
+          action: funcID == "SYS01" ? "add" : "edit",
+          titleAction: funcID == "SYS01" ? "Thêm" : "Chỉnh sửa",
+          disabledProject: true,
+          listPermissions: '',
+          data: model,
+          isOtherModule: true,
+        };
+        this.callfc.openSide(
+        PopupAddMeetingComponent,
+        obj,
+        option).closed.subscribe((res:any) => {
+          if (res?.event) 
+          {
+            let meeting = this.convertModelEvent(res.event,"CO_Meetings");
+            let month = new Date(meeting.startDate)?.getMonth() + 1;
+            if(funcID == "SYS03")
+            {
+              let idx = this.lstEvents.findIndex(x => x.transID == meeting.transID);
+              if(idx > -1)
+                this.lstEvents.splice(idx,1);
+            }
+            if(!this.dEventMonth[month])
+              this.dEventMonth[month] = [];
+            this.lstEvents.push(meeting);
+            this.dEventMonth[month] = this.lstEvents;
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+      else this.notiService.notify("Lỗi lịch họp");
+    });
+  }
+
+  // get model TM
+  getModelTM(business_FuncID:string,event = null){
+    return this.api.execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [business_FuncID,'TM_Tasks'])
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model.data : null;
+      }));
+  }
+
+  // add edit My_Task
+  addEditMyTask(funcID:string, event:any){
+    if(funcID == "SYS01")
+    {
+      this.getModelTM(BUSSINESS_FUNCID.TM_MyTasks,event).subscribe((model:any) => {
+        if(model)
+        {
+          let option = new SidebarModel();
+          option.FormModel = this.myTaskFM;
+          option.Width = '800px';
+          option.zIndex = 1001;
+          let obj = {
+            data: model,
+            action: funcID == "SYS01" ? "add" : "edit",
+            isAssignTask: false,
+            titleAction: funcID == "SYS01" ? "Thêm" : "Chỉnh sửa", 
+            functionID: BUSSINESS_FUNCID.TM_MyTasks,
+            disabledProject: false,
+            isOtherModule: true
+          };
+          this.callfc.openSide(
+            PopupAddComponent,
+            obj,
+            option
+          ).closed.subscribe((res2:any) => {
+            if(res2.event)
+            {
+              let task = this.convertModelEvent(res2.event[0],"TM_MyTasks")
+              let month = new Date(task.startDate)?.getMonth() + 1;
+              if(!this.dEventMonth[month])
+                this.dEventMonth[month] = [];
+              this.dEventMonth[month].push(task);
+              this.lstEvents.push(task);
+              this.ejCalendar && this.ejCalendar.refresh();
+              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        else
+        {
+          this.notiService.notify("Lỗi công việc cá nhân");
+        }
+      });
+    }
+    else if(funcID == "SYS03")
+    {
+      this.TMService.editTask(
+        event.transID,BUSSINESS_FUNCID.TM_MyTasks,"Chỉnh sửa",this.afterSaveMyTask.bind(this)
+      );
+    }
+  }
+
+  // add & edit  TM_AssignTaskS
+  addEditAssignTask(funcID:string, event:any) {
+    if(funcID == "SYS01")
+    {
+      this.getModelTM(BUSSINESS_FUNCID.TM_AssignTasks,event).subscribe((model:any) => {
+        if(model)
+        {
+          let option = new SidebarModel();
+          option.FormModel = this.assignTaskFM;
+          option.Width = '800px';
+          option.zIndex = 1001;
+          let obj = {
+            data: model,
+            action: 'add',
+            isAssignTask: true,
+            titleAction: 'Thêm', 
+            functionID: BUSSINESS_FUNCID.TM_AssignTasks,
+            disabledProject: false,
+            isOtherModule: true
+          };
+          this.callfc.openSide(
+            PopupAddComponent,
+            obj,
+            option
+          ).closed.subscribe((res:any) => {
+            if(res?.event?.length > 0)
+            {
+              let task = this.convertModelEvent(res.event[0],"TM_AssignTasks")
+              let month = new Date(task.startDate)?.getMonth() + 1;
+              if(!this.dEventMonth[month])
+                this.dEventMonth[month] = [];
+              this.dEventMonth[month].push(task);
+              this.lstEvents.push(task);
+              this.ejCalendar && this.ejCalendar.refresh();
+              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+        else
+          this.notiService.notify("Lỗi thêm giao việc");
+      });
+    }
+    else if(funcID == "SYS03")
+    {
+      this.TMService.editTask(event.transID,BUSSINESS_FUNCID.TM_AssignTasks,"Chỉnh sửa",this.afterSaveAssignTask.bind(this));
+    }
+  }
+
+  // after Save Task 
+  afterSaveMyTask(data) {
+    debugger
+    if(data)
+    {
+      let task = this.convertModelEvent(data,"TM_MyTasks")
+      let month = new Date(task.startDate)?.getMonth() + 1;
+      let idx = this.lstEvents.findIndex(x => x.transID == task.transID);
+      if(idx > -1)
+      {
+        this.lstEvents.splice(idx,1);
+      }
+      if(!this.dEventMonth[month])
+        this.dEventMonth[month] = [];
+      this.lstEvents.push(task);
+      this.dEventMonth[month] = this.lstEvents;
+      this.ejCalendar && this.ejCalendar.refresh();
+      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+      this.detectorRef.detectChanges();
+    }
+  }
+  // after Save Task 
+  afterSaveAssignTask(data) {
+    if(data)
+    {
+      let task = this.convertModelEvent(data,"TM_AssignTasks")
+      let month = new Date(task.startDate)?.getMonth() + 1;
+      let idx = this.lstEvents.findIndex(x => x.transID == task.transID);
+      if(idx > -1)
+      {
+        this.lstEvents.splice(idx,1);
+      }
+      if(!this.dEventMonth[month])
+        this.dEventMonth[month] = [];
+      this.lstEvents.push(task);
+      this.dEventMonth[month] = this.lstEvents;
+      this.ejCalendar && this.ejCalendar.refresh();
+      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  // get model WP
+  getModelWP(funcID:string,business_FuncID:string,event=null){
+    if(funcID == "SYS01")
+    {
+      return this.api.execSv<any>('WP', 'Core', 'DataBusiness', 'GetDefaultAsync', [business_FuncID,'WP_Notes'])
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model.data : null;
+      }));
+    }
+    else if(funcID == "SYS03")
+    {
+      return this.api.execSv<any>('WP', 'ERM.Business.WP', 'NotesBusiness', 'GetNoteByCOAsync', event.transID)
+      .pipe(map((model:any) => 
+      {
+        return model != null ?  model : null;
+      }));
+    }
+    else return of(null);
+  }
+
+  // add WP_Notes
+  addEditNote(funcID:string,event:any = null) {
+    this.getModelWP(funcID,BUSSINESS_FUNCID.WP_NOTES,event).subscribe((model:any) => {
+      if(model)
+      {
+        let obj = {
+          formType: funcID == "SYS01" ? "add" :"edit",
+          currentDate: new Date(),
+          component: 'calendar-notes',
+          maxPinNotes: '5',
+          dataUpdate: model
+        };
+        let title = funcID == "SYS01" ? "Thêm ghi chú" : "Cập nhật ghi chú";
+        let option = new DialogModel();
+        option.FormModel = this.noteFM;
+        this.callfc
+          .openForm(
+            AddNoteComponent,
+            title,
+            700,
+            500,
+            '',
+            obj,
+            '',
+            option
+          ).closed.subscribe((res:any) => {
+            if(res?.event)
+            {
+              this.api.execSv("WP","ERM.Business.WP","NotesBusiness","ConvertNoteToEventAsync",[res.event])
+              .subscribe((event:any) => {
+                if(event)
+                {
+                  let note = this.convertModelEvent(event,"WP_Notes");
+                  let month = new Date(note.startDate)?.getMonth() + 1;
+                  if(funcID == "SYS03")
+                  {
+                    let idx = this.lstEvents.findIndex(x => x.transID == note.transID);
+                    if(idx > -1)
+                      this.lstEvents.splice(idx,1);
+                  }
+                  this.lstEvents.push(note);
+                  this.dEventMonth[month] = this.lstEvents;
+                  this.ejCalendar && this.ejCalendar.refresh();
+                  this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+          });
+      }
+      else this.notiService.notify("Lỗi ghi chú");
+    });
+  }
+
+  //delete event
+  deleteEvent(event:any){
+    if(event)
+    {
+      switch (event.transType) 
+      {
+        case 'EP_BookingCars':
+        case 'EP_BookingRooms':
+          this.deleteEventEP(event);
+          break;
+        case 'WP_Notes':
+          this.deleteEventWP(event);
+          break;
+        case 'CO_Meetings':
+          this.deleteEventCO(event);
+          break;
+        case 'TM_MyTasks':
+        case 'TM_AssignTasks':
+          this.deleteEventTM(event);
+          break;
+      }
+    }
+
+  }
+
+  // delete event EP
+  deleteEventEP(event){
+    this.api.execSv("EP","ERM.Business.EP","BookingBusiness","DeleteByIDAsync",event.transID).subscribe((res:any) => {
+      if(res)
+      {
+        let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
+        let month = new Date(event.startDate)?.getMonth() + 1;
+        if(idx > -1)
+          this.lstEvents.splice(idx,1);
+        this.dEventMonth[month] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+        this.detectorRef.detectChanges();
+        this.notiService.notify("Xóa thành công");
+      }
+      else this.notiService.notify("Xóa không thành công");
+    });
+  }
+
+  // delete event WP
+  deleteEventWP(event){
+    this.api.execSv("WP","ERM.Business.WP","NotesBusiness","DeleteByIDAsync",event.transID).subscribe((res:any) => {
+      if(res)
+      {
+        let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
+        let month = new Date(event.startDate)?.getMonth() + 1;
+        if(idx > -1)
+          this.lstEvents.splice(idx,1);
+        this.dEventMonth[month] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+        this.detectorRef.detectChanges();
+        this.notiService.notify("Xóa thành công");
+      }
+      else this.notiService.notify("Xóa không thành công");
+    });
+  }
+
+  // delete event CO
+  deleteEventCO(event){
+    this.api.execSv("CO","ERM.Business.CO","MeetingsBusiness","DeleteMeetingsAsync",event.transID).subscribe((res:any) => {
+      if(res)
+      {
+        let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
+        let month = new Date(event.startDate)?.getMonth() + 1;
+        if(idx > -1)
+          this.lstEvents.splice(idx,1);
+        this.dEventMonth[month] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+        this.detectorRef.detectChanges();
+        this.notiService.notify("Xóa thành công");
+      }
+      else this.notiService.notify("Xóa không thành công");
+    });
+  }
+
+  // delete event TM
+  deleteEventTM(event){
+    this.api.execSv("TM","ERM.Business.TM","TaskBusiness","DeleteTaskByRecIDAsync",event.transID).subscribe((res:any) => {
+      if(res)
+      {
+        let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
+        let month = new Date(event.startDate)?.getMonth() + 1;
+        if(idx > -1)
+          this.lstEvents.splice(idx,1);
+        this.dEventMonth[month] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+        this.detectorRef.detectChanges();
+        this.notiService.notify("Xóa thành công");
+      }
+      else this.notiService.notify("Xóa không thành công");
+    });
+  }
+
+  showData(data){
+    debugger
+    
+  }
+}
+enum BUSSINESS_FUNCID {
+  EP_BOOKINGROOMS = 'EPT11',
+  EP_BOOKINGCARS = 'EPT21',
+  TM_MyTasks = 'TMT0201',
+  TM_AssignTasks = 'TMT0203',
+  CO_MEETINGS = 'TMT0501',
+  WP_NOTES = 'WPT08',
+
 }

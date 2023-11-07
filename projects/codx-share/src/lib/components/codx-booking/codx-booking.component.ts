@@ -907,7 +907,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     res.returnStatus ?? EPCONST.A_STATUS.Released;
                   data.write = false;
                   data.delete = false;
-                  this.view.dataService.update(data).subscribe();
+                  this.view.dataService.update(data,true).subscribe();
                   this.notificationsService.notifyCode('SYS034');
                   if (
                     data?.approveStatus == EPCONST.A_STATUS.Approved &&
@@ -945,7 +945,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               data.approveStatus = approveData?.approveStatus;
               data.write = false;
               data.delete = false;
-              this.view.dataService.update(data).subscribe();
+              this.view.dataService.update(data,true).subscribe();
               this.notificationsService.notifyCode('SYS034');
             } else {
               return;
@@ -969,7 +969,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           if (res && res?.msgCodeError == null) {
             this.notificationsService.notifyCode(EPCONST.MES_CODE.Success); //đã hủy gửi duyệt
             data.approveStatus = EPCONST.A_STATUS.Cancel;
-            this.view.dataService.update(data).subscribe();
+            this.view.dataService.update(data,true).subscribe();
           } else {
             this.notificationsService.notifyCode(res?.msgCodeError);
           }
@@ -1003,7 +1003,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             });
         else if (x.event) {
           x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
+          this.view.dataService.update(x.event,true).subscribe();
         }
       });
     } else {
@@ -1035,7 +1035,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             });
         else if (x.event) {
           x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
+          this.view.dataService.update(x.event,true).subscribe();
         }
       });
     } else {
@@ -1266,7 +1266,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
   reloadData(data: any) {
     if (data != null) {
-      this.view?.dataService.update(data).subscribe();
+      this.view?.dataService.update(data,true).subscribe();
       this.detectorRef.detectChanges();
     }
   }
@@ -1310,7 +1310,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
                     this.notificationsService.notifyCode('SYS034'); //đã duyệt
 
                     data.issueStatus = this.allocateStatus == '5' ? '3' : '4';
-                    this.view.dataService.update(data).subscribe();
+                    this.view.dataService.update(data,true).subscribe();
                   } else {
                     this.notificationsService.notifyCode(res?.msgCodeError);
                   }
