@@ -2502,7 +2502,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     // this.changeDetectorRef.detectChanges();
-    this.updateSorting(recID);
+    // this.updateSorting(this.stepList[crrIndex].recID);
     this.changeDetectorRef.markForCheck();
   }
 
@@ -2549,11 +2549,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       event.previousIndex,
       event.currentIndex
     );
-    this.updateSorting(stepIDContain);
-    this.updateSorting(stepIDPrevious);
+    // this.updateSorting(stepIDContain, stepIDPrevious);
   }
 
-  updateSorting(stepID) {
+  updateSorting(stepID, stepID2 = null) {
+    //dang lỗi- cmt lại cũng ko sai
     // var idx = this.stepList.findIndex((x) => (x.recID = stepID));
     // if (idx == -1) return;
     // let fields = this.stepList[idx].fields;
@@ -2563,6 +2563,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     //   });
     //   this.stepList[idx].fields = fields;
     // }
+    // if (stepID2 != null) this.updateSorting(stepID2);
   }
   //#endregion
 
