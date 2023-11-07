@@ -70,6 +70,10 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.skillObj = JSON.parse(JSON.stringify(data?.data.dataInput));
+    if(this.skillObj){
+      this.skillObj.trainFromDate = new Date(this.skillObj.trainFromDate);
+      this.skillObj.trainToDate = new Date(this.skillObj.trainToDate);
+    }
     
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = data?.data?.trainToHeaderText;
@@ -86,6 +90,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             console.log(this.employId);
+            console.log('skillobj', this.skillObj);
 
             this.skillObj = res?.data;
             this.skillObj.employeeID = this.employId;
@@ -111,7 +116,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
           this.isNullTo = false;
       }
     }
-
   }
 
   ClickCalendar(event){
@@ -162,7 +166,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
     if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.validation(false)
-
       return;
     }
 
@@ -261,6 +264,7 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
   }
 
   changeCalendar(event, changeType: string) {
+    debugger
     if (changeType === 'FromDate') {
       this.skillObj.trainFrom = event.type;
       this.skillObj.trainFromDate = event.fromDate;
@@ -270,7 +274,6 @@ export class PopupESkillsComponent extends UIComponent implements OnInit {
       this.skillObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
-    debugger
     if(this.form && this.form.formGroup){
       this.form.formGroup.patchValue(this.skillObj);
     }
