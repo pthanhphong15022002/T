@@ -695,14 +695,21 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     .subscribe((res:any) => { 
       if(res)
       {
-        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.calendarCenter && this.calendarCenter.changeResource(res[0].length > 0 ? res[0] : []);
         this.getEventData();
       }
     });
   }
 
   // select AD_UserGroup
-  selectGroupUser(item:any){
+  selectGroupUser(item:any,eleGroup:HTMLElement,eleItem:HTMLElement){
+    Array.from(eleGroup.children).forEach((ele:HTMLElement) => {
+      if(ele.classList.contains("active"))
+      {
+        ele.classList.remove("active");
+      }
+    });
+    eleItem.classList.add("active");
     this.lstEvents = [];
     this.groupID = item.groupID;
     this.getListGroupMember(item.groupID);
@@ -714,7 +721,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     .subscribe((res:any) => {
       if(res)
       {
-        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.calendarCenter && this.calendarCenter.changeResource(res[0].length > 0 ? res[0] : []);
         this.getEventData();
       }
     });
@@ -1033,7 +1040,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // get model TM
   getModelTM(business_FuncID:string,event = null){
-    return this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', [business_FuncID,'TM_Tasks'])
+    return this.api.execSv<any>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [business_FuncID,'TM_Tasks'])
       .pipe(map((model:any) => 
       {
         return model != null ?  model.data : null;
@@ -1165,7 +1172,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
   // after Save Task 
   afterSaveAssignTask(data) {
-    debugger
     if(data)
     {
       let task = this.convertModelEvent(data,"TM_AssignTasks")

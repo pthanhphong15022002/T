@@ -45,9 +45,11 @@
                 <div class="w-100 h-100 overflow-auto">
                   <ng-container *ngIf="loadUserGroup">
                     <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
-                      <ng-container *ngFor="let item of lstUserGroups">
-                        <p class="p-2 cursor-pointer" (click)="selectGroupUser(item)">{{item.groupName}}</p>
-                      </ng-container>
+                      <div class="list-group" #eleListGroup>
+                        <ng-container *ngFor="let item of lstUserGroups">
+                          <p class="list-group-item list-group-item-action cursor-pointer border-0" #eleItem (click)="selectGroupUser(item,eleListGroup,eleItem)">{{item.groupName}}</p>
+                        </ng-container>
+                      </div>
                     </ng-container>
                   </ng-container>
                 </div>
@@ -92,8 +94,7 @@
                           {
                             'color':item.ShowColor,
                             'background-color':item.ShowColor
-                          }"
->
+                          }">
                           </li>
                         </div>
                         <div class="show-list-event w-100">

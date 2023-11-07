@@ -91,7 +91,8 @@ export class CalendarCenterComponent
         this.codxSchedule.dataSource = this.events;
         this.codxSchedule.resourceDataSource = this.resources;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
-        (this.view.currentView as any).statusColor = this.statusColor;
+        this.codxSchedule.statusColor = this.statusColor;
+        // this.codxSchedule.currentView = this.currentView ?? "Month";
         this.codxSchedule.setEventSettings();
       }
     },500)
