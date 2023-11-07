@@ -1637,6 +1637,25 @@ export class CodxShareService {
     if (template != null) {
       signFile.templateID = template[0].templateID;
     }
+    // if (approveProcess?.template?.length > 0) {
+    //   Array.from(approveProcess?.template).forEach((tp:any)=>{
+    //     if(tp?.files?.length>0){
+    //       tp?.files?.forEach(file => {
+    //         if(file?.areas?.length>0){
+    //           let fName = file?.fileName?.split('.')[0];
+    //           if(fName!=null && fName !=""){
+    //             let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
+    //             if(sfNewFile?.length>0){
+    //               sfNewFile?.forEach((sfn:any)=>{
+    //                 sfn.areas = file?.areas;                    
+    //               })
+    //             }
+    //           }
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
     return signFile;
   }
 
@@ -1792,9 +1811,9 @@ export class CodxShareService {
       let tmp = new TemplateInfo();
       tmp.templateID = temp?.templateID;
       tmp.templateType = temp?.templateType;
-
+      tmp.exportFileName = temp?.files[0]?.fileName?.split('.')[0];
       listTemplateRecID.push(temp?.templateID);
-      exportUpload.templates.push(temp);
+      exportUpload.templates.push(tmp);
     }
 
     this.getListRpListByTemplateID(listTemplateRecID).subscribe(
@@ -2160,9 +2179,11 @@ export class CodxShareService {
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
+      reportID:reportList[0]?.reportID,
       reportList: reportList,
       url: moduleID + '/report/detail/',
       formModel: formModel,
+      headerText:"Chọn mẫu in",
     };
     let opt = new DialogModel();
     let dialogViewRP = this.callfunc.openForm(

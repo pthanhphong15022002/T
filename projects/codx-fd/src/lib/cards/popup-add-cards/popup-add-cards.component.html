@@ -250,7 +250,8 @@
                         <div class="col-6">
                             <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="Số lượng">
                             </codx-label>
-                            <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form">
+                            <codx-input ControlName="number" [min]="min" [formModel]="dialog.formModel" [Group]="form"
+                                [crrValue]="form.controls['quantity'].value" field="quantity" (valueChange)="valueChange($event)">
                             </codx-input>
                             <!-- <codx-input type="number" [min]="min" class="form-control" [max]="max"
                                 [crrValue]="form.controls['quantity'].value" field="quantity"
@@ -260,7 +261,8 @@
                         <div class="col-6" #TotalPrice>
                             <codx-label [formModel]="dialog.formModel" name="lblfFDTotalPrice" default="Tổng xu">
                             </codx-label>
-                            <codx-input class="form-control" type="text" [crrValue]="amount" [disabled]="true">
+                            <codx-input class="form-control" type="text" [crrValue]="amount" [disabled]="true"
+                                field="amount">
                             </codx-input>
                         </div>
                     </div>
@@ -275,7 +277,7 @@
                                     <span class="icon-remove icon-18"></span>
                                 </button>
                                 <codx-input type="text" [disabled]="true" class="text-center" [crrValue]="givePoint"
-                                    readonly [className]="'border-none'">
+                                    readonly [className]="'border-none'" [min]="0">
                                 </codx-input>
                                 <button class="btn btn-icon btn-sm btn-white" type="button" (click)="addPoint()">
                                     <span class="icon-add icon-18 "></span>

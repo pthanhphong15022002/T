@@ -165,6 +165,7 @@ export class PatternComponent extends UIComponent implements OnInit {
     var obj = {
       formType: 'add',
       dataUpdate: '',
+      dataAdd: null,
       formModel: this.functionList,
       funcID: this.funcID,
     };
@@ -174,6 +175,7 @@ export class PatternComponent extends UIComponent implements OnInit {
     option.Width = 'Auto';
     this.dataService.addNew().subscribe((res: any) => {
       res.cardType = this.type;
+      obj.dataAdd = res;
       this.dataService.addDatas.clear();
       this.dataService.addDatas.set(res._uuid, res);
       var dialog = this.callfunc.openSide(EditPatternComponent, obj, option);

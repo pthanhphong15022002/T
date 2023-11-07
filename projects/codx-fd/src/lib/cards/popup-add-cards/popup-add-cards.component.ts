@@ -43,7 +43,6 @@ export class PopupAddCardsComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputReceiver') inputReceiver: CodxInputComponent;
 
-
   dialog: DialogRef;
   form: FormGroup;
 
@@ -412,6 +411,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.quantityOld = data - 1;
           this.quantity = data;
           this.amount = this.quantity * this.gifts[0].price;
+          this.gifts[0].quantity = this.quantity;
           this.form.patchValue({ quantity: data });
         }
         break;
@@ -455,22 +455,22 @@ export class PopupAddCardsComponent implements OnInit {
         // this.form.patchValue(obj);
         this.industry = data;
         const onwer = e?.component.itemsSelected[0]?.Owner;
-        if(onwer) {
+        if (onwer) {
           this.userReciver = onwer;
           this.api
-                .callSv(
-                  'SYS',
-                  'ERM.Business.AD',
-                  'UsersBusiness',
-                  'GetAsync',
-                  this.userReciver
-                )
-                .subscribe((res2) => {
-                  if (res2.msgBodyData.length) {
-                    this.userReciverName = res2.msgBodyData[0].userName;
-                    this.form.patchValue({ receiver: this.userReciver });
-                  }
-                });
+            .callSv(
+              'SYS',
+              'ERM.Business.AD',
+              'UsersBusiness',
+              'GetAsync',
+              this.userReciver
+            )
+            .subscribe((res2) => {
+              if (res2.msgBodyData.length) {
+                this.userReciverName = res2.msgBodyData[0].userName;
+                this.form.patchValue({ receiver: this.userReciver });
+              }
+            });
         }
         break;
 
@@ -481,18 +481,20 @@ export class PopupAddCardsComponent implements OnInit {
 
       case 'receiver':
         if (data) {
-          this.fdService.CheckAvalidReceiver(this.cardType, data).subscribe((res:any)=> {
-            if(res.error) {
-              this.userReciver = null;
-              this.userReciverName = null;
-              this.form.patchValue({ receiver: this.userReciver });
-              this.inputReceiver.value = null;
-              this.notifySV.notifyCode('FD002');
-            } else {
-              this.userReciver = data;
-              this.userReciverName = e.component.itemsSelected[0].UserName;
-            }
-          })
+          this.fdService
+            .CheckAvalidReceiver(this.cardType, data)
+            .subscribe((res: any) => {
+              if (res.error) {
+                this.userReciver = null;
+                this.userReciverName = null;
+                this.form.patchValue({ receiver: this.userReciver });
+                this.inputReceiver.value = null;
+                this.notifySV.notifyCode('FD002');
+              } else {
+                this.userReciver = data;
+                this.userReciverName = e.component.itemsSelected[0].UserName;
+              }
+            });
           // this.userReciver = data;
           // this.userReciverName = e.component.itemsSelected[0].UserName;
           // this.form.patchValue({ receiver: this.userReciver });
@@ -500,7 +502,6 @@ export class PopupAddCardsComponent implements OnInit {
           //   this.getCountCardRecive(data, this.cardType);
           // }
           // this.checkValidateWallet(this.userReciver);
-          
         }
 
         break;
@@ -539,7 +540,10 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   async Save() {
-    if (!this.form.controls['receiver'].value && this.cardType != this.CARDTYPE_EMNUM.Radio) {
+    if (
+      !this.form.controls['receiver'].value &&
+      this.cardType != this.CARDTYPE_EMNUM.Radio
+    ) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Người nhận');
       this.notifySV.notify(mssg);
       return;
@@ -570,10 +574,13 @@ export class PopupAddCardsComponent implements OnInit {
           break;
       }
     }
-    if (!this.myWallet && (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))) {
+    if (
+      !this.myWallet &&
+      (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))
+    ) {
       this.notifySV.notify('Bạn chưa tích hợp ví');
       return;
-    } else if (this.myWallet && (this.myWallet?.coins < this.amount)) {
+    } else if (this.myWallet && this.myWallet?.coins < this.amount) {
       this.notifySV.notify('Số dư ví của bạn không đủ');
       return;
     } else {
@@ -738,8 +745,10 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   subPoint() {
-    this.givePoint--;
-    this.dt.detectChanges();
+    if (this.givePoint != 0) {
+      this.givePoint--;
+      this.dt.detectChanges();
+    }
   }
 
   addPoint() {
@@ -773,10 +782,14 @@ export class PopupAddCardsComponent implements OnInit {
               if (this.gifts.length == 0) {
                 this.gifts = [];
               }
+              res.quantity = 1;
               this.gifts.push(res);
               this.form.patchValue({ giftID: giftID });
               this.max = res.availableQty;
               this.min = 1;
+              this.quantity = 1;
+              this.amount = this.quantity * this.gifts[0].price;
+              this.form.patchValue({ quantity: 1 });
             }
           }
         });
