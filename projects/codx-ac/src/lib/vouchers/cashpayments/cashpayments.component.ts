@@ -140,29 +140,29 @@ export class CashPaymentsComponent extends UIComponent {
           template2: this.templateGrid,
         },
       },
-      // {
-      //   type: ViewType.grid_detail, //? thiết lập view lưới
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     template2: this.templateGrid,
+      {
+        type: ViewType.grid_detail, //? thiết lập view lưới
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
 
-      //   },
+        },
 
-      //   request:{service:'AC'},
-      //   subModel:{
-      //     entityName:'AC_CashPaymentsLines',
-      //     formName:'CashPaymentsLines',
-      //     gridviewName:'grvCashPaymentsLines',
-      //     parentField:'TransID',
-      //     parentNameField:'JournalNo',
-      //     hideMoreFunc:true,
-      //     request:{
-      //       service: 'AC',
-      //     },
-      //     idField:'recID'
-      //   }
-      // },
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_CashPaymentsLines',
+          formName:'CashPaymentsLines',
+          gridviewName:'grvCashPaymentsLines',
+          parentField:'TransID',
+          parentNameField:'Memo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
+      },
     ];
     this.journalService.setChildLinks(this.journalNo);
 

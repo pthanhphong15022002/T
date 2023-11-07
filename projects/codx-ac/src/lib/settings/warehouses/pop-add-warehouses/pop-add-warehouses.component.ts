@@ -21,12 +21,10 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { PopAddContactComponent } from '../../customers/pop-add-contact/pop-add-contact.component';
 import { WareHouses } from '../../../models/WareHouses.model';
-import { Objects } from '../../../models/Objects.model';
-import { Contact } from '../../../models/Contact.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ContactAddComponent } from '../../customers-categories/contact-add/contact-add.component';
 
 @Component({
   selector: 'lib-pop-add-warehouses',
@@ -43,9 +41,9 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   dialog!: DialogRef;
   warehouses: WareHouses;
-  objects: Objects = new Objects();
-  objectContact: Array<Contact> = [];
-  objectContactDelete: Array<Contact> = [];
+  objects: any;
+  objectContact: Array<any> = [];
+  objectContactDelete: Array<any> = [];
   valuelist: any;
   gridViewSetup: any;
   formType: any;
@@ -203,7 +201,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogcontact = this.callfc.openForm(
-            PopAddContactComponent,
+            ContactAddComponent,
             '',
             650,
             570,
@@ -244,7 +242,7 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           var dialogcontact = this.callfc.openForm(
-            PopAddContactComponent,
+            ContactAddComponent,
             '',
             650,
             550,

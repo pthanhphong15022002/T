@@ -16,6 +16,7 @@ import {
   RequestOption,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewsComponent,
   ViewType,
