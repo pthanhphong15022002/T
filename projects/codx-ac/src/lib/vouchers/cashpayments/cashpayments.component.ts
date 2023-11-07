@@ -155,7 +155,7 @@ export class CashPaymentsComponent extends UIComponent {
           formName:'CashPaymentsLines',
           gridviewName:'grvCashPaymentsLines',
           parentField:'TransID',
-          parentNameField:'JournalNo',
+          parentNameField:'Memo',
           hideMoreFunc:true,
           request:{
             service: 'AC',
