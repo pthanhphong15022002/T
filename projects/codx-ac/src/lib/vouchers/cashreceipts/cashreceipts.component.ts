@@ -442,6 +442,10 @@ export class CashreceiptsComponent extends UIComponent {
    * @returns 
    */
   onSelectedItem(event) {
+    if(this.view?.views){
+      let view = this.view?.views.find(x => x.type == 1);
+      if (view && view.active == true) return;
+    }
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
