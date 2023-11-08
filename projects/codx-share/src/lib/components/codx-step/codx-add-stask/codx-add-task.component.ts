@@ -1,4 +1,4 @@
-import { Subject, filter, firstValueFrom, takeUntil } from 'rxjs';
+import { Subject,firstValueFrom, takeUntil } from 'rxjs';
 import {
   OnInit,
   Optional,
@@ -29,7 +29,6 @@ import { StepService } from '../step.service';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
@@ -40,10 +39,10 @@ import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/cate
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
   linkQuesiton = 'http://';
+  REQUIRE = ['taskName', 'endDate', 'startDate'];
   type: 'calendar' | 'step' | 'activitie' | 'notStep'|'group' ;
 
   typeTask;
@@ -57,7 +56,6 @@ export class CodxAddTaskComponent implements OnInit {
   listInsStep: DP_Instances_Steps[];
   stepsTasks: DP_Instances_Steps_Tasks;
   taskInput: DP_Instances_Steps_Tasks;
-  listTask: DP_Instances_Steps_Tasks[] = [];
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
@@ -167,21 +165,25 @@ export class CodxAddTaskComponent implements OnInit {
 
     this.taskInput = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
+
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.listGroup = dt?.data?.listGroup;
+
+    this.instanceID = dt?.data?.instanceID;
     this.listInsStep = dt?.data?.listInsStep;
     this.instanceStep = dt?.data?.instanceStep;
+    this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
 
     this.titleName = dt?.data?.titleName || '';
-    this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
-    this.isStart = dt?.data?.isStart || !!this.instanceStep?.startDate;
+    this.isStart = dt?.data?.isStart;
 
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
-    this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
+   
     this.typeCM = dt?.data?.typeCM;
-    this.instanceID = dt?.data?.instanceID;
+    
     this.dataParentTask = dt?.data?.dataParentTask;
     this.isRoleFull = dt?.data?.isRoleFull;
-    this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
+    
     if(this.type == 'notStep'){
       this.dataParentTask = dt?.data?.dataParentTask;
       this.typeCM = this.dataParentTask?.typeCM;
@@ -239,6 +241,12 @@ export class CodxAddTaskComponent implements OnInit {
         this.statusInput.group.show = true;
         this.statusInput.group.disabled = false;
         break;
+        case 'group':
+          this.statusInput.step.show = true;
+          this.statusInput.step.disabled = true;
+          this.statusInput.group.show = true;
+          this.statusInput.group.disabled = true;
+          break;
     }
   }
   setData(){
@@ -246,14 +254,19 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
+      this.stepsTasks.taskType = this.typeTask?.value;
       this.setRole();
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.stepsTasks.recID = Util.uid();
+      this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
+      this.stepsTasks.progress = 0;
       this.stepsTasks.fieldID = null;
+      this.stepsTasks.dependRule = "0";
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.requireCompleted = false;
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
     }
@@ -289,6 +302,9 @@ export class CodxAddTaskComponent implements OnInit {
         this.setInstanceStep();
         break;
       case 'activitie':
+        break;
+      case 'group':
+        this.setGroup();
         break;
     }
   }
@@ -333,6 +349,8 @@ export class CodxAddTaskComponent implements OnInit {
           this.instanceStep = res;
           this.listInsStepInUser = [this.instanceStep];
           this.stepsTasks.stepID = this.instanceStep.recID;
+          this.listGroup = this.instanceStep?.taskGroups;
+          this.setDateTimeTask();
         }else{
           this.notiService.alert('','không thể thêm công việc trong giai đoạn này ');
           this.dialog.close();
@@ -341,6 +359,8 @@ export class CodxAddTaskComponent implements OnInit {
     }else{
       this.listInsStepInUser = [this.instanceStep];
       this.stepsTasks.stepID = this.instanceStep.recID;
+      this.listGroup = this.instanceStep?.taskGroups;
+      this.setDateTimeTask();
     }
   }
   setStatusFormDate() {
@@ -362,7 +382,32 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }
   }
-  setStep() {
+  setGroup(){
+    if(this.groupTaskID){
+      if(this.instanceStep){
+        this.listInsStepInUser = [this.instanceStep];
+        this.stepsTasks.stepID = this.instanceStep?.recID;
+        this.stepsTasks.taskGroupID = this.groupTaskID;
+        this.listGroup = this.instanceStep?.taskGroups;
+        this.setDateTimeTask();
+      }
+    }else if(this.groupTask){
+      if(this.instanceStep){
+        this.listInsStepInUser = [this.instanceStep];
+        this.stepsTasks.stepID = this.instanceStep?.recID;
+        this.stepsTasks.taskGroupID = this.groupTaskID;
+        this.listGroup = [this.groupTask]
+        this.setDateTimeTask();
+      }
+    }else{
+
+    }
+    // if(this.instanceStep){
+    //   this.notiService.alert('','không thể thêm công việc trong nhóm này ');
+    //   this.dialog.close();
+    // }
+  }
+  setStepByRole() {
     this.listInsStepInUser = this.listInsStep.filter((step) => {
       if (this.isRoleFull) {
         return !step.isFailStep && !step.isSuccessStep;
@@ -378,7 +423,7 @@ export class CodxAddTaskComponent implements OnInit {
       }
     });
   }
-  setGroup(listGroup) {
+  setGroupByRole(listGroup) {
     this.listGroupInUser =
       this.isRoleFull || this.isRoleFullStep
         ? listGroup
@@ -460,12 +505,12 @@ export class CodxAddTaskComponent implements OnInit {
       .subscribe((res) => {
         if(res){
           this.listInsStep = res;
-          this.setStep();
+          this.setStepByRole();
         }
       });
 
     }else if(this.listInsStep?.length > 0){
-      this.setStep();
+      this.setStepByRole();
     }
   }
   getInstanceStepByRecID(insStepID){
@@ -563,16 +608,24 @@ export class CodxAddTaskComponent implements OnInit {
     this.stepsTasks[key] = data;
     if (data) {
       this.groupTask = this.listGroup.find((x) => x.refID === data);
-      this.startDateParent = new Date(this.groupTask['startDate']);
-      this.endDateParent = new Date(this.groupTask['endDate']);
-      this.stepsTasks['startDate'] = this.startDateParent || new Date();
-      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
+      this.startDateParent = new Date(this.groupTask?.startDate);
+      this.endDateParent = new Date(this.groupTask?.endDate);
+      this.stepsTasks.startDate = this.startDateParent || new Date();
+      this.stepsTasks.indexNo = this.groupTask?.task?.length + 1 || 1;
     } else {
       this.groupTask = this.listGroup.find((x) => x.recID === null);
-      this.startDateParent = new Date(this.instanceStep['startDate']);
-      this.endDateParent = new Date(this.instanceStep['endDate']);
-      this.stepsTasks['startDate'] = this.startDateParent || new Date();
-      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
+      this.startDateParent = new Date(this.instanceStep?.startDate);
+      this.endDateParent = new Date(this.instanceStep?.endDate);
+      this.stepsTasks.startDate = this.startDateParent || new Date();
+      this.stepsTasks.indexNo = this.groupTask?.task?.length + 1 || 1;
+    }
+    let startDays = new Date(this.startDateParent);
+    startDays.setDate(startDays?.getDate() + 1);
+    if(this.stepsTasks.endDate < this.stepsTasks.startDate){
+      this.stepsTasks.endDate = startDays;
+    }
+    if(this.stepsTasks.endDate > this.endDateParent){
+      this.stepsTasks.endDate = this.endDateParent;
     }
   }
   valueChangeAlert(event) {

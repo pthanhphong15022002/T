@@ -136,6 +136,7 @@
                                 [default]="grvSetup['Image']['headerText']">
                             </codx-label>
                             <div class="images-300"  (click)="clickUpload('image')">
+                                <div class="img-post-300">
                                 <ng-container *ngIf="fileImage">
                                     <div class="images-300_close">
                                         <button class="btn" (click)="removeImage();$event.stopPropagation()">
@@ -145,6 +146,7 @@
                                 </ng-container>
                                 <img [ngClass]="fileImage ? 'w-100 h-300px' : 'w-100 h-250px'"
                                     [src]="fileImage ? fileImage.source: defaultImgSrc">
+                                </div>
                                 <ng-container *ngIf="!fileImage">
                                     <div class="text-center" [innerHTML]="messageImage">
                                     </div>
@@ -167,6 +169,7 @@
                                     </codx-attachment>
                                 </div>
                             </div>
+                            
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <div class="me-4">

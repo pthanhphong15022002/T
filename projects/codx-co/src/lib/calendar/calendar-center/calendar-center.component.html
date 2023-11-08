@@ -2,11 +2,11 @@
   #view
   [views]="views"
   (onActions)="onAction($event)"
->
+  >
 </codx-views>
 
 <ng-template #cellTemplate let-data>
-  <div [innerHtml]="getDayOffHTML(data)"></div>
+  <div #element [innerHtml]="getDayOffHTML(data,element)"></div>
 </ng-template>
 
 

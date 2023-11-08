@@ -12,6 +12,7 @@ export class NoSubAsideComponent extends LayoutBaseComponent {
   constructor(inject: Injector, private callfc: CallFuncService) {
     super(inject);
     this.module = 'AD';
+    //this.layoutModel.asideFixed = false;
   }
 
   onInit(): void {}

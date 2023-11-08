@@ -33,6 +33,7 @@ declare var jsBh: any;
   selector: 'lib-cashpayments',
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -100,6 +101,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
+    
     this.cache
       .functionList(this.view.funcID)
       .pipe(takeUntil(this.destroy$))

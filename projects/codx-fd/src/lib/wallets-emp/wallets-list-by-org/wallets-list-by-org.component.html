@@ -173,7 +173,7 @@
     <div class="d-flex has-action-menu justify-content-between w-100">
         <div class="d-flex align-items-center p-3 fw-500">
             <ng-container *ngIf="data?.kudos || data?.kudos == 0; else noKudos">
-                <span class="data-text-color">{{ data?.kudos}}</span>
+                <span class="data-text-color">{{ data?.kudos | number}}</span>
             </ng-container>
             <ng-template #noKudos>
                 <span class="place-holder"><codx-label [fiedName]="'lblKudos'" [setRequire]="false"
@@ -187,14 +187,13 @@
 
 <!-- #region column kudos rank -->
 <ng-template #colKudosRank let-data>
-    <p class="p-3 mb-0">{{getNameRank(data.kudos)}}</p>
+    <p class="title-rank">{{getNameRank(data.kudos)}}</p>
     <div class="d-flex has-action-menu justify-content-between w-100">
         <div class="d-flex align-items-center p-3 fw-500 w-100">
             <ng-container *ngIf="data?.kudos || data?.kudos == 0">
                 <div class="line-100">
                     <div class="line-kudos" [style]="'width: ' + widthOfGrid(data.kudos) + '%; background-color: ' + getColorRank(data.kudos) + ';'">
                     </div>
-                    <p class="number-kudos">{{ data?.kudos}}</p>
                 </div>
             </ng-container>
         </div>

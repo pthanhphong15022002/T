@@ -10,7 +10,7 @@
 }
 
 .table-ac {
-    height: calc(100vh - 429px) !important;
+    height: calc(100vh - 429px);
 }
 
 .table-thead-ac {
@@ -352,6 +352,12 @@
     }
 }
 
+.ac-views codx-view-list {
+    codx-listview {
+        height: 100% !important;
+    }
+}
+
 /* css custom lại codx-view-content spliter */
 .ac-views codx-view-content {
     .codx-view-splitter>.e-static-pane {
@@ -451,4 +457,8 @@
   
   .accordion-button::after {
     background-image: var(--url);
+  }
+
+  .card-general .table-ac{
+    height: calc(100vh - 390px) !important;
   }
