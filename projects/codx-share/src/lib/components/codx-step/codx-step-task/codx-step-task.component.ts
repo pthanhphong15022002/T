@@ -504,13 +504,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
-            if (
-              !(
-                task?.createTask &&
-                this.isOnlyView &&
-                (this.isRoleAll || isGroup || isTask)
-              )
-            ) {
+            if(task?.assigned == '1'){
+              res.disabled = true;
+            }else if (!(task?.createTask && this.isOnlyView &&(this.isRoleAll || isGroup || isTask))) {
               res.isblur = true;
             }
             break;
@@ -1298,7 +1294,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           )
           .subscribe((res) => {
             if (res) {
-              data.assigned == '1';
+              data.assigned = '1';
+              this.changeDetectorRef.markForCheck();
             }
           });
       }
