@@ -23,6 +23,7 @@ export const environment = {
     title: '',
     icon: '',
   },
+  asideMode: '2',
   externalLogin: {
     amazonId: '',
     facebookId: '',
