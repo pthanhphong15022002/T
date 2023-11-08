@@ -90,3 +90,36 @@
   </div>
 </ng-template>
 <!-- End: template listdetail -->
+
+<ng-template #listTemplate let-data>
+  <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
+    (changeDataMF)="changeMFDetail($event, data,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #listtitleTmp let-data>
+  <div class="d-flex flex-column text-content flex-grow-1">
+    <div class="d-flex justify-content-between">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-3">{{ data?.voucherNo }}</span>
+          <img style="width: 18px; height: 18px" src="../assets/themes/ac/default/img/calendar.svg" class="me-2" />
+          <span class="text-gray-600 line-clamp line-clamp-1 mt-1" #voucherDate [innerHTML]="
+              data?.voucherDate
+                | formatvalue : view.formModel : 'voucherDate' : voucherDate
+                | async
+            "></span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
+          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.warehouseName" class="text-gray-600 line-clamp line-clamp-1" >{{data?.warehouseName}}</span>
+          <span *ngIf="(data?.warehouseName == '' || data?.warehouseName == null) && view.gridViewSetup" class="place-holder text-gray-600" >{{view.gridViewSetup['WarehouseID'].headerText}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

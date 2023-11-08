@@ -14,11 +14,6 @@ import { APPostingAccountsComponent } from './apposting-accounts/apposting-accou
 import { PopupAddAPPostingAccountComponent } from './apposting-accounts/popup-add-apposting-account/popup-add-apposting-account.component';
 import { ArPostingAccountsComponent } from './ar-posting-accounts/ar-posting-accounts.component';
 import { PopAddArComponent } from './ar-posting-accounts/pop-add-ar/pop-add-ar.component';
-import { CustomersComponent } from './customers/customers.component';
-import { PopAddAddressComponent } from './customers/pop-add-address/pop-add-address.component';
-import { PopAddBankComponent } from './customers/pop-add-bank/pop-add-bank.component';
-import { PopAddContactComponent } from './customers/pop-add-contact/pop-add-contact.component';
-import { PopAddCustomersComponent } from './customers/pop-add-customers/pop-add-customers.component';
 import { DimensionGroupsComponent } from './dimension-groups/dimension-groups.component';
 import { PopAddDimensionGroupsComponent } from './dimension-groups/pop-add-dimension-groups/pop-add-dimension-groups.component';
 import { PopAddDimensionSetupComponent } from './dimension-groups/pop-add-dimension-setup/pop-add-dimension-setup.component';
@@ -37,8 +32,6 @@ import { PopupAddItemComponent } from './items/popup-add-item/popup-add-item.com
 import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
 import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
-import { PopAddVendorsComponent } from './vendors/pop-add-vendors/pop-add-vendors.component';
-import { VendorsComponent } from './vendors/vendors.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
 import { ImageBoxListComponent } from './items/components/image-box-list/image-box-list.component';
@@ -61,6 +54,13 @@ import { ExchangerateAddComponent } from './currency-categories/currency-exchang
 import { TranformValueNumberPipe } from '../pipes/tranform-value-number.pipe';
 import { ItempostingaccountsComponent } from './posting-accounts-categories/posting-accounts.component';
 import { PostingAccountsAddComponent } from './posting-accounts-categories/posting-accounts-add/posting-accounts-add.component';
+import { CustomersComponent } from './customers-categories/customers.component';
+import { CustomersAddComponent } from './customers-categories/customers-add/customers-add.component';
+import { BankAddComponent } from './customers-categories/bank-add/bank-add.component';
+import { ContactAddComponent } from './customers-categories/contact-add/contact-add.component';
+import { AddressAddComponent } from './customers-categories/address-add/address-add.component';
+import { VendorsComponent } from './vendors-categories/vendors.component';
+import { VendorsAddComponent } from './vendors-categories/vendors-add/vendors-add.component';
 
 var routes: Routes = [
   {
@@ -152,12 +152,12 @@ var routes: Routes = [
     AccountsComponent,
     AccountsAddComponent,
     CustomersComponent,
-    PopAddCustomersComponent,
-    PopAddBankComponent,
-    PopAddContactComponent,
-    PopAddAddressComponent,
+    CustomersAddComponent,
+    BankAddComponent,
+    ContactAddComponent,
+    AddressAddComponent,
     VendorsComponent,
-    PopAddVendorsComponent,
+    VendorsAddComponent,
     NosubAsideComponent,
     ItemsComponent,
     PopupAddItemComponent,

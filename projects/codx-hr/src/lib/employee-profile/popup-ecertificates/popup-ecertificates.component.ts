@@ -72,6 +72,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     }
     this.lstCertificates = data?.data?.lstCertificates;
     this.certificateObj = JSON.parse(JSON.stringify(data.data.dataInput));
+    if(this.certificateObj){
+      this.certificateObj.trainFromDate = new Date(this.certificateObj.trainFromDate);
+      this.certificateObj.trainToDate = new Date(this.certificateObj.trainToDate);
+    }
     // this.indexSelected =
     //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.headerTextCalendar[0] = data?.data?.trainFromHeaderText;
@@ -120,6 +124,8 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.certificateObj = res?.data;
+            console.log('certificateObj', this.certificateObj);
+
             this.certificateObj.employeeID = this.employId;
             // this.formModel.currentData = this.certificateObj;
             // this.form.formGroup.patchValue(this.certificateObj);

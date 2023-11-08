@@ -298,7 +298,7 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('IV', 'VouchersBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -316,7 +316,7 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('IV', 'VouchersBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -333,7 +333,7 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('IV', 'VouchersBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;

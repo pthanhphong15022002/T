@@ -1,613 +1,452 @@
 <ng-container *ngIf="degreeObj">
-
-<codx-layout-add
-  #form
-  [title]="headerText"
-  [tabInfo]="tabInfo"
-  [formModel]="formModel"
-  [subHeader]=""
-  [footer]="footer"
-  [dialog]="dialog"
-  [openMore]="true"
-  (setTitle)="setTitle($event)"
-  [tabContent]="[degreeOveralInf, degreeMoreInf]"
-  [data]="degreeObj"
-  >
-  <!-- [group]="form.formGroup"
-  *ngIf="isAfterRender" -->
-</codx-layout-add>
-
-<ng-template #degreeOveralInf>
-<ng-container *ngIf="form.formGroup">
-
-  <div class="form-group row mt-5">
-    <codx-label fiedName="DegreeName" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="degreeName"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label
-        fiedName="TrainFieldID"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainFieldID"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainLevel" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainLevel"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <codx-label
-      fiedName="TrainFieldDetail"
-      [formModel]="form.formModel"
-    ></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="trainFieldDetail"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="CourseName" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="courseName"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainForm"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label
-        fiedName="YearGraduated"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="yearGraduated"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="IsMain" [formModel]="form.formModel"></codx-label>
-      <div>
-        <codx-input
-        [disabled]="disabledInput"
-          field="isMain"
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-        ></codx-input>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="totalScore"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="ranking"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="note"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3"
-  *ngIf="degreeObj?.attachments > 0"
-  >
-    <codx-label
-      name="lblAttachFile"
-      [formModel]="form.formModel"
-      [default]="'File đính kèm'"
-    >
-    </codx-label>
-  </div>
-
-  <div class=" flex-nowrap">
-    <codx-attachment
-      #attachment
-      [objectType]="formModel?.entityName"
-      showMessage="0"
-      hideBtnSave="1"
-      hideFolder="1"
-      hideUploadBtn="1"
-      hideDes="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      [objectId]="degreeObj?.recID"
-      [allowMultiFile]="1"
-      [idBrowse]="'add'"
-      displayThumb="full"
-      [functionID]="funcID"
-      (fileAdded)="addFiles($event)">
-      [referType]="'source'"
-      >
-    </codx-attachment>
-  </div>
-</ng-container>
-</ng-template>
-
-<ng-template #degreeMoreInf>
-  <ng-container *ngIf="form.formGroup">
-
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
-    <codx-label
-      name="lblTrainInfo"
-      [formModel]="form.formModel"
-      [default]="'Thông tin đào tạo'"
-    >
-    </codx-label>
-  </div>
-  <div class="form-group row">
-    <codx-label
-      fiedName="TrainSupplierID"
-      [formModel]="form.formModel"
-    ></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="trainSupplierID"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
-      <codx-dropdown-calendar  (click)="ClickCalendar($event)" [disabled]="disabledInput" [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-350px w-550px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
-          cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
-      <codx-dropdown-calendar (click)="ClickCalendar($event)" [disabled]="disabledInput" [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-350px w-550px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
-      cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
-    </div>
-  </div>
-
-  <div class="fs-6 fw-bold text-primary mt-6 mb-3">
-    <codx-label
-      name="lblDegreeInfo"
-      [formModel]="form.formModel"
-      [default]="'Thông tin văn bằng'"
-    >
-    </codx-label>
-  </div>
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="decisionNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="IssuedDate" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="issuedDate"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="DegreeNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="degreeNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="BookNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="bookNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row" >
-    <div class="d-flex flex-stack">
-      <codx-label fiedName="IssuedPlace" [formModel]="form.formModel"></codx-label>
-      <span class="text-end align-items-end mb-1"  *ngIf="actionType != 'view'">
-        <a
-          class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
-          (click)="setIssuedPlace()"
-        >
-          <span class="icon-south text-danger btn-text-primary me-2"></span>
-          <codx-label
-            name="lblSetIssuedPlace"
-            default="(=Nơi đào tạo)"
-            [formModel]="form.formModel"
-          ></codx-label>
-        </a>
-      </span>
-    </div>
-
-    <codx-input
-    [disabled]="disabledInput"
-      field="issuedPlace"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <codx-label fiedName="IssuedBy" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="issuedBy"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-</ng-container>
-
-</ng-template>
-
-<!-- <codx-form
+  <codx-layout-add
     #form
-    [headerText] = "headerText"
-    [body]="body"
-    [formModel]="form.formModel"
+    [title]="headerText"
+    [tabInfo]="tabInfo"
+    [formModel]="formModel"
+    [subHeader]=""
     [footer]="footer"
     [dialog]="dialog"
+    [openMore]="true"
+    (setTitle)="setTitle($event)"
+    [tabContent]="[degreeOveralInf, degreeMoreInf]"
     [data]="degreeObj"
-    *ngIf="isAfterRender"
->
+  >
+    <!-- [group]="form.formGroup"
+  *ngIf="isAfterRender" -->
+  </codx-layout-add>
 
-<ng-template #body>
-  <div class="form-group row mt-5">
-    <codx-label fiedName="DegreeName" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="degreeName"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label
-        fiedName="TrainFieldID"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainFieldID"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainLevel" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainLevel"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <codx-label
-      fiedName="TrainFieldDetail"
-      [formModel]="form.formModel"
-    ></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="trainFieldDetail"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <codx-label
-      fiedName="TrainSupplierID"
-      [formModel]="form.formModel"
-    ></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="trainSupplierID"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-      (valueChange)="valueChange($event)"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="CourseName" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="courseName"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainForm"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
-      <codx-dropdown-calendar [emptyText]="headerTextCalendar[0]" [firstChange]="isNullFrom" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainFromDate)" [selectedType]="fromDateFormat" [displayOption]="ops"
-          cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'FromDate')"></codx-dropdown-calendar>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
-      <codx-dropdown-calendar [emptyText]="headerTextCalendar[1]" [firstChange]="isNullTo" cssPopup="h-500px w-500px" [value]="Date(degreeObj.trainToDate)" [selectedType]="toDateFormat" [displayOption]="ops"
-      cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event, 'ToDate')"></codx-dropdown-calendar>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="ExamDate" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="examDate"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label
-        fiedName="YearGraduated"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="yearGraduated"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="totalScore"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="ranking"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        [showSpinButton]="false"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="IsGraduated" [formModel]="form.formModel"></codx-label>
-      <div>
+  <ng-template #degreeOveralInf>
+    <ng-container *ngIf="form.formGroup">
+      <div class="form-group row mt-5">
+        <codx-label
+          *ngIf="form.form.gridviewSetup.DegreeName.allowPopup == true"
+          fiedName="DegreeName"
+          [formModel]="form.formModel"
+        ></codx-label>
         <codx-input
-        [disabled]="disabledInput"
-          field="isGraduated"
+          *ngIf="form.form.gridviewSetup.DegreeName.allowPopup == true"
+          [disabled]="disabledInput"
+          field="degreeName"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
         ></codx-input>
       </div>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="IsMain" [formModel]="form.formModel"></codx-label>
-      <div>
-        <codx-input
-        [disabled]="disabledInput"
-          field="isMain"
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-        ></codx-input>
-      </div>
-    </div>
-  </div>
 
-  <hr>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="decisionNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="IssuedDate" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="issuedDate"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-6">
-      <codx-label fiedName="DegreeNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="degreeNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-    <div class="col-6">
-      <codx-label fiedName="BookNo" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="bookNo"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="d-flex flex-stack">
-      <codx-label fiedName="IssuedPlace" [formModel]="form.formModel"></codx-label>
-      <span class="text-end align-items-end mb-1">
-        <a
-          class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
-          (click)="setIssuedPlace()"
-        >
-          <span class="icon-south text-danger btn-text-primary me-2"></span>
+      <div class="form-group row">
+        <div class="col-6">
           <codx-label
-            name="lblSetIssuedPlace"
-            default="(=Nơi đào tạo)"
+            *ngIf="form.form.gridviewSetup.TrainFieldID.allowPopup == true"
+            fiedName="TrainFieldID"
             [formModel]="form.formModel"
           ></codx-label>
-        </a>
-      </span>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.TrainFieldID.allowPopup == true"
+            [disabled]="disabledInput"
+            field="trainFieldID"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.TrainLevel.allowPopup == true"
+            fiedName="TrainLevel"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.TrainLevel.allowPopup == true"
+            [disabled]="disabledInput"
+            field="trainLevel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="valueChange($event)"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          *ngIf="form.form.gridviewSetup.TrainFieldDetail.allowPopup == true"
+          fiedName="TrainFieldDetail"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          *ngIf="form.form.gridviewSetup.TrainFieldDetail.allowPopup == true"
+          [disabled]="disabledInput"
+          field="trainFieldDetail"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.CourseName.allowPopup == true"
+            fiedName="CourseName"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.CourseName.allowPopup == true"
+            [disabled]="disabledInput"
+            field="courseName"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.TrainForm.allowPopup == true"
+            fiedName="TrainForm"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.TrainForm.allowPopup == true"
+            [disabled]="disabledInput"
+            field="trainForm"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.YearGraduated.allowPopup == true"
+            fiedName="YearGraduated"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.YearGraduated.allowPopup == true"
+            [disabled]="disabledInput"
+            field="yearGraduated"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            [showSpinButton]="false"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.IsMain.allowPopup == true"
+            fiedName="IsMain"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <div>
+            <codx-input
+              *ngIf="form.form.gridviewSetup.IsMain.allowPopup == true"
+              [disabled]="disabledInput"
+              field="isMain"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.TotalScore.allowPopup == true"
+            fiedName="TotalScore"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.TotalScore.allowPopup == true"
+            [disabled]="disabledInput"
+            field="totalScore"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            [showSpinButton]="false"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.Ranking.allowPopup == true"
+            fiedName="Ranking"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.Ranking.allowPopup == true"
+            [disabled]="disabledInput"
+            field="ranking"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            [showSpinButton]="false"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          *ngIf="form.form.gridviewSetup.Note.allowPopup == true"
+          fiedName="Note"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          *ngIf="form.form.gridviewSetup.Note.allowPopup == true"
+          [disabled]="disabledInput"
+          field="note"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+        ></codx-input>
+      </div>
+
+      <div
+        class="fs-6 fw-bold text-primary mt-6 mb-3"
+        *ngIf="degreeObj?.attachments > 0"
+      >
+        <codx-label
+          name="lblAttachFile"
+          [formModel]="form.formModel"
+          [default]="'File đính kèm'"
+        >
+        </codx-label>
+      </div>
+
+      <div class="flex-nowrap">
+        <codx-attachment
+          #attachment
+          [objectType]="formModel?.entityName"
+          showMessage="0"
+          hideBtnSave="1"
+          hideFolder="1"
+          hideUploadBtn="1"
+          hideDes="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          [objectId]="degreeObj?.recID"
+          [allowMultiFile]="1"
+          [idBrowse]="'add'"
+          displayThumb="full"
+          [functionID]="funcID"
+          (fileAdded)="addFiles($event)"
+        >
+          [referType]="'source'" >
+        </codx-attachment>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #degreeMoreInf>
+    <ng-container *ngIf="form.formGroup">
+      <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+        <codx-label
+          name="lblTrainInfo"
+          [formModel]="form.formModel"
+          [default]="'Thông tin đào tạo'"
+        >
+        </codx-label>
+      </div>
+      <div class="form-group row">
+        <codx-label
+          *ngIf="form.form.gridviewSetup.TrainSupplierID.allowPopup == true"
+          fiedName="TrainSupplierID"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          *ngIf="form.form.gridviewSetup.TrainSupplierID.allowPopup == true"
+          [disabled]="disabledInput"
+          field="trainSupplierID"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.TrainFrom.allowPopup == true"
+            fiedName="TrainFrom"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-dropdown-calendar
+            *ngIf="form.form.gridviewSetup.TrainFrom.allowPopup == true"
+            (click)="ClickCalendar($event)"
+            [disabled]="disabledInput"
+            [emptyText]="headerTextCalendar[0]"
+            [firstChange]="isNullFrom"
+            cssPopup="h-350px w-550px"
+            [value]="degreeObj.trainFromDate"
+            [selectedType]="fromDateFormat"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-4"
+            (change)="changeCalendar($event, 'FromDate')"
+          ></codx-dropdown-calendar>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.TrainTo.allowPopup == true"
+            fiedName="TrainTo"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-dropdown-calendar
+            *ngIf="form.form.gridviewSetup.TrainTo.allowPopup == true"
+            (click)="ClickCalendar($event)"
+            [disabled]="disabledInput"
+            [emptyText]="headerTextCalendar[1]"
+            [firstChange]="isNullTo"
+            cssPopup="h-350px w-550px"
+            [value]="degreeObj.trainToDate"
+            [selectedType]="toDateFormat"
+            [displayOption]="ops"
+            cssClass="w-100 om-calendar"
+            class="me-4"
+            (change)="changeCalendar($event, 'ToDate')"
+          ></codx-dropdown-calendar>
+        </div>
+      </div>
+
+      <div class="fs-6 fw-bold text-primary mt-6 mb-3">
+        <codx-label
+          name="lblDegreeInfo"
+          [formModel]="form.formModel"
+          [default]="'Thông tin văn bằng'"
+        >
+        </codx-label>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.DecisionNo.allowPopup == true"
+            fiedName="DecisionNo"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.DecisionNo.allowPopup == true"
+            [disabled]="disabledInput"
+            field="decisionNo"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.IssuedDate.allowPopup == true"
+            fiedName="IssuedDate"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.IssuedDate.allowPopup == true"
+            [disabled]="disabledInput"
+            field="issuedDate"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.DegreeNo.allowPopup == true"
+            fiedName="DegreeNo"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.DegreeNo.allowPopup == true"
+            [disabled]="disabledInput"
+            field="degreeNo"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.BookNo.allowPopup == true"
+            fiedName="BookNo"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <codx-input
+            *ngIf="form.form.gridviewSetup.BookNo.allowPopup == true"
+            [disabled]="disabledInput"
+            field="bookNo"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="d-flex flex-stack">
+          <codx-label
+            *ngIf="form.form.gridviewSetup.IssuedPlace.allowPopup == true"
+            fiedName="IssuedPlace"
+            [formModel]="form.formModel"
+          ></codx-label>
+          <span
+            class="text-end align-items-end mb-1"
+            *ngIf="actionType != 'view'"
+          >
+            <a
+              class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+              (click)="setIssuedPlace()"
+            >
+              <span class="icon-south text-danger btn-text-primary me-2"></span>
+              <codx-label
+                name="lblSetIssuedPlace"
+                default="(=Nơi đào tạo)"
+                [formModel]="form.formModel"
+              ></codx-label>
+            </a>
+          </span>
+        </div>
+
+        <codx-input
+          *ngIf="form.form.gridviewSetup.IssuedPlace.allowPopup == true"
+          [disabled]="disabledInput"
+          field="issuedPlace"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+        ></codx-input>
+      </div>
+
+      <div class="form-group row">
+        <codx-label
+          *ngIf="form.form.gridviewSetup.IssuedBy.allowPopup == true"
+          fiedName="IssuedBy"
+          [formModel]="form.formModel"
+        ></codx-label>
+        <codx-input
+          *ngIf="form.form.gridviewSetup.IssuedBy.allowPopup == true"
+          [disabled]="disabledInput"
+          field="issuedBy"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
+        ></codx-input>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
+      <button
+        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+        (click)="openFormUploadFile()"
+      >
+        <codx-label
+          name="lblAddFile"
+          default="Đính kèm file"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
+
+      <button
+        class="btn btn-primary"
+        (click)="onSaveForm()"
+        [disabled]="!form.formModel.currentData.updateColumn && !changedInForm"
+      >
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
     </div>
-
-    <codx-input
-    [disabled]="disabledInput"
-      field="issuedPlace"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <codx-label fiedName="IssuedBy" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="issuedBy"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-
-  <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
-    <codx-input
-    [disabled]="disabledInput"
-      field="note"
-      [Group]="form.formGroup"
-      [formModel]="form.formModel"
-    ></codx-input>
-  </div>
-</ng-template>
-</codx-form> -->
-
-<ng-template #footer>
-  <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
-    <button
-    class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
-    (click)="openFormUploadFile()"
-  >
-    <codx-label
-      name="lblAddFile"
-      default="Đính kèm file"
-      [formModel]="form.formModel"
-    ></codx-label>
-  </button>
-
-    <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="!form.formModel.currentData.updateColumn && !changedInForm">
-      <i class="icon-save"></i>
-      <codx-label
-        default="Lưu"
-        name="lblSave"
-        [formModel]="form.formModel"
-      ></codx-label>
-    </button>
-  </div>
-</ng-template>
-
+  </ng-template>
 </ng-container>

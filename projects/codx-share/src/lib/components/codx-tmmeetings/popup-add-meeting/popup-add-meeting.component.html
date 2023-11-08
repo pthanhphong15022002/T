@@ -1,16 +1,18 @@
-<codx-layout-add
-  #form
-  [title]="title"
-  [tabInfo]="tabInfo"
-  [formModel]="dialog.formModel"
-  [subHeader]="subHeader"
-  [footer]="footer"
-  [dialog]="dialog"
-  [openMore]="true"
-  [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
-  (setTitle)="setTitle($event)"
-  [data]="meeting"
-></codx-layout-add>
+<ng-container *ngIf="gridViewSetup">
+  <codx-layout-add
+    #form
+    [title]="title"
+    [tabInfo]="tabInfo"
+    [formModel]="dialog.formModel"
+    [subHeader]="subHeader"
+    [footer]="footer"
+    [dialog]="dialog"
+    [openMore]="true"
+    [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
+    (setTitle)="setTitle($event)"
+    [data]="meeting"
+  ></codx-layout-add>
+</ng-container>
 
 <ng-template #subHeader>
   <codx-tag
@@ -43,7 +45,7 @@
       <div>
         <codx-label
           fiedName="StartDate"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Ngày"
         >
         </codx-label>
@@ -63,7 +65,7 @@
       <div>
         <codx-label
           name="StartTime"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Từ giờ"
         >
         </codx-label>
@@ -81,7 +83,7 @@
       <div>
         <codx-label
           name="endTime"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Đến giờ"
         >
         </codx-label>
@@ -102,12 +104,12 @@
         name="checkbox"
         label="Cả ngày"
         labelPosition="After"
-        [formModel]="form.formModel"
+        [formModel]="dialog.formModel"
         (valueChange)="valueChangeCheckFullDay($event)"
         [crrValue]="isFullDay"
       >
       </codx-input>
-      <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
+      <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="dialog.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
   <div *ngIf="!isRoom" class="form-group">
@@ -126,7 +128,7 @@
   </div>
   <div *ngIf="isRoom" class="form-group">
     <div class="d-flex justify-content-between align-items-center">
-      <codx-label fiedName="Location" [formModel]="form.formModel">
+      <codx-label fiedName="Location" [formModel]="dialog.formModel">
       </codx-label>
       <!-- <span class="label-status text-primary">{{
         data?.status | vll: "VL003":"text" | async
@@ -146,7 +148,7 @@
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
       <div class="d-flex me-2">
-        <codx-label fiedName="Memo" [formModel]="form.formModel"> </codx-label>
+        <codx-label fiedName="Memo" [formModel]="dialog.formModel"> </codx-label>
       </div>
       <button
         type="button"
@@ -191,7 +193,7 @@
         ><label for="switchOnl">
           <codx-label
             fiedName="IsOnline"
-            [formModel]="form.formModel"
+            [formModel]="dialog.formModel"
           ></codx-label> </label
       ></span>
     </div>
@@ -241,7 +243,7 @@
           <codx-label
             class="fw-bold fs-6"
             fiedName="Permissions"
-            [formModel]="form.formModel"
+            [formModel]="dialog.formModel"
             default="Người tham gia"
           >
           </codx-label>
@@ -296,7 +298,7 @@
         <div class="fw-bold text-primary">
           <codx-label
             name="lblAttachments"
-            [formModel]="form.formModel"
+            [formModel]="dialog.formModel"
             default="Tài liệu đính kèm"
           >
           </codx-label>
@@ -357,7 +359,7 @@
       <div class="fw-bold fs-6 text-primary">
         <codx-label
           fiedName="Permissions"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Người tham gia"
         >
         </codx-label>
@@ -366,7 +368,7 @@
     <div class="fw-bold fs-6 text-primary">
       <codx-label
         name="lblReviewTask"
-        [formModel]="form.formModel"
+        [formModel]="dialog.formModel"
         default="Review công việc"
       >
       </codx-label>
@@ -438,12 +440,12 @@
     <div class="form-group">
       <div class="d-flex align-items-end justify-content-between mb-2">
         <div class="d-flex me-2">
-          <codx-label fiedName="Reminder" [formModel]="form.formModel">
+          <codx-label fiedName="Reminder" [formModel]="dialog.formModel">
           </codx-label>
         </div>
         <codx-input
           type="number"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           [min]="0"
           field="reminder"
           (valueChange)="valueChange($event)"
@@ -463,7 +465,7 @@
           <span class="text-primary text-hover-primary_darker fw-bold me-1">
             <codx-label
               name="Plan"
-              [formModel]="form.formModel"
+              [formModel]="dialog.formModel"
               default="Công việc review"
             ></codx-label>
           </span>
@@ -483,7 +485,7 @@
       <div class="form-group row mt-3">
         <div class="col-6">
           <div>
-            <codx-label fiedName="FromDate" [formModel]="form.formModel">
+            <codx-label fiedName="FromDate" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <codx-input
@@ -499,7 +501,7 @@
         </div>
         <div class="col-6">
           <div>
-            <codx-label fiedName="ToDate" [formModel]="form.formModel">
+            <codx-label fiedName="ToDate" [formModel]="dialog.formModel">
             </codx-label>
           </div>
           <codx-input
@@ -515,7 +517,7 @@
         </div>
       </div>
       <div class="form-group mt-3">
-        <codx-label fiedName="RefID" [formModel]="form.formModel"> </codx-label>
+        <codx-label fiedName="RefID" [formModel]="dialog.formModel"> </codx-label>
         <codx-input
           type="combobox"
           field="refID"
@@ -526,7 +528,7 @@
           [disabled]="disabledProject"
         >
         </codx-input>
-        <!-- <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
+        <!-- <codx-input field="refID" [formModel]="dialog.formModel" [Group]="form.formGroup"
           (valueChange)="valueChange($event)" [disabled]="disabledProject">
         </codx-input>
         dung cái này dính edit ko view được
@@ -547,7 +549,7 @@
       ><span>
         <codx-label
           name="UploadFile"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Upload File"
         ></codx-label>
       </span>
@@ -555,7 +557,7 @@
     <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
       <codx-label
         name="Save"
-        [formModel]="form.formModel"
+        [formModel]="dialog.formModel"
         default="Lưu"
       ></codx-label>
     </button>
@@ -582,7 +584,7 @@
       <div class="h3">
         <codx-label
           name="lblLink"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
           default="Link cuộc họp"
         ></codx-label>
       </div>
@@ -598,7 +600,7 @@
         <codx-label
           name="lblPath"
           default="Đường dẫn"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
         ></codx-label>
         <codx-input
           type="text"
@@ -618,7 +620,7 @@
         <codx-label
           name="lblSave"
           default="Lưu"
-          [formModel]="form.formModel"
+          [formModel]="dialog.formModel"
         ></codx-label>
       </button>
     </div>
