@@ -9,6 +9,7 @@
   >
 </codx-views>
 <ng-template #panelContent>
+  <div class="fix-container pt-9 mw-1000px">
     <div class="row">
         <div class="col-8 ">
           <div class="row fw-bolder er text-primary fs-3 mb-5">
@@ -32,7 +33,7 @@
           </div>
         </div>
         <div class="col-4">
-          <div class="w-350px min-w-350px ms-5 news-right">
+          <div class="w-350px min-w-350px ms-6 news-right">
               <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
                   <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
               </div>
@@ -79,10 +80,10 @@
           </div>
         </div>
     </div>
-    
+  </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
-  <div class="row my-2" (click)="clickViewDetail(data)">
+  <div class="row mx-0 py-3 mb-1 border-bottom" (click)="clickViewDetail(data)">
     <div class="col-2">
       <codx-img
         [objectId]="data.recID"
@@ -98,7 +99,7 @@
         [typeMF]="'hover'"
         [resourceObjType]="entityName"
         imgCss="me-2"
-        cardCss="card-template border-bottom px-2 py-3"
+        cardCss="card-template px-2 py-3"
         [title]="data.subject"
         [desc]="data.subContent"
         [descLine]="2"
