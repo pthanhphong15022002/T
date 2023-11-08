@@ -90,11 +90,9 @@ export class CalendarCenterComponent
         this.codxSchedule.dataSource = this.events;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
         this.codxSchedule.statusColor = this.statusColor;
-        setTimeout(() => {
-          this.codxSchedule.currentView = "Month";
-          this.codxSchedule.onTimelineViewChange(false);
-          this.codxSchedule.setEventSettings();
-        }, 3000);
+        this.codxSchedule.isCalendarView = true;
+        this.codxSchedule.onTimelineViewChange(false);
+        this.codxSchedule.setEventSettings();
       }
     },500)
   }
@@ -123,7 +121,6 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = resources;
-      // this.codxSchedule.isCalendarView = true;
       this.codxSchedule.onGroupingChange(resources);
       this.codxSchedule.onGridlinesChange(true);
       this.codxSchedule.onTimelineViewChange(true);
@@ -131,11 +128,12 @@ export class CalendarCenterComponent
     }
   }
 
-  //
+  // change mode calendar <-> schedule
   changeModeView(isCalendarView:boolean){
     if(this.codxSchedule)
     {
       this.codxSchedule.isCalendarView = isCalendarView;
+      this.codxSchedule.onTimelineViewChange(isCalendarView);
       this.codxSchedule.setEventSettings();
     }
   }
