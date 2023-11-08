@@ -400,7 +400,7 @@ export class PopupAddCardsComponent implements OnInit {
           !this.gifts[0]?.availableQty ||
           this.gifts[0]?.price == null
         ) {
-          this.form.patchValue({ quantity: 0 });
+          // this.form.patchValue({ quantity: 0 });
           this.notifySV.notify('Vui lòng chọn quà tặng');
           return;
         } else if (data > this.gifts[0].availableQty) {
