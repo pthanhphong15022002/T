@@ -339,6 +339,7 @@ export class CmCustomerComponent
       case 'CM0105_4':
         this.popupPermissions(data);
         break;
+      case 'CM0105_7':
       case 'CM0101_7':
         this.convertCustomerToDeals(data);
         break;
@@ -998,15 +999,7 @@ export class CmCustomerComponent
   convertCustomerToDeals(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
-      //this.oldIdDeal = data.recID;
     }
-    // let deal = new CM_Deals();
-
-    // deal.customerID = data.recID;
-    // deal.dealName = data.customerName;
-    // deal.industries = data.industries;
-    // deal.channelID = data.channelID;
-    // deal.shortName = data.shortName;
 
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1040,9 +1033,6 @@ export class CmCustomerComponent
             gridViewSetup: res,
             isviewCustomer: true,
             customerView: customerView,
-            //     functionModule: this.functionModule,
-            // currencyIDDefault: this.currencyIDDefault,
-            // exchangeRateDefault: this.exchangeRateDefault,
             categoryCustomer: data?.categoryCustomer,
           };
           let dialogCustomDeal = this.callfc.openSide(
