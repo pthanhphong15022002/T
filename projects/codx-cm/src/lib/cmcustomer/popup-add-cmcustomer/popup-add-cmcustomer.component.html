@@ -114,7 +114,17 @@
               >
               </codx-input>
             </div>
-
+            <div class="form-group" (mouseenter)="closePopover()">
+              <codx-label [formModel]="form.formModel" fiedName="BankAccount">
+              </codx-label>
+              <codx-input
+                (mouseenter)="closePopover()"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="bankAccount"
+              >
+              </codx-input>
+            </div>
             <div
               class="form-group"
               *ngIf="funcID == 'CM0101'"
@@ -126,17 +136,6 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="workingDays"
-              >
-              </codx-input>
-            </div>
-            <div class="form-group" (mouseenter)="closePopover()">
-              <codx-label [formModel]="form.formModel" fiedName="BankAccount">
-              </codx-label>
-              <codx-input
-                (mouseenter)="closePopover()"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                field="bankAccount"
               >
               </codx-input>
             </div>
