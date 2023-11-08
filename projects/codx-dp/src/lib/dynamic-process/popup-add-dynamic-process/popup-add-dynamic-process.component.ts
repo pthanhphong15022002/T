@@ -2580,7 +2580,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         if (
           this.step &&
           (this.step.recID == stepID ||
-            (stepID2 != null && st.recID == stepID2))
+            (stepID2 != null && this.step.recID == stepID2))
         ) {
           this.step = st;
         }
