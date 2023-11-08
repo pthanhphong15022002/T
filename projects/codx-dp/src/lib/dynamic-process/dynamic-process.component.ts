@@ -1206,42 +1206,24 @@ export class DynamicProcessComponent
   //----------------------------End-------------------------//
 
   //popover permissions
-  dataImgs: any;
-  positionName: any;
   popoverOld: any;
   allTooltips: any[] = [];
-  async popoverTempImgs(p: any, perm = null) {
-    if (this.popoverOld?.popoverClass !== p?.popoverClass) {
-      this.popoverOld?.close();
-    }
-    this.closeAllTooltips();
-
-    if (perm != null) {
-      if (p) {
-        var element = document.getElementById(perm?.recID);
-        if (element) {
-          var t = this;
-          this.dataImgs = perm;
-          if (
-            this.dataImgs?.objectID &&
-            this.dataImgs?.objectID?.trim() != '' &&
-            (this.dataImgs?.objectType == 'U' ||
-              this.dataImgs?.objectType == '1')
-          ) {
-            const users = await firstValueFrom(
-              this.dpService.getUserByID(this.dataImgs?.objectID)
-            );
-            if (users != null) {
-              this.positionName = users?.positionName;
-            }
-          }
-          p.open();
-        }
+  async popoverTempImgs(perm = null) {
+    let positionName = '';
+    const dataImgs = perm;
+    if (
+      dataImgs?.objectID &&
+      dataImgs?.objectID?.trim() != '' &&
+      (dataImgs?.objectType == 'U' || dataImgs?.objectType == '1')
+    ) {
+      const users = await firstValueFrom(
+        this.dpService.getUserByID(dataImgs?.objectID)
+      );
+      if (users != null) {
+        positionName = users?.positionName;
       }
-    } else p?.close();
-
-    this.popoverOld = p;
-    this.allTooltips.push(p);
+    }
+    return positionName;
   }
 
   closeAllTooltips() {

@@ -8,7 +8,7 @@ export class TranformClassBorderPipe implements PipeTransform {
   transform(item: any, oValue: any[]): string {
     if (item.crediting) {
       let classCss = 'border-bottom: 1px solid var(--bs-border-color) !important;';
-      let data = oValue.filter((x) => x.entryID == item.entryID);
+      let data = oValue.filter((x) => x.entryID == item.entryID && x.postType == item.postType);
       let index = data
         .filter((x) => x.crediting == item.crediting)
         .findIndex((x) => x.recID == item.recID);
