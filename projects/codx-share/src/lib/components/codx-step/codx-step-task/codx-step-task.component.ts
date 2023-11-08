@@ -52,6 +52,7 @@ import {
   CO_Permissions,
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
+import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
   selector: 'codx-step-task',
@@ -177,7 +178,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private stepService: StepService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private bookingService: CodxBookingService
+    private bookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -2507,4 +2509,54 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
   }
   //#endregion
+  approvalTrans(task: DP_Instances_Steps_Tasks) {
+    if(task?.approveRule && task?.recID){
+      this.api.execSv<any>(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        task?.recID
+      ).subscribe(res => {
+        if(!res){
+          this.notiService.notifyCode('ES028');
+          return;
+        }
+        if (res.eSign) {
+          //kys soos
+        } else {
+          this.release(task, res);
+        }
+      })
+    } else {
+      this.notiService.notifyCode('DP040');
+    }
+  }
+  release(data: any, category: any) {
+    // new function release
+    // this.codxShareService.codxReleaseDynamic(
+    //   'DP',
+    //   data,
+    //   category,
+    //   this.view.formModel.entityName,
+    //   this.view.formModel.funcID,
+    //   data?.title,
+    //   this.releaseCallback.bind(this)
+    // );
+  }
+  releaseCallback(res: any, t: any = null) {
+    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.dataSelected = q;
+    //         this.view.dataService.update(this.dataSelected, true).subscribe();
+    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+    //       }
+    //       this.notificationsService.notifyCode('ES007');
+    //     });
+    // }
+  }
 }
