@@ -90,6 +90,9 @@
     padding: 2px 10px;
     overflow: auto;
   }
+  .card-header{
+    z-index: 999;
+  }
   .card-body{
     margin-top: -54px;
     z-index: 99;
