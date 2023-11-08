@@ -75,7 +75,8 @@ export class CalendarCenterComponent
           template4: this.resourceTemplate,//template resource
           template6: this.moreFuncTemplate, // template more funtion
           template8: this.popupEventTemplate, //template popup event
-          currentView:'TimelineMonth'
+          currentView:'TimelineMonth',
+          hideFooter:true
         },
       },
     ];
