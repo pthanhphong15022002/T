@@ -1,5 +1,6 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
-  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'"
+  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC"
+  className="GeneralJournalsBusiness" service="AC" method="GetDataAsync" idField="recID"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 <!-- Start: templateGrid -->
@@ -18,7 +19,12 @@
 </ng-template>
 
 <ng-template #templateDetailRight>
-
+  <ng-container *ngIf="itemSelected">
+    <general-journal-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
+      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
+      [gridViewSetup]="view?.gridViewSetup" [legalName]="legalName" [hideFields]="hideFields"
+      [dataDefault]="dataDefault"></general-journal-detail>
+  </ng-container>
 </ng-template>
 
 <ng-template #titleTmp let-data>
@@ -61,14 +67,10 @@
     </div>
     <div style="height: 18px !important" class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.objectID}}</span>
+        <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
         <!-- <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1"
           [innerHTML]="data?.objectID | tranformSubobject : view.formModel"></span> -->
-        <span *ngIf="
-            (data?.objectID == '' || data?.objectID == null) &&
-            view?.gridViewSetup
-          " class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["ObjectID"].headerText
-          }}</span>
+        <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["ObjectID"].headerText}}</span>
       </div>
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
