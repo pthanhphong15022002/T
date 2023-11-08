@@ -17,8 +17,12 @@ export class FormatDataValuePipe implements PipeTransform {
       mergeMap((data) => {
         if (data) {
           let gridModel = new DataRequest();
-          gridModel.entityName = data.entityName;
-          gridModel.entityPermission = data.entityName;
+          let entityName = data?.tableName; //quang bảo vậy
+          // data.entityName.includes('.') || !data?.entityName // // "LV.Poco.BS_AddressBook" => xu ly
+          //   ? data?.tableName
+          //   : data?.entityName;
+          gridModel.entityName = entityName;
+          gridModel.entityPermission = entityName;
           gridModel.pageLoading = false;
           gridModel.comboboxName = data.comboboxName;
           gridModel.currentValue = value;
