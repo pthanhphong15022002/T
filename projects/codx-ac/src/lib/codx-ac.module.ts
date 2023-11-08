@@ -107,6 +107,9 @@ import { GeneralJournalComponent } from './vouchers/general-journal/general-jour
 import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
 import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
 import { TempPurchaseinvoicesTableComponent } from './periodic/importeinvoices/temp-purchaseinvoices-table/temp-purchaseinvoices-table.component';
+import { WarehouseTransfersComponent } from './vouchers/warehouse-transfers/warehouse-transfers.component';
+import { WarehouseTransfersAddComponent } from './vouchers/warehouse-transfers/warehouse-transfers-add/warehouse-transfers-add.component';
+import { WarehouseTransfersDetailComponent } from './vouchers/warehouse-transfers/warehouse-transfers-detail/warehouse-transfers-detail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -249,6 +252,11 @@ export const routes: Routes = [
       {
         path: 'closingdata/:funcID',
         component: ClosingDataComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'warehousetransfers/:funcID',
+        component: WarehouseTransfersComponent,
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
@@ -397,6 +405,9 @@ export const routes: Routes = [
     GeneralJournalAddComponent,
     GeneralJournalDetailComponent,
     TempPurchaseinvoicesTableComponent,
+    WarehouseTransfersComponent,
+    WarehouseTransfersAddComponent,
+    WarehouseTransfersDetailComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

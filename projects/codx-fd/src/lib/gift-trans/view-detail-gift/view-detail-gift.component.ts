@@ -21,6 +21,7 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
   assemblyName: string = "ERM.Business.FD";
   className: string = "GiftTransBusiness"
   data: any = null;
+  exchangeRate: number = 0;
   TabControl: TabModel[] = [
     {
       name: 'History',
@@ -54,6 +55,14 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
     if (this.objectID) {
       this.getDataInfor(this.objectID);
     }
+    this.serviceFD.getSettingValueByModule("FDParameters", "ActiveCoins").subscribe((res: any) => {
+      if (res) {
+        const data = JSON.parse(res.dataValue);
+        if(data?.ExchangeRateEVoucher){
+          this.exchangeRate = Number.parseFloat(data.ExchangeRateEVoucher);
+        }
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -68,6 +77,7 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
       .subscribe((res: any) => {
         if (res) {
           this.data = res;
+          console.log(this.data)
           this.dt.detectChanges();
         }
       })

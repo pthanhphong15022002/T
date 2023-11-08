@@ -1,4 +1,4 @@
-import { filter } from 'rxjs';
+import { Subject,firstValueFrom, takeUntil } from 'rxjs';
 import {
   OnInit,
   Optional,
@@ -16,6 +16,8 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  FormModel,
+  SidebarModel,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -27,7 +29,7 @@ import { StepService } from '../step.service';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'codx-add-task',
@@ -37,11 +39,11 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 export class CodxAddTaskComponent implements OnInit {
   @ViewChild('inputContainer', { static: false }) inputContainer: ElementRef;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  REQUIRE = ['taskName', 'endDate', 'startDate'];
   action = 'add';
   vllShare = 'BP021';
   linkQuesiton = 'http://';
-  type: 'calendar' | 'step' | 'activitie' | 'notStep' ;
+  REQUIRE = ['taskName', 'endDate', 'startDate'];
+  type: 'calendar' | 'step' | 'activitie' | 'notStep'|'group' ;
 
   typeTask;
   listGroup = [];
@@ -54,7 +56,6 @@ export class CodxAddTaskComponent implements OnInit {
   listInsStep: DP_Instances_Steps[];
   stepsTasks: DP_Instances_Steps_Tasks;
   taskInput: DP_Instances_Steps_Tasks;
-  listTask: DP_Instances_Steps_Tasks[] = [];
   owner: DP_Instances_Steps_Tasks_Roles[] = [];
   roles: DP_Instances_Steps_Tasks_Roles[] = [];
   ownerDefaut: DP_Instances_Steps_Tasks_Roles[] = [];
@@ -81,9 +82,9 @@ export class CodxAddTaskComponent implements OnInit {
   isShowDate = false;
   isShowTime = false;
   isActivitie = false;
-  enabledStep = false;
-  isShowCbxStep = true;
-  isShowCbxGroup = true;
+  // enabledStep = false;
+  // isShowCbxStep = true;
+  // isShowCbxGroup = true;
   isTaskDefault = false;
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
@@ -136,6 +137,14 @@ export class CodxAddTaskComponent implements OnInit {
     customers: '',
     contracts: '',
   };
+
+  statusInput = {
+    type:{show: false, disabled: false},
+    dataType: {show: false, disabled: false},
+    step: {show: false, disabled: false},
+    group: {show: false, disabled: false}
+  }
+  instanceStepID = '';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -149,57 +158,256 @@ export class CodxAddTaskComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.user = this.authStore.get();
+
     this.type = dt?.data?.type;
     this.action = dt?.data?.action;
     this.typeTask = dt?.data?.taskType;
+
     this.taskInput = dt?.data?.dataTask;
     this.isBoughtTM = dt?.data?.isBoughtTM;
+
     this.groupTaskID = dt?.data?.groupTaskID;
+    this.listGroup = dt?.data?.listGroup;
+
+    this.instanceID = dt?.data?.instanceID;
     this.listInsStep = dt?.data?.listInsStep;
     this.instanceStep = dt?.data?.instanceStep;
-    this.titleName = dt?.data?.titleName || '';
     this.ownerParent = dt?.data?.ownerInstance; // owner of Parent
-    this.isStart = dt?.data?.isStart || !!this.instanceStep?.startDate;
+
+    this.titleName = dt?.data?.titleName || '';
+    this.isStart = dt?.data?.isStart;
+
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
-    this.listTask = dt?.data?.listTask || this.instanceStep?.tasks;
+   
     this.typeCM = dt?.data?.typeCM;
-    this.instanceID = dt?.data?.instanceID;
+    
     this.dataParentTask = dt?.data?.dataParentTask;
     this.isRoleFull = dt?.data?.isRoleFull;
-    this.listGroup = JSON.parse(JSON.stringify(dt?.data?.listGroup || []));
+    
     if(this.type == 'notStep'){
       this.dataParentTask = dt?.data?.dataParentTask;
       this.typeCM = this.dataParentTask?.typeCM;
     }
-    this.isSave =
-      dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
-    this.setValueList();
-    if(!this.isRoleFull){
-      this.checkAdminCM();
-    }
+    this.isSave = dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
+    this.getValueList();
+    !this.isRoleFull && this.checkAdminCM();
   }
-
+  
   ngOnInit(): void {
     this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
-    this.getListStepByInstanceID(this.instanceID);
-    this.setTimePeriod();
-    this.setFirstDataTask();
+    this.setStatusForm();
+    this.setData();
+    this.setDataParent();
     this.setFieldTask();
-    this.checkStatusShowForm();
-    if (this.isBoughtTM == undefined) {
-      this.getBoughtTM();
-    }
+    this.setStatusFormDate();
     this.getFormModel();
-    if(this.type == 'notStep'){
-      // this.getListStepByInstanceID(this.dataParentTask?.parentTaskID);
-      this.enabledStep = true;
-    }
-    if(this.type == 'step'){
-      this.enabledStep = false;
-    }
+    (this.action == 'add' || this.action == 'copy') && this.getBoughtTM();
   }
 
-  setStep() {
+  //#region set data before open form
+  setStatusForm(){
+    switch(this.type){
+      case 'calendar':
+        if(this.action == 'edit'){
+          this.statusInput.type.show = true;
+          this.statusInput.type.disabled = true;
+          this.statusInput.dataType.show = true;
+          this.statusInput.dataType.disabled = true;
+        }else if(this.action == 'copy'){
+          this.statusInput.type.show = true;
+          this.statusInput.type.disabled = false;
+          this.statusInput.dataType.show = true;
+          this.statusInput.dataType.disabled = false;
+        }else{
+          this.statusInput.type.show = true;
+          this.statusInput.type.disabled = false;
+        }
+        break;
+      case 'step':
+        this.statusInput.step.show = true;
+        this.statusInput.step.disabled = true;
+        this.statusInput.group.show = true;
+          this.statusInput.group.disabled = false;
+        break;
+      case 'activitie':
+        break;
+      case 'notStep':
+        this.statusInput.type.show = true;
+        this.statusInput.type.disabled = true;
+        this.statusInput.dataType.show = true;
+        this.statusInput.dataType.disabled = true;
+        this.statusInput.step.show = true;
+        this.statusInput.step.disabled = false;
+        this.statusInput.group.show = true;
+        this.statusInput.group.disabled = false;
+        break;
+        case 'group':
+          this.statusInput.step.show = true;
+          this.statusInput.step.disabled = true;
+          this.statusInput.group.show = true;
+          this.statusInput.group.disabled = true;
+          break;
+    }
+  }
+  setData(){
+    if (this.action == 'add') {
+      this.stepsTasks = new DP_Instances_Steps_Tasks();
+      this.stepsTasks.status = '1';
+      this.stepsTasks.taskName = this.typeTask?.text;
+      this.stepsTasks.taskType = this.typeTask?.value;
+      this.setRole();
+    } else if (this.action == 'copy') {
+      this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
+      this.stepsTasks.recID = Util.uid();
+      this.stepsTasks.refID = Util.uid();
+      this.stepsTasks.status = '1';
+      this.stepsTasks.progress = 0;
+      this.stepsTasks.fieldID = null;
+      this.stepsTasks.dependRule = "0";
+      this.stepsTasks.parentID = null;
+      this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.requireCompleted = false;
+    } else if (this.action == 'edit') {
+      this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
+    }
+    this.roles = this.stepsTasks?.roles || [];
+    this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U');
+    this.participant = this.roles?.filter((role) => role.roleType == 'P');
+    this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'O');
+  }
+  setRole() {
+    let role = new DP_Instances_Steps_Tasks_Roles();
+    role.recID = Util.uid();
+    role.objectName = this.user?.userName;
+    role.objectID = this.user?.userID;
+    role.createdOn = new Date();
+    role.createdBy = this.user?.userID;
+    role.roleType = 'U';
+    role.objectType = this.user?.objectType;
+    this.stepsTasks.owner = role.objectID;
+    this.stepsTasks.roles = [role];
+    return role;
+  }
+  setDataParent(){
+    switch (this.type){
+      case 'calendar':
+        if(this.action == 'edit'|| this.action == 'copy'){
+          this.getParentTask(this.stepsTasks);
+        }
+        break;
+      case 'notStep':
+        this.getListStepByInstanceID(this.instanceID);
+        break;
+      case 'step':
+        this.setInstanceStep();
+        break;
+      case 'activitie':
+        break;
+      case 'group':
+        this.setGroup();
+        break;
+    }
+  }
+  setDateTimeTask() {
+    if (!this.taskInput?.taskGroupID) {
+      this.startDateParent = new Date(
+        this.instanceStep?.startDate || new Date()
+      );
+      this.endDateParent = this.instanceStep?.endDate
+        ? new Date(this.instanceStep?.endDate)
+        : null;
+    } else {
+      this.groupTask = this.listGroup.find(
+        (x) => x.refID === this.taskInput?.taskGroupID
+      );
+      this.startDateParent = new Date(this.groupTask['startDate']);
+      this.endDateParent = new Date(this.groupTask['endDate']);
+    }
+    this.stepsTasks.startDate = this.isStart ? this.startDateParent : null;
+    let startDays = new Date(this.startDateParent);
+    startDays.setDate(startDays?.getDate() + 1);
+    this.stepsTasks.endDate = this.isStart ? startDays : null;
+  }
+  setFieldTask() {
+    if (this.instanceStep?.fields?.length > 0 && this.stepsTasks?.fieldID) {
+      let fieldID = this.stepsTasks?.fieldID;
+      this.listFieldCopy = JSON.parse(JSON.stringify(this.instanceStep?.fields));
+      this.listField = this.listFieldCopy?.filter((field) =>
+        fieldID?.includes(field?.recID)
+      );
+    }
+  }
+  setInstanceStep(){
+    if(!this.instanceStep && this.instanceStepID){
+      this.api.exec<any>(
+        'DP',
+        'InstancesStepsBusiness',
+        'GetStepByIdAsync',
+        this.instanceStepID,
+      ).subscribe(res => {
+        if(res){
+          this.instanceStep = res;
+          this.listInsStepInUser = [this.instanceStep];
+          this.stepsTasks.stepID = this.instanceStep.recID;
+          this.listGroup = this.instanceStep?.taskGroups;
+          this.setDateTimeTask();
+        }else{
+          this.notiService.alert('','không thể thêm công việc trong giai đoạn này ');
+          this.dialog.close();
+        }
+      });
+    }else{
+      this.listInsStepInUser = [this.instanceStep];
+      this.stepsTasks.stepID = this.instanceStep.recID;
+      this.listGroup = this.instanceStep?.taskGroups;
+      this.setDateTimeTask();
+    }
+  }
+  setStatusFormDate() {
+    const isAddOrCopy = this.action === 'add' || this.action === 'copy';
+    const isStatus3 = this.stepsTasks?.status === '3';
+    const hasEndDate = !!this.stepsTasks?.endDate;
+    const hasStartDate = !!this.stepsTasks?.startDate;
+    
+    if (isAddOrCopy) {
+      this.isShowDate = this.isStart && !isStatus3;
+      this.isShowTime = true;
+    } else {
+      if (this.isStart) {
+        this.isShowDate = !isStatus3 && hasEndDate && hasStartDate;
+        this.isShowTime = !isStatus3;
+      } else {
+        this.isShowDate = false;
+        this.isShowTime = true;
+      }
+    }
+  }
+  setGroup(){
+    if(this.groupTaskID){
+      if(this.instanceStep){
+        this.listInsStepInUser = [this.instanceStep];
+        this.stepsTasks.stepID = this.instanceStep?.recID;
+        this.stepsTasks.taskGroupID = this.groupTaskID;
+        this.listGroup = this.instanceStep?.taskGroups;
+        this.setDateTimeTask();
+      }
+    }else if(this.groupTask){
+      if(this.instanceStep){
+        this.listInsStepInUser = [this.instanceStep];
+        this.stepsTasks.stepID = this.instanceStep?.recID;
+        this.stepsTasks.taskGroupID = this.groupTaskID;
+        this.listGroup = [this.groupTask]
+        this.setDateTimeTask();
+      }
+    }else{
+
+    }
+    // if(this.instanceStep){
+    //   this.notiService.alert('','không thể thêm công việc trong nhóm này ');
+    //   this.dialog.close();
+    // }
+  }
+  setStepByRole() {
     this.listInsStepInUser = this.listInsStep.filter((step) => {
       if (this.isRoleFull) {
         return !step.isFailStep && !step.isSuccessStep;
@@ -215,14 +423,81 @@ export class CodxAddTaskComponent implements OnInit {
       }
     });
   }
-
-  setGroup(listGroup) {
+  setGroupByRole(listGroup) {
     this.listGroupInUser =
       this.isRoleFull || this.isRoleFullStep
         ? listGroup
         : listGroup.filter((group) => group.owner == this.user?.userID);
   }
+  //#endregion
 
+  //#region get Data
+  getParentTask(task) {
+    if (task) {
+      let recID = task?.recID;
+      let taskGroupID = task?.taskGroupID;
+      let stepID = task?.stepID;
+      let instanceID = task?.instanceID;
+      let objectID = task?.objectID;
+      let objectType = task?.objectType;
+      this.statusInput.step.show = false;
+      this.statusInput.group.show = false;
+      this.api
+        .exec<any>('DP', 'ActivitiesBusiness', 'GetParentOfTaskAsync', [
+          recID,
+          taskGroupID,
+          stepID,
+          instanceID,
+          objectID,
+          objectType,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dataParentTask = res;
+            if (res?.instancesStep) {
+              this.instanceStep= res?.instancesStep;
+              if(this.action == 'edit'){
+                this.listInsStepInUser = [res?.instancesStep];
+                this.statusInput.step.show = true;
+                this.statusInput.group.show = true;
+                this.statusInput.step.disabled = true;
+                this.statusInput.group.disabled = true;
+                this.setFieldTask();
+              }else if(this.action == 'copy'){
+                this.getListInstanceStep(res?.instancesStep?.instanceID, this.isRoleFull);
+              }
+              this.listGroup = res?.instancesStep?.taskGroups || [];
+              this.statusInput.group.show = true;
+              this.statusInput.group.disabled = false;
+            }
+            switch (res?.applyFor) {
+              case '1'://Deal
+                this.typeCM = '5';
+                break;
+              case '2'://case
+                this.typeCM = '9';
+                break;
+              case '3':
+                this.typeCM;
+                break;
+              case '4'://Contracts
+                this.typeCM = '7';
+                break;
+              case '5'://Lead
+                this.typeCM = '3';
+                break;
+              case '6'://Customers
+                this.typeCM = '1';
+                break;
+            }
+            this.typeCMName = this.listTypeCM?.find(
+              (x) => x.value == this.typeCM
+            )?.text;
+            this.dataTypeCM = this.dataParentTask?.parentTaskID;
+          }
+        });
+    }
+  }
   getListStepByInstanceID(instanceID){
     if((!this.listInsStep || this.listInsStep?.length <= 0) && instanceID){
       this.api
@@ -230,15 +505,14 @@ export class CodxAddTaskComponent implements OnInit {
       .subscribe((res) => {
         if(res){
           this.listInsStep = res;
-          this.setStep();
+          this.setStepByRole();
         }
       });
 
     }else if(this.listInsStep?.length > 0){
-      this.setStep();
+      this.setStepByRole();
     }
   }
-
   getInstanceStepByRecID(insStepID){
     if(this.instanceStep){
       this.api
@@ -250,9 +524,7 @@ export class CodxAddTaskComponent implements OnInit {
       });
     }
   }
-
-  //#region setting popup task
-  setValueList() {
+  getValueList() {
     this.cache.valueList('CRM060').subscribe((res) => {
       if (res?.datas) {
         this.listTypeCM = res?.datas?.map((data) => {
@@ -261,114 +533,9 @@ export class CodxAddTaskComponent implements OnInit {
       }
     });
   }
-
-  checkAdminCM() {
-    this.api
-      .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
-      .subscribe((res) => {
-        this.isRoleFull = res ? true : false;
-      });
-  }
-
-  setTimePeriod() {
-    if (!this.taskInput?.taskGroupID) {
-      this.startDateParent = new Date(
-        this.instanceStep?.startDate || new Date()
-      );
-      this.endDateParent = this.instanceStep?.endDate
-        ? new Date(this.instanceStep?.endDate)
-        : null;
-    } else {
-      this.groupTask = this.listGroup.find(
-        (x) => x.refID === this.taskInput?.taskGroupID
-      );
-      this.startDateParent = new Date(this.groupTask['startDate']);
-      this.endDateParent = new Date(this.groupTask['endDate']);
-    }
-  }
-
-  setFirstDataTask() {
-    if (this.type == 'activitie' || this.type == 'calendar') {
-      this.isActivitie = true;
-      this.isShowCbxStep = false;
-      this.isShowCbxGroup = false;
-    }
-    if (!this.isStart) {
-      this.isStart = this.isActivitie == true ? true : this.isActivitie;
-    }
-    if (!this.listInsStep?.length) {
-      this.listInsStep = this.instanceStep ? [this.instanceStep] : [];
-    } else {
-      this.enabledStep = true;
-    }
-
-    if (this.action == 'add') {
-      this.stepsTasks = this.taskInput
-        ? JSON.parse(JSON.stringify(this.taskInput))
-        : new DP_Instances_Steps_Tasks();
-      let role = new DP_Instances_Steps_Tasks_Roles();
-      this.setRole(role);
-      this.owner = [role];
-      this.stepsTasks.roles = [role];
-      this.stepsTasks.owner = this.owner?.[0].objectID;
-      this.stepsTasks.status = '1';
-      this.stepsTasks.createTask = this.isBoughtTM;
-      this.stepsTasks.taskName = this.typeTask?.text;
-      this.stepsTasks.startDate = this.isStart ? this.startDateParent : null;
-      let startDays = new Date(this.startDateParent);
-      startDays.setDate(startDays?.getDate() + 1);
-      this.stepsTasks.endDate = this.isStart ? startDays : null;
-      if (this.instanceStep) {
-        this.stepsTasks.stepID = this.instanceStep?.recID;
-      }
-      if (this.groupTaskID) {
-        this.stepsTasks = this.groupTaskID;
-      }
-    } else if (this.action == 'copy') {
-      this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
-      this.stepsTasks.recID = Util.uid();
-      this.stepsTasks.status = '1';
-      this.stepsTasks.createTask = this.isBoughtTM;
-    } else if (this.action == 'edit') {
-      this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
-    }
-    if (this.stepsTasks?.parentID) {
-      this.litsParentID = this.stepsTasks?.parentID.split(';');
-    }
-    if (this.listGroup?.length > 0) {
-      // remove group task recID null
-      let index = this.listGroup?.findIndex((group) => !group.recID);
-      index >= 0 && this.listGroup?.splice(index, 1);
-    }
-    this.roles = this.stepsTasks['roles'] || [];
-    this.owner = this.roles?.filter(
-      (role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U'
-    );
-    this.participant = this.roles?.filter((role) => role.roleType == 'P');
-    this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'O');
-
-    if (
-      (this.action == 'edit' || this.action == 'copy') &&
-      this.type == 'calendar'
-    ) {
-      this.getParentTask(this.stepsTasks);
-    }
-  }
-
-  setFieldTask() {
-    if (this.instanceStep?.fields?.length > 0 && this.stepsTasks?.fieldID) {
-      let fieldID = this.stepsTasks?.fieldID;
-      this.listFieldCopy = JSON.parse(
-        JSON.stringify(this.instanceStep?.fields)
-      );
-      this.listField = this.listFieldCopy?.filter((field) =>
-        fieldID?.includes(field?.recID)
-      );
-    }
-  }
-
   getBoughtTM() {
-    this.api
+    if (this.isBoughtTM == undefined ) {
+      this.api
       .execSv(
         'SYS',
         'ERM.Business.AD',
@@ -385,25 +552,15 @@ export class CodxAddTaskComponent implements OnInit {
               md.bought &&
               md.boughtModule?.moduleID == 'TM1'
           );
-          this.stepsTasks.createTask =
-            this.action == 'add'
-              ? this.isBoughtTM
-              : this.stepsTasks?.createTask;
+          this.stepsTasks.createTask = this.isBoughtTM;
+  
         }
       });
+    }else{
+      this.stepsTasks.createTask = this.isBoughtTM;
+    }
+    
   }
-
-  setRole<T>(role: T) {
-    role['recID'] = Util.uid();
-    role['objectName'] = this.user['userName'];
-    role['objectID'] = this.user['userID'];
-    role['createdOn'] = new Date();
-    role['createdBy'] = this.user['userID'];
-    role['roleType'] = 'U';
-    role['objectType'] = this.user?.objectType;
-    return role;
-  }
-
   getFormModel() {
     this.cache
       .gridViewSetup('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
@@ -416,45 +573,70 @@ export class CodxAddTaskComponent implements OnInit {
         }
       });
   }
+  getListInstanceStep(instanceID, isRoleFull) {
+    this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'GetInscestepCalendarAsync', [
+        instanceID,
+        isRoleFull,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.listInsStepInUser = res;
+          this.statusInput.step.show  = true;
+          this.statusInput.step.disabled = false;
+        }
+      });
+  }
+  checkAdminCM() {
+    this.api
+      .exec<any>('CM', 'DealsBusiness', 'CheckAdminDealAsync', [])
+      .subscribe((res) => {
+        this.isRoleFull = res ? true : false;
+      });
+  }
   //#endregion
 
-  valueChangeText(event) {
+  //#region change Data
+  changeValueText(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
-
-  valueChangeCombobox(event) {
+  changeValueCombobox(event) {
     this.stepsTasks[event?.field] = event?.data;
   }
-
-  filterText(event, key) {
+  changeValueGroup(event, key) {
     let data = event?.value;
     this.stepsTasks[key] = data;
     if (data) {
       this.groupTask = this.listGroup.find((x) => x.refID === data);
-      this.startDateParent = new Date(this.groupTask['startDate']);
-      this.endDateParent = new Date(this.groupTask['endDate']);
-      this.stepsTasks['startDate'] = this.startDateParent || new Date();
-      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
+      this.startDateParent = new Date(this.groupTask?.startDate);
+      this.endDateParent = new Date(this.groupTask?.endDate);
+      this.stepsTasks.startDate = this.startDateParent || new Date();
+      this.stepsTasks.indexNo = this.groupTask?.task?.length + 1 || 1;
     } else {
       this.groupTask = this.listGroup.find((x) => x.recID === null);
-      this.startDateParent = new Date(this.instanceStep['startDate']);
-      this.endDateParent = new Date(this.instanceStep['endDate']);
-      this.stepsTasks['startDate'] = this.startDateParent || new Date();
-      this.stepsTasks['indexNo'] = this.groupTask?.task?.length + 1 || 1;
+      this.startDateParent = new Date(this.instanceStep?.startDate);
+      this.endDateParent = new Date(this.instanceStep?.endDate);
+      this.stepsTasks.startDate = this.startDateParent || new Date();
+      this.stepsTasks.indexNo = this.groupTask?.task?.length + 1 || 1;
+    }
+    let startDays = new Date(this.startDateParent);
+    startDays.setDate(startDays?.getDate() + 1);
+    if(this.stepsTasks.endDate < this.stepsTasks.startDate){
+      this.stepsTasks.endDate = startDays;
+    }
+    if(this.stepsTasks.endDate > this.endDateParent){
+      this.stepsTasks.endDate = this.endDateParent;
     }
   }
-
   valueChangeAlert(event) {
     this.stepsTasks[event?.field] = event?.data;
     if (event?.field == 'isOnline' && !event?.data) {
       this.stepsTasks.reference = '';
     }
   }
-
   changeValueDate(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
   }
-
   changeValueDateExpected(event) {
     this.stepsTasks[event?.field] = new Date(event?.data?.fromDate);
     if (this.instanceStep) {
@@ -545,7 +727,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks['durationDay'] = 0;
     }
   }
-
   changeRoler(e) {
     if (!e || e?.length == 0) {
       this.participant = [];
@@ -566,7 +747,6 @@ export class CodxAddTaskComponent implements OnInit {
     this.participant = listRole;
     this.removeRoleDuplicate();
   }
-
   changeRolerOwner(event) {
     let role = event[0];
     if (role) {
@@ -641,6 +821,117 @@ export class CodxAddTaskComponent implements OnInit {
       this.owner = [];
     }
   }
+  changeValueRadio(event) {
+    this.stepsTasks.status = event?.value;
+    this.stepsTasks.progress = this.stepsTasks?.status == '3' ? 100 : 0;
+    if (this.stepsTasks?.status == '3') {
+      this.stepsTasks.actualEnd = new Date();
+      [this.startDayOld, this.endDayOld] = [
+        this.stepsTasks?.startDate,
+        this.stepsTasks?.endDate,
+      ];
+      [this.stepsTasks.startDate, this.stepsTasks.endDate] = [null, null];
+    }
+    if (this.stepsTasks?.status == '1') {
+      this.stepsTasks.startDate = this.startDayOld
+        ? this.startDayOld
+        : this.stepsTasks?.startDate;
+      this.stepsTasks.endDate = this.endDayOld
+        ? this.endDayOld
+        : this.stepsTasks?.endDate;
+      this.stepsTasks.actualEnd = null;
+    }
+    this.setStatusFormDate();
+  }
+  changeValueField(event) {
+    if (event && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'R':
+        case 'A':
+        case 'C':
+        case 'L':
+        case 'TA':
+          result = event.e;
+          break;
+      }
+      var index = this.listField.findIndex((x) => x.recID == field.recID);
+      if (index != -1) {
+        this.listField[index].dataValue = result;
+      }
+    }
+  }
+  changeTypeCM(event) {
+    if (event?.data) {
+      if (this.typeCM != event?.data) {
+        this.typeCMName = event?.component?.itemsSelected?.pop()?.text;
+        this.typeCM = event?.data;
+        this.refValueType = this.refValue[this.typeCM];
+        this.statusInput.dataType.show = true;
+        this.statusInput.dataType.disabled = false;
+      }
+    }
+  } 
+  changeDataCM(event) {
+    console.log(event?.component?.itemsSelected[0]);
+    this.dataTypeCM = event?.component?.itemsSelected[0];
+    if (this.dataTypeCM) {
+      if (this.typeCM == '1') {
+        this.isActivitie = true;
+        this.statusInput.step.show = false;
+        this.statusInput.group.show = false;
+        this.stepsTasks.objectID = this.dataTypeCM?.RecID;
+        this.stepsTasks.objectType = 'CM_Customers';
+      } else if (this.typeCM == '5') {
+        this.isActivitie = false;
+        this.stepsTasks.objectID = null;
+        this.stepsTasks.objectType = null;
+        this.stepsTasks.stepID = null;
+        this.stepsTasks.taskGroupID = null;
+        this.getListInstanceStep(this.dataTypeCM.RefID, true);
+      } else {
+        this.isActivitie = !!!this.dataTypeCM.RefID;
+        if (!this.isActivitie) {
+          this.stepsTasks.objectID = null;
+          this.stepsTasks.objectType = null;
+          this.getListInstanceStep(this.dataTypeCM.RefID, true);
+        } else {
+          this.stepsTasks.stepID = null;
+          this.stepsTasks.taskGroupID = null;
+          this.statusInput.step.show = false;
+          this.statusInput.group.show = false;
+          this.statusInput.step.disabled = true;
+        }
+      }
+    }
+    this.dataCM = event?.data;
+  }
+  changeStep(event) {
+    let data = event?.value;
+    if (data) {
+      this.stepsTasks.stepID = data;
+      let stepFind = this.listInsStepInUser?.find((x) => x.recID == data);
+      if (stepFind) {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = stepFind?.taskGroups;
+        this.statusInput.group.show = true;
+        this.stepsTasks.startDate = stepFind?.startDate || new Date();
+        this.stepsTasks.endDate.setDate(
+          this.stepsTasks.startDate.getDate() + 1
+        );
+      } else {
+        this.stepsTasks.taskGroupID = null;
+        this.listGroup = [];
+        this.statusInput.group.show = false;
+      }
+    }
+  }
+  //#endregion
 
   removeRoleDuplicate() {
     let roleTypeO = this.owner[0];
@@ -653,12 +944,10 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }
   }
-
   onDeleteOwner(objectID, data) {
     let index = data.findIndex((item) => item.objectID == objectID);
     if (index != -1) data.splice(index, 1);
   }
-
   handelMail() {
     let data = {
       dialog: this.dialog,
@@ -687,45 +976,19 @@ export class CodxAddTaskComponent implements OnInit {
       }
     });
   }
-
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-
-  fileAdded(e) {}
-
   getfileCount(e) {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
-
   getfileDelete(event) {
     event.data.length;
   }
+  fileAdded(e) {}
 
-  valueChangeRadio(event) {
-    this.stepsTasks.status = event?.value;
-    this.stepsTasks.progress = this.stepsTasks?.status == '3' ? 100 : 0;
-    if (this.stepsTasks?.status == '3') {
-      this.stepsTasks.actualEnd = new Date();
-      [this.startDayOld, this.endDayOld] = [
-        this.stepsTasks?.startDate,
-        this.stepsTasks?.endDate,
-      ];
-      [this.stepsTasks.startDate, this.stepsTasks.endDate] = [null, null];
-    }
-    if (this.stepsTasks?.status == '1') {
-      this.stepsTasks.startDate = this.startDayOld
-        ? this.startDayOld
-        : this.stepsTasks?.startDate;
-      this.stepsTasks.endDate = this.endDayOld
-        ? this.endDayOld
-        : this.stepsTasks?.endDate;
-      this.stepsTasks.actualEnd = null;
-    }
-    this.checkStatusShowForm();
-  }
   //#region save
   async beforeSave(isCreateMeeting = false, isAddTask = false) {
     this.stepsTasks['roles'] = [
@@ -779,10 +1042,6 @@ export class CodxAddTaskComponent implements OnInit {
         message.push(this.view['durationDay']);
       }
     }
-
-    // if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
-    //   message.push(this.view['durationDay']);
-    // }
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
       return;
@@ -796,7 +1055,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.save(this.stepsTasks, isCreateMeeting, isAddTask);
     }
   }
-
   save(task, isCreateMeeting = false, isAddTask = false) {
     if (this.action == 'add' || this.action == 'copy') {
       if (isCreateMeeting) {
@@ -809,7 +1067,6 @@ export class CodxAddTaskComponent implements OnInit {
       this.editTask(task);
     }
   }
-
   addTask(task, isCreateMeeting = false, isAddTask = false) {
     if (this.isSave) {
       this.api
@@ -863,102 +1120,11 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   //#endregion
+
   addFileCompleted(e) {
     // this.isAddComplete = e;
   }
-  valueChangeCustom(event) {
-    //bo event.e vì nhan dc gia trị null
-    if (event && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-          result = event.e;
-          break;
-      }
 
-      var index = this.listField.findIndex((x) => x.recID == field.recID);
-      if (index != -1) {
-        this.listField[index].dataValue = result;
-      }
-    }
-  }
-
-  checkFormat(field) {
-    if (field.dataType == 'T') {
-      if (field.dataFormat == 'E') {
-        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field.dataValue.toLowerCase().match(validEmail)) {
-          //this.notiService.notifyCode('SYS037');
-          this.cache.message('SYS037').subscribe((res) => {
-            if (res) {
-              let errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-            }
-          });
-          return false;
-        }
-      }
-      if (field.dataFormat == 'P') {
-        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field.dataValue.toLowerCase().match(validPhone)) {
-          // this.notiService.notifyCode('RS030');
-          this.cache.message('RS030').subscribe((res) => {
-            if (res) {
-              let errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-            }
-          });
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  checkStatusShowForm() {
-    if (this.action == 'add' || this.action == 'copy') {
-      if (this.isStart) {
-        if (this.stepsTasks.status == '3') {
-          this.isShowDate = false;
-          this.isShowTime = false;
-        } else {
-          this.isShowDate = true;
-          this.isShowTime = true;
-        }
-      } else {
-        this.isShowDate = false;
-        this.isShowTime = true;
-      }
-    } else {
-      //edit
-      if (this.isStart) {
-        if (this.stepsTasks?.status == '3') {
-          this.isShowDate = false;
-          this.isShowTime = false;
-        } else {
-          if (!this.stepsTasks?.endDate || !this.stepsTasks?.startDate) {
-            this.isShowDate = false;
-            this.isShowTime = false;
-          } else {
-            this.isShowDate = true;
-            this.isShowTime = true;
-          }
-        }
-      } else {
-        this.isShowDate = false;
-        this.isShowTime = true;
-      }
-    }
-  }
   openPopupLink(addLink) {
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
@@ -974,142 +1140,95 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
 
-  changeTypeCM(event) {
-    if (event?.data) {
-      if (this.typeCM != event?.data) {
-        this.typeCMName = event?.component?.itemsSelected?.pop()?.text;
-        this.typeCM = event?.data;
-        this.refValueType = this.refValue[this.typeCM];
-      }
-    }
-  }
-  changeDataCM(event) {
-    console.log(event?.component?.itemsSelected[0]);
-    this.dataTypeCM = event?.component?.itemsSelected[0];
-    if (this.dataTypeCM) {
-      if (this.typeCM == '1') {
-        this.isActivitie = true;
-        this.isShowCbxStep = false;
-        this.isShowCbxGroup = false;
-        this.stepsTasks.objectID = this.dataTypeCM?.RecID;
-        this.stepsTasks.objectType = 'CM_Customers';
-      } else if (this.typeCM == '5') {
-        this.isActivitie = false;
-        this.stepsTasks.objectID = null;
-        this.stepsTasks.objectType = null;
-        this.stepsTasks.stepID = null;
-        this.stepsTasks.taskGroupID = null;
-        this.getListInstanceStep(this.dataTypeCM.RefID, true);
-      } else {
-        this.isActivitie = !!!this.dataTypeCM.RefID;
-        if (!this.isActivitie) {
-          this.stepsTasks.objectID = null;
-          this.stepsTasks.objectType = null;
-          this.getListInstanceStep(this.dataTypeCM.RefID, true);
-        } else {
-          this.stepsTasks.stepID = null;
-          this.stepsTasks.taskGroupID = null;
-          this.isShowCbxStep = false;
-          this.isShowCbxGroup = false;
-          this.enabledStep = false;
-        }
-      }
-    }
-    this.dataCM = event?.data;
-  }
-
-  getListInstanceStep(instanceID, isRoleFull) {
-    this.api
-      .exec<any>('DP', 'InstancesStepsBusiness', 'GetInscestepCalendarAsync', [
-        instanceID,
-        isRoleFull,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.listInsStepInUser = res;
-          this.isShowCbxStep = true;
-          this.enabledStep = true;
-        }
-      });
-  }
-
-  changeStep(event) {
-    let data = event?.value;
-    if (data) {
-      this.stepsTasks.stepID = data;
-      let stepFind = this.listInsStepInUser?.find((x) => x.recID == data);
-      if (stepFind) {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = stepFind?.taskGroups;
-        this.isShowCbxGroup = true;
-        this.stepsTasks.startDate = stepFind?.startDate || new Date();
-        this.stepsTasks.endDate.setDate(
-          this.stepsTasks.startDate.getDate() + 1
-        );
-      } else {
-        this.stepsTasks.taskGroupID = null;
-        this.listGroup = [];
-        this.isShowCbxGroup = false;
-      }
-    }
-  }
-
-  getParentTask(task) {
-    if (task) {
-      let recID = task?.recID;
-      let taskGroupID = task?.taskGroupID;
-      let stepID = task?.stepID;
-      let instanceID = task?.instanceID;
-      let objectID = task?.objectID;
-      let objectType = task?.objectType;
+  async clickSettingApprove() {
+    let category;
+    if (this.action == 'edit')
+      category = await firstValueFrom(this.api.execSv<any>(
+            'ES',
+            'ES',
+            'CategoriesBusiness',
+            'GetByCategoryIDAsync',
+            this.stepsTasks.recID)
+          );
+    if (category) {
+      //this.actionOpenFormApprove(category.recID);
+      this.actionOpenFormApprove2(category);
+    } else {
+      //let transID = Util.uid();
+      // this.actionOpenFormApprove(transID);
       this.api
-        .exec<any>('DP', 'ActivitiesBusiness', 'GetParentOfTaskAsync', [
-          recID,
-          taskGroupID,
-          stepID,
-          instanceID,
-          objectID,
-          objectType,
+        .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'ESS22',
+          'ES_Categories',
         ])
-        .subscribe((res) => {
-          if (res) {
-            this.dataParentTask = res;
-            if (res?.instancesStep) {
-              this.listInsStepInUser = [res?.instancesStep];
-              this.isShowCbxStep = true;
-              this.enabledStep = false;
-              if (res?.instancesStep?.taskGroups) {
-                this.listGroup = res?.instancesStep?.taskGroups;
-                this.isShowCbxGroup = true;
-              }
-            }
-
-            switch (res?.applyFor) {
-              case '1'://Deal
-                this.typeCM = '5';
-                break;
-              case '2'://case
-                this.typeCM = '9';
-                break;
-              case '3':
-                this.typeCM;
-                break;
-              case '4'://Contracts
-                this.typeCM = '7';
-                break;
-              case '5'://Lead
-                this.typeCM = '3';
-                break;
-              case '6'://Customers
-                this.typeCM = '1';
-                break;
-            }
-            this.typeCMName = this.listTypeCM?.find(
-              (x) => x.value == this.typeCM
-            )?.text;
-            this.dataTypeCM = this.dataParentTask?.parentTaskID;
+        .subscribe(async (res) => {
+          if (res && res?.data) {
+            category = res.data;
+            category.recID = res?.recID ?? Util.uid();
+            category.eSign = false;
+            category.Category = 'DP_Processes';
+            category.categoryID = this.stepsTasks.recID;
+            category.categoryName = this.stepsTasks.taskName;
+            category.createdBy = this.user.userID;
+            category.owner = this.user.userID;
+            category.FunctionApproval = 'DP01';
+            this.actionOpenFormApprove2(category, true);
           }
         });
     }
+  }
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  titleAction: any;
+  actionOpenFormApprove2(item, isAdd = false) {
+    this.cache.functionList('ESS22').subscribe((f) => {
+      if (f) {
+        if (!f || !f.gridViewName || !f.formName) return;
+        this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((grvSetup) => {
+              let formES = new FormModel();
+              formES.funcID = f?.functionID;
+              formES.entityName = f?.entityName;
+              formES.formName = f?.formName;
+              formES.gridViewName = f?.gridViewName;
+              formES.currentData = item;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              option.FormModel = formES;
+              let opt = new DialogModel();
+              opt.FormModel = formES;
+              let popupEditES = this.callfc.openForm(
+                PopupAddCategoryComponent,
+                '',
+                800,
+                800,
+                '',
+                {
+                  disableCategoryID: '1',
+                  data: item,
+                  isAdd: isAdd,
+                  headerText: this.titleAction,
+                  dataType: 'auto',
+                  templateRefID: this.stepsTasks.recID,
+                  templateRefType: 'DP_Processes',
+                },
+                '',
+                opt                
+              );
+
+              popupEditES.closed.subscribe((res) => {
+                if (res?.event) {
+                  // this.loadListApproverStep();
+                  // this.loadEx();
+                  // this.loadWord();
+                  // this.recIDCategory = res?.event?.recID;
+                }
+              });
+            });
+        });
+      }
+    });
   }
 }

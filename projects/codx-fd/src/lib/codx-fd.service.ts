@@ -155,6 +155,16 @@ export class CodxFdService {
     );
   }
 
+  getSettingValueByModule(FormName: string, TransType: string){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      [FormName, TransType]
+    );
+  }
+
   updateSettingValue(
     formName: string,
     transType: string,
@@ -462,13 +472,23 @@ export class CodxFdService {
     );
   }
 
-  countFavorite(favsID: string, funcID: string, paraValues: string) {
+  countFavorite(
+    favsID: string, 
+    funcID: string, 
+    FormName: string, 
+    GridViewName: string,
+    EntityName: string,
+    EntityPermission: string,
+  ) {
     return this.api.execSv(
       'FD', 
       'FD', 
       'CardsBusiness',
       'CountFavoriteAsync',
-      [favsID, funcID, paraValues]
+      [
+        favsID, funcID, FormName, GridViewName, 
+        EntityName, EntityPermission
+      ]
     );
   }
 }
