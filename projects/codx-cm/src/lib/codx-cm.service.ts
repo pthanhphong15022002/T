@@ -1601,4 +1601,14 @@ export class CodxCmService {
     );
   }
   //end
+
+  // getTestCbx(recID) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'ProcessesBusiness',
+  //     'GetCbxPermissionByProcessIDAsync',
+  //     [recID]
+  //   );
+  // }
+
 }

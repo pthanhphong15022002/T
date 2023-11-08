@@ -58,8 +58,11 @@
       </div>
     </div>
     <div class="w-50px d-flex justify-content-end">
-      <!-- <codx-label fiedName="EmployeeID" [formModel]="form.formModel"></codx-label> -->
+      <!-- <codx-label
+        *ngIf="form.form.gridviewSetup.EmployeeID.allowPopup == true" fiedName="EmployeeID" [formModel]="form.formModel"></codx-label> -->
       <codx-input
+      *ngIf="form.form.gridviewSetup.EmployeeID.allowPopup == true"
+      
         [disabled]="disabledInput"
         [showInput]="false"
         field="employeeID"
@@ -133,12 +136,15 @@
     ></div>
     <!-- <div class="col-6">
       <codx-input
+      *ngIf="form.form.gridviewSetup.IsCurrent.allowPopup == true"
+      
         [disabled]="'true'"
         field="isCurrent"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
       <codx-label
+      *ngIf="form.form.gridviewSetup.IsCurrent.allowPopup == true"
         class="ms-3"
         fiedName="IsCurrent"
         [formModel]="form.formModel"
@@ -148,10 +154,13 @@
   <div class="form-group row mt-5">
     <div class="col-6">
       <codx-label
+      *ngIf="form.form.gridviewSetup.ContractTypeID.allowPopup == true"
         fiedName="ContractTypeID"
         [formModel]="form.formModel"
       ></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.ContractTypeID.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="contractTypeID"
         [formModel]="form.formModel"
@@ -161,8 +170,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="LimitMonths" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.LimitMonths.allowPopup == true" fiedName="LimitMonths" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.LimitMonths.allowPopup == true"
+      
         [disabled]="'true'"
         field="limitMonths"
         [formModel]="form.formModel"
@@ -173,8 +185,11 @@
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="EffectedDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.EffectedDate.allowPopup == true" fiedName="EffectedDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.EffectedDate.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="effectedDate"
         [formModel]="form.formModel"
@@ -183,8 +198,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="ExpiredDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.ExpiredDate.allowPopup == true" fiedName="ExpiredDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.ExpiredDate.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="expiredDate"
         [formModel]="form.formModel"
@@ -196,8 +214,11 @@
   <div class="form-group row">
     <div class="col-6">
       <div class="pb-1 border-bottom">
-        <codx-label fiedName="OrgUnitID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.form.gridviewSetup.OrgUnitID.allowPopup == true" fiedName="OrgUnitID" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.form.gridviewSetup.OrgUnitID.allowPopup == true"
+        
           [disabled]="disabledInput"
           field="orgUnitID"
           [formModel]="form.formModel"
@@ -206,8 +227,11 @@
       </div>
     </div>
     <div class="col-6">
-      <codx-label fiedName="PositionID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.PositionID.allowPopup == true" fiedName="PositionID" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.PositionID.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="positionID"
         [formModel]="form.formModel"
@@ -218,8 +242,11 @@
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="LocationID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.LocationID.allowPopup == true" fiedName="LocationID" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.LocationID.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="locationID"
         [formModel]="form.formModel"
@@ -227,8 +254,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="TransportType" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.TransportType.allowPopup == true" fiedName="TransportType" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.TransportType.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="TransportType"
         [formModel]="form.formModel"
@@ -238,8 +268,11 @@
   </div>
 
   <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.form.gridviewSetup.Note.allowPopup == true" fiedName="Note" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.form.gridviewSetup.Note.allowPopup == true"
+    
       [disabled]="disabledInput"
       field="note"
       [formModel]="form.formModel"
@@ -257,9 +290,10 @@
 
   <div class="form-group row mt-4">
     <div class="col-6">
-      <codx-label fiedName="ContractNo" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.ContractNo.allowPopup == true" fiedName="ContractNo" [formModel]="form.formModel"></codx-label>
       <codx-input
-        *ngIf="loadedAutoField == true"
+      *ngIf="form.form.gridviewSetup.ContractNo.allowPopup == true && loadedAutoField == true"
         [disabled]="autoNumField == 'ContractNo' || disabledInput"
         field="contractNo"
         [formModel]="form.formModel"
@@ -267,8 +301,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.SignedDate.allowPopup == true" fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.SignedDate.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="signedDate"
         [formModel]="form.formModel"
@@ -279,11 +316,14 @@
 
   <div class="d-flex justify-content-between mt-5">
     <codx-label
+    *ngIf="form.form.gridviewSetup.SignerID.allowPopup == true"
       class="fw-bold"
       fiedName="SignerID"
       [formModel]="form.formModel"
     ></codx-label>
     <codx-input
+    *ngIf="form.form.gridviewSetup.SignerID.allowPopup == true"
+    
       [disabled]="disabledInput"
       field="signerID"
       [showInput]="false"
@@ -318,9 +358,12 @@
 
   <!-- <div class="form-group row">
     <div class="col-12">
-      <codx-label fiedName="SignerID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.SignerID.allowPopup == true" fiedName="SignerID" [formModel]="form.formModel"></codx-label>
       <div class="border-bottom pb-1">
         <codx-input
+        *ngIf="form.form.gridviewSetup.SignerID.allowPopup == true"
+        
           [disabled]="disabledInput"
           field="signerID"
           [formModel]="form.formModel"
@@ -332,8 +375,11 @@
   </div> -->
 
   <!-- <div class="form-group row">
-    <codx-label fiedName="SignerPosition" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.form.gridviewSetup.SignerPosition.allowPopup == true" fiedName="SignerPosition" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.form.gridviewSetup.SignerPosition.allowPopup == true"
+    
       [disabled]="disabledInput"
       field="signerPosition"
       [formModel]="form.formModel"
@@ -443,8 +489,11 @@
 <ng-template #workingInfo>
 <ng-container *ngIf="form.formGroup">
   <div class="form-group row mt-5">
-    <codx-label fiedName="TimeWork" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.form.gridviewSetup.TimeWork.allowPopup == true" fiedName="TimeWork" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.form.gridviewSetup.TimeWork.allowPopup == true"
+    
       [disabled]="disabledInput"
       field="timeWork"
       [formModel]="form.formModel"
@@ -452,9 +501,11 @@
     ></codx-input>
   </div>
   <div class="form-group row mt-5">
-    <codx-label fiedName="MainWork" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.form.gridviewSetup.MainWork.allowPopup == true" fiedName="MainWork" [formModel]="form.formModel"></codx-label>
     <div class="main-work">
       <codx-input
+      *ngIf="form.form.gridviewSetup.MainWork.allowPopup == true"
         [disabled]="disabledInput"
         field="mainWork"
         [formModel]="form.formModel"
@@ -469,8 +520,11 @@
 <ng-container *ngIf="form.formGroup">
   <div class="form-group row mt-5">
     <div class="col-6">
-      <codx-label fiedName="MainSalary" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.MainSalary.allowPopup == true" fiedName="MainSalary" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.MainSalary.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="mainSalary"
         [formModel]="form.formModel"
@@ -478,8 +532,11 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="JobSalary" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.form.gridviewSetup.JobSalary.allowPopup == true" fiedName="JobSalary" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.form.gridviewSetup.JobSalary.allowPopup == true"
+      
         [disabled]="disabledInput"
         field="jobSalary"
         [formModel]="form.formModel"

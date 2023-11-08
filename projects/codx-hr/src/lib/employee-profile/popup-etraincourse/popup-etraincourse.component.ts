@@ -90,9 +90,11 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     
     this.funcID = dataDialog?.data?.funcID;
     this.employId = dataDialog?.data?.employeeId;
-    this.trainCourseObj = JSON.parse(
-      JSON.stringify(dataDialog?.data?.dataInput)
-    );
+    this.trainCourseObj = JSON.parse(JSON.stringify(dataDialog?.data?.dataInput));
+    if(this.trainCourseObj){
+      this.trainCourseObj.trainFromDate = new Date(this.trainCourseObj.trainFromDate);
+      this.trainCourseObj.trainToDate = new Date(this.trainCourseObj.trainToDate);
+    }
     this.headerTextCalendar[0] = dataDialog?.data?.trainFromHeaderText;
     this.headerTextCalendar[1] = dataDialog?.data?.trainToHeaderText;
   }
@@ -131,6 +133,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res) {
               this.trainCourseObj = res?.data;
+            console.log('trainCourseObj', this.trainCourseObj);
               this.trainCourseObj.employeeID = this.employId;
               // this.formModel.currentData = this.trainCourseObj;
               // this.form.formGroup.patchValue(this.trainCourseObj);
@@ -403,7 +406,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.trainCourseObj.trainToDate = event.fromDate;
       this.toDateFormat = this.handleControlType(event.type);
     }
+    if(this.form && this.form.formGroup){
     this.form.formGroup.patchValue(this.trainCourseObj);
+  }
   }
 
   handleControlType(evt){

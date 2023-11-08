@@ -53,7 +53,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   
   getReportList(reportID:string){
 
-    if(this.lstReport?.length == 0 && reportID )
+    if(/*this.lstReport?.length == 0 &&*/reportID ) 
     {
       this.api.execSv("rptrp","Codx.RptBusiness.RP","ReportListBusiness","GetByReportIDAsync",[reportID])
       .subscribe((res:any[]) => {
@@ -191,7 +191,15 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     }
   }
 
-
+  submit(){
+    if(this.dataSelected){
+      this.dialog && this.dialog.close(this.dataSelected);
+    }
+    else{
+      this.notificationSV.notify("Vui lòng chọn mẫu in",'2');
+      return;
+    }
+  }
 
 
   // dowload file

@@ -34,11 +34,11 @@
 <ng-template #body>
   <ng-container [ngTemplateOutlet]="tempStatus"></ng-container>
   <ng-container
-    *ngIf="type == 'calendar'"
+    *ngIf="type == 'calendar' || type == 'notStep'"
     [ngTemplateOutlet]="addTaskInCM"
   ></ng-container>
 
-  <div class="form-group" *ngIf="isShowCbxStep">
+  <div class="form-group" *ngIf="statusInput.step.show">
     <div class="mb-1 line-clamp line-clamp-1">
       <codx-label
         class="text-primary"
@@ -51,17 +51,17 @@
     <div>
       <ejs-combobox
         #comboboxStep
-        [dataSource]="listInsStep"
+        [dataSource]="listInsStepInUser"
         [fields]="fieldsStep"
         [value]="stepsTasks?.stepID"
         [allowCustom]="false"
-        [enabled]="disableStep"
+        [enabled]="!statusInput.step.disabled"
         (change)="changeStep($event)"
       ></ejs-combobox>
     </div>
   </div>
   <div
-    *ngIf="isShowCbxGroup"
+    *ngIf="statusInput.group.show"
     class="form-group d-flex justify-content-between align-item-center w-100"
   >
     <div class="step-name w-100">
@@ -80,9 +80,9 @@
           [dataSource]="listGroup"
           [fields]="fieldsGroup"
           [value]="stepsTasks?.taskGroupID"
-          (change)="filterText($event, 'taskGroupID')"
+          (change)="changeValueGroup($event, 'taskGroupID')"
           [allowCustom]="false"
-          [readonly]="stepsTasks?.isTaskDefault || action == 'copy'"
+          [enabled]="!statusInput.group.disabled"
         ></ejs-combobox>
       </div>
     </div>
@@ -108,7 +108,7 @@
         [formModel]="dialog?.formModel"
         type="text"
         [crrValue]="stepsTasks?.taskName"
-        (valueChange)="valueChangeText($event)"
+        (valueChange)="changeValueText($event)"
         [disabled]="stepsTasks?.isTaskDefault"
       >
       </codx-input>
@@ -133,7 +133,7 @@
         type="valuelist"
         refValue="DP023"
         [crrValue]="stepsTasks?.callType"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="changeValueCombobox($event)"
         [disabled]="stepsTasks?.isTaskDefault"
       >
       </codx-input>
@@ -209,7 +209,7 @@
               field="durationDay"
               [formModel]="dialog?.formModel"
               [crrValue]="stepsTasks?.durationDay"
-              (valueChange)="valueChangeText($event)"
+              (valueChange)="changeValueText($event)"
               [disabled]="isStart || stepsTasks?.isTaskDefault"
               type="number"
               min="0"
@@ -233,7 +233,7 @@
               field="durationHour"
               [formModel]="dialog?.formModel"
               [crrValue]="stepsTasks?.durationHour"
-              (valueChange)="valueChangeText($event)"
+              (valueChange)="changeValueText($event)"
               type="number"
               min="0"
               [disabled]="isStart || stepsTasks?.isTaskDefault"
@@ -267,7 +267,7 @@
             [crrValue]="stepsTasks?.reminders"
             refValue="DP030"
             type="valuelist"
-            (valueChange)="valueChangeText($event)"
+            (valueChange)="changeValueText($event)"
             [disabled]="stepsTasks?.isTaskDefault"
           >
           </codx-input>
@@ -331,7 +331,7 @@
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
-        (valueChangeCustom)="valueChangeCustom($event)"
+        (valueChangeCustom)="changeValueField($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
     </ng-container>
@@ -348,7 +348,7 @@
       field="memo"
       [formModel]="dialog?.formModel"
       [crrValue]="stepsTasks?.memo"
-      (valueChange)="valueChangeText($event)"
+      (valueChange)="changeValueText($event)"
       [disabled]="stepsTasks?.isTaskDefault"
     >
     </codx-input>
@@ -396,19 +396,30 @@
     </div>
   </div>
   <div class="d-flex align-items-center form-group">
+    <codx-label
+      fiedName="ApproveRule"
+      [formName]="'DPProcesses'"
+      [gridViewName]="'grvDPProcesses'"
+    >
+  </codx-label>
+  <div class="me-3 pt-2 ms-1">
     <codx-input
       type="switch"
+      class="test-check"
       [checked]="stepsTasks?.approveRule"
       field="approveRule"
       (valueChange)="valueChangeAlert($event)"
     >
     </codx-input>
-    <span class="ms-3">
-      <codx-label
-        fiedName="approveRule"
-        [formModel]="form.formModel"
-      ></codx-label>
-    </span>
+  </div>
+  <button
+    type="button"
+    class="btn btn-icon btn-sm btn-light-primary me-2"
+    [disabled]="!stepsTasks?.approveRule"
+    (click)="clickSettingApprove()"
+  >
+    <i class="icon-settings icon-16"></i>
+  </button>
   </div>
   <ng-container>
     <div class="d-flex align-items-center nav-item w-100 mb-1">
@@ -521,7 +532,7 @@
           name="status"
           value="1"
           [label]="'Mới'"
-          (change)="valueChangeRadio($event)"
+          (change)="changeValueRadio($event)"
           [checked]="stepsTasks?.status == '1'"
           [disabled]="action == 'edit'"
         ></ejs-radiobutton>
@@ -532,7 +543,7 @@
           name="status"
           value="3"
           [label]="'Hoàn thành'"
-          (change)="valueChangeRadio($event)"
+          (change)="changeValueRadio($event)"
           [checked]="stepsTasks?.status == '3'"
           [disabled]="action == 'edit'"
         ></ejs-radiobutton>
@@ -559,7 +570,7 @@
 </ng-template>
 
 <ng-template #addTaskInCM>
-  <div class="form-group" *ngIf="true">
+  <div class="form-group" *ngIf="statusInput.type.show">
     <div class="mb-1 line-clamp line-clamp-1">
       <codx-label
         class="text-primary required"
@@ -577,33 +588,35 @@
         refValue="CRM060"
         (valueChange)="changeTypeCM($event)"
         [crrValue]="typeCM"
-        [disabled]="action == 'edit' && type == 'calendar'"
+        [disabled]="statusInput.type.disabled"
       >
       </codx-input>
     </div>
   </div>
-
-  <div class="form-group" *ngFor="let item of listTypeCM">
-    <div [ngClass]="item?.value == typeCM ? 'd-inline' : 'd-none'">
-      <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
-        <codx-label
-          class="text-primary required"
-          name="lblTypeCm"
-          [formModel]="form?.formModel"
-          [default]="item?.text"
-        ></codx-label>
+  <ng-container *ngIf="statusInput.dataType.show">
+    <div class="form-group" *ngFor="let item of listTypeCM">
+      <div [ngClass]="item?.value == typeCM ? 'd-inline' : 'd-none'">
+        <div class="mb-1 line-clamp line-clamp-1" *ngIf="typeCM">
+          <codx-label
+            class="text-primary required"
+            name="lblTypeCm"
+            [formModel]="form?.formModel"
+            [default]="item?.text"
+          ></codx-label>
+        </div>
+        <codx-input
+          #inputDeal
+          [field]="'deals'"
+          type="combobox"
+          [refValue]="item?.refValue"
+          (valueChange)="changeDataCM($event)"
+          [crrValue]="dataParentTask?.parentTaskID"
+          [disabled]="statusInput.dataType.disabled"
+        ></codx-input>
       </div>
-      <codx-input
-        #inputDeal
-        [field]="'deals'"
-        type="combobox"
-        [refValue]="item?.refValue"
-        (valueChange)="changeDataCM($event)"
-        [crrValue]="dataParentTask?.parentTaskID"
-        [disabled]="action == 'edit' && type == 'calendar'"
-      ></codx-input>
     </div>
-  </div>
+  </ng-container>
+  
 </ng-template>
 
 <!-- <codx-input
