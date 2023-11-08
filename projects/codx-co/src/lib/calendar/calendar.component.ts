@@ -536,10 +536,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.dEventMonth = {};
     switch(id){
       case "COT01": // Lịch công ty
-        // this.calendarCenter && this.calendarCenter.changeModeView(false);
+        this.calendarCenter && this.calendarCenter.changeModeView(false);
         break;
       case "COT02": // Lịch nhóm
-        // this.calendarCenter && this.calendarCenter.changeModeView(false);
+        this.calendarCenter && this.calendarCenter.changeModeView(false);
         this.getListUserGroup();
         break;
       case "COT03": // Lịch cá nhân
