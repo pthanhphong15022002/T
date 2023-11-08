@@ -196,7 +196,10 @@
                             <div class="mt-9 group-gifts" *ngFor="let item of data.gifts">
                                 <div class="d-flex ms-2">
                                     <div class="me-5">
-                                        <codx-img [objectId]="item.giftID" objectType="FD_Gifts" [width]="100"
+                                        <codx-img *ngIf="item.category == '1'" [objectId]="item.giftID" objectType="FD_Gifts" [width]="100"
+                                            imageType="square">
+                                        </codx-img>
+                                        <codx-img *ngIf="item.category == '3' || item.category == '4'" [imgSource]="item.image" objectType="FD_Gifts" [width]="100"
                                             imageType="square">
                                         </codx-img>
                                     </div>

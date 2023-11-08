@@ -5,8 +5,6 @@ import {
   ViewChild,
   TemplateRef,
   Input,
-  OnChanges,
-  SimpleChanges,
   Output,
   EventEmitter
 } from '@angular/core';
@@ -23,8 +21,6 @@ export class CalendarCenterComponent
   extends UIComponent
   implements AfterViewInit
 {
-  
-
 
   @Input() resources: any;
   @Input() events: any;
@@ -36,28 +32,34 @@ export class CalendarCenterComponent
   @Input() eventTemplate:TemplateRef<any>;
   @Input() popupEventTemplate:TemplateRef<any>;
   @Input() resourceTemplate:TemplateRef<any>;
+  @Input() moreFuncTemplate:TemplateRef<any>;
+  @Input() currentView:string;
+  @Input() dFormModel:TemplateRef<any>;
+
 
   @Output() evtChangeDate = new EventEmitter();
   @Output() evtChangeMonth = new EventEmitter();
-  
+
   views: Array<ViewModel> | any = [];
   codxSchedule: CodxScheduleComponent;
   lstDayOff:any[] = []; // danh sách ngày nghỉ
   calendarID = 'STD';
-  
+
+
+  workDays: [1, 2, 3, 4, 5, 6];
+
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
-  
 
-  onInit() 
+
+  onInit()
   {
     this.getListDayOff();
   }
-  
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -69,9 +71,12 @@ export class CalendarCenterComponent
           eventModel: this.eventModel,// mapping của event schedule
           resourceModel: this.resourceModel, // mapping của resource schedule
           template: this.eventTemplate, // template event
-          template4: this.resourceTemplate,//template resource 
-          template6: this.mfButton,
-          template8: this.popupEventTemplate //template popup event
+          template3: this.cellTemplate,
+          template4: this.resourceTemplate,//template resource
+          template6: this.moreFuncTemplate, // template more funtion
+          template8: this.popupEventTemplate, //template popup event
+          currentView:'TimelineMonth',
+          hideFooter:true
         },
       },
     ];
@@ -79,14 +84,15 @@ export class CalendarCenterComponent
     var itv = setInterval(()=> {
       if((this.view?.currentView as any)?.schedule)
       {
-        this.codxSchedule = (this.view?.currentView as any)?.schedule;
+        clearInterval(itv);
+        this.codxSchedule = (this.view?.currentView as any).schedule;
         this.codxSchedule.isOutSource = this.isOutSource;
         this.codxSchedule.dataSource = this.events;
-        this.codxSchedule.resourceDataSource = this.resources;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
-        (this.view.currentView as any).statusColor = this.statusColor;
+        this.codxSchedule.statusColor = this.statusColor;
+        this.codxSchedule.isCalendarView = true;
+        this.codxSchedule.onTimelineViewChange(false);
         this.codxSchedule.setEventSettings();
-        clearInterval(itv);
       }
     },500)
   }
@@ -98,45 +104,76 @@ export class CalendarCenterComponent
     {
       this.codxSchedule.selectedDate = date;
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
-  
+
   // change events
   changeEvents(dataSource:any[]) {
-    if (this.codxSchedule) 
+    if (this.codxSchedule)
     {
       this.codxSchedule.dataSource = dataSource;
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
-  
+
   // change resource
   changeResource(resources:any[]){
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = resources;
       this.codxSchedule.onGroupingChange(resources);
+      this.codxSchedule.onGridlinesChange(true);
+      this.codxSchedule.onTimelineViewChange(true);
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
 
+  // change mode calendar <-> schedule
+  changeModeView(isCalendarView:boolean){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.isCalendarView = isCalendarView;
+      this.codxSchedule.onTimelineViewChange(isCalendarView);
+      this.codxSchedule.setEventSettings();
+    }
+  }
   // remove resource
   removeResource(){
     if(this.codxSchedule)
     {
-      this.codxSchedule.resourceDataSource = null;
-      this.codxSchedule.onGroupingChange(null);
+      this.codxSchedule.resourceDataSource = [];
+      this.codxSchedule.onTimelineViewChange(false);
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
+    }
+  }
+
+  changeStatusColor(statusColor:any[]){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.statusColor = statusColor;
+      this.codxSchedule.setEventSettings();
+    }
+  }
+
+  // add event
+  addEvent(event:any){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.addData(event);
+    }
+  }
+
+  // edit event
+  editEvent(event:any){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.updateData(event);
     }
   }
 
   //change date scheduler
   onAction(event: any) {
-    if(event) 
+    if(event)
     {
       let date = event.data.currentDate as Date;
       if(this.selectedDate.getMonth() != date.getMonth())
@@ -147,26 +184,22 @@ export class CalendarCenterComponent
   }
 
   // render html day off schedule
-  getDayOffHTML(evt: any) {
-    let obj = evt.date;
-    let cellDay = evt.date;
-    let html = "";
-    if (this.lstDayOff?.length > 0) 
-    {
+  getDayOffHTML(evt: any,ele:HTMLElement) {
+    if (this.lstDayOff?.length > 0){
+      let cellDay = evt.date;
       let dayOff = this.lstDayOff.find(x => new Date(x.startDate).toLocaleDateString() === cellDay.toLocaleDateString());
       if(dayOff)
       {
-        debugger
-        let time = obj.getTime();
-        let ele = document.querySelectorAll('[data-date="' + time + '"]');
-        if (ele?.length > 0) 
-        {
-          ele.forEach((item) => { (item as any).style.backgroundColor = dayOff.color; });
-          html =`<icon class="${dayOff.symbol}"></icon><span>${dayOff.note}</span>`;
-        } 
+        ele.style.backgroundColor = dayOff.color;
+        ele.style.color = dayOff.color;
+        ele.style.display = "flex";
+        ele.style.alignItems = "center";
+        ele.style.justifyContent = "center";
+        ele.style.height = "calc(100% - 20px)";        
+       return `${dayOff.note}`;
       }
     }
-    return html;
+    return "";
   }
 
   //get list day off
@@ -181,20 +214,23 @@ export class CalendarCenterComponent
         [this.calendarID]
       )
       .subscribe((res) => {
-        if(res) 
+        if(res?.length > 0)
         {
           this.lstDayOff = res;
+          this.lstDayOff.forEach((e:any) => {
+            let time = new Date(e.startDate).getTime();
+            let eles = document.querySelectorAll('[data-date="' + time + '"]');
+            if (eles?.length > 0){
+              eles.forEach((ele:HTMLElement) => {
+                if(ele.classList.value.includes("e-work-cells")){
+                  ele.style.backgroundColor = e.color;
+                  ele.innerText = e.note;
+                }
+              });
+            }
+          });
         }
       });
   }
 }
 
-enum TimelineSchedule {
-  TimelineDay = 0,
-  TimelineWeek = 1,
-  TimelineWorkWeek = 2,
-  TimelineMonth = 3,
-  TimelineYear = 4,
-  Agenda = 5,
-  MonthAgenda = 6
-}

@@ -1002,6 +1002,16 @@ export class CodxEsService {
     );
   }
 
+  getByRecID(recID){
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
+
   getSFByUserID(data) {
     return this.api.execSv(
       'ES',

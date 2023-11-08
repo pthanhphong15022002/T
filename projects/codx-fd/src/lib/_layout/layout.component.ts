@@ -1,6 +1,7 @@
 import { Component, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { CallFuncService, DialogRef, LayoutBaseComponent, SidebarModel } from 'codx-core';
+import { CodxFdService } from '../codx-fd.service';
 
 @Component({
   selector: 'lib-layout',
@@ -13,7 +14,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector,
     private callfc: CallFuncService,
-    private router: Router
+    private router: Router,
+    private fdService: CodxFdService,
     ) {
     super(inject);
     this.getModule();
@@ -27,5 +29,52 @@ export class LayoutComponent extends LayoutBaseComponent {
   }
   onAfterViewInit(): void { }
 
+  countFavorite(data: any){
+    console.log(data)
+    let entityName = "";
+    switch (data?.functionID)
+    {
+        case "FDT02":
+        case "FDT03":
+        case "FDT04":
+        case "FDT05":
+        case "FDT06":
+        case "FDK012":
+        case "FDW012":
+        case "FDT10":
+        case "FDT072":
+          entityName = "FD_Cards";
+          break;
+        case "FDT091":
+        case "FDT092":
+          entityName = "FD_GiftTrans";
+          break;
+        case "FDT093":
+          break;
+    }
+    if(data) {
+      var favIDs: any[] = [];
+      data.favs.forEach((x: any) => {
+        favIDs.push(x.recID);
+      });
+      data.favs.forEach((x: any) => {
+        this.fdService.countFavorite(
+          x.recID, 
+          data?.functionID,
+          data?.formName,
+          data?.gridViewName,
+          entityName,
+          data?.entityName, // entityPermission
+        )
+        .subscribe((item: string)=>{
+          if(item){
+            x.count = Number.parseInt(item);
+          } else {
+            x.count = 0;
+          }
+        });
+      });
+    }
+  }
   
 }

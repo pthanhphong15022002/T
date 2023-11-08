@@ -81,7 +81,6 @@ export class EPDashboardComponent extends UIComponent implements AfterViewInit {
     minorTickLines: { width: 0 },
     interval: 1,
     lineStyle: { width: 0 },
-    labelIntersectAction: 'Rotate45',
     valueType: 'Category'
 };
 //Initializing Primary Y Axis

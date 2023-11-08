@@ -1634,28 +1634,34 @@ export class CodxShareService {
         signFile.files.push(file);
       }
     }
-    if (template != null) {
-      signFile.templateID = template[0].templateID;
-    }
-    // if (approveProcess?.template?.length > 0) {
-    //   Array.from(approveProcess?.template).forEach((tp:any)=>{
-    //     if(tp?.files?.length>0){
-    //       tp?.files?.forEach(file => {
-    //         if(file?.areas?.length>0){
-    //           let fName = file?.fileName?.split('.')[0];
-    //           if(fName!=null && fName !=""){
-    //             let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
-    //             if(sfNewFile?.length>0){
-    //               sfNewFile?.forEach((sfn:any)=>{
-    //                 sfn.areas = file?.areas;                    
-    //               })
-    //             }
-    //           }
-    //         }
-    //       });
-    //     }
-    //   });
+    // if (template != null) {
+    //   signFile.templateID = template[0].templateID;
     // }
+    if (approveProcess?.template?.length > 0) {
+      if(signFile.files?.length ==1 && approveProcess?.template?.length==1 && approveProcess?.template[0]?.files?.length==1){
+        signFile.files[0].areas = approveProcess?.template[0]?.files[0]?.areas;
+      }
+      else{
+        Array.from(approveProcess?.template).forEach((tp:any)=>{
+          if(tp?.files?.length>0){
+            tp?.files?.forEach(file => {
+              if(file?.areas?.length>0){
+                let fName = file?.fileName?.split('.')[0];
+                if(fName!=null && fName !=""){
+                  let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
+                  if(sfNewFile?.length>0){
+                    sfNewFile?.forEach((sfn:any)=>{
+                      sfn.areas = file?.areas;                    
+                    })
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
+      
+    }
     return signFile;
   }
 
