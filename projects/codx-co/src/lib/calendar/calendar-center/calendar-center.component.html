@@ -6,7 +6,7 @@
 </codx-views>
 
 <ng-template #cellTemplate let-data>
-  <div class="w-100 h-100 d-flex align-items-center justify-content-center" [innerHtml]="getDayOffHTML(data)"></div>
+  <div #element [innerHtml]="getDayOffHTML(data,element)"></div>
 </ng-template>
 
 
