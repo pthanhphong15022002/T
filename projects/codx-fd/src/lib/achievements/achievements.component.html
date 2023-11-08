@@ -1,0 +1,20 @@
+<codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
+  [className]="className" [method]="method" [entityName]="entityName" [button]="button" [autoLoad]="false"
+  [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
+  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)">
+</codx-views>
+
+<!-- tree_masterDetail -->
+<ng-template #tempTree let-data>
+    <div class="d-flex align-items-top py-1">
+      <i class="icon-home me-2"></i>
+      <span>{{ data.orgUnitName }}</span>
+    </div>
+</ng-template>
+<ng-template #tmpMasterDetail>
+  <lib-wallets-list-by-org [formModel]="view.formModel" [grvSetup]="grvSetup"
+  [funcID]="funcID" [rowHeight]="100" [orgUnitID]="itemSelected?.orgUnitID" [view]="view"
+  [showRowNumber]="false" [modeView]="'achievement'">
+</lib-wallets-list-by-org>
+</ng-template>
+  <!-- end tree_masterDetail -->

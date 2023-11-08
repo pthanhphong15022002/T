@@ -854,6 +854,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-more-popup-wrapper .e-more-event-content {
   max-height: 210px !important;
+  padding: 10px 5px 0!important;
 }
 
 .e-more-popup-wrapper {
@@ -3610,7 +3611,7 @@ codx-view-list-tree{
   position: relative;
 
   .codx-detail-main{
-    height: calc(100vh - 60px);
+    //height: calc(100vh - 60px);
     overflow: auto;
     padding-bottom: 60px;
   }
@@ -4098,6 +4099,31 @@ codx-view-kanban{
   }
 }
 
+.okr-tasklist{
+  codx-toolbar .container-fluid{
+      padding: 0;
+  }
+  codx-tasks-share{
+    height: 100%!important;
+    .container-fluid.p-0{
+      height: calc(100% - 60px)!important;
+    }
+  }
+} 
+
+app-setting .e-tab .e-tab-header.e-vertical:before {
+  border-color:transparent;
+}
+
+.line-100 {
+  width: auto;
+  height: 12px;
+  .line-kudos {
+    width: auto;
+    min-width: 100px;
+    height: 12px;
+}
+}
 //////////////
 // ipad and tablet
 /// /////////

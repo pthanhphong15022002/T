@@ -1,44 +1,130 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
+  OnInit,
   Optional,
   ViewEncapsulation,
 } from '@angular/core';
-import { DialogData, DialogRef, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 
 @Component({
   selector: 'popup-settings',
   templateUrl: './popup-settings.component.html',
   styleUrls: ['./popup-settings.component.scss'],
 })
-export class PopupSettingsComponent
-  extends UIComponent
-  implements AfterViewInit
+export class PopupSettingsComponent implements OnInit, AfterViewInit
 {
   headerText: string;
   dialog!: DialogRef;
   data: any;
-
+  lstSettingCalendar:any[] = [];
+  user:any = null;
+  isAdministrator:boolean = false;
+  loaded:boolean = false;
   constructor(
-    injector: Injector,
+    private api:ApiHttpService,
+    private auth:AuthStore,
+    private notiService:NotificationsService,
+    private detectorRef:ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {
-    super(injector);
+  ) 
+  {
     this.dialog = dialog;
     this.data = dt.data;
+    this.user = this.auth.get();
   }
 
-  onInit(): void {
-    debugger
-    const { data } = this.data;
-    console.log(data);
+  ngOnInit(): void {
+    this.getSetting();
   }
 
   ngAfterViewInit(): void {}
 
-  valueChange(event) {
-    console.log(event);
+  //get setting calendars
+  getSetting(){
+    this.api.execSv('SYS',
+    'ERM.Business.SYS',
+    'SettingValuesBusiness',
+    'GetCalendarSettingAsync',
+    ['WPCalendars'])
+    .subscribe((res:any) => {
+      let lstCalendar = [];
+      if(res?.length > 0)
+      {
+        res.forEach((x:any) => 
+        {
+          
+          let obj = {
+            recID : x.recID,
+            dataValue: JSON.parse(x.dataValue),
+          }
+          lstCalendar.push(obj);
+        });
+      }
+      this.lstSettingCalendar = lstCalendar;
+      this.loaded = true;
+      this.detectorRef.detectChanges();
+    });
+  }
+  // color change
+  textColorChange(event) {
+    if(event)
+    {
+      let value = event.data;
+      let transType = event.field;
+      this.lstSettingCalendar.map((x:any) => {
+        if(x.dataValue.Template.TransType === transType)
+        {
+          x.dataValue.ShowColor = value;
+          return x;
+        }
+      });
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  // color change
+  backgroundColorChange(event) {
+    if(event)
+    {
+      let value = event.data;
+      let transType = event.field;
+      this.lstSettingCalendar.map((x:any) => {
+        if(x.dataValue.Template.TransType === transType)
+        {
+          x.dataValue.ShowBackground = value;
+          return x;
+        }
+      });
+      this.detectorRef.detectChanges();
+    }
+  }
+  // click save
+  clickSave(){
+    if(this.lstSettingCalendar)
+    {
+      let settings = this.lstSettingCalendar.map(x => {
+        return {
+          recID: x.recID,
+          dataValue: JSON.stringify(x.dataValue)
+        }
+      });
+      this.api.execSv("SYS","ERM.Business.SYS","SettingValuesBusiness","SaveSettingCalendarAsync",JSON.stringify(settings))
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.notiService.notify("Cập nhật thành công");
+          this.dialog.close(settings.map((x:any) =>  x.dataValue));
+        }
+        else
+        {
+          this.notiService.notify("Cập nhật không thành công");
+          this.dialog.close();
+        }
+      });
+    }
   }
 }

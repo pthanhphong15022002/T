@@ -48,6 +48,10 @@
     justify-content: center !important;
     display: flex;
     align-items: center;
+    flex-direction: column !important;
+    img{
+        width: 15% !important;
+    }
 }
 
 .tabline-content .e-content {
@@ -55,7 +59,7 @@
 }
 
 .tablinevoucher-content .e-content {
-    height: calc(100vh - 435px) !important;
+    height: calc(100vh - 470px) !important;
 }
 
 .tablinegeneral-content .e-content {
@@ -267,21 +271,28 @@
 
 .ac-form {
     animation-name: slideRight;
-    animation-duration: 400ms !important;
+    animation-duration: 0.3s !important;
     animation-fill-mode: both !important;
-    animation-timing-function: linear;
+    animation-timing-function: ease;
     width: 100% !important;
     height: 100% !important;
     position: absolute !important;
+    will-change: transform;
 }
 
 @keyframes slideRight {
     0% {
         transform: translate3d(100%, 0, 0);
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute !important;
     }
 
     100% {
         transform: translate3d(0, 0, 0);
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute !important;
     }
 }
 
@@ -335,6 +346,9 @@
 
     codx-listview {
         height: 100% !important;
+    }
+    .e-pane.e-pane-horizontal.e-scrollable.e-static-pane.e-collapsible{
+        max-width: 450px !important;
     }
 }
 
@@ -399,3 +413,16 @@
 }
 
 /* css custom animation gridviewv2 */
+
+.ac-hide-toolbar{
+    margin-top: -4rem;
+    position: fixed;
+    height: calc(100vh - 75px);
+    background-color: white;
+    background-clip: content-box;
+    width: 100%;
+    padding-right: 9.5rem;
+    codx-toolbar{
+        display: none !important;
+    }
+}

@@ -38,6 +38,7 @@ import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.compon
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'lib-deals',
@@ -180,7 +181,8 @@ export class DealsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private stepService: StepService,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -208,6 +210,13 @@ export class DealsComponent
         this.processIDKanban = res;
       }
     });
+    // this.codxCmService.getTestCbx('0fe9e733-4dff-11ee-bf32-988d46c4cbe1').subscribe((res) => {
+    //   if(res) {
+
+    //   }
+
+    // });
+    //this.codxCmService.test([],[],[]).subscribe((res) => { });;
 
     this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
@@ -361,9 +370,9 @@ export class DealsComponent
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-        const functionID = eventItem.functionID;
-        const mappingFunction = this.getRoleMoreFunction(functionID);
-        mappingFunction && mappingFunction(eventItem, data);
+       const functionID = eventItem.functionID;
+       const mappingFunction = this.getRoleMoreFunction(functionID);
+       mappingFunction && mappingFunction(eventItem, data);
       }
     }
   }
@@ -412,7 +421,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1'
+       data?.alloweStatus == '1'
           ? !['1', '2', '15'].includes(data.status) ||
             data.closed ||
             ['1', '0'].includes(data.status)
@@ -421,7 +430,7 @@ export class DealsComponent
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1'
+        data?.alloweStatus == '1'
           ? !['0'].includes(data.status)
           : true;
     };
@@ -429,7 +438,6 @@ export class DealsComponent
       eventItem.disabled =
         (data.closed && data.status != '1') ||
         data.status == '0' ||
-        (data.processID && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
     };
     // let isUpdateBANT = (eventItem, data) => {
@@ -456,7 +464,7 @@ export class DealsComponent
     };
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled =
-        data.full || data?.alloweStatus == '1' ? false : true;
+        data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -545,12 +553,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(tmpPermission) {
-    return (
-      !tmpPermission?.roleMore?.isReasonSuccess &&
-      !tmpPermission?.roleMore?.isReasonFail &&
-      !tmpPermission?.roleMore?.isMoveStage
-    );
+  checkMoreReason(data) {
+    return data?.status != "1" && data?.status != "2" && data?.status != "15";
   }
   clickMF(e, data) {
     this.dataSelected = data;
@@ -575,6 +579,7 @@ export class DealsComponent
       // SYS002: () => this.exportFiles(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
+      CM0201_18: () => this.addTask(data),
     };
 
     const executeFunction = functionMapping[e.functionID];
@@ -1936,6 +1941,7 @@ export class DealsComponent
       recID: this.dataSelected.recID,
       valueListStatusCode: this.valueListStatusCode,
       gridViewSetup: this.gridViewSetup,
+      category: '1'
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
@@ -1970,5 +1976,27 @@ export class DealsComponent
       }
     }
     return '';
+  }
+
+  async addTask(data){
+    let taskType = await this.stepService.chooseTypeTask();
+    if(taskType){
+      let dataDeal = {
+        typeCM:'5',
+        parentTaskID: data.recID,
+      }
+      let dataAddTask = {
+        type: 'notStep',
+        action: 'add',
+        taskType: taskType,
+        titleName:  this.titleAction,
+        ownerInstance: data?.owner,// owner of Parent
+        dataParentTask: dataDeal,
+        instanceID: data.refID,
+        isStart: data.status == '2',
+      }
+      let task = await this.stepService.openPopupTask2(dataAddTask, 'right');
+    }
+    
   }
 }

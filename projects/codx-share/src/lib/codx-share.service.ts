@@ -880,13 +880,13 @@ export class CodxShareService {
     );
   }
 
-  getDataCO_Meetings(requestData) {
+  getDataCO_Meetings(...args) {
     return this.api.execSv(
       'CO',
       'CO',
       'MeetingsBusiness',
-      'GetListMeetingsCalendarAsync',
-      requestData
+      'GetCalendarEventsAsync',
+      args
     );
   }
 
@@ -1372,6 +1372,15 @@ export class CodxShareService {
       [companyID, roleType]
     );
   }
+  getRPList(ids: any,option :string, isLite :boolean = false,reportType :string = null) {
+    return this.api.execSv(
+      'rptrp',
+      'Codx.RptBusiness.RP',
+      'ReportListBusiness',
+      'GetRPAsync',
+      [ids,option,isLite,reportType]
+    );
+  }
   viewApprovalStep(transID, isSettingMode = true, dynamicApprovers = null) {
     return this.api.execSv<any>(
       'ES',
@@ -1628,6 +1637,25 @@ export class CodxShareService {
     if (template != null) {
       signFile.templateID = template[0].templateID;
     }
+    // if (approveProcess?.template?.length > 0) {
+    //   Array.from(approveProcess?.template).forEach((tp:any)=>{
+    //     if(tp?.files?.length>0){
+    //       tp?.files?.forEach(file => {
+    //         if(file?.areas?.length>0){
+    //           let fName = file?.fileName?.split('.')[0];
+    //           if(fName!=null && fName !=""){
+    //             let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
+    //             if(sfNewFile?.length>0){
+    //               sfNewFile?.forEach((sfn:any)=>{
+    //                 sfn.areas = file?.areas;                    
+    //               })
+    //             }
+    //           }
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
     return signFile;
   }
 
@@ -1758,65 +1786,6 @@ export class CodxShareService {
     }
   }
 
-  // apExportFileWithTemplate(
-  //   approveProcess: ApproveProcess,
-  //   releaseCallback: (response: ResponseModel, component: any) => void,
-  //   template: any,
-  //   releaseBackground: boolean = false
-  // ) {
-  //   approveProcess.template = template;
-  //   if (template?.templateID == null && template?.templateType == null) {
-  //     //TemplateID & TemplateType null -> Thông báo không tìm thấy mấu xuất dữ liệu
-  //     this.notificationsService.alertCode('AP0001').subscribe((x) => {
-  //       if (x.event?.status == 'Y') {
-  //         this.apReleaseWithEmptySignFile(approveProcess, releaseCallback);
-  //       } else {
-  //         return;
-  //       }
-  //     });
-  //   } else if (template?.templateID != null && template?.templateID != null) {
-  //     let exportUpload = new ExportUpload();
-  //     //exportUpload.templateRecID = template?.templateID;
-  //     //exportUpload.templateType = template?.templateType;
-  //     exportUpload.convertToPDF = false;
-  //     exportUpload.title = approveProcess.title;
-  //     exportUpload.entityName = approveProcess.entityName;
-  //     exportUpload.module = approveProcess.module;
-  //     exportUpload.objectID = approveProcess.recID;
-  //     exportUpload.objectType = approveProcess.entityName;
-  //     exportUpload.referType = 'source';
-  //     exportUpload.functionID = approveProcess.funcID;
-  //     exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-
-  //     // this.getRpListByTemplateID(template?.templateID).subscribe(
-  //     //   (rpList: any) => {
-  //     //     if (rpList) {
-  //     //       exportUpload.reportRecID = rpList?.recID;
-  //     //       exportUpload.dataJson = JSON.stringify(approveProcess?.data);
-  //     //       this.apCreateExportFile(
-  //     //         approveProcess,
-  //     //         releaseCallback,
-  //     //         exportUpload
-  //     //       );
-  //     //     } else {
-  //     //       exportUpload.dataJson = JSON.stringify([approveProcess?.data]);
-  //     //       this.apCreateExportFile(
-  //     //         approveProcess,
-  //     //         releaseCallback,
-  //     //         exportUpload
-  //     //       );
-  //     //     }
-  //     //   }
-  //     // );
-  //   } else {
-  //     this.notificationsService.notify(
-  //       'Vui lòng kiểm tra lại mẫu thiết lập',
-  //       '2'
-  //     );
-  //     return;
-  //   }
-  // }
-
   apExportFileWithMultiTemplate(
     approveProcess: ApproveProcess,
     releaseCallback: (response: ResponseModel, component: any) => void,
@@ -1825,8 +1794,6 @@ export class CodxShareService {
   ) {
     approveProcess.template = templates;
     let exportUpload = new ExportUpload();
-    //exportUpload.templateRecID = templates?.templateID;
-    //exportUpload.templateType = templates?.templateType;
     exportUpload.convertToPDF = false;
     exportUpload.title = approveProcess.title;
     exportUpload.entityName = approveProcess.entityName;
@@ -1844,9 +1811,9 @@ export class CodxShareService {
       let tmp = new TemplateInfo();
       tmp.templateID = temp?.templateID;
       tmp.templateType = temp?.templateType;
-
+      tmp.exportFileName = temp?.files[0]?.fileName?.split('.')[0];
       listTemplateRecID.push(temp?.templateID);
-      exportUpload.templates.push(temp);
+      exportUpload.templates.push(tmp);
     }
 
     this.getListRpListByTemplateID(listTemplateRecID).subscribe(
@@ -2212,9 +2179,11 @@ export class CodxShareService {
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
+      reportID:reportList[0]?.reportID,
       reportList: reportList,
       url: moduleID + '/report/detail/',
       formModel: formModel,
+      headerText:"Chọn mẫu in",
     };
     let opt = new DialogModel();
     let dialogViewRP = this.callfunc.openForm(

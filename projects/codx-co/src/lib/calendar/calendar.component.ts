@@ -25,25 +25,23 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { CalendarCenterComponent } from './calendar-center/calendar-center.component';
-import { Query } from '@syncfusion/ej2-data';
-import { FilteringEventArgs } from '@syncfusion/ej2-angular-dropdowns';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { FormGroup } from '@angular/forms';
-import { map, of, switchMap } from 'rxjs';
 import {
   SpeedDialComponent,
   SpeedDialItemEventArgs,
   SpeedDialItemModel,
 } from '@syncfusion/ej2-angular-buttons';
 import { CodxAddBookingCarComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
-import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 import { AddNoteComponent } from 'projects/codx-share/src/lib/components/calendar-notes/add-note/add-note.component';
 import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components/codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
 import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
 import { CodxCoService } from '../codx-co.service';
-import { isElementAccessExpression } from 'typescript';
-import { Data } from '@syncfusion/ej2-angular-grids';
+import { CO_EventModel } from './model/CO_EventModel';
+import {  elementAt, forkJoin, map, of } from 'rxjs';
+import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
+import { Month } from '@syncfusion/ej2-angular-schedule';
 
 
 @Component({
@@ -76,14 +74,12 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   //#region variable
   user:any = null;
   views: Array<ViewModel> = [];
-  calendarParams:any[] = [];
+  settingCalendars:any[] = [];
   typeNavigate = 'Month';
   defaultFuncID:string = 'COT03'; // lịch cá nhân
   locale:string = 'vi';
   calendarID:string = 'COT03';
   lstCalendars:any[] = [];
-  isChangeMonth = true;
-  settings:any = {};
   dPredicate:any = {};
   dResources:any = {};
   statusColor:any[] = [];
@@ -91,51 +87,47 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   toDate:Date = new Date();
   lstEvents:any[] = [];
   lstResources:any[] = [];
-  checked:string = "1";
-  isLoading:boolean = false;
   selectedDate:Date = null;
   sysMoreFunc:any[] = [];
-  id:string = "";
-
-  startDate:Date = new Date(moment().startOf('month').format('YYYY-MM-DD hh:mm'))
-  endDate:Date = new Date(moment().endOf('month').format('YYYY-MM-DD hh:mm'));
-  //speedDial
+  groupID:string = "";
+  orgUnitID:string = "";
+  dEventMonth:any = {};
+  lstUserGroups:any[] = [];
+  startDate:Date = null;
+  endDate:Date = null;
+  month:number = 0 // 0-11 
   speedDialItems: SpeedDialItemModel[] = [];
-  //
-  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
-  @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
-  @ViewChild('calendarCenter') calendarCenter: CalendarCenterComponent;
-  @ViewChild('resourceTemplate') resourceTemplate: TemplateRef<any>;
-
   hrRequest:DataService = null;
+  mapEvents:any[] = [];
+  loaded:boolean = false;
+  loadUserGroup:boolean = false;
   resourceModel:any = {
-    // Name: 'employeeName',
-    // Field: 'employeeID',
-    // IdField: 'employeeID',// field mapping vs event Schedule
-    // TextField: 'employeeName',
-    // Title: 'employeeName',
-    Name: 'name',
-    Field: 'field',
-    IdField: 'idField',// field mapping vs event Schedule
-    TextField: 'textField',
-    Title:  'title'
+    Name: 'resourceName',
+    Field: 'resourceID',
+    IdField: 'resourceID',// field mapping với event Schedule
+    TextField: 'resourceName',
+    Title: 'resourceName',
   };
   eventModel:any = {
     id: 'recID',
     subject: { name: 'title' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
-    resourceId: { name: 'recID' },// field mapping vs resource Schedule
+    resourceId: { name: 'resourceID' },// field mapping với resource Schedule
     status: 'transType',
   };
+  //
+  @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
+  @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
+  @ViewChild('calendarCenter') calendarCenter: CalendarCenterComponent;
+  @ViewChild('resourceTemplate') resourceTemplate: TemplateRef<any>;
+  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   //#endregion 
   
   constructor(
     private injector: Injector,
     private coService: CodxCoService,
-    private cacheService: CacheService,
-    private notificationsService: NotificationsService,
-    private cfService: CallFuncService,
+    private notiService: NotificationsService,
     private authStore:AuthStore
   ) {
     super(injector);
@@ -150,23 +142,14 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.router.params.subscribe((param:any) => {
       this.funcID = param["funcID"];
     });
+    this.selectedDate = new Date();
+    var date = new Date(), year = date.getFullYear(), month = date.getMonth();
+    this.startDate = new Date(year, month, 1);
+    this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate();
+    this.month = month + 1;
     this.getListCalendars();
     this.getSettingValue();
-    this.getListEventFunc();
-    this.cache.functionList('HRT01')
-    .subscribe((func:any) => {
-      if(func)
-      {
-        this.hrRequest = new DataService(this.injector);
-        this.hrRequest.predicate = func.predicate;
-        this.hrRequest.dataValue = func.dataValue;
-        this.hrRequest.service = "HR";
-        this.hrRequest.page = 1;
-        this.hrRequest.pageSize = 20;
-        this.hrRequest.idField = "OrgUnitID";
-        this.hrRequest.selector = "OrgUnitID;OrgUnitName";
-      }
-    });
+    this.getSeedDialitem();
   }
 
   ngAfterViewInit() {
@@ -175,7 +158,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       {
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
+        showFilter: false,
         model: {
           panelLeftRef: this.templateLeft,
         },
@@ -188,6 +172,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.sysMoreFunc = res;
       }
     });
+
     this.coService.getFormModel(EPCONST.FUNCID.R_Bookings).then((res) => {
       this.roomFM = res;
       this.roomFG = this.codxService.buildFormGroup(
@@ -239,19 +224,28 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.assignTaskFM?.gridViewName
       );
     });
-    var itv = setInterval(() => {
-      if(this.ejCalendar)
+
+    this.cache.functionList('HRT01')
+    .subscribe((func:any) => {
+      if(func)
       {
-        document.querySelector(".e-footer-container").firstChild.addEventListener("click",() => {
-          this.ejCalendar.value = new Date();
-        });
-        clearInterval(itv);
+        this.hrRequest = new DataService(this.injector);
+        this.hrRequest.predicate = func.predicate;
+        this.hrRequest.dataValue = func.dataValue;
+        this.hrRequest.service = "HR";
+        this.hrRequest.page = 1;
+        this.hrRequest.pageSize = 20;
+        this.hrRequest.idField = "orgUnitID";
+        this.hrRequest.selector= "OrgUnitID;OrgUnitName";
+        this.hrRequest.parentIdField = "parentID";
       }
-    },1000);    
+    });
+
+      
   }
 
   // get list event function
-  getListEventFunc(){
+  getSeedDialitem(){
     this.api.execSv("CO","CO","CalendarsBusiness","GetListFunctionEventAsync")
     .subscribe((res:any)=>{
       if(res){
@@ -275,26 +269,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         if (res?.length > 0) {
           let arrParam = [];
           res.forEach((element) => {
-            let obj = JSON.parse(element);
-            this.statusColor.push({
-              color: obj.ShowBackground,
-              borderColor: obj.ShowColor,
-              text: obj.Template.TransType,
-              status: obj.Template.TransType,
-              textColor: obj.TextColor ?? "#1F1717" // textColor chưa có thiết lập - gắn để test
-            });
-            this.dResources[obj.Template.TransType] = {
-              color: obj.ShowColor,
-              backgroundColor: obj.ShowBackground,
-              borderColor: obj.ShowColor,
-              text: obj.Template.TransType,
-              status: obj.Template.TransType,
-            }
-            this.dPredicate[obj.Template.TransType] = obj.Predicate;
-            arrParam.push(obj);
+            let param = JSON.parse(element);
+            if(!param["TextColor"])
+              param["TextColor"] = "#1F1717"; // textColor chưa có thiết lập - gắn để test
+            let obj = {
+              color: param.ShowBackground,
+              borderColor: param.ShowColor,
+              showColor: param.ShowColor,
+              text: param.Template.TransType,
+              status: param.Template.TransType,
+              textColor: param.TextColor 
+            };
+            this.statusColor.push(obj);
+            this.dResources[param.Template.TransType] = obj;
+            this.dPredicate[param.Template.TransType] = param.Predicate;
+            arrParam.push(param);
           });
-          this.calendarParams = [...arrParam];
-          this.getListEvents();
+          this.settingCalendars = arrParam;
+          this.getEventData();
           this.detectorRef.detectChanges();
         }
       });
@@ -314,53 +306,75 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     });
   }
 
-  lstUserGroups:any[] = [];
   // Get list AD_UserGroup
   getListUserGroup(){
-    this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetUserGroupByCOAsync")
-    .subscribe((res:any) => {
-      if(res)
-      {
-        this.lstUserGroups = res[0];
-        this.id = this.lstUserGroups[0].groupID;
-        this.getListGroupMember(this.id);
-        this.getListEvents();
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-  //get list group member
-  getListGroupMember(groupID=""){
-    this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetGroupMemberByCOAsync",[groupID])
-    .subscribe((res:any) => {
-      if(res)
-      {
-        this.lstResources = res[0];
-        this.detectorRef.detectChanges();
-      }
-    });
+    if(this.lstUserGroups.length > 0)
+    {
+      this.groupID = this.lstUserGroups[0].groupID;
+      this.loadUserGroup = true;
+      this.getListGroupMember(this.groupID);
+    }
+    else
+    {
+      this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetUserGroupByCOAsync")
+      .subscribe((res:any) => {
+        if(res?.length > 0 && res[0]?.length > 0)
+        {
+          this.loadUserGroup = true;
+          this.lstUserGroups = res[0];
+          this.groupID = this.lstUserGroups[0].groupID;
+          this.getListGroupMember(this.groupID);
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+    
   }
 
   // select day in calendar
   changeDay(args){
-    this.selectedDate = new Date(args.value);
-    var dateDiff = Math.abs((this.startDate as any) - (this.selectedDate as any));
-    if(Math.ceil(dateDiff / (1000 * 60 * 60 * 24)) < 0)
-      this.navigateMoth(this.selectedDate); 
-    this.detectorRef.detectChanges();
+    let date = new Date(args.value);
+    let y = date.getFullYear()
+    let m =  date.getMonth();
+    let d = date.getDate();
+    let d1 = moment([y,m,d]);
+    let d2 = moment([this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate()]);
+    let day = d1.diff(d2,"day");
+    if(day <= 0 || day > 30)
+    {
+      this.changeMonth({date:date});
+    }
+    else
+    {
+      this.selectedDate = date;
+      this.calendarCenter && this.calendarCenter.changeDate(this.selectedDate);
+      this.detectorRef.detectChanges();
+    }
   }
 
   // navigate moth in
-  navigateMoth(args){
-    this.startDate = new Date(moment(args.date.toString()).startOf('month').format('YYYY-MM-DD hh:mm'));
-    this.endDate = new Date(moment(args.date.toString()).endOf('month').format('YYYY-MM-DD hh:mm'));
-    let month = args.date.getMonth() + 1; // javscript month 0-11
-    let crrMonth = new Date().getMonth() + 1; // javscript month 0-11
-    if(month === crrMonth)
-      this.selectedDate = new Date(); // current month set selectedDate is new Date()
+  changeMonth(args){
+    let y = args.date.getFullYear()
+    let m =  args.date.getMonth();
+    let d = args.date.getDate();
+    this.startDate = new Date(y, m, 1);
+    this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate();
+    this.month = m + 1; 
+    this.selectedDate = new Date(y,m,d); 
+    if(this.dEventMonth[this.month])
+    {
+      if(this.ejCalendar)
+      {
+        this.ejCalendar.value = this.selectedDate;
+        this.ejCalendar.refresh();
+      }
+      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+      this.calendarCenter && this.calendarCenter.changeDate(this.selectedDate);
+    }
     else
-      this.selectedDate = this.startDate; // new month set selectedDate is startDate
-    this.getListEvents();
+    {
+      this.getEventData();
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -368,82 +382,52 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   valueChange(e) {
     let transType = e.field;
     let value = e.data === false ? "0" : "1";
-
-    this.calendarParams.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
+    this.settingCalendars.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
     if(value == "0")
     {
-      this.lstEvents = this.lstEvents.filter((x:any)=> x.transType !== transType); 
-      //this.ejCalendar.value = this.startDate;
-      // this.ejCalendar.refresh()
+      this.lstEvents = this.lstEvents.filter(x => x.transType != transType);
+      // this.dEventMonth[this.month] = this.lstEvents;
+      // this.mapEvents[transType] = [];
+      this.ejCalendar && this.ejCalendar.refresh();
+      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       this.detectorRef.detectChanges();
     }      
     else
     {
-      let predicate = this.dPredicate[transType];
-      switch(transType){
+      switch(transType)
+      {
         case"WP_Notes":
-          this.getEventNotes(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-              if(this.ejCalendar)
-                this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
+          this.getEventWP("WP_Notes").subscribe((res:any) => {
+            var notes = res.data;
+            this.lstEvents = this.lstEvents.concat(notes);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
           break;
         case"TM_MyTasks":
-          this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-              if(this.ejCalendar)
-                this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
+        case"TM_AssignTasks":
+          this.getEventTM(transType).subscribe((res:any) => {
+            var tasks = res.data;
+            this.lstEvents = this.lstEvents.concat(tasks);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
           break;
         case"CO_Meetings":
-          this.getEventMeetings(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-              if(this.ejCalendar)
-                this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
+          this.getEventCO("CO_Meetings").subscribe((res:any) => {
+            var meetings = res.data;
+            this.lstEvents = this.lstEvents.concat(meetings);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
           break;
         case"EP_BookingRooms":
-          this.getEventBooking(this.calendarID,"1",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-              if(this.ejCalendar)
-                this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
-          });
-          break;
         case"EP_BookingCars":
-          this.getEventBooking(this.calendarID,"2",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-             // this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
-          });
-          break;
-        case"TM_AssignTasks":
-          this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-            if(res?.length > 0)
-            {
-              this.lstEvents = this.lstEvents.concat(res);
-              if(this.ejCalendar)
-                this.ejCalendar.value = this.startDate;
-              this.detectorRef.detectChanges();
-            }
+          this.getEventEP(transType).subscribe((res:any) => {
+            var bookings = res.data;
+            this.lstEvents = this.lstEvents.concat(bookings);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
           break;
       }      
@@ -452,194 +436,212 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   //open popup setting
   openPopupSetting() {
-    let option = new DialogModel();
-    this.cfService.openForm(
-      PopupSettingsComponent,
-      '',
-      600,
-      550,
-      '',
-      this.calendarParams,
-      '',
-      option
-    );
-  }
-
-  //
-  convertStrToDate(eleDate) {
-    if (eleDate) {
-      let str = eleDate.title.split(',');
-      let strMonth: any = str[1].split('Tháng');
-      let numb: any = strMonth[1] + '-' + strMonth[0];
-      numb = numb + '-' + str[2];
-      return numb.replaceAll(' ', '');
+    if(this.settingCalendars)
+    {
+      let option = new DialogModel();
+      this.callfc.openForm(
+        PopupSettingsComponent,
+        '',
+        600,
+        550,
+        '',
+        this.settingCalendars,
+        '',
+        option
+      ).closed.subscribe((res:any) =>
+      {
+        if(res?.event)
+        {
+          debugger
+          let settings = [];
+          res.event.forEach(element => {
+            let setting = JSON.parse(element);
+            if(!setting["TextColor"])
+              setting["TextColor"] = "#1F1717";
+              settings.push(setting);
+          });
+          this.settingCalendars = settings;
+        }
+      });
     }
+    
   }
 
   //render day cell ej2Calendar
   renderDayCell(args:any) {
-    let eventDays = this.lstEvents.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
-    if (eventDays.length > 0)
+    if(this.dEventMonth[this.month])
     {
-      eventDays = eventDays.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
-      eventDays.forEach((e:any) => {
-        let span: HTMLElement;
-        span = document.createElement('span');
-        span.setAttribute('class', 'e-icons highlight');
-        span.setAttribute('style', `color:${this.dResources[e.transType].color}`);
-        addClass([args.element], ['special', 'e-day']);
-        if((args.element as HTMLElement).children.length > 3)
-        {
-
-        }
-        args.element.appendChild(span);
-        return;
-      });
+      let events = this.dEventMonth[this.month];
+      let eventDays = events.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
+      if (eventDays.length > 0)
+      {
+        eventDays = eventDays.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
+        eventDays.forEach((e:any) => {
+          let span: HTMLElement;
+          span = document.createElement('span');
+          span.setAttribute('class', 'e-icons highlight');
+          span.setAttribute('style', `color:${this.dResources[e.transType].showColor}`);
+          addClass([args.element], ['special', 'e-day']);
+          if((args.element as HTMLElement).children.length > 3)
+          {
+  
+          }
+          args.element.appendChild(span);
+          return;
+        });
+      }
     }
   }
 
   // change calendarID
   changeCalendarID(id:string) {
     this.calendarID = id;
+    this.lstEvents = [];
+    this.dEventMonth = {};
+    this.calendarCenter && this.calendarCenter.changeEvents([]);
     switch(id){
       case "COT01": // Lịch công ty
         break;
       case "COT02": // Lịch nhóm
-        this.lstResources = [];
         this.getListUserGroup();
         break;
       case "COT03": // Lịch cá nhân
-        this.id = "";
-        this.lstResources = [];
-        this.getListEvents();
+        this.groupID = "";
+        this.orgUnitID = "";
+        this.calendarCenter && this.calendarCenter.removeResource();
+        this.getEventData();
         break;
     }
-        
     this.detectorRef.detectChanges();
   }
 
-  // get event source
-  getListEvents(){
-    this.lstEvents = [];
-    this.calendarParams.forEach((element) => {
-      if(element.ShowEvent === "1")
+  // get events
+  getEventData(){
+    let api1 = this.getEventTM("TM_MyTasks");
+    let api2 = this.getEventTM("TM_AssignTasks");
+    let api3 = this.getEventEP("EP_BookingCars");
+    let api4 = this.getEventEP("EP_BookingRooms");
+    let api5 = this.getEventCO("CO_Meetings");
+    let api6 = this.getEventWP("WP_Notes");
+    let obs = forkJoin([api1,api2,api3,api4,api5,api6]);
+    obs.subscribe((res:any) => 
+    {
+      let events = [];
+      if(res?.length > 0)
       {
-        let predicate = this.dPredicate[element.Template.TransType];
-        switch(element.Template.TransType)
-        {
-          case"WP_Notes":
-            this.getEventNotes(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-          case"TM_MyTasks":
-            this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-          case"CO_Meetings":
-            this.getEventMeetings(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-          case"EP_BookingRooms":
-            this.getEventBooking(this.calendarID,"1",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-          case"EP_BookingCars":
-            this.getEventBooking(this.calendarID,"2",this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-          case"TM_AssignTasks":
-            this.getEventTasks(this.calendarID,this.id,predicate,this.startDate,this.endDate).subscribe((res:any) => {
-              if(res?.length > 0)
-              {
-                this.lstEvents = [...this.lstEvents.concat(res)];
-                if(this.ejCalendar)
-                {
-                  this.ejCalendar.value = new Date();
-                }
-              }
-            });
-            break;
-        }
+        res.forEach(ele => {
+          events = events.concat(ele.data);
+        });
       }
+      this.lstEvents = this.lstEvents.concat(events);
+      this.dEventMonth[this.month] = events;
+      if(!this.loaded)
+        this.loaded = true;
+      if(this.ejCalendar)
+      {
+        this.ejCalendar.value = this.selectedDate;
+        this.ejCalendar.refresh();
+      }
+      if(this.calendarCenter)
+      {
+        this.calendarCenter.changeDate(this.selectedDate)
+        this.calendarCenter.changeEvents(this.lstEvents);
+      }
+      this.detectorRef.detectChanges();
     });
   }
 
   // get event TM
-  getEventTasks(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("TM","ERM.Business.TM", "TaskBusiness", "GetCalendarEventsAsync", [funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
+  getEventTM(transType){
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
+    if(param.ShowEvent == "1")
+    {
+      var grdModel = new DataRequest();
+      grdModel.funcID = param.Template.FunctionID;
+      grdModel.entityName = "TM_Tasks";
+      grdModel.predicates = param.Predicate;
+      grdModel.dataValues = `${this.startDate};${this.endDate}`;
+      grdModel.pageLoading = false;
+      grdModel.dataObj = JSON.stringify({calendarID:this.calendarID,orgUnitID:this.orgUnitID,groupID:this.groupID,startDate:this.startDate,endDate:this.endDate});
+      return this.api.execSv("TM","ERM.Business.TM", "TaskBusiness", "GetEventTMByCOAsync", grdModel).pipe(map((res:any) => {
+        let eventTasks = [];
+        if(res?.length > 0 && res[0]?.length > 0)
+        {
+          eventTasks = res[0].map((note:any) => {
+            return this.convertModelEvent(note,transType);
+          });
+        }
+        return {transType:transType, data:eventTasks};
+       }));
+    }
+    else
+      return of({transType:transType, data:[]});
+    
   }
 
-  // get event CO
-  getEventMeetings(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",[funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
-  }
-
-  // get event WP
-  getEventNotes(funcID:string,id:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync", [funcID,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
+// get event CO
+  getEventCO(transType){
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
+    if(param.ShowEvent == "1"){
+      return this.api.execSv("CO","ERM.Business.CO", "MeetingsBusiness", "GetCalendarEventsAsync",
+      [this.calendarID,param.Predicate,this.groupID,this.orgUnitID,this.startDate,this.endDate]).pipe(map((res:any) => {
+        let eventMeetings = [];
+        if(res?.length > 0 && res[0]?.length > 0)
+        {
+          // eventMeetings = res[0].map((note:any) => {
+          //   return this.convertModelEvent(note,transType);
+          // });
+          eventMeetings = res[0];
+        }
+        return {transType:transType, data:eventMeetings};
+      }));
+    }
+    else return of({transType:transType, data:[]});
+    
   }
 
   // get event EP
-  getEventBooking(funcID:string,resourceType:string,id:string,predicate:string,fromDate:Date,toDate:Date){
-    return this.api.execSv("EP","ERM.Business.EP", "BookingsBusiness", "GetCalendarEventsAsync", [funcID,resourceType,id,predicate,fromDate,toDate]).pipe(map((res:any) => {
-      return res;
-    }));
+  getEventEP(transType){
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
+    if(param.ShowEvent == "1"){
+      var grdModel = new DataRequest();
+      grdModel.funcID = param.Template.FunctionID;
+      grdModel.entityName = "EP_Bookings";
+      grdModel.predicates = param.Predicate;
+      grdModel.pageLoading = false;
+      grdModel.dataObj = JSON.stringify({calendarID:this.calendarID,orgUnitID:this.orgUnitID,groupID:this.groupID,startDate:this.startDate,endDate:this.endDate});
+      return this.api.execSv("EP","ERM.Business.EP", "BookingsBusiness", "GetListBookingScheduleAsync", grdModel)
+      .pipe(map((res:any) => {
+        let eventBookings = [];
+        if(res?.length > 0 && res[0]?.length > 0)
+        {
+          eventBookings = res[0].map((note:any) => {
+            return this.convertModelEvent(note,transType);
+          });
+        }
+        return {transType:transType, data:eventBookings};
+      }));
+    }
+    else return of({transType:transType, data:[]});
   }
 
-  //on Filter
-  onFiltering(e: FilteringEventArgs) {
-    let query = new Query();
-    query =
-      e.text != ''
-        ? query.where('defaultName', 'startswith', e.text, true)
-        : query;
-    e.updateData(this.lstCalendars, query);
+  // get event WP
+  getEventWP(transType){
+    let param = this.settingCalendars.find(x => x.Template.TransType == transType);
+    if(param.ShowEvent == "1"){
+      return this.api.execSv("WP","ERM.Business.WP", "NotesBusiness", "GetCalendarEventsAsync",
+      [this.calendarID,param.Predicate,this.groupID,this.orgUnitID,this.startDate,this.endDate]).pipe(map((res:any) => {
+        let eventNotes = [];
+        if(res?.length > 0 && res[0]?.length > 0)
+        {
+          let eventNotes = res[0].map((note:any) => {
+            return this.convertModelEvent(note,transType);
+          });
+        }
+        return {transType:transType, data:eventNotes};
+     }));
+    }
+    else return of({transType:transType, data:[]});
   }
 
   // add event
@@ -672,42 +674,9 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           break;
       }
     }
-    // let transType = args.item.id;
-    // this.coService.checkPermission(transType, '').subscribe((res: boolean) => {
-    //   if (res && res === true) {
-    //     switch (transType) {
-    //       case 'EP_BookingCars':
-    //         this.addBookingCar();
-    //         break;
-
-    //       case 'EP_BookingRooms':
-    //         this.addBookingRoom();
-    //         break;
-
-    //       case 'WP_Notes':
-    //         this.addNote();
-    //         break;
-
-    //       case 'CO_Meetings':
-    //         this.addMeeting();
-    //         break;
-
-    //       case 'TM_MyTasks':
-    //         this.addMyTask();
-    //         break;
-
-    //       case 'TM_AssignTasks':
-    //         this.addAssignTask();
-    //         break;
-    //     }
-    //   } else 
-    //   {
-    //     this.notificationsService.notifyCode('SYS032');
-    //   }
-    // });
   }
 
-  // add booking car
+  // add EP_BookingCars
   addBookingCar() {
     this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT21','EP_Bookings'])
     .subscribe((model:any) => {
@@ -724,39 +693,27 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               [model.data, 'SYS01', this.addCarTitle, null, null, false,res],
               option
             ).closed.subscribe((res2:any) => {
-              debugger
               if(res2?.event)
               {
-                let eventModel = {
-                  transType: "EP_BookingCars",
-                  functionID:"EPT2",
-                  refID: res2.event.refID,
-                  transID: res2.event.recID,
-                  calendarDate: res2.event.startDate,
-                  startDate: res2.event.startDate,
-                  endDate: res2.event.endDate,
-                  startTime: res2.event.startDate,
-                  endTime: res2.event.endDate,
-                  status: "Status|vll:EP022",
-                  title: res2.event.title,
-                  description: res2.event.memo,
-                  memo: "ResourceID | cbx:EP_Cars"
-                };
-                this.lstEvents.push(eventModel);
-                this.lstEvents = [...this.lstEvents];
+                let booking = this.convertModelEvent(res2.event,"EP_BookingCars");
+                let month = new Date(booking.startDate)?.getMonth() + 1;
+                if(!this.dEventMonth[month])
+                  this.dEventMonth[month] = [];
+                this.dEventMonth[month].push(booking);
+                this.lstEvents.push(booking);
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
                 this.detectorRef.detectChanges();
               }
-              else
-                this.notificationsService.notify("Lỗi đặt xe");
             });
         });
       }
       else
-        this.notificationsService.notify("Lỗi đặt xe");
+        this.notiService.notify("Lỗi đặt xe");
     });
   }
 
-  //add booking room
+  //add EP_BookingRooms
   addBookingRoom() {
     this.api.execSv<any>('EP', 'Core', 'DataBusiness', 'GetDefaultAsync', ['EPT11','EP_Bookings'])
     .subscribe((model:any) => {
@@ -765,43 +722,31 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
         .subscribe((res:boolean) => {
           let option = new SidebarModel();
-          option.FormModel = this.carFM;
+          option.FormModel = this.roomFM;
           option.Width = '800px';
           this.callfc
             .openSide(
-              CodxAddBookingCarComponent,
-              [model.data, 'SYS01', this.addRoomTitle, null, null,res],
+              CodxAddBookingRoomComponent,
+              [model.data, 'SYS01', this.addRoomTitle, null, null,false,res],
               option
             ).closed.subscribe((res2:any) => {
-              debugger
               if(res2?.event)
               {
-                let eventModel = {
-                  transType: "EP_BookingRooms",
-                  functionID:"EPT2",
-                  refID: res2.event.refID,
-                  transID: res2.event.recID,
-                  calendarDate: res2.event.startDate,
-                  startDate: res2.event.startDate,
-                  endDate: res2.event.endDate,
-                  startTime: res2.event.startDate,
-                  endTime: res2.event.endDate,
-                  status: "Status|vll:EP022",
-                  title: res2.event.title,
-                  description: res2.event.memo,
-                  memo: "ResourceID | cbx:EP_Rooms"
-                };
-                this.lstEvents.push(eventModel);
-                this.lstEvents = [...this.lstEvents];
+                let booking = this.convertModelEvent(res2.event,"EP_BookingRooms");
+                let month = new Date(booking.startDate)?.getMonth() + 1;
+                if(!this.dEventMonth[month])
+                  this.dEventMonth[month] = [];
+                this.dEventMonth[month].push(booking);
+                this.lstEvents.push(booking);
+                this.ejCalendar && this.ejCalendar.refresh();
+                this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
                 this.detectorRef.detectChanges();
               }
-              else
-                this.notificationsService.notify("Lỗi đặt phòng");
             });
         });
       }
       else
-        this.notificationsService.notify("Lỗi đặt phòng");
+        this.notiService.notify("Lỗi đặt phòng");
     });
   }
 
@@ -813,7 +758,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       component: 'calendar-notes',
       maxPinNotes: '5',
     };
-
     let option = new DialogModel();
     //let moreFuc = this.sysMoreFunc.find(x => x.functionID == "SYS01")?.customName ?? "Thêm";
     this.callfc
@@ -834,16 +778,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           .subscribe((event:any) => {
             if(event)
             {
-              this.lstEvents.push(event);
-              this.lstEvents = [... this.lstEvents];
+              let note = this.convertModelEvent(event,"WP_Notes");
+              let month = new Date(note.startDate)?.getMonth() + 1;
+              this.lstEvents.push(note);
+              this.dEventMonth[month].push(note);
+              this.ejCalendar && this.ejCalendar.refresh();
+              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
               this.detectorRef.detectChanges();
             }
-            else
-              this.notificationsService.notify("Lỗi thêm ghi chú");
           });
         }
-        else
-          this.notificationsService.notify("Lỗi thêm ghi chú");
       });
   }
 
@@ -870,32 +814,20 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           option).closed.subscribe((res2:any) => {
             if (res2?.event) 
             {
-              let eventModel = {
-                transType : "CO_Meetings",
-                functionID : "TMT0501",
-                recID : res2.event.recID,
-                transID : res2.event.recID,
-                calendarDate : res2.event.startDate,
-                startDate : res2.event.startDate,
-                endDate : res2.event.endDate,
-                startTime : res2.event.startDate,
-                endTime : res2.event.endDate,
-                status : res2.event.status,
-                title : res2.event.eventName,
-                description : res2.event.memo,
-                memo : res2.event.location,
-                icon : "icon - location_on"
-              };
-              this.lstEvents.push(eventModel);
-              this.lstEvents = [...this.lstEvents];
+              let meeting = this.convertModelEvent(res2.event,"CO_Meetings");
+              let month = new Date(meeting.startDate)?.getMonth() + 1;
+              if(!this.dEventMonth[month])
+                this.dEventMonth[month] = [];
+              this.dEventMonth[month].push(meeting);
+              this.lstEvents.push(meeting);
+              this.ejCalendar && this.ejCalendar.refresh();
+              this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
               this.detectorRef.detectChanges();
             }
-            else
-              this.notificationsService.notify("Lỗi thêm sự kiện");
           });
         }
         else
-          this.notificationsService.notify("Lỗi thêm sự kiện");
+          this.notiService.notify("Lỗi thêm sự kiện");
       });
   }
 
@@ -926,33 +858,20 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         ).closed.subscribe((res2:any) => {
           if(res2.event)
           {
-            let task = res2.event[0];
-            let eventModel = {
-              transType: "TM_MyTasks",
-              functionID: "TMT0201",
-              transID: task.recID,
-              calendarDate: task.dueDate,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              startTime: task.startDate,
-              endTime: task.endDate,
-              status: task.status,
-              priority: task.priority,
-              title: task.taskName,
-              description: task.taskName,
-              alert: task.isOverdue,
-              memo: task.dueDate
-            };
-            this.lstEvents.push(eventModel);
-            this.lstEvents = [...this.lstEvents];
+            let task = this.convertModelEvent(res2.event[0],"TM_MyTasks")
+            let month = new Date(task.startDate)?.getMonth() + 1;
+            if(!this.dEventMonth[month])
+              this.dEventMonth[month] = [];
+            this.dEventMonth[month].push(task);
+            this.lstEvents.push(task);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
             this.detectorRef.detectChanges();
           }
-          else
-            this.notificationsService.notify("Lỗi thêm công việc");
         });
       }
       else
-        this.notificationsService.notify("Lỗi thêm công việc");
+        this.notiService.notify("Lỗi thêm công việc");
     });
   }
 
@@ -979,78 +898,144 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           obj,
           option
         ).closed.subscribe((res2:any) => {
-          if(res2.event)
+          if(res2?.event?.length > 0)
           {
-            let task = res2.event[0];
-            let eventModel = {
-              transType: "TM_AssignTasks",
-              functionID: "TMT0204",
-              transID: task.recID,
-              calendarDate: task.dueDate,
-              startDate: task.startDate,
-              endDate: task.endDate,
-              startTime: task.startDate,
-              endTime: task.endDate,
-              status: task.status,
-              priority: task.priority,
-              title: task.taskName,
-              description: task.taskName,
-              alert: task.isOverdue,
-              memo: task.dueDate
-            };
-            this.lstEvents.push(eventModel);
-            this.lstEvents = [...this.lstEvents];
+            let task = this.convertModelEvent(res2.event[0],"TM_AssignTasks")
+            let month = new Date(task.startDate)?.getMonth() + 1;
+            if(!this.dEventMonth[month])
+              this.dEventMonth[month] = [];
+            this.dEventMonth[month].push(task);
+            this.lstEvents.push(task);
+            this.ejCalendar && this.ejCalendar.refresh();
+            this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
             this.detectorRef.detectChanges();
           }
-          else
-            this.notificationsService.notify("Lỗi thêm giao việc");
         });
       }
       else
-        this.notificationsService.notify("Lỗi thêm giao việc");
+        this.notiService.notify("Lỗi thêm giao việc");
     });
-  }
-
-  // date select change
-  dateSelectChange(event:any){
-    if (event?.fromDate === 'Invalid Date' && event?.toDate === 'Invalid Date') return;
-    if (this.selectedDate >= event?.fromDate && this.selectedDate < event?.toDate)return;
-    if (event?.fromDate && event?.toDate) 
-    {
-      if (event?.type) 
-      {
-        this.typeNavigate = event.type;
-      }
-      if (this.typeNavigate === 'Year') 
-      {
-        this.selectedDate = this.startDate;
-      } else 
-      {
-        this.selectedDate = event.fromDate;
-      }
-      if (this.typeNavigate === 'Year' && event.type === undefined) {
-        this.selectedDate = event?.toDate;
-        return;
-      }
-    }
   }
 
   // selected HR_OrganziUnits
-  selectOrganizationUnit(event = null){
-    this.id = event.data.OrgUnitID;
-    this.api.execSv("HR","ERM.Business.HR","HRBusiness","GetEmployeeByCOAsync","")
-    .subscribe((res:any) => 
-    { 
-      let data = res ? res[0] : [];
-      this.lstResources = [...data];
-      this.getListEvents();
-      this.detectorRef.detectChanges();
+  selectOrgUnit(event:any){
+    this.lstEvents = [];
+    this.orgUnitID = event?.data?.orgUnitID;
+    this.getEmployeeByOrgUnit(this.orgUnitID);
+  }
+
+  // get Employee by OrgUnitID
+  getEmployeeByOrgUnit(orgUnitID:string){
+    this.api.execSv("HR","ERM.Business.HR","HRBusiness","GetEmployeeByCOAsync",orgUnitID)
+    .subscribe((res:any) => { 
+      if(res)
+      {
+        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.getEventData();
+      }
     });
   }
 
-  //select AD_UserGroup
-  selectUserGroup(item:any){
-    this.id = item.groupID;
+  // select AD_UserGroup
+  selectGroupUser(item:any){
+    this.lstEvents = [];
+    this.groupID = item.groupID;
     this.getListGroupMember(item.groupID);
+  }
+
+  //get list group member
+  getListGroupMember(groupID:string){
+    this.api.execSv("SYS","ERM.Business.AD","UserGroupsBusiness","GetGroupMemberByCOAsync",groupID)
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.calendarCenter && this.calendarCenter.changeResource(res ? res[0] : []);
+        this.getEventData();
+      }
+    });
+  }
+
+  // show Hour
+  showHour(stringDate: any) {
+    const date: Date = new Date(stringDate);
+    const hours: number = date.getHours();
+    const minutes: number = date.getMinutes();
+
+    const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}`;
+
+    return timeString;
+  }
+
+  // show Event Date
+  showEventDate(event:any) {
+    var sDate = moment(event.startDate).format("LL");
+    var sTimeStart = moment(event.startDate).format("LT")
+    var sTimeEnd = moment(event.endDate).format("LT")
+    var str =  `${sDate} (${sTimeStart} - ${sTimeEnd})`;
+    return str;
+  }
+
+  // get event title
+  getEventTitle(event){
+    var sTitle = "Sự kiện";
+    switch(event.transType)
+    {
+      case"WP_Notes":
+        sTitle = "Ghi chú";
+        break;
+      case"CO_Meetings":
+        sTitle = "Lịch họp";
+        break;
+      case"TM_MyTasks":
+        sTitle = "Công việc cá nhân";
+        break;
+      case"TM_AssignTasks":
+        sTitle = "Giao việc";
+        break;
+      case"EP_BookingCars":
+        sTitle = "Đặt xe";
+        break;
+      case"EP_BookingRooms":
+        sTitle = "Đặt phòng";
+        break;
+    }
+    return sTitle;
+  }
+
+  // convert Event to Event CO
+  convertModelEvent(obj:any,transType:string){
+    let template = this.settingCalendars.find(x => x.Template.TransType == transType)?.Template;
+    let event = new CO_EventModel();
+    for(const field in template)
+    {
+      if(field === "Resources" ) continue;
+      let objKey = template[field];
+      let eventKey = field[0].toLocaleLowerCase() + field.slice(1);
+      if(field=="TransType" || field=="FunctionID" || field=="Icon")
+      {
+        event[eventKey] = template[field];
+      }
+      else
+      {
+        if(objKey && objKey !== "")
+        {
+          var ext = "";
+          if(objKey.indexOf("|") > 0)
+          {
+            var arrValue = objKey.split("|");
+            objKey = arrValue[0]; 
+            ext = arrValue[1];
+          }
+          objKey = objKey[0].toLocaleLowerCase() + objKey.slice(1);
+          event[eventKey] = (obj[objKey] ?? "") + ext;
+        }
+        else
+          event[eventKey] = "";
+      }
+    }
+    event["resourceID"] = obj["createdBy"] ?? "";
+    return event;
   }
 }

@@ -373,12 +373,12 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region EmpVisasBusiness
+  //#region EVisasBusiness
   getEmpTotalVisaNum() {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'CountEmpTotalRecordAsync'
     );
   }
@@ -387,7 +387,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'GetEmployeeVisaModelAsync'
     );
   }
@@ -396,7 +396,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'UpdateEmployeeVisasInfoAsync',
       data
     );
@@ -406,7 +406,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'AddEmployeeVisasInfoAsync',
       data
     );
@@ -416,7 +416,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'DeleteEmployeeVisaInfoAsync',
       data
     );
@@ -426,7 +426,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'GetListByEmployeeIDAsync',
       data
     );
@@ -436,7 +436,7 @@ export class CodxHrService {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
+      'EVisasBusiness',
       'GetEmpCrrVisaAsync',
       [empID]
     );

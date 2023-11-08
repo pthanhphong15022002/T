@@ -1,7 +1,7 @@
-<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
-  [entityName]="view.entityName" (buttonClick)="toolbarClick($event)"
-  [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" [dataValues]="runmode == '1' ? '' : journalNo"
-  (selectedChange)="onSelectedItem($event)" [isSubView]="true">
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC"
+  className="PurchaseInvoicesBusiness" service="AC" method="GetDataAsync" idField="recID"
+  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 
 <!-- Start: templateGrid -->
@@ -32,42 +32,45 @@
   <div class="d-flex flex-column text-content flex-grow-1">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{ data?.voucherNo
+        <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-2">{{ data?.voucherNo
           }}</span>
         <span *ngIf="
             (data?.voucherNo == '' || data?.voucherNo == null) &&
             view?.gridViewSetup
-          " class="place-holder line-clamp line-clamp-1 fs-6">
+          " class="place-holder line-clamp line-clamp-1 fs-6 me-2">
           {{ view?.gridViewSetup["VoucherNo"].headerText }}
         </span>
       </div>
       <div>
+        <!-- <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
+          [innerHTML]="(data?.totalDR
+                | formatvalue : view.formModel : 'totalDR' : totalDR
+                | async)+ ' ' +data?.currencyID"></span>
+        <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
+          data?.currencyID}}</span> -->
         <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
           [innerHTML]="(data?.totalAmt | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <ejs-tooltip *ngIf="data?.memo" id="tooltip" target="#tipmemo">
+        <!-- <ejs-tooltip *ngIf="data?.memo" id="tooltip" target="#tipmemo">
           <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
           <ng-template #content>
             <span id="tipmemo">{{ data?.memo }}</span>
           </ng-template>
-        </ejs-tooltip>
+        </ejs-tooltip> -->
+        <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
         <span *ngIf="
             (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
           " class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText
           }}</span>
       </div>
     </div>
-    <div style="height: 18px !important" class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.objectID}}</span>
-        <span *ngIf="
-            (data?.objectID == '' || data?.objectID == null) &&
-            view?.gridViewSetup
-          " class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["ObjectID"].headerText
-          }}</span>
+        <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1" >{{data?.objectName}}</span>
+        <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup" class="place-holder text-gray-600" >{{view.gridViewSetup['ObjectID'].headerText}}</span>
       </div>
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
@@ -94,3 +97,91 @@
   </div>
 </ng-template>
 <!-- End: template listdetail -->
+
+<ng-template #listTemplate let-data>
+  <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
+    (changeDataMF)="changeMFDetail($event, data,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #listtitleTmp let-data>
+  <div class="d-flex flex-column text-content flex-grow-1">
+    <div class="d-flex justify-content-between">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-3">{{ data?.voucherNo }}</span>
+          <img style="width: 18px; height: 18px" src="../assets/themes/ac/default/img/calendar.svg" class="me-2" />
+          <span class="text-gray-600 line-clamp line-clamp-1 mt-1" #voucherDate [innerHTML]="
+              data?.voucherDate
+                | formatvalue : view.formModel : 'voucherDate' : voucherDate
+                | async
+            "></span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
+          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1" >{{data?.objectName}}</span>
+          <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup" class="place-holder text-gray-600" >{{view.gridViewSetup['ObjectID'].headerText}}</span>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="InvoiceNo" [formModel]="view.formModel">
+          </codx-label>
+          <span *ngIf="data?.invoiceNo" class="text-gray-600">{{data?.invoiceNo}}</span>
+          <span *ngIf="(data?.invoiceNo == '' || data?.invoiceNo == null) && view.gridViewSetup" class="place-holder text-gray-600">{{view.gridViewSetup['InvoiceNo'].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="InvoiceDate" [formModel]="view.formModel">
+          </codx-label>
+          <span *ngIf="data?.invoiceDate" #invoiceDate [innerHTML]="
+                      data?.invoiceDate
+                            | formatvalue : view.formModel : 'invoiceDate' : invoiceDate
+                            | async
+                        " class="text-gray-600"></span>
+          <span *ngIf="(data?.invoiceDate == '' || data?.invoiceDate == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['InvoiceDate'].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="InvoiceDueDate" [formModel]="view.formModel">
+          </codx-label>
+          <span *ngIf="data?.invoiceDueDate" #invoiceDueDate [innerHTML]="
+                      data?.invoiceDueDate
+                            | formatvalue : view.formModel : 'invoiceDueDate' : invoiceDueDate
+                            | async
+                        " class="text-gray-600"></span>
+          <span *ngIf="(data?.invoiceDueDate == '' || data?.invoiceDueDate == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['InvoiceDueDate'].headerText}}</span>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
+            [innerHTML]="(data?.totalAmt | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
+        </div>
+        <div class="d-flex align-items-center mb-1">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="PmtMethodID" [formModel]="view.formModel">
+          </codx-label>
+          <span *ngIf="data?.pmtMethodName" class="text-gray-600">{{data?.pmtMethodName}}</span>
+          <span *ngIf="(data?.pmtMethodName == '' || data?.pmtMethodName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['PmtMethodID'].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm border-0">
+          </codx-vll>
+        </div>
+      </div>
+      <div class="col-1">
+        <div class="d-flex align-items-center">
+          <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
+            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

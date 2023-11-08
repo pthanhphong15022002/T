@@ -65,6 +65,7 @@ export class JournalsAddComponent extends UIComponent {
     { icon: 'icon-people', text: 'Phân quyền', name: 'Roles' },
   ];
   fiscalYears:any;
+  isPreventChange:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -131,10 +132,12 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   valueChange(event,fields:any = ''){
-    let field = event?.field || event?.ControlName || fields;
-    let value = event?.data || event?.crrValue || event?.value;
-    if (event && value && this.formJournal.form.hasChange(this.formJournal.form.preData,this.formJournal.form.data)) { 
-      this.formJournal.form.setValue(field,value,{onlySelf: true,emitEvent: false,});
+    if (this.isPreventChange) {
+      return;
+    }
+    let field = event.field || event.ControlName || fields;
+    let value = event.data;
+    if (event && this.formJournal.form.hasChange(this.formJournal.form.preData,this.formJournal.form.data)) { 
       this.formJournal.form.data.updateColumns = '';
       switch (field.toLowerCase()) {
         case 'journalname':
@@ -169,8 +172,18 @@ export class JournalsAddComponent extends UIComponent {
             });
           break;
         case 'periodid':
+          value = event.value;
           let fiscalYear = parseInt(value.substring(0, 4));
           this.formJournal.form.setValue('fiscalYear',fiscalYear,{onlySelf: true,emitEvent: false});
+          break;
+        case 'vatcontrol':
+          this.isPreventChange = true;
+          if (value) {
+            this.formJournal.form.setValue('vatControl','1',{});
+          }else{
+            this.formJournal.form.setValue('vatControl','0',{});
+          }
+          this.isPreventChange = false;
           break;
       }
     }
@@ -205,6 +218,7 @@ export class JournalsAddComponent extends UIComponent {
       multiCurrency: this.formJournal?.form?.data?.multiCurrency
     }
     this.formJournal.form.setValue('extras',JSON.stringify(obj),{onlySelf: true,emitEvent: false,});
+
     if (this.image?.imageUpload?.item) {
       this.formJournal.form.setValue('hasImage',1,{onlySelf: true,emitEvent: false,});
       this.image
@@ -234,15 +248,11 @@ export class JournalsAddComponent extends UIComponent {
         if(!res) return;
         if (res || res.save || res.update) {
           if (res || !res.save.error || !res.update.error) {
-            this.image
-              .updateFileDirectReload(this.formJournal?.form?.data?.recID)
-              .subscribe((res) => {
-                  if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
-                      this.notification.notifyCode('SYS006');
-                  else
-                      this.notification.notifyCode('SYS007');
-                  this.dialog.close();
-              });
+            if (this.formJournal.form.data.isAdd || this.formJournal.form.data.isCopy)
+              this.notification.notifyCode('SYS006');
+            else
+              this.notification.notifyCode('SYS007');
+            this.dialog.close();
           }
         }
       })

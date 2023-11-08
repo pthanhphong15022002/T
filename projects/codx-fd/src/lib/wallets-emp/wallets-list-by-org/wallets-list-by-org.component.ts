@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -6,8 +14,12 @@ import {
   CodxGridviewV2Component,
   CodxService,
   FormModel,
+  NotificationsService,
+  SortModel,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupWalletHistoryComponent } from '../popup-wallet-history/popup-wallet-history.component';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'lib-wallets-list-by-org',
@@ -22,7 +34,7 @@ export class WalletsListByOrgComponent {
   @Input() view: any;
   @Input() grvSetup: any;
   @Input() editable: boolean = false;
-  @Input() modeView: string = 'employee';
+  @Input() modeView: 'wallet' | 'achievement' = 'wallet';
   @Input() rowHeight: string = '50';
   @Input() showRowNumber: boolean = true;
   @Input() funcID: string = 'HRT03a1';
@@ -33,10 +45,14 @@ export class WalletsListByOrgComponent {
   @ViewChild('colJoinedOnHeader') colJoinedOnHeader: TemplateRef<any>;
   @ViewChild('colCoinsHeader') colCoinsHeader: TemplateRef<any>;
   @ViewChild('colCoCoinsHeader') colCoCoinsHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeader') colKudosHeader: TemplateRef<any>;
+  @ViewChild('colKudosHeaderRank') colKudosHeaderRank: TemplateRef<any>;
   @ViewChild('colEmployee') colEmployee: TemplateRef<any>;
   @ViewChild('colJoinedOn') colJoinedOn: TemplateRef<any>;
   @ViewChild('colCoins') colCoins: TemplateRef<any>;
   @ViewChild('colCoCoins') colCoCoins: TemplateRef<any>;
+  @ViewChild('colKudos') colKudos: TemplateRef<any>;
+  @ViewChild('colKudosRank') colKudosRank: TemplateRef<any>;
 
   entityName = 'FD_Wallets';
   service = 'FD';
@@ -48,7 +64,8 @@ export class WalletsListByOrgComponent {
 
   columnsGrid: any[];
   itemSelected: any;
-
+  policyID: string;
+  dataRangeLine: any[] = [];
 
   constructor(
     private cache: CacheService,
@@ -56,11 +73,13 @@ export class WalletsListByOrgComponent {
     private dt: ChangeDetectorRef,
     private callfc: CallFuncService,
     private shareService: CodxShareService,
-    private codxService: CodxService
+    private codxService: CodxService,
+    private fdService: CodxFdService,
+    private notiService: NotificationsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID.currentValue){
+    if (changes.orgUnitID.currentValue) {
       this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.grid) {
         this.grid.dataService.rowCount = 0;
@@ -69,63 +88,176 @@ export class WalletsListByOrgComponent {
         this.grid.refresh();
       }
     }
+  }
 
+  ngOnInit(): void {
+    this.getPolicy();
+    this.fdService.LoadDataRangeLine().subscribe((res: any) => {
+      if(res && res[0].length > 0) {
+        this.dataRangeLine = res[0];
+        console.log(this.dataRangeLine)
+      }
+    });
   }
 
   ngAfterViewInit(): void {
     this.initColumnGrid();
   }
 
+  getPolicy() {
+    const predicates = 'Category = @0 and ApplyFor = @1 and ItemType = @2';
+    let dataValue = '';
+    if (this.modeView == 'wallet') {
+      dataValue = '3;5;4';
+    } else if (this.modeView == 'achievement') {
+      dataValue = '3;4;4';
+    }
+    this.fdService
+      .getListPolicyByPredicate(predicates, dataValue)
+      .subscribe((res) => {
+        if (res) {
+          this.policyID = res[0]?.policyID;
+        }
+      });
+  }
+
   initColumnGrid() {
-    this.columnsGrid = [
-      {
-        headerTemplate: this.colEmployeeHeader,
-        template: this.colEmployee,
-        width: '200',
-      },
-      {
-        headerTemplate: this.colJoinedOnHeader,
-        template: this.colJoinedOn,
-        width: '150',
-      },
-      {
-        headerTemplate: this.colCoinsHeader,
-        template: this.colCoins,
-        width: '150',
-      },
-      {
-        headerTemplate: this.colCoCoinsHeader,
-        template: this.colCoCoins,
-        width: '150',
-      },
-    ];
+    if (this.modeView == 'wallet') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colJoinedOnHeader,
+          template: this.colJoinedOn,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colCoinsHeader,
+          template: this.colCoins,
+          width: '150',
+        },
+        {
+          headerTemplate: this.colCoCoinsHeader,
+          template: this.colCoCoins,
+          width: '150',
+        },
+      ];
+    } else if (this.modeView == 'achievement') {
+      this.columnsGrid = [
+        {
+          headerTemplate: this.colEmployeeHeader,
+          template: this.colEmployee,
+          width: '200',
+        },
+        {
+          headerTemplate: this.colJoinedOnHeader,
+          template: this.colJoinedOn,
+          width: '100',
+        },
+        {
+          headerTemplate: this.colKudosHeader,
+          template: this.colKudos,
+          width: '100',
+        },
+        {
+          headerTemplate: this.colKudosHeaderRank,
+          template: this.colKudosRank,
+          width: '200',
+        },
+      ];
+    }
   }
 
   clickMF(moreFunc: any, data: any) {
     this.itemSelected = data;
-    // switch (moreFunc.functionID) {
-    //   case 'SYS02': // xóa
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03': // sửa
-    //     this.edit(data, moreFunc);
-    //     break;
-    //   case 'SYS04': // sao chép
-    //     this.copy(data, moreFunc);
-    //     break;
-    //   case 'HRT03a1A07': // cập nhật tình trạng
-    //     this.updateStatus(data, moreFunc.functionID);
-    //     break;
-    //   default:
-    //     this.shareService.defaultMoreFunc(
-    //       moreFunc,
-    //       data,
-    //       null,
-    //       this.view.formModel,
-    //       this.view.dataService,
-    //       this
-    //     );
-    //     break;
-    // }
+    if (moreFunc.functionID == 'FDK0111' || moreFunc.functionID == 'FDW0111') {
+      // xem lịch sử xu hoặc điểm
+      this.openPopupHistory(data);
+    } else if (moreFunc.functionID == 'FDW0112') {
+      // kích hoạt ví
+      this.fdService
+        .activeWallet(this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    } else if (
+      moreFunc.functionID == 'FDW0113' ||
+      moreFunc.functionID == 'FDK0112'
+    ) {
+      // chạy lại số dư
+      let refreshType = '';
+      if (this.modeView == 'wallet') {
+        refreshType = '2';
+      } else if (this.modeView == 'achievement') {
+        refreshType = '3';
+      }
+      this.fdService
+        .refreshWallet(refreshType, this.policyID, this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    }
+  }
+
+  openPopupHistory(item) {
+    var obj = {
+      userID: item.domainUser,
+      formModel: this.formModel,
+      modeView: this.modeView,
+    };
+
+    let popup = this.callfc.openForm(
+      PopupWalletHistoryComponent,
+      '',
+      1400,
+      1500,
+      '',
+      obj,
+      ''
+    );
+    popup.closed.subscribe((res: any) => {
+      if (!res || res.closedBy == 'escape' || !res.event) return;
+    });
+  }
+
+  widthOfGrid(data: any) {
+    const number = Number.parseInt(data);
+    if(number <= 0) return 0;
+    return (number * 100) / this.dataRangeLine[this.dataRangeLine.length - 1].breakValue;
+  }
+
+  getColorRank(data: any) {
+    let number = Number.parseInt(data);
+    if(number <= 0) number = 0;
+    for (let index = 0; index < this.dataRangeLine.length; index++) {
+      if(number < this.dataRangeLine[0].breakValue) {
+        return "#dbdbdb";
+      }
+      if(number > this.dataRangeLine[this.dataRangeLine.length - 1].breakValue) {
+        return this.dataRangeLine[this.dataRangeLine.length - 1].color;
+      }
+      if((this.dataRangeLine[index].breakValue <= number) && (number < this.dataRangeLine[index + 1].breakValue)) {
+        return this.dataRangeLine[index].color;
+      }
+    }
+  }
+
+  getNameRank(data: any) {
+    let number = Number.parseInt(data);
+    if(number <= 0) number = 0;
+    for (let index = 0; index < this.dataRangeLine.length; index++) {
+      if(number < this.dataRangeLine[0].breakValue) {
+        return "chưa có hạng";
+      }
+      if(number > this.dataRangeLine[this.dataRangeLine.length - 1].breakValue) {
+        return this.dataRangeLine[this.dataRangeLine.length - 1].breakName;
+      }
+      if((this.dataRangeLine[index].breakValue <= number) && (number < this.dataRangeLine[index + 1].breakValue)) {
+        return this.dataRangeLine[index].breakName;
+      }
+    }
   }
 }

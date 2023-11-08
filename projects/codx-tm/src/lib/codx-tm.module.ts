@@ -22,6 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import {
   AccumulationChartAllModule,
+  AccumulationChartModule,
+  AccumulationDataLabelService,
   AccumulationTooltipService,
   ChartAllModule,
   LegendService,
@@ -241,6 +243,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
+    AccumulationChartModule
   ],
   exports: [RouterModule],
   declarations: T_Component,
@@ -253,6 +256,7 @@ const T_Component: Type<any>[] = [
     GaugeTooltipService,
     LegendService,
     LegendCircularGaugeService,
+    AccumulationDataLabelService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -274,19 +274,17 @@
                       <span class="icon-more_vert icon-18"></span>
                     </button>
                     <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                      <a ngbDropdownItem class="dropdown-item">
+                      <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="openForm('edit', item)">
                         <div
-                          class="d-flex align-items-center cursor-pointer"
-                          (click)="openForm('edit', item)"
+                          class="d-flex align-items-center"
                         >
                           <span class="icon-edit text-primary icon-16"></span>
                           <span class="ms-2">Chỉnh sửa</span>
                         </div>
                       </a>
-                      <a ngbDropdownItem class="dropdown-item">
+                      <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="openForm('delete', item)">
                         <div
-                          class="d-flex align-items-center cursor-pointer"
-                          (click)="openForm('delete', item)"
+                          class="d-flex align-items-center"
                         >
                           <span class="icon-delete text-danger icon-16"></span>
                           <span class="ms-2">Xóa</span>

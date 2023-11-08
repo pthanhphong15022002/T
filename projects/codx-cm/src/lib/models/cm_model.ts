@@ -197,6 +197,12 @@ export class CM_Deals {
   datas: string;
   industries: string;
   shortName:string;
+  employeeID: string;
+  positionID:string;
+  orgUnitID: string;
+  divisionID:string;
+  departmentID: string;
+  companyID:string;
 }
 
 export class CM_Permissions {
@@ -611,6 +617,12 @@ export class CM_Cases {
   applyProcess: boolean;
   permissions: CM_Permissions[];
   datas: string;
+  employeeID: string;
+  positionID:string;
+  orgUnitID: string;
+  divisionID:string;
+  departmentID: string;
+  companyID:string;
 }
 
 export class CM_Partners {
@@ -759,6 +771,12 @@ export class CM_Leads {
   dealValue: number = 0;
   permissions: CM_Permissions[] = [];
   datas:string;
+  employeeID: string;
+  positionID:string;
+  orgUnitID: string;
+  divisionID:string;
+  departmentID: string;
+  companyID:string;
 }
 
 export class CM_Targets {

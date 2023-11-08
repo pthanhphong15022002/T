@@ -81,7 +81,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   endTimeWork: any;
   dayOnWeeks = [];
   selectedDate: Date;
-  listTime = [];
   gridViewSetup: any;
   timeBool = false;
   isMeetingDate = true;
@@ -125,7 +124,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data?.titleAction;
     this.disabledProject = dt?.data?.disabledProject;
     this.listPermissions = dt?.data?.listPermissions;
-    this.preside = dt?.data?.preside; // người chủ trì, không hiểu please not edit !
+    this.preside = dt?.data?.preside; // người chủ trì, please not edit !
     this.reminder = this.meeting.reminder;
     if (this.preside) this.defaultRoleA = this.preside;
 
@@ -174,7 +173,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.loadTime();
   }
   ngAfterViewInit(): void {
     if (this.action == 'add') {
@@ -211,15 +209,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadTime() {
-    this.api
-      .execSv<any>('CO', 'CO', 'MeetingsBusiness', 'GetListTimeAsync')
-      .subscribe((res) => {
-        if (res) {
-          this.listTime = res[0];
-        }
-      });
-  }
+
 
   loadRoomAvailable() {
     this.api
@@ -339,12 +329,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             if (this.isRoom && this.meeting.location != null) {
               this.bookingRoomEP(res.save);
             }
-            this.tmSv
-              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-              .subscribe();
-            // this.tmSv
-            //   .RPASendMailAlert('TM_0024', this.functionID)
-            //   .subscribe();
           } else this.dialog.close();
         });
     } else {
@@ -360,11 +344,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             if (this.isRoom && this.meeting.location != null) {
               this.bookingRoomEP(res);
             }
-            this.tmSv
-              .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
-              .subscribe();
             this.dialog.close(res);
-          } else this.dialog.close();
+            this.notiService.notifyCode('SYS006');
+          } else{
+            this.dialog.close();
+            this.notiService.notifyCode('SYS023');
+          }
         });
     }
   }
@@ -375,7 +360,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         .save((option: any) => this.beforeSave(option))
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res.update);
         });
     } else {
       this.api
@@ -385,7 +370,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         ])
         .subscribe((res) => {
           this.attachment?.clearData();
-          this.dialog.close();
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007');
         });
     }
   }

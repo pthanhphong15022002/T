@@ -177,29 +177,23 @@ export class SalesinvoicesComponent extends UIComponent
       case 'SYS002':
         //this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
-        //this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+      case 'ACT060504':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
-        //this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+      case 'ACT060505':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
-        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+      case 'ACT060503':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
       case 'ACT042905':
-        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
-        //this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+      case 'ACT060507':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT041010':
-      case 'ACT042907':
-        //this.printVoucher(data, e.functionID); //? in chứng từ
+      case 'ACT060508':
+        this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
@@ -382,6 +376,10 @@ export class SalesinvoicesComponent extends UIComponent
    * @returns
    */
   onSelectedItem(event) {
+    if(this.view?.views){
+      let view = this.view?.views.find(x => x.type == 1);
+      if (view && view.active == true) return;
+    }
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -510,7 +508,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -527,7 +525,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -544,7 +542,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -654,29 +652,10 @@ export class SalesinvoicesComponent extends UIComponent
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
   }
 
    /**

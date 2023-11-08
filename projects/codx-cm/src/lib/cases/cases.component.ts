@@ -35,6 +35,7 @@ import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'lib-cases',
@@ -80,6 +81,7 @@ export class CasesComponent
   method = 'GetListCasesAsync';
   idField = 'recID';
   listInsStep = [];
+  valueListStatusCode: any = []; // status code ID
   // data structure
   listCustomer: CM_Customers[] = [];
 
@@ -111,8 +113,7 @@ export class CasesComponent
   processID: any;
   colorReasonSuccess: any;
   colorReasonFail: any;
-  caseType: string;
-  applyFor: string;
+
   formModelCrr: FormModel = new FormModel();
   funCrr: any;
   viewsDefault: any;
@@ -130,6 +131,11 @@ export class CasesComponent
   processIDKanban: any;
   processIDDefault: any;
   crrProcessID: any;
+
+  statusDefault: string = '';
+  statusCodecmt: string = '';
+  caseType: string;
+  applyFor: string;
   applyApprover = '0';
 
   constructor(
@@ -240,7 +246,20 @@ export class CasesComponent
   async executeApiCalls() {
     try {
       await this.getColorReason();
+
     } catch (error) {}
+  }
+  async getListStatusCode() {
+    this.codxCmService.getListStatusCode([this.caseType == '1'? '9':'11']).subscribe((res) => {
+      if (res) {
+        this.valueListStatusCode = res.map((item) => ({
+          text: item.statusName,
+          value: item.statusID,
+        }));
+      } else {
+        this.valueListStatusCode = [];
+      }
+    });
   }
 
   async getColorReason() {
@@ -482,6 +501,7 @@ export class CasesComponent
       CM0401_11: () => this.cancelApprover(data),
       CM0402_11: () => this.cancelApprover(data),
       CM0401_10: () => this.popupPermissions(data),
+      CM0401_12:() => this.openFormChangeStatus(data),
     };
 
     const executeFunction = functionMappings[e.functionID];
@@ -511,6 +531,50 @@ export class CasesComponent
     }
 
 
+  }
+  openFormChangeStatus(data) {
+    this.dataSelected = data;
+    var formMD = new FormModel();
+    let dialogModel = new DialogModel();
+    formMD.funcID = this.funCrr.functionID;
+    formMD.entityName = this.formModelCrr.entityName;
+    formMD.formName = this.formModelCrr.formName;
+    formMD.gridViewName = this.formModelCrr.gridViewName;
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formMD;
+    this.statusDefault = data?.statusCodeID;
+    this.statusCodecmt = data?.statusCodeCmt;
+    var obj = {
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: true,
+      title: this.titleAction,
+      recID: this.dataSelected.recID,
+      valueListStatusCode: this.valueListStatusCode,
+      gridViewSetup: this.gridViewSetup,
+      applyFor:this.applyFor
+    };
+    var dialog = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      '',
+      500,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.dataSelected.statusCodeID = e?.event?.statusDefault;
+        this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.view.dataService.dataSelected = this.dataSelected;
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        this.detectorRef.detectChanges();
+        this.notificationsService.notifyCode('SYS007');
+      }
+    });
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
@@ -1092,6 +1156,7 @@ export class CasesComponent
         this.applyFor = '3';
       }
       this.getMoreFunction(fun.formName, fun.gridViewName);
+      this.getListStatusCode();
     });
   }
 

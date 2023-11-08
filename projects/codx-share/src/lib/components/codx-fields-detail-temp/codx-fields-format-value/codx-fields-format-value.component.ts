@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { CacheService, FormModel } from 'codx-core';
 import moment from 'moment';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-fields-format-value',
@@ -31,9 +32,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     private cache: CacheService,
     private changeRef: ChangeDetectorRef
   ) {
-    this.cache.valueList('DP0274').subscribe((res) => {
-      if (res) this.dtFormatDate = res.datas;
-    });
+    // this.cache.valueList('DP0274').subscribe((res) => {
+    //   if (res) this.dtFormatDate = res.datas;
+    // });
   }
 
   ngOnChanges() {
@@ -43,9 +44,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   ngOnInit(): void {
     switch (this.data.dataType) {
       case 'D':
-        // this.cache.valueList('DP0274').subscribe((res) => {
-        //   if (res) this.dtFormatDate = res.datas;
-        // });
+        this.cache.valueList('DP0274').subscribe((res) => {
+          if (res) this.dtFormatDate = res.datas;
+        });
         break;
       case 'TA':
         this.getColumnTable(this.data);
@@ -120,7 +121,19 @@ export class CodxFieldsFormatValueComponent implements OnInit {
 
   fomatvalue(df) {
     //xu ly tam
+    if (!this.dtFormatDate) {
+      this.cache.valueList('DP0274').subscribe((res) => {
+        if (res) {
+          this.dtFormatDate = res.datas;
+          return this.getFormatValue(df);
+        }
+      });
+    } else {
+      return this.getFormatValue(df);
+    }
+  }
 
+  getFormatValue(df) {
     var index = this.dtFormatDate?.findIndex((x) => x.value == df);
     if (index == -1) return '';
     return this.dtFormatDate[index]?.text;

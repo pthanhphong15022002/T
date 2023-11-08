@@ -12,6 +12,7 @@ import {
   DataRequest,
   DialogModel,
   NotificationsService,
+  ResourceModel,
   SidebarModel,
   TenantStore,
   UIComponent,
@@ -32,7 +33,6 @@ declare var jsBh: any;
   selector: 'lib-cashpayments',
   templateUrl: './cashpayments.component.html',
   styleUrls: ['./cashpayments.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
@@ -139,12 +139,34 @@ export class CashPaymentsComponent extends UIComponent {
           template2: this.templateGrid,
         },
       },
+      // {
+      //   type: ViewType.grid_detail, //? thiết lập view lưới
+      //   active: false,
+      //   sameData: false,
+      //   model: {
+      //     template2: this.templateGrid,
+
+      //   },
+
+      //   request:{service:'AC'},
+      //   subModel:{
+      //     entityName:'AC_CashPaymentsLines',
+      //     formName:'CashPaymentsLines',
+      //     gridviewName:'grvCashPaymentsLines',
+      //     parentField:'TransID',
+      //     parentNameField:'Memo',
+      //     hideMoreFunc:true,
+      //     request:{
+      //       service: 'AC',
+      //     },
+      //     idField:'recID'
+      //   }
+      // },
     ];
     this.journalService.setChildLinks(this.journalNo);
 
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
+    this.optionSidebar.DataService = this.view?.dataService;
+    this.optionSidebar.FormModel = this.view?.formModel;
     this.optionSidebar.isFull = true;
   }
 
@@ -231,6 +253,10 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
+    if (this.view?.views) {
+      let view = this.view?.views.find((x) => x.type == 1);
+      if (view && view.active == true) return;
+    }
     if (typeof event.data !== 'undefined') {
       if (event?.data.data || event?.data.error) {
         return;
@@ -350,7 +376,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view.dataService
+    this.view?.currentView?.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {});
@@ -631,7 +657,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -649,7 +675,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -666,7 +692,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -712,29 +738,15 @@ export class CashPaymentsComponent extends UIComponent {
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 
   /**

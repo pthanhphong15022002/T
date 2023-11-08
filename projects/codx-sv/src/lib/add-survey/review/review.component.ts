@@ -667,7 +667,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.respondents.createdBy = "System";
       }
       this.respondents.responds = respondQuestion;
-      this.respondents.objectType = this.dataSVRepondents.objectType || 'U';
+      this.respondents.objectType = this.dataSVRepondents?.objectType || 'U';
       this.respondents.finishedOn = new Date();
       this.respondents.transID = this.recID;
       this.respondents.scores = 0;

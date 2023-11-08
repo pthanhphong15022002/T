@@ -224,3 +224,9 @@ body.tailwind #selected {
 .e-cell{
   vertical-align: sub;
 }
+.e-cell.special.e-day span.e-day{
+  display: block;
+}
+.max-h-50{
+  max-height: 50%;
+}

@@ -385,29 +385,10 @@ export class SalesinvoicesDetailComponent extends UIComponent {
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.formModel);    
   }
 
    /**
@@ -533,7 +514,11 @@ export class SalesinvoicesDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('AC', 'SalesInvoicesBusiness', 'GetDataDetailAsync', [
         dataItem,
         recID,
@@ -545,6 +530,7 @@ export class SalesinvoicesDetailComponent extends UIComponent {
         //this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
+    }
   }
 
   /**

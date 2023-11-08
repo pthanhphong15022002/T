@@ -236,6 +236,7 @@ export class DP_Steps_Tasks {
   createTask: boolean;
   createTaskControl: string;
   stop: boolean;
+  approveRule: boolean;
   attachments: number;
   callType: string;
   isOnline: boolean;
@@ -487,12 +488,14 @@ export class DP_Instances_Steps_Tasks {
   modifiedOn: Date;
   modifiedBy: string;
   callType: boolean;
+  approveRule: boolean;
   isOnline: boolean;
   isTaskDefault: boolean;
   actionStatus: string;
   fieldID: string;
   objectID: string;
   objectType: string;
+  approvedBy: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

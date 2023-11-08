@@ -172,15 +172,14 @@
         <codx-label
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          fiedName="EndDate"
+          fiedName="ExpectedClosed"
         >
         </codx-label>
         <codx-input
-          type="datetime"
-          field="endDate"
-          format="d"
-          [crrValue]="deal?.endDate"
-          (valueChange)="valueChangeDate($event)"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="expectedClosed"
+          (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
@@ -265,7 +264,7 @@
     </div>
 
 
-    <div class="col-6">
+    <!-- <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
@@ -278,6 +277,24 @@
           [Group]="form.formGroup"
           field="expectedClosed"
           (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div> -->
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="EndDate"
+        >
+        </codx-label>
+        <codx-input
+          type="datetime"
+          field="endDate"
+          format="d"
+          [crrValue]="deal?.endDate"
+          (valueChange)="valueChangeDate($event)"
         >
         </codx-input>
       </div>

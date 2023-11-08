@@ -53,7 +53,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   bhLogin: boolean = false;
   tabInfo: TabModel[] = [
     //? danh sách các tab footer
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
@@ -94,6 +94,10 @@ export class CashpaymentDetailComponent extends UIComponent {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
   }
 
   /**
@@ -165,17 +169,20 @@ export class CashpaymentDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
-      .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [
-        dataItem,
-        recID,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.itemSelected = res;
-        this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
-        this.detectorRef.detectChanges();
-      });
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+      this.detectorRef.detectChanges();
+    } else {
+      this.api
+        .exec('AC', 'CashPaymentsBusiness', 'GetDataDetailAsync', [recID])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          this.itemSelected = res;
+          this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+          this.detectorRef.detectChanges();
+        });
+    }
   }
 
   /**
@@ -535,7 +542,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -552,7 +559,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -568,7 +575,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -616,12 +623,7 @@ export class CashpaymentDetailComponent extends UIComponent {
     let params = {
       Recs: data?.recID,
     };
-    this.shareService.printReport(
-      reportID,
-      reportType,
-      params,
-      this.view?.formModel
-    );
+    this.shareService.printReport(reportID, reportType, params, this.formModel);
   }
 
   /**

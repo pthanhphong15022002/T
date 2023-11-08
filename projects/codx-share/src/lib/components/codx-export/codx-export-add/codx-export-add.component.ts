@@ -32,6 +32,7 @@ import { environment } from 'src/environments/environment';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { capitalizeFirstLetter } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'codx-export-add',
@@ -65,7 +66,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   formModel: any;
   gridViewSettup: any;
   listFeild = [];
+  objRequied=[];
   showInsert = false;
+  gridViewSetupWord:any;
   constructor(
     private tenant: TenantStore,
     private readonly auth: AuthService,
@@ -132,35 +135,28 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           if (!res) return;
           var gridview = res.gridview;
           this.cache.setGridView('grvWordTemplates', gridview);
-          var gridviewSetup = res.gridviewSetup;
+          this.gridViewSetupWord  = res.gridviewSetup;
+          this.getKeyRequied();
           this.cache.setGridViewSetup(
             'WordTemplates',
             'grvWordTemplates',
-            gridviewSetup
+            this.gridViewSetupWord
           );
           if (this.action == 'add') {
             this.data = res.data;
-            this.exportAddForm = this.formBuilder.group({
-              templatetID: [this.data?.templatetID],
-              templateName: [this.data?.templateName, Validators.required],
-              description: this.data?.description,
-              pWControl: '',
-              pWDefault: '',
-              owner: this.data?.owner,
-              buid: this.data?.buid,
-              createdOn: this.data?.createdOn,
-            });
-          } else {
             this.exportAddForm = this.codxService.buildFormGroup(
               'WordTemplates',
               'grvWordTemplates',
               'AD_WordTemplates',
               this.data
             );
-
-            // this.exportAddForm.addControl('pWControl', new FormControl(''));
-            // this.exportAddForm.addControl('pWDefault', new FormControl(''));
-          }
+          } 
+          this.exportAddForm = this.codxService.buildFormGroup(
+            'WordTemplates',
+            'grvWordTemplates',
+            'AD_WordTemplates',
+            this.data
+          );
         });
       this.getGridView();
       //Url service word
@@ -217,7 +213,10 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
 
   onSave() {
     this.submitted = true;
-    if (this.exportAddForm.invalid) return;
+    if (this.exportAddForm.invalid) {
+      this.checkIsRequired();
+      return;
+    }
     if (this.type == 'excel') {
       this.exportAddForm.value.owner = 'a';
       this.exportAddForm.value.buid = 'a';
@@ -314,6 +313,9 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       if (this.action == 'add') {
         this.exportAddForm.value.refID = this.refID;
         this.exportAddForm.value.refType = this.refType;
+        this.exportAddForm.value.isDefault = false; 
+        this.exportAddForm.value.isLocal = false;
+        this.exportAddForm.value.isSystem = false;
         this.api
           .execActionData(
             'AD_WordTemplates',
@@ -557,5 +559,31 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
   downloadWord() {
     var name = this.nameFile || this.formModel?.entityName;
     this.container.documentEditor.save(name, 'Docx');
+  }
+
+  getKeyRequied() {
+    var objKey = Object.keys(this.gridViewSetupWord);
+    for (var i = 0; i < objKey.length; i++) {
+      if (this.gridViewSetupWord[objKey[i]].isRequire)
+        this.objRequied.push(objKey[i]);
+    }
+  }
+
+  checkIsRequired() {
+    var arr = [];
+    for (var i = 0; i < this.objRequied.length; i++) {
+      var field = capitalizeFirstLetter(this.objRequied[i]);
+      var data = this.data[field];
+      if (!data)
+        arr.push(this.gridViewSetupWord[this.objRequied[i]].headerText);
+    }
+
+    if (arr.length > 0) {
+      var name = arr.join(' , ');
+      return this.notifySvr.notifyCode('SYS009', 0, name);
+    }
+    if (!this.fileCount || this.fileCount == 0)
+      return this.notifySvr.notifyCode('OD022');
+    return true;
   }
 }

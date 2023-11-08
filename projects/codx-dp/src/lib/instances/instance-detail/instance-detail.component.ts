@@ -271,7 +271,6 @@ export class InstanceDetailComponent implements OnInit {
   approveStatus = '0';
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
-  isAdmin = false;
 
   constructor(
     private callfc: CallFuncService,
@@ -337,8 +336,6 @@ export class InstanceDetailComponent implements OnInit {
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
       this.isChangeData = false;
-      let isAdmin = await this.dpSv.checkAdminInstance();
-      this.isAdmin = isAdmin ? true : changes['dataSelect'].currentValue?.owner == this.user?.userID; 
     }
   }
 

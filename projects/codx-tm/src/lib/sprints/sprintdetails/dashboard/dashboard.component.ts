@@ -43,9 +43,8 @@ export class DashboardComponent
   performance: number = 0;
   quality: number = 0;
   kpi: number = 0;
-  kpiTop =[] ;
-  top = 3 ;
-  tasksByGroup: object;
+  kpiTop = [];
+  top = 3;
   status: any = {
     doneTasks: 0,
     overdueTasks: 0,
@@ -55,6 +54,7 @@ export class DashboardComponent
   rateDoneTaskOnTime: number = 0;
   rateDoneTask: number = 0;
   qtyTasks: number = 0;
+  tasksByGroup: object;
   vltasksByGroup = [];
   vlWork = [];
   hrWork = [];
@@ -128,8 +128,6 @@ export class DashboardComponent
     visible: true,
   };
 
-
-
   //#endregion gauge
 
   legendSettings: Object = {
@@ -182,6 +180,23 @@ export class DashboardComponent
     { text: 'Hiệu quả làm việc' },
   ];
 
+  //count statistical
+  statistical = {
+    overdueTasks: 0,
+    newTasks: 0,
+    processingTasks: 0,
+    completed: 0,
+    canceledTasks: 0,
+  };
+  lstVllTasks = [];
+  //end
+
+  //chart accumulationchart
+  centerLabel: {};
+  lstTaskByTGroups: Object[] = [];
+  //end
+  loadedDefault: boolean;
+  loaded: boolean;
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -190,6 +205,17 @@ export class DashboardComponent
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
     this.user = this.auth.get();
+    this.getDefaultData();
+  }
+
+  getDefaultData(){
+    this.loadedDefault = false;
+    this.cache.valueList('TM004').subscribe((res) => {
+      if(res && res.datas){
+        this.lstVllTasks = res.datas;
+      }
+      this.loadedDefault = true;
+    });
   }
 
   onInit(): void {
@@ -212,103 +238,61 @@ export class DashboardComponent
         '(Category=@0 or Category=@1)and @2.Contains(Owner) and ProjectID=@3';
       this.model.dataValues = '1;2;[' + resources + '];' + projectID;
     }
-    if(resources == null) return ;
-    this.getGeneralData();
+    if (resources == null) return;
+    this.setTimeOut(100);
   }
 
   private getGeneralData() {
-    this.tmService
-      .getResourceAndProjectDBData(this.model)
-      .subscribe((res: any) => {
-        if (res) {
-          const {
-            status,
-            efficiency,
-            qtyTasks,
-            rateDoneTaskOnTime,
-            rateDoneTask,
-            tasksByGroup,
-            vltasksByGroup,
-            kpiTop,
-            dataBarChart,
-            vltasksByEmp,
-            hoursByEmp,
-          } = res;
-          this.data = res;
-          this.availability = efficiency.availability.toFixed(2);
-          this.performance = efficiency.performance.toFixed(2);
-          this.quality = efficiency.quality.toFixed(2);
-          this.kpi = efficiency.kpi.toFixed(2);
-          this.tasksByGroup = tasksByGroup;
-          this.status = status; 
-          this.dataBarChart = dataBarChart;
-          this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
-          this.rateDoneTask = rateDoneTask.toFixed(2);
-          this.qtyTasks = qtyTasks;
-          this.piedata = [
-            {
-              x: 'Chưa thực hiện',
-              y: status.newTasks,
-            },
-            {
-              x: 'Đang thực hiên',
-              y: status.processingTasks,
-            },
-            {
-              x: 'Hoàn tất',
-              y: status.doneTasks,
-            },
-            {
-              x: 'Hoãn lại',
-              y: status.postponeTasks,
-            },
-            {
-              x: 'Bị huỷ',
-              y: status.canceledTasks,
-            },
-          ];
-          if (vltasksByGroup != null){
-            vltasksByGroup.map((task) => {
-              let newTasks = 0;
-              let processingTasks = 0;
-              let doneTasks = 0;
-              let postponeTasks = 0;
-              let cancelTasks = 0;
-              task.tasks.map((task) => {
-                switch (task.status) {
-                  case StatusTask.New:
-                    newTasks = newTasks + 1;
-                    break;
-                  case StatusTask.Processing:
-                    processingTasks = processingTasks + 1;
-                    break;
-                  case StatusTask.Done:
-                    doneTasks = doneTasks + 1;
-                    break;
-                  case StatusTask.Postpone:
-                    postponeTasks = postponeTasks + 1;
-                    break;
-                  case StatusTask.Cancelled:
-                    cancelTasks = cancelTasks + 1;
-                    break;
-                }
-              });
-              this.vltasksByGroup.push({
-                taskGroupName: task.taskGroupName,
-                qtyTasks: task.qtyTasks,
-                percentage:task.percentage,
-                status: {
-                  new: (newTasks / task.qtyTasks) * 100,
-                  processing: (processingTasks / task.qtyTasks) * 100,
-                  done: (doneTasks / task.qtyTasks) * 100,
-                  postpone: (postponeTasks / task.qtyTasks) * 100,
-                  cancel: (cancelTasks / task.qtyTasks) * 100,
-                },
-              });
-            });
-          }
-        
-          vltasksByEmp.map((task) => {
+    this.tmService.getDataDetailsDashboard(this.model).subscribe((res: any) => {
+      if (res) {
+        const {
+          status,
+          efficiency,
+          qtyTasks,
+          rateDoneTaskOnTime,
+          rateDoneTask,
+          tasksByGroup,
+          vltasksByGroup,
+          kpiTop,
+          dataBarChart,
+          vltasksByEmp,
+          hoursByEmp,
+        } = res;
+        this.data = res;
+        this.availability = efficiency.availability.toFixed(2);
+        this.performance = efficiency.performance.toFixed(2);
+        this.quality = efficiency.quality.toFixed(2);
+        this.kpi = efficiency.kpi.toFixed(2);
+        this.tasksByGroup = tasksByGroup;
+        this.status = status;
+        this.dataBarChart = dataBarChart;
+        this.rateDoneTaskOnTime = rateDoneTaskOnTime.toFixed(2);
+        this.rateDoneTask = rateDoneTask.toFixed(2);
+        this.qtyTasks = qtyTasks;
+        this.piedata = [
+          {
+            x: 'Chưa thực hiện',
+            y: status.newTasks,
+          },
+          {
+            x: 'Đang thực hiên',
+            y: status.processingTasks,
+          },
+          {
+            x: 'Hoàn tất',
+            y: status.doneTasks,
+          },
+          {
+            x: 'Hoãn lại',
+            y: status.postponeTasks,
+          },
+          {
+            x: 'Bị huỷ',
+            y: status.canceledTasks,
+          },
+        ];
+        if (vltasksByGroup != null) {
+          vltasksByGroup.map((task) => {
             let newTasks = 0;
             let processingTasks = 0;
             let doneTasks = 0;
@@ -333,10 +317,10 @@ export class DashboardComponent
                   break;
               }
             });
-            this.vlWork.push({
-              id: task.id,
-              employeeName: task.employeeName,
+            this.vltasksByGroup.push({
+              taskGroupName: task.taskGroupName,
               qtyTasks: task.qtyTasks,
+              percentage: task.percentage,
               status: {
                 new: (newTasks / task.qtyTasks) * 100,
                 processing: (processingTasks / task.qtyTasks) * 100,
@@ -346,22 +330,64 @@ export class DashboardComponent
               },
             });
           });
-          this.hrWork = hoursByEmp;
-          kpiTop.map((element) => {
-             this.kpiTop.push({
-              id: element.id,
-              employeeName: element.employeeName,
-              positionName : element.positionName,
-              kpi : element.efficiency.kpi.toFixed(2)
-             })
-          })
-          this.kpiTop =  this.kpiTop.sort(function(a ,b){return b.kpi - a.kpi})
-          if(this.top > this.kpiTop.length ){
-              this.top = this.kpiTop.length ;
-          }
-          this.detectorRef.detectChanges();
         }
-      });
+
+        vltasksByEmp.map((task) => {
+          let newTasks = 0;
+          let processingTasks = 0;
+          let doneTasks = 0;
+          let postponeTasks = 0;
+          let cancelTasks = 0;
+          task.tasks.map((task) => {
+            switch (task.status) {
+              case StatusTask.New:
+                newTasks = newTasks + 1;
+                break;
+              case StatusTask.Processing:
+                processingTasks = processingTasks + 1;
+                break;
+              case StatusTask.Done:
+                doneTasks = doneTasks + 1;
+                break;
+              case StatusTask.Postpone:
+                postponeTasks = postponeTasks + 1;
+                break;
+              case StatusTask.Cancelled:
+                cancelTasks = cancelTasks + 1;
+                break;
+            }
+          });
+          this.vlWork.push({
+            id: task.id,
+            employeeName: task.employeeName,
+            qtyTasks: task.qtyTasks,
+            status: {
+              new: (newTasks / task.qtyTasks) * 100,
+              processing: (processingTasks / task.qtyTasks) * 100,
+              done: (doneTasks / task.qtyTasks) * 100,
+              postpone: (postponeTasks / task.qtyTasks) * 100,
+              cancel: (cancelTasks / task.qtyTasks) * 100,
+            },
+          });
+        });
+        this.hrWork = hoursByEmp;
+        kpiTop.map((element) => {
+          this.kpiTop.push({
+            id: element.id,
+            employeeName: element.employeeName,
+            positionName: element.positionName,
+            kpi: element.efficiency.kpi.toFixed(2),
+          });
+        });
+        this.kpiTop = this.kpiTop.sort(function (a, b) {
+          return b.kpi - a.kpi;
+        });
+        if (this.top > this.kpiTop.length) {
+          this.top = this.kpiTop.length;
+        }
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   sort() {
@@ -370,4 +396,124 @@ export class DashboardComponent
     this.hrWork = this.hrWork.reverse();
     this.detectorRef.detectChanges();
   }
+
+  //#region get data list not yet calculation
+  setTimeOut(deley){
+    setTimeout(() => {
+      if(this.loadedDefault){
+        this.getDataDetailsDashboard();
+      }else{
+        deley += 100;
+        this.setTimeOut(deley);
+      }
+    }, deley);
+  }
+  getDataDetailsDashboard() {
+    this.loaded = false;
+    this.tmService.getDataDetailsDashboard(this.model).subscribe((res: any) => {
+      if (res) {
+        const tasks = res[0];
+        const taskGroups = res[1];
+        const employees = res[2];
+
+        //calculation dashboard
+        this.countStatistical(tasks);
+        //taskgroups
+        this.countTaskByTaskGroups(tasks, taskGroups);
+
+        this.detectorRef.detectChanges();
+      } else {
+        //calculation dashboard
+        this.countStatistical();
+        //taskgroups
+        this.countTaskByTaskGroups();
+      }
+      setTimeout(() => {
+        this.loaded = true;
+      }, 500);
+    });
+  }
+  //#endregion
+
+  //#region calculation dashboard
+  countStatistical(tasks = []) {
+    const now = new Date();
+    if (tasks != null && tasks.length > 0) {
+      //Đã quá hạn
+      var tmp = {};
+      this.statistical['overdueTasks'] = tasks.filter(
+        (x) =>
+          (x.status == '00' || x.status == '10' || x.status == '20') &&
+          x.dueDate != null &&
+          now >
+            new Date(
+              new Date(x.dueDate).setDate(new Date(x.dueDate).getDate() + 1)
+            )
+      ).length;
+
+      //Chưa thực hiện
+      this.statistical['newTasks'] = tasks.filter(
+        (x) => x.status == '10'
+      ).length;
+
+      //Đang thực hiện
+      this.statistical['processingTasks'] = tasks.filter(
+        (x) => x.status == '20'
+      ).length;
+
+      //Hoàn tất
+      this.statistical['completed'] = tasks.filter(
+        (x) => x.status == '90'
+      ).length;
+
+      //Hoãn lại
+      this.statistical['canceledTasks'] = tasks.filter(
+        (x) => x.status == '50'
+      ).length;
+    }
+  }
+
+  getColors(value, type){
+    let data = this.lstVllTasks.find(x => x.value == value);
+    return data[type];
+  }
+  //#endregion
+
+  //#region dashboard task groups
+  countTaskByTaskGroups(tasks = [], taskGroups = []) {
+    let sum = 0;
+    for (var item of taskGroups) {
+      let tmp = {};
+      tmp['x'] = item?.taskGroupID;
+      tmp['taskGroupName'] = item?.taskGroupName;
+      let countTasksByTGs = 0;
+      countTasksByTGs = tasks.filter(
+        (x) => x.taskGroupID == item.taskGroupID
+      ).length;
+      tmp['countTasks'] = countTasksByTGs;
+      tmp['y'] = 0;
+      sum += countTasksByTGs;
+      this.lstTaskByTGroups.push(tmp);
+    }
+    this.lstTaskByTGroups.forEach((item) => {
+      item['y'] =
+        Math.round(sum) > 0
+          ? Math.round((item?.['countTasks'] / sum) * 100)
+          : 100 / this.lstTaskByTGroups.length;
+    });
+    this.centerLabel ={text: sum + '<br>' + 'Công việc'} ;
+  }
+
+  formatCrrView(e) {
+    if (e && e?.point) {
+      let data = this.lstTaskByTGroups.find(
+        (x) => x['x'] == e?.point?.x
+      );
+      if (data) {
+        e.point.tooltip =
+          data['taskGroupName'] + ': <b>' + data['countTasks'] + '</b>';
+      }
+    }
+  }
+  //#endregion
 }

@@ -266,169 +266,60 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   valueChangeMaster(event: any) {
+    if(this.isPreventChange){
+      return;
+    }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if (event && value) { //? nếu data có thay đổi
-      this.formCashReceipt.setValue(field,value,{onlySelf: true,emitEvent: false,}); //? gán data mới cho field thay đổi
+    if (event && value && this.formCashReceipt.hasChange(this.formCashReceipt.preData,this.formCashReceipt.data)) { //? nếu data có thay đổi
+      this.formCashReceipt.data.updateColumns = '';
       switch (field.toLowerCase()) {
         //* Sổ quỹ
         case 'cashbookid':
           let valueCashbook = {
-            CurrencyID : event?.component?.itemsSelected[0]?.CurrencyID || '',
-            OffsetAcctID : event?.component?.itemsSelected[0]?.CashAcctID || '',
             PreOffsetAcctID : event?.component?.dataService?.currentComponent?.previousItemData?.CashAcctID || '',
-            BankAcctID : event?.component?.itemsSelected[0]?.BankAcctID || ''
+            CurOffsetAcctID : event?.component?.itemsSelected[0]?.CashAcctID || ''
           }
-          this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
-              field,
-              this.formCashReceipt.data,
-              JSON.stringify(valueCashbook)
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (this.formCashReceipt.data.currencyID != event?.component?.itemsSelected[0]?.CurrencyID) {
-                this.formCashReceipt.setValue('currencyID',res?.CurrencyID,{onlySelf: true,emitEvent: false,});
-                this.formCashReceipt.setValue('exchangeRate',res?.ExchangeRate,{onlySelf: true,emitEvent: false,});
-                this.showHideColumn();
-                this.detectorRef.detectChanges();
-              }
-              if ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length)) {
-                this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
-                this.refreshGrid();
-              }
-              if (this.formCashReceipt.data.journalType == 'BP') {
-                let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
-                if (indexCashBook > -1) {
-                  this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
-                }
-                this.bankNamePay = res?.BankName || '';
-                this.detectorRef.detectChanges();
-              }
-            });
+          this.cashBookIDChange(field,valueCashbook);
           break;
 
-        //* Lí do chi
+        //* Lí do thu
         case 'reasonid':
-          this.formCashReceipt.data.memo = this.getMemoMaster();
-          this.formCashReceipt.setValue('memo',this.formCashReceipt.data.memo,{onlySelf: true,emitEvent: false,});
-          if (this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) {
-            let valueReason = {
-              preReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
-              Note: event?.component?.itemsSelected[0]?.ReasonName || '',
-              AccountID : event?.component?.itemsSelected[0]?.OffsetAcctID || '',
-              preAccountID: event?.component?.dataService?.currentComponent?.previousItemData?.OffsetAcctID || ''
-            };
-            this.api
-              .exec('AC', 'CashReceiptsBusiness', 'UpdateLineAsync', [
-                this.formCashReceipt.data,
-                field,
-                JSON.stringify(valueReason),
-              ])
-              .subscribe((res) => {
-                if (res) {
-                  this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
-                  this.refreshGrid();
-                }
-              });
-          }
+          let valueReason = {
+            preReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
+            Note: event?.component?.itemsSelected[0]?.ReasonName || '',
+            AccountID : event?.component?.itemsSelected[0]?.OffsetAcctID || '',
+            preAccountID: event?.component?.dataService?.currentComponent?.previousItemData?.OffsetAcctID || ''
+          };
+          this.reasonIDChange(field,valueReason)
           break;
 
         //* Đối tượng
         case 'objectid':
-          this.formCashReceipt.data.memo = this.getMemoMaster();
-          this.formCashReceipt.setValue('memo',this.formCashReceipt.data.memo,{onlySelf: true,emitEvent: false,});
-          if (this.formCashReceipt.data.journalType == 'BP') {
-            let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-            if (indexObject > -1) {
-              this.ownerReceive = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName; //? lấy tên chủ tài khoản
-            }
-            this.detectorRef.detectChanges();
-          }
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formCashReceipt.setValue('objectType',objectType,{});
+          this.objectIDChange();
           break;
-
-        // //* Tài khoản chi
-        // case 'bankacctid':
-        //   let valueBank = {
-        //     BankAcctID : event?.component?.itemsSelected[0]?.BankAcctID || ''
-        //   };
-        //   this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
-        //     field,
-        //     this.formCashReceipt.data,
-        //     JSON.stringify(valueBank)
-        //   ])
-        //   .pipe(takeUntil(this.destroy$))
-        //   .subscribe((res: any) => {
-        //     let indexBankAcct = this.eleCbxBankAcct?.ComponentCurrent?.dataService?.data.findIndex((x) => x.BankAcctID == this.eleCbxBankAcct?.ComponentCurrent?.value);
-        //     if (indexBankAcct > -1) {
-        //     this.bankAcctIDReceive = this.eleCbxBankAcct?.ComponentCurrent?.dataService?.data[indexBankAcct].BankAcctID; //? lấy tài khoản nhận
-        //     }
-        //     this.bankReceiveName = res?.BankName || '';
-        //     this.detectorRef.detectChanges();
-        //   });
-        //   break;
 
         //* Tên người gửi
         case 'payor':
-          this.formCashReceipt.data.memo = this.getMemoMaster();
-          this.formCashReceipt.setValue('memo',this.formCashReceipt.data.memo,{onlySelf: true,emitEvent: false,});
+          this.formCashReceipt.setValue('payeeID',event?.component?.itemsSelected[0]?.ContactID || '',{});
+          this.payorChange();
           break;
 
         //* Tiền tệ
         case 'currencyid':
-          this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
-              field,
-              this.formCashReceipt.data,
-            ])
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((res: any) => {
-              if (res) {
-                if (this.formCashReceipt.data.exchangeRate != res.exchangeRate) {
-                  this.formCashReceipt.setValue('exchangeRate',res.exchangeRate,{ onlySelf: true, emitEvent: false }); //? lấy tỷ giá của currency
-                  this.detectorRef.detectChanges();
-                }
-                this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
-                this.showHideColumn();
-                this.refreshGrid();
-              }
-            });
+          this.currencyIDChange(field);
           break;
 
         //* Tỷ giá
         case 'exchangerate':
-          if ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length) ) {
-            this.api
-              .exec('AC', 'CashReceiptsBusiness', 'UpdateLineAsync', [
-                this.formCashReceipt.data,
-                field
-              ])
-              .subscribe((res) => {
-                if (res) {
-                  this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
-                  this.refreshGrid();
-                }
-              });
-          }
+          this.exchangeRateChange(field);
           break;
 
         //* Ngày chứng từ
         case 'voucherdate':
-          this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
-            field,
-            this.formCashReceipt.data,
-          ])
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              if (this.formCashReceipt.data.exchangeRate != res.exchangeRate) {
-                this.formCashReceipt.setValue('exchangeRate',res.exchangeRate,{ onlySelf: true, emitEvent: false }); //? lấy tỷ giá của currency
-                this.detectorRef.detectChanges();
-                this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
-                setTimeout(() => {
-                  this.refreshGrid();
-                }, 100);
-              }
-            }
-          });
+          this.voucherDateChange(field);
           break;
       }
     }
@@ -742,6 +633,169 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   //#endregion Method
 
   //#region Function
+
+  /**
+   * *Hàm thay đổi sổ quỹ
+   * @param field 
+   * @param obj 
+   */
+  cashBookIDChange(field:any,obj:any){
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashReceipt.data,
+      JSON.stringify(obj)
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        if ((obj.PreOffsetAcctID && obj.PreOffsetAcctID != obj.CurOffsetAcctID) || this.formCashReceipt?.data?.exchangeRate != res?.ExchangeRate
+        || this.formCashReceipt?.data?.currencyID != res?.CurrencyID) {
+          if (this.formCashReceipt?.data?.currencyID != res?.CurrencyID) {
+            this.isPreventChange = true;
+            this.formCashReceipt.setValue('currencyID',res?.CurrencyID,{});
+            this.formCashReceipt.setValue('multi',res?.ExchangeRate,{});
+            this.showHideColumn();
+          }
+
+          if (this.formCashReceipt?.data?.exchangeRate != res?.ExchangeRate) {
+            this.formCashReceipt.setValue('exchangeRate',res?.ExchangeRate,{});
+          }
+          setTimeout(() => {
+            this.refreshGrid();
+          }, 50);
+          this.isPreventChange = false;
+        }
+      }
+    });
+  }
+
+  /**
+   * *Hàm thay đổi lí do chi
+   * @param field 
+   * @param obj 
+   */
+  reasonIDChange(field:any,obj:any){
+    let memo = this.getMemoMaster();
+    this.formCashReceipt.setValue('memo',memo,{});
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashReceipt.data,
+      JSON.stringify(obj)
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res && res?.update) {
+        this.refreshGrid();
+        this.formCashReceipt.preData = { ...this.formCashReceipt.data };
+        this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+      }
+    });
+  }
+
+  /**
+   * *Hàm thay đổi đối tượng
+   */
+  objectIDChange(){
+    let memo = this.getMemoMaster();
+    this.formCashReceipt.setValue('memo',memo,{});
+    if (this.formCashReceipt.data.journalType == 'BP') {
+      let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+      if (indexObject > -1) {
+        this.ownerReceive = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName; //? lấy tên chủ tài khoản
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  /**
+   * *Hàm thay đổi tên người nhận
+   */
+  payorChange(){
+    let memo = this.getMemoMaster();
+    this.formCashReceipt.setValue('memo',memo,{});
+  }
+
+  /**
+   * *Hàm thay đổi tiền tệ
+   * @param field 
+   */
+  currencyIDChange(field:any){
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashReceipt.data,
+      ''
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        if (this.formCashReceipt.data.exchangeRate != res.ExchangeRate) {
+          this.isPreventChange = true;
+          this.formCashReceipt.setValue('exchangeRate',res.ExchangeRate,{});
+          this.detectorRef.detectChanges();
+        }
+        this.showHideColumn();
+        this.refreshGrid();
+        if (this.formCashReceipt.hasChange(this.formCashReceipt.preData,this.formCashReceipt.data) && ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length))) {
+          this.formCashReceipt.preData = {...this.formCashReceipt.data};
+          this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+        }    
+        this.isPreventChange = false;    
+      }
+    });
+  }
+
+  /**
+   * *Hàm thay đổi tỷ giá
+   * @param field 
+   */
+  exchangeRateChange(field:any){
+    if (this.formCashReceipt.hasChange(this.formCashReceipt.preData,this.formCashReceipt.data) && ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length))) {
+      this.api
+        .exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
+          field,
+          this.formCashReceipt.data,
+          ''
+        ])
+        .subscribe((res:any) => {
+          if (res && res?.update) {
+            this.refreshGrid();
+            this.formCashReceipt.preData = {...this.formCashReceipt.data};
+            this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+          }
+        });
+    } 
+  }
+
+  /**
+   * *Hàm thay đổi ngày chứng từ
+   * @param field 
+   */
+  voucherDateChange(field:any){
+    this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashReceipt.data,
+      ''
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        if (this.formCashReceipt.data.exchangeRate != res.exchangeRate) {
+          this.isPreventChange = true;
+          this.formCashReceipt.setValue('exchangeRate',res.exchangeRate,{}); //? lấy tỷ giá của currency
+          this.detectorRef.detectChanges();
+          if (this.formCashReceipt.hasChange(this.formCashReceipt.preData,this.formCashReceipt.data) && ((this.eleGridCashReceipt && this.eleGridCashReceipt.dataSource.length) || (this.eleGridSettledInvoices && this.eleGridSettledInvoices.dataSource.length))) {
+            this.formCashReceipt.preData = {...this.formCashReceipt.data};
+            this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+            setTimeout(() => {
+              this.refreshGrid();
+            }, 100);
+          }    
+          this.isPreventChange = false; 
+        }
+      }
+    });
+  }
+
   /**
    * *Hàm thêm dòng theo loại nút
    */
@@ -1074,7 +1128,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   getMemoMaster() {
     let newMemo = ''; //? tên ghi chú mới
-    let reasonName = ''; //? tên lí do chi
+    let reasonName = ''; //? tên lí do thu
     let objectName = ''; //? tên đối tượng
     let payName = ''; //? tên người nhận
 
@@ -1091,19 +1145,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
     }
 
-    let indexPayor =
-      this.eleCbxPayor?.ComponentCurrent?.dataService?.data.findIndex(
-        (x) => x.ContactID == this.eleCbxPayor?.ComponentCurrent?.value
-      );
-    if (indexPayor > -1) {
-      payName =
-        this.eleCbxPayor?.ComponentCurrent?.dataService?.data[indexPayor]
-          .ContactName + ' - ';
-    } else {
-      if (this.eleCbxPayor?.ComponentCurrent?.value) {
-        payName = this.eleCbxPayor?.ComponentCurrent?.value + ' - ';
-      }
-    }
+    if(this.formCashReceipt?.data?.payor) payName = this.formCashReceipt?.data?.payor  + ' - ';
+    
     newMemo = reasonName + objectName + payName;
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
@@ -1191,13 +1234,15 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm refresh tất cả dữ liệu chi tiết của tab detail
    */
   refreshGrid() {
-    if(this.eleGridCashReceipt){
+    if(this.eleGridCashReceipt && this.elementTabDetail?.selectingID == '0'){
       this.eleGridCashReceipt.dataSource = [];
       this.eleGridCashReceipt.refresh();
+      return;
     }
-    if(this.eleGridSettledInvoices){
+    if(this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1'){
       this.eleGridSettledInvoices.dataSource = [];
       this.eleGridSettledInvoices.refresh();
+      return;
     }
   }
 
@@ -1254,22 +1299,14 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param data 
    * @returns 
    */
-  async saveValidationLine(data:any){
-    let lsterror = [];
-    if (data.dr == 0) {
-      lsterror.push({field:'dr',msgCode:'E0094'}); //? truyền field lỗi và msgcode
+  beforeSaveRow(event:any){
+    if (event.rowData) {
+      if (event.rowData.dr == 0 && event.rowData.dR2 == 0) {
+        this.eleGridCashReceipt.showErrorField('dr','E0094');
+        event.cancel = true;
+        return;
+      }
     }
-    // xử lí trường hợp call api để check validate
-    // let error = await new Promise((resolve, reject) => {
-    //   this.api.exec('BS', 'ExchangeRatesBusiness', 'LoadDataAsync', [
-    //     'USD'
-    //   ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-    //     if (res) {
-    //       resolve({status: true});
-    //     }
-    //   });
-    //   });
-    return lsterror;
   }
 
   @HostListener('click', ['$event']) //? focus out grid

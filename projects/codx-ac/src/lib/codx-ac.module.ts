@@ -43,8 +43,6 @@ import { SearchingComponent } from './searching/searching.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
 import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
-import { TableLineDetailStaticComponent } from './vouchers/salesinvoices/components/table-line-detail-static/table-line-detail-static.component';
-import { TableLineDetailComponent } from './vouchers/salesinvoices/components/table-line-detail/table-line-detail.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
 import { DeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/deduct-interest-expenses.component';
 import { PopAddDeductInterestExpensesComponent } from './periodic/deduct-interest-expenses/pop-add-deduct-interest-expenses/pop-add-deduct-interest-expenses.component';
@@ -108,6 +106,7 @@ import { ImportinvoicesDetailComponent } from './periodic/importeinvoices/import
 import { GeneralJournalComponent } from './vouchers/general-journal/general-journal.component';
 import { GeneralJournalAddComponent } from './vouchers/general-journal/general-journal-add/general-journal-add.component';
 import { GeneralJournalDetailComponent } from './vouchers/general-journal/general-journal-detail/general-journal-detail.component';
+import { TempPurchaseinvoicesTableComponent } from './periodic/importeinvoices/temp-purchaseinvoices-table/temp-purchaseinvoices-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -264,7 +263,6 @@ export const routes: Routes = [
   //       component: JournalV2Component,
   //       data: { noReuse: true },
   //     },
-  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
   //   ],
   // },
   {
@@ -332,7 +330,6 @@ export const routes: Routes = [
     SalesinvoicesAddComponent,
     SalesinvoiceslinesAddComponent,
     SearchingComponent,
-    TableLineDetailComponent,
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
     ReportsComponent,
@@ -363,7 +360,6 @@ export const routes: Routes = [
     PopAddInvoiceSetlementComponent,
     ClosingDataComponent,
     PopAddClosingDataComponent,
-    TableLineDetailStaticComponent,
     JournalV2Component,
     LayloutJournalComponent,
     TranformSubobjectPipe,
@@ -400,6 +396,7 @@ export const routes: Routes = [
     GeneralJournalComponent,
     GeneralJournalAddComponent,
     GeneralJournalDetailComponent,
+    TempPurchaseinvoicesTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

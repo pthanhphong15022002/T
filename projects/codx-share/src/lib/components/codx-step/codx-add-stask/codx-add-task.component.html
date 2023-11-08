@@ -34,7 +34,7 @@
 <ng-template #body>
   <ng-container [ngTemplateOutlet]="tempStatus"></ng-container>
   <ng-container
-    *ngIf="type == 'calendar'"
+    *ngIf="type == 'calendar' || type == 'notStep'"
     [ngTemplateOutlet]="addTaskInCM"
   ></ng-container>
 
@@ -51,11 +51,11 @@
     <div>
       <ejs-combobox
         #comboboxStep
-        [dataSource]="listInsStep"
+        [dataSource]="listInsStepInUser"
         [fields]="fieldsStep"
         [value]="stepsTasks?.stepID"
         [allowCustom]="false"
-        [enabled]="disableStep"
+        [enabled]="enabledStep"
         (change)="changeStep($event)"
       ></ejs-combobox>
     </div>
@@ -395,6 +395,21 @@
       </span>
     </div>
   </div>
+  <div class="d-flex align-items-center form-group">
+    <codx-input
+      type="switch"
+      [checked]="stepsTasks?.approveRule"
+      field="approveRule"
+      (valueChange)="valueChangeAlert($event)"
+    >
+    </codx-input>
+    <span class="ms-3">
+      <codx-label
+        fiedName="approveRule"
+        [formModel]="form.formModel"
+      ></codx-label>
+    </span>
+  </div>
   <ng-container>
     <div class="d-flex align-items-center nav-item w-100 mb-1">
       <div class="d-flex align-items-center mb-2">
@@ -544,7 +559,7 @@
 </ng-template>
 
 <ng-template #addTaskInCM>
-  <div class="form-group" *ngIf="true">
+  <div class="form-group">
     <div class="mb-1 line-clamp line-clamp-1">
       <codx-label
         class="text-primary required"
@@ -562,7 +577,7 @@
         refValue="CRM060"
         (valueChange)="changeTypeCM($event)"
         [crrValue]="typeCM"
-        [disabled]="action == 'edit' && type == 'calendar'"
+        [disabled]="(action == 'edit' && type == 'calendar') || type == 'notStep'"
       >
       </codx-input>
     </div>
@@ -585,7 +600,7 @@
         [refValue]="item?.refValue"
         (valueChange)="changeDataCM($event)"
         [crrValue]="dataParentTask?.parentTaskID"
-        [disabled]="action == 'edit' && type == 'calendar'"
+        [disabled]="(action == 'edit' && type == 'calendar') || type == 'notStep'"
       ></codx-input>
     </div>
   </div>

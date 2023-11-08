@@ -1,0 +1,110 @@
+
+.pic
+{
+  background-image: url('../../../../../src/assets/themes/fd/default/img/GrandChampion.svg');
+  height: 150px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.pic-2-puh
+{
+  background-image: url('../../../../../src/assets/themes/fd/default/img/CardWallet.svg');
+  height: 148px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.pic-3-puh
+{
+  background-image: url('../../../../../src/assets/themes/wp/default/img/WP.svg');
+  width: 70px;
+  height: 28px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.w-right
+{
+  width: calc(100% - 320px);
+}
+.border-bottom-dotted
+{
+  border-bottom: dotted 1px #E1E6E7;
+}
+.margin-left-fd-3
+{
+  margin-left: -3%;
+}
+.z-3
+{
+  z-index: 3;
+}
+.z-2
+{
+  z-index: 2;
+}
+.z-1
+{
+  z-index: 1;
+}
+.z-0
+{
+  z-index: 0;
+}
+.w-320px
+{
+  width: 320px;
+}
+.span-break
+{
+  margin-top: 12px;
+}
+.fd-achieve-info
+{
+  .symbol-90px
+  {
+    width: 90px;
+    height: 90px;
+  }
+  .symbol.symbol-90px img
+  {
+    width: 100% !important;
+  }
+}
+.fd-personal-achieve
+{
+  .container-fluid
+  {
+    padding: 0 !important;
+  }
+ 
+}
+.div-per-usage-his:hover , .div-per-usage-his.active
+{
+  background-color: var(--primary-lighter);
+}
+.p-achie
+{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+}
+.p-achie > p
+{
+  display: none;
+}
+.p-achie > p:first-child
+{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  -webkit-line-clamp: 2;
+}

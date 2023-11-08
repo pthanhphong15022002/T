@@ -61,7 +61,6 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {}
 
   onSaveForm() {
-    console.log('du lieu chuan bi luu', this.data);
     
     if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);

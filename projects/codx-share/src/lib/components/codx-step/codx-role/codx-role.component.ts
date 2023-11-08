@@ -44,12 +44,14 @@ export class CodxRoleComponent implements OnInit {
       this.isPopupUserCbb = true;
       if(this.controlUserOne){
         let option = new DialogModel();
-        option.zIndex = 1010;
+        option.zIndex = 1030;
         this.popup = this.callfc.openForm(this.controlUserOne, '', 500, 500,'',null,'', option);
         this.popup.close();
       }
     }else{
-      this.popup = this.callfc.openForm(share, '', 500, 500);
+      let option = new DialogModel();
+        option.zIndex = 1030;
+      this.popup = this.callfc.openForm(share, '', 500, 500,'',null,'', option);
     }
   }
 

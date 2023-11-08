@@ -259,7 +259,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -275,7 +275,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -292,7 +292,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data.recID])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -402,29 +402,10 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    * @param reportType
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
-    this.api
-      .execSv(
-        'rptrp',
-        'Codx.RptBusiness.RP',
-        'ReportListBusiness',
-        'GetListReportByIDandType',
-        [reportID, reportType]
-      )
-      .subscribe((res: any) => {
-        if (res != null) {
-          if (res.length > 1) {
-            this.openFormReportVoucher(data, res);
-          } else if (res.length == 1) {
-            window.open(
-              '/' +
-                this.tenant.getName() +
-                '/' +
-                'ac/report/detail/' +
-                `${res[0].recID}`
-            );
-          }
-        }
-      });
+    let params = {
+      Recs:data?.recID,
+    }
+    this.shareService.printReport(reportID,reportType,params,this.formModel);    
   }
 
    /**
@@ -554,7 +535,12 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem, recID) {
-    this.api
+    if (dataItem) {
+      this.itemSelected = dataItem;
+      this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+      this.detectorRef.detectChanges();
+    }else{
+      this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'GetDataDetailAsync', [
         dataItem,
         recID,
@@ -565,6 +551,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
         this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
         this.detectorRef.detectChanges();
       });
+    } 
   }
 
   /**

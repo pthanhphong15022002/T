@@ -42,6 +42,7 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
   @ViewChild('chart') chart: ChartComponent;
   @ViewChildren('template') templates: QueryList<any>;
   @ViewChildren('template2') templates2: QueryList<any>;
+  @ViewChildren('templateKudos') templates3: QueryList<any>;
 
   //#region Đát Bo
 
@@ -56,6 +57,12 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     '[{"id":"0.4199281088325755_layout","header":"Tỉ lệ đổi quà theo phòng ban","row":0,"col":12,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.4592017601751599_layout","header":"Top nhân viên hoạt động nhiều nhất","row":0,"col":30,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"id":"0.06496875406606994_layout","header":"Thống kê xu theo phòng ban","row":11,"col":12,"sizeX":36,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"id":"0.21519762020962552_layout","header":"Thống kê theo mục đích sử dụng","row":0,"col":0,"sizeX":12,"sizeY":23,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
   );
   datas2:any = JSON.parse(
+    '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
+  );
+  panels3:any = JSON.parse(
+    '[{"header":"Điểm cộng thành tích tuyên dương","id":"0.4199281088325755_layout","row":0,"col":0,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"header":"Top nhân viên bị trừ điểm thành tích phiếu góp ý","id":"0.4592017601751599_layout","row":0,"col":18,"sizeX":18,"sizeY":11,"minSizeX":16,"minSizeY":8,"maxSizeX":null,"maxSizeY":null},{"header":"Bảng điểm thành tích theo bộ phận","id":"0.06496875406606994_layout","row":11,"col":0,"sizeX":36,"sizeY":12,"minSizeX":16,"minSizeY":12,"maxSizeX":null,"maxSizeY":null},{"header":"Top nhân viên có điểm thành tích cao nhất","id":"0.21519762020962552_layout","row":0,"col":36,"sizeX":12,"sizeY":23,"minSizeX":8,"minSizeY":8,"maxSizeX":null,"maxSizeY":null}]'
+  );
+  datas3:any = JSON.parse(
     '[{"panelId":"0.4199281088325755_layout","data":"2"},{"panelId":"0.4592017601751599_layout","data":"3"},{"panelId":"0.06496875406606994_layout","data":"4"},{"panelId":"0.21519762020962552_layout","data":"1"}]'
   );
 
@@ -266,6 +273,15 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
     connectorStyle: { length: '20px', type: 'Curve'},
 
   };
+  dataLabelCoins: Object = {
+    visible: true,
+    position: 'Outside', name: 'transName',
+    font: {
+        fontWeight: '500'
+    },
+    connectorStyle: { length: '20px', type: 'Curve'},
+
+  };
   circleMarker: Object = { visible: true, height: 7, width: 7 , shape: 'Circle' , isFilled: true };
   palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
 
@@ -276,7 +292,6 @@ export class StatisticalComponent extends UIComponent implements AfterViewInit {
       minorTickLines: { width: 0 },
       interval: 1,
       lineStyle: { width: 0 },
-      labelIntersectAction: 'Rotate45',
       valueType: 'Category'
   };
   //Initializing Primary Y Axis
@@ -318,6 +333,7 @@ chartArea: Object = {
   dataset:any=[];
   vllFD017:any=[];
   vllFD018:any=[];
+  rangeLines:any=[];
   editSettings: any = {
     allowAdding: false,
     allowDeleting: false,
@@ -327,6 +343,7 @@ chartArea: Object = {
   columnGrids:any=[];
 
   onInit(): void {
+    this.getRangeLines();
     this.options.pageLoading = false;
     this.options.entityName = 'FD_Receivers';
     this.options.entityPermission = 'FD_Receivers';
@@ -363,6 +380,7 @@ chartArea: Object = {
 
   isLoaded:boolean=false;
   ngAfterViewInit() {
+
     this.views = [
       // {
       //   type: ViewType.content,
@@ -488,6 +506,8 @@ chartArea: Object = {
       this.getDataChartB();
     if(this.funcID == 'FDD003')
       this.loadData();
+    if(this.funcID == 'FDD004')
+      this.loadKudos()
     //this.getDataChartB();
   }
 
@@ -540,7 +560,7 @@ chartArea: Object = {
           for(let key in objEmp){
             let  obj:any={};
             obj.userID = key;
-            obj.userName= objEmp[key][0].userName;
+            obj.username= objEmp[key][0].userName;
             obj.positionName= objEmp[key][0].positionName;
             obj.departmentName= objEmp[key][0].departmentName;
             obj.coinsIn = this.sumByProp(objEmp[key].filter((x:any)=>x.coins >0),'coins');
@@ -577,6 +597,126 @@ chartArea: Object = {
       });
   }
 
+
+  statByRule:any=[];
+  statByBehavior:any=[];
+  statByMinusKudos:any=[];
+  loadKudos(){
+      this.statByRule = [];
+      this.statByBehavior = [];
+      this.statByMinusKudos=[];
+      this.statByEmps=[];
+      this.statByDepts=[];
+      this.options.pageLoading = false;
+      this.options.entityName = 'FD_KudosTrans';
+      this.options.entityPermission = 'FD_KudosTrans';
+      this.options.gridViewName = 'grvKudosTrans';
+      this.options.formName = 'KudosTrans';
+      this.options.funcID = 'FDW011';
+      this.options.dataObj = 'Coins';
+      this.api
+        .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+          this.options,"4", this.objParams ? this.objParams : {},
+        ])
+        .subscribe((res:any)=>{
+
+          this.dataset = res;
+          let objRule = this.groupBy(this.dataset.filter((x:any)=>x.isGroup == true),'competenceID');
+          for(let key in objRule){
+            let obj:any={};
+            obj.competenceID = key;
+            obj.competenceName= objRule[key][0].competenceName;
+            obj.quantity = this.sumByProp(objRule[key].filter((x:any)=>x.kudos>0),'kudos');
+            this.statByRule.push(obj)
+          }
+          let objBev = this.groupBy(this.dataset.filter((x:any)=>x.isGroup == false),'competenceID');
+          for(let key in objBev){
+            let obj:any={};
+            obj.competenceID = key;
+            obj.competenceName= objBev[key][0].competenceName;
+            obj.quantity = this.sumByProp(objBev[key],'kudos');
+            this.statByBehavior.push(obj)
+          }
+          let objMinus = this.groupBy(JSON.parse(JSON.stringify(this.dataset.filter((x:any)=>x.kudos<0))),'userID');
+          for(let key in objMinus){
+            let obj:any={};
+            obj.userID = key;
+            obj.username= objMinus[key][0].employeeName;
+            obj.positionName = objMinus[key][0].positionName;
+            obj.departmentName = objMinus[key][0].departmentName;
+            obj.orgUnitName = objMinus[key][0].orgUnitName;
+
+            objMinus[key].map((x:any)=> {x.kudos = -x.kudos; return x});
+            obj.quantity = this.sumByProp(objMinus[key],'kudos')
+            this.statByMinusKudos.push(obj)
+          }
+          this.dataset = this.sortByProp(this.dataset,'quantity','desc');
+          let objEmp = this.groupBy(this.dataset,'userID');
+          let idx=0
+          for(let key in objEmp){
+            let obj:any ={};
+            obj.stt=idx+1;
+            idx++;
+            obj.userID = key;
+            obj.username = objEmp[key][0].employeeName;
+            obj.departmentID = objEmp[key][0].departmentID;
+            obj.departmentName =objEmp[key][0].departmentName;
+            obj.positionName =objEmp[key][0].positionName;
+            obj.quantity = this.sumByProp(objEmp[key],'kudos');
+            let rank = this.setRank(obj);
+            if(rank){
+              obj.rankName = rank.breakName;
+              obj.color = rank.color
+            }
+            this.statByEmps.push(obj);
+          }
+
+          let objDept = this.groupBy(this.statByEmps,'departmentID');
+          for(let key in objDept){
+            let obj:any={};
+            obj.departmentID = key;
+            obj.departmentName = objDept[key][0].departmentName;
+            obj.quantity = this.sumByProp(objDept[key],'quantity');
+            obj.avg = this.toFixed(obj.quantity/objDept[key].length)
+            for(let i=0;i<this.rangeLines.length;i++){
+              obj[`type${i}`] = objDept[key].filter((x:any)=>x.rankName== this.rangeLines[i].breakName).length;
+            }
+            this.statByDepts.push(obj)
+          }
+          this.isLoaded = true;
+        })
+  }
+
+
+  getRangeLines(){
+    let model:any = {
+      predicate:"RangeID=@0",
+      dataValue: "KUDOS",
+      sortColumns: "BreakValue",
+      sortDirections: "desc"
+     };
+    this.api
+        .execSv<any>('BS', 'ERM.Business.BS', 'RangeLinesBusiness', 'GetDataByPredicateAsync', [
+          model
+        ])
+        .subscribe((res:any)=>{
+          this.rangeLines = res;
+          this.rangeLines = this.sortByProp(this.rangeLines,'breakValue','desc');
+        })
+  }
+
+  setRank(user:any){
+    if(this.rangeLines?.length){
+      let items = this.rangeLines.filter((x:any)=>x.breakValue <= user.quantity);
+      if(items.length) return items[0];
+      else return this.rangeLines[this.rangeLines.length-1];
+    }
+    return null;
+  }
+  avaLoaded(ele:any , e:any){
+    console.log(e);
+    debugger
+  }
   ratingStats:any=[];
   cardsByRatingType:any={};
   cardByDepts:any={};
@@ -589,6 +729,11 @@ chartArea: Object = {
   statByEmps:any=[]
   subscription: Subscription;
   getDataChartB() {
+    this.options.pageLoading = false;
+    this.options.entityName = 'FD_Receivers';
+    this.options.entityPermission = 'FD_Receivers';
+    this.options.gridViewName = 'grvReceivers';
+    this.options.formName = 'Receivers';
     this.columnGrids = [
 
       {
@@ -655,6 +800,7 @@ chartArea: Object = {
           }
           this.cardByDepts = this.groupBy(this.dataset.filter((x:any)=>x.departmentID),'departmentID');
           for(let key in this.cardByDepts){
+
             let obj:any={};
             obj.recID= this.newGuid();
             obj.departmentID=key;
@@ -1007,6 +1153,20 @@ chartArea: Object = {
     this.detectorRef.detectChanges();
   }
 
+  activePane:any='btnRule'
+  changeRule(ele:any,obj:any){
+    if(ele.id==this.activePane) return;
+    this.activePane = ele.id;
+    if(ele.id=='btnRule'){
+      obj.paneRule.classList.contains('d-none') && obj.paneRule.classList.remove('d-none');
+      !obj.paneBev.classList.contains('d-none') && obj.paneBev.classList.add('d-none')
+    }
+    if(ele.id=='btnBev'){
+      !obj.paneRule.classList.contains('d-none') && obj.paneRule.classList.add('d-none')
+      obj.paneBev.classList.contains('d-none') && obj.paneBev.classList.remove('d-none')
+    }
+  }
+
   sumByProp(arr:any[],property:string){
     if(arr && arr.length){
       return arr.reduce((accumulator:any, object:any) => {
@@ -1060,7 +1220,11 @@ chartArea: Object = {
 
   doubleClick(e:any){
     let dialogModel = new DialogModel;
-    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'',dialogModel)
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',[this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'1'],'',dialogModel)
+  }
+  doubleClick2(e:any){
+    let dialogModel = new DialogModel;
+    this.callfc.openForm(DrilldownComponent,e.departmentName,1280,720,'',[this.sortByProp(this.statByEmps.filter((x:any)=>x.departmentID==e.departmentID),'quantity','desc'),'2'],'',dialogModel)
   }
 
 
@@ -1137,6 +1301,7 @@ chartArea: Object = {
 
   objParams:any;
   filterChange(e:any){
+    this.isLoaded = false;
     this.objParams=e[1];
     this.reportItem &&  this.reloadAllChart();
   }
