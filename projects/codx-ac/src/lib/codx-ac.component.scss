@@ -352,6 +352,12 @@
     }
 }
 
+.ac-views codx-view-list {
+    codx-listview {
+        height: 100% !important;
+    }
+}
+
 /* css custom lại codx-view-content spliter */
 .ac-views codx-view-content {
     .codx-view-splitter>.e-static-pane {

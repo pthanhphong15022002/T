@@ -102,6 +102,13 @@ export const fmGeneralJournalsLinesOne: FormModel = {
   entityPer: 'AC_GeneralJournalsLines',
 };
 
+export const fmTransfersLines: FormModel = {
+  entityName: 'IV_TransfersLines',
+  formName: 'TransfersLines',
+  gridViewName: 'grvTransfersLines',
+  entityPer: 'IV_TransfersLines',
+};
+
 export enum MorfuncCash {
   GhiSoPC = 'ACT041003',
   GhiSoUPC = 'ACT042905',

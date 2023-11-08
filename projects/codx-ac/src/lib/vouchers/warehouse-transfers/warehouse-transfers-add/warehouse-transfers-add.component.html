@@ -1,0 +1,318 @@
+<codx-form #formWareHouse [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
+    [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" (onAfterInit)="onAfterInitForm($event)"
+    class="ac-dialog ac-form">
+</codx-form>
+<ng-template #TmpSubToolbar>
+    <div *ngIf="formWareHouse" class="w-100">
+        <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+            <div class="d-flex align-items-center me-2">
+                <div style="background-color: var(--primary-dark)"
+                    class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+                    <i *ngIf="formWareHouse.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
+                    <i *ngIf="formWareHouse.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
+                    <i *ngIf="formWareHouse.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
+                </div>
+                <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+                    {{ headerText }}
+                </div>
+                <div class="input-circle input-sm" *ngIf="formWareHouse?.formGroup">
+                    <span class="me-2">
+                        <codx-vll [name]="'AC040'" [formModel]="dialog.formModel" [field]="'Status'"
+                            [value]="formWareHouse.data?.status" [showText]="true" [showBgColor]="true"
+                            class="badge badge-light badge-sm">
+                        </codx-vll>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center me-3">
+                <div class="ms-2">
+                    <div class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
+                        <i class="icon-close icon-18"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <ng-container>
+          <div style="margin-left: 25px" *ngIf="!formWareHouse.data?._isEdit || formWareHouse.data?.status == '7'"
+            class="input-circle h-20px input-border-0 w-400px mb-1">
+            <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+              [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
+              field="subType" [refValue]="formWareHouse?.gridviewSetup['SubType'].referedValue"
+              [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
+              (valueChange)="changeSubType($event)"></codx-dropdown-select>
+          </div>
+          <span style="margin-left: 30px" *ngIf="formWareHouse.data?._isEdit && formWareHouse.data?.status != '7'">
+            <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
+              [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
+              class="badge badge-light-primary badge-lg mt-1">
+            </codx-vll>
+          </span>
+        </ng-container> -->
+    </div>
+</ng-template>
+
+<ng-template #TmpBody>
+    <div style="height: 250px !important">
+        <ejs-tab>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-info icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    <!-- Start: Tab Detail -->
+  <div style="height: calc(100vh - 400px) !important">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-format_list_numbered icon-18 me-2"></i>
+              <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
+                [formModel]="dialog.formModel" default="Thông tin xuất"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-format_list_numbered icon-18 me-2"></i>
+                <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
+                  [formModel]="dialog.formModel" default="Thông tin nhập"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="TmpTabLine2"></ng-container>
+            </ng-template>
+          </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+  <!-- End: Tab Detail -->
+  <div class="row ac-empty-record"></div>
+</ng-template>
+
+<ng-template #TmpFooter>
+    <div style="display: grid !important" ngClass="collape"
+        class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formWareHouse.data">
+        <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
+                *ngIf="formWareHouse.data?.status == '7'" style="border: 1px solid" type="button"
+                class="btn btn-md btn-light-danger me-2 rounded-15"
+                (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
+                <div class="d-flex align-items-center">
+                    <i class="icon-cancel icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+                </div>
+            </button>
+            <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
+                style="border: 1px solid var(--primary-dark) !important" type="button"
+                class="btn btn-md btn-light-primary me-2 rounded-15"
+                (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()" (click)="onSaveVoucher('saveadd')">
+                <div class="d-flex align-items-center">
+                    <i class="icon-add_to_photos icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+                </div>
+            </button>
+            <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+                class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+                (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
+                <div class="d-flex align-items-center">
+                    <i class="icon-save_alt icon-16"></i>
+                    <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+                </div>
+            </button>
+        </div>
+        <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
+            [objectID]="formWareHouse.data?.recID" [funcID]="dialog.formModel.funcID"
+            [TabControl]="tabInfo"></codx-tabs>
+    </div>
+</ng-template>
+
+<!-- Start: TmpTabGeneral -->
+<ng-template #TmpTabGeneral>
+    <ng-container *ngIf="formWareHouse?.formGroup">
+        <div class="p-3 tab-basic ac-form-master">
+            <div class="row">
+                <div class="col-7 ac-left">
+                    <div class="mw-850">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="FromWHID"
+                                        [formModel]="dialog.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formWareHouse.formGroup" field="fromWHID"
+                                            [formModel]="dialog.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
+                                        [formModel]="dialog.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #eleCbxReasonID [Group]="formWareHouse.formGroup" field="reasonID"
+                                            [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="toWHID"
+                                        [formModel]="dialog.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input [Group]="formWareHouse.formGroup" field="toWHID"
+                                            [formModel]="dialog.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="Requester"
+                                        [formModel]="dialog.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #eleCbxReasonID [Group]="formWareHouse.formGroup" field="requester"
+                                            [formModel]="dialog.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <codx-label style="white-space: nowrap !important" fiedName="RequestedDate"
+                                        [formModel]="dialog.formModel">
+                                    </codx-label>
+                                    <div class="ac-input">
+                                        <codx-input #eleCbxReasonID [Group]="formWareHouse.formGroup"
+                                            field="requestedDate" [formModel]="dialog.formModel">
+                                        </codx-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <codx-label style="white-space: nowrap !important" fiedName="Memo"
+                                [formModel]="dialog.formModel">
+                            </codx-label>
+                            <div class="ac-input">
+                                <codx-input [Group]="formWareHouse.formGroup" field="memo"
+                                    [formModel]="dialog.formModel">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 ac-right d-flex justify-content-end">
+                    <div class="d-flex flex-column mw-350px">
+                      <div class="row justify-content-end">
+                        <div class="col-5">
+                          <div class="form-group">
+                            <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                              [formModel]="dialog.formModel">
+                            </codx-label>
+                            <div class="ac-input">
+                              <codx-input [Group]="formWareHouse.formGroup" [formModel]="dialog.formModel"
+                                field="voucherDate">
+                              </codx-input>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-5">
+                          <div class="form-group">
+                            <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
+                              [formModel]="dialog.formModel">
+                            </codx-label>
+                            <div [class]="
+                                journal?.assignRule != '0'
+                                  ? 'ac-input-disable'
+                                  : 'ac-input'
+                              ">
+                              <codx-input [Group]="formWareHouse.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                                [disabled]="journal?.assignRule != '0'">
+                              </codx-input>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+<!-- End: TmpTabGeneral -->
+
+<!-- Start: Grid Tranfer -->
+<ng-template #TmpTabLine>
+    <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
+        <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+          [formName]="fmTransfersLines.formName" [gridViewName]="fmTransfersLines.gridViewName" [templateMore]="templateMore"
+          [entityName]="fmTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
+          service="IV" [editOnClick]="true" rowNoField="rowNo" (eventAction)="onActionGrid($event)"
+          (actionCompleted)="onActionGrid($event)"
+          (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+        <div class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div>
+              <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddVou" (keydown.enter)="
+                onAddLine(); $event.preventDefault()
+                " (click)="onAddLine()" class="btn btn-sm btn-light-primary rounded-15 btnAddCash">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<ng-template #TmpTabLine2>
+    <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
+        <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+          [formName]="fmTransfersLines.formName" [gridViewName]="fmTransfersLines.gridViewName" [templateMore]="templateMore"
+          [entityName]="fmTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
+          service="IV" [editOnClick]="true" rowNoField="rowNo" (eventAction)="onActionGrid($event)"
+          (actionCompleted)="onActionGrid($event)"
+          (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+        <div class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div>
+              <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddVou" (keydown.enter)="
+                onAddLine(); $event.preventDefault()
+                " (click)="onAddLine()" class="btn btn-sm btn-light-primary rounded-15 btnAddCash">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+</ng-template>
+<!-- End: Grid Tranfer -->
+
+<ng-template #templateMore let-data>
+    <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)"
+      type="view"></codx-mfunc>
+</ng-template>
