@@ -73,7 +73,8 @@ export class CalendarCenterComponent
           template: this.eventTemplate, // template event
           template4: this.resourceTemplate,//template resource
           template8: this.popupEventTemplate, //template popup event
-          currentView:'TimelineMonth'
+          currentView:'TimelineMonth',
+          hideFooter:true
         },
       },
     ];
