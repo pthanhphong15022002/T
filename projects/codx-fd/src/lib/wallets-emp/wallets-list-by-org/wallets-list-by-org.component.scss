@@ -39,7 +39,7 @@
 
 .line-100 {
     width: 100%;
-    height: 12px;
+    height: 8px !important;
     border-radius: 5px;
     display: flex;
     background-color: #E9F1F0;
@@ -47,6 +47,7 @@
 
 .line-kudos {
     border-radius: 5px;
+    height: 8px !important;
     min-width: 0px !important;
 }
 
