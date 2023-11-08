@@ -384,6 +384,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.stepID = this.instanceStep?.recID;
         this.stepsTasks.taskGroupID = this.groupTaskID;
         this.listGroup = this.instanceStep?.taskGroups;
+        this.setDateTimeTask();
       }
     }else if(this.groupTask){
       if(this.instanceStep){
@@ -391,6 +392,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.stepID = this.instanceStep?.recID;
         this.stepsTasks.taskGroupID = this.groupTaskID;
         this.listGroup = [this.groupTask]
+        this.setDateTimeTask();
       }
     }else{
 
