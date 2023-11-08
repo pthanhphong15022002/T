@@ -61,7 +61,7 @@ export class DP_Processes {
   deleted: boolean = false;
   stepsColorMode: boolean;
   instanceProgressControl: boolean;
-  startInstanceControl:boolean = false;
+  startInstanceControl: boolean = false;
   tabControl: string;
 }
 
@@ -628,7 +628,7 @@ export class tempVllDP {
   createdBy: string;
   createdOn: Date;
   customize: string;
-  isUserDefined: boolean;
+  isUserDefined: boolean = true;
   multiSelect: boolean;
   version: string;
   note: string;
