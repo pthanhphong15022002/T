@@ -562,19 +562,14 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
   showHideTab(type: any, ele?: TabComponent) {
     ele = this.elementTabDetail;
     if (ele) {
-      ele.hideTab(0, false);
       ele.select(0);
       switch (type) {
         case '2':
-          ele.hideTab(0, false);
           ele.hideTab(1, false);
-          ele.hideTab(2, false);
           break;
         case '1':
         case '3':
-          ele.hideTab(1, false);
-          ele.hideTab(2, false);
-          ele.hideTab(2, true);
+          ele.hideTab(1, true);
           break;
       }
     }

@@ -38,9 +38,11 @@ export class LayoutComponent extends LayoutBaseComponent {
         case "FDT03":
         case "FDT04":
         case "FDT05":
+        case "FDT06":
         case "FDK012":
         case "FDW012":
         case "FDT10":
+        case "FDT072":
           entityName = "FD_Cards";
           break;
         case "FDT091":
@@ -50,7 +52,7 @@ export class LayoutComponent extends LayoutBaseComponent {
         case "FDT093":
           break;
     }
-    if(data && data?.functionID !== "FDT072" && data?.functionID !== "FDT06") {
+    if(data) {
       var favIDs: any[] = [];
       data.favs.forEach((x: any) => {
         favIDs.push(x.recID);
@@ -65,7 +67,11 @@ export class LayoutComponent extends LayoutBaseComponent {
           data?.entityName, // entityPermission
         )
         .subscribe((item: string)=>{
-          x.count = Number.parseInt(item);
+          if(item){
+            x.count = Number.parseInt(item);
+          } else {
+            x.count = 0;
+          }
         });
       });
     }
