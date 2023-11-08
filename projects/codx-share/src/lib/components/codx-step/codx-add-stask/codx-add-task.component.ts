@@ -259,10 +259,14 @@ export class CodxAddTaskComponent implements OnInit {
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.stepsTasks.recID = Util.uid();
+      this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
+      this.stepsTasks.progress = 0;
       this.stepsTasks.fieldID = null;
+      this.stepsTasks.dependRule = "0";
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.requireCompleted = false;
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
     }

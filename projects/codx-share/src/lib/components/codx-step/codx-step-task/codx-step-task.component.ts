@@ -1138,17 +1138,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async copyTask(task) {
     if (task) {
-      let taskCopy = JSON.parse(JSON.stringify(task));
-      taskCopy.recID = Util.uid();
-      taskCopy.refID = Util.uid();
-      taskCopy['progress'] = 0;
-      taskCopy['isTaskDefault'] = false;
-      taskCopy['requireCompleted'] = false;
-      taskCopy['dependRule'] = '0';
-      this.taskType = this.listTaskType.find(
-        (type) => type.value == taskCopy?.taskType
-      );
-      let taskOutput = await this.openPopupTask('copy', 'step', taskCopy);
+      this.taskType = this.listTaskType.find((type) => type.value == task?.taskType);
+      let taskOutput = await this.openPopupTask('copy', 'step', task);
 
       if (taskOutput?.task) {
         let data = taskOutput;
@@ -1160,6 +1151,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (group) {
           group?.task.push(data.task);
           group['progress'] = data.progressGroup;
+          this.changeDetectorRef.markForCheck();
         }
       }
     }
