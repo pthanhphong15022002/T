@@ -67,17 +67,7 @@ export class ImportinvoicesDetailComponent extends UIComponent {
   }
 
   ngOnChanges(changes: SimpleChange) {
-    if (changes['recID']) {
-      if (
-        changes['recID'].currentValue === this.id ||
-        changes['recID'].currentValue == null
-      )
-        return;
-      this.id = changes['recID'].currentValue;
-      // this.loadedHisPro = false;
-      // this.getTaskDetail();
-      this.getDataDetail(this.dataItem,this.id);
-    }
+    return;
   }
 
   //#endregion Init
@@ -87,24 +77,9 @@ export class ImportinvoicesDetailComponent extends UIComponent {
   //#endregion
 
   //#region Method
-  /**
-   * *Hàm get data chi tiết
-   * @param data
-   */
-  getDataDetail(data,recID) {
-    this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'GetTempInvoicesDetailAsync', [
-        data,recID,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.itemSelected = res;
-        this.detectorRef.detectChanges();
-      });
-  }
 
   //#endregion
-  
+
   /**
    * *Hàm ẩn hiện các tab khi thay đổi chứng từ theo loại chứng từ
    * @param event
