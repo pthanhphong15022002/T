@@ -571,6 +571,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
+          case 'DP32': // gởi duyệt 
+            res.disabled =  !(task?.approveRule);
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled =  true;
+            break;
         }
       });
     }
@@ -1144,8 +1150,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
       let taskOutput = await this.openPopupTask('copy', 'step', taskCopy);
 
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
+      if (taskOutput?.task) {
+        let data = taskOutput;
         this.currentStep?.tasks?.push(data.task);
         this.currentStep['progress'] = data.progressStep;
         let group = this.listGroupTask.find((group) =>
