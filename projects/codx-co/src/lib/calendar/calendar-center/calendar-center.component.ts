@@ -71,7 +71,9 @@ export class CalendarCenterComponent
           eventModel: this.eventModel,// mapping của event schedule
           resourceModel: this.resourceModel, // mapping của resource schedule
           template: this.eventTemplate, // template event
+          template3: this.cellTemplate,
           template4: this.resourceTemplate,//template resource
+          template6: this.moreFuncTemplate, // template more funtion
           template8: this.popupEventTemplate, //template popup event
           currentView:'TimelineMonth',
           hideFooter:true
@@ -86,14 +88,13 @@ export class CalendarCenterComponent
         this.codxSchedule = (this.view?.currentView as any).schedule;
         this.codxSchedule.isOutSource = this.isOutSource;
         this.codxSchedule.dataSource = this.events;
-        this.codxSchedule.resourceDataSource = this.resources;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
         this.codxSchedule.statusColor = this.statusColor;
-        this.codxSchedule.currentView = "TimelineMonth";
-        this.codxSchedule.onTimelineViewChange(false);
-        // this.codxSchedule.isCalendarView = true;
-
-        this.codxSchedule.setEventSettings();
+        setTimeout(() => {
+          this.codxSchedule.currentView = "Month";
+          this.codxSchedule.onTimelineViewChange(false);
+          this.codxSchedule.setEventSettings();
+        }, 3000);
       }
     },500)
   }
@@ -122,7 +123,7 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = resources;
-      this.codxSchedule.isCalendarView = true;
+      // this.codxSchedule.isCalendarView = true;
       this.codxSchedule.onGroupingChange(resources);
       this.codxSchedule.onGridlinesChange(true);
       this.codxSchedule.onTimelineViewChange(true);
@@ -130,15 +131,20 @@ export class CalendarCenterComponent
     }
   }
 
+  //
+  changeModeView(isCalendarView:boolean){
+    if(this.codxSchedule)
+    {
+      this.codxSchedule.isCalendarView = isCalendarView;
+      this.codxSchedule.setEventSettings();
+    }
+  }
   // remove resource
   removeResource(){
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = [];
-      this.codxSchedule.isCalendarView = false;
-      // this.codxSchedule.onGroupingChange(false);
-      // this.codxSchedule.onGridlinesChange(false);
-      // this.codxSchedule.onTimelineViewChange(false);
+      this.codxSchedule.onTimelineViewChange(false);
       this.codxSchedule.setEventSettings();
     }
   }
@@ -180,31 +186,22 @@ export class CalendarCenterComponent
   }
 
   // render html day off schedule
-  getDayOffHTML(evt: any) {
-    let cellDay = evt.date;
-    let html = "";
-    if (this.lstDayOff?.length > 0)
-    {
+  getDayOffHTML(evt: any,ele:HTMLElement) {
+    if (this.lstDayOff?.length > 0){
+      let cellDay = evt.date;
       let dayOff = this.lstDayOff.find(x => new Date(x.startDate).toLocaleDateString() === cellDay.toLocaleDateString());
       if(dayOff)
       {
-        let time = cellDay.getTime();
-        let eles = document.querySelectorAll('[data-date="' + time + '"]');
-        if (eles?.length > 0)
-        {
-          eles.forEach((ele:HTMLElement) => {
-            if(ele.classList.value.includes("e-work-cells"))
-            {
-              ele.style.backgroundColor = dayOff.color;
-              // ele.style.backgroundColor = "#ddd";
-              ele.style.textAlign = "center";
-            }
-          });
-          html =`<icon class="${dayOff.symbol}"></icon><span>${dayOff.note}</span>`;
-        }
+        ele.style.backgroundColor = dayOff.color;
+        ele.style.color = dayOff.color;
+        ele.style.display = "flex";
+        ele.style.alignItems = "center";
+        ele.style.justifyContent = "center";
+        ele.style.height = "calc(100% - 20px)";        
+       return `${dayOff.note}`;
       }
     }
-    return html;
+    return "";
   }
 
   //get list day off
@@ -219,9 +216,21 @@ export class CalendarCenterComponent
         [this.calendarID]
       )
       .subscribe((res) => {
-        if(res)
+        if(res?.length > 0)
         {
           this.lstDayOff = res;
+          this.lstDayOff.forEach((e:any) => {
+            let time = new Date(e.startDate).getTime();
+            let eles = document.querySelectorAll('[data-date="' + time + '"]');
+            if (eles?.length > 0){
+              eles.forEach((ele:HTMLElement) => {
+                if(ele.classList.value.includes("e-work-cells")){
+                  ele.style.backgroundColor = e.color;
+                  ele.innerText = e.note;
+                }
+              });
+            }
+          });
         }
       });
   }

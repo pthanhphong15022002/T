@@ -254,6 +254,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
+      this.stepsTasks.taskType = this.typeTask?.value;
       this.setRole();
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
@@ -384,6 +385,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.stepID = this.instanceStep?.recID;
         this.stepsTasks.taskGroupID = this.groupTaskID;
         this.listGroup = this.instanceStep?.taskGroups;
+        this.setDateTimeTask();
       }
     }else if(this.groupTask){
       if(this.instanceStep){
@@ -391,6 +393,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.stepID = this.instanceStep?.recID;
         this.stepsTasks.taskGroupID = this.groupTaskID;
         this.listGroup = [this.groupTask]
+        this.setDateTimeTask();
       }
     }else{
 

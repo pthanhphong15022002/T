@@ -530,20 +530,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // change calendarID
-  changeCalendarID(id:string) {
+  changeCalendarType(id:string) {
     this.calendarID = id;
     this.lstEvents = [];
     this.dEventMonth = {};
     switch(id){
       case "COT01": // Lịch công ty
+        // this.calendarCenter && this.calendarCenter.changeModeView(false);
         break;
       case "COT02": // Lịch nhóm
+        // this.calendarCenter && this.calendarCenter.changeModeView(false);
         this.getListUserGroup();
         break;
       case "COT03": // Lịch cá nhân
         this.groupID = "";
         this.orgUnitID = "";
         this.calendarCenter && this.calendarCenter.removeResource();
+        // this.calendarCenter && this.calendarCenter.changeModeView(true);
+
         this.getEventData();
         break;
     }
