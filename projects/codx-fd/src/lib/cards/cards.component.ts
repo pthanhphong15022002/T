@@ -39,6 +39,7 @@ import { CardType, FunctionName, Valuelist } from '../models/model';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
 import { PopupApprovalComponent } from '../approvals/popup-approval/popup-approval.component';
 import { CodxFdService } from '../codx-fd.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-cards',
@@ -71,13 +72,15 @@ export class CardsComponent extends UIComponent {
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
 
+
   constructor(
     private inject: Injector,
     private notifiSV: NotificationsService,
     private auth: AuthService,
     private notiService: NotificationsService,
     private callFC: CallFuncService,
-    private fdService: CodxFdService
+    private fdService: CodxFdService,
+    private shareService: CodxShareService
   ) {
     super(inject);
     this.user = this.auth.userValue;
@@ -225,6 +228,23 @@ export class CardsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
+    } else {
+      var customData = {
+        refID: '',
+        refType: this.view.formModel?.entityName,
+        dataSource: data,
+        addPermissions: []
+      };
+
+      this.shareService.defaultMoreFunc(
+        event,
+        data,
+        null,
+        this.view.formModel,
+        this.view.dataService,
+        this,
+        customData
+      );
     }
   }
 
