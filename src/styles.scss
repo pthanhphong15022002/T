@@ -1060,7 +1060,14 @@ codx-dynamic-form codx-view-grid {
   margin-left: -16px;
   margin-right: -16px;
 }
-
+wp-news-tag{
+  margin-top: -16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  background-color: var(--bg-body);
+  height: calc(100% + 16px)!important;
+  overflow: auto;
+}
 codx-header
   .menu-state-title-primary
   .menu-item:not(.here)
