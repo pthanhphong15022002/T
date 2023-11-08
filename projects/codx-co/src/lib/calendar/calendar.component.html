@@ -45,9 +45,11 @@
                 <div class="w-100 h-100 overflow-auto">
                   <ng-container *ngIf="loadUserGroup">
                     <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
-                      <ng-container *ngFor="let item of lstUserGroups">
-                        <p class="p-2 cursor-pointer" (click)="selectGroupUser(item)">{{item.groupName}}</p>
-                      </ng-container>
+                      <div class="list-group" #eleListGroup>
+                        <ng-container *ngFor="let item of lstUserGroups">
+                          <p class="list-group-item list-group-item-action cursor-pointer border-0" #eleItem (click)="selectGroupUser(item,eleListGroup,eleItem)">{{item.groupName}}</p>
+                        </ng-container>
+                      </div>
                     </ng-container>
                   </ng-container>
                 </div>
@@ -70,8 +72,8 @@
               </div>
             </ng-container>
             <!-- Calendar Setting -->
-              <div class="d-flex flex-column align-items-stretch h-50 max-h-50">
-                <div class="d-flex justify-content-between fs-3 w-100">
+              <div class="d-flex flex-column align-items-stretch h-50 max-h-50 pe-4">
+                <div class="d-flex justify-content-between fs-3 py-2 w-100">
                   <codx-label
                     fiedName="CO_Events"
                     default="Danh sách sự kiện"
@@ -85,15 +87,14 @@
                 <div class="w-100 h-100 overflow-auto">
                   <ng-container *ngIf="settingCalendars">
                     <ng-container *ngFor="let item of settingCalendars">
-                      <div class="d-flex mt-3 align-items-center w-100">
+                      <div class="d-flex py-2 align-items-center w-100">
                         <div class="w-5px me-2">
                           <li
                           [ngStyle]="
                           {
                             'color':item.ShowColor,
                             'background-color':item.ShowColor
-                          }"
->
+                          }">
                           </li>
                         </div>
                         <div class="show-list-event w-100">
@@ -217,6 +218,8 @@
           [resources]="lstResources"
           [resourceModel]="resourceModel"
           [resourceTemplate]="resourceTemplate"
+          [moreFuncTemplate]="moreFuncTemplate"
+          [dFormModel]="dFormModel"
           (evtChangeDate)="changeDay($event)"
           (evtChangeMonth)="changeMonth($event)">
         </co-calendar-center>
@@ -231,7 +234,7 @@
       [itemTemplate]="itemTemplate"
       openIconCss="icon-add icon-22"
       cssClass="e-primary"
-      (clicked)="addEvent($event)"
+      (clicked)="addEditEvent('SYS01',{ transType:$event?.item?.id })"
     >
     <ng-template #itemTemplate let-items>
       <div class="itemlist">
@@ -242,8 +245,9 @@
   </div>
 </ng-template>
 
+<!-- resource template -->
 <ng-template #resourceTemplate let-data>
-  <div class="d-flex flex-row ms-5 align-items-center">
+  <div class="d-flex flex-row ms-5 align-items-center" (click)="showData(data)">
     <codx-img [objectId]="data?.resourceData?.resourceID" imageType="circle" width="40" [objectType]="'AD_Users'"
       [objectName]="data?.resourceData?.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column" style="width: 160px">
@@ -253,24 +257,15 @@
   </div>
 </ng-template>
 
-<ng-template #orgUnitTemplate let-item>
-  <p class="m-0 p-2 text-break">{{ item.orgUnitName}}</p>
-</ng-template>
-
+<!-- event template -->
 <ng-template #eventTemplate let-data>
-  <ng-container *ngIf="data.transType != 'WP_Notes';else tmpNotes">
-    <div class="d-flex flex-column w-100">
-      <span class="fw-bold text-truncate">{{data.title}}</span>
-      <span class="d-flex flex-start">{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span>
-    </div>
-  </ng-container>
-  <ng-template #tmpNotes>
-    <div class="d-flex flex-column w-100">
-      <span class="fw-bold text-truncate">{{data.title}}</span>
-    </div>
-  </ng-template>
+  <div class="d-flex flex-column w-100">
+    <span class="fw-bold text-truncate">{{data.title}}</span>
+    <!-- <span class="d-flex flex-start">{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span> -->
+  </div>
 </ng-template>
 
+<!-- popup event -->
 <ng-template #popupEventTemplate let-data>
   <div class="container">
     <div class="row">
@@ -310,6 +305,7 @@
     </ng-container>
   </div>
 </ng-template>
+
 <!-- template  -->
 <ng-template #tmpDefault let-data="data">
   <div class="row">
@@ -324,7 +320,25 @@
   </div>
 </ng-template>
 
+<!-- template more function -->
+<ng-template #moreFuncTemplate let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dFormModel[data.transType]"
+      type="hover"
+      (changeDataMF)="dataChangeMF($event)"
+      (clickMF)="clickMF($event,data)">
+    </codx-mfunc>
+  </div>
+</ng-template>
 
+<!-- codx lits view template -->
+<ng-template #orgUnitTemplate let-item>
+  <p class="m-0 p-2 text-break">{{ item.orgUnitName}}</p>
+</ng-template>
+
+<!-- template empty data -->
 <ng-template #dataEmpty>
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">

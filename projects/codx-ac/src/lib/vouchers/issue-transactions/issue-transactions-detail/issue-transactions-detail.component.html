@@ -63,23 +63,23 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1">
       <div class="float-left">
-        <div *ngIf="itemSelected.subType == '0311'" class="d-flex align-items-center">
+        <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'" class="d-flex align-items-center">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM1" [formModel]="formModel">
           </codx-label>
-          <span *ngIf="itemSelected?.diM1" class="text-gray-600">{{itemSelected?.diM1Name}}</span>
-          <span *ngIf="(itemSelected?.diM1 == '' || itemSelected?.diM1 == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
+          <span *ngIf="itemSelected?.diM1Name" class="text-gray-600">{{itemSelected?.diM1Name}}</span>
+          <span *ngIf="(itemSelected?.diM1Name == '' || itemSelected?.diM1Name == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
         </div>
-        <div *ngIf="itemSelected.subType == '0312'" class="d-flex align-items-center me-6">
+        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'" class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="ObjectID" [formModel]="formModel">
           </codx-label>
-          <span *ngIf="itemSelected?.objectID" class="text-gray-600">{{itemSelected?.objectName}}</span>
-          <span *ngIf="(itemSelected?.objectID == '' || itemSelected?.objectID == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
+          <span *ngIf="itemSelected?.objectName" class="text-gray-600">{{itemSelected?.objectName}}</span>
+          <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
         </div>
-        <div *ngIf="itemSelected.subType == '0312'" class="d-flex align-items-center me-6">
+        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'" class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="Requester" [formModel]="formModel">
           </codx-label>
-          <span *ngIf="itemSelected?.requester" class="text-gray-600">{{itemSelected?.requesterName}}</span>
-          <span *ngIf="(itemSelected?.requester == '' || itemSelected?.requester == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
+          <span *ngIf="itemSelected?.requesterName" class="text-gray-600">{{itemSelected?.requesterName}}</span>
+          <span *ngIf="(itemSelected?.requesterName == '' || itemSelected?.requesterName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
         </div>
       </div>
       <div class="d-flex align-self-center">
@@ -89,13 +89,13 @@
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1">
-      <div *ngIf="itemSelected.subType == '0311'"  class="d-flex align-items-top mb-1">
+      <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'"  class="d-flex align-items-top mb-1">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM2" [formModel]="formModel">
         </codx-label>
-        <span *ngIf="itemSelected?.diM2" class="text-gray-600">{{itemSelected?.diM2Name}}</span>
-        <span *ngIf="(itemSelected?.diM2 == '' || itemSelected?.diM2 == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
+        <span *ngIf="itemSelected?.diM2Name" class="text-gray-600">{{itemSelected?.diM2Name}}</span>
+        <span *ngIf="(itemSelected?.diM2Name == '' || itemSelected?.diM2Name == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
       </div>
-      <div *ngIf="itemSelected.subType == '0312'"  class="d-flex align-items-top mb-1">
+      <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'"  class="d-flex align-items-top mb-1">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="RequestDate" [formModel]="formModel">
         </codx-label>
         <span #requestDate [innerHTML]="

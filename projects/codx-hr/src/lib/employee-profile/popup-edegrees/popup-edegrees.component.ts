@@ -64,6 +64,10 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   ) {
     super(injector);
     this.degreeObj = JSON.parse(JSON.stringify(data?.data?.degreeObj));
+    if(this.degreeObj){
+      this.degreeObj.trainFromDate = new Date(this.degreeObj.trainFromDate);
+      this.degreeObj.trainToDate = new Date(this.degreeObj.trainToDate);
+    }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
@@ -212,6 +216,8 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
             .subscribe((res) => {
               if (res && res.data) {
                 this.degreeObj = res?.data;
+            console.log('degreeObj', this.degreeObj);
+
                 if (
                   this.degreeObj.issuedDate.toString() == this.defaultIssueDate
                 ) {

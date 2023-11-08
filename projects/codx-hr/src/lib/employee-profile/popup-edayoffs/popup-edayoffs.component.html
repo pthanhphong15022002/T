@@ -59,6 +59,8 @@
       </div>
       <div class="col-2 d-flex justify-content-end">
         <codx-input
+*ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
+
           [disabled]="disabledInput || isPortal"
           [showInput]="false"
           field="employeeID"
@@ -72,10 +74,14 @@
     <!-- <div class="form-group row mt-5">
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.RegisteredDate.allowPopup == true"
+
           fiedName="RegisteredDate"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.RegisteredDate.allowPopup == true"
+
           disabled="true"
           field="registeredDate"
           [formModel]="form.formModel"
@@ -84,10 +90,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.RegisteredBy.allowPopup == true"
+
           fiedName="RegisteredBy"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.RegisteredBy.allowPopup == true"
+
           disabled="true"
           field="registeredBy"
           [formModel]="form.formModel"
@@ -97,8 +107,12 @@
     </div> -->
 
     <div class="form-group row">
-      <codx-label fiedName="KowID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.KowID.allowPopup == true"
+      fiedName="KowID" [formModel]="form.formModel"></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.KowID.allowPopup == true"
+
         [disabled]="disabledInput"
         field="kowID"
         [formModel]="form.formModel"
@@ -109,8 +123,12 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.BeginDate.allowPopup == true"
+        fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.BeginDate.allowPopup == true"
+
           [disabled]="disabledInput"
           field="beginDate"
           [formModel]="form.formModel"
@@ -119,8 +137,12 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="EndDate" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.EndDate.allowPopup == true"
+        fiedName="EndDate" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.EndDate.allowPopup == true"
+
           [disabled]="disabledInput"
           field="endDate"
           [formModel]="form.formModel"
@@ -132,8 +154,12 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
+        fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
+
           [disabled]="disabledInput"
           field="periodType"
           [formModel]="form.formModel"
@@ -143,10 +169,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.TotalDaysOff.allowPopup == true"
+
           fiedName="TotalDaysOff"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TotalDaysOff.allowPopup == true"
+
           [disabled]="disabledInput"
           field="totalDaysOff"
           [formModel]="form.formModel"
@@ -154,10 +184,14 @@
           [showSpinButton]="false"
         ></codx-input>
         <!-- <codx-label
+*ngIf="form.gridviewSetup.ActualEndDate.allowPopup == true"
+
           fiedName="ActualEndDate"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.ActualEndDate.allowPopup == true"
+
           [disabled]="disabledInput"
           field="actualEndDate"
           [formModel]="form.formModel"
@@ -169,16 +203,21 @@
     <!-- <div class="form-group row">
       <div class="col-6">
         <div class="text-primary">
-          <codx-label default="Loại trừ các ngày"></codx-label>
+          <codx-label
+          default="Loại trừ các ngày"></codx-label>
         </div>
         <div>
           <codx-input
+*ngIf="form.gridviewSetup.IsSubHoliday.allowPopup == true"
+
             [disabled]="disabledInput"
             field="isSubHoliday"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           ></codx-input>
           <codx-label
+*ngIf="form.gridviewSetup.IsSubHoliday.allowPopup == true"
+
             class="ms-2"
             fiedName="IsSubHoliday"
             [formModel]="form.formModel"
@@ -187,12 +226,16 @@
 
         <div>
           <codx-input
+*ngIf="form.gridviewSetup.IsSubWeekOff.allowPopup == true"
+
             [disabled]="disabledInput"
             field="isSubWeekOff"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           ></codx-input>
           <codx-label
+*ngIf="form.gridviewSetup.IsSubWeekOff.allowPopup == true"
+
             class="ms-2"
             fiedName="IsSubWeekOff"
             [formModel]="form.formModel"
@@ -201,12 +244,16 @@
 
         <div>
           <codx-input
+*ngIf="form.gridviewSetup.IsSubSunday.allowPopup == true"
+
             [disabled]="disabledInput"
             field="isSubSunday"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
           ></codx-input>
           <codx-label
+*ngIf="form.gridviewSetup.IsSubSunday.allowPopup == true"
+
             class="ms-2"
             fiedName="IsSubSunday"
             [formModel]="form.formModel"
@@ -215,10 +262,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.TotalSubDays.allowPopup == true"
+
           fiedName="TotalSubDays"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TotalSubDays.allowPopup == true"
+
           [showSpinButton]="false"
           disabled="true"
           field="totalSubDays"
@@ -230,8 +281,12 @@
 
     <!-- <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TotalDays" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.TotalDays.allowPopup == true"
+        fiedName="TotalDays" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TotalDays.allowPopup == true"
+
           [disabled]="disabledInput"
           field="totalDays"
           [formModel]="form.formModel"
@@ -242,10 +297,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.TotalDaysOff.allowPopup == true"
+
           fiedName="TotalDaysOff"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TotalDaysOff.allowPopup == true"
+
           [disabled]="disabledInput"
           field="totalDaysOff"
           [formModel]="form.formModel"
@@ -256,8 +315,12 @@
     </div> -->
 
     <div class="form-group row">
-      <codx-label fiedName="Reason" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.Reason.allowPopup == true"
+      fiedName="Reason" [formModel]="form.formModel"></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.Reason.allowPopup == true"
+
         [disabled]="disabledInput"
         field="reason"
         [formModel]="form.formModel"
@@ -266,8 +329,12 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.Note.allowPopup == true"
+      fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.Note.allowPopup == true"
+
         [disabled]="disabledInput"
         field="note"
         [formModel]="form.formModel"
@@ -285,12 +352,16 @@
 
     <div
       id="groupA"
-      *ngIf="groupKowTypeView['groupA'] && groupKowTypeView['groupA'].isShow"
+      *ngIf="groupKowTypeView && groupKowTypeView['groupA'] && groupKowTypeView['groupA'].isShow"
       class="form-group row"
     >
       <div class="col-6">
-        <codx-label fiedName="SILeaveNo" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.SILeaveNo.allowPopup == true"
+        fiedName="SILeaveNo" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.SILeaveNo.allowPopup == true"
+
           [disabled]="disabledInput"
           field="SILeaveNo"
           [formModel]="form.formModel"
@@ -299,10 +370,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.HospitalLine.allowPopup == true"
+
           fiedName="HospitalLine"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.HospitalLine.allowPopup == true"
+
           [disabled]="disabledInput"
           field="hospitalLine"
           [formModel]="form.formModel"
@@ -313,12 +388,16 @@
 
     <div
       id="groupB"
-      *ngIf="groupKowTypeView['groupB'] && groupKowTypeView['groupB'].isShow"
+      *ngIf="groupKowTypeView && groupKowTypeView['groupB'] && groupKowTypeView['groupB'].isShow"
       class="form-group row"
     >
       <div class="col-6">
-        <codx-label fiedName="ChildID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.ChildID.allowPopup == true"
+        fiedName="ChildID" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.ChildID.allowPopup == true"
+
           [disabled]="disabledInput"
           field="childID"
           [formModel]="form.formModel"
@@ -327,10 +406,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.ChildHICardNo.allowPopup == true"
+
           fiedName="ChildHICardNo"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.ChildHICardNo.allowPopup == true"
+
           [disabled]="disabledInput"
           field="childHICardNo"
           [formModel]="form.formModel"
@@ -341,15 +424,19 @@
 
     <div
       id="groupC"
-      *ngIf="groupKowTypeView['groupC'] && groupKowTypeView['groupC'].isShow"
+      *ngIf="groupKowTypeView && groupKowTypeView['groupC'] && groupKowTypeView['groupC'].isShow"
       class="form-group row"
     >
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.PregnancyFrom.allowPopup == true"
+
           fiedName="PregnancyFrom"
           [formModel]="form.formModel"
         ></codx-label>
         <!-- <codx-input
+*ngIf="form.gridviewSetup.PregnancyFrom.allowPopup == true"
+
           [disabled]="disabledInput"
                     field="pregnancyFrom"
                     [formModel]="form.formModel"
@@ -365,10 +452,14 @@
       </div>
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.PregnancyWeeks.allowPopup == true"
+
           fiedName="PregnancyWeeks"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.PregnancyWeeks.allowPopup == true"
+
           [disabled]="disabledInput"
           [showSpinButton]="false"
           field="pregnancyWeeks"
@@ -378,14 +469,18 @@
       </div>
     </div>
 
-    <div id="groupD" *ngIf="groupKowTypeView['groupD'] && groupKowTypeView['groupD'].isShow">
+    <div id="groupD" *ngIf="groupKowTypeView && groupKowTypeView['groupD'] && groupKowTypeView['groupD'].isShow">
       <div class="form-group row">
         <div class="col-6">
           <codx-label
+*ngIf="form.gridviewSetup.NewChildBirthDate.allowPopup == true"
+
             fiedName="NewChildBirthDate"
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
+*ngIf="form.gridviewSetup.NewChildBirthDate.allowPopup == true"
+
             [disabled]="disabledInput"
             field="newChildBirthDate"
             [formModel]="form.formModel"
@@ -394,10 +489,14 @@
         </div>
         <div class="col-6">
           <codx-label
+*ngIf="form.gridviewSetup.NewChildNum.allowPopup == true"
+
             fiedName="NewChildNum"
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
+*ngIf="form.gridviewSetup.NewChildNum.allowPopup == true"
+
             [disabled]="disabledInput"
             field="newChildNum"
             [showSpinButton]="false"
@@ -410,6 +509,8 @@
       <div class="form-group row">
         <div class="col-6">
           <!-- <codx-label
+*ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
+
                         fiedName="NewChildBirthType"
                         [formModel]="form.formModel"
                         ></codx-label> -->
@@ -440,12 +541,16 @@
         <div class="col-6">
           <div>
             <codx-label
+*ngIf="form.gridviewSetup.IsNewChildUnder32W.allowPopup == true"
+
               fiedName="IsNewChildUnder32W"
               [formModel]="form.formModel"
             ></codx-label>
           </div>
           <div>
             <codx-input
+*ngIf="form.gridviewSetup.isNewChildUnder32W.allowPopup == true"
+
               [disabled]="disabledInput"
               field="isNewChildUnder32W"
               [formModel]="form.formModel"
@@ -456,8 +561,12 @@
       </div>
 
       <div class="form-group row">
-        <codx-label fiedName="WifeID" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.WifeID.allowPopup == true"
+        fiedName="WifeID" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.WifeID.allowPopup == true"
+
           [disabled]="disabledInput"
           field="wifeID"
           [formModel]="form.formModel"
@@ -468,10 +577,14 @@
       <div class="form-group row">
         <div class="col-6">
           <codx-label
+*ngIf="form.gridviewSetup.WifeIDCardNo.allowPopup == true"
+
             fiedName="WifeIDCardNo"
             [formModel]="form.formModel"
           ></codx-label>
           <codx-input
+*ngIf="form.gridviewSetup.WifeIDCardNo.allowPopup == true"
+
             [disabled]="disabledInput"
             field="wifeIDCardNo"
             [formModel]="form.formModel"
@@ -479,8 +592,12 @@
           ></codx-input>
         </div>
         <div class="col-6">
-          <codx-label fiedName="WifeSINo" [formModel]="form.formModel"></codx-label>
+          <codx-label
+          *ngIf="form.gridviewSetup.WifeSINo.allowPopup == true"
+          fiedName="WifeSINo" [formModel]="form.formModel"></codx-label>
           <codx-input
+*ngIf="form.gridviewSetup.WifeSINo.allowPopup == true"
+
             [disabled]="disabledInput"
             field="wifeSINo"
             [formModel]="form.formModel"
@@ -491,8 +608,12 @@
     </div>
 
     <div class="form-group row" *ngIf="showInfoDayoffType == true">
-      <codx-label fiedName="RegimeNote" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.RegimeNote.allowPopup == true"
+      fiedName="RegimeNote" [formModel]="form.formModel"></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.RegimeNote.allowPopup == true"
+
         [disabled]="disabledInput"
         field="regimeNote"
         [formModel]="form.formModel"
