@@ -10,8 +10,6 @@ import {
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
 import {
   AuthStore,
-  CacheService,
-  CallFuncService,
   DataRequest,
   DataService,
   DialogModel,
@@ -34,10 +32,9 @@ import { PopupAddMeetingComponent } from 'projects/codx-share/src/lib/components
 import { PopupAddComponent } from 'projects/codx-share/src/lib/components/codx-tasks/popup-add/popup-add.component';
 import { PopupSettingsComponent } from '../popup/popup-settings/popup-settings.component';
 import { CO_EventModel } from './model/CO_EventModel';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { forkJoin, map, of } from 'rxjs';
 import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
-import { env } from 'process';
 import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
 
 
@@ -54,16 +51,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   user:any = null;
   views: Array<ViewModel> = [];
   settingCalendars:any[] = [];
-  typeNavigate = 'Month';
-  defaultFuncID:string = 'COT03'; // lịch cá nhân
-  locale:string = 'vi';
-  calendarID:string = 'COT03';
+  defaultFuncID:string = "COT03"; // default mod lịch cá nhân
+  calendarID:string = "";
   lstCalendars:any[] = [];
-  dPredicate:any = {};
   dResources:any = {};
   statusColor:any[] = [];
-  fromDate:Date = new Date();
-  toDate:Date = new Date();
   lstEvents:any[] = [];
   lstResources:any[] = [];
   selectedDate:Date = null;
@@ -74,13 +66,22 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   lstUserGroups:any[] = [];
   startDate:Date = null;
   endDate:Date = null;
-  month:number = 0 // 0-11 
+  month:number = 0; // 0-11 
+  locale:string = 'vi';
   speedDialItems: SpeedDialItemModel[] = [];
-  hrRequest:DataService = null;
-  mapEvents:any[] = [];
+  HRRequest:DataService = null;
   loaded:boolean = false;
   loadUserGroup:boolean = false;
   dFormModel:any = {};
+  dFunc:any = {};
+  roomFM: FormModel;
+  addRoomTitle = '';
+  carFM: FormModel;
+  addCarTitle = '';
+  meetingFM: FormModel;
+  myTaskFM: FormModel;
+  assignTaskFM: FormModel;
+  noteFM: FormModel;
   resourceModel:any = {
     Name: 'resourceName',
     Field: 'resourceID',
@@ -96,21 +97,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     resourceId: { name: 'resourceID' },// field mapping với resource Schedule
     status: 'transType',
   };
-  roomFM: FormModel;
-  addRoomTitle = '';
-  carFM: FormModel;
-  addCarTitle = '';
-  meetingFM: FormModel;
-  myTaskFM: FormModel;
-  assignTaskFM: FormModel;
-  noteFM: FormModel;
 
-  //
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('ejCalendar') ejCalendar: CalendarComponent;
   @ViewChild('calendarCenter') calendarCenter: CalendarCenterComponent;
-  @ViewChild('resourceTemplate') resourceTemplate: TemplateRef<any>;
-  @ViewChild('eventTemplate') eventTemplate: TemplateRef<any>;
   //#endregion 
   
   constructor(
@@ -121,22 +111,19 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     private authStore:AuthStore
   ) {
     super(injector);
-    this.roomFM = new FormModel();
-    this.carFM = new FormModel();
-    this.meetingFM = new FormModel();
-    this.myTaskFM = new FormModel();
-    this.assignTaskFM = new FormModel();
     this.user = this.authStore.get();
   }
   onInit(): void {
     this.router.params.subscribe((param:any) => {
       this.funcID = param["funcID"];
     });
-    this.selectedDate = new Date();
-    var date = new Date(), year = date.getFullYear(), month = date.getMonth();
+    let crrDate = new Date(), month = crrDate.getMonth(), year = crrDate.getFullYear();
+    this.locale = this.user.language != 'VN' ? "en-US" : "vi";
+    this.selectedDate = crrDate;
     this.startDate = new Date(year, month, 1);
     this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate();
     this.month = month + 1;
+    this.dEventMonth[month + 1 + "-" + year] = [];
     this.getListCalendars();
     this.getSettingValue();
     this.getSeedDialitem();
@@ -164,92 +151,98 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     });
 
     // get formModel EP
-    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGROOMS).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGROOMS).subscribe((func:any) => {
+      if (func) 
       {
         let formModel = new FormModel();
-        this.addRoomTitle = res.customName;
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        this.addRoomTitle = func.customName;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.roomFM = formModel;
         this.dFormModel["EP_BookingRooms"] = formModel;
+        this.dFunc["EP_BookingRooms"] = func;
       }
     });
 
-    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGCARS).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.EP_BOOKINGCARS).subscribe((func:any) => {
+      if (func) 
       {
-        this.addCarTitle = res?.customName;
+        this.addCarTitle = func?.customName;
         let formModel = new FormModel();
-        this.addCarTitle = res.customName;
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        this.addCarTitle = func.customName;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.carFM = formModel;
         this.dFormModel["EP_BookingCars"] = formModel;
+        this.dFunc["EP_BookingCars"] = func;
       }
     });
     //get formModel CO
-    this.cache.functionList(BUSSINESS_FUNCID.CO_MEETINGS).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.CO_MEETINGS).subscribe((func) => {
+      if (func) 
       {
         let formModel = new FormModel();
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.meetingFM = formModel;
         this.dFormModel["CO_Meetings"] = formModel;
+        this.dFunc["CO_Meetings"] = func;
       }
     });
 
     // get formModel TM
-    this.cache.functionList(BUSSINESS_FUNCID.TM_MyTasks).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.TM_MyTasks).subscribe((func:any) => {
+      if (func) 
       {
         let formModel = new FormModel();
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.myTaskFM = formModel;
         this.dFormModel["TM_MyTasks"] = formModel;
+        this.dFunc["TM_MyTasks"] = func;
       }
     });
 
-    this.cache.functionList(BUSSINESS_FUNCID.TM_AssignTasks).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.TM_AssignTasks).subscribe((func) => {
+      if (func) 
       {
         let formModel = new FormModel();
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.assignTaskFM = formModel;
         this.dFormModel["TM_AssignTasks"] = formModel;
+        this.dFunc["TM_AssignTasks"] = func;
       }
     });
     
     // get formModel WP
-    this.cache.functionList(BUSSINESS_FUNCID.WP_NOTES).subscribe((res) => {
-      if (res) 
+    this.cache.functionList(BUSSINESS_FUNCID.WP_NOTES).subscribe((func:any) => {
+      if (func) 
       {
         let formModel = new FormModel();
-        formModel.entityName = res.entityName;
-        formModel.formName = res.formName;
-        formModel.gridViewName = res.gridViewName;
-        formModel.funcID = res.functionID;
-        formModel.entityPer = res.entityPer;
+        formModel.entityName = func.entityName;
+        formModel.formName = func.formName;
+        formModel.gridViewName = func.gridViewName;
+        formModel.funcID = func.functionID;
+        formModel.entityPer = func.entityPer;
         this.noteFM = formModel;
         this.dFormModel["WP_Notes"] = formModel;
+        this.dFunc["WP_Notes"] = func;
       }
     });
     // get function HR_Organization
@@ -257,15 +250,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     .subscribe((func:any) => {
       if(func)
       {
-        this.hrRequest = new DataService(this.injector);
-        this.hrRequest.predicate = func.predicate;
-        this.hrRequest.dataValue = func.dataValue;
-        this.hrRequest.service = "HR";
-        this.hrRequest.page = 1;
-        this.hrRequest.pageSize = 20;
-        this.hrRequest.idField = "orgUnitID";
-        this.hrRequest.selector= "OrgUnitID;OrgUnitName";
-        this.hrRequest.parentIdField = "parentID";
+        this.HRRequest = new DataService(this.injector);
+        this.HRRequest.predicate = func.predicate;
+        this.HRRequest.dataValue = func.dataValue;
+        this.HRRequest.service = "HR";
+        this.HRRequest.page = 1;
+        this.HRRequest.pageSize = 20;
+        this.HRRequest.idField = "orgUnitID";
+        this.HRRequest.selector= "OrgUnitID;OrgUnitName";
+        this.HRRequest.parentIdField = "parentID";
       }
     });
       
@@ -307,11 +300,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               showColor: param.ShowColor,
               text: param.Template.TransType,
               status: param.Template.TransType,
-              textColor: param.TextColor ?? "1F1717"
+              textColor: param.TextColor
             };
             this.statusColor.push(obj);
             this.dResources[param.Template.TransType] = obj;
-            this.dPredicate[param.Template.TransType] = param.Predicate;
             arrParam.push(param);
           });
           this.settingCalendars = arrParam;
@@ -387,18 +379,20 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     let m =  args.date.getMonth();
     let d = args.date.getDate();
     this.startDate = new Date(y, m, 1);
-    this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate();
-    this.month = m + 1; 
-    this.selectedDate = new Date(y,m,d); 
-    if(this.dEventMonth[this.month])
+    this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate(); 
+    this.selectedDate = args.date; 
+    if(this.dEventMonth[(m + 1) + "-" + y])
     {
       if(this.ejCalendar)
       {
         this.ejCalendar.value = this.selectedDate;
         this.ejCalendar.refresh();
       }
-      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-      this.calendarCenter && this.calendarCenter.changeDate(this.selectedDate);
+      if(this.calendarCenter)
+      {
+        this.calendarCenter.changeDate(this.selectedDate);
+        this.calendarCenter.changeEvents(this.lstEvents);
+      }
     }
     else
     {
@@ -414,10 +408,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.settingCalendars.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
     if(value == "0")
     {
-      for (const month in this.dEventMonth) {
-        if(this.dEventMonth[month])
+      for (const key in this.dEventMonth) {
+        if(this.dEventMonth[key] && this.dEventMonth[key]?.length > 0)
         {
-          this.dEventMonth[month] = this.dEventMonth[month].filter(x => x.transType != transType);
+          this.dEventMonth[key] = this.dEventMonth[key].filter(x => x.transType != transType);
         }
       }
       this.lstEvents = this.lstEvents.filter(x => x.transType != transType);
@@ -467,7 +461,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  //open popup setting
+  // open popup setting
   openPopupSetting() {
     if(this.settingCalendars)
     {
@@ -485,7 +479,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       {
         if(res?.event)
         {
-          debugger
           let settingCalendars = [];
           let statusColors = [];
           res.event.forEach(element => {
@@ -497,7 +490,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               showColor: param.ShowColor,
               text: param.Template.TransType,
               status: param.Template.TransType,
-              textColor: param.TextColor ?? "1F1717"
+              textColor: param.TextColor ?? "#1F1717"
             };
             statusColors.push(obj);
           });
@@ -510,25 +503,25 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     
   }
 
-  //render day cell ej2Calendar
+  // render day cell ej2Calendar
   renderDayCell(args:any) {
-    if(this.dEventMonth[this.month])
-    {
-      let events = this.dEventMonth[this.month];
-      let eventDays = events.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
-      if (eventDays.length > 0)
+    let month = args.date.getMonth() + 1 , year = args.date.getFullYear(); 
+    let events = this.dEventMonth[month + "-" + year];
+    if(events && events?.length > 0){
+      events = events.filter((x:any) => x.startDate != null && new Date(x.startDate).toLocaleDateString() === args.date.toLocaleDateString());
+      if (events.length > 0)
       {
-        eventDays = eventDays.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
-        eventDays.forEach((e:any) => {
+        events = events.filter((value, index, self) => self.findIndex((m) => m.transType === value.transType) === index);
+        events.forEach((e:any) => {
           let span: HTMLElement;
           span = document.createElement('span');
           span.setAttribute('class', 'e-icons highlight');
           span.setAttribute('style', `color:${this.dResources[e.transType].showColor}`);
           addClass([args.element], ['special', 'e-day']);
-          if((args.element as HTMLElement).children.length > 3)
-          {
+          // if((args.element as HTMLElement).children.length > 3)
+          // {
   
-          }
+          // }
           args.element.appendChild(span);
           return;
         });
@@ -537,21 +530,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // change calendarID
-  changeCalendarID(id:string) {
+  changeCalendarType(id:string) {
     this.calendarID = id;
     this.lstEvents = [];
     this.dEventMonth = {};
-    this.calendarCenter && this.calendarCenter.changeEvents([]);
     switch(id){
       case "COT01": // Lịch công ty
+        // this.calendarCenter && this.calendarCenter.changeModeView(false);
         break;
       case "COT02": // Lịch nhóm
+        // this.calendarCenter && this.calendarCenter.changeModeView(false);
         this.getListUserGroup();
         break;
       case "COT03": // Lịch cá nhân
         this.groupID = "";
         this.orgUnitID = "";
         this.calendarCenter && this.calendarCenter.removeResource();
+        // this.calendarCenter && this.calendarCenter.changeModeView(true);
+
         this.getEventData();
         break;
     }
@@ -570,6 +566,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     obs.subscribe((res:any) => 
     {
       let events = [];
+      let month = this.selectedDate.getMonth() + 1, year = this.selectedDate.getFullYear();
       if(res?.length > 0)
       {
         res.forEach(ele => {
@@ -577,7 +574,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         });
       }
       this.lstEvents = this.lstEvents.concat(events);
-      this.dEventMonth[this.month] = events;
+      this.dEventMonth[month + "-" + year] = events;
       if(!this.loaded)
         this.loaded = true;
       if(this.ejCalendar)
@@ -728,17 +725,17 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // show Hour
-  showHour(stringDate: any) {
-    const date: Date = new Date(stringDate);
-    const hours: number = date.getHours();
-    const minutes: number = date.getMinutes();
+  // showHour(stringDate: any) {
+  //   const date: Date = new Date(stringDate);
+  //   const hours: number = date.getHours();
+  //   const minutes: number = date.getMinutes();
 
-    const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
+  //   const timeString: string = `${hours.toString().padStart(2, '0')}:${minutes
+  //     .toString()
+  //     .padStart(2, '0')}`;
 
-    return timeString;
-  }
+  //   return timeString;
+  // }
 
   // show Event Date
   showEventDate(event:any) {
@@ -750,28 +747,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // get event title
-  getEventTitle(event){
-    var sTitle = "Sự kiện";
-    switch(event.transType)
+  showEventTitle(event){
+    var sTitle = this.user.language != 'VN' ? "Events" : "Sự kiện";
+    if(event?.transType)
     {
-      case"WP_Notes":
-        sTitle = "Ghi chú";
-        break;
-      case"CO_Meetings":
-        sTitle = "Lịch họp";
-        break;
-      case"TM_MyTasks":
-        sTitle = "Công việc cá nhân";
-        break;
-      case"TM_AssignTasks":
-        sTitle = "Giao việc";
-        break;
-      case"EP_BookingCars":
-        sTitle = "Đặt xe";
-        break;
-      case"EP_BookingRooms":
-        sTitle = "Đặt phòng";
-        break;
+      sTitle = this.dFunc[event.transType].customName;
     }
     return sTitle;
   }
@@ -909,17 +889,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               if(res?.event)
               {
                 let booking = this.convertModelEvent(res.event,"EP_BookingCars");
-                let month = new Date(booking.startDate)?.getMonth() + 1;
+                let date = new Date(booking.startDate);
+                let month = date?.getMonth() + 1, year = date.getFullYear();
                 if(funcID == "SYS03")
                 {
                   let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
                   if(idx > -1)
                     this.lstEvents.splice(idx,1);
                 }
-                if(!this.dEventMonth[month])
-                  this.dEventMonth[month] = [];
                 this.lstEvents.push(booking);
-                this.dEventMonth[month] = this.lstEvents;
+                this.dEventMonth[month + "-" + year] = this.lstEvents;
                 this.ejCalendar && this.ejCalendar.refresh();
                 this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
                 this.detectorRef.detectChanges();
@@ -951,17 +930,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               if(res?.event)
               {
                 let booking = this.convertModelEvent(res.event,"EP_BookingRooms");
-                let month = new Date(booking.startDate)?.getMonth() + 1;
+                let date = new Date(booking.startDate);
+                let month = date?.getMonth() + 1, year = date.getFullYear();
                 if(funcID == "SYS03")
                 {
                   let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
                   if(idx > -1)
                     this.lstEvents.splice(idx,1);
                 }
-                if(!this.dEventMonth[month])
-                  this.dEventMonth[month] = [];
                 this.lstEvents.push(booking);
-                this.dEventMonth[month] = this.lstEvents;
+                this.dEventMonth[month + "-" + year] = this.lstEvents;
                 this.ejCalendar && this.ejCalendar.refresh();
                 this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
                 this.detectorRef.detectChanges();
@@ -1017,17 +995,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           if (res?.event) 
           {
             let meeting = this.convertModelEvent(res.event,"CO_Meetings");
-            let month = new Date(meeting.startDate)?.getMonth() + 1;
+            let date = new Date(meeting.startDate);
+            let month = date.getMonth() + 1 , year = date.getFullYear();;
             if(funcID == "SYS03")
             {
               let idx = this.lstEvents.findIndex(x => x.transID == meeting.transID);
               if(idx > -1)
                 this.lstEvents.splice(idx,1);
             }
-            if(!this.dEventMonth[month])
-              this.dEventMonth[month] = [];
             this.lstEvents.push(meeting);
-            this.dEventMonth[month] = this.lstEvents;
+            this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
             this.detectorRef.detectChanges();
@@ -1074,12 +1051,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           ).closed.subscribe((res2:any) => {
             if(res2.event)
             {
-              let task = this.convertModelEvent(res2.event[0],"TM_MyTasks")
-              let month = new Date(task.startDate)?.getMonth() + 1;
-              if(!this.dEventMonth[month])
-                this.dEventMonth[month] = [];
-              this.dEventMonth[month].push(task);
+              let task = this.convertModelEvent(res2.event[0],"TM_MyTasks");
+              let date = new Date(task.startDate);
+              let month = date.getMonth() + 1, year = date.getFullYear();
               this.lstEvents.push(task);
+              this.dEventMonth[month + "-" + year] = this.lstEvents;
               this.ejCalendar && this.ejCalendar.refresh();
               this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
               this.detectorRef.detectChanges();
@@ -1128,11 +1104,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             if(res?.event?.length > 0)
             {
               let task = this.convertModelEvent(res.event[0],"TM_AssignTasks")
-              let month = new Date(task.startDate)?.getMonth() + 1;
-              if(!this.dEventMonth[month])
-                this.dEventMonth[month] = [];
-              this.dEventMonth[month].push(task);
+              let date = new Date(task.startDate);
+              let month = date.getMonth() + 1, year = date.getFullYear();
               this.lstEvents.push(task);
+              this.dEventMonth[month + "-" + year] = this.lstEvents;
               this.ejCalendar && this.ejCalendar.refresh();
               this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
               this.detectorRef.detectChanges();
@@ -1151,40 +1126,38 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // after Save Task 
   afterSaveMyTask(data) {
-    debugger
     if(data)
     {
       let task = this.convertModelEvent(data,"TM_MyTasks")
-      let month = new Date(task.startDate)?.getMonth() + 1;
+      let date = new Date(task.startDate);
+      let month = date.getMonth() + 1, year = date.getFullYear() ;
       let idx = this.lstEvents.findIndex(x => x.transID == task.transID);
       if(idx > -1)
       {
         this.lstEvents.splice(idx,1);
       }
-      if(!this.dEventMonth[month])
-        this.dEventMonth[month] = [];
       this.lstEvents.push(task);
-      this.dEventMonth[month] = this.lstEvents;
+      this.dEventMonth[month + "-" + year] = this.lstEvents;
       this.ejCalendar && this.ejCalendar.refresh();
       this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       this.detectorRef.detectChanges();
     }
   }
+
   // after Save Task 
   afterSaveAssignTask(data) {
     if(data)
     {
       let task = this.convertModelEvent(data,"TM_AssignTasks")
-      let month = new Date(task.startDate)?.getMonth() + 1;
+      let date = new Date(task.startDate);
+      let month = date.getMonth() + 1, year = date.getFullYear();
       let idx = this.lstEvents.findIndex(x => x.transID == task.transID);
       if(idx > -1)
       {
         this.lstEvents.splice(idx,1);
       }
-      if(!this.dEventMonth[month])
-        this.dEventMonth[month] = [];
       this.lstEvents.push(task);
-      this.dEventMonth[month] = this.lstEvents;
+      this.dEventMonth[month + "-" + year] = this.lstEvents;
       this.ejCalendar && this.ejCalendar.refresh();
       this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       this.detectorRef.detectChanges();
@@ -1245,7 +1218,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                 if(event)
                 {
                   let note = this.convertModelEvent(event,"WP_Notes");
-                  let month = new Date(note.startDate)?.getMonth() + 1;
+                  let date = new Date(note.startDate);
+                  let month = date.getMonth() + 1, year = date.getFullYear();
                   if(funcID == "SYS03")
                   {
                     let idx = this.lstEvents.findIndex(x => x.transID == note.transID);
@@ -1253,7 +1227,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                       this.lstEvents.splice(idx,1);
                   }
                   this.lstEvents.push(note);
-                  this.dEventMonth[month] = this.lstEvents;
+                  this.dEventMonth[month + "-" + year] = this.lstEvents;
                   this.ejCalendar && this.ejCalendar.refresh();
                   this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
                   this.detectorRef.detectChanges();
@@ -1297,13 +1271,13 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(res)
       {
         let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
-        let month = new Date(event.startDate)?.getMonth() + 1;
+        let date = new Date(event.startDate);
+        let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month] = this.lstEvents;
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
         this.ejCalendar && this.ejCalendar.refresh();
         this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.detectorRef.detectChanges();
         this.notiService.notify("Xóa thành công");
       }
       else this.notiService.notify("Xóa không thành công");
@@ -1316,13 +1290,13 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(res)
       {
         let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
-        let month = new Date(event.startDate)?.getMonth() + 1;
+        let date = new Date(event.startDate);
+        let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month] = this.lstEvents;
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
         this.ejCalendar && this.ejCalendar.refresh();
         this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.detectorRef.detectChanges();
         this.notiService.notify("Xóa thành công");
       }
       else this.notiService.notify("Xóa không thành công");
@@ -1335,13 +1309,13 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(res)
       {
         let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
-        let month = new Date(event.startDate)?.getMonth() + 1;
+        let date = new Date(event.startDate);
+        let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month] = this.lstEvents;
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
         this.ejCalendar && this.ejCalendar.refresh();
         this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.detectorRef.detectChanges();
         this.notiService.notify("Xóa thành công");
       }
       else this.notiService.notify("Xóa không thành công");
@@ -1354,22 +1328,17 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(res)
       {
         let idx = this.lstEvents.findIndex(x => x.transID == event.transID);
-        let month = new Date(event.startDate)?.getMonth() + 1;
+        let date = new Date(event.startDate);
+        let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month] = this.lstEvents;
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
         this.ejCalendar && this.ejCalendar.refresh();
         this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.detectorRef.detectChanges();
         this.notiService.notify("Xóa thành công");
       }
       else this.notiService.notify("Xóa không thành công");
     });
-  }
-
-  showData(data){
-    debugger
-    
   }
 }
 enum BUSSINESS_FUNCID {

@@ -930,6 +930,13 @@ export class CatagoryComponent implements OnInit {
                       const tempDataValue = JSON.parse(dt.dataValue);
                       this.updateCustom(tempDataValue, data);
                     }
+                    if (data) {
+                      let des = this.formatDes.transform(data, this.dataValue);
+                      let ele = document.querySelector(
+                        ".setting-description[data-id='" + data.recID + "']"
+                      );
+                      if (ele) (ele as HTMLElement).innerText = des;
+                    }
                   }
                   this.changeDetectorRef.detectChanges();
                   console.log(res);

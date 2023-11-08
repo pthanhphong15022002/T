@@ -15,6 +15,7 @@ import {
   UIComponent,
   CodxFormComponent,
   ImageViewerComponent,
+  LayoutAddComponent,
 } from 'codx-core';
 import { CodxFdService } from '../../../codx-fd.service';
 
@@ -31,12 +32,23 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
   dataUpdate: any;
   isModeAdd = true;
   user: any;
-
-  @ViewChild('form') form: CodxFormComponent;
+  
+  @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
 
   @Output() loadData = new EventEmitter();
-
+  tabInfo = [
+    {
+      icon: 'icon-info',
+      text: 'Thông tin chung',
+      name: 'tabGeneralInfo',
+    },
+    {
+      icon: 'icon-layers',
+      text: 'Chính sách',
+      name: 'tabPolicy',
+    }
+  ];
   constructor(
     private injector: Injector,
     private notification: NotificationsService,
@@ -64,6 +76,7 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
           res?.customName.slice(1);
       }
     });
+    
   }
 
   onInit(): void {}

@@ -19,11 +19,10 @@
                 </div>
                 <div class="h-100 px-0">
                   <codx-listview 
-                    [dataService]="hrRequest" 
+                    [dataService]="HRRequest" 
                     [itemTemplate]="orgUnitTemplate" 
                     [emptyTemplate]="dataEmpty"
                     funcID="HRT01" 
-                    [parentIdField]="'ParentID'"
                     [entityName]="'HR_OrganizationUnits'"
                     [selectFirst]="true"
                     [type]="'treeView'"
@@ -84,7 +83,7 @@
                     <i class="icon-settings text-white icon-18"></i>
                   </button>
                 </div>
-                <div class="w-100 h-100 overflow-auto">
+                <div class="w-100 h-100 p-2 overflow-auto">
                   <ng-container *ngIf="settingCalendars">
                     <ng-container *ngFor="let item of settingCalendars">
                       <div class="d-flex py-2 align-items-center w-100">
@@ -128,7 +127,7 @@
             <div class="d-flex justify-content-between align-items-center nav">
               <div class="d-flex flex-column justify-content-between nav-item"
                 [ngClass]="{ active: calendarID == 'COT03' }"
-                (click)="changeCalendarID('COT03')">
+                (click)="changeCalendarType('COT03')">
                 <span class="text-center">
                   <i class="icon-i-person icon-24"></i>
                 </span>
@@ -143,7 +142,7 @@
 
               <div class="d-flex flex-column justify-content-between nav-item"
                 [ngClass]="{ active: calendarID == 'COT02' }"
-                (click)="changeCalendarID('COT02')">
+                (click)="changeCalendarType('COT02')">
                 <span class="text-center">
                   <i class="icon-i-people icon-24"></i>
                 </span>
@@ -157,7 +156,7 @@
               </div>
               <div class="d-flex flex-column justify-content-between nav-item"
                 [ngClass]="{ active: calendarID == 'COT01' }"
-                (click)="changeCalendarID('COT01')">
+                (click)="changeCalendarType('COT01')">
                 <span class="text-center">
                   <i class="icon-i-diagram-3 icon-24"></i>
                 </span>
@@ -184,7 +183,7 @@
               <!-- <ng-container *ngFor="let func of lstCalendars">
                 <div class="col cursor-pointer"
                   [class.active]="calendarID === func.functionID"
-                  (click)="changeCalendarID(func.functionID)">
+                  (click)="changeCalendarType(func.functionID)">
                   <p class="text-center">
                     <i class="icon-i-person icon-24"></i>
                   </p>
@@ -247,7 +246,7 @@
 
 <!-- resource template -->
 <ng-template #resourceTemplate let-data>
-  <div class="d-flex flex-row ms-5 align-items-center" (click)="showData(data)">
+  <div class="d-flex flex-row ms-5 align-items-center">
     <codx-img [objectId]="data?.resourceData?.resourceID" imageType="circle" width="40" [objectType]="'AD_Users'"
       [objectName]="data?.resourceData?.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column" style="width: 160px">
@@ -270,7 +269,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <p class="fs-3 fw-bold m-0 text-truncate">{{getEventTitle(data)}}</p>
+        <p class="fs-3 fw-bold m-0 text-truncate">{{showEventTitle(data)}}</p>
       </div>
     </div>
     <ng-container [ngSwitch]="data.transType">
@@ -299,21 +298,15 @@
           <codx-booking-room-schedule-content [recID]="data.transID"></codx-booking-room-schedule-content>
       </ng-container>
       <!-- Default -->
-      <ng-container *ngSwitchDefault="!data.transType || data.transType == ''">
+      <ng-template ngSwitchDefault>
         <ng-container [ngTemplateOutlet]="tmpDefault" [ngTemplateOutletContext]="{data:data}"></ng-container>
-      </ng-container>
+      </ng-template>
     </ng-container>
   </div>
 </ng-template>
 
 <!-- template  -->
 <ng-template #tmpDefault let-data="data">
-  <div class="row">
-    <div class="col-1">
-      <i class="icon-event"></i>
-    </div>
-    <div class="col-11" [innerHTML]="data.title"></div>
-  </div>
   <div class="row">
     <span class="col-1 icon-date_range"></span>
     <span class="col-11">{{showEventDate(data)}}</span>

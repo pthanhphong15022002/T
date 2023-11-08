@@ -150,7 +150,11 @@
                   [loadFull]="true"
                   [field]="data.fieldName"
                   [checked]="
-                    autoDefault && autoDefault[data.fieldName]
+                    data.controlType != 'Switch' &&
+                    data.controlType != 'Checkbox' &&
+                    data.controlType != 'Radio'
+                      ? false
+                      : autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
                       : dataValue[data.transType]
                       ? dataValue[data.transType][data.fieldName] == '1' ||
@@ -159,7 +163,8 @@
                   "
                   [crrValue]="
                     data.controlType == 'Switch' ||
-                    data.controlType == 'Checkbox'
+                    data.controlType == 'Checkbox' ||
+                    data.controlType != 'Radio'
                       ? ''
                       : autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop

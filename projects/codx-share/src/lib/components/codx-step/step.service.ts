@@ -495,7 +495,7 @@ export class StepService {
   //   return taskOutput;
   // }
 
-  async openPopupTask2(data,location){
+  async openPopupCodxTask(data,location){
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',

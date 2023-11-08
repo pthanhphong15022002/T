@@ -504,13 +504,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
-            if (
-              !(
-                task?.createTask &&
-                this.isOnlyView &&
-                (this.isRoleAll || isGroup || isTask)
-              )
-            ) {
+            if(task?.assigned == '1'){
+              res.disabled = true;
+            }else if (!(task?.createTask && this.isOnlyView &&(this.isRoleAll || isGroup || isTask))) {
               res.isblur = true;
             }
             break;
@@ -989,10 +985,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';
-
-    let taskOutput = await this.openPopupTask('add', task, groupID);
-    if (taskOutput?.event?.task) {
-      let data = taskOutput?.event;
+    let type  = groupID ? 'group' : 'step';
+    let taskOutput = await this.openPopupTask('add', type ,task, groupID);
+    if (taskOutput?.task) {
+      let data = taskOutput;
       let groupData = this.currentStep?.taskGroups.find((group) =>
         this.comparison(group.refID, data.task?.taskGroupID)
       );
@@ -1091,7 +1087,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskEdit?.taskType
       );
-      let dataOutput = await this.openPopupTask('edit', taskEdit);
+      let dataOutput = await this.openPopupTask('edit', 'step',taskEdit);
       if (dataOutput?.event.task) {
         let taskOutput = dataOutput?.event?.task;
         let group = this.listGroupTask.find((group) =>
@@ -1146,7 +1142,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskCopy?.taskType
       );
-      let taskOutput = await this.openPopupTask('copy', taskCopy);
+      let taskOutput = await this.openPopupTask('copy', 'step', taskCopy);
 
       if (taskOutput?.event.task) {
         let data = taskOutput?.event;
@@ -1209,13 +1205,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     });
   }
 
-  async openPopupTask(action, dataTask, groupTaskID = null) {
+  async openPopupTask(action, type, dataTask, groupTaskID = null) {
     let dataInput = {
       action,
       titleName: this.titleAction,
       taskType: this.taskType,
       instanceStep: this.currentStep,
-      listGroup: this.listGroupTask,
       dataTask: dataTask || {},
       listTask: this.listTask,
       isEditTimeDefault: this.currentStep?.leadtimeControl,
@@ -1223,25 +1218,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isStart: this.isStart,
       isBoughtTM: this.isBoughtTM,
       ownerInstance: this.ownerInstance,
-      listInsStep:[this.currentStep],
       isRoleFull: this.isRoleAll,
-      type:'step',
+      type:type,
     };
-    let frmModel: FormModel = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
-      gridViewName: 'grvDPInstancesStepsTasks',
-    };
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.zIndex = 1011;
-    option.FormModel = frmModel;
-    let popupTask = this.callfc.openSide(
-      CodxAddTaskComponent,
-      dataInput,
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
+    let dataPopupOutput = await this.stepService.openPopupCodxTask(dataInput, 'right');
+    // let frmModel: FormModel = {
+    //   entityName: 'DP_Instances_Steps_Tasks',
+    //   formName: 'DPInstancesStepsTasks',
+    //   gridViewName: 'grvDPInstancesStepsTasks',
+    // };
+    // let option = new SidebarModel();
+    // option.Width = '550px';
+    // option.zIndex = 1011;
+    // option.FormModel = frmModel;
+    // let popupTask = this.callfc.openSide(
+    //   CodxAddTaskComponent,
+    //   dataInput,
+    //   option
+    // );
+    // let dataPopupOutput = await firstValueFrom(popupTask.closed);
     return dataPopupOutput;
   }
   //#endregion
@@ -1299,7 +1294,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           )
           .subscribe((res) => {
             if (res) {
-              data.assigned == '1';
+              data.assigned = '1';
+              this.changeDetectorRef.markForCheck();
             }
           });
       }

@@ -26,6 +26,14 @@
   background-repeat: no-repeat;
   background-size: contain;
 }
+.pic-4-puh
+{
+  background-image: url('../../../../../src/assets/themes/fd/default/img/BagCoCoins.svg');
+  height: 130px;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 .w-right
 {
   width: calc(100% - 320px);
@@ -107,4 +115,9 @@
   overflow: hidden;
   word-wrap: break-word;
   -webkit-line-clamp: 2;
+}
+.span-coCoins
+{
+  margin-left: -45px;
+  margin-top: 32px;
 }
