@@ -10,7 +10,7 @@
 }
 
 .table-ac {
-    height: calc(100vh - 429px) !important;
+    height: calc(100vh - 429px);
 }
 
 .table-thead-ac {
@@ -457,4 +457,8 @@
   
   .accordion-button::after {
     background-image: var(--url);
+  }
+
+  .card-general .table-ac{
+    height: calc(100vh - 390px) !important;
   }
