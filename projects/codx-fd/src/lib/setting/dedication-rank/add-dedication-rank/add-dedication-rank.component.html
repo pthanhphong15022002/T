@@ -1,4 +1,106 @@
-<codx-form
+<codx-layout-add #form [title]="header" [formModel]="formModel" [footer]="footer" [dialog]="dialog" 
+  [tabContent]="[ tabGeneralInfo, tabPolicy]" [data]="dataUpdate" [tabInfo]="tabInfo">
+  
+  <ng-template #tabGeneralInfo>
+    <ng-container>
+      <div class="form-group">
+        <codx-label class="text-dark" fiedName="BreakName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [Group]="form.formGroup" [formModel]="form.formModel" (valueChange)="valueChange($event)"
+          field="breakName">
+        </codx-input>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label class="text-dark" fiedName="BreakValue" [formModel]="form.formModel">
+          </codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57" (valueChange)="valueChange($event)"
+            field="breakValue">
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label class="text-dark" fiedName="Color" [formModel]="form.formModel">
+          </codx-label>
+          <div class="input-group w-100">
+            <codx-input class="w-100" #colorPicker type="colorpicker" [showText]="true" [modeSwitcher]="true"
+              [crrValue]="dataUpdate.color" field="color" (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label class="text-dark" fiedName="Note" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input class="form-control test-textarea" rows="3" (valueChange)="valueChange($event)" field="note"
+          [Group]="form.formGroup" [formModel]="form.formModel">
+        </codx-input>
+      </div>
+      <div class="form-group pt-2">
+        <codx-label class="text-dark" fiedName="Image" [formModel]="form.formModel">
+        </codx-label>
+        <div class="upload-img mt-3">
+          <codx-img #imageUpload [objectId]="dataUpdate.recID" [objectName]="dataUpdate.breakName"
+            [objectType]="form.formModel.entityName" [funcId]="form.formModel.funcID" [isAllowEdit]="true" [width]="50"
+            [imgOn]="dataUpdate?.modifiedOn">
+          </codx-img>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #tabPolicy>
+    <ng-container>
+      <div class="d-flex flex-row justify-content-between align-items-center pt-5">
+        <div class="d-flex flex-column justify-content-between">
+          <codx-label class="fw-bold text-dark" name="lblPolicyDedication1"
+          default="Tặng điểm khi thăng hạng"></codx-label>
+        <span class="text-gray-500 pt-1 setting-description"
+          [innerHTML]="'Khi người dùng thăng hạng sẽ tặng <b>100 xu</b> vào <b>TÚI NHẬN</b>'"></span>
+        </div>
+        <div >
+          <codx-input type="switch"></codx-input>
+          <a role="button" class="icon-18 icon-edit-one mx-2"></a>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between align-items-center pt-5">
+        <div class="d-flex flex-column justify-content-between">
+          <codx-label class="fw-bold text-dark" name="lblPolicyDedication1"
+          default="Tặng quà khi thăng hạng"></codx-label>
+        <span class="text-gray-500 pt-1 setting-description"
+          [innerHTML]="'Khi người dùng thăng hạng sẽ tặng <b>Mũ bảo hiểm</b>'"></span>
+        </div>
+        <div >
+          <codx-input type="switch"></codx-input>
+          <a role="button" class="icon-18 icon-edit-one mx-2"></a>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between align-items-center pt-5">
+        <div class="d-flex flex-column justify-content-between">
+          <codx-label class="fw-bold text-dark" name="lblPolicyDedication1"
+          default="Tạo thiệp"></codx-label>
+        <span class="text-gray-500 pt-1 setting-description"
+          [innerHTML]="'Gửi <b>Thiệp chúc mừng</b> cho người dùng khi thăng hạng'"></span>
+        </div>
+        <div >
+          <codx-input type="switch"></codx-input>
+          <a role="button" class="icon-18 icon-edit-one mx-2"></a>
+        </div>
+      </div>
+    </ng-container>
+
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+        <codx-label fiedName="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+
+</codx-layout-add>
+<!-- <codx-form
   [headerText]="header"
   [body]="body"
   [footer]="footer"
@@ -7,100 +109,7 @@
   [formModel]="formModel"
   #form
 >
-  <ng-template #body>
-    <div class="form-group">
-      <codx-label
-        class="text-dark"
-        fiedName="BreakName"
-        [formModel]="form.formModel"
-      >
-      </codx-label>
-      <codx-input
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        (valueChange)="valueChange($event)"
-        field="breakName"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label
-          class="text-dark"
-          fiedName="BreakValue"
-          [formModel]="form.formModel"
-        >
-        </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-          onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-          (valueChange)="valueChange($event)"
-          field="breakValue"
-        >
-        </codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label
-          class="text-dark"
-          fiedName="Color"
-          [formModel]="form.formModel"
-        >
-        </codx-label>
-        <div class="input-group w-100">
-          <codx-input
-            class="w-100"
-            #colorPicker
-            type="colorpicker"
-            [showText]="true"
-            [modeSwitcher]="true"
-            [crrValue]="dataUpdate.color"
-            field="color"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <codx-label
-        class="text-dark"
-        fiedName="Note"
-        [formModel]="form.formModel"
-      >
-      </codx-label>
-      <codx-input
-        class="form-control test-textarea"
-        rows="3"
-        (valueChange)="valueChange($event)"
-        field="note"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      >
-      </codx-input>
-    </div>
-    <div class="form-group pt-2">
-      <codx-label
-        class="text-dark"
-        fiedName="Image"
-        [formModel]="form.formModel"
-      >
-      </codx-label>
-      <div class="upload-img mt-3">
-        <codx-img
-          #imageUpload
-          [objectId]="dataUpdate.recID"
-          [objectName]="dataUpdate.breakName"
-          [objectType]="form.formModel.entityName"
-          [funcId]="form.formModel.funcID"
-          [isAllowEdit]="true"
-          [width]="50"
-          [imgOn]="dataUpdate?.modifiedOn"
-        >
-        </codx-img>
-      </div>
-    </div>
-  </ng-template>
+  
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
@@ -112,4 +121,4 @@
       </button>
     </div>
   </ng-template>
-</codx-form>
+</codx-form> -->
