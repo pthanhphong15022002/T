@@ -23,7 +23,7 @@ export class CalendarCenterComponent
   extends UIComponent
   implements AfterViewInit
 {
-  
+
 
 
   @Input() resources: any;
@@ -39,25 +39,25 @@ export class CalendarCenterComponent
 
   @Output() evtChangeDate = new EventEmitter();
   @Output() evtChangeMonth = new EventEmitter();
-  
+
   views: Array<ViewModel> | any = [];
   codxSchedule: CodxScheduleComponent;
   lstDayOff:any[] = []; // danh sách ngày nghỉ
   calendarID = 'STD';
-  
+
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
 
   constructor(injector: Injector, private coService: CodxCoService) {
     super(injector);
   }
-  
 
-  onInit() 
+
+  onInit()
   {
     this.getListDayOff();
   }
-  
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -69,9 +69,10 @@ export class CalendarCenterComponent
           eventModel: this.eventModel,// mapping của event schedule
           resourceModel: this.resourceModel, // mapping của resource schedule
           template: this.eventTemplate, // template event
-          template4: this.resourceTemplate,//template resource 
+          template4: this.resourceTemplate,//template resource
           template6: this.mfButton,
-          template8: this.popupEventTemplate //template popup event
+          template8: this.popupEventTemplate, //template popup event
+          currentView:'TimelineMonth'
         },
       },
     ];
@@ -101,17 +102,17 @@ export class CalendarCenterComponent
       this.detectorRef.detectChanges();
     }
   }
-  
+
   // change events
   changeEvents(dataSource:any[]) {
-    if (this.codxSchedule) 
+    if (this.codxSchedule)
     {
       this.codxSchedule.dataSource = dataSource;
       this.codxSchedule.setEventSettings();
       this.detectorRef.detectChanges();
     }
   }
-  
+
   // change resource
   changeResource(resources:any[]){
     if(this.codxSchedule)
@@ -136,7 +137,7 @@ export class CalendarCenterComponent
 
   //change date scheduler
   onAction(event: any) {
-    if(event) 
+    if(event)
     {
       let date = event.data.currentDate as Date;
       if(this.selectedDate.getMonth() != date.getMonth())
@@ -151,7 +152,7 @@ export class CalendarCenterComponent
     let obj = evt.date;
     let cellDay = evt.date;
     let html = "";
-    if (this.lstDayOff?.length > 0) 
+    if (this.lstDayOff?.length > 0)
     {
       let dayOff = this.lstDayOff.find(x => new Date(x.startDate).toLocaleDateString() === cellDay.toLocaleDateString());
       if(dayOff)
@@ -159,11 +160,11 @@ export class CalendarCenterComponent
         debugger
         let time = obj.getTime();
         let ele = document.querySelectorAll('[data-date="' + time + '"]');
-        if (ele?.length > 0) 
+        if (ele?.length > 0)
         {
           ele.forEach((item) => { (item as any).style.backgroundColor = dayOff.color; });
           html =`<icon class="${dayOff.symbol}"></icon><span>${dayOff.note}</span>`;
-        } 
+        }
       }
     }
     return html;
@@ -181,7 +182,7 @@ export class CalendarCenterComponent
         [this.calendarID]
       )
       .subscribe((res) => {
-        if(res) 
+        if(res)
         {
           this.lstDayOff = res;
         }
