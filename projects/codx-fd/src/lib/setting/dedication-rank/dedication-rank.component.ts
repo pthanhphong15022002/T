@@ -273,7 +273,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      option.Width = '550px';
+      option.Width = '800px';
       var dialog = this.callfc.openSide(
         AddDedicationRankComponent,
         obj,
@@ -303,7 +303,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         this.dialog = this.callfc.openSide(
           AddDedicationRankComponent,
           obj,
@@ -324,7 +324,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         var dialog = this.callfc.openSide(
           AddDedicationRankComponent,
           obj,
