@@ -30,14 +30,48 @@ export class LayoutComponent extends LayoutBaseComponent {
   onAfterViewInit(): void { }
 
   countFavorite(data: any){
+    console.log(data)
+    let entityName = "";
+    switch (data?.functionID)
+    {
+        case "FDT02":
+        case "FDT03":
+        case "FDT04":
+        case "FDT05":
+        case "FDT06":
+        case "FDK012":
+        case "FDW012":
+        case "FDT10":
+        case "FDT072":
+          entityName = "FD_Cards";
+          break;
+        case "FDT091":
+        case "FDT092":
+          entityName = "FD_GiftTrans";
+          break;
+        case "FDT093":
+          break;
+    }
     if(data) {
       var favIDs: any[] = [];
       data.favs.forEach((x: any) => {
         favIDs.push(x.recID);
       });
       data.favs.forEach((x: any) => {
-        this.fdService.countFavorite(x.recID, data?.functionID, x?.paraValues).subscribe((item: string)=>{
-          x.count = Number.parseInt(item);
+        this.fdService.countFavorite(
+          x.recID, 
+          data?.functionID,
+          data?.formName,
+          data?.gridViewName,
+          entityName,
+          data?.entityName, // entityPermission
+        )
+        .subscribe((item: string)=>{
+          if(item){
+            x.count = Number.parseInt(item);
+          } else {
+            x.count = 0;
+          }
         });
       });
     }
