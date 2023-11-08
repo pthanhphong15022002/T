@@ -30,10 +30,9 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./accounts-add.component.css','../../../codx-ac.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountsAddComponent extends UIComponent implements OnInit {
+export class AccountsAddComponent extends UIComponent {
   
   //#region Contructor
-
   @ViewChild('form') form: LayoutAddComponent; //? element form layoutadd
   dialog!: DialogRef;
   dialogData?: DialogData

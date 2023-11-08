@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddAddressComponent } from './pop-add-address.component';
+import { AddressAddComponent } from './address-add.component';
 
 describe('PopAddAddressComponent', () => {
-  let component: PopAddAddressComponent;
-  let fixture: ComponentFixture<PopAddAddressComponent>;
+  let component: AddressAddComponent;
+  let fixture: ComponentFixture<AddressAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddAddressComponent ]
+      declarations: [ AddressAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddAddressComponent);
+    fixture = TestBed.createComponent(AddressAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

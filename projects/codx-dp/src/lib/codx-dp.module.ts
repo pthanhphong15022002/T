@@ -61,6 +61,7 @@ import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynami
 import { ViewInstancesComponent } from './view-instances/view-instances.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-setting-table.component';
+import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 
 export const routes: Routes = [
   {
@@ -150,6 +151,7 @@ const T_Component: Type<any>[] = [
   PopupAddVllCustomComponent,
   PopupAddColumnTableComponent,
   PopupSettingTableComponent,
+  PopupSettingReferenceComponent,
   ViewInstancesComponent,
 ];
 

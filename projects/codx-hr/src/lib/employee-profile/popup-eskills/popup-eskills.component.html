@@ -1,191 +1,4 @@
-<!-- <layout-list-detail
-  #lstDetail
-  [title]="headerText"
-  [formModel]="form.formModel"
-  [footer]="footer"
-  [dialog]="dialog"
-  [data]="skillObj"
-  [leftTemlate]="LeftTemlate"
-  [RightTemlate]="body"
-  *ngIf="isAfterRender"
->
-  <ng-template #body>
-    <div class="form-group row">
-      <codx-label fiedName="SkillID" [formModel]="form.formModel"> </codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="skillID"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
 
-    <div class="form-group row">
-      <codx-label fiedName="SkillGradeID" [formModel]="form.formModel"></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="skillGradeID"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
-      <codx-label
-        fiedName="TrainSupplierID"
-        [formModel]="form.formModel"
-      ></codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="trainSupplierID"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label
-          fiedName="TrainCourseID"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="trainCourseID"
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="trainForm"
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-        ></codx-input>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="trainFrom"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="trainTo"
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-        ></codx-input>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="totalScore"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [showSpinButton]="false"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
-        <codx-input
-        [disabled]="disabledInput"
-          field="ranking"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
-      <codx-input
-      [disabled]="disabledInput"
-        field="note"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      ></codx-input>
-    </div>
-  </ng-template>
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
-        <i class="icon-save"></i>
-        <codx-label
-          default="Lưu"
-          name="lblSave"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
-</layout-list-detail>
-
-<ng-template #LeftTemlate>
-  <codx-listview
-    #listView
-    [type]="'cardView'"
-        class="w-100"
-        [service]="'HR'"
-    [assemblyName]="'HR'"
-    [entityName]="'HR_ESkills'"
-    [className]="'ESkillsBusiness'"
-    [method]="'LoadDataESkillAsync'"
-    [predicate]="'EmployeeID=@0'"
-    [dataValue]="employId"
-    [itemTemplate]="itemTemplate"
-    (afterRender)="afterRenderListView($event)"
-    [selectFirst]="true"
-  ></codx-listview>
-</ng-template>
-
-<ng-template #itemTemplate let-data>
-  <codx-temp-full
-    [formModel]="form.formModel"
-    [typeMF]="'hover'"
-    [title]="data.skillID"
-    [icoTitleCss]="'icon-i-arrow-down-left-circle-fill'"
-    [subTitleTmp]="tmplateEPassportsMenuList"
-    cardCss="card codx_cardcenter px-4 py-3 w-100"
-    [hideMF]="true"
-    typeMF="hover"
-    [dataItem]="data"
-    (click)="click(data)"
-  ></codx-temp-full>
-</ng-template>
-
-<ng-template #tmplateEPassportsMenuList let-data>
-  <div class="d-flex flex-column w-100">
-    <div>
-      <i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i
-      >{{ data.skillID
-      }}<i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i>
-      {{ data.skillGradeID }}
-    </div>
-    <div class="d-flex align-items-center">
-      <i class="icon-event"></i
-      >{{ (data.trainFrom | fmDT) + " - " + (data.trainTo | fmDT) }}
-    </div>
-    <div class="d-flex align-items-center">
-      <i class="icon-insights"></i>{{ data.ranking }}
-      <i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i
-      >{{ data.totalScore }}
-    </div>
-  </div>
-</ng-template> -->
 
 <ng-container *ngIf="skillObj">
 <codx-form
@@ -198,11 +11,16 @@
   [data]="skillObj"
   >
   <!-- [group]="form.formGroup"
-  *ngIf="isAfterRender" -->
+  *ngIf="isAfterRender" 
+-->
   <ng-template #body>
     <div class="form-group row mt-5">
-      <codx-label fiedName="SkillID" [formModel]="form.formModel"> </codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.SkillID.allowPopup == true"
+      fiedName="SkillID" [formModel]="form.formModel"> </codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.SkillID.allowPopup == true"
+
       [disabled]="disabledInput"
         field="skillID"
         [Group]="form.formGroup"
@@ -211,8 +29,12 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="SkillGradeID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.SkillGradeID.allowPopup == true"
+      fiedName="SkillGradeID" [formModel]="form.formModel"></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.SkillGradeID.allowPopup == true"
+
       [disabled]="disabledInput"
         field="skillGradeID"
         [Group]="form.formGroup"
@@ -222,10 +44,14 @@
 
     <div class="form-group row">
       <codx-label
+*ngIf="form.gridviewSetup.TrainSupplierID.allowPopup == true"
+
         fiedName="TrainSupplierID"
         [formModel]="form.formModel"
       ></codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.TrainSupplierID.allowPopup == true"
+
       [disabled]="disabledInput"
         field="trainSupplierID"
         [Group]="form.formGroup"
@@ -236,10 +62,14 @@
     <div class="form-group row">
       <div class="col-6">
         <codx-label
+*ngIf="form.gridviewSetup.TrainCourseID.allowPopup == true"
+
           fiedName="TrainCourseID"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TrainCourseID.allowPopup == true"
+
         [disabled]="disabledInput"
           field="trainCourseID"
           [Group]="form.formGroup"
@@ -247,8 +77,12 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.TrainForm.allowPopup == true"
+        fiedName="TrainForm" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TrainForm.allowPopup == true"
+
         [disabled]="disabledInput"
           field="trainForm"
           [Group]="form.formGroup"
@@ -259,13 +93,16 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.TrainFrom.allowPopup == true"
+        fiedName="TrainFrom" [formModel]="form.formModel"></codx-label>
         <codx-dropdown-calendar
+        *ngIf="form.gridviewSetup.TrainFrom.allowPopup == true"
         #calendar
         [disabled]="disabledInput"
           cssPopup="h-350px w-550px"
-          [value]="Date(skillObj.trainFromDate)"
           [emptyText]="headerTextCalendar[0]"
+          [value]="skillObj.trainFromDate"
           [firstChange]="isNullFrom"
           [selectedType]="fromDateFormat"
           [displayOption]="ops"
@@ -277,11 +114,14 @@
         </codx-dropdown-calendar>
       </div>
       <div class="col-6">
-        <codx-label fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.TrainTo.allowPopup == true"
+        fiedName="TrainTo" [formModel]="form.formModel"></codx-label>
         <codx-dropdown-calendar
+        *ngIf="form.gridviewSetup.TrainTo.allowPopup == true"
         [disabled]="disabledInput"
           cssPopup="h-350px w-550px"
-          [value]="Date(skillObj.trainToDate)"
+          [value]="skillObj.trainToDate"
           [emptyText]="headerTextCalendar[1]"
           [firstChange]="isNullTo"
           [selectedType]="toDateFormat"
@@ -297,8 +137,12 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.TotalScore.allowPopup == true"
+        fiedName="TotalScore" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.TotalScore.allowPopup == true"
+
         [disabled]="disabledInput"
           field="totalScore"
           [formModel]="form.formModel"
@@ -307,8 +151,12 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Ranking" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.Ranking.allowPopup == true"
+        fiedName="Ranking" [formModel]="form.formModel"></codx-label>
         <codx-input
+*ngIf="form.gridviewSetup.Ranking.allowPopup == true"
+
         [disabled]="disabledInput"
           field="ranking"
           [formModel]="form.formModel"
@@ -318,8 +166,11 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="form.formModel"> </codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.Note.allowPopup == true"
+      fiedName="Note" [formModel]="form.formModel"> </codx-label>
       <codx-input
+*ngIf="form.gridviewSetup.Note.allowPopup == true"
       [disabled]="disabledInput"
         field="note"
         [Group]="form.formGroup"

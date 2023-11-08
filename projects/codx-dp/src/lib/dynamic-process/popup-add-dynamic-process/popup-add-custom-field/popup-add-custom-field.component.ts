@@ -862,4 +862,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.changeRef.detectChanges();
   }
   //---------------------End Column Table-----------------------------//
+
+  //----------------Data Referent-----------------------//
+  getDataFieldSelect(comboxName) {
+    this.cache.combobox(comboxName).subscribe((res) => {
+      if (res) {
+        let entityName = res?.entityName;
+
+        this.cache.entity(entityName).subscribe((en) => {
+          if (en) {
+            this.cache
+              .gridViewSetup(en?.formName, en?.gridViewName)
+              .subscribe((grv) => {
+                if (grv) {
+                  //////////////////////////////
+                } else this.notiService.alertCode('SYS001');
+              });
+          }
+        });
+      }
+    });
+  }
+  //
 }
