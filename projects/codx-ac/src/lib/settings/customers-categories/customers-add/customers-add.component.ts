@@ -211,21 +211,23 @@ export class CustomersAddComponent extends UIComponent {
     this.bankService.addNew().subscribe((res: any) => {
       if (res) {
         data.dataDefault = { ...res };
-        let dialog = this.callfc.openForm(
-          BankAddComponent,
-          '',
-          500,
-          400,
-          '',
-          data,
-          '',
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            this.lstBank.push({...res?.event?.bank});
-            this.detectorRef.detectChanges();
-          }
+        this.cache.gridViewSetup(this.fmBank.formName,this.fmBank.gridViewName).subscribe((o)=>{
+          let dialog = this.callfc.openForm(
+            BankAddComponent,
+            '',
+            500,
+            400,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              this.lstBank.push({...res?.event?.bank});
+              this.detectorRef.detectChanges();
+            }
+          })
         })
       }
     })
@@ -243,21 +245,23 @@ export class CustomersAddComponent extends UIComponent {
     this.contactService.addNew().subscribe((res: any) => {
       if (res) {
         data.dataDefault = { ...res };
-        let dialog = this.callfc.openForm(
-          ContactAddComponent,
-          '',
-          650,
-          600,
-          '',
-          data,
-          '',
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            this.lstContact.push({...res?.event?.contact});
-            this.detectorRef.detectChanges();
-          }
+        this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
+          let dialog = this.callfc.openForm(
+            ContactAddComponent,
+            '',
+            650,
+            600,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              this.lstContact.push({...res?.event?.contact});
+              this.detectorRef.detectChanges();
+            }
+          })
         })
       }
     })
@@ -274,24 +278,24 @@ export class CustomersAddComponent extends UIComponent {
     option.DataService = this.addressService;
     this.addressService.addNew().subscribe((res: any) => {
       if (res) {
-        res.objectType = '1';
-        res.objectID = this.form.form.data.customerID;
         data.dataDefault = { ...res };
-        let dialog = this.callfc.openForm(
-          AddressAddComponent,
-          '',
-          600,
-          650,
-          '',
-          data,
-          '',
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          if (res && res?.event) {
-            this.lstAddress.push({...res?.event?.address});
-            this.detectorRef.detectChanges();
-          }
+        this.cache.gridViewSetup(this.fmAddress.formName,this.fmAddress.gridViewName).subscribe((o)=>{
+          let dialog = this.callfc.openForm(
+            AddressAddComponent,
+            '',
+            600,
+            500,
+            '',
+            data,
+            '',
+            option
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              this.lstAddress.push({...res?.event?.address});
+              this.detectorRef.detectChanges();
+            }
+          })
         })
       }
     })

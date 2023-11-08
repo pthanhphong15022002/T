@@ -1995,7 +1995,7 @@ export class DealsComponent
         instanceID: data.refID,
         isStart: data.status == '2',
       }
-      let task = await this.stepService.openPopupTask2(dataAddTask, 'right');
+      let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
     }
     
   }
