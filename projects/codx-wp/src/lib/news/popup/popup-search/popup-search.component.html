@@ -1,6 +1,6 @@
-<div class="p-6">
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
+<div class="popup-search">
+    <div class="d-flex align-items-center justify-content-between p-3">
+        <div class="d-flex align-items-center ps-4">
             <codx-label class="fw-bolder fs-1" 
                 [formModel]="dialogRef.formModel" 
                 name="lblSearch"
@@ -13,7 +13,7 @@
             </button>
         </div>
     </div>
-    <div class="row mt-2">
+    <div class="row mt-2 mw-1200px h-100 news-search-content">
         <codx-fulltextsearch #view 
             [centerTmp]="itemTemplate"  
             [funcID]="funcID" 
