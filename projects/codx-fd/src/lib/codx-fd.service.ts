@@ -461,4 +461,24 @@ export class CodxFdService {
       ]
     );
   }
+
+  countFavorite(
+    favsID: string, 
+    funcID: string, 
+    FormName: string, 
+    GridViewName: string,
+    EntityName: string,
+    EntityPermission: string,
+  ) {
+    return this.api.execSv(
+      'FD', 
+      'FD', 
+      'CardsBusiness',
+      'CountFavoriteAsync',
+      [
+        favsID, funcID, FormName, GridViewName, 
+        EntityName, EntityPermission
+      ]
+    );
+  }
 }

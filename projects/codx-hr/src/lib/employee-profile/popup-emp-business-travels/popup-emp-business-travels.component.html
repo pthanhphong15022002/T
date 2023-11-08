@@ -15,10 +15,12 @@
   <div class="form-group row">
     <div class="col-6">
       <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
         fiedName="RegisteredDate"
         [formModel]="form.formModel"
       ></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -26,8 +28,10 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="RegisteredBy" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="RegisteredBy" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -36,8 +40,10 @@
     </div>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="KowID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="KowID" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -46,8 +52,10 @@
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -55,8 +63,10 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="EndDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="EndDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -66,8 +76,10 @@
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -75,8 +87,10 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="Days" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="Days" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -86,8 +100,10 @@
     </div>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="BusinessPlace" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="BusinessPlace" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -95,8 +111,10 @@
     ></codx-input>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="Address" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="Address" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -104,8 +122,10 @@
     ></codx-input>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="BusinessPurpose" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="BusinessPurpose" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -115,8 +135,10 @@
 
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="TransportType" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="TransportType" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -125,8 +147,10 @@
     </div>
     <div class="col-6">
       <div class="d-flex justify-content-between">
-        <codx-label fiedName="IsOversea" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="IsOversea" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
         [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -134,6 +158,7 @@
         ></codx-input>
       </div>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -143,8 +168,10 @@
   </div>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="Cost" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="Cost" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -153,8 +180,10 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="ChargeObject" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="ChargeObject" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -165,8 +194,10 @@
   <hr>
   <div class="form-group row">
     <div class="col-6">
-      <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -174,8 +205,10 @@
       ></codx-input>
     </div>
     <div class="col-6">
-      <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -185,8 +218,10 @@
   </div>
 
   <div class="form-group row">
-    <codx-label fiedName="SignerID" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="SignerID" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -196,10 +231,12 @@
 
   <div class="form-group row">
     <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
       fiedName="SignerPositionID"
       [formModel]="form.formModel"
     ></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -207,8 +244,10 @@
     ></codx-input>
   </div>
   <div class="form-group row">
-    <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+    <codx-label
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true" fiedName="Note" [formModel]="form.formModel"></codx-label>
     <codx-input
+    *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
     [disabled]="disabledInput"
       [Group]="form.formGroup"
       [formModel]="form.formModel"
@@ -241,6 +280,7 @@
     <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
         default="Lưu"
         name="lblSave"
         [formModel]="form.formModel"
@@ -254,6 +294,7 @@
     <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
+      *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
         default="Lưu"
         name="lblSave"
         [formModel]="form.formModel"
@@ -418,6 +459,7 @@
       </div>
       <div class="col-2 d-flex justify-content-end">
         <codx-input
+        *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [showInput]="false"
           field="employeeID"
           [formModel]="form.formModel"
@@ -475,8 +517,10 @@
       </div>
     </div>
     <div class="col-6" *ngIf="actionType != 'edit'">
-      <codx-label fiedName="EmployeeID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true" fiedName="EmployeeID" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
         field="employeeID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
@@ -503,8 +547,10 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="KowID" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.KowID.allowPopup == true" fiedName="KowID" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.KowID.allowPopup == true"
         [disabled]="disabledInput"
         field="kowID"
         [formModel]="form.formModel"
@@ -513,8 +559,10 @@
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.BeginDate.allowPopup == true" fiedName="BeginDate" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.BeginDate.allowPopup == true"
           [disabled]="disabledInput"
           field="beginDate"
           [formModel]="form.formModel"
@@ -524,8 +572,10 @@
         </codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="EndDate" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.EndDate.allowPopup == true" fiedName="EndDate" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.EndDate.allowPopup == true"
           [disabled]="disabledInput"
           field="endDate"
           [formModel]="form.formModel"
@@ -537,8 +587,10 @@
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.PeriodType.allowPopup == true" fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -547,8 +599,10 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="Days" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.Days.allowPopup == true" fiedName="Days" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.Days.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -558,8 +612,10 @@
       </div>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="BusinessPlace" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.BusinessPlace.allowPopup == true" fiedName="BusinessPlace" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.BusinessPlace.allowPopup == true"
         [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -567,8 +623,10 @@
       ></codx-input>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="Address" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.Address.allowPopup == true" fiedName="Address" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.Address.allowPopup == true"
         [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -577,10 +635,12 @@
     </div>
     <div class="form-group row">
       <codx-label
+      *ngIf="form.gridviewSetup.BusinessPurpose.allowPopup == true"
         fiedName="BusinessPurpose"
         [formModel]="form.formModel"
       ></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.BusinessPurpose.allowPopup == true"
         [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -591,10 +651,12 @@
     <div class="form-group row">
       <div class="col-6">
         <codx-label
+        *ngIf="form.gridviewSetup.TransportType.allowPopup == true"
           fiedName="TransportType"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.TransportType.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -604,8 +666,10 @@
       </div>
       <div class="col-6">
         <div class="d-flex justify-content-between">
-          <codx-label fiedName="IsOversea" [formModel]="form.formModel"></codx-label>
+          <codx-label
+          *ngIf="form.gridviewSetup.IsOversea.allowPopup == true" fiedName="IsOversea" [formModel]="form.formModel"></codx-label>
           <codx-input
+          *ngIf="form.gridviewSetup.IsOversea.allowPopup == true"
             [disabled]="disabledInput"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
@@ -614,8 +678,8 @@
           ></codx-input>
         </div>
         <codx-input
-          [disabled]="disabledInput"
-          [disabled]="!isNotOverseaFlag"
+        *ngIf="form.gridviewSetup.Country.allowPopup == true"
+          [disabled]="disabledInput || !isNotOverseaFlag"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
           field="country"
@@ -624,8 +688,10 @@
     </div>
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="Cost" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.Cost.allowPopup == true" fiedName="Cost" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.Cost.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -635,10 +701,12 @@
       </div>
       <div class="col-6">
         <codx-label
+        *ngIf="form.gridviewSetup.ChargeObject.allowPopup == true"
           fiedName="ChargeObject"
           [formModel]="form.formModel"
         ></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.ChargeObject.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -648,8 +716,10 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
+      <codx-label
+      *ngIf="form.gridviewSetup.Note.allowPopup == true" fiedName="Note" [formModel]="form.formModel"></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.Note.allowPopup == true"
         [disabled]="disabledInput"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
@@ -667,8 +737,10 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.DecisionNo.allowPopup == true" fiedName="DecisionNo" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.DecisionNo.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -676,8 +748,10 @@
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
+        <codx-label
+        *ngIf="form.gridviewSetup.SignedDate.allowPopup == true" fiedName="SignedDate" [formModel]="form.formModel"></codx-label>
         <codx-input
+        *ngIf="form.gridviewSetup.SignedDate.allowPopup == true"
           [disabled]="disabledInput"
           [Group]="form.formGroup"
           [formModel]="form.formModel"
@@ -688,11 +762,13 @@
 
     <div class="d-flex justify-content-between mt-5">
       <codx-label
+      *ngIf="form.gridviewSetup.SignerID.allowPopup == true"
         class="fw-bold"
         fiedName="SignerID"
         [formModel]="form.formModel"
       ></codx-label>
       <codx-input
+      *ngIf="form.gridviewSetup.SignerID.allowPopup == true"
         [disabled]="disabledInput"
         field="signerID"
         [formModel]="form.formModel"

@@ -167,7 +167,7 @@ export class CardsComponent extends UIComponent {
     } else {
       this.selectedID = event.data.recID;
     }
-    this.detectorRef.detectChanges();
+    // this.detectorRef.detectChanges();
   }
 
   clickShowAssideRight() {

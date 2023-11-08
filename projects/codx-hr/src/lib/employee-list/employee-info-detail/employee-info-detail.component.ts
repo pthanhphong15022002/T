@@ -7350,6 +7350,7 @@ dataService.clear();
     newData: any,
     oldData?: any
   ) {
+    debugger
     let returnVal = 0;
     let index = 0;
     if(oldData){
@@ -7372,6 +7373,7 @@ dataService.clear();
       //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
       gridView.refresh();
     } else if ((actionType = 'delete')) {
+      debugger
       (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
       gridView.deleteRow(oldData,true);
       returnVal = -1;
