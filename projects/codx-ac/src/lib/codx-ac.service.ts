@@ -668,16 +668,11 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (journal.approvalControl == '0') {
-<<<<<<< HEAD
           arrBookmark.forEach((element) => {
             if (
               element.functionID == MorfuncVoucher.GhiSo ||
-              MorfuncVoucher.In
+              element.functionID == MorfuncVoucher.In
             ) {
-=======
-          arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncVoucher.GhiSo || element.functionID == MorfuncVoucher.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -710,10 +705,13 @@ export class CodxAcService {
         break;
       case '5':
       case '9':
-        arrBookmark.forEach(element => {
-          if (element.functionID == MorfuncVoucher.GhiSo || element.functionID == MorfuncVoucher.In) {
+        arrBookmark.forEach((element) => {
+          if (
+            element.functionID == MorfuncVoucher.GhiSo ||
+            element.functionID == MorfuncVoucher.In
+          ) {
             element.disabled = false;
-          }else{
+          } else {
             element.disabled = true;
           }
         });
@@ -795,16 +793,11 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (journal.approvalControl == '0') {
-<<<<<<< HEAD
           arrBookmark.forEach((element) => {
             if (
               element.functionID == MorfuncCashReceipt.GhiSo ||
-              MorfuncCashReceipt.In
+              element.functionID == MorfuncCashReceipt.In
             ) {
-=======
-          arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncCashReceipt.GhiSo || element.functionID == MorfuncCashReceipt.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -825,14 +818,10 @@ export class CodxAcService {
         break;
       case '3':
         arrBookmark.forEach((element) => {
-<<<<<<< HEAD
           if (
             element.functionID == MorfuncCashReceipt.HuyDuyet ||
             element.functionID == MorfuncCashReceipt.In
           ) {
-=======
-          if (element.functionID == MorfuncCashReceipt.HuyDuyet || element.functionID == MorfuncCashReceipt.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
             element.disabled = false;
           } else {
             element.disabled = true;
@@ -841,10 +830,13 @@ export class CodxAcService {
         break;
       case '5':
       case '9':
-        arrBookmark.forEach(element => {
-          if (element.functionID == MorfuncCashReceipt.GhiSo || element.functionID == MorfuncCashReceipt.In) {
+        arrBookmark.forEach((element) => {
+          if (
+            element.functionID == MorfuncCashReceipt.GhiSo ||
+            element.functionID == MorfuncCashReceipt.In
+          ) {
             element.disabled = false;
-          }else{
+          } else {
             element.disabled = true;
           }
         });
@@ -926,13 +918,11 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (journal.approvalControl == '0') {
-<<<<<<< HEAD
           arrBookmark.forEach((element) => {
-            if (element.functionID == MorfuncPur.GhiSo || MorfuncPur.In) {
-=======
-          arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncPur.GhiSo || element.functionID == MorfuncPur.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
+            if (
+              element.functionID == MorfuncPur.GhiSo ||
+              element.functionID == MorfuncPur.In
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -965,10 +955,13 @@ export class CodxAcService {
         break;
       case '5':
       case '9':
-        arrBookmark.forEach(element => {
-          if (element.functionID == MorfuncPur.GhiSo || element.functionID == MorfuncPur.In) {
+        arrBookmark.forEach((element) => {
+          if (
+            element.functionID == MorfuncPur.GhiSo ||
+            element.functionID == MorfuncPur.In
+          ) {
             element.disabled = false;
-          }else{
+          } else {
             element.disabled = true;
           }
         });
@@ -1050,13 +1043,11 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (journal.approvalControl == '0') {
-<<<<<<< HEAD
           arrBookmark.forEach((element) => {
-            if (element.functionID == MorfuncSale.GhiSo || MorfuncSale.In) {
-=======
-          arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncSale.GhiSo || element.functionID == MorfuncSale.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
+            if (
+              element.functionID == MorfuncSale.GhiSo ||
+              element.functionID == MorfuncSale.In
+            ) {
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -1089,10 +1080,13 @@ export class CodxAcService {
         break;
       case '5':
       case '9':
-        arrBookmark.forEach(element => {
-          if (element.functionID == MorfuncPur.GhiSo || element.functionID == MorfuncPur.In) {
+        arrBookmark.forEach((element) => {
+          if (
+            element.functionID == MorfuncPur.GhiSo ||
+            element.functionID == MorfuncPur.In
+          ) {
             element.disabled = false;
-          }else{
+          } else {
             element.disabled = true;
           }
         });
@@ -1174,16 +1168,11 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (journal.approvalControl == '0') {
-<<<<<<< HEAD
           arrBookmark.forEach((element) => {
             if (
               element.functionID == MorfuncIssueVoucher.GhiSo ||
-              MorfuncIssueVoucher.In
+              element.functionID == MorfuncIssueVoucher.In
             ) {
-=======
-          arrBookmark.forEach(element => {
-            if (element.functionID == MorfuncIssueVoucher.GhiSo || element.functionID == MorfuncIssueVoucher.In) {
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
               element.disabled = false;
             } else {
               element.disabled = true;
@@ -1216,10 +1205,13 @@ export class CodxAcService {
         break;
       case '5':
       case '9':
-        arrBookmark.forEach(element => {
-          if (element.functionID == MorfuncIssueVoucher.GhiSo || element.functionID == MorfuncIssueVoucher.In) {
+        arrBookmark.forEach((element) => {
+          if (
+            element.functionID == MorfuncIssueVoucher.GhiSo ||
+            element.functionID == MorfuncIssueVoucher.In
+          ) {
             element.disabled = false;
-          }else{
+          } else {
             element.disabled = true;
           }
         });

@@ -189,18 +189,16 @@ export class CashrecieptDetailComponent extends UIComponent {
       this.itemSelected = dataItem;
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
-    }else{
+    } else {
       this.api
-      .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [
-        recID
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
-        this.itemSelected = res;
-        this.setTotalRecord();
-        this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
-        this.detectorRef.detectChanges();
-      });
+        .exec('AC', 'CashReceiptsBusiness', 'GetDataDetailAsync', [recID])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          this.itemSelected = res;
+          this.setTotalRecord();
+          this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
+          this.detectorRef.detectChanges();
+        });
     }
   }
 
@@ -573,7 +571,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -590,7 +588,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -606,7 +604,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -652,9 +650,9 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
-    }
-    this.shareService.printReport(reportID,reportType,params,this.formModel);    
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(reportID, reportType, params, this.formModel);
   }
 
   /**
@@ -698,29 +696,4 @@ export class CashrecieptDetailComponent extends UIComponent {
     return item.recID;
   }
   //#endregion Function
-<<<<<<< HEAD
-=======
-
-  //#region Bankhub
-  // call() {
-  //   jsBh.login('accNet', (o) => this.callback(o));
-  // }
-
-  // callback(o: any) {
-  //   if (o) {
-  //     this.bhLogin = true;
-  //     localStorage.setItem('bh_tk', o);
-  //     this.getbank();
-  //   }
-  // }
-
-  // getbank() {
-  //   this.acService
-  //     .call_bank('banks', { bankId: '970448', requestId: Util.uid() })
-  //     .subscribe((res) => {
-  //       console.log(res);
-  //     });
-  // }
-  //endregion Function
->>>>>>> 9ef807831d1170ffc80280fca84633e6676079da
 }
