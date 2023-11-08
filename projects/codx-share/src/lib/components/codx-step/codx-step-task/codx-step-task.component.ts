@@ -571,6 +571,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
+          case 'DP32': // gởi duyệt 
+            res.disabled =  !(task?.approveRule);
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled =  true;
+            break;
         }
       });
     }
@@ -1132,20 +1138,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async copyTask(task) {
     if (task) {
-      let taskCopy = JSON.parse(JSON.stringify(task));
-      taskCopy.recID = Util.uid();
-      taskCopy.refID = Util.uid();
-      taskCopy['progress'] = 0;
-      taskCopy['isTaskDefault'] = false;
-      taskCopy['requireCompleted'] = false;
-      taskCopy['dependRule'] = '0';
-      this.taskType = this.listTaskType.find(
-        (type) => type.value == taskCopy?.taskType
-      );
-      let taskOutput = await this.openPopupTask('copy', 'step', taskCopy);
+      this.taskType = this.listTaskType.find((type) => type.value == task?.taskType);
+      let taskOutput = await this.openPopupTask('copy', 'step', task);
 
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
+      if (taskOutput?.task) {
+        let data = taskOutput;
         this.currentStep?.tasks?.push(data.task);
         this.currentStep['progress'] = data.progressStep;
         let group = this.listGroupTask.find((group) =>
@@ -1154,6 +1151,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (group) {
           group?.task.push(data.task);
           group['progress'] = data.progressGroup;
+          this.changeDetectorRef.markForCheck();
         }
       }
     }
