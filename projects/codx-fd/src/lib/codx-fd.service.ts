@@ -155,6 +155,16 @@ export class CodxFdService {
     );
   }
 
+  getSettingValueByModule(FormName: string, TransType: string){
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      [FormName, TransType]
+    );
+  }
+
   updateSettingValue(
     formName: string,
     transType: string,

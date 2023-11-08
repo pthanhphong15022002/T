@@ -8,9 +8,9 @@
   [footer]="footer"
   [dialog]="dialog"
   [data]="benefitObj"
-  >
   [group]="form.formGroup"
-  *ngIf="isAfterRender"
+  >
+  <!-- *ngIf="isAfterRender" -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
     <div *ngIf="useForQTNS" class="form-group row mt-5">
@@ -304,7 +304,6 @@
     <div class="d-flex justify-content-between mt-5">
       <codx-label
 *ngIf="form.gridviewSetup.SignerID.allowPopup == true"
-
         class="fw-bold"
         fiedName="SignerID"
         [formModel]="form.formModel"

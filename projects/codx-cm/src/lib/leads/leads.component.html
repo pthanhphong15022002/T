@@ -431,6 +431,7 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
+      [hidden]="data?.status == '11'"
       (changeDataMF)="changeDataMFGird($event, data)"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
