@@ -592,7 +592,7 @@ export class PopupAddCardsComponent implements OnInit {
       }
     }
     if (
-      !this.myWallet &&
+      (!this.myWallet || this.myWallet?.status != '1') &&
       (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))
     ) {
       this.notifySV.notify('Bạn chưa tích hợp ví');
@@ -686,6 +686,7 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res[1]) {
           (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
           this.dialog.close();
+          this.notifySV.notifyCode('SYS006')
         } else {
           this.notifySV.notify(res[1]);
         }
@@ -794,9 +795,11 @@ export class PopupAddCardsComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             if (res.availableQty <= 0) {
+              this.form.patchValue({ giftID: '' });
               this.notifySV.notify('Số dư quà tặng không đủ');
+              this.dt.detectChanges();
             } else {
-              if (this.gifts.length == 0) {
+              if (this.gifts.length != 0) {
                 this.gifts = [];
               }
               res.quantity = 1;
@@ -808,9 +811,15 @@ export class PopupAddCardsComponent implements OnInit {
               this.amount = this.quantity * this.gifts[0].price;
               this.form.patchValue({ quantity: 1 });
             }
-          }
+          } 
         });
-    }
+    } else {
+      this.gifts = [];
+      this.form.patchValue({ giftID: '' });
+      this.quantity = 0;
+      this.amount = 0;
+      this.dt.detectChanges();
+  }
   }
 
   addFile(evt: any) {

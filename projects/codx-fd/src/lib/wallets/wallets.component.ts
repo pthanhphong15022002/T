@@ -341,7 +341,7 @@ export class WalletsComponent extends UIComponent implements OnInit {
 
     this.api
       .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
-        this.options,
+        this.options,{}
       ])
       .subscribe((res) => {
         if (res) {

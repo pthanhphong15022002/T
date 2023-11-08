@@ -8,6 +8,7 @@ export abstract class AppConfig {
   saas: number;
   layoutCZ: string;
   layout: any;
+  asideMode: string;
   themeMode: string;
   hideFavCount: boolean;
   singleExec: boolean;

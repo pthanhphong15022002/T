@@ -25,6 +25,7 @@ export class AppConfigService extends AppConfig {
         environment.saas = res.saas;
         environment.layoutCZ = res.layoutCZ;
         environment.layout = res.layout;
+        environment.asideMode = res.asideMode;
         environment.themeMode = res.themeMode;
         environment.hideFavCount = res.hideFavCount;
         environment.singleExec = res.singleExec;
