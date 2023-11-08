@@ -18,9 +18,13 @@
           <div class="p-4 div-per-usage-his cursor-pointer" (click)="clickActive(item)" [class.active]="item.id == active" *ngFor="let item of listFunc">
             <span class="fw-bold">{{item.name}}</span> 
           </div>
+         
         </div>
       </div>
       <div class="d-flex flex-column px-5">
+        <div class="pic-4-puh w-100 m-5 d-flex align-items-center justify-content-center">
+          <div class="text-white fs-2 span-coCoins">{{wallets?.coCoins}}</div>
+        </div>
         <div class="d-flex flex-column align-items-start py-6 px-4 pic-2-puh">
           <div class="pic-3-puh"></div>
           <div class="my-5 fw-bold" [style.color]="'#032D60'"><span>{{user?.userName | uppercase}}</span></div>
@@ -29,7 +33,7 @@
               <codx-label default="FROM"></codx-label>
               <span>{{wallets?.activedOn | fmDT: 'dmy'}}</span>
             </div>
-            <div class="d-flex align-items-center" [style.color]="'#EB5769'">
+            <div class="d-flex align-items-center" [style.color]="'#EE6F64'">
               <span class="me-2 fs-1 fw-bold">{{wallets?.coins}}</span>
               <span>xu</span>
             </div>

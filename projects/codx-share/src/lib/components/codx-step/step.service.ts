@@ -495,7 +495,7 @@ export class StepService {
   //   return taskOutput;
   // }
 
-  async openPopupTask2(data,location){
+  async openPopupCodxTask(data,location){
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
@@ -506,7 +506,7 @@ export class StepService {
     if (location == 'right') {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.zIndex = 1011;
+      option.zIndex = 1001;
       option.FormModel = frmModel;
       popupAddTask = this.callFunc.openSide(
         CodxAddTaskComponent,

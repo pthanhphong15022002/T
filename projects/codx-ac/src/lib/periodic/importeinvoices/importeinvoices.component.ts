@@ -27,6 +27,7 @@ export class ImportEInvoicesComponent extends UIComponent {
   button?: ButtonModel = { id: 'btnAdd' };
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
   @ViewChild('xml', { read: ElementRef }) private xml: ElementRef;
 
   itemSelected: any;
@@ -72,6 +73,29 @@ export class ImportEInvoicesComponent extends UIComponent {
           widthLeft: '25%',
           //separatorSize:3
         },
+      },
+      {
+        type: ViewType.grid_detail, //? thiết lập view lưới
+        active: true,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
+
+        },
+
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_PurchaseInvoicesLines',
+          formName:'PurchaseInvoicesLines',
+          gridviewName:'grvPurchaseInvoicesLines',
+          parentField:'TransID',
+          parentNameField:'InvoiceNo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
       },
     ];
     this.cache
