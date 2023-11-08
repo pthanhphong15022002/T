@@ -210,13 +210,7 @@ export class DealsComponent
         this.processIDKanban = res;
       }
     });
-    // this.codxCmService.getTestCbx('0fe9e733-4dff-11ee-bf32-988d46c4cbe1').subscribe((res) => {
-    //   if(res) {
 
-    //   }
-
-    // });
-    //this.codxCmService.test([],[],[]).subscribe((res) => { });;
 
     this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
@@ -1997,6 +1991,6 @@ export class DealsComponent
       }
       let task = await this.stepService.openPopupTask2(dataAddTask, 'right');
     }
-    
+
   }
 }
