@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddVendorsComponent } from './pop-add-vendors.component';
+import { VendorsAddComponent } from './vendors-add.component';
 
 describe('PopAddVendorsComponent', () => {
-  let component: PopAddVendorsComponent;
-  let fixture: ComponentFixture<PopAddVendorsComponent>;
+  let component: VendorsAddComponent;
+  let fixture: ComponentFixture<VendorsAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddVendorsComponent ]
+      declarations: [ VendorsAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddVendorsComponent);
+    fixture = TestBed.createComponent(VendorsAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
