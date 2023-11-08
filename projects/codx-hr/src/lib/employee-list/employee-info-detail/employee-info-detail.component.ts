@@ -3351,7 +3351,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[0]){
-            debugger
             this.active[0] = this.eInfoFuncID;
           }
 
@@ -3510,7 +3509,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[1]){
-            debugger
             this.active[1] = this.jobGeneralFuncID;
           }
           this.lineManager = null;
@@ -3691,7 +3689,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[3]){
-            debugger
             this.active[3] = this.eContractFuncID;
           }
           this.lstBtnAdd = []
@@ -3807,7 +3804,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[4]){
-            debugger
             this.active[4] = this.eDegreeFuncID;
           }
           this.lstBtnAdd = []
@@ -3921,7 +3917,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             }
           }
           if(!this.active[5]){
-            debugger
             this.active[5] = this.eAccidentsFuncID;
           }
           this.lstBtnAdd = []
@@ -4100,7 +4095,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       dataService.clear();
-      if (res) {
+      if (res?.event) {
         let temp3 = res.event.update.data;
         this.infoPersonal = temp3;
       }
@@ -4172,7 +4167,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       dataService.clear();
-      if (res) {
+      if (res?.event) {
         let temp3 = res.event.update.data;
         this.infoPersonal = temp3;
       }
@@ -4242,7 +4237,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       dataService.clear();
-      if (res) {
+      if (res?.event) {
         let temp3 = res.event.update.data;
         this.infoPersonal = temp3;
       }
@@ -4308,7 +4303,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
     dialogAdd.closed.subscribe((res) => {
       dataService.clear();
-      if (res) {
+      if (res?.event) {
         let temp3 = res.event.update.data;
         this.infoPersonal = temp3;
       }
@@ -4956,7 +4951,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5194,7 +5189,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5419,7 +5414,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5428,6 +5423,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   openFormEVisas(actionHeaderText, actionType,dataService, tempData, data){
     dataService.dataSelected = tempData;
     let option = new SidebarModel();
+    debugger
     option.FormModel = this.eVisaFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -5555,7 +5551,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -5655,7 +5651,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEAccident(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -6000,7 +5996,6 @@ dataService.clear();
   //       this.eExperienceFormModel.entityName,
   //       'RecID'
   //     ).subscribe((res: any) => {
-  //       debugger
   //       tempData = res?.data;
   //       tempData.employeeID = this.employeeID;
   //       dataService.addDatas.set(tempData.recID, tempData);
@@ -6167,7 +6162,7 @@ dataService.clear();
 
       // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
     this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
 
@@ -6266,7 +6261,7 @@ dataService.clear();
       dataService.addDatas.set(tempData.recID, tempData);
     this.openFormEDiseases(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
     this.openFormEDiseases(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -6300,7 +6295,6 @@ dataService.clear();
           this.updateGridView(this.eDiseasesGrid, actionType, res.event.update.data, null);
         }
         else if(actionType == 'add' || actionType =='copy'){
-          debugger
           this.updateGridView(this.eDiseasesGrid, actionType, res.event.save.data, null);
         }
       this.df.detectChanges();
@@ -6457,7 +6451,7 @@ dataService.clear();
       dataService.addDatas.set(tempData.recID, tempData);
       this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
     }
-    else if(actionType == 'edit'){
+    else if(actionType == 'edit' || actionType == 'view'){
       dataService.updateDatas.set(tempData.recID, tempData);
       this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
     }
@@ -6754,7 +6748,6 @@ dataService.clear();
     if (this.crrIndex > -1) {
       this.LoadedEInfo = false;
       this.infoPersonal = null;
-      debugger
       let urlView = `/hr/employeedetail/${this.funcID}`;
       this.codxService.replaceNavigate(
         urlView,
@@ -7350,7 +7343,6 @@ dataService.clear();
     newData: any,
     oldData?: any
   ) {
-    debugger
     let returnVal = 0;
     let index = 0;
     if(oldData){
@@ -7373,7 +7365,6 @@ dataService.clear();
       //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
       gridView.refresh();
     } else if ((actionType = 'delete')) {
-      debugger
       (gridView?.dataService as CRUDService)?.remove(oldData).subscribe();
       gridView.deleteRow(oldData,true);
       returnVal = -1;
