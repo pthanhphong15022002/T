@@ -5,8 +5,6 @@ import {
   ViewChild,
   TemplateRef,
   Input,
-  OnChanges,
-  SimpleChanges,
   Output,
   EventEmitter
 } from '@angular/core';
@@ -75,6 +73,7 @@ export class CalendarCenterComponent
           eventModel: this.eventModel,// mapping của event schedule
           resourceModel: this.resourceModel, // mapping của resource schedule
           template: this.eventTemplate, // template event
+          template3: this.cellTemplate, 
           template4: this.resourceTemplate,//template resource 
           template6: this.moreFuncTemplate, // template more funtion
           template8: this.popupEventTemplate //template popup event
@@ -92,7 +91,10 @@ export class CalendarCenterComponent
         this.codxSchedule.resourceDataSource = this.resources;
         this.codxSchedule.selectedDate = this.selectedDate ?? new Date();
         this.codxSchedule.statusColor = this.statusColor;
-        // this.codxSchedule.currentView = this.currentView ?? "Month";
+        this.codxSchedule.currentView = "TimelineMonth";
+        this.codxSchedule.onTimelineViewChange(false);
+        // this.codxSchedule.isCalendarView = true;
+
         this.codxSchedule.setEventSettings();
       }
     },500)
@@ -105,7 +107,6 @@ export class CalendarCenterComponent
     {
       this.codxSchedule.selectedDate = date;
       this.codxSchedule.setEventSettings();
-      this.detectorRef.detectChanges();
     }
   }
   
@@ -123,6 +124,7 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = resources;
+      this.codxSchedule.isCalendarView = true;
       this.codxSchedule.onGroupingChange(resources);
       this.codxSchedule.onGridlinesChange(true);
       this.codxSchedule.onTimelineViewChange(true);
@@ -135,9 +137,10 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = [];
-      this.codxSchedule.onGroupingChange(false);
-      this.codxSchedule.onGridlinesChange(false);
-      this.codxSchedule.onTimelineViewChange(false);
+      this.codxSchedule.isCalendarView = false;
+      // this.codxSchedule.onGroupingChange(false);
+      // this.codxSchedule.onGridlinesChange(false);
+      // this.codxSchedule.onTimelineViewChange(false);
       this.codxSchedule.setEventSettings();
     }
   }
@@ -180,7 +183,6 @@ export class CalendarCenterComponent
 
   // render html day off schedule
   getDayOffHTML(evt: any) {
-    let obj = evt.date;
     let cellDay = evt.date;
     let html = "";
     if (this.lstDayOff?.length > 0) 
@@ -188,12 +190,18 @@ export class CalendarCenterComponent
       let dayOff = this.lstDayOff.find(x => new Date(x.startDate).toLocaleDateString() === cellDay.toLocaleDateString());
       if(dayOff)
       {
-        debugger
-        let time = obj.getTime();
-        let ele = document.querySelectorAll('[data-date="' + time + '"]');
-        if (ele?.length > 0) 
+        let time = cellDay.getTime();
+        let eles = document.querySelectorAll('[data-date="' + time + '"]');
+        if (eles?.length > 0) 
         {
-          ele.forEach((item) => { (item as any).style.backgroundColor = dayOff.color; });
+          eles.forEach((ele:HTMLElement) => {
+            if(ele.classList.value.includes("e-work-cells"))
+            {
+              ele.style.backgroundColor = dayOff.color;
+              // ele.style.backgroundColor = "#ddd";
+              ele.style.textAlign = "center";
+            }
+          });
           html =`<icon class="${dayOff.symbol}"></icon><span>${dayOff.note}</span>`;
         } 
       }
@@ -213,10 +221,7 @@ export class CalendarCenterComponent
         [this.calendarID]
       )
       .subscribe((res) => {
-        if(res) 
-        {
-          this.lstDayOff = res;
-        }
+        this.lstDayOff = res;
       });
   }
 }
