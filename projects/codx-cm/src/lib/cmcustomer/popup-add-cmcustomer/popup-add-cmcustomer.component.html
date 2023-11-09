@@ -446,7 +446,7 @@
           </div>
         </div>
       </div>
-      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
+      <div class="mb-2 mt-5" *ngIf="funcID == 'CM0103'" (mouseenter)="closePopover()">
         <codx-label
           name="lblSystemInfo"
           class="fs-6 text-dark text-primary fw-bold"
@@ -454,7 +454,7 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row mt-3" *ngIf="funcID == 'CM0103'">
+        <div class="row mt-3" >
           <!-- <div class="col-6 form-group">
             <codx-label [formModel]="form.formModel" fiedName="SegmentID">
             </codx-label>
