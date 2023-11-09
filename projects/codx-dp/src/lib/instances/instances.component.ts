@@ -1060,17 +1060,17 @@ export class InstancesComponent
         this.cancelApprover(data);
         break;
       //lay datas ra
-      // case 'SYS002':
-      //   this.exportTemplet(e, data);
-      //   break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       default: {
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
-        let dataSource = data.datas;
+        //let dataSource = data.datas;
         var customData = {
           refID: data.processID,
           refType: 'DP_Processes',
-          dataSource: dataSource,
+          // dataSource: dataSource,
         };
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1104,11 +1104,17 @@ export class InstancesComponent
         data.recID
       )
       .subscribe((str) => {
-        if (str) {
+        if (str && str?.length > 0) {
+          let datas = str[1];
+          if (datas && datas.includes('[{')) datas = datas.substring(2);
+          let fix = str[0];
+          fix = fix.substring(1, fix.length - 1);
+          let dataSource = '[{ ' + fix + ',' + datas;
+          // let dataSource = '[' + str + ']';
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
-            dataSource: str,
+            dataSource: dataSource,
           };
           this.codxShareService.defaultMoreFunc(
             e,
