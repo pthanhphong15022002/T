@@ -15,7 +15,6 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./codx-view-approve.component.scss'],
 })
 export class CodxViewApproveComponent implements OnInit, OnChanges {
-  @Input() class;
   @Input() listApprover;
   @Input() categoryID;
   
