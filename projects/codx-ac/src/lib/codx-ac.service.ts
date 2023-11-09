@@ -101,10 +101,17 @@ export const fmGeneralJournalsLinesOne: FormModel = {
   entityPer: 'AC_GeneralJournalsLines',
 };
 
-export const fmTransfersLines: FormModel = {
+export const fmIssueTransfersLines: FormModel = {
   entityName: 'IV_TransfersLines',
-  formName: 'TransfersLines',
-  gridViewName: 'grvTransfersLines',
+  formName: 'TransfersIssueLines',
+  gridViewName: 'grvTransfersIssueLines',
+  entityPer: 'IV_TransfersLines',
+};
+
+export const fmReceiptTransfersLines: FormModel = {
+  entityName: 'IV_TransfersLines',
+  formName: 'TransfersReceiptLines',
+  gridViewName: 'grvTransfersReceiptLines',
   entityPer: 'IV_TransfersLines',
 };
 
