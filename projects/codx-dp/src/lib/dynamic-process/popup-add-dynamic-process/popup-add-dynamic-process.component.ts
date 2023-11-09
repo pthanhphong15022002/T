@@ -819,10 +819,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
-        if (step && step['taskGroups']?.length > 0) {
-          let index = step['taskGroups']?.findIndex((x) => !x['recID']);
-          step['taskGroups']?.splice(index, 1);
-          step['taskGroups']?.forEach((element) => {
+        if (step && step?.taskGroups?.length > 0) {
+          let index = step?.taskGroups?.findIndex((x) => !x?.recID);
+          if(index >= 0){
+            step?.taskGroups?.splice(index, 1);
+          }
+          step?.taskGroups?.forEach((element) => {
             delete element['task'];
           });
         }
@@ -2972,8 +2974,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.taskGroupList.splice(index - 1, 0, taskGroup);
       } else {
         this.taskGroupList.push(taskGroup);
-      }
-
+      };
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
