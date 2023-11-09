@@ -1139,6 +1139,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (indexTask >= 0) {
           this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
+        this.changeDetectorRef.markForCheck();
         this.notiService.notifyCode('SYS007');
       }
     }
