@@ -60,6 +60,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   lstResources:any[] = [];
   selectedDate:Date = null;
   sysMoreFunc:any[] = [];
+  addMoreFunc:any = {
+    text: "Thêm",
+    action:"add",
+    functionID:"SYS01"
+  }
   groupID:string = "";
   orgUnitID:string = "";
   dEventMonth:any = {};
@@ -145,8 +150,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
     // get sys more function
     this.cache.moreFunction('CoDXSystem', '').subscribe((res:any) => {
-      if(res){
+      if(res)
+      {
         this.sysMoreFunc = res;
+        let addMore = res.find(x => x.functionID == "SYS01");
+        if(addMore)
+        {
+          this.addMoreFunc.functionID = addMore.functionID;
+          this.addMoreFunc.text = addMore.customName;
+        }
       }
     });
 
@@ -288,7 +300,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         'GetParamMyCalendarAsync',
         ['WPCalendars'])
         .subscribe((res: any) => {
-        if (res?.length > 0) {
+        if (res?.length > 0) 
+        {
           let arrParam = [];
           res.forEach((element) => {
             let param = JSON.parse(element);
@@ -375,29 +388,29 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
 
   // navigate moth in
   changeMonth(args){
-    let y = args.date.getFullYear()
-    let m =  args.date.getMonth();
-    let d = args.date.getDate();
+    let y = args.date.getFullYear(),m =  args.date.getMonth();
     this.startDate = new Date(y, m, 1);
     this.endDate = moment(this.startDate).add(1, 'M').add(-1,'s').toDate(); 
     this.selectedDate = args.date; 
-    if(this.dEventMonth[(m + 1) + "-" + y])
-    {
-      if(this.ejCalendar)
-      {
-        this.ejCalendar.value = this.selectedDate;
-        this.ejCalendar.refresh();
-      }
-      if(this.calendarCenter)
-      {
-        this.calendarCenter.changeDate(this.selectedDate);
-        this.calendarCenter.changeEvents(this.lstEvents);
-      }
-    }
-    else
-    {
-      this.getEventData();
-    }
+    // if(this.dEventMonth[(m + 1) + "-" + y])
+    // {
+    //   this.lstEvents = this.dEventMonth[(m + 1) + "-" + y];
+    //   if(this.ejCalendar)
+    //   {
+    //     this.ejCalendar.value = this.selectedDate;
+    //     this.ejCalendar.refresh();
+    //   }
+    //   if(this.calendarCenter)
+    //   {
+    //     this.calendarCenter.changeDate(this.selectedDate);
+    //     this.calendarCenter.changeEvents(this.lstEvents);
+    //   }
+    // }
+    // else
+    // {
+    //   this.getEventData();
+    // }
+    this.getEventData();
     this.detectorRef.detectChanges();
   }
 
@@ -408,7 +421,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     this.settingCalendars.map(x => { if(x.Template.transType == transType) {x.ShowEvent = value} });
     if(value == "0")
     {
-      for (const key in this.dEventMonth) {
+      for (const key in this.dEventMonth) 
+      {
         if(this.dEventMonth[key] && this.dEventMonth[key]?.length > 0)
         {
           this.dEventMonth[key] = this.dEventMonth[key].filter(x => x.transType != transType);
@@ -417,16 +431,17 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       this.lstEvents = this.lstEvents.filter(x => x.transType != transType);
       this.ejCalendar && this.ejCalendar.refresh();
       this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-      this.detectorRef.detectChanges();
     }      
     else
     {
+      let month = this.selectedDate.getMonth() + 1, year = this.selectedDate.getFullYear();
       switch(transType)
       {
         case"WP_Notes":
           this.getEventWP("WP_Notes").subscribe((res:any) => {
             var notes = res.data;
             this.lstEvents = this.lstEvents.concat(notes);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;  
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -436,6 +451,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventTM(transType).subscribe((res:any) => {
             var tasks = res.data;
             this.lstEvents = this.lstEvents.concat(tasks);
+            this.dEventMonth[month + "-" + year] = this.lstEvents 
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -444,6 +460,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventCO("CO_Meetings").subscribe((res:any) => {
             var meetings = res.data;
             this.lstEvents = this.lstEvents.concat(meetings);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -453,6 +470,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventEP(transType).subscribe((res:any) => {
             var bookings = res.data;
             this.lstEvents = this.lstEvents.concat(bookings);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -490,7 +508,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               showColor: param.ShowColor,
               text: param.Template.TransType,
               status: param.Template.TransType,
-              textColor: param.TextColor ?? "#1F1717"
+              textColor: param.TextColor
             };
             statusColors.push(obj);
           });
@@ -545,9 +563,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       case "COT03": // Lịch cá nhân
         this.groupID = "";
         this.orgUnitID = "";
-        this.calendarCenter && this.calendarCenter.removeResource();
-        // this.calendarCenter && this.calendarCenter.changeModeView(true);
-
+        this.calendarCenter && this.calendarCenter.changeModeView(true);
         this.getEventData();
         break;
     }
@@ -573,7 +589,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           events = events.concat(ele.data);
         });
       }
-      this.lstEvents = this.lstEvents.concat(events);
+      this.lstEvents = events;
       this.dEventMonth[month + "-" + year] = events;
       if(!this.loaded)
         this.loaded = true;
@@ -807,7 +823,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     {
       case"SYS01":
       case"SYS03":
-        this.addEditEvent(event.functionID,data);
+        this.addEditEvent(event,data);
         break;
       case"SYS02":
         this.deleteEvent(data);
@@ -816,33 +832,31 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // add && edit event
-  addEditEvent(funcID:string,event:any) {
-    if(event.transType)
-    {
-      switch (event.transType) 
-      {
+  addEditEvent(moreFunc:string,event:any) {
+    if(event.transType){
+      switch (event.transType) {
         case 'EP_BookingCars':
-          this.addEditBookingCar(funcID,event);
+          this.addEditBookingCar(moreFunc,event);
           break;
 
         case 'EP_BookingRooms':
-          this.addEditBookingRoom(funcID,event);
+          this.addEditBookingRoom(moreFunc,event);
           break;
 
         case 'WP_Notes':
-          this.addEditNote(funcID,event);
+          this.addEditNote(moreFunc,event);
           break;
 
         case 'CO_Meetings':
-          this.addEditMetting(funcID,event);
+          this.addEditMetting(moreFunc,event);
           break;
 
         case 'TM_MyTasks':
-          this.addEditMyTask(funcID,event);
+          this.addEditMyTask(moreFunc,event);
           break;
 
         case 'TM_AssignTasks':
-          this.addEditAssignTask(funcID,event);
+          this.addEditAssignTask(moreFunc,event);
           break;
       }
     }
@@ -870,20 +884,19 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // add & edit booking car
-  addEditBookingCar(funcID:string,event:any = null){
-    this.getModelEP(funcID,BUSSINESS_FUNCID.EP_BOOKINGCARS,event).subscribe((model:any) => 
-    {
+  addEditBookingCar(moreFunc:any,event:any = null){
+    this.getModelEP(moreFunc.functionID,BUSSINESS_FUNCID.EP_BOOKINGCARS,event).subscribe((model:any) => {
       if(model)
       {
         this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
-        .subscribe((res:boolean) => {
+        .subscribe((isAppro:boolean) => {
           let option = new SidebarModel();
           option.FormModel = this.carFM;
           option.Width = '800px';
           this.callfc
             .openSide(
               CodxAddBookingCarComponent,
-              [model, funcID, this.addCarTitle, null, null, false,res],
+              [model, moreFunc.functionID, this.addCarTitle, null, null, false,isAppro],
               option
             ).closed.subscribe((res:any) => {
               if(res?.event)
@@ -891,7 +904,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                 let booking = this.convertModelEvent(res.event,"EP_BookingCars");
                 let date = new Date(booking.startDate);
                 let month = date?.getMonth() + 1, year = date.getFullYear();
-                if(funcID == "SYS03")
+                if(moreFunc.functionID == "SYS03")
                 {
                   let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
                   if(idx > -1)
@@ -906,25 +919,24 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             });
         });
       }
-      else this.notiService.notify("Lỗi đặt xe");
     });
   }
   
   // add & edit booking room
-  addEditBookingRoom(funcID:string,event:any = null){
-    this.getModelEP(funcID,BUSSINESS_FUNCID.EP_BOOKINGROOMS,event).subscribe((model:any) => 
+  addEditBookingRoom(moreFunc:any,event:any = null){
+    this.getModelEP(moreFunc.functionID,BUSSINESS_FUNCID.EP_BOOKINGROOMS,event).subscribe((model:any) => 
     {
       if(model)
       {
         this.api.execSv("SYS","ERM.Business.AD","UserRolesBusiness","CheckUserRolesCOAsync",[this.user.userID,["EP4","EP4E"]])
-        .subscribe((res:boolean) => {
+        .subscribe((isPermisson:boolean) => {
           let option = new SidebarModel();
           option.FormModel = this.roomFM;
           option.Width = '800px';
           this.callfc
             .openSide(
               CodxAddBookingRoomComponent,
-              [model, funcID, this.addRoomTitle, null, null,false,res],
+              [model, moreFunc.functionID, this.addRoomTitle, null, null,false,isPermisson],
               option
             ).closed.subscribe((res:any) => {
               if(res?.event)
@@ -932,7 +944,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                 let booking = this.convertModelEvent(res.event,"EP_BookingRooms");
                 let date = new Date(booking.startDate);
                 let month = date?.getMonth() + 1, year = date.getFullYear();
-                if(funcID == "SYS03")
+                if(moreFunc.functionID == "SYS03")
                 {
                   let idx = this.lstEvents.findIndex(x => x.transID == booking.transID);
                   if(idx > -1)
@@ -942,12 +954,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                 this.dEventMonth[month + "-" + year] = this.lstEvents;
                 this.ejCalendar && this.ejCalendar.refresh();
                 this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-                this.detectorRef.detectChanges();
               }
             });
         });
       }
-      else this.notiService.notify("Lỗi đặt phòng");
     });
   }  
 
@@ -973,16 +983,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // add & edit CO
-  addEditMetting(funcID:string,event:any = null){
-    this.getModelCO(funcID,event).subscribe((model:any) => {
+  addEditMetting(moreFunc:any,event:any = null){
+    this.getModelCO(moreFunc.functionID,event).subscribe((model:any) => {
       if(model)
       {
         let option = new SidebarModel();
         option.FormModel = this.meetingFM;
         option.Width = 'Auto';
         let obj = {
-          action: funcID == "SYS01" ? "add" : "edit",
-          titleAction: funcID == "SYS01" ? "Thêm" : "Chỉnh sửa",
+          action: moreFunc.functionID == "SYS01" ? "add" : "edit",
+          titleAction: moreFunc.text,
           disabledProject: true,
           listPermissions: '',
           data: model,
@@ -997,7 +1007,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             let meeting = this.convertModelEvent(res.event,"CO_Meetings");
             let date = new Date(meeting.startDate);
             let month = date.getMonth() + 1 , year = date.getFullYear();;
-            if(funcID == "SYS03")
+            if(moreFunc.functionID == "SYS03")
             {
               let idx = this.lstEvents.findIndex(x => x.transID == meeting.transID);
               if(idx > -1)
@@ -1007,11 +1017,9 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-            this.detectorRef.detectChanges();
           }
         });
       }
-      else this.notiService.notify("Lỗi lịch họp");
     });
   }
 
@@ -1025,8 +1033,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // add edit My_Task
-  addEditMyTask(funcID:string, event:any){
-    if(funcID == "SYS01")
+  addEditMyTask(moreFunc:any, event:any){
+    if(moreFunc.functionID == "SYS01")
     {
       this.getModelTM(BUSSINESS_FUNCID.TM_MyTasks,event).subscribe((model:any) => {
         if(model)
@@ -1037,9 +1045,9 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           option.zIndex = 1001;
           let obj = {
             data: model,
-            action: funcID == "SYS01" ? "add" : "edit",
+            action: moreFunc.functionID == "SYS01" ? "add" : "edit",
             isAssignTask: false,
-            titleAction: funcID == "SYS01" ? "Thêm" : "Chỉnh sửa", 
+            titleAction: moreFunc.text, 
             functionID: BUSSINESS_FUNCID.TM_MyTasks,
             disabledProject: false,
             isOtherModule: true
@@ -1048,10 +1056,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             PopupAddComponent,
             obj,
             option
-          ).closed.subscribe((res2:any) => {
-            if(res2.event)
+          ).closed.subscribe((res:any) => {
+            if(res?.event?.length > 0)
             {
-              let task = this.convertModelEvent(res2.event[0],"TM_MyTasks");
+              let task = this.convertModelEvent(res.event[0],"TM_MyTasks");
               let date = new Date(task.startDate);
               let month = date.getMonth() + 1, year = date.getFullYear();
               this.lstEvents.push(task);
@@ -1062,24 +1070,19 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             }
           });
         }
-        else
-        {
-          this.notiService.notify("Lỗi công việc cá nhân");
-        }
       });
     }
-    else if(funcID == "SYS03")
+    else if(moreFunc.functionID == "SYS03")
     {
       this.TMService.editTask(
-        event.transID,BUSSINESS_FUNCID.TM_MyTasks,"Chỉnh sửa",this.afterSaveMyTask.bind(this)
+        event.transID,BUSSINESS_FUNCID.TM_MyTasks,moreFunc.text,this.afterSaveMyTask.bind(this)
       );
     }
   }
 
   // add & edit  TM_AssignTaskS
-  addEditAssignTask(funcID:string, event:any) {
-    if(funcID == "SYS01")
-    {
+  addEditAssignTask(moreFunc:any, event:any) {
+    if(moreFunc.functionID == "SYS01"){
       this.getModelTM(BUSSINESS_FUNCID.TM_AssignTasks,event).subscribe((model:any) => {
         if(model)
         {
@@ -1091,7 +1094,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             data: model,
             action: 'add',
             isAssignTask: true,
-            titleAction: 'Thêm', 
+            titleAction: moreFunc.text, 
             functionID: BUSSINESS_FUNCID.TM_AssignTasks,
             disabledProject: false,
             isOtherModule: true
@@ -1114,13 +1117,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
             }
           });
         }
-        else
-          this.notiService.notify("Lỗi thêm giao việc");
       });
     }
-    else if(funcID == "SYS03")
+    else if(moreFunc.functionID == "SYS03")
     {
-      this.TMService.editTask(event.transID,BUSSINESS_FUNCID.TM_AssignTasks,"Chỉnh sửa",this.afterSaveAssignTask.bind(this));
+      this.TMService.editTask(event.transID,BUSSINESS_FUNCID.TM_AssignTasks,moreFunc.text,this.afterSaveAssignTask.bind(this));
     }
   }
 
@@ -1135,12 +1136,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(idx > -1)
       {
         this.lstEvents.splice(idx,1);
+        this.lstEvents.push(task);
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       }
-      this.lstEvents.push(task);
-      this.dEventMonth[month + "-" + year] = this.lstEvents;
-      this.ejCalendar && this.ejCalendar.refresh();
-      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-      this.detectorRef.detectChanges();
     }
   }
 
@@ -1155,12 +1155,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       if(idx > -1)
       {
         this.lstEvents.splice(idx,1);
+        this.lstEvents.push(task);
+        this.dEventMonth[month + "-" + year] = this.lstEvents;
+        this.ejCalendar && this.ejCalendar.refresh();
+        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
       }
-      this.lstEvents.push(task);
-      this.dEventMonth[month + "-" + year] = this.lstEvents;
-      this.ejCalendar && this.ejCalendar.refresh();
-      this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-      this.detectorRef.detectChanges();
     }
   }
 
@@ -1186,18 +1185,18 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
   }
 
   // add WP_Notes
-  addEditNote(funcID:string,event:any = null) {
-    this.getModelWP(funcID,BUSSINESS_FUNCID.WP_NOTES,event).subscribe((model:any) => {
+  addEditNote(moreFunc:any,event:any = null) {
+    this.getModelWP(moreFunc.functionID,BUSSINESS_FUNCID.WP_NOTES,event).subscribe((model:any) => {
       if(model)
       {
         let obj = {
-          formType: funcID == "SYS01" ? "add" :"edit",
+          formType: moreFunc.functionID == "SYS01" ? "add" :"edit",
           currentDate: new Date(),
           component: 'calendar-notes',
           maxPinNotes: '5',
           dataUpdate: model
         };
-        let title = funcID == "SYS01" ? "Thêm ghi chú" : "Cập nhật ghi chú";
+        let title = moreFunc.functionID == "SYS01" ? "Thêm ghi chú" : "Cập nhật ghi chú";
         let option = new DialogModel();
         option.FormModel = this.noteFM;
         this.callfc
@@ -1220,7 +1219,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                   let note = this.convertModelEvent(event,"WP_Notes");
                   let date = new Date(note.startDate);
                   let month = date.getMonth() + 1, year = date.getFullYear();
-                  if(funcID == "SYS03")
+                  if(moreFunc.functionID == "SYS03")
                   {
                     let idx = this.lstEvents.findIndex(x => x.transID == note.transID);
                     if(idx > -1)
@@ -1230,13 +1229,11 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
                   this.dEventMonth[month + "-" + year] = this.lstEvents;
                   this.ejCalendar && this.ejCalendar.refresh();
                   this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-                  this.detectorRef.detectChanges();
                 }
               });
             }
           });
       }
-      else this.notiService.notify("Lỗi ghi chú");
     });
   }
 
@@ -1274,13 +1271,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let date = new Date(event.startDate);
         let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
+        {
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month + "-" + year] = this.lstEvents;
-        this.ejCalendar && this.ejCalendar.refresh();
-        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.notiService.notify("Xóa thành công");
+          this.dEventMonth[month + "-" + year] = this.lstEvents;
+          this.ejCalendar && this.ejCalendar.refresh();
+          this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+          this.notiService.notifyCode("SYS008");
+        }
       }
-      else this.notiService.notify("Xóa không thành công");
+      else this.notiService.notifyCode("SYS022");
     });
   }
 
@@ -1293,13 +1292,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let date = new Date(event.startDate);
         let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
+        {
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month + "-" + year] = this.lstEvents;
-        this.ejCalendar && this.ejCalendar.refresh();
-        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.notiService.notify("Xóa thành công");
+          this.dEventMonth[month + "-" + year] = this.lstEvents;
+          this.ejCalendar && this.ejCalendar.refresh();
+          this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+          this.notiService.notifyCode("SYS008");
+        }
       }
-      else this.notiService.notify("Xóa không thành công");
+      else this.notiService.notifyCode("SYS022");
     });
   }
 
@@ -1312,13 +1313,15 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let date = new Date(event.startDate);
         let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
+        {
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month + "-" + year] = this.lstEvents;
-        this.ejCalendar && this.ejCalendar.refresh();
-        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.notiService.notify("Xóa thành công");
+          this.dEventMonth[month + "-" + year] = this.lstEvents;
+          this.ejCalendar && this.ejCalendar.refresh();
+          this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+          this.notiService.notifyCode("SYS008");
+        }
       }
-      else this.notiService.notify("Xóa không thành công");
+      else this.notiService.notifyCode("SYS022");
     });
   }
 
@@ -1331,15 +1334,18 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         let date = new Date(event.startDate);
         let month = date.getMonth() + 1, year = date.getFullYear();
         if(idx > -1)
+        {
           this.lstEvents.splice(idx,1);
-        this.dEventMonth[month + "-" + year] = this.lstEvents;
-        this.ejCalendar && this.ejCalendar.refresh();
-        this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
-        this.notiService.notify("Xóa thành công");
+          this.dEventMonth[month + "-" + year] = this.lstEvents;
+          this.ejCalendar && this.ejCalendar.refresh();
+          this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+          this.notiService.notifyCode("SYS008");
+        }
       }
-      else this.notiService.notify("Xóa không thành công");
+      else this.notiService.notifyCode("SYS022");
     });
   }
+
 }
 enum BUSSINESS_FUNCID {
   EP_BOOKINGROOMS = 'EPT11',

@@ -37,6 +37,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
+import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -134,8 +135,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   isShowMore = false;
   widthDefault = '550';
 
+  //Field PA
+  entityNamePA = '';
+  servicePA: string;
+
   constructor(
-    private changdef: ChangeDetectorRef,
     private cache: CacheService,
     private notiService: NotificationsService,
     private callfc: CallFuncService,
@@ -217,8 +221,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
         // this.changeFormVll();
       }
     }
+    if (e.field == 'refValue' && this.field.dataType == 'PA') {
+      this.servicePA = e?.component?.itemsSelected[0]?.Service;
+      this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
+    }
 
-    this.changdef.detectChanges();
+    // this.changdef.detectChanges(); thua
   }
 
   changeRequired(e) {
@@ -863,25 +871,46 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //---------------------End Column Table-----------------------------//
 
-  //----------------Data Referent-----------------------//
-  getDataFieldSelect(comboxName) {
-    this.cache.combobox(comboxName).subscribe((res) => {
-      if (res) {
-        let entityName = res?.entityName;
+  //----------------Data Referent__PA-------------------------//
+  clickSettingReference() {
+    if (!this.field.refValue || !this.entityNamePA) {
+      this.notiService.notify(
+        'Hãy chọn đối tượng liên kết trước khi thiết lập',
+        '3'
+      );
+      return;
+    }
 
-        this.cache.entity(entityName).subscribe((en) => {
-          if (en) {
-            this.cache
-              .gridViewSetup(en?.formName, en?.gridViewName)
-              .subscribe((grv) => {
-                if (grv) {
-                  //////////////////////////////
-                } else this.notiService.alertCode('SYS001');
-              });
+    //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
+    let formName = this.entityNamePA.replace('_', '');
+    let gridViewName = 'grv' + formName;
+
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+      if (grv) {
+        let option = new DialogModel();
+        console.log(grv);
+        option.zIndex = 1050;
+        let obj = {
+          datas: grv,
+          entityName: this.entityNamePA,
+          action: this.action,
+          titleAction: 'Thêm trường liên kết', //test
+        };
+        let dialogColumn = this.callfc.openForm(
+          PopupSettingReferenceComponent,
+          '',
+          550,
+          Util.getViewPort().height - 100,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialogColumn.closed.subscribe((res) => {
+          if (res && res.event) {
           }
         });
-      }
+      } else this.notiService.alertCode('SYS001');
     });
   }
-  //
 }

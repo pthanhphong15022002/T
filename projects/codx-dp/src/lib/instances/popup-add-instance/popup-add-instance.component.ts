@@ -158,6 +158,15 @@ export class PopupAddInstanceComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+      this.instance.endDate = this.HandleEndDate(
+        this.listStep,
+        this.action,
+        this.action !== 'edit' ||
+          (this.action === 'edit' &&
+            (this.instance.status == '1' || this.instance.status == '15' ))
+          ? null
+          : this.instance.createdOn
+      );
   }
 
   ngOnInit(): void {
@@ -484,4 +493,60 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return false;
   }
+  HandleEndDate(listSteps: any, action: string, endDateValue: any) {
+    endDateValue =
+      action === 'add' ||
+      action ===  'copy'||
+      (this.action === 'edit' &&
+        (this.instance.status == '1' || this.instance.status == '15'))
+        ? new Date()
+        : new Date(endDateValue);
+    let dateNow = endDateValue;
+    let endDate = endDateValue;
+    for (let i = 0; i < listSteps.length; i++) {
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
+
+    }
+    return endDate;
+  }
+  setTimeHoliday(startDay: Date, endDay: Date, dayOff: string) {
+    if (!dayOff || (dayOff && (dayOff.includes('7') || dayOff.includes('8')))) {
+      const isSaturday = dayOff.includes('7');
+      const isSunday = dayOff.includes('8');
+      let day = 0;
+
+      for (
+        let currentDate = new Date(startDay);
+        currentDate <= endDay;
+        currentDate.setDate(currentDate.getDate() + 1)
+      ) {
+        day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
+        day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
+      }
+      let isEndSaturday = endDay.getDay() === 6 ;
+      endDay.setDate(endDay.getDate() + day);
+
+      if (endDay.getDay() === 6 && isSaturday) {
+        endDay.setDate(endDay.getDate() + 1);
+      }
+
+      if (endDay.getDay() === 0 && isSunday) {
+        if(!isEndSaturday) {
+          endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        }
+        endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
+      }
+    }
+    return endDay;
+  }
+
 }
