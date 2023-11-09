@@ -44,8 +44,8 @@
                     </div>
                 </div>
                 <div *ngIf="functionID !== 'FDT091'">
-                    <h3 style="color: #365AC6;">{{(data?.amount / exchangeRate) * 1000}} VND</h3>
-                    <P style="color: #FBAF35;">{{data?.gift?.price}} Xu</P>
+                    <h3 style="color: #365AC6;">{{((data?.gift?.amount / exchangeRate) * 1000) | number}} VND</h3>
+                    <P style="color: #FBAF35;">{{data?.gift?.price | number}} Xu</P>
                 </div>
             </div>
             <div class="mt-6">

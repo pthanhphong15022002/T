@@ -1059,9 +1059,13 @@ export class InstancesComponent
       case 'DP23':
         this.cancelApprover(data);
         break;
+      //lay datas ra
+      // case 'SYS002':
+      //   this.exportTemplet(e, data);
+      //   break;
       default: {
         //Biến động tự custom
-        // let dataSource = this.getDataSource(data);
+        //let dataSource = this.getDataSource(data);
         let dataSource = data.datas;
         var customData = {
           refID: data.processID,
@@ -1089,6 +1093,37 @@ export class InstancesComponent
     let formatDat = '[{ ' + fix + ',' + datasArr;
     return formatDat;
   }
+  //get datas = datas + model ko có datas
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'DP',
+        'DP',
+        'InstancesBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str) {
+          var customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: str,
+          };
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
   afterSave(e?: any, that: any = null) {
     //đợi xem chung sửa sao rồi làm tiếp
   }

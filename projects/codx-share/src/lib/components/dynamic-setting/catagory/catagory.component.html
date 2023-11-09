@@ -164,7 +164,7 @@
                   [crrValue]="
                     data.controlType == 'Switch' ||
                     data.controlType == 'Checkbox' ||
-                    data.controlType != 'Radio'
+                    data.controlType == 'Radio'
                       ? ''
                       : autoDefault && autoDefault[data.fieldName]
                       ? !autoDefault[data.fieldName].stop
