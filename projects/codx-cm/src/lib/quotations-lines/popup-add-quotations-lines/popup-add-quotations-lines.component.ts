@@ -120,7 +120,7 @@ export class PopupAddQuotationsLinesComponent implements OnInit {
   loadItem(itemID) {
     this.codxCM.getItem(itemID).subscribe((items) => {
       if (items) {
-        this.quotationsLine['onhand'] = items.quantity;
+        this.quotationsLine['onhand'] = items?.quantity ?? 0;
         this.quotationsLine['idiM4'] = items.warehouseID; // kho
 
         this.quotationsLine['umid'] = items.umid; // don vi tinh

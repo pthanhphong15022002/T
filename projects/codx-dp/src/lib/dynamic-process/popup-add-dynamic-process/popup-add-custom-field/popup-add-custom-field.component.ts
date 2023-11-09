@@ -884,15 +884,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
     let formName = this.entityNamePA.replace('_', '');
     let gridViewName = 'grv' + formName;
-    // this.api
-    //   .execSv<any>(
-    //     this.servicePA,
-    //     'ERM.Business.Core',
-    //     'DataBusiness',
-    //     'GetModelByEntityNameAsync',
-    //     this.entityNamePA
-    //   )
-    //   .subscribe();
 
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
