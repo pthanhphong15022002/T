@@ -461,7 +461,7 @@
         <label class="me-2">
           <codx-label fiedName="" [formModel]="formModelCustom" default="Quy trình mẫu"></codx-label>
         </label>
-        <codx-input type="combobox" field="processID" refValue="ProcessTemplate" [crrValue]="processID"
+        <codx-input type="combobox" field="processID" refValue="ProcessTemplate" [crrValue]="processID" [model]="data" 
           (valueChange)="processIDChange($event)">
         </codx-input>
       </div>
