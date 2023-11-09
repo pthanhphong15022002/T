@@ -425,7 +425,7 @@
         <i class="icon-settings icon-16"></i>
       </button>
     </div>
-    <codx-view-approve class="ms-4"*ngIf="listApproverView" [listApprover]="listApproverView"></codx-view-approve>
+    <codx-view-approve class="ms-4" *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView"></codx-view-approve>
   </div>
 
   <ng-container>

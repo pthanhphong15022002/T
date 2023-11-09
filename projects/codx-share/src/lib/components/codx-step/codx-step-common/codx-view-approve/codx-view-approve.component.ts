@@ -29,12 +29,16 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    if(!this.listApprover && this.categoryID){
-      this.loadListApproverStep();
-    }
+    
   }
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes?.listApprover || changes?.categoryID){
+      if(!this.listApprover && this.categoryID){
+        this.loadListApproverStep();
+      }
+    }
+  }
  
   loadListApproverStep() {
     this.getListAproverStepByCategoryID(this.categoryID)

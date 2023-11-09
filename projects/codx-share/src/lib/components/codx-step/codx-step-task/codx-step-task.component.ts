@@ -1102,8 +1102,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (type) => type.value == taskEdit?.taskType
       );
       let dataOutput = await this.openPopupTask('edit', 'step',taskEdit);
-      if (dataOutput?.event.task) {
-        let taskOutput = dataOutput?.event?.task;
+      if (dataOutput?.task) {
+        let taskOutput = dataOutput?.task;
         let group = this.listGroupTask.find((group) =>
           this.comparison(group.refID, taskOutput?.taskGroupID)
         );
