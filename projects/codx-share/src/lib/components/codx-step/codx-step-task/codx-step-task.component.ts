@@ -765,6 +765,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP31':
         this.startTask(task, groupTask);
         break;
+      case 'DP32':
+        this.approvalTrans(task);
+        break;
+      case 'DP33':
+        this.cancelApprover(task);
+        break;
     }
   }
 
@@ -2508,6 +2514,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
   }
+
   //#endregion
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     if(task?.approveRule && task?.recID){
@@ -2533,20 +2540,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   release(data: any, category: any) {
-    // new function release
-    // this.codxShareService.codxReleaseDynamic(
-    //   'DP',
-    //   data,
-    //   category,
-    //   this.view.formModel.entityName,
-    //   this.view.formModel.funcID,
-    //   data?.title,
-    //   this.releaseCallback.bind(this)
-    // );
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      'DP_Instances_Steps_Tasks',
+      'CM0201',
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
   }
   releaseCallback(res: any, t: any = null) {
-    // if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
-    // else {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    else {
     //   this.codxCmService
     //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
     //     .subscribe((q) => {
@@ -2557,6 +2563,46 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //       }
     //       this.notificationsService.notifyCode('ES007');
     //     });
-    // }
+    }
+  }
+  cancelApprover(task) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api.execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          task?.recID
+        ).subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        task?.recID,
+                        'DP_Instances_Steps_Tasks',
+                        null,
+                        null
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          // this.dataSelected.approveStatus = '0';
+                          // this.view.dataService
+                          //   .update(this.dataSelected)
+                          //   .subscribe();
+                          // if (this.kanban)
+                          //   this.kanban.updateCard(this.dataSelected);
+                          // this.notificationsService.notifyCode('SYS007');
+                        } else this.notiService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+      }
+    });
   }
 }

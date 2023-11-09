@@ -170,6 +170,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
   clickExport(){
     if(!this.loading)
     {
+      debugger
       this.loading = true;
       this.api.execSv(this.dataSelected.service,"Codx.RptBusiness","ReportBusiness","ExportTemplateAsync",[this.dataSelected,this.jsParameters,this.formModel?.entityName,this.formModel?.formName,this.formModel?.gridViewName])
       .subscribe((res:any) => {
@@ -191,7 +192,7 @@ export class CodxListReportsComponent extends UIComponent implements OnInit{
     }
   }
 
-  submit(){
+  print(){
     if(this.dataSelected){
       this.dialog && this.dialog.close(this.dataSelected);
     }
