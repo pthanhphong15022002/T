@@ -2552,7 +2552,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    // else {
+    else {
     //   this.codxCmService
     //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
     //     .subscribe((q) => {
@@ -2563,7 +2563,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //       }
     //       this.notificationsService.notifyCode('ES007');
     //     });
-    // }
+    }
   }
   cancelApprover(task) {
     this.notiService.alertCode('ES016').subscribe((x) => {
