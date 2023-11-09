@@ -33,7 +33,7 @@ import {
   CM_Deals,
   CM_Leads,
 } from '../../models/cm_model';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { CM_Contacts } from '../../models/tmpCrm.model';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';

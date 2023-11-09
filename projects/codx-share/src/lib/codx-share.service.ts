@@ -2153,24 +2153,23 @@ export class CodxShareService {
   ) {
     this.getRPByIDAndType(reportID, reportType).subscribe((rpList: any) => {
       if (rpList != null) {
-        let tenantName = this.tenant.getName();
-        let rpOpenReportUI = function (recID, module) {
-          let params = {
-            ReportID: reportID,
-          };
-          if(paras){
-            for(const p in paras){
-              params[p] = paras[p];
-            }
+        let tenantName = this.tenant.getName();        
+        let params = {
+          ReportID: reportID,
+        };
+        if(paras){
+          for(const p in paras){
+            params[p] = paras[p];
           }
-
-          //let paramURL = this.shareService.genURLParamObject(params);
-          let paramURL = encodeURIComponent(JSON.stringify(params));
+        } 
+        //let paramURL = this.shareService.genURLParamObject(params);
+        let paramURL = encodeURIComponent(JSON.stringify(params));
+        let rpOpenReportUI = function (recID, module) {
           let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
           window.open(url);
         };
         if (rpList?.length > 1) {
-          this.rpViewReportList(rpList, formModel, rpOpenReportUI);
+          this.rpViewReportList(rpList, formModel,params, rpOpenReportUI);
         } else if (rpList?.length == 1) {
           rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
         }
@@ -2181,6 +2180,7 @@ export class CodxShareService {
   rpViewReportList(
     reportList: any,
     formModel: any,
+    params: any,
     rpOpenReportUI: (recID: string, moduleID: string) => void
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
@@ -2190,6 +2190,7 @@ export class CodxShareService {
       url: moduleID + '/report/detail/',
       formModel: formModel,
       headerText:"Chọn mẫu in",
+      parameters: params
     };
     let opt = new DialogModel();
     let dialogViewRP = this.callfunc.openForm(
