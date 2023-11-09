@@ -448,7 +448,7 @@ export class CodxFdService {
       'BS',
       'ERM.Business.BS',
       'RangeLinesBusiness',
-      'LoadDataRangeLinesAsync',
+      'GetDataByPredicateAsync',
       [
         {
           "pageLoading": true,
@@ -466,7 +466,9 @@ export class CodxFdService {
           "predicates": "",
           "dataValues": "",
           "entryMode": "",
-          "selector": ""
+          "selector": "",
+          "sortColumns": "BreakValue",
+          "sortDirections": "asc"
         }
       ]
     );
