@@ -1060,9 +1060,9 @@ export class InstancesComponent
         this.cancelApprover(data);
         break;
       //lay datas ra
-      case 'SYS002':
-        this.exportTemplet(e, data);
-        break;
+      // case 'SYS002':
+      //   this.exportTemplet(e, data);
+      //   break;
       default: {
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
