@@ -387,7 +387,7 @@ export class GeneralJournalComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -405,7 +405,7 @@ export class GeneralJournalComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -422,7 +422,7 @@ export class GeneralJournalComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
