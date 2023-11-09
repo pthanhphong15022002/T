@@ -10,7 +10,7 @@ import {
 import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
 
 @Component({
-  selector: 'popup-settings',
+  selector: 'co-popup-settings',
   templateUrl: './popup-settings.component.html',
   styleUrls: ['./popup-settings.component.scss'],
 })
@@ -57,7 +57,6 @@ export class PopupSettingsComponent implements OnInit, AfterViewInit
       {
         res.forEach((x:any) => 
         {
-          
           let obj = {
             recID : x.recID,
             dataValue: JSON.parse(x.dataValue),
@@ -118,12 +117,12 @@ export class PopupSettingsComponent implements OnInit, AfterViewInit
       .subscribe((res:boolean) => {
         if(res)
         {
-          this.notiService.notify("Cập nhật thành công");
+          this.notiService.notifyCode("SYS007");
           this.dialog.close(settings.map((x:any) =>  x.dataValue));
         }
         else
         {
-          this.notiService.notify("Cập nhật không thành công");
+          this.notiService.notifyCode("SYS021");
           this.dialog.close();
         }
         this.isLoading = false;

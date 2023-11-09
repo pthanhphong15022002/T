@@ -634,7 +634,7 @@ export class InstancesComponent
       listSteps: JSON.parse(JSON.stringify(listSteps)),
       titleAction: this.titleAction,
       formMD: formMD,
-      endDate: this.HandleEndDate(this.listStepsCbx, action, null),
+      //endDate: this.HandleEndDate(this.listStepsCbx, action, null),
       lstParticipants: this.lstOrg,
       oldIdInstance: this.oldIdInstance,
       autoName: this.autoName,
@@ -678,11 +678,11 @@ export class InstancesComponent
       applyFor: applyFor,
       titleAction: titleAction,
       formMD: formMD,
-      endDate: this.HandleEndDate(
-        this.listStepsCbx,
-        'edit',
-        this.view.dataService?.dataSelected?.createdOn
-      ),
+      // endDate: this.HandleEndDate(
+      //   this.listStepsCbx,
+      //   'edit',
+      //   this.view.dataService?.dataSelected?.createdOn
+      // ),
       autoName: this.autoName,
       lstParticipants: this.lstOrg,
       addFieldsControl: this.addFieldsControl,
@@ -1060,17 +1060,17 @@ export class InstancesComponent
         this.cancelApprover(data);
         break;
       //lay datas ra
-      // case 'SYS002':
-      //   this.exportTemplet(e, data);
-      //   break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       default: {
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
-        let dataSource = data.datas;
+        //let dataSource = data.datas;
         var customData = {
           refID: data.processID,
           refType: 'DP_Processes',
-          dataSource: dataSource,
+          // dataSource: dataSource,
         };
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1104,11 +1104,17 @@ export class InstancesComponent
         data.recID
       )
       .subscribe((str) => {
-        if (str) {
+        if (str && str?.length > 0) {
+          let datas = str[1];
+          if (datas && datas.includes('[{')) datas = datas.substring(2);
+          let fix = str[0];
+          fix = fix.substring(1, fix.length - 1);
+          let dataSource = '[{ ' + fix + ',' + datas;
+          // let dataSource = '[' + str + ']';
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
-            dataSource: str,
+            dataSource: dataSource,
           };
           this.codxShareService.defaultMoreFunc(
             e,
@@ -1991,6 +1997,7 @@ export class InstancesComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
+      let isEndSaturday = endDay.getDay() === 6 ;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -1998,7 +2005,10 @@ export class InstancesComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        if(!isEndSaturday) {
+          endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        }
+        endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
       }
     }
     return endDay;

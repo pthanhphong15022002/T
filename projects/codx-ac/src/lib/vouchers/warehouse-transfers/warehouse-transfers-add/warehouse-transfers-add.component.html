@@ -86,7 +86,7 @@
             <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
           </ng-template>
         </e-tabitem>
-        <e-tabitem>
+        <!-- <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-format_list_numbered icon-18 me-2"></i>
@@ -97,7 +97,7 @@
             <ng-template #content>
               <ng-container *ngTemplateOutlet="TmpTabLine2"></ng-container>
             </ng-template>
-          </e-tabitem>
+          </e-tabitem> -->
       </e-tabitems>
     </ejs-tab>
   </div>
@@ -178,7 +178,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <codx-label style="white-space: nowrap !important" fiedName="toWHID"
+                                    <codx-label style="white-space: nowrap !important" fiedName="ToWHID"
                                         [formModel]="dialog.formModel">
                                     </codx-label>
                                     <div class="ac-input">
@@ -213,7 +213,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div [ngStyle]="formWareHouse?.data?.subType == '1' ? '' : {display:'none'}" class="form-group">
                             <codx-label style="white-space: nowrap !important" fiedName="Memo"
                                 [formModel]="dialog.formModel">
                             </codx-label>
@@ -223,6 +223,32 @@
                                 </codx-input>
                             </div>
                         </div>
+                        <div [ngStyle]="formWareHouse?.data?.subType == '2' ? '' : {display:'none'}" class="row">
+                          <div class="col-6">
+                              <div class="form-group">
+                                  <codx-label style="white-space: nowrap !important" fiedName="Memo"
+                                      [formModel]="dialog.formModel">
+                                  </codx-label>
+                                  <div class="ac-input">
+                                      <codx-input [Group]="formWareHouse.formGroup" field="memo"
+                                          [formModel]="dialog.formModel">
+                                      </codx-input>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-6">
+                              <div class="form-group">
+                                  <codx-label style="white-space: nowrap !important" fiedName="Requester"
+                                      [formModel]="dialog.formModel">
+                                  </codx-label>
+                                  <div class="ac-input">
+                                      <codx-input #eleCbxReasonID [Group]="formWareHouse.formGroup" field="requester"
+                                          [formModel]="dialog.formModel">
+                                      </codx-input>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
                     </div>
                 </div>
                 <div class="col-5 ac-right d-flex justify-content-end">
@@ -268,12 +294,12 @@
 <!-- Start: Grid Tranfer -->
 <ng-template #TmpTabLine>
     <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
-        <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
-          [formName]="fmTransfersLines.formName" [gridViewName]="fmTransfersLines.gridViewName" [templateMore]="templateMore"
-          [entityName]="fmTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
+        <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+          [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName" [templateMore]="templateMore"
+          [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
           service="IV" [editOnClick]="true" rowNoField="rowNo" (eventAction)="onActionGrid($event)"
           (actionCompleted)="onActionGrid($event)"
-          (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+          (cellChanged)="valueChangeLine($event,'issue')"></codx-gridview-v2>
         <div class="btn-addline">
           <div class="d-flex align-items-center">
             <div>
@@ -288,14 +314,15 @@
         </div>
       </div>
 </ng-template>
+
 <ng-template #TmpTabLine2>
     <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
-        <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
-          [formName]="fmTransfersLines.formName" [gridViewName]="fmTransfersLines.gridViewName" [templateMore]="templateMore"
-          [entityName]="fmTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
+        <codx-gridview-v2 #eleGridWareHouse [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+          [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName" [templateMore]="templateMore"
+          [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0" [dataValues]="formWareHouse?.data?.recID"
           service="IV" [editOnClick]="true" rowNoField="rowNo" (eventAction)="onActionGrid($event)"
           (actionCompleted)="onActionGrid($event)"
-          (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
+          (cellChanged)="valueChangeLine($event,'receipt')"></codx-gridview-v2>
         <div class="btn-addline">
           <div class="d-flex align-items-center">
             <div>
