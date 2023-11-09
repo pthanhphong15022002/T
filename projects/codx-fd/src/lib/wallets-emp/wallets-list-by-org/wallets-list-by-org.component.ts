@@ -93,7 +93,6 @@ export class WalletsListByOrgComponent {
   ngOnInit(): void {
     this.getPolicy();
     this.fdService.LoadDataRangeLine().subscribe((res: any) => {
-      console.log(res)
       if(res && res.length > 0) {
         this.dataRangeLine = res;
       }

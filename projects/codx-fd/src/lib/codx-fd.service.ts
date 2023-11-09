@@ -466,7 +466,9 @@ export class CodxFdService {
           "predicates": "",
           "dataValues": "",
           "entryMode": "",
-          "selector": ""
+          "selector": "",
+          "sortColumns": "BreakValue",
+          "sortDirections": "asc"
         }
       ]
     );
