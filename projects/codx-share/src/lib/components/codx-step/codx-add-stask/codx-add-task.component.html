@@ -82,7 +82,7 @@
           [value]="stepsTasks?.taskGroupID"
           (change)="changeValueGroup($event, 'taskGroupID')"
           [allowCustom]="false"
-          [enabled]="!statusInput.group.disabled"
+          [enabled]="!statusInput.group.disabled || stepsTasks?.isTaskDefault"
         ></ejs-combobox>
       </div>
     </div>
@@ -167,7 +167,7 @@
       >
       </codx-label>
       <codx-input
-        [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
+        [disabled]="isEditTimeDefault || stepsTasks?.isTaskDefault"
         field="endDate"
         (valueChange)="changeValueDateExpected($event)"
         [crrValue]="stepsTasks?.endDate"
@@ -395,32 +395,42 @@
       </span>
     </div>
   </div>
-  <div class="d-flex align-items-center form-group" *ngIf="stepsTasks?.status != '3'">
-    <codx-label
-      fiedName="ApproveRule"
-      [formName]="'DPProcesses'"
-      [gridViewName]="'grvDPProcesses'"
-    >
-    </codx-label>
-    <div class="me-3 pt-2 ms-1">
-      <codx-input
-        type="switch"
-        class="test-check"
-        [checked]="stepsTasks?.approveRule"
-        field="approveRule"
-        (valueChange)="valueChangeAlert($event)"
+  <div
+    class="form-group"
+    *ngIf="stepsTasks?.status != '3'"
+  >
+    <div class="d-flex align-items-center">
+      <codx-label
+        fiedName="ApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
       >
-      </codx-input>
+      </codx-label>
+      <div class="me-3 pt-1 ms-2">
+        <codx-input
+          type="switch"
+          class="test-check"
+          [checked]="stepsTasks?.approveRule"
+          field="approveRule"
+          (valueChange)="valueChangeAlert($event)"
+        >
+        </codx-input>
+      </div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary ms-"
+        [disabled]="!stepsTasks?.approveRule"
+        (click)="clickSettingApprove()"
+      >
+        <i class="icon-settings icon-16"></i>
+      </button>
     </div>
-    <button
-      type="button"
-      class="btn btn-icon btn-sm btn-light-primary me-2"
-      [disabled]="!stepsTasks?.approveRule"
-      (click)="clickSettingApprove()"
-    >
-      <i class="icon-settings icon-16"></i>
-    </button>
+    <ng-container
+      *ngIf="listApproverView"
+      [ngTemplateOutlet]="tempApproveRule"
+    ></ng-container>
   </div>
+
   <ng-container>
     <div class="d-flex align-items-center nav-item w-100 mb-1">
       <div class="d-flex align-items-center mb-2">
@@ -482,7 +492,8 @@
         *ngIf="
           typeTask?.value != 'M' &&
           (this.action == 'add' || this.action == 'copy') &&
-          isBoughtTM
+          isBoughtTM &&
+          stepsTasks?.status != '3'
         "
         type="button"
         class="btn btn-primary ms-1"
@@ -618,6 +629,111 @@
   </ng-container>
 </ng-template>
 
+<ng-template #tempApproveRule>
+  <div class="d-flex align-items-center">
+    <div class="me-2 mt-1">
+      <codx-label
+        class="fw-normal text-gray-400 label-colon"
+        name="lblDescriptionApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        default="Các bước duyệt"
+      >
+      </codx-label>
+    </div>
+    <div
+      class="progress-approval"
+      *ngIf="listApproverView?.length > 0"
+    >
+      <ng-container *ngFor="let item of listApproverView; let i = index">
+        <div class="process-step" placement="top">
+          <div
+            class="step-node cursor-pointer d-flex flex-center"
+            [style.color]="''"
+            [ngStyle]="{ border: '2px solid ' + '' }"
+            #popoverDetails="ngbPopover"
+            [ngbPopover]="popupViewApproverStep"
+            (mouseenter)="popoverApproverStep(popoverDetails, item)"
+            (mouseleave)="popoverApproverStep(popoverDetails, null)"
+            popoverClass="approverStepClass"
+            container="body"
+            placement="top bottom"
+          >
+            {{ i + 1 }}
+          </div>
+          <!-- <div class="text-gray-700 mt-3">
+            {{ item.stepType | vll : "ES002" : "text" | async }}
+          </div> -->
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div
+    class="center w-400 mt-5 mb-3"
+    *ngIf="listApproverView && listApproverView.length == 0"
+  >
+    <codx-label
+      name="lblNotSetup"
+      default="Chưa thiết lập"
+      [formName]="'DPProcesses'"
+      [gridViewName]="'grvDPProcesses'"
+    >
+    </codx-label>
+  </div>
+</ng-template>
+<ng-template #popupViewApproverStep>
+  <div class>
+    <div class="text-gray-600 fw-bold">
+      {{ viewApprover.stepName }}
+    </div>
+    <div class="d-flex flex-wrap">
+      <ng-container *ngFor="let approver of viewApprover.approvers">
+        <div
+          class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+        >
+          <codx-temp-full
+            cardCss="card-template p-3"
+            *ngIf="approver.roleType?.length == 1 || approver.roleType == 'PA'"
+            [imageId]="approver.approver"
+            [title]="approver.name"
+            [subTitle]="approver.position"
+            [imageObjType]="'AD_Users'"
+            [modeImgs]="true"
+            [titleLine]="3"
+          >
+          </codx-temp-full>
+
+          <codx-temp-full
+            cardCss="card-template p-3"
+            *ngIf="approver.roleType.length > 1 && approver.roleType != 'PA'"
+            [imageSrc]="
+              './assets/themes/sys/default/img/' +
+              (viewApprover.icon ? viewApprover.icon : 'share_default.svg')
+            "
+            imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
+            [title]="approver.approver | vll : 'ES014' : 'text' | async"
+            [subTitle]="approver.approver | vll : 'ES014' : 'text' | async"
+            [modeImgs]="true"
+            [titleLine]="3"
+          >
+          </codx-temp-full>
+
+          <!-- <ng-template #footer1 let-data>
+          <div
+            class="d-flex align-items-center justify-content-end"
+          >
+            <span
+              class="icon-access_time icon-14 me-1"
+            ></span
+            >{{ data.leadtime }} giờ
+          </div>
+        </ng-template> -->
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
 <!-- <codx-input
   [name]="'status'"
   type="radio"

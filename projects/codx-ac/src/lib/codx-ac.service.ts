@@ -483,6 +483,7 @@ export class CodxAcService {
       'SYS02',
       'SYS03',
       'SYS04',
+      'SYS002'
     ];
     let arrBookmark = [];
     event.forEach((element) => {
@@ -502,7 +503,8 @@ export class CodxAcService {
         if (
           element.functionID != 'SYS02' &&
           element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
+          element.functionID != 'SYS04' &&
+          element.functionID != 'SYS002'
         ) {
           let item = event.find(
             (x) =>
