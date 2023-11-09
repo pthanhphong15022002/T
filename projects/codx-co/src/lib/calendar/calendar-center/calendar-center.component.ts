@@ -75,7 +75,7 @@ export class CalendarCenterComponent
           template4: this.resourceTemplate,//template resource
           template6: this.moreFuncTemplate, // template more funtion
           template8: this.popupEventTemplate, //template popup event
-          currentView:'TimelineMonth',
+          currentView: this.currentView ?? 'TimelineMonth',
           hideFooter:true
         },
       },
@@ -121,9 +121,8 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.resourceDataSource = resources;
-      this.codxSchedule.onGroupingChange(resources);
+      this.codxSchedule.onGroupingChange(true);
       this.codxSchedule.onGridlinesChange(true);
-      this.codxSchedule.onTimelineViewChange(true);
       this.codxSchedule.setEventSettings();
     }
   }
@@ -133,20 +132,15 @@ export class CalendarCenterComponent
     if(this.codxSchedule)
     {
       this.codxSchedule.isCalendarView = isCalendarView;
-      this.codxSchedule.onTimelineViewChange(isCalendarView);
-      this.codxSchedule.setEventSettings();
-    }
-  }
-  // remove resource
-  removeResource(){
-    if(this.codxSchedule)
-    {
       this.codxSchedule.resourceDataSource = [];
-      this.codxSchedule.onTimelineViewChange(false);
+      this.codxSchedule.onGroupingChange(!isCalendarView);
+      this.codxSchedule.onGridlinesChange(!isCalendarView);
+      this.codxSchedule.onTimelineViewChange(!isCalendarView);
       this.codxSchedule.setEventSettings();
     }
   }
-
+  
+  // change status color
   changeStatusColor(statusColor:any[]){
     if(this.codxSchedule)
     {
@@ -175,11 +169,19 @@ export class CalendarCenterComponent
   onAction(event: any) {
     if(event)
     {
-      let date = event.data.currentDate as Date;
-      if(this.selectedDate.getMonth() != date.getMonth())
-        this.evtChangeMonth.emit({date:date});
-      else
-        this.evtChangeDate.emit({value:date});
+      if(event.type == "navigate")
+      {
+        let date = event.data.currentDate as Date;
+        if(this.selectedDate.getMonth() != date.getMonth())
+          this.evtChangeMonth.emit({date:date});
+        else
+          this.evtChangeDate.emit({value:date});
+      }
+      else if(event.type == "add")
+      {
+        debugger
+      }
+
     }
   }
 
