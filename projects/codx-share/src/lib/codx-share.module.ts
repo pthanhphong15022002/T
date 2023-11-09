@@ -340,6 +340,7 @@ const T_Component: Type<any>[] = [
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
   CodxIconStepComponent,
+  CodxViewApproveComponent,
   //CO
   AddNoteComponent,
   PopupTitleComponent,
@@ -382,7 +383,6 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     PopupAddLineTableComponent,
     CodxDateComponent,
     T_Pipe,
-    CodxViewApproveComponent,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [
