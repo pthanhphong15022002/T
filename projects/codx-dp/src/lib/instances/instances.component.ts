@@ -1061,10 +1061,12 @@ export class InstancesComponent
         break;
       default: {
         //Biến động tự custom
+        // let dataSource = this.getDataSource(data);
+        let dataSource = data.datas;
         var customData = {
           refID: data.processID,
           refType: 'DP_Processes',
-          dataSource: data.datas,
+          dataSource: dataSource,
         };
         this.codxShareService.defaultMoreFunc(
           e,
@@ -1079,6 +1081,13 @@ export class InstancesComponent
         break;
       }
     }
+  }
+  getDataSource({ datas, permissions, ...dataSource }) {
+    let datasArr = datas.substring(2);
+    let fix = JSON.stringify(dataSource);
+    fix = fix.substring(1, fix.length - 1);
+    let formatDat = '[{ ' + fix + ',' + datasArr;
+    return formatDat;
   }
   afterSave(e?: any, that: any = null) {
     //đợi xem chung sửa sao rồi làm tiếp

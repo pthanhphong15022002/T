@@ -5,6 +5,7 @@ import {
   ViewChild,
   Component,
   ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   Util,
@@ -89,6 +90,7 @@ export class CodxAddTaskComponent implements OnInit {
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   isEditTimeDefault = false;
+  viewApprover: any;
 
   folderID = '';
   titleName = '';
@@ -101,6 +103,7 @@ export class CodxAddTaskComponent implements OnInit {
   startDayOld;
   groupTaskID = null;
   showLabelAttachment = false;
+  listApproverView;
 
   view = [];
   listField = [];
@@ -153,6 +156,7 @@ export class CodxAddTaskComponent implements OnInit {
     private stepService: StepService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -259,12 +263,17 @@ export class CodxAddTaskComponent implements OnInit {
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.stepsTasks.recID = Util.uid();
+      this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
+      this.stepsTasks.progress = 0;
       this.stepsTasks.fieldID = null;
+      this.stepsTasks.dependRule = "0";
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.requireCompleted = false;
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
+      this.loadListApproverStep();
     }
     this.roles = this.stepsTasks?.roles || [];
     this.owner = this.roles?.filter((role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U');
@@ -1175,6 +1184,7 @@ export class CodxAddTaskComponent implements OnInit {
   }
   private destroyFrom$: Subject<void> = new Subject<void>();
   titleAction: any;
+
   actionOpenFormApprove2(item, isAdd = false) {
     this.cache.functionList('ESS22').subscribe((f) => {
       if (f) {
@@ -1195,6 +1205,7 @@ export class CodxAddTaskComponent implements OnInit {
               option.FormModel = formES;
               let opt = new DialogModel();
               opt.FormModel = formES;
+              option.zIndex= 1100;
               let popupEditES = this.callfc.openForm(
                 PopupAddCategoryComponent,
                 '',
@@ -1216,7 +1227,7 @@ export class CodxAddTaskComponent implements OnInit {
 
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
-                  // this.loadListApproverStep();
+                  this.loadListApproverStep();
                   // this.loadEx();
                   // this.loadWord();
                   // this.recIDCategory = res?.event?.recID;
@@ -1226,5 +1237,32 @@ export class CodxAddTaskComponent implements OnInit {
         });
       }
     });
+  }
+  loadListApproverStep() {
+    this.getListAproverStepByCategoryID(this.stepsTasks?.recID)
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res) {
+          this.listApproverView = res;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
+  popoverApproverStep(p, data) {
+    if (!data) {
+      p.close();
+      return;
+    }
+    if (p.isOpen()) p.close();
+    this.viewApprover = data;
+    p.open();
   }
 }

@@ -513,7 +513,7 @@
     </div>
     <div class="d-flex justify-content-between form-group">
       <codx-label fiedName="AutoPost" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="autoPost" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      <codx-input field="autoPost" [formModel]="dialog.formModel" [crrValue]="formJournal?.form?.data?.autoPost == 1 ? true : false" (valueChange)="valueChange($event)"></codx-input>
     </div>
     <div class="row">
       <div class="col-8">

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Injector, Optional, ViewChild } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, SubModel, UIComponent, Util } from 'codx-core';
 import { CodxAcService, fmGeneralJournalsLines, fmGeneralJournalsLinesOne, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
@@ -223,9 +223,14 @@ export class GeneralJournalAddComponent extends UIComponent {
       this.formGeneral.data.updateColumns = '';
       switch (field.toLowerCase()) {
         case 'reasonid':
+          let memos = this.getMemoMaster();
+          this.formGeneral.setValue('memo',memos,{});
+          break;
         case 'objectid':
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formGeneral.setValue('objectType',objectType,{});
           let memo = this.getMemoMaster();
-          this.formGeneral.setValue('memo',memo,{onlySelf: true,emitEvent: false,});
+          this.formGeneral.setValue('memo',memo,{});
           break;
       }
     }
@@ -236,7 +241,104 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @param event
    */
   valueChangeLine(event: any) {
-
+    let oLine = event.data;
+    let oAccount = this.acService.getCacheValue('account',oLine.accountID);
+    let oOffsetAccount = this.acService.getCacheValue('account',oLine.offsetAcctID);
+    switch (event.field.toLowerCase()) {
+      case 'accountid':
+        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
+        break;
+      case 'offsetacctid':
+        if (oOffsetAccount) {
+          oLine.isBrigdeAcct = false;
+        } else {
+          oLine.isBrigdeAcct =
+            (oOffsetAccount as any)?.accountType == '5' ? true : false;
+        }
+        this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
+        break;
+      case 'dr':
+        this.eleGridGeneral.startProcess();
+        if (oLine.dr != 0 && oLine.cR2 != 0) {
+          oLine.cr = 0;
+          oLine.cR2 = 0;
+        }
+        setTimeout(() => {
+          oLine = this.calcAmt2(this.formGeneral.data, oLine, true);
+          if (this.journal.entryMode == '2') {
+            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
+          }
+          this.detectorRef.detectChanges();   
+          this.eleGridGeneral.endProcess();
+        }, 200);
+        break;
+      case 'cr':
+        this.eleGridGeneral.startProcess();
+        if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
+          oLine.dr = 0;
+          oLine.dR2 = 0;
+        }
+        setTimeout(() => {
+          oLine = this.calcAmt2(this.formGeneral.data, oLine, false);
+          if (this.journal.entryMode == '2') {
+            this.setLockAndRequireFields(oLine, oAccount, oOffsetAccount);
+          }
+          this.detectorRef.detectChanges();
+          this.eleGridGeneral.endProcess();
+        }, 200);
+        break;
+      case 'dr2':
+        this.eleGridGeneral.startProcess();
+        if (oLine.dR2 != 0 && oLine.cR2 != 0) {
+          oLine.cr = 0;
+          oLine.cR2 = 0;
+        }
+        if (oLine.dr == 0 && (oOffsetAccount as any)?.multiCurrency) {
+          setTimeout(() => {
+            if (this.formGeneral.data.multi) {
+              oLine.dr = this.formGeneral.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID) : oLine.cR2;
+            } else {
+              oLine.dr = this.roundService.amount(oLine.cR2 * this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID);
+            }
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR2')) oLine.updateColumns += 'CR2;';
+            this.eleGridGeneral.endProcess();
+          }, 200);
+        }
+        this.eleGridGeneral.endProcess();
+        break;
+      case 'cr2':
+        this.eleGridGeneral.startProcess();
+        if (oLine.cR2 != 0 && oLine.dR2 != 0) {
+          oLine.dr = 0;
+          oLine.dR2 = 0;
+        }
+        if (oLine.cr == 0 && (oOffsetAccount as any)?.multiCurrency) {
+          setTimeout(() => {
+            if (this.formGeneral.data.multi) {
+              oLine.cr = this.formGeneral.data.exchangeRate != 0 ? this.roundService.amount(oLine.cR2 / this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID) : oLine.cR2;
+            } else {
+              oLine.cr = this.roundService.amount(oLine.cR2 * this.formGeneral.data.exchangeRate,this.formGeneral.data.currencyID);
+            }
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR')) oLine.updateColumns += 'DR;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('DR2')) oLine.updateColumns += 'DR2;';
+            if(oLine.updateColumns && !oLine.updateColumns.includes('CR')) oLine.updateColumns += 'CR;';
+            this.eleGridGeneral.endProcess();
+          }, 200);
+        }
+        break;
+      case 'note':
+        oLine.reasonID = event?.itemData?.ReasonID;
+        if(oLine.updateColumns && !oLine.updateColumns.includes('AccountID')) oLine.updateColumns += 'AccountID;';
+        setTimeout(() => {
+          oLine.accountID = event?.itemData?.OffsetAcctID;
+          this.detectorRef.detectChanges();
+          oAccount = this.acService.getCacheValue('account',oLine.accountID);
+          this.setLockAndRequireFields(oLine,oAccount,oOffsetAccount);
+        }, 200);
+        break;
+    }
   }
 
   /**
@@ -336,7 +438,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    */
   onTabSelectedDetail(event) {
     // if (event.selectedIndex == 0 && this.formGeneral.data.subType == '9') {
-    //   this.eleGridCashPayment.refresh();
+    //   this.eleGridGeneral.refresh();
     // }
   }
 
@@ -374,7 +476,84 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
+    this.formGeneral.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          if ((this.eleGridGeneral || this.eleGridGeneral?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
+            this.eleGridGeneral.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }
+          if ((this.eleGridSettledInvoices || this.eleGridSettledInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới SettledInvoices có active hoặc đang edit
+            this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }
+          if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '2') { //? nếu lưới VatInvoices có active hoặc đang edit
+            this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }
+        }
+      }
+    });
+  }
 
+  /**
+   * lưu chứng từ
+   */
+  saveVoucher(type){
+    this.api
+      .exec('AC', 'GeneralJournalsBusiness', 'UpdateVoucherAsync', [
+        this.formGeneral.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          }else{
+            this.api
+            .exec('AC', 'GeneralJournalsBusiness', 'SetDefaultAsync', [
+              null,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                res.data.isAdd = true;
+                this.formGeneral.refreshData({...res.data});
+                setTimeout(() => {
+                  this.refreshGrid();
+                }, 100);
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+          if (this.formGeneral.data.isAdd || this.formGeneral.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
+          
+        }
+        if(this.eleGridGeneral && this.eleGridGeneral?.isSaveOnClick) this.eleGridGeneral.isSaveOnClick = false;
+        if(this.eleGridSettledInvoices && this.eleGridSettledInvoices.isSaveOnClick) this.eleGridSettledInvoices.isSaveOnClick = false;
+        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+      });
   }
   //#endregion Method
 
@@ -701,7 +880,7 @@ export class GeneralJournalAddComponent extends UIComponent {
         break;
       case 'beginEdit': //? trước khi thêm dòng
         // if (event?.data.dr == 0) { //? khi số tiền < 0
-        //   this.eleGridCashPayment.startProcess(); //? ko cho lưu dòng
+        //   this.eleGridGeneral.startProcess(); //? ko cho lưu dòng
         // }
         let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
         let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
@@ -882,6 +1061,76 @@ export class GeneralJournalAddComponent extends UIComponent {
     return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
 
+  /**
+   * *Hàm refresh tất cả dữ liệu chi tiết của tab detail
+   */
+  refreshGrid() {
+    if(this.eleGridGeneral && this.elementTabDetail?.selectingID == '0'){
+      this.eleGridGeneral.dataSource = [];
+      this.eleGridGeneral.refresh();
+      return;
+    }
+    if(this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1'){
+      this.eleGridSettledInvoices.dataSource = [];
+      this.eleGridSettledInvoices.refresh();
+      return;
+    }
+    if(this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2'){
+      this.eleGridVatInvoices.dataSource = [];
+      this.eleGridVatInvoices.refresh();
+      return;
+    }
+  }
+
+  @HostListener('click', ['$event']) //? focus out grid
+  onClick(e) {
+    if (
+      (e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null) && 
+      e.target.closest('button') == null
+    ) {
+      if (this.eleGridGeneral && this.eleGridGeneral?.gridRef?.isEdit) {
+        this.eleGridGeneral.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridGeneral.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+      if (this.eleGridSettledInvoices && this.eleGridSettledInvoices?.gridRef?.isEdit) {
+        this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridSettledInvoices.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
+        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridVatInvoices.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+    }
+  }
   
   //#endregion Function
 

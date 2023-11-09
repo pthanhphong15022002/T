@@ -185,6 +185,15 @@ export class JournalsAddComponent extends UIComponent {
           }
           this.isPreventChange = false;
           break;
+        case 'autopost':
+          this.isPreventChange = true;
+          if (value) {
+            this.formJournal.form.setValue('autoPost',1,{});
+          }else{
+            this.formJournal.form.setValue('autoPost',0,{});
+          }
+          this.isPreventChange = false;
+          break;
       }
     }
   }

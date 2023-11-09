@@ -571,7 +571,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data, text])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -588,7 +588,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data, text])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -604,7 +604,7 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data, text])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -653,29 +653,6 @@ export class CashrecieptDetailComponent extends UIComponent {
       Recs: data?.recID,
     };
     this.shareService.printReport(reportID, reportType, params, this.formModel);
-  }
-
-  /**
-   * *Hàm mở form báo cáo
-   */
-  openFormReportVoucher(data: any, reportList: any) {
-    var obj = {
-      data: data,
-      reportList: reportList,
-      url: 'ac/report/detail/',
-      formModel: this.view.formModel,
-    };
-    let opt = new DialogModel();
-    var dialog = this.callfc.openForm(
-      CodxListReportsComponent,
-      '',
-      400,
-      600,
-      '',
-      obj,
-      '',
-      opt
-    );
   }
 
   /**
