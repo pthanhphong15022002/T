@@ -447,23 +447,13 @@
       </codx-gridview-v2>
       <div class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="(formCashReceipt.data?.subType == '2' || formCashReceipt.data?.subType == '9')">
+          <div>
             <button style="border: 1px solid !important" tab-index="12" id="btnAddSet"
               class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine('3');$event.preventDefault()"
               (click)="onAddLine('3')">
               <i class="icon-i-wallet2 icon-16"></i>
               <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
                 default="Thêm hóa đơn công nợ"></codx-label>
-            </button>
-          </div>
-          <div *ngIf="formCashReceipt.data?.subType == '3' || formCashReceipt.data?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="onAddLine('2'); $event.preventDefault()" (click)="onAddLine('2')">
-              <i class="icon-library_add_check icon-16"></i>
-              <codx-label *ngIf="formCashReceipt.data.subType == '3'" [formModel]="dialog.formModel"
-                fiedName="lblAddVat" default="Thêm đề nghị tạm ứng"></codx-label>
-              <codx-label *ngIf="formCashReceipt.data.subType == '4'" [formModel]="dialog.formModel"
-                fiedName="lblAddVat" default="Thêm đề nghị thanh toán"></codx-label>
             </button>
           </div>
         </div>

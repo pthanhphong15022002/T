@@ -101,7 +101,8 @@
           field.dataType &&
           field.dataType != 'A' &&
           field.dataType != 'R' &&
-          field.dataType != 'C'
+          field.dataType != 'C' &&
+          field.dataType != 'PA'
         "
       >
         <div class="d-flex justify-content-between">
@@ -208,12 +209,7 @@
         >
         </codx-input>
       </div>
-      <ng-container
-        *ngIf="
-          field.dataType == 'L' &&
-          (field.dataFormat == 'C' || field.dataFormat == 'V')
-        "
-      >
+      <ng-container *ngIf="field.dataType == 'L' || field.dataType == 'PA'">
         <div class="form-group">
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">
@@ -227,32 +223,44 @@
             </div>
             <div
               class="d-flex justify-content-end"
-              *ngIf="field.dataFormat == 'V'"
+              *ngIf="field.dataFormat == 'V' || field.dataType == 'PA'"
             >
-              <button
-                *ngIf="field.refValue"
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary me-2"
-                (click)="clickDeletedVll()"
-              >
-                <i class="icon-close icon-16 text-danger"></i>
-              </button>
+              <ng-container *ngIf="field.dataFormat == 'V'">
+                <button
+                  *ngIf="field.refValue"
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickDeletedVll()"
+                >
+                  <i class="icon-close icon-16 text-danger"></i>
+                </button>
 
-              <button
-                type="button"
-                class="btn btn-icon btn-sm btn-light-primary me-2"
-                (click)="clickAddVll()"
-              >
-                <i
-                  class=" {{
-                    !field.refValue ? 'icon-add_box' : 'icon-edit'
-                  }} icon-16"
-                ></i>
-              </button>
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickAddVll()"
+                >
+                  <i
+                    class=" {{
+                      !field.refValue ? 'icon-add_box' : 'icon-edit'
+                    }} icon-16"
+                  ></i>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="field.dataType == 'PA'">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-light-primary me-2"
+                  (click)="clickSettingReference()"
+                >
+                  <i class="icon-settings icon-16"></i>
+                </button>
+              </ng-container>
             </div>
           </div>
           <codx-input
-            *ngIf="field.dataFormat == 'C'"
+            *ngIf="field.dataFormat == 'C' || field.dataType == 'PA'"
             type="combobox"
             field="refValue"
             [crrValue]="field.refValue"
@@ -274,7 +282,10 @@
             ></ejs-combobox
           ></ng-container>
         </div>
-        <div class="form-group" *ngIf="field.dataType == 'L'">
+        <div
+          class="form-group"
+          *ngIf="field.dataType == 'L' || field.dataType == 'PA'"
+        >
           <codx-label
             class="label-colon"
             name="demoVll"
@@ -283,9 +294,10 @@
             class="me-4"
           >
           </codx-label>
-          <ng-container *ngIf="field.dataFormat == 'C'">
+          <ng-container
+            *ngIf="field.dataFormat == 'C' || field.dataType == 'PA'"
+          >
             <codx-input
-              *ngIf="field.dataFormat == 'C'"
               type="combobox"
               [refType]="field.refType"
               [refValue]="field.refValue"
