@@ -288,7 +288,8 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         'GetParamMyCalendarAsync',
         ['WPCalendars'])
         .subscribe((res: any) => {
-        if (res?.length > 0) {
+        if (res?.length > 0) 
+        {
           let arrParam = [];
           res.forEach((element) => {
             let param = JSON.parse(element);
@@ -421,12 +422,14 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     }      
     else
     {
+      let month = this.selectedDate.getMonth() + 1, year = this.selectedDate.getFullYear();
       switch(transType)
       {
         case"WP_Notes":
           this.getEventWP("WP_Notes").subscribe((res:any) => {
             var notes = res.data;
             this.lstEvents = this.lstEvents.concat(notes);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;  
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -436,6 +439,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventTM(transType).subscribe((res:any) => {
             var tasks = res.data;
             this.lstEvents = this.lstEvents.concat(tasks);
+            this.dEventMonth[month + "-" + year] = this.lstEvents 
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -444,6 +448,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventCO("CO_Meetings").subscribe((res:any) => {
             var meetings = res.data;
             this.lstEvents = this.lstEvents.concat(meetings);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -453,6 +458,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.getEventEP(transType).subscribe((res:any) => {
             var bookings = res.data;
             this.lstEvents = this.lstEvents.concat(bookings);
+            this.dEventMonth[month + "-" + year] = this.lstEvents;
             this.ejCalendar && this.ejCalendar.refresh();
             this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
           });
@@ -490,7 +496,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
               showColor: param.ShowColor,
               text: param.Template.TransType,
               status: param.Template.TransType,
-              textColor: param.TextColor ?? "#1F1717"
+              textColor: param.TextColor
             };
             statusColors.push(obj);
           });
@@ -545,9 +551,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       case "COT03": // Lịch cá nhân
         this.groupID = "";
         this.orgUnitID = "";
-        this.calendarCenter && this.calendarCenter.removeResource();
-        // this.calendarCenter && this.calendarCenter.changeModeView(true);
-
+        this.calendarCenter && this.calendarCenter.changeModeView(true);
         this.getEventData();
         break;
     }
@@ -573,7 +577,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           events = events.concat(ele.data);
         });
       }
-      this.lstEvents = this.lstEvents.concat(events);
+      this.lstEvents = events;
       this.dEventMonth[month + "-" + year] = events;
       if(!this.loaded)
         this.loaded = true;
@@ -1339,6 +1343,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       }
       else this.notiService.notify("Xóa không thành công");
     });
+  }
+
+  showData(data){
+    debugger
   }
 }
 enum BUSSINESS_FUNCID {
