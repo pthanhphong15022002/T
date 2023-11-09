@@ -16,8 +16,10 @@
             <div class="detail-header" *ngIf="data.gift">
                 <div class="d-flex">
                     <div class="me-6">
-                        <codx-img class="rounded-2" [ngClass]="" [objectId]="data.gift.giftID" [objectType]="'FD_Gifts'" imageType="square"
-                            [width]="150"></codx-img>
+                        <codx-img *ngIf="data.gift.category == '1'" class="rounded-2" [ngClass]="" [objectId]="data.gift.giftID"
+                            [objectType]="'FD_Gifts'" imageType="square" [width]="150"></codx-img>
+                        <codx-img *ngIf="data.gift.category == '3' || data.gift.category == '4'" class="rounded-2" [ngClass]=""
+                            [imgSource]="data.gift.image" [objectType]="'FD_Gifts'" imageType="square" [width]="150"></codx-img>
                     </div>
                     <div class="d-flex flex-column">
                         <div class="fw-bold fs-3 mb-3">{{data.gift.giftName}}</div>
@@ -42,7 +44,7 @@
                     </div>
                 </div>
                 <div *ngIf="functionID !== 'FDT091'">
-                    <h3 style="color: #365AC6;">{{data?.gift?.price}} VND</h3>
+                    <h3 style="color: #365AC6;">{{(data?.amount / exchangeRate) * 1000}} VND</h3>
                     <P style="color: #FBAF35;">{{data?.gift?.price}} Xu</P>
                 </div>
             </div>

@@ -291,7 +291,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
   }
 
   onSelectEmployee(evt) {
-    console.log('sau khi chon nhan vien', evt);
+    debugger
     this.familyMemberObj.relationName =
       evt.component.itemsSelected[0].EmployeeName;
     this.familyMemberObj.gender = evt.component.itemsSelected[0].Gender;

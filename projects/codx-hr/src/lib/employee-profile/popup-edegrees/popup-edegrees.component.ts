@@ -49,8 +49,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   trainFieldText: string;
   @ViewChild('form') form: LayoutAddComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
-  //@ViewChild('listView') listView: CodxListviewComponent;
   ops = ['d', 'm', 'y'];
   date = new Date();
 
@@ -130,7 +128,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
   // }
 
   changeCalendar(event, changeType: string) {
-    debugger;
     if (changeType === 'FromDate') {
       this.degreeObj.trainFrom = event.type;
       this.degreeObj.trainFromDate = event.fromDate;
@@ -383,7 +380,6 @@ export class PopupEDegreesComponent extends UIComponent implements OnInit {
     ) {
       this.attachment.objectId = this.degreeObj?.recID;
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-        debugger;
       });
     }
 

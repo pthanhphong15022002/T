@@ -52,6 +52,7 @@ import {
   CO_Permissions,
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
+import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
   selector: 'codx-step-task',
@@ -177,7 +178,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private stepService: StepService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private bookingService: CodxBookingService
+    private bookingService: CodxBookingService,
+    private codxShareService: CodxShareService,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -571,6 +573,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
+          case 'DP32': // gởi duyệt 
+            res.disabled =  !(task?.approveRule);
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled =  true;
+            break;
         }
       });
     }
@@ -756,6 +764,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'DP31':
         this.startTask(task, groupTask);
+        break;
+      case 'DP32':
+        this.approvalTrans(task);
+        break;
+      case 'DP33':
+        this.cancelApprover(task);
         break;
     }
   }
@@ -1132,20 +1146,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async copyTask(task) {
     if (task) {
-      let taskCopy = JSON.parse(JSON.stringify(task));
-      taskCopy.recID = Util.uid();
-      taskCopy.refID = Util.uid();
-      taskCopy['progress'] = 0;
-      taskCopy['isTaskDefault'] = false;
-      taskCopy['requireCompleted'] = false;
-      taskCopy['dependRule'] = '0';
-      this.taskType = this.listTaskType.find(
-        (type) => type.value == taskCopy?.taskType
-      );
-      let taskOutput = await this.openPopupTask('copy', 'step', taskCopy);
+      this.taskType = this.listTaskType.find((type) => type.value == task?.taskType);
+      let taskOutput = await this.openPopupTask('copy', 'step', task);
 
-      if (taskOutput?.event.task) {
-        let data = taskOutput?.event;
+      if (taskOutput?.task) {
+        let data = taskOutput;
         this.currentStep?.tasks?.push(data.task);
         this.currentStep['progress'] = data.progressStep;
         let group = this.listGroupTask.find((group) =>
@@ -1154,6 +1159,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (group) {
           group?.task.push(data.task);
           group['progress'] = data.progressGroup;
+          this.changeDetectorRef.markForCheck();
         }
       }
     }
@@ -2508,5 +2514,95 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
   }
+
   //#endregion
+  approvalTrans(task: DP_Instances_Steps_Tasks) {
+    if(task?.approveRule && task?.recID){
+      this.api.execSv<any>(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        task?.recID
+      ).subscribe(res => {
+        if(!res){
+          this.notiService.notifyCode('ES028');
+          return;
+        }
+        if (res.eSign) {
+          //kys soos
+        } else {
+          this.release(task, res);
+        }
+      })
+    } else {
+      this.notiService.notifyCode('DP040');
+    }
+  }
+  release(data: any, category: any) {
+    this.codxShareService.codxReleaseDynamic(
+      'DP',
+      data,
+      category,
+      'DP_Instances_Steps_Tasks',
+      'CM0201',
+      data?.title,
+      this.releaseCallback.bind(this)
+    );
+  }
+  releaseCallback(res: any, t: any = null) {
+    if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+    // else {
+    //   this.codxCmService
+    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+    //     .subscribe((q) => {
+    //       if (q) {
+    //         this.dataSelected = q;
+    //         this.view.dataService.update(this.dataSelected, true).subscribe();
+    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
+    //       }
+    //       this.notificationsService.notifyCode('ES007');
+    //     });
+    // }
+  }
+  cancelApprover(task) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.api.execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          task?.recID
+        ).subscribe((res2: any) => {
+                if (res2) {
+                  if (res2?.eSign == true) {
+                    //trình ký
+                  } else if (res2?.eSign == false) {
+                    //kí duyet
+                    this.codxShareService
+                      .codxCancel(
+                        'CM',
+                        task?.recID,
+                        'DP_Instances_Steps_Tasks',
+                        null,
+                        null
+                      )
+                      .subscribe((res3) => {
+                        if (res3) {
+                          // this.dataSelected.approveStatus = '0';
+                          // this.view.dataService
+                          //   .update(this.dataSelected)
+                          //   .subscribe();
+                          // if (this.kanban)
+                          //   this.kanban.updateCard(this.dataSelected);
+                          // this.notificationsService.notifyCode('SYS007');
+                        } else this.notiService.notifyCode('SYS021');
+                      });
+                  }
+                }
+              });
+      }
+    });
+  }
 }

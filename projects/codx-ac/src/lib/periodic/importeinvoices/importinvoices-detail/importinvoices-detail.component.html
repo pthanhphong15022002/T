@@ -1,153 +1,93 @@
 <!-- Start: template listdetail -->
-<ng-container *ngIf="itemSelected">
-  <codx-detail-tmp
-    [hideMF]="false"
-    [formModel]="formModel"
-    [dataItem]="itemSelected"
-    (clickMF)="clickMF($event, itemSelected)"
-    [header]="TmpHeaderDetail"
-    [body]="TmpBodyDetail"
-    [footer]="TmpFooterDetail"
-  >
+<ng-container *ngIf="dataItem">
+  <codx-detail-tmp [hideMF]="false" [formModel]="formModel" [dataItem]="dataItem" (clickMF)="clickMF($event, dataItem)"
+    [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [footer]="TmpFooterDetail">
   </codx-detail-tmp>
 </ng-container>
 <!-- End: template listdetail -->
 
 <!-- Start: template listdetail Header-->
 <ng-template #TmpHeaderDetail>
-  <ng-container *ngIf="itemSelected">
-    <div
-      style="position: relative; z-index: 1000; width: 50%"
-      class="d-flex align-items-center ac-cashID mt-n8 mb-2"
-    >
-      <span
-        *ngIf="itemSelected?.invoiceNo"
-        class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5"
-      >
-        {{ itemSelected?.invoiceNo }}
+  <ng-container *ngIf="dataItem">
+    <div style="position: relative; z-index: 1000; width: 50%" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
+      <span *ngIf="dataItem?.invoiceNo" class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
+        {{ dataItem?.invoiceNo }}
       </span>
-      <span
-        *ngIf="
-          (itemSelected?.invoiceNo == '' || itemSelected?.invoiceNo == null) &&
+      <span *ngIf="
+          (dataItem?.invoiceNo == '' || dataItem?.invoiceNo == null) &&
           gridViewSetup
-        "
-        class="place-holder fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5"
-      >
+        " class="place-holder fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
         {{ gridViewSetup["invoiceNo"].headerText }}
       </span>
       <div class="d-flex align-items-center me-3">
-        <img
-          style="width: 18px; height: 18px"
-          class="me-2"
-          src="../assets/themes/ac/default/img/calendar.svg"
-        />
-        <codx-label
-          class="fw-bold label-colon mt-1"
-          default="Ngày chứng từ"
-          fiedName="voucherDate"
-          [formModel]="formModel"
-        >
+        <img style="width: 18px; height: 18px" class="me-2" src="../assets/themes/ac/default/img/calendar.svg" />
+        <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" fiedName="voucherDate"
+          [formModel]="formModel">
         </codx-label>
-        <span
-          #voucherDate
-          [innerHTML]="
-            itemSelected?.voucherDate
+        <span #voucherDate [innerHTML]="
+            dataItem?.voucherDate
               | formatvalue : formModel : 'voucherDate' : voucherDate
               | async
-          "
-          class="text-gray-600 mt-1"
-        ></span>
+          " class="text-gray-600 mt-1"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div style="height: 27px !important" class="d-flex align-items-center">
-        <span
-          *ngIf="itemSelected?.objectName"
-          class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1"
-          >{{ itemSelected?.objectName }}</span
-        >
-        <span
-          *ngIf="
-            (itemSelected?.objectName == '' ||
-              itemSelected?.objectName == null) &&
+        <span *ngIf="dataItem?.objectName" class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{
+          dataItem?.objectName }}</span>
+        <span *ngIf="
+            (dataItem?.objectName == '' ||
+              dataItem?.objectName == null) &&
             gridViewSetup
-          "
-          class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1"
-          >{{ gridViewSetup["ObjectID"].headerText }}</span
-        >
+          " class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{
+          gridViewSetup["ObjectID"].headerText }}</span>
       </div>
       <div class="d-flex align-self-center">
-        <codx-vll
-          [formModel]="formModel"
-          [field]="'Status'"
-          [value]="itemSelected?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-sm border-0 me-2"
-        >
+        <codx-vll [formModel]="formModel" [field]="'Status'" [value]="dataItem?.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-sm border-0 me-2">
         </codx-vll>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div style="height: 27px !important" class="d-flex align-items-center">
         <!-- Hình thức thanh toán  -->
-        <codx-label
-          class="fw-bold label-colon text-nowrap"
-          fiedName="PmtMethodID"
-          [formModel]="formModel"
-        >
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="PmtMethodID" [formModel]="formModel">
         </codx-label>
-        <span *ngIf="itemSelected?.pmtMethodName" class="text-gray-600">{{
-          itemSelected?.pmtMethodName
-        }}</span>
-        <span
-          *ngIf="
-            (itemSelected?.pmtMethodName == '' ||
-              itemSelected?.pmtMethodName == null) &&
+        <span *ngIf="dataItem?.pmtMethodName" class="text-gray-600">{{
+          dataItem?.pmtMethodName
+          }}</span>
+        <span *ngIf="
+            (dataItem?.pmtMethodName == '' ||
+              dataItem?.pmtMethodName == null) &&
             gridViewSetup
-          "
-          class="place-holder text-gray-600"
-          >{{ gridViewSetup["PmtMethodID"].headerText }}</span
-        >
+          " class="place-holder text-gray-600">{{ gridViewSetup["PmtMethodID"].headerText }}</span>
         <!-- Hình thức thanh toán  -->
       </div>
       <div class="d-flex align-self-center">
         <span class="badge badge-pill badge-primary me-3">
-          <span
-            class="fw-bold"
-            [innerHTML]="
-              (itemSelected?.totalAmt
+          <span class="fw-bold" [innerHTML]="
+              (dataItem?.totalAmt
                 | tranformValueNumber
-                  : (itemSelected?.currencyID != baseCurr ? 'S' : 'B')
+                  : (dataItem?.currencyID != baseCurr ? 'S' : 'B')
                 | async) +
               ' ' +
-              itemSelected?.currencyID
-            "
-          ></span>
+              dataItem?.currencyID
+            "></span>
         </span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1 mb-2">
       <div style="height: 27px !important" class="d-flex align-items-center">
         <!-- Diễn giải  -->
-        <codx-label
-          class="fw-bold label-colon text-nowrap"
-          fiedName="Memo"
-          default="Diễn giải"
-          [formModel]="formModel"
-        >
+        <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" default="Diễn giải" [formModel]="formModel">
         </codx-label>
-        <span *ngIf="itemSelected?.memo" class="text-gray-600">{{
-          itemSelected?.memo
-        }}</span>
-        <span
-          *ngIf="
-            (itemSelected?.memo == '' || itemSelected?.memo == null) &&
+        <span *ngIf="dataItem?.memo" class="text-gray-600">{{
+          dataItem?.memo
+          }}</span>
+        <span *ngIf="
+            (dataItem?.memo == '' || dataItem?.memo == null) &&
             gridViewSetup
-          "
-          class="place-holder text-gray-600"
-          >{{ gridViewSetup["Memo"].headerText }}</span
-        >
+          " class="place-holder text-gray-600">{{ gridViewSetup["Memo"].headerText }}</span>
         <!-- Diễn giải  -->
       </div>
     </div>
@@ -156,30 +96,21 @@
 <!-- End: template listdetail Header-->
 <!-- Start: template listdetail Body-->
 <ng-template #TmpBodyDetail>
-  <ng-container *ngIf="itemSelected">
+  <ng-container *ngIf="dataItem">
     <div class="card-add mt-5">
-      <ejs-tab
-        #elementTabDetail
-        (created)="createTab($event, elementTabDetail)"
-      >
+      <ejs-tab #elementTabDetail (created)="createTab($event, elementTabDetail)">
         <e-tabitems>
           <!--Start tab Thông tin hóa đơn -->
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-top me-2 mt-2">
                 <i class="icon-format_list_bulleted icon-16 me-2"></i>
-                <codx-label
-                  class="fw-bold fs-6"
-                  fiedName="lblDetail2"
-                  [formModel]="formModel"
-                  default="Thông tin hóa đơn"
-                ></codx-label>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail2" [formModel]="formModel"
+                  default="Thông tin hóa đơn"></codx-label>
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container
-                *ngTemplateOutlet="tabPurchaseInvoices"
-              ></ng-container>
+              <ng-container *ngTemplateOutlet="tabPurchaseInvoices"></ng-container>
             </ng-template>
           </e-tabitem>
           <!--End tab Thông tin hóa đơn -->
@@ -192,24 +123,16 @@
 
 <!-- Start: template Tab PurchaseInvoices-->
 <ng-template #tabPurchaseInvoices>
-  <ng-container *ngIf="itemSelected">
-    <temp-purchaseinvoices-table
-      [itemSelected]="itemSelected"
-      [baseCurr]="baseCurr"
-    ></temp-purchaseinvoices-table>
+  <ng-container *ngIf="dataItem">
+    <temp-purchaseinvoices-table [itemSelected]="dataItem" [baseCurr]="baseCurr"></temp-purchaseinvoices-table>
   </ng-container>
 </ng-template>
 <!-- End: template Tab PurchaseInvoices-->
 <!-- Start: template listdetail Footer-->
 <ng-template #TmpFooterDetail let-data>
-  <ng-container *ngIf="itemSelected">
-    <codx-tabs
-      [entityName]="formModel.entityName"
-      [formModel]="formModel"
-      [objectID]="itemSelected?.recID"
-      [funcID]="formModel.funcID"
-      [TabControl]="tabInfo"
-    ></codx-tabs>
+  <ng-container *ngIf="dataItem">
+    <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="dataItem?.recID"
+      [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </ng-container>
 </ng-template>
 <!-- End: template listdetail Footer-->
