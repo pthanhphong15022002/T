@@ -148,13 +148,21 @@
   <span>{{data?.policy?.policyName}}</span>
 </ng-template>
 
+<ng-template #rowKudos let-data>
+  <span class="fw-bold" [ngClass]="(data?.kudos > 0) ?'text-success' : (data?.kudos == 0) ? 'text-gray-500' :'text-danger'">{{(data?.kudos > 0 ? "+" : "") +data?.kudos}}</span>
+</ng-template>
+
 <ng-template #rowCoins let-data>
-  <span class="fw-bold" [ngClass]="(data?.kudos >= 0) ?'text-success' : 'text-danger'">{{(data?.kudos >= 0 ? "+" : "") +data?.kudos}}</span>
+  <span class="fw-bold" [ngClass]="(data?.coins > 0) ?'text-success' : (data?.coins == 0) ? 'text-gray-500' :'text-danger'">{{(data?.coins > 0 ? "+" : "") +data?.coins}}</span>
+</ng-template>
+
+<ng-template #rowcoCoins let-data>
+  <span class="fw-bold" [ngClass]="(data?.coCoins > 0) ?'text-success' : (data?.coCoins == 0) ? 'text-gray-500' :'text-danger'">{{(data?.coCoins > 0 ? "+" : "") +data?.coCoins}}</span>
 </ng-template>
 
 <ng-template #rowObjectName let-data>
   <div class="d-flex align-items-center" *ngIf="data?.objectName">
-    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'" [width]="25"></codx-img>
+    <codx-img [objectId]="data?.objectID" [objectType]="'AD_Users'" [width]="25"></codx-img>
     <span class="ms-2">{{data?.objectName}}</span>
   </div>
 </ng-template>

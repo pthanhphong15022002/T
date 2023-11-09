@@ -24,7 +24,6 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { Vendors } from '../../../models/Vendors.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { BankAddComponent } from '../../customers-categories/bank-add/bank-add.component';
 import { ContactAddComponent } from '../../customers-categories/contact-add/contact-add.component';

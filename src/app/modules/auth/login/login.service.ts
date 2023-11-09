@@ -71,7 +71,6 @@ export class LoginService {
         this.returnUrl.indexOf('https://') == 0
       ) {
         this.iParams = UrlUtil.getUrl('i') || '';
-
         if (this.iParams.toLocaleLowerCase() == 'hcs') {
           this.shareService.redirect(this.iParams, this.returnUrl);
         } else window.location.href = this.returnUrl;
@@ -111,6 +110,16 @@ export class LoginService {
       'UsersBusiness',
       'CheckTOTPAsync',
       []
+    );
+  }
+
+  getTenants(email) {
+    return this.api.execSv(
+      'Tenant',
+      'Tenant',
+      'TenantsBusiness',
+      'GetListDatabaseByEmailAsync',
+      email
     );
   }
 }
