@@ -234,7 +234,7 @@
       [itemTemplate]="itemTemplate"
       openIconCss="icon-add icon-22"
       cssClass="e-primary"
-      (clicked)="addEditEvent('SYS01',{ transType:$event?.item?.id })"
+      (clicked)="addEditEvent(addMoreFunc,{ transType:$event?.item?.id })"
     >
     <ng-template #itemTemplate let-items>
       <div class="itemlist">
@@ -247,7 +247,7 @@
 
 <!-- resource template -->
 <ng-template #resourceTemplate let-data>
-  <div class="d-flex flex-row ms-5 align-items-center" (click)="showData(data)">
+  <div class="d-flex flex-row ms-5 align-items-center">
     <codx-img [objectId]="data?.resourceData?.resourceID" imageType="circle" width="40" [objectType]="'AD_Users'"
       [objectName]="data?.resourceData?.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column" style="width: 160px">
