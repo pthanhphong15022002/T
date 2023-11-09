@@ -21,6 +21,8 @@ implements AfterViewInit, OnChanges{
   @ViewChild('rowCard') rowCard: TemplateRef<any>;
   @ViewChild('rowPolicy') rowPolicy: TemplateRef<any>;
   @ViewChild('rowCoins') rowCoins: TemplateRef<any>;
+  @ViewChild('rowKudos') rowKudos: TemplateRef<any>;
+  @ViewChild('rowcoCoins') rowcoCoins: TemplateRef<any>;
   @ViewChild('rowObjectName') rowObjectName: TemplateRef<any>;
   @ViewChild('rowStatusMyGift') rowStatusMyGift: TemplateRef<any>;
   @ViewChild('rowItemID') rowItemID: TemplateRef<any>;
@@ -210,7 +212,20 @@ implements AfterViewInit, OnChanges{
             }
           case "kudos":
             {
+              obj.template = this.rowKudos;
+              obj.textAlign = "center";
+              break;
+            }
+          case "coins":
+            {
               obj.template = this.rowCoins;
+              obj.textAlign = "center";
+              break;
+            }
+          case "coCoins":
+            {
+              obj.template = this.rowcoCoins;
+              obj.textAlign = "center";
               break;
             }
           case "objectName":

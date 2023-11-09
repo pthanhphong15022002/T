@@ -448,7 +448,7 @@ export class CodxFdService {
       'BS',
       'ERM.Business.BS',
       'RangeLinesBusiness',
-      'LoadDataRangeLinesAsync',
+      'GetDataByPredicateAsync',
       [
         {
           "pageLoading": true,
