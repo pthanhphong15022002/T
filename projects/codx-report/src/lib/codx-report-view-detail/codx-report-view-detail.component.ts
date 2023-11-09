@@ -110,11 +110,10 @@ export class CodxReportViewDetailComponent
     });
 
     this.router.queryParams.subscribe((param: any) => {
-    if (param['params']){
+    if (param['params'])
+    {
       this._paramString = decodeURIComponent(param['params']);
-      //this._paramString = decode(this._paramString)
       this.params = JSON.parse(this._paramString);
-      this.getReport(this.reportID);
     }
     });
     let objFormat: any = {};
@@ -178,13 +177,15 @@ export class CodxReportViewDetailComponent
           this.isRunMode = res.runMode == '1';
           this.pageTitle.setRootNode(res.customName);
           this.getRootFunction(res.moduleID, res.reportType);
-          if (
-            res.displayMode == '2' ||
-            res.displayMode == '3' ||
-            res.displayMode == '4'
-          ) {
-            this.getReportPDF(res.recID);
-          }
+          // if (
+          //   res.displayMode == '2' ||
+          //   res.displayMode == '3' ||
+          //   res.displayMode == '4'
+          // ) 
+          // {
+
+          //   this.getReportPDF(res.recID);
+          // }
         }
       });
   }
@@ -424,6 +425,7 @@ export class CodxReportViewDetailComponent
     }
     // get report PDF
     if (this.data.displayMode == '3' || this.data.displayMode == '4') {
+      debugger
       this.getReportPDF(this.data.recID);
     }
   }
@@ -456,7 +458,8 @@ export class CodxReportViewDetailComponent
   }
 
   url: string = '';
-  getReportPDF(recID: string) {
+  getReportPDF(recID: string) 
+  {
     let sk =
       'sk=' +
       btoa(
@@ -464,8 +467,6 @@ export class CodxReportViewDetailComponent
       );
     this.url = `${environment.apiUrl}/api/${
       this.data.service
-    }/GetReportByPDF?reportID=${recID}&parameters=${JSON.stringify(
-      this._paramString
-    )}&${sk}&=`+Util.uid();
+    }/GetReportByPDF?reportID=${recID}&parameters=${this._paramString}&${sk}&=`+Util.uid();
   }
 }
