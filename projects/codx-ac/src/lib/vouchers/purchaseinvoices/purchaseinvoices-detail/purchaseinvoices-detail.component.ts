@@ -259,7 +259,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -275,7 +275,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data,text])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -292,7 +292,7 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [data.recID,text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;

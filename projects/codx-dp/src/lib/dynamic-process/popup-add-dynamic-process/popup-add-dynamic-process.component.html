@@ -1301,7 +1301,11 @@
           <div class="col-6 row">
             <div class="col-lg-12 col-xl-8">
               <codx-input
-                [formModel]="dialog?.formModel"
+                type="valuelist"
+                [refValue]="gridViewSetup?.TabControl?.referedValue"
+                [placeholder]="
+                  gridViewSetup?.TabControl?.description
+                "
                 [crrValue]="process.tabControl"
                 (valueChange)="valueChange($event)"
                 field="tabControl"

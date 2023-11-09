@@ -33,11 +33,13 @@
         </span>
         <!-- </div> -->
         <!-- <div class="d-flex justify-content-end"> -->
-        <span
+        <button type="button"
           *ngIf="customField.dataType == 'A'"
-          class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
+          class="me-5 btn btn-icon btn-light-primary"
           (click)="!disable ? addFile() : ''"
-        ></span>
+        >
+          <span class="icon-attach_file icon-18"></span>
+        </button>
         <span
           *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
           class="ms-2"

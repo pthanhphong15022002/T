@@ -43,7 +43,7 @@
                   <div *ngIf="(item.itemName != null && item.itemName != '')" class="d-flex align-items-center justify-content-start">
                     <ng-container>
                       <span style="text-align: left !important;"
-                        class="fw-bold line-clamp line-clamp-1">{{item.itemName}}</span>
+                        class="fw-bold">{{item.itemName}}</span>
                     </ng-container>
                   </div>
                   <div *ngIf="(item.idiM0 != null && item.idiM0 != '') ||
@@ -56,17 +56,17 @@
                       :&nbsp;
                       <div class="w-100" style="text-align: left;display: inline-block;">
                         <div *ngIf="(item.idiM0 != null && item.idiM0 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             {{item.idiM0Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM1 != null && item.idiM1 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM1Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM2 != null && item.idiM2 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM2Name}}
                           </span>
                         </div>
@@ -86,32 +86,32 @@
                       :&nbsp;                    
                       <div class="w-100" style="text-align: left;display: inline-block;">
                         <div *ngIf="(item.idiM4 != null && item.idiM4 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             {{item.idiM4Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM5 != null && item.idiM5 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM5Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM6 != null && item.idiM6 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM6Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM7 != null && item.idiM7 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM7Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM8 != null && item.idiM8 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;{{item.idiM8Name}}
                           </span>
                         </div>
                         <div *ngIf="(item.idiM9 != null && item.idiM9 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700">
+                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
                             -&nbsp;&nbsp;{{item.idiM9Name}}
                           </span>
                         </div>
@@ -152,7 +152,7 @@
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.vatAmt
                       | tranformValueNumber : 'B' | async"></span>
               </div>
-              <div *ngIf="item?.taxRate" class="d-flex justify-content-end ps-3">
+              <div *ngIf="item?.vatPct" class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
               </div>
             </td>

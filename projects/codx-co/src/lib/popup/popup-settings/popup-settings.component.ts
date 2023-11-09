@@ -23,6 +23,7 @@ export class PopupSettingsComponent implements OnInit, AfterViewInit
   user:any = null;
   isAdministrator:boolean = false;
   loaded:boolean = false;
+  isLoading:boolean = false;
   constructor(
     private api:ApiHttpService,
     private auth:AuthStore,
@@ -106,6 +107,7 @@ export class PopupSettingsComponent implements OnInit, AfterViewInit
   clickSave(){
     if(this.lstSettingCalendar)
     {
+      this.isLoading = true;
       let settings = this.lstSettingCalendar.map(x => {
         return {
           recID: x.recID,
@@ -124,6 +126,7 @@ export class PopupSettingsComponent implements OnInit, AfterViewInit
           this.notiService.notify("Cập nhật không thành công");
           this.dialog.close();
         }
+        this.isLoading = false;
       });
     }
   }

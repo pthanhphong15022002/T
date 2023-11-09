@@ -123,8 +123,8 @@ export class GeneralJournalDetailComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    this.view.dataService.dataSelected = dataEdit;
-    this.view.dataService
+    this.dataService.dataSelected = dataEdit;
+    this.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -140,7 +140,7 @@ export class GeneralJournalDetailComponent extends UIComponent {
           GeneralJournalAddComponent,
           data,
           this.optionSidebar,
-          this.view.funcID
+          this.funcID
         );
       });
   }
@@ -151,8 +151,8 @@ export class GeneralJournalDetailComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    this.view.dataService.dataSelected = dataCopy;
-    this.view.dataService
+    this.dataService.dataSelected = dataCopy;
+    this.dataService
       .copy((o) => this.setDefault(dataCopy, 'copy'))
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -267,11 +267,11 @@ export class GeneralJournalDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.dataService.update(this.itemSelected).subscribe();
           //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -285,11 +285,11 @@ export class GeneralJournalDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -302,11 +302,11 @@ export class GeneralJournalDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
-          this.view.dataService.update(this.itemSelected).subscribe();
+          this.dataService.update(this.itemSelected).subscribe();
           //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -328,7 +328,7 @@ export class GeneralJournalDetailComponent extends UIComponent {
       reportID,
       reportType,
       params,
-      this.view?.formModel
+      this.formModel
     );
   }
   

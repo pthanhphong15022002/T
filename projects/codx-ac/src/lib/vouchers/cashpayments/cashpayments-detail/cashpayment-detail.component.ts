@@ -542,7 +542,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data, text])
+      .exec('AC', 'CashPaymentsBusiness', 'ValidateVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -559,7 +559,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data, text])
+      .exec('AC', 'CashPaymentsBusiness', 'PostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -575,7 +575,7 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data, text])
+      .exec('AC', 'CashPaymentsBusiness', 'UnPostVourcherAsync', [data.recID, text])
       .subscribe((res: any) => {
         if (res?.update) {
           this.dataService.update(res?.data).subscribe();
@@ -627,29 +627,6 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
 
   /**
-   * *Hàm mở form báo cáo
-   */
-  openFormReportVoucher(data: any, reportList: any) {
-    var obj = {
-      data: data,
-      reportList: reportList,
-      url: 'ac/report/detail/',
-      formModel: this.view.formModel,
-    };
-    let opt = new DialogModel();
-    var dialog = this.callfc.openForm(
-      CodxListReportsComponent,
-      '',
-      400,
-      600,
-      '',
-      obj,
-      '',
-      opt
-    );
-  }
-
-  /**
    * *Hàm call set default data khi thêm mới chứng từ
    * @returns
    */
@@ -689,11 +666,8 @@ export class CashpaymentDetailComponent extends UIComponent {
           )
           .subscribe((res) => {
             if (res) {
-              this.view.dataService.update(res).subscribe((o) => {
-                if (o) this.notification.notifyCode('AC0029', 0, text);
-              });
-            } else {
-              this.notification.notifyCode('AC0030', 0, text);
+              this.dataService.update(res).subscribe();
+              this.notification.notifyCode('AC0029', 0, text);
             }
           });
       }
