@@ -63,6 +63,8 @@ export class DP_Processes {
   instanceProgressControl: boolean;
   startInstanceControl: boolean = false;
   tabControl: string;
+  businessLineID:string;
+  allowEstimatedEnd:boolean;
 }
 
 export class DP_Processes_Permission {

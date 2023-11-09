@@ -812,6 +812,7 @@ export class PopupAddCasesComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
+      let isEndSaturday = endDay.getDay() === 6 ;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -819,7 +820,10 @@ export class PopupAddCasesComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        if(!isEndSaturday) {
+          endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        }
+        endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
       }
     }
     return endDay;
