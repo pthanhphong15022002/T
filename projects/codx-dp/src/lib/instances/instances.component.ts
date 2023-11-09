@@ -1066,11 +1066,11 @@ export class InstancesComponent
       default: {
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
-        //let dataSource = data.datas;
+        let dataSource = data.datas;
         var customData = {
           refID: data.processID,
           refType: 'DP_Processes',
-          // dataSource: dataSource,
+          dataSource: dataSource,
         };
         this.codxShareService.defaultMoreFunc(
           e,
