@@ -62,7 +62,7 @@
                 #checkShareRight1
                 type="checkbox"
                 [checked]="check(item.recID)"
-                (change)="selectField(item.recID)"
+                (change)="selectField($event, item)"
               />
             </span>
           </td>
