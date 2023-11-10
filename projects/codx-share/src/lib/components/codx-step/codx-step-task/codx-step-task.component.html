@@ -272,7 +272,7 @@
                         [isShowTitle]="false"
                       >
                       </codx-fields-detail-temp>
-                      <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID"></codx-view-approve>
+                      <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
