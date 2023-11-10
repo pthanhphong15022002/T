@@ -826,16 +826,16 @@ export class PopupAddLeadComponent
         } else {
           this.lead.leadID = res[2];
         }
-        this.lead.endDate = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action !== this.actionEdit || this.action === this.actionEdit && (this.lead.status == '1' || this.lead.status == '15' ) ? null : this.lead.createdOn
-        );
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.lead.createdOn
+          this.action !== this.actionEdit ||
+            (this.action === this.actionEdit &&
+              (this.lead.status == '1' || this.lead.status == '15'))
+            ? null
+            : this.lead.createdOn
         );
+      this.lead.endDate = this.action === this.actionEdit ? this.lead?.endDate: this.dateMax;
         this.planceHolderAutoNumber = this.lead.leadID;
 
         this.changeDetectorRef.detectChanges();

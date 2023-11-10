@@ -406,7 +406,6 @@
                     fiedName="StartDate"
                     formName="Tasks"
                     gridViewName="grvTasks"
-                    default="Ngày bắt đầu"
                   >
                   </codx-label>
                 </div>
@@ -476,6 +475,32 @@
                         : formModel
                         : 'endDate'
                         : endDate
+                        : 'Tasks'
+                        : 'grvTasks'
+                      | async
+                  "
+                ></span>
+              </div>
+              <div class="d-flex me-6" *ngIf="itemSelected?.startedOn">
+                <div class="fw-bold">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="StartOn"
+                    formName="Tasks"
+                    gridViewName="grvTasks"
+                    default="Ngày bắt đầu thực tế"
+                  >
+                  </codx-label>
+                </div>
+                <span
+                  class="text-gray-700"
+                  #startedOn
+                  [innerHTML]="
+                    itemSelected?.startedOn
+                      | formatvalue
+                        : formModel
+                        : 'startedOn'
+                        : startedOn
                         : 'Tasks'
                         : 'grvTasks'
                       | async

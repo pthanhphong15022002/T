@@ -604,18 +604,18 @@ export class PopupAddCasesComponent
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
         } else {
-          this.cases.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
           this.cases.caseNo = res[2];
         }
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.cases.createdOn
+          this.action !== this.actionEdit ||
+            (this.action === this.actionEdit &&
+              (this.cases.status == '1' || this.cases.status == '15'))
+            ? null
+            : this.cases.createdOn
         );
+      this.cases.endDate = this.action === this.actionEdit ? this.cases?.endDate: this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });

@@ -167,7 +167,7 @@
       >
       </codx-label>
       <codx-input
-        [disabled]="isEditTimeDefault || stepsTasks?.isTaskDefault"
+        [disabled]="isEditTimeDefault && stepsTasks?.isTaskDefault"
         field="endDate"
         (valueChange)="changeValueDateExpected($event)"
         [crrValue]="stepsTasks?.endDate"
