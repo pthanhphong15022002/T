@@ -16,6 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class CodxViewApproveComponent implements OnInit, OnChanges {
   @Input() listApprover;
+  @Input() change;
   @Input() categoryID;
   
   viewApprover;
@@ -32,7 +33,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.listApprover || changes?.categoryID){
+    if(changes?.listApprover || changes?.categoryID ||  changes?.change){
       if(!this.listApprover && this.categoryID){
         this.loadListApproverStep();
       }

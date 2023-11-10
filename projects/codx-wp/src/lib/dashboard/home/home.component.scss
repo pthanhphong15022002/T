@@ -52,6 +52,18 @@
   }
 }
 
+.wp-portal 
+{
+  .menu-aside-group
+  {
+    font-size: 17px;
+  }
+  .menu-title:hover
+  {
+    color: var(--primary-darker)!important;;
+  }
+}
+
 .aside.aside-transparent {
   width: 22%;
   min-width: 220px;
