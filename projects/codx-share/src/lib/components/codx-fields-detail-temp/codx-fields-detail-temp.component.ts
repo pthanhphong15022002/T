@@ -93,9 +93,9 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-  ngOnChanges() {
-    this.changeDetectorRef.detectChanges();
-  }
+  // ngOnChanges() {
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
   clickShow(e, id) {
     let children = e.currentTarget.children[0];
@@ -187,7 +187,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
             (x) => x.recID == obj.recID && x.dataValue != obj.dataValue
           );
           if (idx != -1) {
-            this.dataStep.fields[idx] = JSON.parse(JSON.stringify(obj)) ;
+            this.dataStep.fields[idx] = JSON.parse(JSON.stringify(obj));
           }
         });
         this.changeDetectorRef.detectChanges();
@@ -354,7 +354,6 @@ export class CodxFieldsDetailTempComponent implements OnInit {
           if (idx != -1)
             this.dataStep.fields[idx].dataValue = this.dataValueOld;
         }
-       
       });
   }
 

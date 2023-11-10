@@ -558,22 +558,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     eDegreeFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false,
     },
     eCertificateFuncID: {
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false,
     },
     eSkillFuncID: {
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     },
     eTrainCourseFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     }
   }
 
@@ -581,22 +585,26 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     eHealthFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     },
     eDiseasesFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     },
     eVaccinesFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     },
     eAccidentsFuncID:{
       view : false,
       write: false,
-      delete: false
+      delete: false,
+      isPortal: false
     },
   }
 
@@ -2486,612 +2494,643 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any, funcID = null) {
-    switch (event.functionID) {
-      // case this.ePassportFuncID + 'ViewAll':
-      case "HRTEM0202ViewAll":
-        this.popupViewAllPassport();
-        break;
-      // case this.eVisaFuncID + 'ViewAll':
-      case "HRTEM0203ViewAll":
-        this.popupViewAllVisa();
-        break;
-      // case this.eWorkPermitFuncID + 'ViewAll':
-      case "HRTEM0204ViewAll":
-        this.popupViewAllWorkPermit();
-        break;
-      case this.eContractFuncID + 'ViewAll':
-        this.popupViewAllContract();
-        break;
-
-      case 'SYS03': //edit
-        if (funcID == 'passport') {
-          this.handleEmployeePassportInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'workpermit') {
-          this.handleEmployeeWorkingPermitInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'visa') {
-          this.handleEmployeeVisaInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'family') {
-          this.handleEFamilyInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'jobSalary') {
-          this.HandleEmployeeJobSalariesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eexperiences') {
-          this.handlEmployeeExperiences(event.text, 'edit', data);
-        } else if (funcID == 'evaccines') {
-          this.HandleEVaccinesInfo(event.text, 'edit', data);
-        } else if (funcID == 'basicSalary') {
-          this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'Assets') {
-          this.HandlemployeeAssetInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDegrees') {
-          this.HandleEmployeeEDegreeInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eCertificate') {
-          this.HandleEmployeeECertificateInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eAppointions') {
-          this.HandleEmployeeAppointionInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eExperiences') {
-          this.handlEmployeeExperiences(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'Diseases') {
-          this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eBenefit') {
-          this.handlEmployeeBenefit(event.text, 'edit', data);
-        } else if (funcID == 'eSkill') {
-          this.HandleEmployeeESkillsInfo(event.text, 'edit', data);
-        } else if (funcID == 'eTrainCourses') {
-          this.HandleEmployeeTrainCourseInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eHealth') {
-          this.HandleEmployeeEHealths(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eVaccine') {
-          this.HandleEVaccinesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDayoff') {
-          this.HandleEmployeeDayOffInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eBusinessTravels') {
-          this.HandleEBusinessTravel(event.text, 'edit', data);
-        } else if (funcID == 'eAwards') {
-          this.HandleEmployeeEAwardsInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDisciplines') {
-          this.HandleEmployeeEDisciplinesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDiseases') {
-          this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eAccidents') {
-          this.HandleEmployeeAccidentInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eContract') {
-          this.HandleEContractInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        } else if(funcID == 'eDocument'){
-          this.HandleEDocumentInfo(event.text, 'edit', data);
-          this.df.detectChanges();
-        }
-        break;
-
-      case 'SYS02': //delete
-        // if (event.isRenderDelete === true) {
-        //   this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-        //     if (res) {
-        //       this.listCrrBenefit = res;
-        //       this.df.detectChanges();
-        //     }
-        //   });
-        //   break;
-        // }
-
-        this.notifySvr.alertCode('SYS030').subscribe((x) => {
-          if (x.event?.status == 'Y') {
-            if (funcID == 'passport') {
-              this.hrService
-                .DeleteEmployeePassportInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetEmpCurrentPassport(this.employeeID)
-                      .subscribe((res) => {
-                        this.crrPassport = res;
-                        this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
-                        this.df.detectChanges();
-                      });
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'workpermit') {
-              this.hrService
-                .DeleteEmployeeWorkPermitInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetEmpCurrentWorkpermit(this.employeeID)
-                      .subscribe((res) => {
-                        this.crrWorkpermit = res;
-            this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
-
-                        this.df.detectChanges();
-                      });
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'visa') {
-              this.hrService
-                .DeleteEmployeeVisaInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.hrService
-                      .GetEmpCurrentVisa(this.employeeID)
-                      .subscribe((res) => {
-                        this.crrVisa = res;
-            this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
-
-                        this.df.detectChanges();
-                      });
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'eDayoff') {
-              this.hrService
-                .DeleteEmployeeDayOffInfo(data.recID)
-                .subscribe((p) => {
+    let subStr = event.functionID.substr(event.functionID.length - 3);
+    if(subStr == 'A13'){
+      let subFunc = event.functionID.substr(0, event.functionID.length-3);
+      switch(subFunc){
+        case this.benefitFuncID:
+          this.copyValue(event.text, data, 'benefit', true); //
+          break;
+        case this.eBasicSalaryFuncID:
+          this.copyValue(event.text, data, 'basicSalary', true); //
+          break;
+        case this.eContractFuncID:
+          this.copyValue(event.text, data, 'eContract', true); //
+          break;
+        case this.appointionFuncID:
+          this.copyValue(event.text, data, 'eAppointions');
+          break;
+        case this.eBusinessTravelFuncID:
+          this.copyValue(event.text, data, 'eBusinessTravels');
+          break;
+        case this.awardFuncID:
+          this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
+          break;
+        case this.eDisciplineFuncID:
+          this.copyValue(event.text, data, 'eDisciplines', true); //
+          break;
+      }
+      debugger
+    }
+    else{
+      switch (event.functionID) {
+        // case this.ePassportFuncID + 'ViewAll':
+        case "HRTEM0202ViewAll":
+          this.popupViewAllPassport();
+          break;
+        // case this.eVisaFuncID + 'ViewAll':
+        case "HRTEM0203ViewAll":
+          this.popupViewAllVisa();
+          break;
+        // case this.eWorkPermitFuncID + 'ViewAll':
+        case "HRTEM0204ViewAll":
+          this.popupViewAllWorkPermit();
+          break;
+        case this.eContractFuncID + 'ViewAll':
+          this.popupViewAllContract();
+          break;
+  
+        case 'SYS03': //edit
+          if (funcID == 'passport') {
+            this.handleEmployeePassportInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'workpermit') {
+            this.handleEmployeeWorkingPermitInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'visa') {
+            this.handleEmployeeVisaInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'family') {
+            this.handleEFamilyInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'jobSalary') {
+            this.HandleEmployeeJobSalariesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eexperiences') {
+            this.handlEmployeeExperiences(event.text, 'edit', data);
+          } else if (funcID == 'evaccines') {
+            this.HandleEVaccinesInfo(event.text, 'edit', data);
+          } else if (funcID == 'basicSalary') {
+            this.HandleEmployeeBasicSalariesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'Assets') {
+            this.HandlemployeeAssetInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDegrees') {
+            this.HandleEmployeeEDegreeInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eCertificate') {
+            this.HandleEmployeeECertificateInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eAppointions') {
+            this.HandleEmployeeAppointionInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eExperiences') {
+            this.handlEmployeeExperiences(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'Diseases') {
+            this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eBenefit') {
+            this.handlEmployeeBenefit(event.text, 'edit', data);
+          } else if (funcID == 'eSkill') {
+            this.HandleEmployeeESkillsInfo(event.text, 'edit', data);
+          } else if (funcID == 'eTrainCourses') {
+            this.HandleEmployeeTrainCourseInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eHealth') {
+            this.HandleEmployeeEHealths(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eVaccine') {
+            this.HandleEVaccinesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDayoff') {
+            this.HandleEmployeeDayOffInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eBusinessTravels') {
+            this.HandleEBusinessTravel(event.text, 'edit', data);
+          } else if (funcID == 'eAwards') {
+            this.HandleEmployeeEAwardsInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDisciplines') {
+            this.HandleEmployeeEDisciplinesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDiseases') {
+            this.HandleEmployeeEDiseasesInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eAccidents') {
+            this.HandleEmployeeAccidentInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eContract') {
+            this.HandleEContractInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          } else if(funcID == 'eDocument'){
+            this.HandleEDocumentInfo(event.text, 'edit', data);
+            this.df.detectChanges();
+          }
+          break;
+  
+        case 'SYS02': //delete
+          // if (event.isRenderDelete === true) {
+          //   this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
+          //     if (res) {
+          //       this.listCrrBenefit = res;
+          //       this.df.detectChanges();
+          //     }
+          //   });
+          //   break;
+          // }
+  
+          this.notifySvr.alertCode('SYS030').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              if (funcID == 'passport') {
+                this.hrService
+                  .DeleteEmployeePassportInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.hrService
+                        .GetEmpCurrentPassport(this.employeeID)
+                        .subscribe((res) => {
+                          this.crrPassport = res;
+                          this.passPortIsExpired = this.currentDate.toISOString() > new Date(this.crrPassport?.expiredDate).toISOString();
+                          this.df.detectChanges();
+                        });
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'workpermit') {
+                this.hrService
+                  .DeleteEmployeeWorkPermitInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.hrService
+                        .GetEmpCurrentWorkpermit(this.employeeID)
+                        .subscribe((res) => {
+                          this.crrWorkpermit = res;
+              this.workpermitIsExpired = this.currentDate.toISOString() > new Date(this.crrWorkpermit?.toDate).toISOString();
+  
+                          this.df.detectChanges();
+                        });
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'visa') {
+                this.hrService
+                  .DeleteEmployeeVisaInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.hrService
+                        .GetEmpCurrentVisa(this.employeeID)
+                        .subscribe((res) => {
+                          this.crrVisa = res;
+              this.visaIsExpired = this.currentDate.toISOString() > new Date(this.crrVisa.expiredDate).toISOString();
+  
+                          this.df.detectChanges();
+                        });
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eDayoff') {
+                this.hrService
+                  .DeleteEmployeeDayOffInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p != null) {
+                      this.notify.notifyCode('SYS008');
+                      this.updateGridView(this.dayoffGrid, 'delete', null, data);
+                      // (this.dayoffGrid.dataService as CRUDService)
+                      //   .remove(data)
+                      //   .subscribe();
+                      // this.dayoffRowCount = this.dayoffRowCount - 1;
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'family') {
+                this.hrService
+                  .DeleteEmployeeFamilyInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      let i = this.lstFamily.indexOf(data);
+                      if (i != -1) {
+                        this.lstFamily.splice(i, 1);
+                      }
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'Assets') {
+                this.hrService
+                  .DeleteEmployeeAssetInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p != null) {
+                      this.notify.notifyCode('SYS008');
+                      (this.eAssetGrid.dataService as CRUDService)
+                        .remove(data)
+                        .subscribe();
+                      this.eAssetRowCount = this.eAssetRowCount - 1;
+                      this.hrService
+                        .LoadDataEAsset(this.employeeID)
+                        .subscribe((res) => {
+                          this.lstAsset = res;
+                        });
+                      this.df.detectChanges();
+  
+                      // let i = this.lstAsset.findIndex(
+                      //   (x) => x.recID == data.recID
+                      // );
+                      // // let i = this.lstAsset.indexOf(data);
+                      // console.log('data can xoa', data);
+  
+                      // console.log(
+                      //   'ds tai trc khi xoa',
+                      //   this.lstAsset,
+                      //   'index ',
+                      //   i
+                      // );
+                      // if (i != -1) {
+                      //   this.lstAsset.splice(i, 1);
+                      // }
+                      // this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eHealth') {
+                this.hrService.deleteEHealth(data).subscribe((p) => {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.dayoffGrid, 'delete', null, data);
-                    // (this.dayoffGrid.dataService as CRUDService)
+                    this.updateGridView(this.eHealthsGrid, 'delete', null, data);
+  
+                    // (this.eHealthsGrid.dataService as CRUDService)
                     //   .remove(data)
                     //   .subscribe();
-                    // this.dayoffRowCount = this.dayoffRowCount - 1;
+                    // this.eHealthRowCount = this.eHealthRowCount - 1;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'family') {
-              this.hrService
-                .DeleteEmployeeFamilyInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    let i = this.lstFamily.indexOf(data);
-                    if (i != -1) {
-                      this.lstFamily.splice(i, 1);
-                    }
-                    this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'Assets') {
-              this.hrService
-                .DeleteEmployeeAssetInfo(data.recID)
-                .subscribe((p) => {
+              } else if (funcID == 'eBenefit') {
+                this.hrService.DeleteEBenefit(data).subscribe((p) => {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    (this.eAssetGrid.dataService as CRUDService)
-                      .remove(data)
-                      .subscribe();
-                    this.eAssetRowCount = this.eAssetRowCount - 1;
-                    this.hrService
-                      .LoadDataEAsset(this.employeeID)
-                      .subscribe((res) => {
-                        this.lstAsset = res;
-                      });
+                    let index = this.listCrrBenefit.indexOf(data)
+                    if(index > -1){
+                      this.listCrrBenefit.splice(index, 1);
                     this.df.detectChanges();
-
-                    // let i = this.lstAsset.findIndex(
-                    //   (x) => x.recID == data.recID
-                    // );
-                    // // let i = this.lstAsset.indexOf(data);
-                    // console.log('data can xoa', data);
-
-                    // console.log(
-                    //   'ds tai trc khi xoa',
-                    //   this.lstAsset,
-                    //   'index ',
-                    //   i
-                    // );
-                    // if (i != -1) {
-                    //   this.lstAsset.splice(i, 1);
-                    // }
-                    // this.df.detectChanges();
-                  } else {
+                    }
+                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eHealth') {
-              this.hrService.deleteEHealth(data).subscribe((p) => {
-                if (p != null) {
-                  this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.eHealthsGrid, 'delete', null, data);
-
-                  // (this.eHealthsGrid.dataService as CRUDService)
-                  //   .remove(data)
-                  //   .subscribe();
-                  // this.eHealthRowCount = this.eHealthRowCount - 1;
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              });
-            } else if (funcID == 'eBenefit') {
-              this.hrService.DeleteEBenefit(data).subscribe((p) => {
-                if (p != null) {
-                  this.notify.notifyCode('SYS008');
-                  let index = this.listCrrBenefit.indexOf(data)
-                  if(index > -1){
-                    this.listCrrBenefit.splice(index, 1);
-                  this.df.detectChanges();
-                  }
-                 } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              });
-            } else if (funcID == 'eDocument'){
-              this.DeleteEDocument(data.recID).subscribe((p) => {
-                if(p != null){
-                  this.notify.notifyCode('SYS008');
-                  this.deleteFile(data, this.edocumentFormModel).subscribe((res) =>{
-                  })
-                  let index = this.lstEmpDocument.indexOf(data)
-                  if(index > -1){
-                    this.lstEmpDocument.splice(index, 1);
-                  this.df.detectChanges();
-                }
-                else {
-                  this.notify.notifyCode('SYS022');
-                }
-              }})
-            }
-            else if (funcID == 'eVaccine') {
-              this.hrService.deleteEVaccine(data).subscribe((p) => {
-                if (p != null) {
-                  this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.eVaccinesGrid, 'delete', null, data);
-                  // (this.eVaccinesGrid.dataService as CRUDService)
-                  //   .remove(data)
-                  //   .subscribe();
-                  // this.eVaccineRowCount = this.eVaccineRowCount - 1;
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              });
-            } else if (funcID == 'jobSalary') {
-              this.hrService
-                .DeleteEmployeeJobsalaryInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
+              } else if (funcID == 'eDocument'){
+                this.DeleteEDocument(data.recID).subscribe((p) => {
+                  if(p != null){
                     this.notify.notifyCode('SYS008');
-                    (this.jobSalaryGridview?.dataService as CRUDService)
-                      ?.remove(data)
-                      .subscribe();
-                    this.eJobSalaryRowCount--;
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'evaccines') {
-              this.hrService.deleteEVaccine(data).subscribe((res) => {
-                if (res) {
-                }
-              });
-            } else if (funcID == 'basicSalary') {
-              this.hrService
-                .DeleteEmployeeBasicsalaryInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    // this.initBasicSalaryInfo();
-                    this.hrService
-                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-                      .subscribe((dataEBaSlary) => {
-                        this.crrEBSalary = dataEBaSlary;
-                        this.df.detectChanges();
-                      });
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'eDegrees') {
-              this.hrService
-                .DeleteEmployeeDegreeInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.deleteFile(data, this.eDegreeFormModel).subscribe((res) =>{
+                    this.deleteFile(data, this.edocumentFormModel).subscribe((res) =>{
                     })
-                    this.updateGridView(this.eDegreeGrid, 'delete', null, data);
-                    // (this.eDegreeGrid?.dataService as CRUDService)
+                    let index = this.lstEmpDocument.indexOf(data)
+                    if(index > -1){
+                      this.lstEmpDocument.splice(index, 1);
+                    this.df.detectChanges();
+                  }
+                  else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                }})
+              }
+              else if (funcID == 'eVaccine') {
+                this.hrService.deleteEVaccine(data).subscribe((p) => {
+                  if (p != null) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.eVaccinesGrid, 'delete', null, data);
+                    // (this.eVaccinesGrid.dataService as CRUDService)
+                    //   .remove(data)
+                    //   .subscribe();
+                    // this.eVaccineRowCount = this.eVaccineRowCount - 1;
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+              } else if (funcID == 'jobSalary') {
+                this.hrService
+                  .DeleteEmployeeJobsalaryInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      (this.jobSalaryGridview?.dataService as CRUDService)
+                        ?.remove(data)
+                        .subscribe();
+                      this.eJobSalaryRowCount--;
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'evaccines') {
+                this.hrService.deleteEVaccine(data).subscribe((res) => {
+                  if (res) {
+                  }
+                });
+              } else if (funcID == 'basicSalary') {
+                this.hrService
+                  .DeleteEmployeeBasicsalaryInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      // this.initBasicSalaryInfo();
+                      this.hrService
+                        .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+                        .subscribe((dataEBaSlary) => {
+                          this.crrEBSalary = dataEBaSlary;
+                          this.df.detectChanges();
+                        });
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eDegrees') {
+                this.hrService
+                  .DeleteEmployeeDegreeInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.deleteFile(data, this.eDegreeFormModel).subscribe((res) =>{
+                      })
+                      this.updateGridView(this.eDegreeGrid, 'delete', null, data);
+                      // (this.eDegreeGrid?.dataService as CRUDService)
+                      //   ?.remove(data)
+                      //   .subscribe();
+                      // this.eDegreeRowCount--;
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eSkill') {
+                this.hrService.deleteESkill(data.recID).subscribe((res) => {
+                  if (res == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.skillGrid, 'delete', null, data);
+                    // (this.skillGrid?.dataService as CRUDService)
                     //   ?.remove(data)
                     //   .subscribe();
-                    // this.eDegreeRowCount--;
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
+                  // if (res) {
+                  //   if (!this.skillGrid && res[0] == true) {
+                  //     this.lstESkill = res[1];
+                  //     this.eSkillRowCount--;
+                  //   } else if (this.lstESkill && res[0] == true) {
+                  //     this.notify.notifyCode('SYS008');
+                  //     this.lstESkill = res[1];
+                  //     this.eSkillRowCount += this.updateGridView(
+                  //       this.skillGrid,
+                  //       'delete',
+                  //       data
+                  //     );
+                  //   } else {
+                  //     this.notify.notifyCode('SYS022');
+                  //   }
+                  //   this.df.detectChanges();
+                  // }
                 });
-            } else if (funcID == 'eSkill') {
-              this.hrService.deleteESkill(data.recID).subscribe((res) => {
-                if (res == true) {
-                  this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.skillGrid, 'delete', null, data);
-                  // (this.skillGrid?.dataService as CRUDService)
-                  //   ?.remove(data)
-                  //   .subscribe();
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-                // if (res) {
-                //   if (!this.skillGrid && res[0] == true) {
-                //     this.lstESkill = res[1];
-                //     this.eSkillRowCount--;
-                //   } else if (this.lstESkill && res[0] == true) {
-                //     this.notify.notifyCode('SYS008');
-                //     this.lstESkill = res[1];
-                //     this.eSkillRowCount += this.updateGridView(
-                //       this.skillGrid,
-                //       'delete',
-                //       data
-                //     );
-                //   } else {
-                //     this.notify.notifyCode('SYS022');
-                //   }
-                //   this.df.detectChanges();
-                // }
-              });
-            } else if (funcID == 'eCertificate') {
-              this.hrService
-                .DeleteEmployeeCertificateInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
-                    })
-                    // let i = this.lstCertificates.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstCertificates.splice(i, 1);
-                    // }
-                    // this.eCertificateRowCount--;
-                    // (this.eCertificateGrid.dataService as CRUDService)
-                    //   .remove(data)
-                    //   .subscribe();
-                  this.updateGridView(this.eCertificateGrid, 'delete', null, data);
-                    this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                  this.df.detectChanges();
-                });
-            } else if (funcID == 'eAppointions') {
-              this.hrService
-                .DeleteEmployeeAppointionsInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.appointionGridView, 'delete', null, data);
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'eExperiences') {
-              this.hrService
-                .DeleteEmployeeExperienceInfo(data)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    let index = this.lstExperiences.indexOf(data);
-                    if (index != -1) {
-                      this.lstExperiences.splice(index, 1);
+              } else if (funcID == 'eCertificate') {
+                this.hrService
+                  .DeleteEmployeeCertificateInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.deleteFile(data,this.eCertificateFormModel).subscribe((res) => {
+                      })
+                      // let i = this.lstCertificates.indexOf(data);
+                      // if (i != -1) {
+                      //   this.lstCertificates.splice(i, 1);
+                      // }
+                      // this.eCertificateRowCount--;
+                      // (this.eCertificateGrid.dataService as CRUDService)
+                      //   .remove(data)
+                      //   .subscribe();
+                    this.updateGridView(this.eCertificateGrid, 'delete', null, data);
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
                     }
                     this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'eDiseases') {
-              this.hrService
-                .DeleteEmployeeEDiseasesInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.eDiseasesGrid, 'delete', null, data);
-                    // (this.eDiseasesGrid.dataService as CRUDService)
-                    //   .remove(data)
-                    //   .subscribe();
-                    // this.eDiseasesRowCount--;
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                  this.df.detectChanges();
-                });
-            } else if (funcID == 'eTrainCourses') {
-              this.hrService
-                .deleteEmployeeTrainCourseInfo(data.recID)
-                .subscribe((p) => {
+                  });
+              } else if (funcID == 'eAppointions') {
+                this.hrService
+                  .DeleteEmployeeAppointionsInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.updateGridView(this.appointionGridView, 'delete', null, data);
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eExperiences') {
+                this.hrService
+                  .DeleteEmployeeExperienceInfo(data)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      let index = this.lstExperiences.indexOf(data);
+                      if (index != -1) {
+                        this.lstExperiences.splice(index, 1);
+                      }
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eDiseases') {
+                this.hrService
+                  .DeleteEmployeeEDiseasesInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                    this.updateGridView(this.eDiseasesGrid, 'delete', null, data);
+                      // (this.eDiseasesGrid.dataService as CRUDService)
+                      //   .remove(data)
+                      //   .subscribe();
+                      // this.eDiseasesRowCount--;
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                    this.df.detectChanges();
+                  });
+              } else if (funcID == 'eTrainCourses') {
+                this.hrService
+                  .deleteEmployeeTrainCourseInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p != null) {
+                      this.notify.notifyCode('SYS008');
+                      // let i = this.lstEdiseases.indexOf(data);
+                      // if (i != -1) {
+                      //   this.lstEdiseases.splice(i, 1);
+                      // }
+                      // (this.eTrainCourseGrid.dataService as CRUDService)
+                      //   .remove(data)
+                      //   .subscribe();
+                      // this.eTrainCourseRowCount--;
+                      this.updateGridView(this.eTrainCourseGrid, 'delete', null, data);
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eBusinessTravels') {
+                this.hrService.deleteEBusinessTravels(data).subscribe((p) => {
                   if (p != null) {
                     this.notify.notifyCode('SYS008');
-                    // let i = this.lstEdiseases.indexOf(data);
-                    // if (i != -1) {
-                    //   this.lstEdiseases.splice(i, 1);
-                    // }
-                    // (this.eTrainCourseGrid.dataService as CRUDService)
+                    this.updateGridView(this.businessTravelGrid, 'delete', null, data);
+                    // (this.businessTravelGrid.dataService as CRUDService)
                     //   .remove(data)
                     //   .subscribe();
-                    // this.eTrainCourseRowCount--;
-                    this.updateGridView(this.eTrainCourseGrid, 'delete', null, data);
+                    // this.eBusinessTravelRowCount =
+                    //   this.eBusinessTravelRowCount - 1;
+                  }
+                });
+              } else if (funcID == 'eAwards') {
+                this.hrService
+                  .DeleteEmployeeAwardInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p != null) {
+                      this.notify.notifyCode('SYS008');
+                      this.updateGridView(this.AwardGrid, 'delete', null, data);
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eDisciplines') {
+                this.hrService
+                  .DeleteEmployeeDisciplineInfo(data.recID)
+                  .subscribe((p) => {
+                    if (p == true) {
+                      this.notify.notifyCode('SYS008');
+                      this.updateGridView(this.eDisciplineGrid, 'delete', null, data);
+                      // (this.eDisciplineGrid.dataService as CRUDService)
+                      //   .remove(data)
+                      //   .subscribe();
+                      //this.eDisciplineRowCount--;
+                      this.df.detectChanges();
+                    } else {
+                      this.notify.notifyCode('SYS022');
+                    }
+                  });
+              } else if (funcID == 'eContract') {
+                this.hrService.deleteEContract(data).subscribe((res) => {
+                  if (res && res[0]) {
+                    this.notify.notifyCode('SYS008');
+                    this.getECurrentContract();
                     this.df.detectChanges();
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            } else if (funcID == 'eBusinessTravels') {
-              this.hrService.deleteEBusinessTravels(data).subscribe((p) => {
-                if (p != null) {
-                  this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.businessTravelGrid, 'delete', null, data);
-                  // (this.businessTravelGrid.dataService as CRUDService)
-                  //   .remove(data)
-                  //   .subscribe();
-                  // this.eBusinessTravelRowCount =
-                  //   this.eBusinessTravelRowCount - 1;
-                }
-              });
-            } else if (funcID == 'eAwards') {
-              this.hrService
-                .DeleteEmployeeAwardInfo(data.recID)
-                .subscribe((p) => {
-                  if (p != null) {
+              } else if (funcID == 'eAccidents') {
+                this.hrService.deleteEAccident(data?.recID).subscribe((res) => {
+                  if (res) {
+                    debugger
                     this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.AwardGrid, 'delete', null, data);
-                    this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
-                });
-            } else if (funcID == 'eDisciplines') {
-              this.hrService
-                .DeleteEmployeeDisciplineInfo(data.recID)
-                .subscribe((p) => {
-                  if (p == true) {
-                    this.notify.notifyCode('SYS008');
-                    this.updateGridView(this.eDisciplineGrid, 'delete', null, data);
-                    // (this.eDisciplineGrid.dataService as CRUDService)
-                    //   .remove(data)
+                    this.updateGridView(this.eAccidentGridView, 'delete', null, data);
+  
+                    // (this.eAccidentGridView.dataService as CRUDService)
+                    //   ?.remove(data)
                     //   .subscribe();
-                    //this.eDisciplineRowCount--;
+                    // this.eAccidentsRowCount--;
                     this.df.detectChanges();
-                  } else {
-                    this.notify.notifyCode('SYS022');
-                  }
+                  } else this.notify.notifyCode('SYS022');
                 });
-            } else if (funcID == 'eContract') {
-              this.hrService.deleteEContract(data).subscribe((res) => {
-                if (res && res[0]) {
-                  this.notify.notifyCode('SYS008');
-                  this.getECurrentContract();
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              });
-            } else if (funcID == 'eAccidents') {
-              this.hrService.deleteEAccident(data?.recID).subscribe((res) => {
-                if (res) {
-                  debugger
-                  this.notify.notifyCode('SYS008');
-                  this.updateGridView(this.eAccidentGridView, 'delete', null, data);
-
-                  // (this.eAccidentGridView.dataService as CRUDService)
-                  //   ?.remove(data)
-                  //   .subscribe();
-                  // this.eAccidentsRowCount--;
-                  this.df.detectChanges();
-                } else this.notify.notifyCode('SYS022');
-              });
+              }
             }
+          });
+          break;
+  
+        case 'SYS04': //copy
+          if (funcID == 'passport') {
+            this.copyValue(event.text, data, 'ePassport');
+            this.df.detectChanges();
+          } else if (funcID == 'eDayoff') {
+            this.copyValue(event.text, data, 'eDayoff');
+            this.df.detectChanges();
+          } else if (funcID == 'workpermit') {
+            this.copyValue(event.text, data, 'eWorkPermit');
+            this.df.detectChanges();
+          } else if (funcID == 'visa') {
+            this.copyValue(event.text, data, 'eVisa');
+            this.df.detectChanges();
+          } else if (funcID == 'family') {
+            this.copyValue(event.text, data, 'eFamilies');
+            this.df.detectChanges();
+          } else if (funcID == 'jobSalary') {
+            this.copyValue(event.text, data, 'jobSalary');
+            this.df.detectChanges();
+          } else if (funcID == 'basicSalary') {
+            this.copyValue(event.text, data, 'basicSalary');
+            this.df.detectChanges();
+          } else if (funcID == 'Assets') {
+            this.copyValue(event.text, data, 'Assets');
+            this.df.detectChanges();
+          } else if (funcID == 'eDegrees') {
+            // this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
+            this.copyValue(event.text, data, 'eDegrees');
+            this.df.detectChanges();
+          } else if (funcID == 'eCertificate') {
+            this.copyValue(event.text, data, 'eCertificate');
+            // this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eAppointions') {
+            this.copyValue(event.text, data, 'eAppointions');
+            // this.HandleEmployeeAppointionInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eExperiences') {
+            this.copyValue(event.text, data, 'eExperiences');
+            this.df.detectChanges();
+          } else if (funcID == 'eHealth') {
+            this.copyValue(event.text, data, 'eHealth');
+            this.df.detectChanges();
+          } else if (funcID == 'eVaccine') {
+            this.copyValue(event.text, data, 'eVaccine');
+            this.df.detectChanges();
+          } else if (funcID == 'Diseases') {
+            this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eSkill') {
+            this.copyValue(event.text, data, 'eSkills');
+            this.df.detectChanges();
+          } else if (funcID == 'eTrainCourses') {
+            this.copyValue(event.text, data, 'eTrainCourses');
+            this.df.detectChanges();
+          } else if (funcID == 'eBenefit') {
+            this.copyValue(event.text, data, 'benefit');
+            this.df.detectChanges();
+          } else if (funcID == 'eBusinessTravels') {
+            this.copyValue(event.text, data, 'eBusinessTravels');
+          } else if (funcID == 'eAwards') {
+            this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDisciplines') {
+            this.copyValue(event.text, data, 'eDisciplines');
+            // this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eDiseases') {
+            this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
+            this.df.detectChanges();
+          } else if (funcID == 'eAccidents') {
+            this.copyValue(event.text, data, 'eAccidents');
+            this.df.detectChanges();
+          } else if (funcID == 'eContract') {
+            this.copyValue(event.text, data, 'eContract');
+            this.df.detectChanges();
           }
-        });
-        break;
-
-      case 'SYS04': //copy
-        if (funcID == 'passport') {
-          this.copyValue(event.text, data, 'ePassport');
-          this.df.detectChanges();
-        } else if (funcID == 'eDayoff') {
-          this.copyValue(event.text, data, 'eDayoff');
-          this.df.detectChanges();
-        } else if (funcID == 'workpermit') {
-          this.copyValue(event.text, data, 'eWorkPermit');
-          this.df.detectChanges();
-        } else if (funcID == 'visa') {
-          this.copyValue(event.text, data, 'eVisa');
-          this.df.detectChanges();
-        } else if (funcID == 'family') {
-          this.copyValue(event.text, data, 'eFamilies');
-          this.df.detectChanges();
-        } else if (funcID == 'jobSalary') {
-          this.copyValue(event.text, data, 'jobSalary');
-          this.df.detectChanges();
-        } else if (funcID == 'basicSalary') {
-          this.copyValue(event.text, data, 'basicSalary');
-          this.df.detectChanges();
-        } else if (funcID == 'Assets') {
-          this.copyValue(event.text, data, 'Assets');
-          this.df.detectChanges();
-        } else if (funcID == 'eDegrees') {
-          // this.HandleEmployeeEDegreeInfo(event.text, 'copy', data);
-          this.copyValue(event.text, data, 'eDegrees');
-          this.df.detectChanges();
-        } else if (funcID == 'eCertificate') {
-          this.copyValue(event.text, data, 'eCertificate');
-          // this.HandleEmployeeECertificateInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eAppointions') {
-          this.copyValue(event.text, data, 'eAppointions');
-          // this.HandleEmployeeAppointionInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eExperiences') {
-          this.copyValue(event.text, data, 'eExperiences');
-          this.df.detectChanges();
-        } else if (funcID == 'eHealth') {
-          this.copyValue(event.text, data, 'eHealth');
-          this.df.detectChanges();
-        } else if (funcID == 'eVaccine') {
-          this.copyValue(event.text, data, 'eVaccine');
-          this.df.detectChanges();
-        } else if (funcID == 'Diseases') {
-          this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eSkill') {
-          this.copyValue(event.text, data, 'eSkills');
-          this.df.detectChanges();
-        } else if (funcID == 'eTrainCourses') {
-          this.copyValue(event.text, data, 'eTrainCourses');
-          this.df.detectChanges();
-        } else if (funcID == 'eBenefit') {
-          this.copyValue(event.text, data, 'benefit');
-          this.df.detectChanges();
-        } else if (funcID == 'eBusinessTravels') {
-          this.copyValue(event.text, data, 'eBusinessTravels');
-        } else if (funcID == 'eAwards') {
-          this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDisciplines') {
-          this.copyValue(event.text, data, 'eDisciplines');
-          // this.HandleEmployeeEDisciplinesInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eDiseases') {
-          this.HandleEmployeeEDiseasesInfo(event.text, 'copy', data);
-          this.df.detectChanges();
-        } else if (funcID == 'eAccidents') {
-          this.copyValue(event.text, data, 'eAccidents');
-          this.df.detectChanges();
-        } else if (funcID == 'eContract') {
-          this.copyValue(event.text, data, 'eContract');
-          this.df.detectChanges();
-        }
-        break;
+          break;
+      }
     }
+    
   }
 
   popupViewAllContract() {
@@ -3842,6 +3881,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eDegreeFuncID.view = true;
                 this.knowledgeInfoPer.eDegreeFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eDegreeFuncID.delete = res[i].delete;
+                this.knowledgeInfoPer.eDegreeFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3850,6 +3890,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eCertificateFuncID.view = true;
                 this.knowledgeInfoPer.eCertificateFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eCertificateFuncID.delete = res[i].delete;
+                this.knowledgeInfoPer.eCertificateFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3858,6 +3899,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eSkillFuncID.view = true;
                 this.knowledgeInfoPer.eSkillFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eSkillFuncID.delete = res[i].delete;
+                this.knowledgeInfoPer.eSkillFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3866,6 +3908,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.knowledgeInfoPer.eTrainCourseFuncID.view = true;
                 this.knowledgeInfoPer.eTrainCourseFuncID.write = res[i].write;
                 this.knowledgeInfoPer.eTrainCourseFuncID.delete = res[i].delete;
+                this.knowledgeInfoPer.eTrainCourseFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3955,6 +3998,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eHealthFuncID.view = true;
                 this.healthInfoPer.eHealthFuncID.write = res[i].write;
                 this.healthInfoPer.eHealthFuncID.delete = res[i].delete;
+                this.healthInfoPer.eHealthFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3963,6 +4007,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eDiseasesFuncID.view = true;
                 this.healthInfoPer.eDiseasesFuncID.write = res[i].write;
                 this.healthInfoPer.eDiseasesFuncID.delete = res[i].delete;
+                this.healthInfoPer.eDiseasesFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3971,6 +4016,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eVaccinesFuncID.view = true;
                 this.healthInfoPer.eVaccinesFuncID.write = res[i].write;
                 this.healthInfoPer.eVaccinesFuncID.delete = res[i].delete;
+                this.healthInfoPer.eVaccinesFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3979,6 +4025,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.healthInfoPer.eAccidentsFuncID.view = true;
                 this.healthInfoPer.eAccidentsFuncID.write = res[i].write;
                 this.healthInfoPer.eAccidentsFuncID.delete = res[i].delete;
+                this.healthInfoPer.eAccidentsFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -4597,7 +4644,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   //   });
   // }
 
-  handlEmployeeBenefit(actionHeaderText, actionType: string, data: any) {
+  handlEmployeeBenefit(actionHeaderText, actionType: string, data: any, isMulti = false) {
     let option = new SidebarModel();
     option.FormModel = this.benefitFormodel;
     option.Width = '550px';
@@ -4605,7 +4652,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       PopupEbenefitComponent,
       {
         employeeId: this.employeeID,
-        actionType: actionType,
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader2(this.benefitFuncID, this.lstFuncSalaryBenefit),
         funcID: this.benefitFuncID,
@@ -4810,7 +4857,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   HandleEmployeeBasicSalariesInfo(
     actionHeaderText,
     actionType: string,
-    data: any
+    data: any,
+    isMulti = false
   ) {
     let option = new SidebarModel();
     option.DataService =
@@ -4820,7 +4868,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEBasicSalariesComponent,
       {
-        actionType: actionType,
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
         headerText:
           actionHeaderText + ' ' + this.getFormHeader2(this.eBasicSalaryFuncID, this.lstFuncSalaryBenefit),
         funcID: this.eBasicSalaryFuncID,
@@ -5553,104 +5601,105 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   // }
 
     // form động kỷ luật
-    HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
-    let tempData = JSON.parse(JSON.stringify(data));
+  //   HandleEmployeeEDisciplinesInfo(actionHeaderText, actionType: string, data: any) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
 
-    var dataService = new CRUDService(this.inject);
-    let request = new DataRequest(this.eDisciplineFunc?.formName,this.eDisciplineFunc?.gridViewName,this.eDisciplineFunc?.entityName);
-    request.funcID = this.eDisciplineFunc?.functionID;
-    dataService.service = 'HR';
-    dataService.request = request;
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.eDisciplineFunc?.formName,this.eDisciplineFunc?.gridViewName,this.eDisciplineFunc?.entityName);
+  //   request.funcID = this.eDisciplineFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
 
-    if(actionType == 'add'){
-      this.hrService.getDataDefault(
-        this.eDisciplineFormModel.funcID,
-        this.eDisciplineFormModel.entityName,
-        'RecID'
-      ).subscribe((res: any) => {
-        tempData = res?.data;
-        tempData.employeeID = this.employeeID;
-        dataService.addDatas.set(tempData.recID, tempData);
-        this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
-      })
-    }
-    else if(actionType == 'copy'){
-      tempData.recID = Util.uid();
-      dataService.addDatas.set(tempData.recID, tempData);
-      this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
-    }
-    else if(actionType == 'edit' || actionType == 'view'){
-      dataService.updateDatas.set(tempData.recID, tempData);
-      this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
-    }
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.eDisciplineFormModel.funcID,
+  //       this.eDisciplineFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //       this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     tempData.recID = Util.uid();
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //     this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit' || actionType == 'view'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //     this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
   
-    // dataService.updateDatas.set(tempData.recID, tempData);
-    // this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
-  }
+  //   // dataService.updateDatas.set(tempData.recID, tempData);
+  //   // this.openFormEDiscipline(actionHeaderText, actionType, dataService, tempData, data);
+  // }
 
-  openFormEDiscipline(actionHeaderText, actionType,dataService, tempData, data){
-    dataService.dataSelected = tempData;
-    let option = new SidebarModel();
-    option.FormModel = this.eDisciplineFormModel;
-    option.Width = '550px';
-    let dialogAdd = this.callfunc.openSide(
-      CodxFormDynamicComponent,
-      {
-        formModel: option.FormModel,
-        data: tempData,
-        isView: actionType == 'view' ? true : false,
-        function: null,
-        dataService: dataService,
-        titleMore: actionHeaderText,
-      },
-      option
-    );
-
-    dialogAdd.closed.subscribe((res) => {
-      if (res.event) {
-        dataService.clear();
-
-        if(actionType == 'edit'){
-          this.updateGridView(this.eDisciplineGrid, actionType, res.event.update.data, null);
-        }
-        else if(actionType == 'add' || actionType =='copy'){
-          this.updateGridView(this.eDisciplineGrid, actionType, res.event.save.data, null);
-        }
-      this.df.detectChanges();
-    }});
-  }
-
-  //form custome kỷ luật
-  // HandleEmployeeEDisciplinesInfo(
-  //   actionHeaderText,
-  //   actionType: string,
-  //   data: any
-  // ) {
+  // openFormEDiscipline(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
   //   let option = new SidebarModel();
-  //   option.DataService = this.view.dataService;
-  //   option.FormModel = this.view.formModel;
+  //   option.FormModel = this.eDisciplineFormModel;
   //   option.Width = '550px';
   //   let dialogAdd = this.callfunc.openSide(
-  //     PopupEDisciplinesComponent,
+  //     CodxFormDynamicComponent,
   //     {
-  //       actionType: actionType,
-  //       headerText:
-  //         actionHeaderText + ' ' + this.getFormHeader2(this.eDisciplineFuncID, this.lstFuncHRProcess),
-  //       employeeId: this.employeeID,
-  //       empObj: this.infoPersonal,
-  //       funcID: this.eDisciplineFuncID,
-  //       dataInput: data,
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       isView: actionType == 'view' ? true : false,
+  //       function: null,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
   //     },
   //     option
   //   );
+
   //   dialogAdd.closed.subscribe((res) => {
-  //     if (!res?.event)
-  //       (this.eDisciplineGrid?.dataService as CRUDService).clear();
-  //     if (res.event)
-  //       this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
+  //     if (res.event) {
+  //       dataService.clear();
+
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.eDisciplineGrid, actionType, res.event.save.data, null);
+  //       }
   //     this.df.detectChanges();
-  //   });
+  //   }});
   // }
+
+  //form custome kỷ luật
+  HandleEmployeeEDisciplinesInfo(
+    actionHeaderText,
+    actionType: string,
+    data: any
+    , isMulti = false
+  ) {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEDisciplinesComponent,
+      {
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader2(this.eDisciplineFuncID, this.lstFuncHRProcess),
+        employeeId: this.employeeID,
+        empObj: this.infoPersonal,
+        funcID: this.eDisciplineFuncID,
+        dataInput: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event)
+        (this.eDisciplineGrid?.dataService as CRUDService).clear();
+      if (res.event)
+        this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
+      this.df.detectChanges();
+    });
+  }
 
       // form động tai nạn lđ
     HandleEmployeeAccidentInfo(actionHeaderText, actionType: string, data: any) {
@@ -5784,7 +5833,8 @@ dataService.clear();
   HandleEmployeeAppointionInfo(
     actionHeaderText,
     actionType: string,
-    data: any
+    data: any,
+    isMulti = false
   ) {
     if (this.appointionGridView)
       this.appointionGridView.dataService.dataSelected = this.infoPersonal;
@@ -5796,7 +5846,7 @@ dataService.clear();
     let dialogAdd = this.callfunc.openSide(
       PopupEappointionsComponent,
       {
-        actionType: actionType,
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
         employeeId: this.employeeID,
         funcID: this.appointionFuncID,
         appointionObj: data,
@@ -5968,7 +6018,7 @@ dataService.clear();
     }
   }
 
-  HandleEContractInfo(actionHeaderText, actionType: string, data: any) {
+  HandleEContractInfo(actionHeaderText, actionType: string, data: any , isMulti = false) {
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.eContractFormModel;
@@ -5985,7 +6035,7 @@ dataService.clear();
     let dialogAdd = this.callfunc.openSide(
       isAppendix ? PopupSubEContractComponent : PopupEProcessContractComponent,
       {
-        actionType: actionType,
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
         dataObj: data,
         empObj: this.infoPersonal,
         headerText:
@@ -6261,7 +6311,6 @@ dataService.clear();
 
   //form động bệnh nghề nghiệp
     HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
-      console.log('recID nhan vao', data.recID);
       
     let tempData = JSON.parse(JSON.stringify(data));
 
@@ -7192,20 +7241,30 @@ dataService.clear();
     }, 100);
   }
 
-  copyValue(actionHeaderText, data, flag) {
+  copyValue(actionHeaderText, data, flag, isMulti = false) {
     if (flag == 'benefit') {
       if (this.eBenefitGrid) {
         this.eBenefitGrid.dataService.dataSelected = data;
         (this.eBenefitGrid.dataService as CRUDService)
           .copy()
           .subscribe((res: any) => {
-            this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+            if(isMulti == true){
+              this.handlEmployeeBenefit(actionHeaderText, 'copy', res, true);
+            }
+            else{
+              this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+            }
           });
       } else {
         this.hrService
           .copy(data, this.benefitFormodel, 'RecID')
           .subscribe((res) => {
-            this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+            if(isMulti == true){
+              this.handlEmployeeBenefit(actionHeaderText, 'copy', res, true);
+            }
+            else{
+              this.handlEmployeeBenefit(actionHeaderText, 'copy', res);
+            }
           });
       }
     } else if (flag == 'eDisciplines') {
@@ -7214,13 +7273,23 @@ dataService.clear();
         (this.eDisciplineGrid.dataService as CRUDService)
           .copy()
           .subscribe((res: any) => {
-            this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+            if(isMulti == true){
+              this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res, true);
+            }
+            else{
+              this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+            }
           });
       } else {
         this.hrService
           .copy(data, this.eDisciplineFormModel, 'RecID')
           .subscribe((res) => {
-            this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+            if(isMulti == true){
+              this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res, true);
+            }
+            else{
+              this.HandleEmployeeEDisciplinesInfo(actionHeaderText, 'copy', res);
+            }
           });
       }
     } else if (flag == 'eAppointions') {
@@ -7228,7 +7297,12 @@ dataService.clear();
       (this.appointionGridView.dataService as CRUDService)
         .copy()
         .subscribe((res: any) => {
-          this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res);
+          if(isMulti == true){
+            this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res, true);
+          }
+          else{
+            this.HandleEmployeeAppointionInfo(actionHeaderText, 'copy', res);
+          }
         });
     } else if (flag == 'ePassport') {
       this.hrService
@@ -7312,7 +7386,12 @@ dataService.clear();
       this.hrService
         .copy(data, this.eBasicSalaryFormmodel, 'RecID')
         .subscribe((res) => {
-          this.HandleEmployeeBasicSalariesInfo(actionHeaderText, 'copy', res);
+          if(isMulti == true){
+            this.HandleEmployeeBasicSalariesInfo(actionHeaderText, 'copy', res, true);
+          }
+          else{
+            this.HandleEmployeeBasicSalariesInfo(actionHeaderText, 'copy', res);
+          }
         });
     } else if (flag == 'jobSalary') {
       this.hrService
@@ -7336,7 +7415,12 @@ dataService.clear();
       this.hrService
         .copy(data, this.eContractFormModel, 'RecID')
         .subscribe((res) => {
-          this.HandleEContractInfo(actionHeaderText, 'copy', res);
+          if(isMulti == true){
+            this.HandleEContractInfo(actionHeaderText, 'copy', res, true);
+          }
+          else{
+            this.HandleEContractInfo(actionHeaderText, 'copy', res);
+          }
         });
     } else if (flag == 'eDegrees') {
       this.hrService
