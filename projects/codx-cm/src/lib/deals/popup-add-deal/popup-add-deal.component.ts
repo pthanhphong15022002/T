@@ -46,8 +46,9 @@ export class PopupAddDealComponent
   implements OnInit, AfterViewInit
 {
   // view child
-  @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
-  @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
+  @ViewChild('tabCustomFieldDetail')
+  tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail')
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
@@ -962,20 +963,16 @@ export class PopupAddDealComponent
           }
           this.deal.dealID = res[2];
         }
-        this.deal.endDate = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action !== this.actionEdit ||
-            (this.action === this.actionEdit &&
-              (this.deal.status == '1' || this.deal.status == '15'))
-            ? null
-            : this.deal.createdOn
-        );
         this.dateMax = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action != this.actionEdit ? null : this.deal.createdOn
-        );
+            this.listInstanceSteps,
+            this.action,
+            this.action !== this.actionEdit ||
+              (this.action === this.actionEdit &&
+                (this.deal.status == '1' || this.deal.status == '15'))
+              ? null
+              : this.deal.createdOn
+          );
+        this.deal.endDate = this.action === this.actionEdit ? this.deal?.endDate: this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1157,31 +1154,34 @@ export class PopupAddDealComponent
 
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
-    let menuInput = this.tabInfo.find((item) => item === this.menuInputInfo);
-    let tabInput = this.tabContent.find(
+    let menuInput = this.tabInfo.findIndex(
+      (item) => item === this.menuInputInfo
+    );
+    let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if (check && !menuInput && !tabInput) {
+    if (check && menuInput == -1 && tabInput == -1) {
       this.tabInfo.splice(2, 0, this.menuInputInfo);
       this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    } else if (!check && menuInput && tabInput) {
-      this.tabInfo.splice(2, 1);
-      this.tabContent.splice(2, 1);
+    } else if (!check && menuInput != -1 && tabInput != -1) {
+      this.tabInfo.splice(menuInput, 1);
+      this.tabContent.splice(tabInput, 1);
     }
   }
+
   itemTabContact(check: boolean): void {
-    let menuContact = this.tabInfo.find(
+    let menuContact = this.tabInfo.findIndex(
       (item) => item === this.menuGeneralContact
     );
-    let tabContact = this.tabContent.find(
+    let tabContact = this.tabContent.findIndex(
       (item) => item === this.tabGeneralContactDetail
     );
-    if (check && !menuContact && !tabContact) {
+    if (check && menuContact == -1 && tabContact == -1) {
       this.tabInfo.splice(1, 0, this.menuGeneralContact);
       this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact && tabContact) {
-      this.tabInfo.splice(1, 1);
-      this.tabContent.splice(1, 1);
+      this.tabInfo.splice(menuContact, 1);
+      this.tabContent.splice(tabContact, 1);
     }
   }
   ischeckFields(steps: any): boolean {

@@ -110,6 +110,7 @@ import { TempPurchaseinvoicesTableComponent } from './periodic/importeinvoices/t
 import { WarehouseTransfersComponent } from './vouchers/warehouse-transfers/warehouse-transfers.component';
 import { WarehouseTransfersAddComponent } from './vouchers/warehouse-transfers/warehouse-transfers-add/warehouse-transfers-add.component';
 import { WarehouseTransfersDetailComponent } from './vouchers/warehouse-transfers/warehouse-transfers-detail/warehouse-transfers-detail.component';
+import { TransfersTableComponent } from './share/ac-tableview/transfers-table/transfers-table.component';
 export const routes: Routes = [
   {
     path: '',
@@ -408,6 +409,7 @@ export const routes: Routes = [
     WarehouseTransfersComponent,
     WarehouseTransfersAddComponent,
     WarehouseTransfersDetailComponent,
+    TransfersTableComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

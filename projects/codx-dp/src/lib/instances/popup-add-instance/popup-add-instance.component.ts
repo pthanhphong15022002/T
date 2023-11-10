@@ -101,7 +101,7 @@ export class PopupAddInstanceComponent implements OnInit {
   instanceNoSetting: any;
   processID: string = '';
   idxCrr: number = -1;
-
+  autoNameTabFields: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -123,6 +123,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.addFieldsControl = dt?.data?.addFieldsControl;
     this.instanceNoSetting = dt?.data?.instanceNoSetting;
     this.processID = dt?.data?.processID;
+    this.autoNameTabFields = dt?.data?.autoNameTabFields;
     this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.lstParticipants = dt?.data?.lstParticipants?.filter(x => x?.userID != null && x?.userID != '');
@@ -167,6 +168,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.menuInputInfo) this.menuInputInfo.text = this.autoNameTabFields != null && this.autoNameTabFields?.trim() != '' ? this.autoNameTabFields : this.menuInputInfo.text
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
     } else if (this.action === 'edit') {
@@ -193,15 +195,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   updateEndDate() {
-    this.instance.endDate = this.HandleEndDate(
-      this.listStep,
-      this.action,
-      this.action !== 'edit' ||
-        (this.action === 'edit' &&
-          (this.instance.status == '1' || this.instance.status == '15' ))
-        ? null
-        : this.instance.createdOn
-    );
     this.endDate = this.HandleEndDate(
       this.listStep,
       this.action,
@@ -211,6 +204,7 @@ export class PopupAddInstanceComponent implements OnInit {
         ? null
         : this.instance.createdOn
     );
+    this.instance.endDate = this.action === 'edit' ? this.instance?.endDate:  this.endDate;
   }
 
   loadTabsForm() {
@@ -246,9 +240,7 @@ export class PopupAddInstanceComponent implements OnInit {
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));
-
          this.updateEndDate();
-
           this.loadTabsForm();
         }
       });

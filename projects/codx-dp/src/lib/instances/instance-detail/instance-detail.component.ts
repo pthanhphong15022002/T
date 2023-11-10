@@ -70,7 +70,7 @@ export class InstanceDetailComponent implements OnInit {
   // View deatail Of approrver
   @Input() runMode = '';
   @Input() hideMF = false;
-
+  @Input() autoNameTabFields: string;
   @Input() applyFor: any;
   @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
@@ -303,6 +303,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    console.log(this.tabInstances);
     if (this.dataSelect?.permissions?.length > 0) {
       this.ownerInstance =
         this.dataSelect?.permissions
@@ -341,6 +342,7 @@ export class InstanceDetailComponent implements OnInit {
 
   loadChangeData() {
     this.instanceStatus = this.dataSelect.status;
+    this.autoNameTabFields = JSON.parse(JSON.stringify(this.autoNameTabFields));
     this.GetStepsByInstanceIDAsync();
     // this.getDataGanttChart(this.dataSelect.recID, this.dataSelect.processID);
     this.listReasonBySteps(this.reasonStepsObject);

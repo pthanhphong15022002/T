@@ -12,7 +12,7 @@
           name="titleDefault"
           formName="DPInstancesSteps"
           grvName="grvDPInstancesSteps"
-          default="Thông tin nhập liệu"
+          [default]="titleDefault"
         ></codx-label>
       </span>
       <span class="title-1 fw-bold text-primary" *ngIf="!titleDefault">{{
@@ -297,7 +297,7 @@
   </ng-container>
 </ng-template> -->
 
-<!-- 
+<!--
 <ng-template #viewDataValue let-data>
   <ng-container *ngIf="!data.dataValue">
     <span class="place-holder" *ngIf="data.dataType != 'R'">
@@ -491,7 +491,7 @@
         </div>
       </ng-template>
     </ng-container>
-    
+
     <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
       <ng-container *ngIf="data.dataFormat == 'C'">
         <span
@@ -510,7 +510,7 @@
       </ng-container>
     </ng-container>
 
-  
+
     <ng-container *ngIf="data.dataType == 'TA'">
       <table class="table table-row-bordered" *ngIf="data.dataFormat">
         <thead>
