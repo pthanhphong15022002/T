@@ -370,7 +370,7 @@
   </div>
 </ng-template>
 
-<ng-template #tabCustomFieldDetail let-form>
+<ng-template #fieldDetail let-form>
   <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
     <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
       <ng-container *ngIf="step?.fields?.length > 0">
@@ -416,9 +416,9 @@
       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
-  <ng-template #tabInputInfo>
+  <ng-template #tabCustomFieldDetail>
     <ng-container
-      [ngTemplateOutlet]="tabCustomFieldDetail"
+      [ngTemplateOutlet]="fieldDetail"
       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>

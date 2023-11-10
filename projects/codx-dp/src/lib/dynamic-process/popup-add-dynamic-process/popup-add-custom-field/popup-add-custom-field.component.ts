@@ -873,16 +873,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //----------------Data Referent__PA-------------------------//
   clickSettingReference() {
-    if (!this.field.refValue || !this.entityNamePA) {
-      this.notiService.notify(
-        'Hãy chọn đối tượng liên kết trước khi thiết lập',
-        '3'
-      );
-      return;
-    }
+    // if (!this.field.refValue || !this.entityNamePA) {
+    //   this.notiService.notify(
+    //     'Hãy chọn đối tượng liên kết trước khi thiết lập',
+    //     '3'
+    //   );
+    //   return;
+    // }
 
     //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    let formName = this.entityNamePA.replace('_', '');
+    // let formName = this.entityNamePA.replace('_', '');
+    // let gridViewName = 'grv' + formName;
+    let formName = 'CMCustomers';
     let gridViewName = 'grv' + formName;
 
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {

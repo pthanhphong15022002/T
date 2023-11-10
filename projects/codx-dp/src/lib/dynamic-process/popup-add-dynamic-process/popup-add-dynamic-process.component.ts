@@ -878,6 +878,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   valueChangeAutoNoCode(e) {
     this.instanceNoSetting = e?.data;
   }
+  valueChangebusinessLineID($event ){
+    if($event && $event?.data) {
+      this.process.businessLineID = $event?.data;
+    }
+  }
   //#endregion
 
   closePopup() {
@@ -1720,13 +1725,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.startInstanceControl = false;
       }
     }
-    // else if (view === 'AllowEstimatedEndView') {
-    //   if ($event.field === 'yes' && $event.component.checked === true) {
-    //     this.process.allowEstimatedEnd = true;
-    //   } else if ($event.field == 'no' && $event.component.checked === true) {
-    //     this.process.allowEstimatedEnd = false;
-    //   }
-    // }
+    else if (view === 'AllowEstimatedEndView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowEstimatedEnd = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowEstimatedEnd = false;
+      }
+    }
 
     this.changeDetectorRef.detectChanges();
   }
@@ -4547,6 +4552,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.stepList.filter((x) => !x.isSuccessStep && !x.isFailStep)
       )
     ) {
+      return false;
+    }
+    if(!this.process?.businessLineID && this.process.applyFor == '1' && this.action !== 'edit' ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+
       return false;
     }
     return true;

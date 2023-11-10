@@ -174,6 +174,7 @@ export class PopupAddLeadComponent
 
   convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
   transIDCamp: any;
+  autoNameTabFields: string;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -249,6 +250,19 @@ export class PopupAddLeadComponent
       lever = paramDefault['ControlInputAddress'] ?? 0;
     }
     this.leverSetting = lever;
+  }
+
+  setAutoNameTabFields(autoNameTabFields){
+    this.autoNameTabFields = autoNameTabFields;
+    if(this.menuInputInfo){
+      this.menuInputInfo.text = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Thông tin mở rộng';
+      this.menuInputInfo.subName = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
+      this.menuInputInfo.subText =this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
+      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
+      if(menuInput != -1){
+        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+      }
+    }
   }
 
   valueChange($event) {
@@ -795,6 +809,7 @@ export class PopupAddLeadComponent
         // this.afterLoad();
         this.getListInstanceSteps(res.recID);
         this.lead.processID = res.recID;
+        this.setAutoNameTabFields(res?.autoNameTabFields);
       }
     });
   }
@@ -807,7 +822,7 @@ export class PopupAddLeadComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
-          permissionRoles: res[3],
+          autoNameTabFields: res[3],
         };
         this.leadNoProcess = res[2];
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
@@ -818,6 +833,7 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
+        this.setAutoNameTabFields(obj?.autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = null;
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
@@ -826,16 +842,16 @@ export class PopupAddLeadComponent
         } else {
           this.lead.leadID = res[2];
         }
-        this.lead.endDate = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action !== this.actionEdit || this.action === this.actionEdit && (this.lead.status == '1' || this.lead.status == '15' ) ? null : this.lead.createdOn
-        );
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.lead.createdOn
+          this.action !== this.actionEdit ||
+            (this.action === this.actionEdit &&
+              (this.lead.status == '1' || this.lead.status == '15'))
+            ? null
+            : this.lead.createdOn
         );
+      this.lead.endDate = this.action === this.actionEdit ? this.lead?.endDate: this.dateMax;
         this.planceHolderAutoNumber = this.lead.leadID;
 
         this.changeDetectorRef.detectChanges();

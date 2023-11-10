@@ -45,6 +45,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
+  autoNameTabFields: string;
   steps: DP_Steps[] = [];
   approveRule: boolean = false;
 
