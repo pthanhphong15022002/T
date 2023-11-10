@@ -599,6 +599,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
           case 'SYS02': //xóa
@@ -677,6 +679,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
@@ -1206,6 +1210,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 groupData['progress'] = data[0];
               }
               this.currentStep['progress'] = data[1];
+              this.changeDetectorRef.markForCheck();
             }
           });
       }
@@ -2545,7 +2550,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       'DP',
       data,
       category,
-      'DP_Instances_Steps_Tasks',
+      'DP_Activities',
       'CM0201',
       data?.title,
       this.releaseCallback.bind(this)
@@ -2585,7 +2590,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       .codxCancel(
                         'CM',
                         task?.recID,
-                        'DP_Instances_Steps_Tasks',
+                        'DP_Activities',
                         null,
                         null
                       )
