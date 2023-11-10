@@ -13,7 +13,7 @@
   <!-- *ngIf="isAfterRender" -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
-    <div *ngIf="useForQTNS" class="form-group row mt-5">
+    <div *ngIf="useForQTNS == true || isMultiCopy == true" class="form-group row mt-5">
       <div class="col-11">
         <div class="d-flex">
           <div class="d-flex flex-column position-relative">
@@ -61,7 +61,8 @@
                       | async
                   "
                 ></span>
-              </div> -->
+              </div>
+            --> 
           </div>
         </div>
       </div>
