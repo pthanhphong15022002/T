@@ -496,6 +496,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
   }
 
@@ -504,11 +505,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     benefitFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
   }
 
@@ -517,31 +520,37 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     appointionFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     dayoffFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     eBusinessTravelFuncID:{
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     awardFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     eDisciplineFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     }
   }
 
@@ -614,6 +623,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
     foreignWorkerFuncID: {
       view : false,
@@ -623,6 +633,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         view : false,
         write: false,
         delete: false,
+        isPortal: false,
       },
     },
     legalInfoFuncID: {
@@ -633,17 +644,20 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         view : false,
         write: false,
         delete: false,
+        isPortal: false
       },
       visaFuncID:{
         view : false,
         write: false,
         delete: false,
+        isPortal: false,
       }
     },
     eExperienceFuncID: {
       view : false,
       write: false,
       delete: false,
+      isPortal: false,
     },
   };
 
@@ -3402,6 +3416,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.view = true;
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.write = res[i].write;
                       this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.delete = res[i].delete;
+                      this.curriculumVitaePermission.legalInfoFuncID.passportFuncID.isPortal = res[i].isPortal;
                       if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                         this.lstBtnAdd.push(res[i]);
                       }
@@ -3410,6 +3425,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.view = true;
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.write = res[i].write;
                       this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.delete = res[i].delete;
+                      this.curriculumVitaePermission.legalInfoFuncID.visaFuncID.isPortal = res[i].isPortal;
                       if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                         this.lstBtnAdd.push(res[i]);
                       }
@@ -3441,6 +3457,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view = true;
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write = res[i].write;
                         this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.delete = res[i].delete;
+                        this.curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.isPortal = res[i].isPortal;
                       if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                           this.lstBtnAdd.push(res[i]);
                         }
@@ -3459,6 +3476,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.curriculumVitaePermission.eFamiliesFuncID.view = true;
                 this.curriculumVitaePermission.eFamiliesFuncID.write = res[i].write;
                 this.curriculumVitaePermission.eFamiliesFuncID.delete = res[i].delete;
+                this.curriculumVitaePermission.eFamiliesFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3468,6 +3486,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.curriculumVitaePermission.eExperienceFuncID.view = true;
                 this.curriculumVitaePermission.eExperienceFuncID.write = res[i].write;
                 this.curriculumVitaePermission.eExperienceFuncID.delete = res[i].delete;
+                this.curriculumVitaePermission.eExperienceFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3539,6 +3558,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.jobInfoPer.eNeedToSubmitProfileFuncID.view = true;
                 this.jobInfoPer.eNeedToSubmitProfileFuncID.write = res[i].write;
                 this.jobInfoPer.eNeedToSubmitProfileFuncID.delete = res[i].delete;
+                this.jobInfoPer.eNeedToSubmitProfileFuncID.isPortal = res[i].isPortal;
                 this.GetEmpDocument(this.infoPersonal.employeeID).subscribe((res) => {
                   this.lstEmpDocument = res;
                   for(let i = 0; i< this.lstEmpDocument.length; i++){
@@ -3603,6 +3623,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.view = true;
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.write = res[i].write;
                 this.salaryBenefitInfoPer.eBasicSalaryFuncID.delete = res[i].delete;
+                this.salaryBenefitInfoPer.eBasicSalaryFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3611,6 +3632,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.salaryBenefitInfoPer.benefitFuncID.view = true;
                 this.salaryBenefitInfoPer.benefitFuncID.write = res[i].write;
                 this.salaryBenefitInfoPer.benefitFuncID.delete = res[i].delete;
+                this.salaryBenefitInfoPer.benefitFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3699,6 +3721,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eContractFuncID.view = true;
                 this.workingProcessInfoPer.eContractFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eContractFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.eContractFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3707,6 +3730,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.appointionFuncID.view = true;
                 this.workingProcessInfoPer.appointionFuncID.write = res[i].write;
                 this.workingProcessInfoPer.appointionFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.appointionFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3715,6 +3739,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.dayoffFuncID.view = true;
                 this.workingProcessInfoPer.dayoffFuncID.write = res[i].write;
                 this.workingProcessInfoPer.dayoffFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.dayoffFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3723,6 +3748,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eBusinessTravelFuncID.view = true;
                 this.workingProcessInfoPer.eBusinessTravelFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eBusinessTravelFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.eBusinessTravelFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3731,6 +3757,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.awardFuncID.view = true;
                 this.workingProcessInfoPer.awardFuncID.write = res[i].write;
                 this.workingProcessInfoPer.awardFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.awardFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }
@@ -3739,6 +3766,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
                 this.workingProcessInfoPer.eDisciplineFuncID.view = true;
                 this.workingProcessInfoPer.eDisciplineFuncID.write = res[i].write;
                 this.workingProcessInfoPer.eDisciplineFuncID.delete = res[i].delete;
+                this.workingProcessInfoPer.eDisciplineFuncID.isPortal = res[i].isPortal;
                   if((res[i].write == true && (this.fromWS == false || res[i].isPortal == false))){
                   this.lstBtnAdd.push(res[i]);
                 }

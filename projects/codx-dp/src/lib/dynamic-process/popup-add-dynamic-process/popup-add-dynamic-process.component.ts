@@ -59,7 +59,7 @@ import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-d
 import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
@@ -819,10 +819,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
-        if (step && step['taskGroups']?.length > 0) {
-          let index = step['taskGroups']?.findIndex((x) => !x['recID']);
-          step['taskGroups']?.splice(index, 1);
-          step['taskGroups']?.forEach((element) => {
+        if (step && step?.taskGroups?.length > 0) {
+          let index = step?.taskGroups?.findIndex((x) => !x?.recID);
+          if(index >= 0){
+            step?.taskGroups?.splice(index, 1);
+          }
+          step?.taskGroups?.forEach((element) => {
             delete element['task'];
           });
         }
@@ -2426,8 +2428,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   deleteCustomField(field) {
     this.fieldCrr = field;
-    this.notiService.alertCode('SYS030').subscribe((x) => {
+    let task = this.checkFieldInTask(this.fieldCrr?.recID,this.fieldCrr?.stepID)
+    let mes = task ?'Xóa liên kết với công việc nhé':'SYS030';
+    this.notiService.alertCode(mes).subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
+        if(task){
+          let fieldId = this.convertString(task?.fieldID,this.fieldCrr?.recID);
+          task.fieldID = fieldId;
+        }
         let idxStep = this.stepList.findIndex(
           (x) => x.recID == this.fieldCrr.stepID
         );
@@ -2529,8 +2537,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.dropFieldsToStep(event, stepID);
     }
   }
-
-  dropFieldsToStep(event, stepID) {
+  async dropFieldsToStep(event, stepID) {
+    let task = this.checkFieldInTask(event.item.data?.recID, event.item.data?.stepID);
+    if(task){
+      let select = await firstValueFrom(this.notiService.alertCode('Trường tùy chỉnh này có liên kết với công việc nếu di chuyển sẽ hủy liên kết', null, []));
+      if (select.event && select.event.status == 'Y') {
+        let fieldId = this.convertString(task?.fieldID, event.item.data?.recID);
+        task.fieldID = fieldId;
+      }else{
+        return
+      }
+    }
     let stepIDContain = event.container.id;
     let stepIDPrevious = event.previousContainer.id;
     if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
@@ -2563,6 +2580,27 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     );
 
     this.updateSorting(stepIDContain, stepIDPrevious);
+  }
+  checkFieldInTask(fieldID, stepID) {
+    let step = this.stepList?.find(step => step.recID == stepID);
+    if(step){
+      let tasks = step.tasks;
+      if(tasks?.length  > 0){
+        let task = tasks.find(x => x.fieldID.includes(fieldID));
+        if(task) return task;
+      }
+    }
+    return null;
+  }
+  convertString(str, strDelete){
+    str = str.replace(strDelete, "");
+    if (str.startsWith(";")) {
+      str = str.slice(1);
+    }
+    if (str.endsWith(";")) {
+      str = str.slice(0, -1);
+    }
+    return str;
   }
 
   updateSorting(stepID, stepID2 = null) {
@@ -2939,8 +2977,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.taskGroupList.splice(index - 1, 0, taskGroup);
       } else {
         this.taskGroupList.push(taskGroup);
-      }
-
+      };
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
