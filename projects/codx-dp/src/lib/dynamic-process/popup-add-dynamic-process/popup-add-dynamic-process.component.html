@@ -457,7 +457,7 @@
             >
             </codx-input>
           </div>
-          <!-- <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
+          <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
             <div>
               <codx-label
                 fiedName="BusinessLineID"
@@ -468,12 +468,14 @@
             </div>
             <codx-input
               field="businessLineID"
+              [disabled]="action === 'edit'"
               [formModel]="dialog.formModel"
-              [crrValue]="process.businessLineID"
-              (valueChange)="valueChange($event)"
+              [model]="{ ProcessID: process?.recID }"
+              [crrValue]="process?.businessLineID"
+              (valueChange)="valueChangebusinessLineID($event)"
             >
             </codx-input>
-          </div> -->
+          </div>
 
         </div>
         <div class="col-6">

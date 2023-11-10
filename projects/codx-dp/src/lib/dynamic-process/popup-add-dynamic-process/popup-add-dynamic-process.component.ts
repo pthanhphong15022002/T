@@ -879,7 +879,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.instanceNoSetting = e?.data;
   }
   valueChangebusinessLineID($event ){
-
+    if($event && $event?.data) {
+      this.process.businessLineID = $event?.data;
+    }
   }
   //#endregion
 
@@ -4550,6 +4552,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.stepList.filter((x) => !x.isSuccessStep && !x.isFailStep)
       )
     ) {
+      return false;
+    }
+    if(!this.process?.businessLineID && this.process.applyFor == '1' && this.action !== 'edit' ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+
       return false;
     }
     return true;

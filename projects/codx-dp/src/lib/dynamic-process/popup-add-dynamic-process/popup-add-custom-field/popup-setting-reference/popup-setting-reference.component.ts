@@ -38,6 +38,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     formName: 'DPStepsFields',
     entityName: 'DP_Steps_Fields',
   };
+  dataRef = [];
   constructor(
     private changdef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -71,9 +72,11 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     }
   }
 
-  selectField(fieldName) {}
+  selectField(e, field) {
+    this.dataRef.push(field);
+  }
 
   check(recID) {
-    return false;
+    return this.dataRef.includes((x) => x.recID == recID);
   }
 }

@@ -209,7 +209,7 @@
 
 <!-- Start: template Tab VatInvoices-->
 <ng-template #tabVatInvoices>
-    <ng-container *ngIf="itemSelected?.listVATInvoices">
+    <ng-container *ngIf="itemSelected">
         <vatinvoices-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></vatinvoices-table>
       </ng-container>
 </ng-template>
