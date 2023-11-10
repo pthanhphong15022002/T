@@ -584,7 +584,10 @@
         </div>
       </div>
     </div>
-    <div
+
+    <!-- nut bam dropdown them moi -->
+
+    <!-- <div
       ngbDropdown
       class="emp-check-add rounded-circle"
       *ngIf="lstBtnAdd && lstBtnAdd.length > 0 && infoPersonal && infoPersonal.status != '90'"
@@ -615,7 +618,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- <div class="more-function">
     <div class="d-flex flex-column">
@@ -4657,7 +4660,6 @@
             </div>
             <div class="d-flex align-items-center ms-5"
             *ngIf="workingProcessInfoPer.eDisciplineFuncID.write == true && (fromWS == false || workingProcessInfoPer.eDisciplineFuncID.isPortal == false)">
-            >
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -4762,9 +4764,11 @@
                 {{ getFormHeader2(eDegreeFuncID, lstFuncKnowledge) }}
               </div>
               <!-- <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eDegreeRowCount }})</span> -->
+              <span class="text-dark">({{ eDegreeRowCount }})</span>
+            -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+                *ngIf="knowledgeInfoPer.eDegreeFuncID.write == true && (fromWS == false || knowledgeInfoPer.eDegreeFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -4772,7 +4776,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-5">
             <!-- <div>
@@ -4891,7 +4895,9 @@
               <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eCertificateRowCount }})</span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="knowledgeInfoPer.eCertificateFuncID.write == true && (fromWS == false || knowledgeInfoPer.eCertificateFuncID.isPortal == false)"
+            >
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white position-relative"
@@ -4901,7 +4907,7 @@
               >
                 <i class="icon-add icon-18"></i>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div class="mb-1 mt-5">
@@ -5018,8 +5024,8 @@
               <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eSkillRowCount }})</span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5">
+              <!-- <codx-dropdown-select
               *ngIf="eSkillgrvSetup"
               [cssClass]="'rounded-pill border-1'"
               cssPopup="h-350px w-300px"
@@ -5031,15 +5037,16 @@
               (valueChange)="valueChangeFilterSkillID($event)"
             ></codx-dropdown-select>
 
-              <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-500 mx-2">|</span> -->
               <button
+              *ngIf="knowledgeInfoPer.eSkillFuncID.write == true && (fromWS == false || knowledgeInfoPer.eSkillFuncID.isPortal == false)"
               type="button"
               class="btn btn-icon btn-sm btn-white"
               (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
             >
               <i class="icon-add icon-18"></i>
             </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-7"
           *ngIf="eSkillFormmodel && eSkillColumnGrid; else emptyDataTemplate"
@@ -5231,9 +5238,10 @@
                   (change)="valueChangeYearFilterETrainCourse($event)"
                 ></codx-dropdown-calendar
               ></span>
-              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-500 mx-2">|</span>
               <span class="ms-3">
                 <button
+                *ngIf="knowledgeInfoPer.eTrainCourseFuncID.write == true && (fromWS == false || knowledgeInfoPer.eTrainCourseFuncID.isPortal == false)"
                   type="button"
                   class="btn btn-icon btn-sm btn-white"
                   (click)="
@@ -5242,7 +5250,7 @@
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
-              </span> -->
+              </span>
             </div>
           </div>
 
@@ -5362,8 +5370,8 @@
                 <span>({{ eAccidentsRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5">
+              <!-- <codx-dropdown-select
                 *ngIf="eAccidentsGrvSetup"
                 [emptyText]="eAccidentsGrvSetup.AccidentID.headerText"
                 [cssClass]="'rounded-pill border-1'"
@@ -5377,15 +5385,16 @@
                 <i class="icon-filter_alt"></i>
               </codx-dropdown-select>
 
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eAccidentsFuncID.write == true && (fromWS == false || healthInfoPer.eAccidentsFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEmployeeAccidentInfo(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1"
           *ngIf="eAccidentsFormModel && eAccidentsColumnsGrid; else emptyDataTemplate"
@@ -5443,8 +5452,8 @@
                 <span>({{ eDiseasesRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5" *ngIf="eDiseasesHeaderText">
-              <span>
+            <div class="d-flex align-items-center ms-5" *ngIf="eDiseasesHeaderText">
+              <!-- <span>
                 <codx-dropdown-select
                   *ngIf="eDiseasesGrvSetup"
                   [emptyText]="eDiseasesHeaderText['DiseaseID']"
@@ -5459,8 +5468,9 @@
                   <i class="icon-filter_alt"></i>
                 </codx-dropdown-select>
               </span>
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eDiseasesFuncID.write == true && (fromWS == false || healthInfoPer.eDiseasesFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="
@@ -5469,7 +5479,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <!--Griddiseases-->
@@ -5560,7 +5570,8 @@
                 <span>({{ eHealthRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="healthInfoPer.eHealthFuncID.write == true && (fromWS == false || healthInfoPer.eHealthFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -5568,7 +5579,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-6"
           *ngIf="eHealthFormModel && eHealthColumnGrid; else emptyDataTemplate"
@@ -5632,8 +5643,8 @@
                 <span>({{ eVaccineRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5" *ngIf="eVaccineHeaderText">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5" *ngIf="eVaccineHeaderText">
+              <!-- <codx-dropdown-select
                 *ngIf="eVaccineGrvSetup"
                 [cssClass]="'rounded-pill border-1'"
                 cssPopup="h-350px w-300px"
@@ -5655,15 +5666,16 @@
                   (change)="valueChangeYearFilterEVaccine($event)"
                 ></codx-dropdown-calendar>
               </span>
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eVaccinesFuncID.write == true && (fromWS == false || healthInfoPer.eVaccinesFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEVaccinesInfo(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mt-7"
           *ngIf="eVaccineFormModel && eVaccineColumnGrid; else emptyDataTemplate"
