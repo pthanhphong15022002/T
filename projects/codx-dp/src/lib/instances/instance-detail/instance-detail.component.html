@@ -246,12 +246,7 @@
                       "
                     ></i
                     ><span>
-                      <codx-label
-                        [name]="'lbl' + item.viewModelDetail"
-                        [formName]="'SYS'"
-                        [default]="item.textDefault"
-                      >
-                      </codx-label>
+                      {{item.textDefault}}
                     </span>
                   </a>
                 </li>
@@ -296,7 +291,12 @@
                     [formModel]="formModel"
                     [currentStep]="currentNameStep"
                     [instance]="dataSelect"
-                    [titleDefault]="titleDefault"
+                    [titleDefault]="
+                      autoNameTabFields != null &&
+                      autoNameTabFields.trim() != ''
+                        ? autoNameTabFields
+                        : titleDefault
+                    "
                     [listStep]="listSteps"
                     [lstIDInvo]="lstInv"
                     [listUserIdRole]="ownerInstance"

@@ -645,6 +645,7 @@ export class InstancesComponent
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
+      autoNameTabFields: this.process?.autoNameTabFields,
     };
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
@@ -690,6 +691,7 @@ export class InstancesComponent
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
       processID: this.processID,
+      autoNameTabFields: this.process?.autoNameTabFields,
     };
     let dialogEditInstance = await this.checkPopupInCM(applyFor, obj, option);
     dialogEditInstance.closed.subscribe((e) => {
@@ -1997,7 +1999,7 @@ export class InstancesComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
-      let isEndSaturday = endDay.getDay() === 6 ;
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -2005,7 +2007,7 @@ export class InstancesComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        if(!isEndSaturday) {
+        if (!isEndSaturday) {
           endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
         }
         endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
@@ -2236,6 +2238,13 @@ export class InstancesComponent
                 tab['viewModelDetail'] = element?.value;
                 tab['textDefault'] = element?.text;
                 tab['icon'] = element?.icon;
+                if (tab['viewModelDetail'] == 'F') {
+                  tab['textDefault'] =
+                    this.process?.autoNameTabFields != null &&
+                    this.process?.autoNameTabFields?.trim() != ''
+                      ? this.process?.autoNameTabFields
+                      : element?.text;
+                }
                 tabIns.push(tab);
               }
               break;
@@ -2244,6 +2253,13 @@ export class InstancesComponent
               tab['viewModelDetail'] = element?.value;
               tab['textDefault'] = element?.text;
               tab['icon'] = element?.icon;
+              if (tab['viewModelDetail'] == 'F') {
+                tab['textDefault'] =
+                  this.process?.autoNameTabFields != null &&
+                  this.process?.autoNameTabFields?.trim() != ''
+                    ? this.process?.autoNameTabFields
+                    : element?.text;
+              }
               tabIns.push(tab);
 
               break;
