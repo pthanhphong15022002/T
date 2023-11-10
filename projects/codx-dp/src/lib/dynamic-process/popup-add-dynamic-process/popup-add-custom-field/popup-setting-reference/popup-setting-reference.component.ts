@@ -87,7 +87,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     let field = this.dataRef.find((x) => x.fieldName == data.fieldName);
     if (field) return field;
     field = new DP_Steps_Fields();
-    field.recID = Util.uid();
+    field.recID = data.recID; ///Util.uid();
     field.fieldName = data.fieldName;
     field.title = data.headerText;
     field.refType = data.referedType;
