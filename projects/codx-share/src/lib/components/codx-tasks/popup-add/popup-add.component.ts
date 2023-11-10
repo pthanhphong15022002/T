@@ -163,6 +163,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   crrRole: any;
   isOtherModule = false;
   isLoadedData = false; //da load data
+  tabControlExtend = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+  ];
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
