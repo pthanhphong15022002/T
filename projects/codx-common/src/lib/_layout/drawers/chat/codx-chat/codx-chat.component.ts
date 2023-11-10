@@ -34,7 +34,7 @@ declare var window: any;
 export class CodxChatComponent implements OnInit, AfterViewInit {
   @HostBinding('class') get class() {
     return (
-      'd-flex align-items-center ' + this.codxService.toolbarButtonMarginClass + (this.codxService.asideMode == '2' ? ' w-70px' : '')
+      'd-flex align-items-center ' + this.codxService.toolbarButtonMarginClass
     );
   }
   loaded = false;
