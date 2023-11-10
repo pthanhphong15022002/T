@@ -1327,25 +1327,30 @@ export class DealsComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-      if (process) {
-        this.codxCmService
-          .getESCategoryByCategoryID(process.processNo)
-          .subscribe((res) => {
-            if (!res) {
-              this.notificationsService.notifyCode('ES028');
-              return;
-            }
-            if (res.eSign) {
-              //kys soos
-            } else {
-              this.release(dt, res);
-            }
-          });
-      } else {
-        this.notificationsService.notifyCode('DP040');
-      }
-    });
+      this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+        if (process) {
+          if(process.approveRule) {
+            this.codxCmService
+            .getESCategoryByCategoryID(process.processNo)
+            .subscribe((res) => {
+              if (!res) {
+                this.notificationsService.notifyCode('ES028');
+                return;
+              }
+              if (res.eSign) {
+                //kys soos
+              } else {
+                this.release(dt, res);
+              }
+            });
+          }
+          else {
+            this.notificationsService.notifyCode('Quy trình chưa bật chức năng ký duyệt');
+          }
+        } else {
+          this.notificationsService.notifyCode('DP040');
+        }
+      });
   }
 
   release(data: any, category: any) {
