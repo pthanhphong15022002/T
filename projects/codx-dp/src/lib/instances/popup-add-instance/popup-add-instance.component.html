@@ -153,12 +153,13 @@
     >
     </codx-label>
     <codx-input
-      field="endDate"
-      [formModel]="form.formModel"
-      [crrValue]="instance?.endDate"
-      (valueChange)="valueChange($event)"
-    >
-    </codx-input>
+    type="datetime"
+    field="endDate"
+    format="d"
+    [crrValue]="instance?.endDate"
+    (valueChange)="valueChangeDate($event)"
+  >
+  </codx-input>
   </div>
 
   <div class="form-group">
