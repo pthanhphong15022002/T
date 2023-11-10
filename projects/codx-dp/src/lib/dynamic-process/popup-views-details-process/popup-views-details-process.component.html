@@ -230,15 +230,19 @@
   <ng-template #titleTmpStep let-data>
     <div class="w-100 d-flex justify-content-between">
       <div
-        class="d-flex align-items-center line-clamp line-clamp-1 fs-3 mb-2"
+        class="d-flex align-items-center line-clamp line-clamp-1 fs-3 mb-2 fw-bold"
         style="cursor: context-menu; display: -webkit-inline-box"
       >
-        <codx-icon-step
-          [icon]="data?.icon"
-          [iconColor]="data?.iconColor"
-          [isStep]="true"
-        ></codx-icon-step>
-        <span class="ms-2">
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="fs-5-sm">
+            <codx-icon-step
+              [icon]="data?.icon"
+              [iconColor]="data?.iconColor"
+              [isStep]="true"
+            ></codx-icon-step>
+          </span>
+        </div>
+        <span class="ms-3">
           {{ " " + data?.stepName }}
         </span>
       </div>
