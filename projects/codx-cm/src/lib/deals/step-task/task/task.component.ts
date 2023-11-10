@@ -29,9 +29,9 @@ import { TM_Tasks } from 'projects/codx-tm/src/lib/models/TM_Tasks.model';
 import { AssignTaskModel } from 'projects/codx-share/src/lib/models/assign-task.model';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AssignInfoComponent } from 'projects/codx-share/src/lib/components/assign-info/assign-info.component';
-import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-add-stask/codx-add-task.component';
+import { CodxAddTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-popup-task/codx-add-task.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -67,6 +67,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   grvMoreFunction: FormModel;
   listActivitie: DP_Activities[] = [];
   isLoad = false;
+  taskApproval: DP_Activities;
   moreDefaut = {
     share: true,
     write: true,
@@ -83,7 +84,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private codxCmService: CodxCmService,
     private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
-    private codxShareService: CodxShareService,
+    private codxShareService: CodxShareService
   ) {
     this.user = this.authstore.get();
   }
@@ -239,11 +240,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               res.disabled = true;
             }
             break;
-          case 'DP32': // gởi duyệt 
-            res.disabled =  !(task?.approveRule);
+          case 'DP32': // gởi duyệt
+            res.disabled = !(task?.approveRule && !task?.approvedBy);
             break;
           case 'DP33': // hủy duyệt
-            res.disabled =  true;
+            if (!(task?.approveRule && task?.approvedBy)) {
+              res.disabled = true;
+            }
             break;
         }
       });
@@ -281,6 +284,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         break;
       case 'DP32':
         this.approvalTrans(task);
+        break;
+      case 'DP33':
+        this.cancelApprover(task);
         break;
     }
   }
@@ -323,7 +329,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.activitie,
           this.entityName,
           isCreateMeeting,
-          isAddTask
+          isAddTask,
         ])
         .subscribe((res) => {
           if (res) {
@@ -419,7 +425,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           this.activitie,
           this.entityName,
           isCreateMeeting,
-          isAddTask
+          isAddTask,
         ])
         .subscribe((res) => {
           if (res) {
@@ -451,7 +457,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   async openPopupTask(action, dataTask, groupTaskID = null) {
     let dataInput = {
-      type:"activitie",
+      type: 'activitie',
       action,
       titleName: this.titleName,
       taskType: this.taskType,
@@ -715,84 +721,118 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   //#region duyet
-  approvalTrans(dt) {
-    this.codxCmService
-      .getESCategoryByCategoryID('ES_CM0501')
-      .subscribe((res) => {
-        if (!res) {
-          this.notiService.notifyCode('ES028');
-          return;
-        }
-
-        if (res.eSign) {
-          //kys soos
-        } else {
-          this.release(dt, res);
-        }
-      });
+  approvalTrans(task: DP_Activities) {
+    if (task?.approveRule && task?.recID) {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          task?.recID
+        )
+        .subscribe((res) => {
+          if (!res) {
+            this.notiService.notifyCode('ES028');
+            return;
+          }
+          this.taskApproval = task;
+          if (res.eSign) {
+            //kys soos
+          } else {
+            this.release(task, res);
+          }
+        });
+    } else {
+      this.notiService.notifyCode('DP040');
+    }
   }
-  //Gửi duyệt
   release(data: any, category: any) {
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
       category,
-      "DP_Activities",
-      "CM0101",
+      'DP_Activities',
+      'CM0201',
       data?.title,
       this.releaseCallback.bind(this)
     );
   }
-  //call Back
-  releaseCallback(res: any, t: any = null, data) {
+  releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.codxCmService
-        .getOneObject(data, 'ActivitiesBusiness')
-        .subscribe((q) => {
-          if (q) {
-            
+      this.api
+        .exec<any>(
+          'DP',
+          'ActivitiesBusiness',
+          'UpdateStatusApprovalTaskAsync',
+          [this.taskApproval?.recID, true]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.taskApproval.approvedBy = res;
+            this.moreDefaut = {
+              share: true,
+              write: true,
+              read: true,
+              download: true,
+              delete: true,
+            };
+            this.taskApproval = null;
           }
-          this.notiService.notifyCode('ES007');
         });
     }
   }
-
   //Huy duyet
-  cancelApprover(dt) {
-    // this.notiService.alertCode('ES016').subscribe((x) => {
-    //   if (x.event.status == 'Y') {
-    //     this.codxCmService
-    //       .getESCategoryByCategoryID('ES_CM0501')
-    //       .subscribe((res2: any) => {
-    //         if (res2) {
-    //           if (res2?.eSign == true) {
-    //             //trình ký
-    //           } else if (res2?.eSign == false) {
-    //             //kí duyet
-    //             this.codxShareService
-    //               .codxCancel(
-    //                 'CM',
-    //                 dt?.recID,
-    //                 this.view.formModel.entityName,
-    //                 null,
-    //                 null
-    //               )
-    //               .subscribe((res3) => {
-    //                 if (res3) {
-    //                   this.itemSelected.approveStatus = '0';
-    //                   this.itemSelected.status = '0';
-    //                   this.view.dataService
-    //                     .update(this.itemSelected)
-    //                     .subscribe();
-    //                   this.notiService.notifyCode('SYS007');
-    //                 } else this.notiService.notifyCode('SYS021');
-    //               });
-    //           }
-    //         }
-    //       });
-    //   }
-    // });
+  //Huy duyet
+  cancelApprover(task) {
+    this.notiService.alertCode('ES016').subscribe((x) => {
+      if (x.event.status == 'Y') {
+        this.taskApproval = task;
+        this.codxCmService
+          .getESCategoryByCategoryID(this.taskApproval?.recID)
+          .subscribe((res2: any) => {
+            if (res2) {
+              if (res2?.eSign == true) {
+                //trình ký
+              } else if (res2?.eSign == false) {
+                //kí duyet
+                this.codxShareService
+                  .codxCancel(
+                    'DP',
+                    this.taskApproval?.recID,
+                    'DP_Activities',
+                    null,
+                    null
+                  )
+                  .subscribe((res3) => {
+                    if (res3) {
+                      this.api
+                        .exec<any>(
+                          'DP',
+                          'ActivitiesBusiness',
+                          'UpdateStatusApprovalTaskAsync',
+                          [this.taskApproval?.recID, false]
+                        )
+                        .subscribe((res) => {                      
+                            this.taskApproval.approvedBy = res;
+                            this.moreDefaut = {
+                              share: true,
+                              write: true,
+                              read: true,
+                              download: true,
+                              delete: true,
+                            };
+                            this.taskApproval = null;
+                            this.notiService.notifyCode('SYS007');
+                        });
+                    } else this.notiService.notifyCode('SYS021');
+                  });
+              }
+            }
+          });
+      }
+    });
   }
   //end duyet
   //#endregion

@@ -37,11 +37,11 @@ import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
-import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
-import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
+import { CodxAddTaskComponent } from '../codx-popup-task/codx-add-task.component';
+import { CodxTypeTaskComponent } from '../codx-step-common/codx-type-task/codx-type-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
-import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
+import { CodxAddGroupTaskComponent } from '../codx-popup-group/codx-add-group-task.component';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
@@ -1102,8 +1102,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (type) => type.value == taskEdit?.taskType
       );
       let dataOutput = await this.openPopupTask('edit', 'step',taskEdit);
-      if (dataOutput?.event.task) {
-        let taskOutput = dataOutput?.event?.task;
+      if (dataOutput?.task) {
+        let taskOutput = dataOutput?.task;
         let group = this.listGroupTask.find((group) =>
           this.comparison(group.refID, taskOutput?.taskGroupID)
         );
@@ -1139,6 +1139,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (indexTask >= 0) {
           this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
+        this.changeDetectorRef.markForCheck();
         this.notiService.notifyCode('SYS007');
       }
     }
