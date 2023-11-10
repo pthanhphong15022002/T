@@ -101,7 +101,7 @@ export class PopupAddInstanceComponent implements OnInit {
   instanceNoSetting: any;
   processID: string = '';
   idxCrr: number = -1;
-
+  autoNameTabFields: string;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -123,6 +123,7 @@ export class PopupAddInstanceComponent implements OnInit {
     this.addFieldsControl = dt?.data?.addFieldsControl;
     this.instanceNoSetting = dt?.data?.instanceNoSetting;
     this.processID = dt?.data?.processID;
+    this.autoNameTabFields = dt?.data?.autoNameTabFields;
     this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.lstParticipants = dt?.data?.lstParticipants?.filter(x => x?.userID != null && x?.userID != '');
@@ -167,6 +168,7 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.menuInputInfo) this.menuInputInfo.text = this.autoNameTabFields != null && this.autoNameTabFields?.trim() != '' ? this.autoNameTabFields : this.menuInputInfo.text
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
     } else if (this.action === 'edit') {
