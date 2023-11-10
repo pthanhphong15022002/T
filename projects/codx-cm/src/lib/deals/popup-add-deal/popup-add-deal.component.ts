@@ -962,20 +962,16 @@ export class PopupAddDealComponent
           }
           this.deal.dealID = res[2];
         }
-        this.deal.endDate = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action !== this.actionEdit ||
-            (this.action === this.actionEdit &&
-              (this.deal.status == '1' || this.deal.status == '15'))
-            ? null
-            : this.deal.createdOn
-        );
         this.dateMax = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action != this.actionEdit ? null : this.deal.createdOn
-        );
+            this.listInstanceSteps,
+            this.action,
+            this.action !== this.actionEdit ||
+              (this.action === this.actionEdit &&
+                (this.deal.status == '1' || this.deal.status == '15'))
+              ? null
+              : this.deal.createdOn
+          );
+        this.deal.endDate = this.action === this.actionEdit ? this.deal?.endDate: this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });

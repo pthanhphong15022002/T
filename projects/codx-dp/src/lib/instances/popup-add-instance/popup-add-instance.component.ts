@@ -193,15 +193,6 @@ export class PopupAddInstanceComponent implements OnInit {
   }
 
   updateEndDate() {
-    this.instance.endDate = this.HandleEndDate(
-      this.listStep,
-      this.action,
-      this.action !== 'edit' ||
-        (this.action === 'edit' &&
-          (this.instance.status == '1' || this.instance.status == '15' ))
-        ? null
-        : this.instance.createdOn
-    );
     this.endDate = this.HandleEndDate(
       this.listStep,
       this.action,
@@ -211,6 +202,7 @@ export class PopupAddInstanceComponent implements OnInit {
         ? null
         : this.instance.createdOn
     );
+    this.instance.endDate = this.action === 'edit' ? this.instance?.endDate:  this.endDate;
   }
 
   loadTabsForm() {
@@ -246,9 +238,7 @@ export class PopupAddInstanceComponent implements OnInit {
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));
-
          this.updateEndDate();
-
           this.loadTabsForm();
         }
       });
