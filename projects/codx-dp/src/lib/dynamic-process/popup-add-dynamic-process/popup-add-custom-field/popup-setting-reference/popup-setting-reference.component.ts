@@ -49,6 +49,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     this.datas = dt?.data?.datas;
+    this.dataRef = dt?.data?.dataRef ?? [];
     this.entityName = dt?.data?.entityName;
     this.titleAction = dt?.data?.titleAction;
     this.getArrFields();
@@ -57,26 +58,41 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
   ngOnInit(): void {}
 
-  saveData() {}
-
   getArrFields() {
     this.listField = [];
     for (var key in this.datas) {
-      let field = new DP_Steps_Fields();
-      field.recID = Util.uid();
-      field.fieldName = this.datas[key].fieldName;
-      field.title = this.datas[key].headerText;
-      field.refType = this.datas[key].referedType;
-      field.refValue = this.datas[key].referedValue;
+      let field = this.convertStepField(this.datas[key]);
       this.listField.push(field);
+      //test
+      if (key == 'Address') this.dataRef.push(field);
     }
   }
 
-  selectField(e, field) {
-    this.dataRef.push(field);
+  selectField(field) {
+    let idx = this.dataRef.findIndex((x) => x.recID == field.recID);
+    if (idx != -1) {
+      this.dataRef.splice(idx, 1);
+    } else this.dataRef.push(field);
   }
 
   check(recID) {
-    return this.dataRef.includes((x) => x.recID == recID);
+    let idx = this.dataRef.findIndex((x) => x.recID == recID);
+    return idx != -1;
+  }
+
+  saveData() {
+    this.dialog.close(this.dataRef);
+  }
+  convertStepField(data) {
+    let field = this.dataRef.find((x) => x.fieldName == data.fieldName);
+    if (field) return field;
+    field = new DP_Steps_Fields();
+    field.recID = Util.uid();
+    field.fieldName = data.fieldName;
+    field.title = data.headerText;
+    field.refType = data.referedType;
+    field.refValue = data.referedValue;
+    field.refValue = data.referedValue;
+    return field;
   }
 }
