@@ -771,9 +771,11 @@ export class CashPaymentsComponent extends UIComponent {
             [data.recID, tk, 'test']
           )
           .subscribe((res) => {
-            if (res) {
-              this.view.dataService.update(res).subscribe();
+            if (res && !res?.error) {
+              this.view.dataService.update(res?.data).subscribe();
               this.notification.notifyCode('AC0029', 0, text);
+            }else{
+              this.notification.notify(res.data.data.result.message,'2');
             }
           });
       }
