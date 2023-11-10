@@ -154,7 +154,7 @@ export class PopupAddDealComponent
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
   currencyIDOld: string;
-
+  autoNameTabFields: string;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -277,6 +277,21 @@ export class PopupAddDealComponent
 
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
+
+  //get autoname tab fields
+  setAutoNameTabFields(autoNameTabFields){
+    this.autoNameTabFields = autoNameTabFields;
+    if(this.menuInputInfo){
+      this.menuInputInfo.text = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Thông tin mở rộng';
+      this.menuInputInfo.subName = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
+      this.menuInputInfo.subText =this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
+      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
+      if(menuInput != -1){
+        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+      }
+    }
+  }
+  //end
 
   valueChange($event) {
     if ($event) {
@@ -726,6 +741,7 @@ export class PopupAddDealComponent
                   ? null
                   : this.deal.createdOn
               );
+              this.setAutoNameTabFields(result?.autoNameTabFields);
               this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
               if (this.listParticipants && this.listParticipants?.length > 0) {
                 let index = this.listParticipants.findIndex(
@@ -923,7 +939,9 @@ export class PopupAddDealComponent
                     ? null
                     : this.deal.createdOn
                 );
+                this.setAutoNameTabFields(result?.autoNameTabFields);
                 this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.getListInstanceSteps(this.deal.processID);
@@ -942,12 +960,15 @@ export class PopupAddDealComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
+          autoNameTabFields: res[3]
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        const autoNameTabFields = res[3];
+        this.setAutoNameTabFields(autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
