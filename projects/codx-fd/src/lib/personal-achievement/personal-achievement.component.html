@@ -105,7 +105,7 @@
 
 <ng-template #rowObjectName let-data>
   <div class="d-flex align-items-center" *ngIf="data?.objectName">
-    <codx-img [objectId]="data?.userID" [objectType]="'AD_Users'" [width]="25"></codx-img>
+    <codx-img [objectId]="data?.objectID" [objectType]="'AD_Users'" [width]="25"></codx-img>
     <span class="ms-2">{{data?.objectName}}</span>
   </div>
 </ng-template>

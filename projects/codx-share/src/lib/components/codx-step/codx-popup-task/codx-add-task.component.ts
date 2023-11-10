@@ -271,6 +271,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
       this.stepsTasks.requireCompleted = false;
+      this.stepsTasks.approvedBy = null;
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.loadListApproverStep();
@@ -307,6 +308,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.setInstanceStep();
         break;
       case 'activitie':
+        this.setDateTimeTask();
         break;
       case 'group':
         this.setGroup();

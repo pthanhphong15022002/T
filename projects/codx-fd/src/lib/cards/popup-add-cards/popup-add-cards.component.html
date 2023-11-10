@@ -306,11 +306,22 @@
 <ng-template #footer>
     <div class="offcanvas-footer">
         <div class="d-flex align-items-center justify-content-between">
-            <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
-                <i class="icon-cloud_upload fs-5"></i><span>
-                    <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
-                </span>
-            </button>
+            <div class="d-flex align-items-center justify-content-between">
+                <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
+                    <i class="icon-cloud_upload fs-5"></i><span>
+                        <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
+                    </span>
+                </button>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <codx-label name="lblCreateNewFeed" default="Tạo Newfeed">
+                        </codx-label>
+                    </div>
+                    <div>
+                        <ejs-switch style="margin-left: 5px;" id="checked" [(checked)]="createNewfeed"></ejs-switch>
+                    </div>
+                </div>
+            </div>
             <button type="button" class="btn btn-primary" (click)="Save()">
                 <codx-label [formModel]="dialog.formModel" name="lblFDSumbit" default="Thêm"></codx-label>
             </button>
