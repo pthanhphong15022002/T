@@ -333,7 +333,7 @@
         </div>
       </ng-container>
 
-      <div
+      <!-- <div
         class="form-group"
         *ngIf="
           field.dataType == 'N' ||
@@ -343,10 +343,7 @@
           field.dataType == 'PA'
         "
       >
-        <!-- <codx-label
-          fiedName="DefaultValue"
-          [formModel]="form.formModel"
-        ></codx-label> -->
+      
         <codx-input-custom-field
           [customField]="field"
           [showTitle]="false"
@@ -355,7 +352,7 @@
           (valueChangeCustom)="valueChangeCustom($event)"
         >
         </codx-input-custom-field>
-      </div>
+      </div> -->
 
       <div class="form-group" *ngIf="field.dataType == 'A'">
         <codx-input
