@@ -142,6 +142,7 @@ export class WarehouseTransfersComponent extends UIComponent {
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
     this.optionSidebar.isFull = true;
+    console.log(this.view.dataService.data)
   }
 
   ngOnDestroy() {
@@ -177,47 +178,46 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param data
    */
   clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT041002':
-    //   case 'ACT042903':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT041004':
-    //   case 'ACT042904':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT041009':
-    //   case 'ACT042902':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT041003':
-    //   case 'ACT042905':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT041008':
-    //   case 'ACT042906':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT042901':
-    //     this.transferToBank(e.text,data); //? chuyển tiền ngân hàng điện tử
-    //     break;
-    //   case 'ACT041010':
-    //   case 'ACT042907':
-    //     this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteVoucher(data); //? xóa chứng từ
+        break;
+      case 'SYS03':
+        this.editVoucher(data); //? sửa chứng từ
+        break;
+      case 'SYS04':
+        this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS002':
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        break;
+      case 'ACT041002':
+      case 'ACT042903':
+        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+        break;
+      case 'ACT041004':
+      case 'ACT042904':
+        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+        break;
+      case 'ACT041009':
+      case 'ACT042902':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        break;
+      case 'ACT041003':
+      case 'ACT042905':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        break;
+      case 'ACT041008':
+      case 'ACT042906':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        break;
+      case 'ACT042901':
+        break;
+      case 'ACT041010':
+      case 'ACT042907':
+        this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+    }
   }
 
   /**
@@ -275,27 +275,26 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    // this.view.dataService.dataSelected = dataEdit;
-    // this.view.dataService
-    //   .edit(dataEdit)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     res.isEdit = true;
-    //     let data = {
-    //       headerText: this.headerText, //? tiêu đề voucher
-    //       journal: { ...this.journal }, //?  data journal
-    //       oData: { ...res }, //?  data của cashpayment
-    //       hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //       baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //       legalName: this.legalName, //? tên company
-    //     };
-    //     let dialog = this.callfc.openSide(
-    //       CashPaymentAddComponent,
-    //       data,
-    //       this.optionSidebar,
-    //       this.view.funcID
-    //     );
-    //   });
+    this.view.dataService.dataSelected = dataEdit;
+    this.view.dataService
+      .edit(dataEdit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        res.isEdit = true;
+        let data = {
+          headerText: this.headerText, //? tiêu đề voucher
+          journal: { ...this.journal }, //?  data journal
+          oData: { ...res },
+          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+        };
+        let dialog = this.callfc.openSide(
+          WarehouseTransfersAddComponent,
+          data,
+          this.optionSidebar,
+          this.view.funcID
+        );
+      });
   }
 
   /**
@@ -389,168 +388,6 @@ export class WarehouseTransfersComponent extends UIComponent {
    */
   changeMFDetail(event: any, data: any, type: any = '') {
     this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
-    // let arrBookmark = event.filter(
-    //   // danh sách các morefunction
-    //   (x: { functionID: string }) =>
-    //     x.functionID == 'ACT041003' || // MF ghi sổ (PC)
-    //     x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-    //     x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
-    //     x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-    //     x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
-    //     x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-    //     x.functionID == 'ACT041008' || // Mf khôi phục (PC)
-    //     x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
-    //     x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-    //     x.functionID == 'ACT041010' || // Mf in (PC)
-    //     x.functionID == 'ACT042907' || // Mf in (UNC)
-    //     x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-    //     x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
-    // );
-    // if (arrBookmark.length > 0) {
-    //   if (type == 'viewgrid') {
-    //     arrBookmark.forEach((element) => {
-    //       element.isbookmark = false;
-    //     });
-    //   }
-    //   switch (data?.status) {
-    //     case '1':
-    //       if (this.journal.approvalControl == '0') {
-    //         arrBookmark.forEach((element) => {
-    //           if (
-    //             element.functionID == 'ACT041003' ||
-    //             element.functionID == 'ACT041010' ||
-    //             element.functionID == 'ACT042905' ||
-    //             element.functionID == 'ACT042907' ||
-    //             (element.functionID == 'ACT042901' &&
-    //               this.view.formModel.funcID == 'ACT0429')
-    //           ) {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       } else {
-    //         arrBookmark.forEach((element) => {
-    //           if (
-    //             element.functionID == 'ACT041002' ||
-    //             element.functionID == 'ACT041010' ||
-    //             element.functionID == 'ACT042903' ||
-    //             element.functionID == 'ACT042907'
-    //           ) {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       }
-    //       break;
-    //     case '3':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041004' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042904' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '5':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041003' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042905' ||
-    //           element.functionID == 'ACT042907' ||
-    //           (element.functionID == 'ACT042901' &&
-    //             this.view.formModel.funcID == 'ACT0429')
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '6':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041008' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042906' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '2':
-    //     case '7':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041009' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042902' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '8':
-    //     case '11':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT042907' &&
-    //           this.view.formModel.funcID == 'ACT0429'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '9':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041003' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042905' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '10':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT042905' ||
-    //           (element.functionID == 'ACT042907' &&
-    //             this.view.formModel.funcID == 'ACT0429')
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     default:
-    //       arrBookmark.forEach((element) => {
-    //         element.disabled = true;
-    //       });
-    //       break;
-    //   }
-    // }
-    // return;
   }
 
   /**

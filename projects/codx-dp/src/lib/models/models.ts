@@ -45,6 +45,7 @@ export class DP_Processes {
   viewMode: string;
   viewModeDetail: string;
   autoName: string;
+  autoNameTabFields: string;
   steps: DP_Steps[] = [];
   approveRule: boolean = false;
 
@@ -64,6 +65,7 @@ export class DP_Processes {
   startInstanceControl: boolean = false;
   tabControl: string;
   businessLineID:string;
+  allowEstimatedEnd:boolean;
 }
 
 export class DP_Processes_Permission {
@@ -94,10 +96,11 @@ export class DP_Processes_Permission {
   approvalRule: String;
   approverType: String;
   approvers: String;
-  approvedBy: String;
   approveStatus: String;
   approvedOn: Date;
   isActive: boolean = true;
+  approvedBy: string;
+  approveRule: string;
 }
 
 export class DP_Processes_Ratings {
@@ -609,6 +612,8 @@ export class DP_Activities {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  approvedBy: string;
+  approveRule: string;
 }
 export class DP_Activities_Roles {
   recID: string;

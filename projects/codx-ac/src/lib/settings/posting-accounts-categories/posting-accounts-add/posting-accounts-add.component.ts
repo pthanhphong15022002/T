@@ -21,7 +21,6 @@ import {
   CodxInputComponent,
   CodxGridviewV2Component,
 } from 'codx-core';
-import { IVPostingAccounts } from '../../../models/IVPostingAccounts.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

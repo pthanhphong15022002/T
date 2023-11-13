@@ -312,6 +312,7 @@ export class PopupAddCasesComponent
         if (result) {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
+          this.setAutoNameTabFields(result?.autoNameTabFields);
           this.cases.caseNo = result?.caseId;
           this.cases.endDate = this.HandleEndDate(
             this.listInstanceSteps,
@@ -592,34 +593,53 @@ export class PopupAddCasesComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
+          autoNameTabFields: res[3]
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.setAutoNameTabFields(obj?.autoNameTabFields);
         this.itemTabs(this.ischeckFields(this.listInstanceSteps));
 
         this.listParticipants = obj.permissions;
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
         } else {
-          this.cases.endDate = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            null
-          );
           this.cases.caseNo = res[2];
         }
         this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
-          this.action != this.actionEdit ? null : this.cases.createdOn
+          this.action !== this.actionEdit ||
+            (this.action === this.actionEdit &&
+              (this.cases.status == '1' || this.cases.status == '15'))
+            ? null
+            : this.cases.createdOn
         );
+      this.cases.endDate = this.action === this.actionEdit ? this.cases?.endDate: this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
   }
+
+  //get autoname tab fields
+  setAutoNameTabFields(autoNameTabFields){
+    autoNameTabFields = autoNameTabFields;
+    if(this.menuInputInfo){
+      this.menuInputInfo.text = autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Thông tin nhập liệu';
+      this.menuInputInfo.subName = autoNameTabFields && autoNameTabFields.trim() != '' ?autoNameTabFields : 'Input information';
+      this.menuInputInfo.subText =autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Input information';
+      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
+      if(menuInput != -1){
+        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+  //end
+
   async getListContacts(customerID: any) {
     customerID =
       this.action === this.actionCopy ? this.cases.customerID : customerID;
@@ -812,6 +832,7 @@ export class PopupAddCasesComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
+      let isEndSaturday = endDay.getDay() === 6 ;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -819,7 +840,10 @@ export class PopupAddCasesComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        if(!isEndSaturday) {
+          endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        }
+        endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
       }
     }
     return endDay;

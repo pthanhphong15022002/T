@@ -14,15 +14,15 @@ import {
 import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
-import { CodxTypeTaskComponent } from './codx-type-task/codx-type-task.component';
+import { CodxTypeTaskComponent } from './codx-step-common/codx-type-task/codx-type-task.component';
 import { firstValueFrom } from 'rxjs';
 import {
   DP_Instances_Steps,
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
 } from 'projects/codx-dp/src/lib/models/models';
-import { CodxAddGroupTaskComponent } from './codx-add-group-task/codx-add-group-task.component';
-import { CodxAddTaskComponent } from './codx-add-stask/codx-add-task.component';
+import { CodxAddGroupTaskComponent } from './codx-popup-group/codx-add-group-task.component';
+import { CodxAddTaskComponent } from './codx-popup-task/codx-add-task.component';
 import { CodxAddBookingCarComponent } from '../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';

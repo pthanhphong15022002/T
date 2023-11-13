@@ -1054,7 +1054,7 @@ export class CodxAddBookingCarComponent
                         this.returnData.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
                         this.returnData.write = false;
                         this.returnData.delete = false;
-                        (this.dialogRef.dataService as CRUDService).update(this.returnData).subscribe();
+                        (this.dialogRef.dataService as CRUDService).update(this.returnData,true).subscribe();
                         this.notificationsService.notifyCode('SYS034');
                         this.dialogRef && this.dialogRef.close(this.returnData);
                       } else {

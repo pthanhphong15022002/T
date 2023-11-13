@@ -11,7 +11,7 @@ export class ActiviesApprovalListComponent implements OnInit {
   @HostBinding('class') get class() {
      return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
-  funcID:string = "WPT038";
+  funcID:string = "BGT002";
   function:any = null;
   constructor(
     private api:ApiHttpService,

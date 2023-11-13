@@ -457,7 +457,7 @@
             >
             </codx-input>
           </div>
-          <!-- <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
+          <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
             <div>
               <codx-label
                 fiedName="BusinessLineID"
@@ -468,12 +468,15 @@
             </div>
             <codx-input
               field="businessLineID"
+              [disabled]="action === 'edit'"
               [formModel]="dialog.formModel"
-              [crrValue]="process.businessLineID"
-              (valueChange)="valueChange($event)"
+              [model]="{ ProcessID: process?.recID }"
+              [crrValue]="process?.businessLineID"
+              (valueChange)="valueChangebusinessLineID($event)"
             >
             </codx-input>
-          </div> -->
+          </div>
+
         </div>
         <div class="col-6">
           <div class="form-group ms-5">
@@ -1041,6 +1044,31 @@
         <div class="row">
           <div class="col-6">
             <codx-label
+              fiedName="AutoNameTabFields"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <codx-input
+              field="autoNameTabFields"
+              type="text"
+              [crrValue]="process?.autoNameTabFields"
+              [placeholder]="gridViewSetup?.AutoNameTabFields?.description"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
               fiedName="ViewMode"
               [formName]="'DPProcesses'"
               [gridViewName]="'grvDPProcesses'"
@@ -1242,6 +1270,51 @@
           </div>
         </div>
       </div>
+      <!-- <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="AllowEstimatedEnd"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="allowEstimatedEnd-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.allowEstimatedEnd ?? false"
+                    [crrValue]="process?.allowEstimatedEnd"
+                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="allowEstimatedEnd-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.allowEstimatedEnd ?? false"
+                    [crrValue]="process?.allowEstimatedEnd"
+                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -1255,7 +1328,11 @@
           <div class="col-6 row">
             <div class="col-lg-12 col-xl-8">
               <codx-input
-                [formModel]="dialog?.formModel"
+                type="valuelist"
+                [refValue]="gridViewSetup?.TabControl?.referedValue"
+                [placeholder]="
+                  gridViewSetup?.TabControl?.description
+                "
                 [crrValue]="process.tabControl"
                 (valueChange)="valueChange($event)"
                 field="tabControl"
