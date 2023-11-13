@@ -26,7 +26,6 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CodxAcService } from '../../../codx-ac.service';
 import { CashPaymentAddComponent } from '../cashpayments-add/cashpayments-add.component';
-import { ListbankComponent } from '../../../share/ac-bankhub/listbank/listbank.component';
 declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
