@@ -897,6 +897,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           entityName: this.entityNamePA,
           action: this.action,
           titleAction: 'Thêm trường liên kết', //test
+          dataRef: JSON.parse(this.field.dataFormat),
         };
         let dialogColumn = this.callfc.openForm(
           PopupSettingReferenceComponent,
@@ -909,10 +910,29 @@ export class PopupAddCustomFieldComponent implements OnInit {
           option
         );
         dialogColumn.closed.subscribe((res) => {
-          if (res && res.event) {
+          if (res && res.event?.length > 0) {
+            this.field.refType = '3';
+            this.field.dataFormat = JSON.stringify(res.event);
           }
         });
       } else this.notiService.alertCode('SYS001');
     });
   }
+
+  //lưu giá trị mặc định
+  valueChangeCustom(event) {
+    if (event && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'P':
+        case 'L':
+          // case 'TA':
+          result = event.e;
+          break;
+      }
+      this.field.defaultValue = result;
+    }
+  }
+  //end
 }
