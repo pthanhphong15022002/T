@@ -278,4 +278,10 @@
       </table>
     </div>
   </ng-container>
+  <!-- ref -->
+  <ng-container *ngIf="data.dataType == 'PA' && dataValueTypePA?.length > 0">
+    <ng-container *ngFor="let value of dataValueTypePA">
+      <codx-fields-format-value [data]="value"></codx-fields-format-value>
+    </ng-container>
+  </ng-container>
 </ng-container>

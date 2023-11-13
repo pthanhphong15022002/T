@@ -104,7 +104,7 @@ export class PopupAddCasesComponent
   owner: any;
   dateMessage: any;
   dateMax: any;
-  user:any;
+  user: any;
   instanceRes: any;
 
   contactID: string = '';
@@ -183,7 +183,7 @@ export class PopupAddCasesComponent
   }
 
   async onInit(): Promise<void> {
-   this.action != this.actionEdit && await this.getCurrentSetting();
+    this.action != this.actionEdit && (await this.getCurrentSetting());
     // this.tabInfo = this.applyProcess
     //   ? [this.menuGeneralInfo, this.menuInputInfo]
     //   : [this.menuGeneralInfo];
@@ -284,7 +284,7 @@ export class PopupAddCasesComponent
     // } else {
     //   this.editInstance();
     // }
-   this.actionSaveBeforeSaveAttachment();
+    this.actionSaveBeforeSaveAttachment();
   }
   async actionSaveBeforeSaveAttachment() {
     if (this.attachment?.fileUploadList?.length > 0) {
@@ -341,6 +341,7 @@ export class PopupAddCasesComponent
         // case 'C':case ko có
         case 'L':
         case 'TA':
+        case 'PA':
           result = event.e;
           break;
       }
@@ -383,10 +384,9 @@ export class PopupAddCasesComponent
           (x) => x.userID === this.owner
         )[0]?.userName;
       }
-      this.searchOwner('1', 'O', '0',this.owner, ownerName);
-    }
-    else if ($event == null || $event == '') {
-      this.deleteOwner('1', 'O', '0', this.owner,'owner');
+      this.searchOwner('1', 'O', '0', this.owner, ownerName);
+    } else if ($event == null || $event == '') {
+      this.deleteOwner('1', 'O', '0', this.owner, 'owner');
     }
   }
   searchOwner(
@@ -414,7 +414,7 @@ export class PopupAddCasesComponent
       }
     }
     if (index == -1) {
-      if(owner) {
+      if (owner) {
         this.addOwner(owner, ownerName, roleType, objectType);
       }
     }
@@ -436,16 +436,29 @@ export class PopupAddCasesComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
-    this.cases.permissions = this.cases?.permissions ? this.cases.permissions : [];
+    this.cases.permissions = this.cases?.permissions
+      ? this.cases.permissions
+      : [];
     this.cases.permissions.push(permission);
   }
-  deleteOwner( objectType: any,roleType: any, memberType: any,  owner: any,field:any) {
+  deleteOwner(
+    objectType: any,
+    roleType: any,
+    memberType: any,
+    owner: any,
+    field: any
+  ) {
     let index = this.cases?.permissions.findIndex(
-      (x) =>    x.objectType == objectType &&   x.roleType === roleType &&  x.memberType == memberType && x.objectID === owner );
-    if(index != -1) {
-      if(field === 'owner' ){
+      (x) =>
+        x.objectType == objectType &&
+        x.roleType === roleType &&
+        x.memberType == memberType &&
+        x.objectID === owner
+    );
+    if (index != -1) {
+      if (field === 'owner') {
         this.cases.owner = null;
-        this.owner= null;
+        this.owner = null;
       }
       this.cases.permissions.splice(index, 1);
     }
@@ -520,10 +533,9 @@ export class PopupAddCasesComponent
     option.data = data;
     option.service = 'CM';
     return true;
-
   }
   beforeSaveInstance(option: RequestOption) {
-    option.service ='DP';
+    option.service = 'DP';
     option.className = 'InstancesBusiness';
     option.assemblyName = 'ERM.Business.DP';
     if (this.action === 'add' || this.action === 'copy') {
@@ -564,10 +576,10 @@ export class PopupAddCasesComponent
 
   async executeSaveData() {
     if (this.action !== this.actionEdit) {
-      this.cases.applyProcess && await this.insertInstance();
+      this.cases.applyProcess && (await this.insertInstance());
       !this.cases.applyProcess && this.onAdd();
     } else {
-      this.cases.applyProcess &&  await this.editInstance();
+      this.cases.applyProcess && (await this.editInstance());
       !this.cases.applyProcess && this.onEdit();
     }
   }
@@ -593,7 +605,7 @@ export class PopupAddCasesComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
-          autoNameTabFields: res[3]
+          autoNameTabFields: res[3],
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
@@ -618,22 +630,36 @@ export class PopupAddCasesComponent
             ? null
             : this.cases.createdOn
         );
-      this.cases.endDate = this.action === this.actionEdit ? this.cases?.endDate: this.dateMax;
+        this.cases.endDate =
+          this.action === this.actionEdit ? this.cases?.endDate : this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   //get autoname tab fields
-  setAutoNameTabFields(autoNameTabFields){
+  setAutoNameTabFields(autoNameTabFields) {
     autoNameTabFields = autoNameTabFields;
-    if(this.menuInputInfo){
-      this.menuInputInfo.text = autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Thông tin nhập liệu';
-      this.menuInputInfo.subName = autoNameTabFields && autoNameTabFields.trim() != '' ?autoNameTabFields : 'Input information';
-      this.menuInputInfo.subText =autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Input information';
-      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
-      if(menuInput != -1){
-        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+    if (this.menuInputInfo) {
+      this.menuInputInfo.text =
+        autoNameTabFields && autoNameTabFields.trim() != ''
+          ? autoNameTabFields
+          : 'Thông tin nhập liệu';
+      this.menuInputInfo.subName =
+        autoNameTabFields && autoNameTabFields.trim() != ''
+          ? autoNameTabFields
+          : 'Input information';
+      this.menuInputInfo.subText =
+        autoNameTabFields && autoNameTabFields.trim() != ''
+          ? autoNameTabFields
+          : 'Input information';
+      const menuInput = this.tabInfo.findIndex(
+        (item) => item?.name === this.menuInputInfo?.name
+      );
+      if (menuInput != -1) {
+        this.tabInfo[menuInput] = JSON.parse(
+          JSON.stringify(this.menuInputInfo)
+        );
       }
     }
     this.detectorRef.detectChanges();
@@ -664,8 +690,7 @@ export class PopupAddCasesComponent
   }
 
   insertInstance() {
-
-    if(!this.isLoading) {
+    if (!this.isLoading) {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.codxCmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -676,13 +701,12 @@ export class PopupAddCasesComponent
           this.onAdd();
         }
       });
-    }
-    else {
+    } else {
       this.onAddInstance();
     }
   }
   async editInstance() {
-    if(!this.isLoading) {
+    if (!this.isLoading) {
       let data = [this.instance, this.listCustomFile];
       this.codxCmService.editInstance(data).subscribe((instance) => {
         if (instance) {
@@ -692,15 +716,15 @@ export class PopupAddCasesComponent
           this.onEdit();
         }
       });
-
-    }
-    else {
+    } else {
       this.onUpdateInstance();
     }
   }
   addPermission(permissionDP) {
-    if ( permissionDP && permissionDP?.length > 0) {
-      this.cases.permissions = this.cases?.permissions ? this.cases.permissions : [];
+    if (permissionDP && permissionDP?.length > 0) {
+      this.cases.permissions = this.cases?.permissions
+        ? this.cases.permissions
+        : [];
       for (let item of permissionDP) {
         this.cases.permissions.push(this.copyPermission(item));
       }
@@ -775,7 +799,7 @@ export class PopupAddCasesComponent
       cases.caseType = this.funcID == 'CM0401' ? '1' : '2';
     }
     cases.owner = this.owner;
-  //  cases.salespersonID = this.owner;
+    //  cases.salespersonID = this.owner;
   }
   checkFormat(field) {
     if (field.dataType == 'T') {
@@ -832,7 +856,7 @@ export class PopupAddCasesComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
-      let isEndSaturday = endDay.getDay() === 6 ;
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -840,7 +864,7 @@ export class PopupAddCasesComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        if(!isEndSaturday) {
+        if (!isEndSaturday) {
           endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
         }
         endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
@@ -877,7 +901,6 @@ export class PopupAddCasesComponent
     this.showLabelAttachment = this.isHaveFile;
   }
 
-
   // onSave(){
 
   // }
@@ -907,7 +930,10 @@ export class PopupAddCasesComponent
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.applyProcess = this.funcID == 'CM0401' ? dataValue?.ProcessCase == '1':dataValue?.ProcessRequest == '1';
+      this.applyProcess =
+        this.funcID == 'CM0401'
+          ? dataValue?.ProcessCase == '1'
+          : dataValue?.ProcessRequest == '1';
       this.cases.applyProcess = this.applyProcess;
     }
   }

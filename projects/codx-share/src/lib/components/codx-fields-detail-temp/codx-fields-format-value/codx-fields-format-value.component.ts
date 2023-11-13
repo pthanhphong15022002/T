@@ -1,5 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DataRequest,
+  FormModel,
+} from 'codx-core';
 import moment from 'moment';
 
 @Component({
@@ -29,10 +34,12 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   count: number = 0;
   dataValueTypeC: any = [];
   dataValueTypeV: any = [];
+  dataValueTypePA: any = [];
 
   constructor(
     private cache: CacheService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private api: ApiHttpService
   ) {}
 
   // ngOnChanges() {
@@ -51,6 +58,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         if (this.data.dataFormat == 'V')
           this.dataValueTypeV = this.listValue(this.data.dataValue);
         break;
+      case 'PA':
+        this.parseValuePA(this.data.dataValue);
+        break;
     }
   }
 
@@ -60,6 +70,53 @@ export class CodxFieldsFormatValueComponent implements OnInit {
 
   listValue(dataValue) {
     return dataValue?.split(';');
+  }
+
+  parseValuePA(dataValue) {
+    this.dataValueTypePA = [];
+    this.cache.combobox(this.data.refValue).subscribe((res) => {
+      let gridModel = new DataRequest();
+      let entityName = res?.tableName;
+      gridModel.entityName = entityName;
+      gridModel.entityPermission = entityName;
+      gridModel.pageLoading = false;
+
+      let predicate = res.valueMember + '=@0';
+      if (res.predicate) {
+        predicate += ' and ' + res.predicate;
+      }
+      gridModel.predicate = predicate;
+      gridModel.dataValue = dataValue;
+
+      this.api
+        .execSv<any>(
+          res.service,
+          'ERM.Business.Core',
+          'DataBusiness',
+          'LoadDataAsync',
+          gridModel
+        )
+        .subscribe((dataRes) => {
+          if (dataRes) {
+            let crrData = dataRes[0][0];
+            let dataFormat = JSON.parse(this.data.dataFormat);
+            if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+              dataFormat.forEach((x) => {
+                let value = '';
+                for (var key in crrData) {
+                  if (
+                    key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()
+                  ) {
+                    value = crrData[key];
+                  }
+                }
+                let obj = Object.assign(x, { dataValue: value });
+                this.dataValueTypePA.push(obj);
+              });
+            }
+          }
+        });
+    });
   }
 
   //--------------format table---------------//
