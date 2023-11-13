@@ -62,6 +62,7 @@ import { ViewInstancesComponent } from './view-instances/view-instances.componen
 import { CdkTableModule } from '@angular/cdk/table';
 import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
+import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 
 export const routes: Routes = [
   {
@@ -153,6 +154,7 @@ const T_Component: Type<any>[] = [
   PopupSettingTableComponent,
   PopupSettingReferenceComponent,
   ViewInstancesComponent,
+  ReplaceProgressPipe,
 ];
 
 @NgModule({

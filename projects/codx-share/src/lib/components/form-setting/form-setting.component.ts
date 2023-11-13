@@ -117,10 +117,12 @@ override onInit(): void {
   }
 
   selectedItem:any;
+  selectedData:any;
   onSelected(e:any){
     this.selectedItem = e.nodeData;
     let item = this.data.find((x:any)=>x[this.field.id]==e.nodeData.id);
     if(item){
+      this.selectedData = item;
       if(item.functionType == 'G'){
         this.isEditGroup = true;
         this.isAddFunc = false;
@@ -229,8 +231,11 @@ override onInit(): void {
     if (args.event.which === 3) {
         this.tree.selectedNodes = [args.node.getAttribute('data-uid') as string];
     }
-}
+  }
 
+  valueChange(e:any){
+
+  }
 
   onAddFunc(parentID){
     this.isEditGroup = false;

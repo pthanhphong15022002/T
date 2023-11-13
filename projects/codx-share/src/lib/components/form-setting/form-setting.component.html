@@ -5,7 +5,7 @@
         <div class="row h-100">
           <div class="col-4 h-100 p-0">
             <div class="container h-100 p-0">
-              <div class="row overflow-scroll overflow-x-hidden  border-end " style="height: calc( 100% - 50px)">
+              <div class="row overflow-scroll overflow-x-hidden  border-end h-100" >
                 <ejs-treeview #treeELe
                 id="formSetting"
                 [cssClass]="''"
@@ -49,17 +49,15 @@
               </ng-template>
               </ejs-treeview>
               </div>
-              <div class="row" style="height: 50px">
+              <!-- <div class="row" style="height: 50px">
                 <div class="d-flex align-items-center">
 
-                  <div class="mx-2 w-100  fs-5 d-flex align-items-center" (click)="onAddGroup()">
-                     <i class="icon-add_circle_outline me-3 text-primary"></i> <span class="text-muted fs-5">Thêm nhóm</span>
-                  </div>
-                   <!-- <div  class="ms-3">
-                      <span class="treeCount e-badge e-badge-primary"  *ngIf="data.functionType">{{ data.functionType }}</span>
-                  </div> -->
-              </div>
-              </div>
+                    <div class="mx-2 w-100  fs-5 d-flex align-items-center" (click)="onAddGroup()">
+                      <i class="icon-add_circle_outline me-3 text-primary"></i> <span class="text-muted fs-5">Thêm nhóm</span>
+                    </div>
+
+                </div>
+              </div> -->
             </div>
 
           </div>
@@ -70,7 +68,28 @@
                   <span class="fs-5 fw-bold text-dark"><codx-label name="lblEditGroup" default="Chỉnh sửa Nhóm" [formName]="'sys'" ></codx-label></span>&nbsp; <span class="fs-4 fw-bold text-dark"> : {{selectedItem?.text}}</span>
                 </div>
                 <div class="col d-flex justify-content-start" *ngIf="isEditFunc">
-                  <span class="fs-5 fw-bold text-dark"><codx-label name="lblEditFunc" default="Chỉnh sửa Chức năng" [formName]="'sys'" ></codx-label></span>&nbsp; <span class="fs-4 fw-bold text-dark"> : {{selectedItem?.text}}</span>
+                  <div class="container p-0 h-100">
+                    <span class="fs-5 fw-bold text-dark"><codx-label name="lblEditFunc" default="Chỉnh sửa Chức năng" [formName]="'sys'" ></codx-label></span>&nbsp; <span class="fs-4 fw-bold text-dark"> : {{selectedItem?.text}}</span>
+                    <div class="row px-5">
+                      <div class="col form-group ps-0">
+                        <codx-label default="Đường dẫn" name="lblUrl" formName="sys">
+                        </codx-label>
+                        <codx-input field="url" [crrValue]="selectedData?.url" type="text"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
+                    </div>
+                    <div class="row px-5">
+                      <div class="col form-group ps-0">
+                        <codx-label default="Tên chức năng" name="lblFuctionName" formName="sys">
+                        </codx-label>
+                        <codx-input field="customName" [crrValue]="selectedData?.customName"  type="text"
+                          (valueChange)="valueChange($event)">
+                        </codx-input>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div class="col d-flex justify-content-start" *ngIf="isAddFunc">
                   <span class="fs-5 fw-bold text-dark"><codx-label name="lblAddFunc" default="Thêm mới Chức năng" [formName]="'sys'" ></codx-label></span>&nbsp; <span class="fs-4 fw-bold text-dark"> : {{selectedItem?.text}}</span>
@@ -95,13 +114,13 @@
 
 </codx-form>
 <ng-template #footer>
-  <div class="">
-    <div class="form-group d-flex justify-content-start flex-row">
-      <button type="button" class="btn btn-primary" (click)="onAddGroup()">
+  <div class="d-flex">
+    <div class="form-group w-50 d-flex justify-content-start">
+      <button type="button" class="btn btn-sm text-hover-primary d-flex align-items-center" (click)="onAddGroup()">
         <i class="icon-add_circle_outline me-3 text-primary"></i> <span class="text-muted fs-5">Thêm nhóm</span>
       </button>
     </div>
-    <div class="form-group d-flex justify-content-end flex-row">
+    <div class="form-group w-50 d-flex justify-content-end ">
       <button type="button" class="btn btn-primary" (click)="onSaveForm()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
