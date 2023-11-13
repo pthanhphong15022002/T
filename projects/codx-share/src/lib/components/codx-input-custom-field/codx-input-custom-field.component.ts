@@ -34,16 +34,17 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customField: any = null;
   @Output() valueChangeCustom = new EventEmitter<any>();
   @Output() addFileCompleted = new EventEmitter<boolean>();
-  //file - đặc thù cần hỏi lại sauF
-  @Input() showTitle = true;
-  @Input() objectId: any = '';
-  @Input() checkValid = true;
-  @Input() objectType: any = '';
-  @Input() funID: any = '';
+
+  @Input() isAdd = false; //la add new
+  @Input() showTitle = true; // show Title hoặc "gia trị măc định"
+  @Input() objectId: any = ''; //objectId của file
+  @Input() objectType: any = ''; // object Type của file
+  @Input() checkValid = true; //check Validate khi add, edit
+
   @Input() formModel: any = null;
   @Input() disable = false;
-  @Input() viewFieldName = false;
-  @Input() objectIdParent: any = '';
+  @Input() viewFieldName = false; //hiện field name bên cạnh title
+  @Input() objectIdParent: any = ''; //recID của model cha
   @Input() customerID: string = ''; //Khách hàng cơ hội
   placeholderRole = 'Vai trò........';
 
@@ -148,6 +149,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //gia tri mặc dinh khi them moi
+    if (this.isAdd && this.customField.defaultValue)
+      this.customField.dataValue = this.customField.defaultValue;
+
     switch (this.customField.dataType) {
       case 'TA':
         this.getColumnTable(this.customField);
