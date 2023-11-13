@@ -35,6 +35,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Output() valueChangeCustom = new EventEmitter<any>();
   @Output() addFileCompleted = new EventEmitter<boolean>();
   //file - đặc thù cần hỏi lại sauF
+  @Input() showTitle = true;
   @Input() objectId: any = '';
   @Input() checkValid = true;
   @Input() objectType: any = '';

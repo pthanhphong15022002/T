@@ -17,7 +17,6 @@ import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { LayoutComponent } from './_layout/layout.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { ResourcesComponent } from './resources/resources.component';
@@ -36,6 +35,7 @@ import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dyn
 import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components/codx-view-content/codx-view-content.component';
 import { EPDashboardComponent } from './dashboard/dashboard.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 
 export const routes: Routes = [
   {
@@ -161,7 +161,6 @@ export const routes: Routes = [
   ],
   exports: [RouterModule],
   declarations: [
-    LayoutComponent,
     ResourcesComponent,
     PopupAddResourcesComponent,
     EPHistoryCardComponent,

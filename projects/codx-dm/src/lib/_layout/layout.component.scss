@@ -102,14 +102,31 @@
 }
 
 
-
-
-
 #kt_aside_menu_header {
   margin-bottom: 15px;
   white-space: nowrap;
 }
-
+.aside-padding-v2
+{
+  #kt_aside_menu_header
+  {
+    margin-bottom: 0px;
+  }
+  .icon-add
+  {
+    color: #28292b;
+  }
+  .btn.btn-pill
+  {
+    color: #28292b;
+    border: 1px solid #28292b !important;
+  }
+  .btn-dm-add
+  {
+    width: 30px;
+    height: 30px;
+  }
+}
 .aside-menu codx-temp-full .fw-bold {
   font-weight: 400 !important;
   line-height: 23px;
@@ -179,7 +196,7 @@ codx-layout:not([data-kt-aside-minimize="on"]){
   }
   
 }
-.aside-minimize-icon-title .page-dm .aside .menu-link{
+.aside-minimize-icon-title:not(.header-fixed-2) .page-dm .aside .menu-link{
   border-radius: 3px 0 0 3px!important;
   padding: 7px 10px!important;
   margin-bottom: 2px;
