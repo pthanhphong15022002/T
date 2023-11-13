@@ -821,12 +821,12 @@ export class CodxCmService {
       data
     );
   }
-  changeStatusDeal(data, business, method) {
+  changeStatusCM(data, business, method) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
-      'DealsBusiness',
-      'ChangeStatusDealAsync',
+      business,
+      method,
       data
     );
   }

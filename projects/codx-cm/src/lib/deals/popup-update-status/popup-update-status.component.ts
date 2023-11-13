@@ -76,7 +76,7 @@ export class PopupUpdateStatusComponent
     this.isLockStep = true;
     let datas = [this.recID, this.statusDefault, this.statusCodecmt];
     let functionCM = this.getMethod(this.applyFor);
-    this.codxCmService.changeStatusDeal(datas,functionCM.business,functionCM.method).subscribe((res) => {
+    this.codxCmService.changeStatusCM(datas,functionCM.business,functionCM.method).subscribe((res) => {
       if (res) {
         let obj = {
           statusDefault: this.statusDefault,
@@ -112,6 +112,10 @@ export class PopupUpdateStatusComponent
     else if(applyFor == '2' ||applyFor == '3'  ) {
       business = 'CasesBusiness';
       method ='ChangeStatusCasesAsync';
+    }
+    else if(applyFor == '5'  ) {
+      business = 'LeadsBusiness';
+      method ='ChangeStatusLeadAsync';
     }
     return obj = {
       business: business,
