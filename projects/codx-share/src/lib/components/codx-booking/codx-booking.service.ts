@@ -87,6 +87,15 @@ export class CodxBookingService {
       [recID]
     );
   }
+  getCostInfo(recID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingCostBusiness',
+      'GetListByTranIDAsync',
+      [recID]
+    );
+  }
   addEditBooking(data: any, isAdd:boolean, listAttendees:any, listStationery:any) {
     return this.api.execSv(
       'EP',
