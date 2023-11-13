@@ -64,7 +64,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
       let field = this.convertStepField(this.datas[key]);
       this.listField.push(field);
       //test
-      if (key == 'Address') this.dataRef.push(field);
+      // if (key == 'Address') this.dataRef.push(field);
     }
   }
 

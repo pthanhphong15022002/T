@@ -116,7 +116,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // view Crr
   datasVllCrr = [];
   fieldsCrrVll = { text: 'textValue', value: 'value' };
-  crrValueFirst = '';
+  crrValueFirst = null;
   element: any;
   isOpenPopup = false;
   loaded: boolean = false;
@@ -622,21 +622,21 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
   }
 
-  async cbxChangeVll(value) {
+  cbxChangeVll(value) {
     this.field['refValue'] = value;
+
     if (!value) {
       // await this.getDefaultVll();
       this.crrVll = null;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
-      this.crrValueFirst = null;
+      // this.crrValueFirst = null;
       if (this.comboxView) this.comboxView.refresh();
       return;
     }
-
+    if (!this.listVllCus || this.listVllCus?.length == 0) return;
     this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
-
     if (
       this.crrDatasVll &&
       this.crrDatasVll.listType == '1' &&
@@ -648,12 +648,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
       if (Array.isArray(arr) && arr?.length > 0) {
         this.datasVllCrr = arr.map((x) => {
-          return {
+          let obj = {
             textValue: x,
             value: x,
           };
+          return obj;
         });
-        this.crrValueFirst = this.datasVllCrr[0].textValue;
+        // this.crrValueFirst = this.datasVllCrr[0].textValue;
       }
     }
   }
@@ -731,7 +732,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
               this.field.refValue = '';
               this.datasVllCrr = [];
-              this.crrValueFirst = '';
+              this.crrValueFirst = null;
               this.crrVll = null;
               if (this.comboxView) {
                 this.comboxView.value = '';
