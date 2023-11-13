@@ -1176,7 +1176,7 @@ export class PopupAddDealComponent
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
-      (item) => item === this.menuInputInfo
+      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
     );
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail

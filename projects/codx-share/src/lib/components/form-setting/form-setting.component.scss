@@ -1,0 +1,39 @@
+#formSetting.e-treeview .e-list-text {
+  width: 100%;
+  padding: 0 !important;
+}
+
+#formSetting.e-treeview .e-list-item.e-active>.e-fullrow {
+  background-color: #ddd;
+  border-color: #ddd;
+}
+#formSetting.e-treeview .e-list-item .e-ul {
+  margin: 2px 0 -2px;
+  padding: 0 0 0 10px !important;
+}
+
+#formSetting.e-treeview .e-text-content {
+  padding: 0 0 0 10px !important;
+}
+
+
+
+#formSetting.e-treeview .e-fullrow {
+
+  width: calc( 100% - 10px) !important;
+}
+
+.hover-ne .btn{
+  visibility: hidden;
+}
+.hover-ne:hover{
+  .btn{
+    visibility: visible;
+  }
+}
+
+#formSetting.e-treeview .e-ul {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}

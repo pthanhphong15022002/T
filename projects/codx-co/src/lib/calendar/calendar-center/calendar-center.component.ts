@@ -80,11 +80,20 @@ export class CalendarCenterComponent
         },
       },
     ];
+    // remmove codx-fillter form --- showFilter: false ko hoạt động
+    let itv1 = setInterval(() => {
+      let codxFillter = document.getElementById("Content-Fillter");
+      if(codxFillter)
+      {
+        clearInterval(itv1);
+        codxFillter.remove();
+      }
+    },1000); 
     // set statusColor & isOutSource for Schedule
-    var itv = setInterval(()=> {
+    var itv2 = setInterval(()=> {
       if((this.view?.currentView as any)?.schedule)
       {
-        clearInterval(itv);
+        clearInterval(itv2);
         this.codxSchedule = (this.view?.currentView as any).schedule;
         this.codxSchedule.isOutSource = this.isOutSource;
         this.codxSchedule.dataSource = this.events;
