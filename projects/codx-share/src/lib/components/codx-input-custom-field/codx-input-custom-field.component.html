@@ -567,6 +567,9 @@
       [disabled]="disable"
     >
     </codx-input>
+    <div class="text-gray-600 ms-3" data-field="">
+      {{ dataRef }}
+    </div>
   </ng-container>
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
     {{ errorMessage }}

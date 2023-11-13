@@ -55,6 +55,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     download: true,
     delete: true,
   };
+  dataRef = '';
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -154,6 +155,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.customField.dataValue = this.customField.defaultValue;
 
     switch (this.customField.dataType) {
+      case 'PA':
+        this.viewFieldRef();
+        break;
       case 'TA':
         this.getColumnTable(this.customField);
         break;
@@ -808,7 +812,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           if (dataRes) {
             let crrData = dataRes[0][0];
             if (crrData) {
-              this.refValuePA(crrData);
+              //this.refValuePA(crrData);
 
               this.valueChangeCustom.emit({
                 e: e.data,
@@ -825,6 +829,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     });
   }
   refValuePA(crrData) {
+    this.dataRef = '';
     let dataFormat = JSON.parse(this.customField.dataFormat);
     if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
       dataFormat.forEach((x) => {
@@ -838,6 +843,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
       this.modelJSON = this.modelJSON.substring(0, this.modelJSON.length - 1);
       this.modelJSON = '[{' + this.modelJSON + '}]';
+    }
+  }
+
+  viewFieldRef() {
+    let dataFormat = JSON.parse(this.customField.dataFormat);
+    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+      dataFormat.forEach((x) => {
+        this.dataRef += x.fieldName + ', ';
+      });
+      this.dataRef = this.dataRef.substring(0, this.dataRef.length - 2);
     }
   }
   //-----------------------------//
