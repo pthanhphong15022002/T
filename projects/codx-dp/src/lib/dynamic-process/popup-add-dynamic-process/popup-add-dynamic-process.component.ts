@@ -59,7 +59,7 @@ import { PopupRolesDynamicComponent } from '../popup-roles-dynamic/popup-roles-d
 import { firstValueFrom, Observable, finalize, map } from 'rxjs';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
@@ -819,10 +819,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
       stepListSave.forEach((step) => {
-        if (step && step['taskGroups']?.length > 0) {
-          let index = step['taskGroups']?.findIndex((x) => !x['recID']);
-          step['taskGroups']?.splice(index, 1);
-          step['taskGroups']?.forEach((element) => {
+        if (step && step?.taskGroups?.length > 0) {
+          let index = step?.taskGroups?.findIndex((x) => !x?.recID);
+          if(index >= 0){
+            step?.taskGroups?.splice(index, 1);
+          }
+          step?.taskGroups?.forEach((element) => {
             delete element['task'];
           });
         }
@@ -875,6 +877,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   valueChangeAutoNoCode(e) {
     this.instanceNoSetting = e?.data;
+  }
+  valueChangebusinessLineID($event ){
+    if($event && $event?.data) {
+      this.process.businessLineID = $event?.data;
+    }
   }
   //#endregion
 
@@ -1718,13 +1725,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.startInstanceControl = false;
       }
     }
-    // else if (view === 'AllowEstimatedEndView') {
-    //   if ($event.field === 'yes' && $event.component.checked === true) {
-    //     this.process.allowEstimatedEnd = true;
-    //   } else if ($event.field == 'no' && $event.component.checked === true) {
-    //     this.process.allowEstimatedEnd = false;
-    //   }
-    // }
+    else if (view === 'AllowEstimatedEndView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowEstimatedEnd = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowEstimatedEnd = false;
+      }
+    }
 
     this.changeDetectorRef.detectChanges();
   }
@@ -2972,8 +2979,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.taskGroupList.splice(index - 1, 0, taskGroup);
       } else {
         this.taskGroupList.push(taskGroup);
-      }
-
+      };
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
@@ -4546,6 +4552,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.stepList.filter((x) => !x.isSuccessStep && !x.isFailStep)
       )
     ) {
+      return false;
+    }
+    if(!this.process?.businessLineID && this.process.applyFor == '1' && this.action !== 'edit' ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+
       return false;
     }
     return true;

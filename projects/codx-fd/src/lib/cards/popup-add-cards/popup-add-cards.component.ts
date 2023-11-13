@@ -74,6 +74,7 @@ export class PopupAddCardsComponent implements OnInit {
   shareControl: string = '1';
   entityName: string = 'FD_Cards';
   refValue: string = 'Behaviors_Grp';
+  createNewfeed: boolean = false;
 
   countCardReive: number = 0;
   countCardSend: number = 0;
@@ -231,6 +232,8 @@ export class PopupAddCardsComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.parameter = JSON.parse(res);
+          const createNewfeedStr = this.parameter.createNewfeed || '0';
+          this.createNewfeed = createNewfeedStr == '1';
           if (this.parameter.MaxSendControl === '1') {
             this.getCountCardSend(this.user.userID, this.cardType);
           }
@@ -677,16 +680,18 @@ export class PopupAddCardsComponent implements OnInit {
     if (this.type == 'copy') {
       this.card.recID = undefined;
     }
+    const createNewfeedStr = this.createNewfeed ? '1' : '0';
     this.api
       .execSv<any>('FD', 'ERM.Business.FD', 'CardsBusiness', 'AddNewAsync', [
         this.card,
-        post,
+        // post,
+        createNewfeedStr,
       ])
       .subscribe(async (res: any[]) => {
         if (res && res[1]) {
           (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
           this.dialog.close();
-          this.notifySV.notifyCode('SYS006')
+          this.notifySV.notifyCode('SYS006');
         } else {
           this.notifySV.notify(res[1]);
         }
@@ -811,7 +816,7 @@ export class PopupAddCardsComponent implements OnInit {
               this.amount = this.quantity * this.gifts[0].price;
               this.form.patchValue({ quantity: 1 });
             }
-          } 
+          }
         });
     } else {
       this.gifts = [];
@@ -819,7 +824,7 @@ export class PopupAddCardsComponent implements OnInit {
       this.quantity = 0;
       this.amount = 0;
       this.dt.detectChanges();
-  }
+    }
   }
 
   addFile(evt: any) {

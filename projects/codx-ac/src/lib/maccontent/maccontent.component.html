@@ -34,7 +34,8 @@
               field="periodID"
               type="combobox"
               [refValue]="'DPProcessSteps'"
-              [crrValue]="''"
+              [crrValue]="1"
+              [model]="{ processNo: '2307180001' }"
               (valueChange)="valueChange($event)"
               placeholder="Kỳ"
             ></codx-input>

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
-import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent, Util } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { Subject, takeUntil } from 'rxjs';
-import { CodxAcService, fmTransfersLines } from '../../../codx-ac.service';
+import { CodxAcService, fmIssueTransfersLines, fmReceiptTransfersLines } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
+import { IV_TransfersLines } from '../../../models/IV_TransfersLines.model';
 
 @Component({
   selector: 'lib-warehouse-transfers-add',
@@ -13,8 +14,13 @@ import { RoundService } from '../../../round.service';
 })
 export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Contrucstor
-  @ViewChild('eleGridWareHouse') eleGridWareHouse: CodxGridviewV2Component; 
+  @ViewChild('eleGridIssue') eleGridIssue: CodxGridviewV2Component;
+  @ViewChild('eleGridReceipt') eleGridReceipt: CodxGridviewV2Component;
   @ViewChild('formWareHouse') public formWareHouse: CodxFormComponent;
+  @ViewChild('eleCbxReasonID') eleCbxReasonID: any;
+  @ViewChild('eleCbxFromWHID') eleCbxFromWHID: any;
+  @ViewChild('eleCbxToWHID') eleCbxToWHID: any;
+  @ViewChild('elementTabDetail') elementTabDetail: any;
   headerText: string; //? tên tiêu đề
   dialog!: DialogRef; //? dialog truyền vào
   dialogData?: any; //? dialog hứng data truyền vào
@@ -26,9 +32,10 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  fmTransfersLines:any = fmTransfersLines
+  fmIssueTransfersLines: any = fmIssueTransfersLines;
+  fmReceiptTransfersLines: any = fmReceiptTransfersLines;
   baseCurr: any; //? đồng tiền hạch toán
-  isPreventChange:any = false;
+  isPreventChange: any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -50,13 +57,13 @@ export class WarehouseTransfersAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    
+
   }
 
   ngAfterViewInit() {
-    if(this.formWareHouse?.data?.coppyForm) this.formWareHouse.data._isEdit = true; //? test copy để tạm
+    if (this.formWareHouse?.data?.coppyForm) this.formWareHouse.data._isEdit = true; //? test copy để tạm
   }
-  
+
   ngOnDestroy() {
     this.onDestroy();
   }
@@ -70,7 +77,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * *Hàm init sau khi form được vẽ xong
    * @param event
    */
-  onAfterInitForm(event){
+  onAfterInitForm(event) {
     //this.setValidateForm();
     this.detectorRef.detectChanges();
   }
@@ -106,134 +113,207 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * @param event 
    */
   changeSubType(event?: any) {
-    this.formWareHouse.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+    this.formWareHouse.setValue('subType', event.data[0], { onlySelf: true, emitEvent: false, });
   }
 
   valueChangeMaster(event: any) {
-
+    let field = event?.field || event?.ControlName;
+    let value = event?.data || event?.crrValue;
+    if (event && value && this.formWareHouse.hasChange(this.formWareHouse.preData,this.formWareHouse.data)) {
+      switch (field.toLowerCase()) {
+        case 'reasonid':
+        case 'fromwhid':
+        case 'towhid':
+          this.formWareHouse.data.memo = this.getMemoMaster();
+          this.formWareHouse.setValue('memo',this.formWareHouse.data.memo,{});
+          break;
+      }
+    }
   }
 
-  valueChangeLine(event: any) {
+  valueChangeLine(event: any,type:any) {
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'itemid') {
+      oLine.itemName = event?.itemData?.ItemName;
+      this.detectorRef.detectChanges();
+    }
+    if(type === 'receipt') this.eleGridReceipt.startProcess();
+    else this.eleGridIssue.startProcess();
     
+    this.api.exec('IV', 'TransfersLinesBusiness', 'ValueChangedAsync', [
+      event.field,
+      this.formWareHouse.data,
+      oLine,
+      type
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.genFixedDims(oLine);
+        this.detectorRef.detectChanges();
+        if(type === 'receipt') this.eleGridReceipt.endProcess();
+        else this.eleGridIssue.endProcess();
+      }
+    })
   }
   //#endregion Event
 
   //#region Method
-  onDiscardVoucher(){
-    // if (this.formVouchers && this.formVouchers.data._isEdit) {
-    //   this.notification.alertCode('AC0010', null).subscribe((res) => {
-    //     if (res.event.status === 'Y') {
-    //       this.detectorRef.detectChanges();
-    //       this.dialog.dataService
-    //         .delete([this.formVouchers.data], false, null, '', '', null, null, false)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res.data != null) {
-    //             this.notification.notifyCode('E0860');
-    //             this.dialog.close();
-    //             this.onDestroy();
-    //           }
-    //         });
-    //     }
-    //   });
-    // }else{
-    //   this.dialog.close();
-    //   this.onDestroy();
-    // }
+  onDiscardVoucher() {
+    if (this.formWareHouse && this.formWareHouse.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.formWareHouse.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.notification.notifyCode('E0860');
+                this.dialog.close();
+                this.onDestroy();
+              }
+            });
+        }
+      });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
+    }
   }
 
   /**
    * *Hàm lưu chứng từ
    * @param type 
    */
-  onSaveVoucher(type){
-    // this.formVouchers.save(null, 0, '', '', false)
-    // .pipe(takeUntil(this.destroy$))
-    // .subscribe((res: any) => {
-    //   if(!res) return;
-    //   if (res || res.save || res.update) {
-    //     if (res || !res.save.error || !res.update.error) {
-    //       if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
-    //         this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-    //           if(res){
-    //             this.saveVoucher(type);
-    //           }
-    //         })
-    //         return;
-    //       }    
-    //     }
-    //   }
-    // });
+  onSaveVoucher(type) {
+    this.formWareHouse.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') { //?
+            this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }    
+          if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') { //?
+            this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.saveVoucher(type);
+              }
+            })
+            return;
+          }    
+        }
+      }
+    });
   }
 
   /**
    * lưu chứng từ
    */
-  saveVoucher(type){
-    // this.api
-    //   .exec('IV', 'VouchersBusiness', 'UpdateVoucherAsync', [
-    //     this.formVouchers.data,
-    //     this.journal,
-    //   ])
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res?.update) {
-    //       this.dialog.dataService.update(res.data).subscribe();
-    //       if (type == 'save') {
-    //         this.onDestroy();
-    //         this.dialog.close();
-    //       }else{
-    //         this.api
-    //         .exec('IV', 'VouchersBusiness', 'SetDefaultAsync', [
-    //           this.dialogData.data?.oData,
-    //           this.journal,
-    //         ])
-    //         .subscribe((res: any) => {
-    //           if (res) {
-    //             res.data.isAdd = true;
-    //             this.formVouchers.refreshData({...res.data});
-    //             setTimeout(() => {
-    //               this.eleGridVouchers.dataSource = [];
-    //               this.eleGridVouchers.refresh();
-    //             }, 100);
-    //             this.detectorRef.detectChanges();
-    //           }
-    //         });
-    //       }
-    //       if (this.formVouchers.data.isAdd || this.formVouchers.data.isCopy)
-    //         this.notification.notifyCode('SYS006');
-    //       else 
-    //         this.notification.notifyCode('SYS007');
-          
-    //     }
-    //     if(this.eleGridVouchers && this.eleGridVouchers?.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false;
-    //   });
+  saveVoucher(type) {
+    this.api
+      .exec('IV', 'TransfersBusiness', 'UpdateVoucherAsync', [
+        this.formWareHouse.data,
+        this.journal,
+      ])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res?.update) {
+          this.dialog.dataService.update(res.data).subscribe();
+          if (type == 'save') {
+            this.onDestroy();
+            this.dialog.close();
+          }else{
+            this.api
+            .exec('IV', 'TransfersBusiness', 'SetDefaultAsync', [
+              this.dialogData.data?.oData,
+              this.journal,
+            ])
+            .subscribe((res: any) => {
+              if (res) {
+                res.data.isAdd = true;
+                this.formWareHouse.refreshData({...res.data});
+                setTimeout(() => {
+                  this.eleGridIssue.dataSource = [];
+                  this.eleGridIssue.refresh();
+                  this.eleGridReceipt.dataSource = [];
+                  this.eleGridReceipt.refresh();
+                }, 100);
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+          if (this.formWareHouse.data.isAdd || this.formWareHouse.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
+
+        }
+        if(this.eleGridIssue && this.eleGridIssue?.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+        if(this.eleGridReceipt && this.eleGridReceipt?.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+      });
   }
   //#endregion Method
 
   //#region Function
 
-  onAddLine() {
-    // this.formWareHouse.save(null, 0, '', '', false)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if(!res) return;
-    //     if (res || res.save || res.update) {
-    //       if (res || !res.save.error || !res.update.error) {
-    //         if (this.eleGridVouchers) {
-    //           this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-    //             if(res){
-    //               this.addLine();
-    //             }
-    //           })
-    //           return;
-    //         }
-    //       }
-    //     }
-    //   })
+  onAddLine(type) {
+    this.formWareHouse.save(null, 0, '', '', false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res || res.save || res.update) {
+          if (res || !res.save.error || !res.update.error) {
+            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
+              this.eleGridIssue.saveRow((res: any) => { //? save lưới trước
+                if (res) {
+                  this.addLine(type);
+                }
+              })
+              return;
+            }
+            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
+              this.eleGridReceipt.saveRow((res: any) => { //? save lưới trước
+                if (res) {
+                  this.addLine(type);
+                }
+              })
+              return;
+            }
+          }
+        }
+      })
   }
 
-  onActionGrid(event: any){
+  addLine(type) {
+    let oLine = this.setDefaultLine();
+    if(type === 'issue')
+      this.eleGridIssue.addRow(oLine, this.eleGridIssue.dataSource.length);
+    else 
+      this.eleGridReceipt.addRow(oLine, this.eleGridReceipt.dataSource.length);
+  }
+
+  setDefaultLine() {
+    let model : any = new IV_TransfersLines();
+    let oLine = Util.camelizekeyObj(model);
+    oLine.transID = this.formWareHouse.data.recID;
+    oLine.idiM41 = this.formWareHouse.data.fromWHID;
+    oLine.idiM42 = this.formWareHouse.data.toWHID;
+    oLine.reasonID = this.formWareHouse.data.reasonID;
+    let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
+    if (indexReason > -1) {
+      oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
+    }
+    return oLine;
+  }
+
+  onActionGrid(event: any) {
     // switch (event.type) {
     //   case 'autoAdd':
     //     this.onAddLine();
@@ -255,6 +335,56 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     // }
   }
 
+  getMemoMaster() {
+    let newMemo = ''; 
+    let reasonName = '';
+    let fromName = '';
+    let toName = '';
+
+    let indexReason =
+      this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex(
+        (x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value
+      );
+    if (indexReason > -1) {
+      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName + ' - ';
+    }
+
+    let indexFrom =
+      this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data.findIndex(
+        (x) => x.WarehouseID == this.eleCbxFromWHID?.ComponentCurrent?.value
+      );
+    if (indexFrom > -1) {
+      fromName = this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data[indexFrom].WarehouseName + ' - ';
+    }
+
+    let indexTo =
+      this.eleCbxToWHID?.ComponentCurrent?.dataService?.data.findIndex(
+        (x) => x.WarehouseID == this.eleCbxToWHID?.ComponentCurrent?.value
+      );
+    if (indexTo > -1) {
+      toName = this.eleCbxToWHID?.ComponentCurrent?.dataService?.data[indexTo].WarehouseName + ' - ';
+    }
+
+    newMemo = reasonName + fromName + toName;
+    return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
+  }
+
+  genFixedDims(line: any) {
+    let fixedDims1: string[] = Array(10).fill('0');
+    let fixedDims2: string[] = Array(10).fill('0');
+    for (let i = 0; i < 10; i++) {
+      if (line['idiM' + i + '1']) {
+        fixedDims1[i] = '1';
+      }
+      if (line['idiM' + i + '2']) {
+        fixedDims2[i] = '1';
+      }
+    }
+    line.fixedDIMs1 = fixedDims1.join('');
+    line.fixedDIMs2 = fixedDims2.join('');
+    return line;
+  }
+
   /**
    * *Hàm ẩn các morefunction trong lưới
    * @param event
@@ -264,7 +394,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
         element.disabled = false;
         element.isbookmark = false;
-      }else{
+      } else {
         element.disabled = true;
       }
     });
