@@ -1146,7 +1146,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.sampleProcessName = this.tempSampleProcessName; 
         //Xóa vùng ký mẫu cũ
         if(this.data.files?.length>0){
-          this.data?.files?.foreach(f=>{
+          this.data.files.forEach(f=>{
             f.areas = null;
           })
         }          
