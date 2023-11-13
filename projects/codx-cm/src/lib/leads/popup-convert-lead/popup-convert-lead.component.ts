@@ -343,20 +343,24 @@ export class PopupConvertLeadComponent implements OnInit {
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.deal.dealID,
+          autoNameTabFields: res[3]
         };
         this.listInstanceSteps = res[0];
         this.listParticipants = obj.permissions;
         let find = this.listParticipants.some(
           (x) => x.userID == this.lead?.salespersonID
         );
+        this.setAutoNameTabFields(obj?.autoNameTabFields);
         if (find) {
           this.deal.salespersonID = this.lead?.salespersonID;
           this.deal.owner = this.lead?.salespersonID;
           this.setPermissions(
-            this.listParticipants.find((x) => x.userID == this.lead?.salespersonID),
+            this.listParticipants.find(
+              (x) => x.userID == this.lead?.salespersonID
+            ),
             'O'
           );
-          if(!this.radioChecked){
+          if (!this.radioChecked) {
             this.customer.owner = this.deal.salespersonID;
           }
         }
@@ -367,6 +371,22 @@ export class PopupConvertLeadComponent implements OnInit {
       }
     });
   }
+
+  //get autoname tab fields
+  setAutoNameTabFields(autoNameTabFields) {
+    const text =
+      autoNameTabFields && autoNameTabFields.trim() != ''
+        ? autoNameTabFields
+        : 'Thông tin khác';
+    const menuInput = this.tabInfo.findIndex(
+      (item) => item?.name === 'InputInformation'
+    );
+    if (menuInput != -1) {
+      this.tabInfo[menuInput].text = JSON.parse(JSON.stringify(text));
+      this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.tabInfo[menuInput]));
+    }
+  }
+  //end
 
   getListContactByObjectID(objectID) {
     this.cmSv.getListContactByObjectID(objectID).subscribe((res) => {
@@ -718,14 +738,16 @@ export class PopupConvertLeadComponent implements OnInit {
     var endDate =
       action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
-      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(
-        dateNow,
-        endDate,
-        listSteps[i]?.excludeDayoff
-      );
-      dateNow = endDate;
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
     }
     return endDate;
   }
@@ -743,7 +765,7 @@ export class PopupConvertLeadComponent implements OnInit {
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
-      let isEndSaturday = endDay.getDay() === 6 ;
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -751,7 +773,7 @@ export class PopupConvertLeadComponent implements OnInit {
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        if(!isEndSaturday) {
+        if (!isEndSaturday) {
           endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
         }
         endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));

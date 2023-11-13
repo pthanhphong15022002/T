@@ -1423,6 +1423,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   if (this.showMessage == '1')
                     this.notificationsService.notify(item2.message);
                   this.fileUploadList[0].recID = item2.data.recID;
+                  if(!Array.isArray(this.atSV.fileListAdded)) this.atSV.fileListAdded = [];
                   this.atSV.fileListAdded.push(Object.assign({}, item2));
                   this.data.push(Object.assign({}, item2.data));
                   this.fileUploadList = [];

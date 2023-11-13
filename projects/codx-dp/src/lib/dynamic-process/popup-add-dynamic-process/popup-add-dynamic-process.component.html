@@ -476,7 +476,6 @@
             >
             </codx-input>
           </div>
-
         </div>
         <div class="col-6">
           <div class="form-group ms-5">
@@ -547,7 +546,7 @@
           >
             <i class="icon-settings icon-16"></i>
           </button>
-       </div>
+        </div>
         <!-- <div class="text-gray-500">
           <codx-label
             name="lblLocationControl"
@@ -641,6 +640,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'O')"
+        >
+        </codx-input>
       </div>
       <hr />
 
@@ -708,6 +716,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'P')"
+        >
+        </codx-input>
       </div>
 
       <hr />
@@ -774,6 +791,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'F')"
+        >
+        </codx-input>
       </div>
       <hr />
       <div class="d-flex flex-column mb-4">
@@ -970,7 +996,10 @@
             </codx-label>
           </div>
           <div class="col-6 row">
-            <div #autoNumberSetting class="position-relative col-lg-12 col-xl-8">
+            <div
+              #autoNumberSetting
+              class="position-relative col-lg-12 col-xl-8"
+            >
               <!-- <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
@@ -1053,13 +1082,13 @@
           <div class="col-6 row">
             <div class="col-lg-12 col-xl-8">
               <codx-input
-              field="autoNameTabFields"
-              type="text"
-              [crrValue]="process?.autoNameTabFields"
-              [placeholder]="gridViewSetup?.AutoNameTabFields?.description"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
+                field="autoNameTabFields"
+                type="text"
+                [crrValue]="process?.autoNameTabFields"
+                [placeholder]="gridViewSetup?.AutoNameTabFields?.description"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
             </div>
           </div>
         </div>
@@ -1330,9 +1359,7 @@
               <codx-input
                 type="valuelist"
                 [refValue]="gridViewSetup?.TabControl?.referedValue"
-                [placeholder]="
-                  gridViewSetup?.TabControl?.description
-                "
+                [placeholder]="gridViewSetup?.TabControl?.description"
                 [crrValue]="process.tabControl"
                 (valueChange)="valueChange($event)"
                 field="tabControl"

@@ -40,6 +40,8 @@ import {
   DataRequest,
   CodxService,
   AuthService,
+  CodxComboboxComponent,
+  CodxInputComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -81,6 +83,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
+  @ViewChild('inputUser') inputUser: CodxInputComponent;
   process = new DP_Processes();
   permissions = [];
   dialog: any;
@@ -1245,6 +1248,62 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   openPopupParticipants(popupParticipants) {
     this.callfc.openForm(popupParticipants, '', 950, 650);
+  }
+
+  searchAddUsers(e, type) {
+    if (e && e?.component?.itemsSelected?.length > 0) {
+      if (!this.isChange) this.isChange = true;
+      if (!this.isUpdatePermiss) this.isUpdatePermiss = true;
+      const data = e?.component?.itemsSelected[0];
+      if (data) {
+        let perm = new DP_Processes_Permission();
+        perm.objectID = data?.UserID;
+        perm.objectName = data?.UserName;
+        perm.objectType = 'U';
+        perm.roleType = type;
+        perm.read = true;
+        switch (type) {
+          case 'O':
+            perm.full = true;
+            perm.create = true;
+            perm.assign = true;
+            perm.edit = true;
+            perm.delete = true;
+            perm.isActive = true;
+            break;
+          case 'P':
+            perm.full = false;
+            perm.create = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.isActive = true;
+            perm.delete = false;
+            break;
+          case 'F':
+            perm.full = false;
+            perm.create = false;
+            perm.assign = false;
+            perm.edit = false;
+            perm.isActive = true;
+            // perm.publish = false;
+            perm.delete = false;
+            break;
+        }
+        this.permissions = this.checkUserPermission(this.permissions, perm);
+        this.process.permissions = this.permissions;
+        this.updateStepChange(this.step?.recID);
+      }
+      if(this.inputUser){
+        e.data = null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).value = null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).valueField = null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).textField = null;
+        this.inputUser.crrValue = null;
+        this.inputUser.value = null;
+        this.inputUser.data = null;
+      }
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   applyShare(e, type) {

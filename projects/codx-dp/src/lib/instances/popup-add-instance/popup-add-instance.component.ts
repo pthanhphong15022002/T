@@ -92,7 +92,6 @@ export class PopupAddInstanceComponent implements OnInit {
   readonly fieldCbxStep = { text: 'stepName', value: 'stepID' };
   fields: Object = { text: 'userName', value: 'userID' };
   actionAdd: string = 'add';
-  oldEndDate: Date;
   endDate: Date;
   oldIdInstance: string;
   user: any;
@@ -171,8 +170,6 @@ export class PopupAddInstanceComponent implements OnInit {
     if(this.menuInputInfo) this.menuInputInfo.text = this.autoNameTabFields != null && this.autoNameTabFields?.trim() != '' ? this.autoNameTabFields : this.menuInputInfo.text
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
-    } else if (this.action === 'edit') {
-      this.oldEndDate = this.instance?.endDate;
     }
   }
 
@@ -269,6 +266,11 @@ export class PopupAddInstanceComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  valueChangeDate($event) {
+    if ($event) {
+      this.instance[$event.field] = $event.data.fromDate;
+    }
+  }
   valueChange($event) {
     if ($event) {
       this.instance[$event.field] = $event.data;

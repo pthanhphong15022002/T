@@ -312,6 +312,7 @@ export class PopupAddCasesComponent
         if (result) {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
+          this.setAutoNameTabFields(result?.autoNameTabFields);
           this.cases.caseNo = result?.caseId;
           this.cases.endDate = this.HandleEndDate(
             this.listInstanceSteps,
@@ -592,12 +593,14 @@ export class PopupAddCasesComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
+          autoNameTabFields: res[3]
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        this.setAutoNameTabFields(obj?.autoNameTabFields);
         this.itemTabs(this.ischeckFields(this.listInstanceSteps));
 
         this.listParticipants = obj.permissions;
@@ -620,6 +623,23 @@ export class PopupAddCasesComponent
       }
     });
   }
+
+  //get autoname tab fields
+  setAutoNameTabFields(autoNameTabFields){
+    autoNameTabFields = autoNameTabFields;
+    if(this.menuInputInfo){
+      this.menuInputInfo.text = autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Thông tin nhập liệu';
+      this.menuInputInfo.subName = autoNameTabFields && autoNameTabFields.trim() != '' ?autoNameTabFields : 'Input information';
+      this.menuInputInfo.subText =autoNameTabFields && autoNameTabFields.trim() != '' ? autoNameTabFields : 'Input information';
+      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
+      if(menuInput != -1){
+        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+  //end
+
   async getListContacts(customerID: any) {
     customerID =
       this.action === this.actionCopy ? this.cases.customerID : customerID;
@@ -787,14 +807,16 @@ export class PopupAddCasesComponent
     var endDate =
       action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
-      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(
-        dateNow,
-        endDate,
-        listSteps[i]?.excludeDayoff
-      );
-      dateNow = endDate;
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
     }
     return endDate;
   }

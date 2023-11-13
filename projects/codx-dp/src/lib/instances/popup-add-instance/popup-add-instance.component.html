@@ -90,7 +90,7 @@
     <codx-label
       [formModel]="form.formModel"
       name="lblInstanceNo"
-      [default]="gridViewSetup['InstanceNo']?.headerText +' '+ autoName"
+      [default]="gridViewSetup['InstanceNo']?.headerText + ' ' + autoName"
     >
     </codx-label>
     <codx-input
@@ -106,7 +106,7 @@
     <codx-label
       [formModel]="form.formModel"
       name="lblTitle"
-      [default]="gridViewSetup['Title']?.headerText+' ' + autoName"
+      [default]="gridViewSetup['Title']?.headerText + ' ' + autoName"
     >
     </codx-label>
     <codx-input
@@ -128,13 +128,13 @@
       </codx-label>
     </div>
     <ejs-combobox
-    [dataSource]="lstParticipants"
-    (valueChange)="eventUser($event)"
-    [fields]="fields"
-    [placeholder]="gridViewSetup?.Owner?.description"
-    [allowFiltering]="true"
-    [value]="owner"
-  ></ejs-combobox>
+      [dataSource]="lstParticipants"
+      (valueChange)="eventUser($event)"
+      [fields]="fields"
+      [placeholder]="gridViewSetup?.Owner?.description"
+      [allowFiltering]="true"
+      [value]="owner"
+    ></ejs-combobox>
     <!-- <codx-popup-participants
       [lstParticipants]="lstParticipants"
       [dialog]="dialog"
@@ -153,10 +153,11 @@
     >
     </codx-label>
     <codx-input
+      type="datetime"
       field="endDate"
-      [formModel]="form.formModel"
+      format="d"
       [crrValue]="instance?.endDate"
-      (valueChange)="valueChange($event)"
+      (valueChange)="valueChangeDate($event)"
     >
     </codx-input>
   </div>
@@ -327,6 +328,7 @@
           <div class="form-group" *ngIf="checkAddField(step, idx)">
             <codx-input-custom-field
               [customField]="item"
+              [isAdd]="action != 'edit'"
               [checkValid]="false"
               [objectId]="item.recID"
               [objectType]="'DP_Instances_Steps_Fields'"

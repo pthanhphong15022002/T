@@ -41,6 +41,7 @@ import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
 import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 import { EP_BookingInputParam } from './codx-booking.model';
+import { FormSettingComponent } from '../form-setting/form-setting.component';
 
 @Component({
   selector: 'codx-booking',
@@ -175,7 +176,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         ];
         this.detectorRef.detectChanges();
       } else {
-        
+
         this.getSchedule();
         this.crrViewMode = this.viewType.schedule;
         this.views = [
@@ -210,9 +211,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               panelRightRef: this.panelRight,
             },
           },
-          
-        ];       
-                
+
+        ];
+
         this.navigateSchedule();
         this.cache
           .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
@@ -341,7 +342,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             this.resourceType = EPCONST.VLL.ResourceType.Car;
             this.categoryIDProcess = 'ES_EP002';
             break;
-    
+
           case EPCONST.ENTITY.S_Bookings:
             this.resourceType = EPCONST.VLL.ResourceType.Stationery;
             this.categoryIDProcess = 'ES_EP003';
@@ -427,7 +428,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         }
       }
     });
-    
+
   }
 
   getSchedule() {
@@ -493,6 +494,19 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
       case 'btnAdd':
+        // let dModel = new DialogModel();
+        // dModel.FormModel = this.formModel;
+        // dModel.DataService = this.view?.dataService;
+        // let dialogStationery = this.callfc.openForm(
+        //   FormSettingComponent,
+        //   '',
+        //   1024,
+        //   768,
+        //   null,
+        //   [ EPCONST.MFUNCID.Add, this.popupTitle],
+        //   '',
+        //   dModel
+        // );
         this.addNew();
         break;
       default:

@@ -1,0 +1,6 @@
+.action-more{
+    opacity: 0;
+}
+.action-more:hover .action-more {
+    opacity: 1;
+  }

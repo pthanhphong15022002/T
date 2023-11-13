@@ -32,6 +32,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   actionType: string;
   disabledInput = false;
   useForQTNS: boolean = false;
+  isMultiCopy: boolean = false;
   loaded: boolean = false;
   idField = 'RecID';
   autoNumField = '';
@@ -71,6 +72,9 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
     }
     //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;

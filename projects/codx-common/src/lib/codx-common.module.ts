@@ -73,6 +73,7 @@ import { ScrollPipe } from './pipe/scrollPipe.pipe';
 import { FilterPipe } from './pipe/filterObject.pipe';
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
 import { MessageReplacePipe } from './pipe/mssgReplace.pipe';
+import { BackHomeComponent } from './_layout/back-home/back-home.component';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -113,6 +114,8 @@ const T_Component: Type<any>[] = [
   BreadcumbComponent,
   AttachmentWebComponent,
   //#endregion
+
+  BackHomeComponent
 ];
 
 const T_Pipe: Type<any>[] = [
