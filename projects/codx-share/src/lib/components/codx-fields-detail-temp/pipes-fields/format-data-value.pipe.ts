@@ -32,7 +32,7 @@ export class FormatDataValuePipe implements PipeTransform {
         break;
     }
 
-    return value;
+    return of(value || '');
   }
 
   formatCombox(value, refValue): any {

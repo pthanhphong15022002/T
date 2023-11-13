@@ -19,7 +19,7 @@ import {
   CalendarModule,
   DateRangePickerModule,
 } from '@syncfusion/ej2-angular-calendars';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TabModule, TreeViewModule } from '@syncfusion/ej2-angular-navigations';
 import { SliderModule, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
@@ -187,6 +187,8 @@ import { AddIetablesComponent } from './components/codx-import/add-template/add-
 import { FreezeService, GridModule } from '@syncfusion/ej2-angular-grids';
 import { CodxViewDetailSignFileComponent } from './components/codx-approval-procress/codx-view-detail-signfile/codx-view-detail-signfile.component';
 import { CodxViewApproveComponent } from './components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { FormSettingComponent } from './components/form-setting/form-setting.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -361,6 +363,7 @@ const T_Component: Type<any>[] = [
 
   //View
   CodxView2Component,
+  FormSettingComponent
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];
@@ -382,6 +385,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
     CodxDateComponent,
+    LayoutComponent,
     T_Pipe,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
@@ -419,6 +423,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     ProgressBarAllModule,
     NgxCaptureModule,
     TooltipModule,
+    TreeViewModule
   ],
 })
 export class CodxShareModule {
