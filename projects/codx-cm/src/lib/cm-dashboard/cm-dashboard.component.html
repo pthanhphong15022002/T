@@ -983,24 +983,37 @@
       <div
         class="d-flex justify-content-between align-items-center mb-1"
         [ngStyle]="{
-          color: findTmpDeals('4')
-            ? getIcon(findTmpDeals('4')?.isAsc, 'color')
-            : getIcon('4', 'color')
+          color:
+            ('4' | customIcon : null : tmpDashBoardDeals)
+              ? ('4'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns)
+              : ('4' | customIcon : 'color' : vllUpDowns)
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bolder fs-2" *ngIf="findTmpDeals('4')">{{
-            findTmpDeals("4")?.count
-          }}</span>
+          <span
+            class="fw-bolder fs-2"
+            *ngIf="'4' | customIcon : null : tmpDashBoardDeals"
+            >{{ "4" | customIcon : "count" : tmpDashBoardDeals }}</span
+          >
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <span
             class="me-1 icon-14"
-            [ngClass]="getIcon(findTmpDeals('4')?.isAsc, 'icon')"
+            [ngClass]="
+              '4'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns
+            "
           >
           </span>
-          <span class="fw-bold me-1">{{ findTmpDeals("4")?.countAsc }}</span>
-          <span class="fw-bold">({{ findTmpDeals("4")?.valueAsc }})</span>
+          <span class="fw-bold me-1">{{
+            "4" | customIcon : "countAsc" : tmpDashBoardDeals
+          }}</span>
+          <span class="fw-bold"
+            >({{ "4" | customIcon : "valueAsc" : tmpDashBoardDeals }})</span
+          >
         </div>
       </div>
       <div class="d-flex fw-bold">
@@ -1011,7 +1024,7 @@
           gridViewName="grvCMMyDashboard"
           [default]="textTitle"
         ></codx-label>
-        <span>{{ findTmpDeals("4")?.countOld }}</span>
+        <span>{{ "4" | customIcon : "countOld" : tmpDashBoardDeals }}</span>
       </div>
     </div>
   </div>
