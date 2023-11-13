@@ -26,6 +26,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CodxAcService } from '../../../codx-ac.service';
 import { CashPaymentAddComponent } from '../cashpayments-add/cashpayments-add.component';
+import { ListbankComponent } from '../../../share/ac-bankhub/listbank/listbank.component';
 declare var jsBh: any;
 @Component({
   selector: 'cashpayment-detail',
@@ -666,7 +667,8 @@ export class CashpaymentDetailComponent extends UIComponent {
           )
           .subscribe((res) => {
             if (res && !res?.error) {
-              this.dataService.update(res?.data).subscribe();
+              this.itemSelected.status = '8';
+              this.dataService.update(this.itemSelected).subscribe();
               this.notification.notifyCode('AC0029', 0, text);
             }else{
               this.notification.notify(res.data.data.result.message,'2');
@@ -682,6 +684,25 @@ export class CashpaymentDetailComponent extends UIComponent {
   checkLogin(func: any) {
     return jsBh.login('test', (o) => {
       return func(o);
+      // if (o && !o?.isLogin) {
+      //   let data = {
+      //     response: o,
+      //     headerText : 'Chọn ngân hàng điện tử'.toUpperCase()
+      //   };
+      //   let opt = new DialogModel();
+      //   let dialog = this.callfc.openForm(
+      //     ListbankComponent,
+      //     '',
+      //     null,
+      //     null,
+      //     '',
+      //     data,
+      //     '',
+      //     opt
+      //   );
+      // }else{
+      //   return func(o);
+      // }
     });
   }
 
