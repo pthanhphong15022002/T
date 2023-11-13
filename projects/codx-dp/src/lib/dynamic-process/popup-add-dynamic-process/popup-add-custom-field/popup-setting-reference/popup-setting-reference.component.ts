@@ -92,7 +92,17 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     field.title = data.headerText;
     field.refType = data.referedType;
     field.refValue = data.referedValue;
-    field.refValue = data.referedValue;
+    field.dataType = this.getDataType(data.dataType);
+    field.dataFormat = 'S'; // hoi lai Khanh
     return field;
+  }
+  getDataType(dataType) {
+    let type = 'T';
+    //hoi laiKhanh
+    // switch(dataType.toLocaleLowerCase()){
+    //   case 'string':
+
+    // }
+    return type;
   }
 }

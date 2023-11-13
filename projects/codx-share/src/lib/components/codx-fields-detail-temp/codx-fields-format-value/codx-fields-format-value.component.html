@@ -280,8 +280,11 @@
   </ng-container>
   <!-- ref -->
   <ng-container *ngIf="data.dataType == 'PA' && dataValueTypePA?.length > 0">
-    <ng-container *ngFor="let value of dataValueTypePA">
-      <codx-fields-format-value [data]="value"></codx-fields-format-value>
-    </ng-container>
+    <codx-fields-detail-temp
+      [listFields]="dataValueTypePA"
+      [showColumnControl]="1"
+      [isShowTitle]="false"
+    >
+    </codx-fields-detail-temp>
   </ng-container>
 </ng-container>
