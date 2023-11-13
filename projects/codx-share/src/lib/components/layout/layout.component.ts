@@ -1,36 +1,30 @@
 import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  CallFuncService,
-  DialogRef,
-  LayoutBaseComponent,
-  SidebarModel,
-} from 'codx-core';
-
+import { DialogRef, LayoutBaseComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent extends LayoutBaseComponent {
+export class LayoutComponent extends LayoutBaseComponent{
   dialog!: DialogRef;
 
   constructor(
-    inject: Injector, 
-    private callfc: CallFuncService,
-    private router: Router
-  ) {
+    inject: Injector,
+    private router: Router,
+  ) 
+  {
     super(inject);
     this.getModule();
   }
-  onInit(): void {}
 
-  onAfterViewInit(): void {}
-  
+  onInit() {}
+
   getModule()
   {
     this.module = this.router?.url.split("/")[2].toUpperCase();
   }
-  
+
+  override onAfterViewInit(){}
 }
