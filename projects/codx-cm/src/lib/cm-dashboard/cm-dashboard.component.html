@@ -845,24 +845,37 @@
       <div
         class="d-flex justify-content-between align-items-center mb-1"
         [ngStyle]="{
-          color: findTmpDeals('1')
-            ? getIcon(findTmpDeals('1')?.isAsc, 'color')
-            : getIcon('1', 'color')
+          color:
+            ('1' | customIcon : null : tmpDashBoardDeals)
+              ? ('1'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns)
+              : ('1' | customIcon : 'color' : vllUpDowns)
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bolder fs-2" *ngIf="findTmpDeals('1')">{{
-            findTmpDeals("1")?.count
-          }}</span>
+          <span
+            class="fw-bolder fs-2"
+            *ngIf="'1' | customIcon : null : tmpDashBoardDeals"
+            >{{ "1" | customIcon : "count" : tmpDashBoardDeals }}</span
+          >
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <span
             class="me-1 icon-14"
-            [ngClass]="getIcon(findTmpDeals('1')?.isAsc, 'icon')"
+            [ngClass]="
+              '1'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns
+            "
           >
           </span>
-          <span class="fw-bold me-1">{{ findTmpDeals("1")?.countAsc }}</span>
-          <span class="fw-bold">({{ findTmpDeals("1")?.valueAsc }})</span>
+          <span class="fw-bold me-1">{{
+            "1" | customIcon : "countAsc" : tmpDashBoardDeals
+          }}</span>
+          <span class="fw-bold"
+            >({{ "1" | customIcon : "valueAsc" : tmpDashBoardDeals }})</span
+          >
         </div>
       </div>
       <div class="d-flex fw-bold">
@@ -873,7 +886,7 @@
           gridViewName="grvCMMyDashboard"
           [default]="textTitle"
         ></codx-label>
-        <span>{{ findTmpDeals("1")?.countOld }}</span>
+        <span>{{ "1" | customIcon : "countOld" : tmpDashBoardDeals }}</span>
       </div>
     </div>
   </div>
@@ -891,24 +904,37 @@
       <div
         class="d-flex justify-content-between align-items-center mb-1"
         [ngStyle]="{
-          color: findTmpDeals('2')
-            ? getIcon(findTmpDeals('2')?.isAsc, 'color')
-            : getIcon('2', 'color')
+          color:
+            ('2' | customIcon : null : tmpDashBoardDeals)
+              ? ('2'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns)
+              : ('2' | customIcon : 'color' : vllUpDowns)
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bolder fs-2" *ngIf="findTmpDeals('2')">{{
-            findTmpDeals("2")?.count
-          }}</span>
+          <span
+            class="fw-bolder fs-2"
+            *ngIf="'2' | customIcon : null : tmpDashBoardDeals"
+            >{{ "2" | customIcon : "count" : tmpDashBoardDeals }}</span
+          >
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <span
             class="me-1 icon-14"
-            [ngClass]="getIcon(findTmpDeals('2')?.isAsc, 'icon')"
+            [ngClass]="
+              '2'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns
+            "
           >
           </span>
-          <span class="fw-bold me-1">{{ findTmpDeals("2")?.countAsc }}</span>
-          <span class="fw-bold">({{ findTmpDeals("2")?.valueAsc }})</span>
+          <span class="fw-bold me-1">{{
+            "2" | customIcon : "countAsc" : tmpDashBoardDeals
+          }}</span>
+          <span class="fw-bold"
+            >({{ "2" | customIcon : "valueAsc" : tmpDashBoardDeals }})</span
+          >
         </div>
       </div>
       <div class="d-flex fw-bold">
@@ -919,7 +945,7 @@
           gridViewName="grvCMMyDashboard"
           [default]="textTitle"
         ></codx-label>
-        <span>{{ findTmpDeals("2")?.countOld }}</span>
+        <span>{{ "2" | customIcon : "countOld" : tmpDashBoardDeals }}</span>
       </div>
     </div>
   </div>
@@ -937,26 +963,40 @@
       <div
         class="d-flex justify-content-between align-items-center mb-1"
         [ngStyle]="{
-          color: findTmpDeals('3')
-            ? getIcon(findTmpDeals('3')?.isAsc, 'color')
-            : getIcon('3', 'color')
+          color:
+            ('3' | customIcon : null : tmpDashBoardDeals)
+              ? ('3'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns)
+              : ('3' | customIcon : 'color' : vllUpDowns)
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bolder fs-2" *ngIf="findTmpDeals('3')">{{
-            findTmpDeals("3")?.count
-          }}</span>
+          <span
+            class="fw-bolder fs-2"
+            *ngIf="'3' | customIcon : null : tmpDashBoardDeals"
+            >{{ "3" | customIcon : "count" : tmpDashBoardDeals }}</span
+          >
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <span
             class="me-1 icon-14"
-            [ngClass]="getIcon(findTmpDeals('3')?.isAsc, 'icon')"
+            [ngClass]="
+              '3'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns
+            "
           >
           </span>
-          <span class="fw-bold me-1">{{ findTmpDeals("3")?.countAsc }}</span>
-          <span class="fw-bold">({{ findTmpDeals("3")?.valueAsc }})</span>
+          <span class="fw-bold me-1">{{
+            "3" | customIcon : "countAsc" : tmpDashBoardDeals
+          }}</span>
+          <span class="fw-bold"
+            >({{ "3" | customIcon : "valueAsc" : tmpDashBoardDeals }})</span
+          >
         </div>
       </div>
+
       <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
@@ -965,7 +1005,7 @@
           gridViewName="grvCMMyDashboard"
           [default]="textTitle"
         ></codx-label>
-        <span>{{ findTmpDeals("3")?.countOld }}</span>
+        <span>{{ "3" | customIcon : "countOld" : tmpDashBoardDeals }}</span>
       </div>
     </div>
   </div>
@@ -1042,25 +1082,37 @@
       <div
         class="d-flex justify-content-between align-items-center mb-1"
         [ngStyle]="{
-          color: findTmpDeals('5')
-            ? getIcon(findTmpDeals('5')?.isAsc, 'color')
-            : getIcon('5', 'color')
+          color:
+            ('5' | customIcon : null : tmpDashBoardDeals)
+              ? ('5'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns)
+              : ('5' | customIcon : 'color' : vllUpDowns)
         }"
       >
         <div class="d-flex justify-content-start">
-          <span class="fw-bolder fs-2" *ngIf="findTmpDeals('5')">{{
-            findTmpDeals("5")?.count
-          }}</span>
+          <span
+            class="fw-bolder fs-2"
+            *ngIf="'5' | customIcon : null : tmpDashBoardDeals"
+            >{{ "5" | customIcon : "count" : tmpDashBoardDeals }}</span
+          >
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <span
-            class="me-1 align-items-center icon-14"
-            [ngClass]="getIcon(findTmpDeals('5')?.isAsc, 'icon')"
+            class="me-1 icon-14"
+            [ngClass]="
+              '5'
+                | customIcon : 'isAsc' : tmpDashBoardDeals
+                | customIcon : 'color' : vllUpDowns
+            "
           >
           </span>
-          <span class="fw-bold">{{ findTmpDeals("5")?.valueAsc }}</span>
+          <span class="fw-bold"
+            >{{ "5" | customIcon : "valueAsc" : tmpDashBoardDeals }}</span
+          >
         </div>
       </div>
+
       <div class="d-flex fw-bold">
         <codx-label
           class="fw-bold mb-1 label-colon me-1"
@@ -1069,7 +1121,7 @@
           gridViewName="grvCMMyDashboard"
           [default]="textTitle"
         ></codx-label>
-        <span>{{ findTmpDeals("5")?.countOld }}</span>
+        <span>{{ "5" | customIcon : "countOld" : tmpDashBoardDeals }}</span>
       </div>
     </div>
   </div>
@@ -1623,40 +1675,40 @@
               <ng-container *ngFor="let user of lstUsers">
                 <td
                   class="min-w-50px w-50px"
-                  *ngIf="findItemUser(item.value, user?.performances)"
+                  *ngIf="item.value | customIcon : null : user?.performances"
                   style="border-bottom: 1px var(--gray-100) solid !important"
                 >
                   <div class="text-gray-800 d-flex justify-content-between">
                     <div class="w-80">
                       <span class="d-flex justify-content-end">
                         {{
-                          findItemUser(item.value, user?.performances)?.count
+                          item.value | customIcon : "count" : user?.performances
                         }}
                       </span>
                     </div>
                     <div
                       class="w-20 d-flex justify-content-end"
                       [ngStyle]="{
-                        color: getIcon(
-                          findItemUser(item.value, user?.performances)?.isAsc,
-                          'color'
-                        )
+                        color:
+                          (item.value
+                          | customIcon : 'isAsc' : user?.performances
+                          | customIcon : 'color' : vllUpDowns)
                       }"
                       *ngIf="item.value != '7' && item.value != '9'"
                     >
                       <span
                         class="me-1 icon-14"
                         [ngClass]="
-                          getIcon(
-                            findItemUser(item.value, user?.performances)?.isAsc,
-                            'icon'
-                          )
+                          item.value
+                            | customIcon : 'isAsc' : user?.performances
+                            | customIcon : 'icon' : vllUpDowns
                         "
                       >
                       </span>
                       <span>
                         {{
-                          findItemUser(item.value, user?.performances)?.valueAsc
+                          item.value
+                            | customIcon : "valueAsc" : user?.performances
                         }}</span
                       >
                     </div>

@@ -7,6 +7,7 @@ export class CustomIconPipe implements PipeTransform {
   transform(value, type = '', lstData = []) {
     if (value == null || lstData == null) return null;
     const data = lstData.find((x) => x.value == value);
+    if (data == null) return null;
     return type && type?.trim() != '' ? data[type] : data;
   }
 }
