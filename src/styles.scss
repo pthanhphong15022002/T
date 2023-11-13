@@ -3080,7 +3080,7 @@ codx-vll.badge.badge-md span::before{
    }
 
  }
-.aside-minimize-icon-title .aside .menu-link {
+.aside-minimize-icon-title:not(.header-fixed-2) .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
   margin-bottom: 1px;

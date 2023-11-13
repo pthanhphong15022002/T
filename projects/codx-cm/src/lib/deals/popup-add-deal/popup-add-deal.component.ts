@@ -1108,14 +1108,17 @@ export class PopupAddDealComponent
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
-      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(
-        dateNow,
-        endDate,
-        listSteps[i]?.excludeDayoff
-      );
-      dateNow = endDate;
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
+
     }
     return endDate;
   }
@@ -1176,7 +1179,7 @@ export class PopupAddDealComponent
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
-      (item) => item === this.menuInputInfo
+      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
     );
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail

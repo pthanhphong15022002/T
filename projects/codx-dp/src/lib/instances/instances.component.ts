@@ -817,7 +817,7 @@ export class InstancesComponent
       .subscribe((info) => {
         if (info?.event?.status == 'Y') {
           this.codxDpService
-            .openOrClosedInstance(data.recID, check)
+            .openOrClosedInstance(data.recID, check,this.process.applyFor)
             .subscribe((res) => {
               if (res) {
                 this.dataSelected.closed = check;

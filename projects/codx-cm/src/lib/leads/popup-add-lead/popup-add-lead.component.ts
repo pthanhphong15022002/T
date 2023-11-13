@@ -882,14 +882,16 @@ export class PopupAddLeadComponent
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
-      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(
-        dateNow,
-        endDate,
-        listSteps[i]?.excludeDayoff
-      );
-      dateNow = endDate;
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
     }
     return endDate;
   }

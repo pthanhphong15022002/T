@@ -116,6 +116,7 @@ import { PopupUpdateStatusComponent } from './deals/popup-update-status/popup-up
 import { CodxShowMoreLessComponent } from './deals/deal-detail/codx-show-more-less/codx-show-more-less.component';
 import { ViewDealDetailComponent } from './deals/view-deal-detail/view-deal-detail.component';
 import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-detail.component';
+import { CustomIconPipe } from './pipes/customIcon.pipe';
 
 export const routes: Routes = [
   {
@@ -279,6 +280,7 @@ const T_Component: Type<any>[] = [
     CodxShowMoreLessComponent,
     ViewDealDetailComponent,
     ViewLeadDetailComponent,
+    CustomIconPipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

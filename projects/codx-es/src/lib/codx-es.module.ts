@@ -26,7 +26,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DocCategoryComponent } from './setting/category/category.component';
 import { SignatureComponent } from './setting/signature/signature.component';
 import { SignFileComponent } from './sign-file/sign-file.component';
-import { LayoutComponent } from './_layout/layout.component';
 import { PopupAddAutoNumberComponent } from './setting/category/popup-add-auto-number/popup-add-auto-number.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ViewDetailComponent } from './sign-file/view-detail/view-detail.component';
@@ -62,6 +61,7 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { ApprovalStepSignComponent } from './sign-file/approval-step/approval-step.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 
 const routes: Routes = [
   {
@@ -148,7 +148,6 @@ const routes: Routes = [
 ];
 @NgModule({
   declarations: [
-    LayoutComponent,
     DashboardComponent,
     CodxEsComponent,
     PopupAddSignatureComponent,

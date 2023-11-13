@@ -283,13 +283,13 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   sumTarget(lst = []) {
     let target = 0;
     lst.forEach((res) => (target += res.target));
-    return this.targetToFixed(target);
+    return target.toLocaleString();
   }
 
   sumWeight(lst = []) {
     let weight = 0;
     lst.forEach((res) => (weight += res.weight));
-    return this.targetToFixed(weight);
+    return weight.toLocaleString();
   }
 
   formatNumberWithoutTrailingZeros(num) {
