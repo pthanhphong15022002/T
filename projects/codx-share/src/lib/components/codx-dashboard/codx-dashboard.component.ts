@@ -339,23 +339,23 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     // }, 200);
 
     //snapshot dashboard
-    let index = setInterval(() => {
-      if (this.screen) {
-        clearInterval(index);
-        this.captureService
-          .getImage(this.screen.nativeElement, true)
-          .pipe(
-            tap((img) => {
-              //img: string Base64
-            }),
+    // let index = setInterval(() => {
+    //   if (this.screen) {
+    //     clearInterval(index);
+    //     this.captureService
+    //       .getImage(this.screen.nativeElement, true)
+    //       .pipe(
+    //         tap((img) => {
+    //           //img: string Base64
+    //         }),
 
-            tap((img) => {
-              //this.captureService.downloadImage(img);
-            })
-          )
-          .subscribe();
-      }
-    }, 1000);
+    //         tap((img) => {
+    //           //this.captureService.downloadImage(img);
+    //         })
+    //       )
+    //       .subscribe();
+    //   }
+    // }, 1000);
   }
 
   changeCondition() {

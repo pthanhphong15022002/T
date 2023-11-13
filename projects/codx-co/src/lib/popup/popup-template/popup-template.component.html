@@ -1,0 +1,60 @@
+<codx-form
+  #form
+  headerText="Chọn template"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+  [data]="data"
+  [bodyCss]="'h-100'"
+></codx-form>
+<ng-template #body>    
+    <div class="row mb-2">
+        <div class="col-3">
+            <codx-searchbar [width]="300"></codx-searchbar>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-12 d-flex">
+            <div ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills flex-column col-3" orientation="vertical">
+                <ng-container ngbNavItem="1">
+                    <button ngbNavLink class="d-flex flex-column">
+                        <p class="fw-bold fs-6 mb-0">Template trống</p>
+                        <p class="text-muted fs-7 mb-0">Template trống</p>
+                    </button>
+                    <ng-template ngbNavContent>
+                        <ng-container [ngTemplateOutlet]="tmplNavContent"></ng-container>
+                    </ng-template>
+                </ng-container>
+                <ng-container ngbNavItem="2">
+                    <button ngbNavLink class="d-flex flex-column">
+                        <p class="fw-bold fs-6 mb-0">Template trống2</p>
+                        <p class="text-muted fs-7 mb-0">Template trống2</p>
+                    </button>
+                    <ng-template ngbNavContent>
+                        <ng-container [ngTemplateOutlet]="tmplNavContent2"></ng-container>
+                    </ng-template>
+                </ng-container>
+            </div>
+            <div [ngbNavOutlet]="nav" class="ms-4 col-9"></div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex align-items-center justify-content-between">
+        <button class="btn btn-outline-primary">Thêm mới mẫu</button>
+        <button class="btn btn-primary">Sử dụng</button>
+    </div>
+</ng-template>
+
+<ng-template #tmplNavContent>
+    <div class="container">
+        <h1>NavContent</h1>
+    </div>
+</ng-template>
+<ng-template #tmplNavContent2>
+    <div class="container">
+        <h1>NavContent 2</h1>
+    </div>
+</ng-template>

@@ -9,8 +9,10 @@ import { PopupSettingsComponent } from './popup/popup-settings/popup-settings.co
 import { COCalendarComponent } from './calendar/calendar.component';
 import { CalendarCenterComponent } from './calendar/calendar-center/calendar-center.component';
 import { ScheduleCenterComponent } from './calendar/schedule-center/schedule-center.component';
-import { NgbAccordionModule, NgbPopover, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
-import { PopupAddMeetingComponent } from './popup/popup-add-meeting/popup-add-meeting.component';
+import { NgbModule, NgbNavModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { PopupAddMeetingsComponent } from './popup/popup-add-meeting/popup-add-meeting.component';
+import { PopupTemplateComponent } from './popup/popup-template/popup-template.component';
+
 
 export const routes: Routes = [
   {
@@ -32,15 +34,17 @@ export const routes: Routes = [
     ScheduleCenterComponent,
     COCalendarComponent,
     PopupSettingsComponent,
-    PopupAddMeetingComponent
+    PopupAddMeetingsComponent,
+    PopupTemplateComponent
   ],
   imports: [
     RouterModule.forChild(routes),
     CodxCoreModule,
     CodxShareModule,
     SpeedDialModule,
-    NgbAccordionModule,
-    NgbPopoverModule
+    NgbPopoverModule,
+    NgbModule,
+    NgbNavModule
   ],
 })
 export class CodxCoModule {

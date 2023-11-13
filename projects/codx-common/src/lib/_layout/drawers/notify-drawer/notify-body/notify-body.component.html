@@ -16,7 +16,7 @@
                     </div>
                     <div class="w-100">
                         <div class="d-flex align-items-center justify-content-between">
-                            <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async "></span>
+                            <span class="line-clamp line-clamp-3 me-1" [innerHTML]="item.textValue | fTextValue:item.text | async "></span>
                             <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark"
                                 style="color: rgb(255, 168, 0);"></span>
                         </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="w-100">
                         <div class="d-flex align-items-center justify-content-between">
-                            <span class="me-1" [innerHTML]="item.textValue | fTextValue:item.text | async"></span>
+                            <span class="line-clamp line-clamp-3 me-1" [innerHTML]="item.textValue | fTextValue:item.text | async"></span>
                             <span *ngIf="item.isBookmark" class="icon-16 icon-bookmark"
                                 style="color: rgb(255, 168, 0);"></span>
                         </div>

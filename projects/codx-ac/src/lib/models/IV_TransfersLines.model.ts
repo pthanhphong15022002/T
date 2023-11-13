@@ -13,7 +13,7 @@ export class IV_TransfersLines {
 
     itemID: string;
 
-    itemname: string;
+    itemName: string;
 
     lotID1: string;
 
@@ -39,7 +39,7 @@ export class IV_TransfersLines {
 
     IDIM91: string;
 
-    fixedDIMs1: string;
+    fixedDIMs1: string = '0000000000';
 
     alterItem: string;
 
@@ -67,7 +67,7 @@ export class IV_TransfersLines {
 
     IDIM92: string;
 
-    fixedDIMs2: string;
+    fixedDIMs2: string = '0000000000';
 
     CWUM: string;
 

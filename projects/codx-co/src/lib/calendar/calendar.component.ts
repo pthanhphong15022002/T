@@ -36,6 +36,7 @@ import { forkJoin, map, of } from 'rxjs';
 import { CodxAddBookingRoomComponent } from 'projects/codx-share/src/lib/components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
+import { PopupAddMeetingsComponent } from '../popup/popup-add-meeting/popup-add-meeting.component';
 
 
 @Component({
@@ -257,6 +258,7 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.dFunc["WP_Notes"] = func;
       }
     });
+
     // get function HR_Organization
     this.cache.functionList('HRT01')
     .subscribe((func:any) => {
@@ -273,7 +275,16 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         this.HRRequest.parentIdField = "parentID";
       }
     });
-      
+    
+    // remmove codx-fillter form --- showFilter: false ko hoạt động
+    let itv = setInterval(() => {
+      let codxFillter = document.getElementById("Content-Fillter");
+      if(codxFillter)
+      {
+        clearInterval(itv);
+        codxFillter.remove();
+      }
+    },1000);  
   }
 
   // get list event function
@@ -284,9 +295,10 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
       {
         for (const key in res) 
         {
-          this.speedDialItems.push({id:key,text:res[key]})
+          this.speedDialItems.push({id:key,text:res[key]});
         } 
       }
+      //this.speedDialItems.push({id:"Test",text:"Test thêm lịch họp"});
     })
   }
   
@@ -858,6 +870,9 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
         case 'TM_AssignTasks':
           this.addEditAssignTask(moreFunc,event);
           break;
+        case "Test": // gắn để test popup Thêm lịch họp mới
+          this.addEditMettingTest(moreFunc,event);
+          break;
       }
     }
   }
@@ -1346,6 +1361,42 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  // open poup add Metting new
+  addEditMettingTest(moreFunc:any, event) {
+    this.getModelCO(moreFunc.functionID,event).subscribe((model:any) => {
+      if(model) {
+        let option = new SidebarModel();
+        option.FormModel = this.meetingFM;
+        option.Width = 'Auto';
+        let obj = {
+          funcID : "TMT0501",
+          action : moreFunc.text,
+          data : model,
+        };
+        this.callfc.openSide(
+          PopupAddMeetingsComponent,
+        obj,
+        option).closed.subscribe((res:any) => {
+          if (res?.event) 
+          {
+            // let meeting = this.convertModelEvent(res.event,"CO_Meetings");
+            // let date = new Date(meeting.startDate);
+            // let month = date.getMonth() + 1 , year = date.getFullYear();;
+            // if(moreFunc.functionID == "SYS03")
+            // {
+            //   let idx = this.lstEvents.findIndex(x => x.transID == meeting.transID);
+            //   if(idx > -1)
+            //     this.lstEvents.splice(idx,1);
+            // }
+            // this.lstEvents.push(meeting);
+            // this.dEventMonth[month + "-" + year] = this.lstEvents;
+            // this.ejCalendar && this.ejCalendar.refresh();
+            // this.calendarCenter && this.calendarCenter.changeEvents(this.lstEvents);
+          }
+        });
+      }
+    });
+  }
 }
 enum BUSSINESS_FUNCID {
   EP_BOOKINGROOMS = 'EPT11',

@@ -1718,12 +1718,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
     let countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
-    let isAsc =
-      countDealValues - countDealValueOlds == 0
-        ? '0'
-        : countDealValues - countDealValueOlds > 0
-        ? '1'
-        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    let isAsc = countDealValues - countDealValueOlds >= 0 ? '1' : '2'; //1 - tăng, 2 - giảm
     tmp['value'] = '1';
     tmp['count'] = this.formatDealValues(countDealValues);
     tmp['countOld'] = this.formatDealValues(countDealValueOlds);
@@ -1738,12 +1733,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     countDealValueOlds = dealOlds?.length ?? 0;
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
-    isAsc =
-      countDealValues - countDealValueOlds == 0
-        ? '0'
-        : countDealValues - countDealValueOlds > 0
-        ? '1'
-        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    isAsc = countDealValues - countDealValueOlds >= 0 ? '1' : '2'; //1 - tăng, 2 - giảm
     tmp['value'] = '2';
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
@@ -1772,12 +1762,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
-    isAsc =
-      countDealValues - countDealValueOlds == 0
-        ? '0'
-        : countDealValues - countDealValueOlds > 0
-        ? '1'
-        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    isAsc = countDealValues - countDealValueOlds >= 0 ? '1' : '2'; //1 - tăng, 2 - giảm
+
     tmp['value'] = '3';
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
@@ -1806,12 +1792,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
     countDealAscs = Math.abs(countDealValues - countDealValueOlds);
 
-    isAsc =
-      countDealValues - countDealValueOlds == 0
-        ? '0'
-        : countDealValues - countDealValueOlds > 0
-        ? '1'
-        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    isAsc = countDealValues - countDealValueOlds >= 0 ? '1' : '2'; //1 - tăng, 2 - giảm
+
     tmp['value'] = '4';
     tmp['count'] = countDealValues;
     tmp['countOld'] = countDealValueOlds;
@@ -1851,12 +1833,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     countDealValueOlds =
       leadOldsCount > 0 ? (countDealsConvertOlds / leadOldsCount) * 100 : 0;
 
-    isAsc =
-      countDealValues - countDealValueOlds == 0
-        ? '0'
-        : countDealValues - countDealValueOlds > 0
-        ? '1'
-        : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+    isAsc = countDealValues - countDealValueOlds >= 0 ? '1' : '2'; //1 - tăng, 2 - giảm
     tmp['value'] = '5';
     tmp['count'] = (countDealValues > 0 ? countDealValues.toFixed(2) : 0) + '%';
     tmp['countOld'] =
@@ -2060,7 +2037,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.lstSalesStatusCodes.length > 0
       ) {
         this.lstSalesStatusCodes.sort((a, b) => a.quantity - b.quantity);
-        this.palettePipsStatusCodes = this.lstSalesStatusCodes.map(x => x.color);
+        this.palettePipsStatusCodes = this.lstSalesStatusCodes.map(
+          (x) => x.color
+        );
         let lst = this.lstSalesStatusCodes;
         this.lstNamesStatusCodes = JSON.parse(JSON.stringify(lst.reverse()));
       }
@@ -2492,7 +2471,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               countOlds
             ).toLocaleString();
             tmpPerform['isAsc'] =
-              count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+              count - countOlds >= 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
             performances.push(tmpPerform);
           }
         }

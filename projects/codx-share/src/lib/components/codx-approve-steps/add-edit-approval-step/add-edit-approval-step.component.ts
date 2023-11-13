@@ -468,7 +468,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       }
       else{
         if(this.newAppr?.approver!=null && this.newAppr?.approver!=this.newAppr?.roleType){
-          this.lstApprover = this.lstApprover.filter(x=>x?.approver != this.newAppr?.approver && x?.roleType != this.newAppr.roleType);
+          this.lstApprover = this.lstApprover.filter(x=>x?.approver != this.newAppr?.approver);
         }
         else{
           this.lstApprover = this.lstApprover.filter(x=>x?.roleType != this.newAppr.roleType);

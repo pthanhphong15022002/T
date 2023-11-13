@@ -116,7 +116,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // view Crr
   datasVllCrr = [];
   fieldsCrrVll = { text: 'textValue', value: 'value' };
-  crrValueFirst = '';
+  crrValueFirst = null;
   element: any;
   isOpenPopup = false;
   loaded: boolean = false;
@@ -622,21 +622,21 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
   }
 
-  async cbxChangeVll(value) {
+  cbxChangeVll(value) {
     this.field['refValue'] = value;
+
     if (!value) {
       // await this.getDefaultVll();
       this.crrVll = null;
       this.datasVll = [];
       //data crrVll
       this.datasVllCrr = [];
-      this.crrValueFirst = null;
+      // this.crrValueFirst = null;
       if (this.comboxView) this.comboxView.refresh();
       return;
     }
-
+    if (!this.listVllCus || this.listVllCus?.length == 0) return;
     this.crrDatasVll = this.listVllCus.find((vl) => vl.listName == value);
-
     if (
       this.crrDatasVll &&
       this.crrDatasVll.listType == '1' &&
@@ -648,12 +648,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
       if (Array.isArray(arr) && arr?.length > 0) {
         this.datasVllCrr = arr.map((x) => {
-          return {
+          let obj = {
             textValue: x,
             value: x,
           };
+          return obj;
         });
-        this.crrValueFirst = this.datasVllCrr[0].textValue;
+        // this.crrValueFirst = this.datasVllCrr[0].textValue;
       }
     }
   }
@@ -731,7 +732,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
               this.field.refValue = '';
               this.datasVllCrr = [];
-              this.crrValueFirst = '';
+              this.crrValueFirst = null;
               this.crrVll = null;
               if (this.comboxView) {
                 this.comboxView.value = '';
@@ -873,16 +874,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //----------------Data Referent__PA-------------------------//
   clickSettingReference() {
-    if (!this.field.refValue || !this.entityNamePA) {
-      this.notiService.notify(
-        'Hãy chọn đối tượng liên kết trước khi thiết lập',
-        '3'
-      );
-      return;
-    }
+    // if (!this.field.refValue || !this.entityNamePA) {
+    //   this.notiService.notify(
+    //     'Hãy chọn đối tượng liên kết trước khi thiết lập',
+    //     '3'
+    //   );
+    //   return;
+    // }
 
     //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    let formName = this.entityNamePA.replace('_', '');
+    // let formName = this.entityNamePA.replace('_', '');
+    // let gridViewName = 'grv' + formName;
+    let formName = 'CMCustomers';
     let gridViewName = 'grv' + formName;
 
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
@@ -895,6 +898,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           entityName: this.entityNamePA,
           action: this.action,
           titleAction: 'Thêm trường liên kết', //test
+          dataRef: JSON.parse(this.field.dataFormat),
         };
         let dialogColumn = this.callfc.openForm(
           PopupSettingReferenceComponent,
@@ -907,10 +911,29 @@ export class PopupAddCustomFieldComponent implements OnInit {
           option
         );
         dialogColumn.closed.subscribe((res) => {
-          if (res && res.event) {
+          if (res && res.event?.length > 0) {
+            this.field.refType = '3';
+            this.field.dataFormat = JSON.stringify(res.event);
           }
         });
       } else this.notiService.alertCode('SYS001');
     });
   }
+
+  //lưu giá trị mặc định
+  valueChangeCustom(event) {
+    if (event && event.data) {
+      var result = event.e?.data;
+      var field = event.data;
+      switch (field.dataType) {
+        case 'P':
+        case 'L':
+          // case 'TA':
+          result = event.e;
+          break;
+      }
+      this.field.defaultValue = result;
+    }
+  }
+  //end
 }

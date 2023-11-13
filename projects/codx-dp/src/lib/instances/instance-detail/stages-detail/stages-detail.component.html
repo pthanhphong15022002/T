@@ -118,7 +118,7 @@
             [ngStyle]="
               +step?.progress < 10 ? { position: 'relative', left: '15px' } : {}
             "
-            >{{ step?.progress || 0 }}%</span
+            >{{ step?.progress | replaceProgress:1}}</span
           >
         </div>
       </div>
