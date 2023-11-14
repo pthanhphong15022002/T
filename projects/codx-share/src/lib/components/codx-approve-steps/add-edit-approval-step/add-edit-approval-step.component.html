@@ -102,7 +102,8 @@
                   [subTitle]="item?.orgUnitName" [desc]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
                   [formModel]="formModel" [dataItem]="item" typeMF="hover"
                   [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
-                  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
+                  [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
+                  [hideMF]="true">
                 </codx-temp-full>
                 </div>
               </div>

@@ -177,17 +177,19 @@
                 *ngIf="data.status == '2'"
                 style="border-radius: 23px; padding: 0px 8px 0px"
                 [ngStyle]="{
-                  'background-color': getStep(data?.stepID)?.backgroundColor
+                  'background-color':
+                    (data?.stepID
+                    | customIcon : 'backgroundColor' : lstStep : 'stepID')
                 }"
                 class="d-flex align-items-center"
               >
                 <span
-                  [ngClass]="getStep(data?.stepID)?.icon"
-                  [ngStyle]="{ color: getStep(data?.stepID)?.iconColor }"
+                  [ngClass]=" data?.stepID | customIcon : 'icon' : lstStep : 'stepID'"
+                  [ngStyle]="{ color: data?.stepID | customIcon : 'iconColor' : lstStep : 'stepID' }"
                   class="me-1"
                 ></span>
                 <div
-                  [ngbPopover]="getStep(data?.stepID)?.stepName"
+                  [ngbPopover]="data?.stepID | customIcon : 'stepName' : lstStep : 'stepID'"
                   #pStep="ngbPopover"
                   [openDelay]="500"
                   (mouseenter)="pStep.open()"
@@ -196,8 +198,8 @@
                 >
                   <span
                     class="line-clamp line-clamp-1"
-                    [ngStyle]="{ color: getStep(data?.stepID)?.textColor }"
-                    [innerHTML]="getStep(data?.stepID)?.stepName"
+                    [ngStyle]="{ color: data?.stepID | customIcon : 'textColor' : lstStep : 'stepID' }"
+                    [innerHTML]="data?.stepID | customIcon : 'stepName' : lstStep : 'stepID'"
                   ></span>
                 </div>
               </div>

@@ -29,30 +29,25 @@
   <span
     class="text-dark"
     *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
-    [innerHTML]="formatNumber(data)"
+    [innerHTML]="
+      data.dataValue | formatDataValue : data.dataType : data.dataFormat | async
+    "
   >
-    <span *ngIf="data.dataFormat == 'P'">%</span>
+    <!-- <span *ngIf="data.dataFormat == 'P'">%</span> -->
   </span>
   <!-- margin-l -->
   <span class="text-dark" *ngIf="data.dataType == 'D'">
     <span
-      *ngIf="
-        data?.dataFormat == '1' ||
-        data?.dataFormat == '2' ||
-        data.dataFormat == '3'
+      [innerHTML]="
+        data.dataValue
+          | formatDataValue : data.dataType : data.dataFormat
+          | async
       "
-    >
-      {{ data.dataValue | date : fomatvalue(data.dataFormat) }}</span
-    >
-    <span *ngIf="data.dataFormat == '4' || data.dataFormat == '5'">
-      {{
-        getFormatTime(data.dataValue) | date : fomatvalue(data.dataFormat)
-      }}</span
-    >
+    ></span>
   </span>
   <ng-container *ngIf="data.dataType == 'R'">
     <ngb-rating
-      [rate]="partNum(data.dataValue)"
+      [rate]="data.dataValue | number"
       [max]="data?.rank"
       [readonly]="true"
       [starTemplate]="temp"
@@ -97,11 +92,9 @@
     </codx-attachment>
   </ng-container>
 
-  <ng-container
-    *ngIf="data.dataType == 'C' && parseValue(data.dataValue)?.length > 0"
-  >
+  <ng-container *ngIf="data.dataType == 'C' && dataValueTypeC?.length > 0">
     <div class="d-flex flex-column">
-      <ng-container *ngFor="let item of parseValue(data.dataValue)">
+      <ng-container *ngFor="let item of dataValueTypeC">
         <div class="mt-2">
           <ng-container
             *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
@@ -196,14 +189,16 @@
     <ng-container *ngIf="data.dataFormat == 'C'">
       <span
         [innerHTML]="
-          data.dataValue | formatDataValue : 'C' : data.refValue | async
+          data.dataValue
+            | formatDataValue : data.dataType : data.dataFormat : data.refValue
+            | async
         "
       ></span>
     </ng-container>
 
     <ng-container *ngIf="data.dataFormat == 'V'">
       <div class="flex flex-column">
-        <div *ngFor="let item of listValue(data.dataValue)">
+        <div *ngFor="let item of dataValueTypeV">
           <span>{{ item }}</span>
         </div>
       </div>
@@ -282,5 +277,14 @@
         </tbody>
       </table>
     </div>
+  </ng-container>
+  <!-- ref -->
+  <ng-container *ngIf="data.dataType == 'PA' && dataValueTypePA?.length > 0">
+    <codx-fields-detail-temp
+      [listFields]="dataValueTypePA"
+      [showColumnControl]="1"
+      [isShowTitle]="false"
+    >
+    </codx-fields-detail-temp>
   </ng-container>
 </ng-container>

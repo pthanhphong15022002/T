@@ -58,6 +58,7 @@ export class PopupAddLineTableComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event?.e;
           break;
       }

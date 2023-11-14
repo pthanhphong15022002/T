@@ -2,7 +2,7 @@
     <table style="table-layout: fixed;" class="table mb-0">
         <thead class="border-gray-200 table-thead-ac">
             <tr class="border-bottom">
-                <th class="w-30 border-bottom">
+                <th class="w-20 border-bottom">
                     <div class="d-flex align-items-center justify-content-start ps-3">
                         <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
                         </codx-label>
@@ -74,13 +74,7 @@
                                 <div *ngIf="(item.objectName!= null && item.objectName != '')"
                                     class="d-flex align-items-center justify-content-start">
                                     <ng-container>
-                                        <codx-label *ngIf="itemSelected?.subType == '1' || itemSelected?.subType == '2'"
-                                            style="white-space: nowrap" class="fs-7 fw-bold" default="Nhà cung cấp">
-                                        </codx-label>
-                                        <codx-label *ngIf="itemSelected?.subType == '3' || itemSelected?.subType == '4'"
-                                            style="white-space: nowrap" class="fs-7 fw-bold" default="Nhân viên">
-                                        </codx-label>
-                                        <codx-label *ngIf="itemSelected?.subType == '9'" style="white-space: nowrap"
+                                        <codx-label style="white-space: nowrap"
                                             class="fs-7 fw-bold" default="Đối tượng">
                                         </codx-label>
                                         :&nbsp;
@@ -221,7 +215,7 @@
 </div>
 <table style="table-layout: fixed;" class="table mb-0">
     <tfoot class="table-footer-ac">
-        <td class="w-30">
+        <td class="w-20">
             <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
                 <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
                     default="Tổng cộng">

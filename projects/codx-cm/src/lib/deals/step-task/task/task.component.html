@@ -31,6 +31,7 @@
         </div>
 
         <div style="margin-left: 45px">
+          <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve>
           <ng-container
             [ngTemplateOutlet]="fileTemplate"
             [ngTemplateOutletContext]="{ value: task }"

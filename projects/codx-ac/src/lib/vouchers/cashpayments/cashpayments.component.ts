@@ -121,7 +121,7 @@ export class CashPaymentsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '25%',
+          widthLeft: '22%',
           //separatorSize:3
         },
       },
@@ -141,29 +141,29 @@ export class CashPaymentsComponent extends UIComponent {
           template2: this.templateGrid,
         },
       },
-      // {
-      //   type: ViewType.grid_detail, //? thiết lập view lưới
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     template2: this.templateGrid,
+      {
+        type: ViewType.grid_detail, //? thiết lập view lưới
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
 
-      //   },
+        },
 
-      //   request:{service:'AC'},
-      //   subModel:{
-      //     entityName:'AC_CashPaymentsLines',
-      //     formName:'CashPaymentsLines',
-      //     gridviewName:'grvCashPaymentsLines',
-      //     parentField:'TransID',
-      //     parentNameField:'Memo',
-      //     hideMoreFunc:true,
-      //     request:{
-      //       service: 'AC',
-      //     },
-      //     idField:'recID'
-      //   }
-      // },
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_CashPaymentsLines',
+          formName:'CashPaymentsLines',
+          gridviewName:'grvCashPaymentsLines',
+          parentField:'TransID',
+          parentNameField:'Memo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
+      },
     ];
     this.journalService.setChildLinks(this.journalNo);
 
@@ -771,9 +771,12 @@ export class CashPaymentsComponent extends UIComponent {
             [data.recID, tk, 'test']
           )
           .subscribe((res) => {
-            if (res) {
-              this.view.dataService.update(res).subscribe();
+            if (res && !res?.error) {
+              data.status = '8';
+              this.view.dataService.update(data).subscribe();
               this.notification.notifyCode('AC0029', 0, text);
+            }else{
+              this.notification.notify(res.data.data.result.message,'2');
             }
           });
       }

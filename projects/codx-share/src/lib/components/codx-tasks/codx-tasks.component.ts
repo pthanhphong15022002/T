@@ -1520,10 +1520,15 @@ export class CodxTasksComponent
     );
     this.dialogProgess.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
           this.view.dataService.update(obj).subscribe();
+          if (kanban) {
+            kanban.updateCard(obj);
+          }
         });
         this.itemSelected = e?.event[0];
+
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
         this.detail.getDataHistoryProgress(this.itemSelected.recID);

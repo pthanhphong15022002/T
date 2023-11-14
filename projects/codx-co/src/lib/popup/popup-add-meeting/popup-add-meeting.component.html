@@ -1,0 +1,270 @@
+<codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" 
+  [footer]="footer" [dialog]="dialogRef" [templateExtend]="tmplExtend" [subHeader]="tmplSubheader"
+  [tabContent]="[tabGeneralInfo,tabParticipants,tabSampleMeeting,tabExtend]" [data]="data">
+</codx-layout-add>
+<!-- Sub Header -->
+<ng-template #tmplSubheader>
+    <codx-tag
+        [entityName]="formModel?.entityName"
+        [isEdit]="true"
+        [value]="data.tags"
+        (valueChange)="valueChangeTags($event)">
+    </codx-tag>
+</ng-template>
+<!-- Thông tin chung -->
+<ng-template #tabGeneralInfo>
+    <div class="container">
+        <div class="row form-group">
+            <div class="col-12">
+                <codx-label [formModel]="formModel" fiedName="MeetingName" [default]="'Tên buổi họp'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="MeetingName" type="text" [crrValue]="data.meetingName"  [placeholder]="'Nhập tên buổi họp'" (valueChange)="valueChange($event)" ></codx-input>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-4">
+                <codx-label [formModel]="formModel" fiedName="StartDate" [default]="'Ngày'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="StartDate" type="datetime" format="d" [crrValue]="data.startDate" [placeholder]="'dd/MM/yyyy'" (valueChange)="valueChange($event)" ></codx-input>
+            </div>
+            <div class="col-3">
+                <codx-label [formModel]="formModel" fiedName="StartTime" [default]="'Từ giờ'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="StartTime" type="datetime" format="t"[crrValue]="data.startTime" [placeholder]="'hh:mm'" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+            <div class="col-3">
+                <codx-label [formModel]="formModel" fiedName="EndTime" [default]="'Đến giờ'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="EndTime" type="datetime" format="t"[crrValue]="data.endTime" [placeholder]="'hh:mm'" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+            <div class="col-2 d-flex align-items-center">
+                <codx-input [formModel]="formModel" type="checkbox" [crrValue]="data.isFullday" label="Cả ngày" labelPosition="After" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <codx-label [formModel]="formModel" fiedName="Location" [default]="'Địa điểm'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="Location" type="text" [crrValue]="data.location" [placeholder]="'Chọn địa điểm'" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <codx-label [formModel]="formModel" fiedName="Memo" [default]="'Nội dung họp'"></codx-label>
+                <codx-input [formModel]="formModel" fiedName="Memo" type="textarea" format="ed2" height="150" [crrValue]="data.memo" [placeholder]="'Nhập nội dung buổi họp...'" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <codx-input
+                            field="IsOnline"
+                            type="switch"
+                            [checked]="data.isOnline"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                        <codx-label class="fw-bold ms-2" fiedName="IsOnline" [formModel]="formModel" default="Họp trực tuyến"></codx-label>
+                    </div>
+                    <div>
+                        <button class="btn alert alert-primary fw-bold">
+                            <span class="me-2">                    
+                                <codx-label class="fw-bold" fiedName="Links" [formModel]="formModel" default="Link phòng họp"></codx-label>
+                            </span>
+                            <span>
+                                <i class="icon-insert_link"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <codx-input [formModel]="formModel" fiedName="Links" type="text" [crrValue]="data.links" [placeholder]="'Link phòng họp'" (valueChange)="valueChange($event)"></codx-input>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="d-flex align-item-center justify-content-between">
+                    <div class="fw-bold d-flex align-item-center justify-content-between">
+                        <i class="icon-person icon-18 text-primary me-2"></i>
+                        <codx-label [formModel]="formModel"  fiedName="Permissions"  default="Người tham gia" class="text-primary"></codx-label>
+                    </div>
+                    <div>
+                        <codx-input
+                            type="Share"
+                            refValue="TM003"
+                            field="Permissions"
+                            [multiple]="true"
+                            [showInput]="false"
+                            (valueChange)="valueChange($event)">
+                        </codx-input>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <ng-container *ngIf="data.permissions?.length > 0 && strUserID">
+                    <codx-imgs
+                        class="flex symbol-40px"
+                        [objectId]="strUserID"
+                        objectType="AD_Users"
+                        [numberImages]="5">
+                    </codx-imgs>
+                </ng-container>
+            </div>  
+        </div>
+    </div>
+</ng-template>
+<!-- Người tham gia -->
+<ng-template #tabParticipants>
+    <div class="container">
+        <div class="row form-group border-bottom">
+            <div class="col-12">
+                <codx-label [formModel]="formModel" fiedName="TotlParticipants" [default]="'Tổng số người tham dự'"></codx-label>
+                <span>:{{data.permissions ? data.permissions.length : 0}}</span>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 d-flex">
+                        <ng-container *ngIf="lstRoles">
+                            <ng-container *ngFor="let item of lstRoles">
+                                <div class="d-flex align-items-center me-2">
+                                    <span inlineSVG="./assets/themes/co/default/img/{{item.icon}}"></span>
+                                    <span class="fs-8 text-gray-500 ms-1">{{ item.text }}</span>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <div class="d-flex align-items-center alert alert-primary fw-bold px-2 py-1">
+                            <codx-label [formModel]="formModel" fiedName="Participants" [default]="'Mời tham gia'" class="text-primary me-2"></codx-label>
+                            <codx-input
+                                type="combobox"
+                                refType="P"
+                                refValue="Users"
+                                field="Permissions"
+                                [className]="'text-primary'"
+                                (valueChange)="valueChange($event)"
+                                [multiple]="true">
+                            </codx-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12 d-flex justify-content-between">
+                <codx-label [formModel]="formModel" fiedName="Permissions" [default]="'Người tham dự'" class="'fw-bold'"></codx-label>
+                <codx-label [formModel]="formModel" fiedName="Optional" [default]="'Không bắt buộc'" class="'fw-bold'"></codx-label>
+            </div>
+            <div class="col-12">
+                <ng-container *ngIf="data.permissions && data.permissions?.length > 0">
+                    <ng-container *ngFor="let permissison of data.permissions">
+                        <div class="row form-group">
+                            <div class="col-9 d-flex alig-items-center justify-content-between">
+                                <codx-temp-full 
+                                    [imageId]="permissison.objectID"
+                                    [imageObjType]="'AD_Users'"
+                                    [imageWidth]="40"
+                                    [formModel]="formModel"
+                                    [dataItem]="permissison" 
+                                    [title]="data.objectName"
+                                    [desc]="permissison.positionName">
+                                </codx-temp-full>
+                            </div>
+                            <div class="col-3 d-flex alig-items-center justify-content-between">
+                                <div>
+                                    <codx-input
+                                        type="checkbox"
+                                        class="check-sys d-block text-right"
+                                        (valueChange)="checkPermission($event,permissison.objectID)"
+                                        [crrValue]="permissison.isCheck">
+                                    </codx-input>
+                                </div>
+                                <div>
+                                    <span class="action-more cursor-pointer"><i class="icon-close text-danger icon-16"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- Mẫu biên bản buổi họp -->
+<ng-template #tabSampleMeeting>
+    <div class="container">
+        <div class="row align-items-center form-group">
+            <div class="col-6">
+                <span>Tên mẫu: Review công việc</span>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <div class="d-flex align-items-center alert alert-primary mb-0 p-2 cursor-pointer" (click)="openPopupTemplate()">
+                    <span class="me-2 text-primary">Chọn mẫu biên bản</span>
+                    <span><i class="icon-video_library text-primary"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group border p-4">
+            <div class="col-12">
+                <div class="row form-group">
+                    <div class="col-12">
+                        <p class="fw-bold fs-4">Đã thực hiện</p>
+                        <p class="">Review tất cả những công việc đã chuyển sang tình trạng 'Hoàn tất'</p>
+                        <p class="text-muted">
+                            <codx-input [formModel]="formModel" name="radio" type="radio" field="radioCheck" [crrValue]="false" [label]="'Mô tả chi tiết'" labelPosition="after"></codx-input>
+                        </p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-12">
+                        <p class="fw-bold fs-4">Trễ tiến độ</p>
+                        <p class="">Review tất cả những công việc đã chuyển sang tình trạng 'Hoàn tất'</p>
+                        <p class="text-muted">
+                            <codx-input [formModel]="formModel" name="radio" type="radio" field="radioCheck" [crrValue]="false" [label]="'Mô tả chi tiết'" labelPosition="after"></codx-input>
+                        </p>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-12">
+                        <p class="fw-bold fs-4">Ngừng thực hiện</p>
+                        <p class="">Review tất cả những công việc đã chuyển sang tình trạng 'Hoàn tất'</p>
+                        <p class="text-muted">
+                            <codx-input [formModel]="formModel" name="radio" type="radio" field="radioCheck" [crrValue]="false" [label]="'Mô tả chi tiết'" labelPosition="after"></codx-input>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- Mở rộng -->
+<ng-template #tabExtend>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="fw-bold">Nhắc nhở trước buổi họp</p>
+                    <p class="text-muted">Thời gian nhắc nhở trước buổi họp diễn ra</p>
+                </div>
+                <div>
+                    <codx-input [formModel]="formModel" name="" field="" [crrValue]="" type="valuelist" [refValue]=""></codx-input>
+                </div>
+            </div>
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <div>
+                    <p class="fw-bold">Lặp lại theo chu kỳ</p>
+                    <p class="text-muted">Buổi họp sẽ lặp lại vào ngày thứ 6 hàng tuần</p>
+                </div>
+                <div class="d-flex align-items-center">
+                    <codx-input type="switch" name="switch" field="switch" [formModel]="formModel" [crrValue]="isRepeat" (valueChange)="valueChangeSWitchRepeat($event)"></codx-input>
+                    <span><i class="icon-event_available"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- footer -->
+<ng-template #footer>
+    <div class="d-flex align-item-center justify-content-between">
+        <button class="btn btn-outline-primary">Đính kèm</button>
+        <button class="btn btn-primary">Lưu</button>
+    </div>
+</ng-template>
+<!-- template extend -->
+<ng-template #tmplExtend></ng-template>

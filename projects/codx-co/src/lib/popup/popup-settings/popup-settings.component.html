@@ -111,10 +111,10 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-outline-primary" (click)="clickSave()">
+      <button [disabled]="isLoading" type="button" class="btn btn-outline-primary" (click)="clickSave()">
         <codx-label
           fiedName="CO_Save"
-          default="Lưu">
+          default="Lưu thiết lập">
         </codx-label>
       </button>
     </div>

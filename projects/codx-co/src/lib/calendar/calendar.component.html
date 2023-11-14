@@ -6,7 +6,7 @@
       <!-- template left -->
       <div class="w-350px min-w-350px h-100">
         <div class="calendar-left">
-          <div ngbAccordion class="w-100 h-100">
+          <div class="w-100 h-100">
             <!-- Lịch công ty -->
             <ng-container *ngIf="calendarID == 'COT01'">
               <div class="d-flex flex-column h-50 max-h-50">
@@ -41,7 +41,7 @@
                     class="fw-bold">
                   </codx-label>
                 </div>
-                <div class="w-100 h-100 overflow-auto">
+                <div class="w-100 h-100 py-2 overflow-auto">
                   <ng-container *ngIf="loadUserGroup">
                     <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
                       <div class="list-group" #eleListGroup>
@@ -206,10 +206,10 @@
       <div class="bg-white h-100 calender-viewmain">
         <co-calendar-center 
           #calendarCenter 
-          *ngIf="loaded"
           [selectedDate]="selectedDate"
           [statusColor]="statusColor"
           [isOutSource]="true" 
+          [currentView]="'TimelineMonth'"
           [events]="lstEvents" 
           [eventModel]="eventModel"
           [eventTemplate]="eventTemplate"
@@ -233,7 +233,7 @@
       [itemTemplate]="itemTemplate"
       openIconCss="icon-add icon-22"
       cssClass="e-primary"
-      (clicked)="addEditEvent('SYS01',{ transType:$event?.item?.id })"
+      (clicked)="addEditEvent(addMoreFunc,{ transType:$event?.item?.id })"
     >
     <ng-template #itemTemplate let-items>
       <div class="itemlist">
@@ -251,16 +251,19 @@
       [objectName]="data?.resourceData?.resourceName"></codx-img>
     <div class="ms-4 d-flex flex-column" style="width: 160px">
       <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName}}</span>
-      <span class="fw-bold text-truncate">{{ '(' + data?.resourceData?.events + ')'}}</span>
+      <span class="text-truncate" [title]="data?.resourceData?.description">{{ data?.resourceData?.description}}</span>
+      <span class="font-italic">{{ '(' + data?.resourceData?.events + ')'}}</span>
     </div>
   </div>
 </ng-template>
 
 <!-- event template -->
 <ng-template #eventTemplate let-data>
-  <div class="d-flex flex-column w-100">
-    <span class="fw-bold text-truncate">{{data.title}}</span>
-    <!-- <span class="d-flex flex-start">{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span> -->
+  <div class="container">
+    <div class="row">
+      <span class="col-12 fw-bold text-truncate">{{data.title}}</span>
+      <!-- <span class="d-flex flex-start">{{ showHour(data.startDate) }} - {{ showHour(data.endDate) }}</span> -->
+    </div>
   </div>
 </ng-template>
 
@@ -307,6 +310,9 @@
 
 <!-- template  -->
 <ng-template #tmpDefault let-data="data">
+  <div class="row">
+    <span class="fw-bold text-truncate">{{data.title}}</span>
+  </div>
   <div class="row">
     <span class="col-1 icon-date_range"></span>
     <span class="col-11">{{showEventDate(data)}}</span>

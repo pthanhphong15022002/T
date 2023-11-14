@@ -52,6 +52,18 @@
   }
 }
 
+.wp-portal 
+{
+  .menu-aside-group
+  {
+    font-size: 17px;
+  }
+  .menu-title:hover
+  {
+    color: var(--primary-darker)!important;;
+  }
+}
+
 .aside.aside-transparent {
   width: 22%;
   min-width: 220px;
@@ -68,7 +80,7 @@
     overflow: auto;
     
     .aside-menu{
-      width: 200px;    
+      width: 250px;    
     }
   }
   .aside-menu .menu-item .menu-link, .aside-footer .menu-item .menu-link {

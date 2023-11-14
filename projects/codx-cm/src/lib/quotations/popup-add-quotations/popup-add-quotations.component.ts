@@ -118,7 +118,7 @@ export class PopupAddQuotationsComponent implements OnInit {
     this.disableContactsID = dt?.data?.disableContactsID;
     this.copyToRecID = dt?.data?.copyToRecID;
     this.listQuotationLines = [];
-    this.isNewVersion = dt?.data?.isNewVersion;
+    this.isNewVersion = dt?.data?.isNewVersion ?? false;
 
     if (this.action == 'edit' || this.action == 'copy') {
       let tranID =

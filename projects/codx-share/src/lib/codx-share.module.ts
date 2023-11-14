@@ -19,7 +19,7 @@ import {
   CalendarModule,
   DateRangePickerModule,
 } from '@syncfusion/ej2-angular-calendars';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { TabModule, TreeViewModule } from '@syncfusion/ej2-angular-navigations';
 import { SliderModule, UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxImportComponent } from './components/codx-import/codx-import.component';
 import { CodxFullTextSearch } from './components/codx-fulltextsearch/codx-fulltextsearch.component';
@@ -127,17 +127,17 @@ import { MeetingDetailComponent } from './components/codx-tmmeetings/meeting-det
 import { PostShareComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/post-share/post-share.component';
 import { CodxStepTaskComponent } from './components/codx-step/codx-step-task/codx-step-task.component';
 import { UpdateProgressComponent } from './components/codx-step/codx-progress/codx-progress.component';
-import { ProgressbarComponent } from './components/codx-step/codx-progressbar/codx-progressbar.component';
+import { ProgressbarComponent } from './components/codx-step/codx-step-common/codx-progressbar/codx-progressbar.component';
 import { ProgressBarAllModule } from '@syncfusion/ej2-angular-progressbar';
 import { CodxBookingComponent } from './components/codx-booking/codx-booking.component';
 import { CodxBookingCarScheduleContentComponent } from './components/codx-booking/codx-booking-car-schedule-content/codx-booking-car-schedule-content.component';
 import { CodxBookingRoomScheduleContentComponent } from './components/codx-booking/codx-booking-room-schedule-content/codx-booking-room-schedule-content.component';
 import { CodxBookingViewDetailComponent } from './components/codx-booking/codx-booking-view-detail/codx-booking-view-detail.component';
 import { CodxMeetingOnlineComponent } from './components/codx-meeting-online/codx-meeting-online.component';
-import { CodxAddGroupTaskComponent } from './components/codx-step/codx-add-group-task/codx-add-group-task.component';
-import { CodxAddTaskComponent } from './components/codx-step/codx-add-stask/codx-add-task.component';
-import { CodxRoleComponent } from './components/codx-step/codx-role/codx-role.component';
-import { CodxTypeTaskComponent } from './components/codx-step/codx-type-task/codx-type-task.component';
+import { CodxAddGroupTaskComponent } from './components/codx-step/codx-popup-group/codx-add-group-task.component';
+import { CodxAddTaskComponent } from './components/codx-step/codx-popup-task/codx-add-task.component';
+import { CodxRoleComponent } from './components/codx-step/codx-step-common/codx-role/codx-role.component';
+import { CodxTypeTaskComponent } from './components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
 import { CodxViewTaskComponent } from './components/codx-step/codx-view-task/codx-view-task.component';
 import { CodxAddBookingCarComponent } from './components/codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { CodxAddBookingRoomComponent } from './components/codx-booking/codx-add-booking-room/codx-add-booking-room.component';
@@ -147,7 +147,7 @@ import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/co
 import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsDetailTempComponent } from './components/codx-fields-detail-temp/codx-fields-detail-temp.component';
 import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
-import { CodxTaskbarComponent } from './components/codx-step/codx-taskbar/codx-taskbar.component';
+import { CodxTaskbarComponent } from './components/codx-step/codx-step-common/codx-taskbar/codx-taskbar.component';
 import { CodxViewDetailLittleComponent } from './components/codx-view-detail-little/codx-view-detail-little.component';
 import { AddNoteComponent } from './components/calendar-notes/add-note/add-note.component';
 import { PopupTitleComponent } from './components/calendar-notes/add-note/save-note/popup-title/popup-title.component';
@@ -159,10 +159,10 @@ import { CodxTaskGoalTempComponent } from './components/codx-task-goal-temp/codx
 import { UsingHistoryComponent } from './components/dynamic-form/using-history/using-history.component';
 import { AccessHistoryComponent } from './components/dynamic-form/access-history/access-history.component';
 import { OrderHistoryComponent } from './components/dynamic-form/order-history/order-history.component';
-import { CodxIconStepComponent } from './components/codx-step/codx-icon-step/codx-icon-step.component';
+import { CodxIconStepComponent } from './components/codx-step/codx-step-common/codx-icon-step/codx-icon-step.component';
 import { CodxViewContentComponent } from './components/codx-view-content/codx-view-content.component';
 import { PopupViewContentComponent } from './components/codx-view-content/popup-view-content.component';
-import { CodxNoDataComponent } from './components/codx-step/codx-no-data/codx-no-data.component';
+import { CodxNoDataComponent } from './components/codx-step/codx-step-common/codx-no-data/codx-no-data.component';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
 
@@ -186,6 +186,9 @@ import { AddImportDetailsComponent } from './components/codx-import/add-template
 import { AddIetablesComponent } from './components/codx-import/add-template/add-ietables/add-ietables.component';
 import { FreezeService, GridModule } from '@syncfusion/ej2-angular-grids';
 import { CodxViewDetailSignFileComponent } from './components/codx-approval-procress/codx-view-detail-signfile/codx-view-detail-signfile.component';
+import { CodxViewApproveComponent } from './components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { FormSettingComponent } from './components/form-setting/form-setting.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -339,6 +342,7 @@ const T_Component: Type<any>[] = [
   CodxViewDetailLittleComponent,
   CodxStepChartComponent,
   CodxIconStepComponent,
+  CodxViewApproveComponent,
   //CO
   AddNoteComponent,
   PopupTitleComponent,
@@ -359,6 +363,7 @@ const T_Component: Type<any>[] = [
 
   //View
   CodxView2Component,
+  FormSettingComponent
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];
@@ -380,6 +385,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
     CodxDateComponent,
+    LayoutComponent,
     T_Pipe,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
@@ -417,6 +423,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     ProgressBarAllModule,
     NgxCaptureModule,
     TooltipModule,
+    TreeViewModule
   ],
 })
 export class CodxShareModule {

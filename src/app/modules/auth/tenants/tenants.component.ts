@@ -48,9 +48,11 @@ export class TenantsComponent implements OnInit {
 
   ngOnInit(): void {
     // this.router.navigate(['/tester']);
-    this.getTenants().subscribe((tenants: Array<any>) => {
-      this.lstTenant = tenants;
-    });
+    this.loginService
+      .getTenants(this.user.email)
+      .subscribe((tenants: Array<any>) => {
+        this.lstTenant = tenants;
+      });
   }
 
   navigate(tn) {
@@ -95,15 +97,5 @@ export class TenantsComponent implements OnInit {
 
     //   // if (res) this.router.navigate(['/' + tn]);
     // });
-  }
-
-  getTenants() {
-    return this.api.execSv(
-      'Tenant',
-      'Tenant',
-      'TenantsBusiness',
-      'GetListDatabaseByEmailAsync',
-      this.user.email
-    );
   }
 }
