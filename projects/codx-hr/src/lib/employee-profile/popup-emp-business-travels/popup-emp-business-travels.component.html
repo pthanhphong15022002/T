@@ -401,7 +401,7 @@
   *ngIf="isAfterRender" -->
   <ng-template #body>
 <ng-container *ngIf="form.formGroup">
-    <div class="form-group row mt-5" *ngIf="useForQTNS">
+    <div class="form-group row mt-5" *ngIf="useForQTNS == true || isMultiCopy == true" >
       <div class="col-10">
         <div class="d-flex">
           <div class="d-flex flex-column position-relative">
@@ -462,6 +462,7 @@
         *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [showInput]="false"
           field="employeeID"
+      [multiple]="isMultiCopy"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"

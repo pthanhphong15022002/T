@@ -500,6 +500,7 @@ export class DP_Instances_Steps_Tasks {
   objectID: string;
   objectType: string;
   approvedBy: string;
+  assigned: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

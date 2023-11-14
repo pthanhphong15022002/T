@@ -35,7 +35,7 @@
               >
                 <div 
                   class="d-flex align-items-top ps-6"
-                  [ngStyle]="item?.stepStatus == '3' ? { color: item?.iconColor } : {color: '#00000' }"
+                  [ngStyle]="!['0','1','2'].includes(item?.stepStatus) ? { color: item?.iconColor } : {color: '#00000' }"
                 >
                   <span
                     [ngClass]="item?.icon"
@@ -75,7 +75,7 @@
           [style]="getbackgroundColor(item)"
         >
           <div class="d-flex align-items-top ps-6" 
-          [ngStyle]="item?.stepStatus == '3' ? { color: item?.iconColor } : {color: '#00000' }"
+          [ngStyle]="!['0','1','2'].includes(item?.stepStatus) ? { color: item?.iconColor } : {color: '#00000' }"
           >
             <span
               [ngClass]="item?.icon"
