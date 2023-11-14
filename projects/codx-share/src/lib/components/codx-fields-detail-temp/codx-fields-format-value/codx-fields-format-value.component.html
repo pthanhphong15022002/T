@@ -278,4 +278,13 @@
       </table>
     </div>
   </ng-container>
+  <!-- ref -->
+  <ng-container *ngIf="data.dataType == 'PA' && dataValueTypePA?.length > 0">
+    <codx-fields-detail-temp
+      [listFields]="dataValueTypePA"
+      [showColumnControl]="1"
+      [isShowTitle]="false"
+    >
+    </codx-fields-detail-temp>
+  </ng-container>
 </ng-container>

@@ -142,7 +142,6 @@ export class WarehouseTransfersComponent extends UIComponent {
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
     this.optionSidebar.isFull = true;
-    console.log(this.view.dataService.data)
   }
 
   ngOnDestroy() {

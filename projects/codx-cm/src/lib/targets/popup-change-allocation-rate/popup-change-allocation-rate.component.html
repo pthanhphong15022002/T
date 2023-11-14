@@ -109,7 +109,7 @@
                       <span
                         class="me-1"
                         [innerHTML]="
-                          formatNumberWithoutTrailingZeros(item?.weight)
+                          item?.weight | formatTarget
                         "
                       ></span>
                       <span>%</span>
@@ -341,7 +341,7 @@
                     <span
                       class="me-1"
                       [innerHTML]="
-                        formatNumberWithoutTrailingZeros(item?.weight)
+                        item?.weight | formatTarget
                       "
                     ></span>
                     <span>%</span>

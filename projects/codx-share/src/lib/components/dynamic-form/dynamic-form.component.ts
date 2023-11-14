@@ -506,7 +506,11 @@ export class DynamicFormComponent extends UIComponent {
           let grv = res[1];
           let groups = res[2];
           let action = res[3] ? 'edit' : 'add';
-
+          if (
+            process.businessLineID == null ||
+            process.businessLineID?.trim() == ''
+          )
+            process.businessLineID = data.businessLineID;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
           dialogModel.zIndex = 999;

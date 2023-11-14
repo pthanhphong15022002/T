@@ -947,20 +947,20 @@ export class DealsComponent
   }
 
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
+    let formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
     let oldStatus = data.status;
     let oldStepId = data.stepID;
-    var dataCM = {
+    let dataCM = {
       refID: data?.refID,
       processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
-    var obj = {
+    let obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
@@ -970,7 +970,7 @@ export class DealsComponent
       isMoveProcess: false,
     };
 
-    var dialogRevision = this.callfc.openForm(
+    let dialogRevision = this.callfc.openForm(
       PopupMoveReasonComponent,
       '',
       800,
@@ -980,10 +980,10 @@ export class DealsComponent
     );
     dialogRevision.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var listSteps = e.event?.listStep;
+        let listSteps = e.event?.listStep;
         this.detailViewDeal?.reloadListStep(listSteps);
         data = this.updateReasonDeal(e.event?.instance, data);
-        var datas = [data, oldStepId, oldStatus, e.event?.comment];
+        let datas = [data, oldStepId, oldStatus, e.event?.comment];
         this.codxCmService.moveDealReason(datas).subscribe((res) => {
           if (res) {
             data = res;

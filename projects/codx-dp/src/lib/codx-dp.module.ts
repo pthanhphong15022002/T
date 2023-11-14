@@ -28,7 +28,7 @@ import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
+
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
@@ -133,7 +133,6 @@ const T_Component: Type<any>[] = [
   InstanceDetailComponent,
   PopupAddInstanceComponent,
   StagesDetailComponent,
-  InputCustomFieldComponent,
   PopupMoveStageComponent,
   PopupMoveReasonComponent,
   ViewJobComponent,
