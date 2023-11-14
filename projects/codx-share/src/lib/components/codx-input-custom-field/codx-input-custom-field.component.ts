@@ -847,6 +847,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   viewFieldRef() {
+    this.dataRef = '';
     let dataFormat = JSON.parse(this.customField.dataFormat);
     if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
       dataFormat.forEach((x) => {
