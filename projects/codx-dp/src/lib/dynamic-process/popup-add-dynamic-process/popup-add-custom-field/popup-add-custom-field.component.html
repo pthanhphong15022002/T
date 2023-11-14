@@ -341,7 +341,7 @@
           (valueChangeCustom)="valueChangeCustom($event)"
         >
         </codx-input-custom-field>
-        <ng-container *ngIf="field.defaultValue">
+        <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">
           <codx-fields-format-value
             [data]="fieldCus"
           ></codx-fields-format-value>
