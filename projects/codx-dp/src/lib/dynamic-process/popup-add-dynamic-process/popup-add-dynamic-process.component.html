@@ -399,10 +399,7 @@
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
               [disabled]="
-                systemProcess == '1' ||
-                process?.category == '0'
-                  ? true
-                  : false
+                systemProcess == '1' || process?.category == '0' ? true : false
               "
               type="text"
               [crrValue]="process.processName"
@@ -431,7 +428,7 @@
                   : 'DP002'
               "
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit' || systemProcess == '1'"
+              [disabled]="action == 'edit' || systemProcess == '1' || systemProcess == '2'"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>
@@ -456,7 +453,10 @@
             >
             </codx-input>
           </div>
-          <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
+          <div
+            class="form-group margin-form"
+            *ngIf="process.applyFor == '1' || process.applyFor == '4'"
+          >
             <div>
               <codx-label
                 fiedName="BusinessLineID"
@@ -468,7 +468,9 @@
             <codx-input
               field="businessLineID"
               [disabled]="action === 'edit' || systemProcess == '2'"
-              [formModel]="dialog.formModel"
+              type="combobox"
+              [placeholder]="gridViewSetup?.BusinessLineID?.description"
+              [refValue]="gridViewSetup?.BusinessLineID?.referedValue"
               [model]="{ ProcessID: process?.recID }"
               [crrValue]="process?.businessLineID"
               (valueChange)="valueChangebusinessLineID($event)"
