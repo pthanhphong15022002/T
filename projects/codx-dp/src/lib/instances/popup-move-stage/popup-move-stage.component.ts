@@ -516,12 +516,13 @@ export class PopupMoveStageComponent implements OnInit {
         // save deal form dp
         if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [
-            this.instanceCM.recID,
-            this.instanceCM.stepID,
+            this.instance.recID,
+            this.instance.stepID,
             this.oldStepID,
             this.oldStatus,
             this.instancesStepOld?.note,
             this.expectedClosed,
+            res[2]
           ];
           this.codxDpService.moveStageDeal(dataUpdate).subscribe((res) => {
             if (res) {

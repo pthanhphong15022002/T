@@ -23,7 +23,8 @@ import {
   SidebarModel,
   Util,
   ViewsComponent,
-  UIDetailComponent
+  UIDetailComponent,
+  CodxService
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -114,7 +115,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
     private codxODService: CodxOdService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
+    private codxService: CodxService
   ) {
     super(inject);
   }
@@ -128,6 +130,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID = this.formModel?.funcID;
     this.getGridViewSetup(this.funcID);
+    if(this.codxService.asideMode == "2") this.hideMF = true;
   }
 
   ngAfterViewInit(): void {

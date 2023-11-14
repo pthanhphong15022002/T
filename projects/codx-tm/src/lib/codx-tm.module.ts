@@ -8,7 +8,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TaskGroupComponent } from './setting/taskgroups/task-group.component';
 import { SettingComponent } from './setting/setting.component';
 import { CodxShareModule } from './../../../codx-share/src/lib/codx-share.module';
-import { LayoutComponent } from './_layout/layout.component';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -79,6 +78,7 @@ import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dyn
 import { SearchingComponent } from './searching/searching.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-common/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
+import { LayoutComponent } from './_layout/layout.component';
 
 export const routes: Routes = [
   {
