@@ -95,7 +95,7 @@ export class GeneralJournalComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'25%'
+          widthLeft:'22%'
           //separatorSize:3
         },
       },

@@ -45,6 +45,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
 import { stringify } from 'querystring';
 import { firstValueFrom } from 'rxjs';
 import moment from 'moment';
+import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -149,7 +150,7 @@ export class LeadsComponent
   gridDetailView = '2';
 
 
-  readonly applyForLead: string = '5';
+  readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
 
@@ -263,7 +264,7 @@ export class LeadsComponent
   }
   async getProcessSetting() {
     this.codxCmService
-      .getListProcessDefault([this.applyForLead])
+      .getListProcessDefault([this.applyFor])
       .subscribe((res) => {
         if (res) {
           this.processId = res.recID;
@@ -710,7 +711,7 @@ export class LeadsComponent
       CM0205_6: () => this.moveReason(data, false),
       CM0205_8: () => this.approvalTrans(data),
       CM0205_9: () => this.popupOwnerRoles(data),
-      CM0205_12: () => this.openFormChangeStatus(data),
+      CM0205_12: () => this.changeStatus(data),
       CM0205_13: () => this.startFirst(data),
       CM0205_14: () => this.updateProcess(data, true),
       CM0205_15: () => this.updateProcess(data, false),
@@ -807,7 +808,7 @@ export class LeadsComponent
       titleAction: this.formatTitleMore(this.titleAction),
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
-      applyFor: this.applyForLead,
+      applyFor: this.applyFor,
       processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected?.applyProcess,
@@ -846,7 +847,7 @@ export class LeadsComponent
           action: 'edit',
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
-          applyFor: this.applyForLead,
+          applyFor: this.applyFor,
           processId: this.processId,
           gridViewSetup: this.gridViewSetup,
           listCategory: this.listCategory,
@@ -928,7 +929,7 @@ export class LeadsComponent
         action: 'edit',
         title: this.titleAction,
         gridViewSetup: res,
-        applyFor: this.applyForLead,
+        applyFor: this.applyFor,
         data: data,
       };
       var dialog = this.callfc.openSide(PopupConvertLeadComponent, obj, option);
@@ -1202,7 +1203,7 @@ export class LeadsComponent
           data.refID,
           data.status,
           data.processID,
-          this.applyForLead,
+          this.applyFor,
         ])
         .subscribe((resDP) => {
           if (resDP) {
@@ -1354,7 +1355,7 @@ export class LeadsComponent
             deal: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
-            applyFor: this.applyForLead,
+            applyFor: this.applyFor,
             dataCM: dataCM,
           };
           var dialogMoveStage = this.callfc.openForm(
@@ -1432,7 +1433,7 @@ export class LeadsComponent
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor: this.applyForLead,
+      applyFor: this.applyFor,
       dataCM: dataCM,
       stepName: data.currentStepName,
       isMoveProcess: false,
@@ -1488,7 +1489,7 @@ export class LeadsComponent
       stepID: data?.stepID,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
-      applyFor: this.applyForLead,
+      applyFor: this.applyFor,
       titleAction: this.titleAction,
       owner: data.owner,
       startControl: data.steps.startControl,
@@ -1552,7 +1553,7 @@ export class LeadsComponent
   checkApplyProcess(data) {
     return data?.applyProcess;
   }
-  saveCopy() {
+  saveStatus() {
     if (
       this.dataSelected.status === this.statusDefault ||
       this.dataSelected.statusCode === this.statusDefault
@@ -1578,19 +1579,64 @@ export class LeadsComponent
       });
     }
   }
-  openFormChangeStatus(data) {
+
+  changeStatus(data) {
     this.dataSelected = data;
-    this.statusDefault = this.dataSelected.applyProcess
-      ? this.dataSelected?.statusCode
-      : ['1', '15'].includes(this.dataSelected?.status)
-      ? ''
-      : this.dataSelected?.status;
-    this.dialogQuestionCopy = this.callfc.openForm(
-      this.popUpQuestionCopy,
-      '',
-      400,
-      200
-    );
+    if(this.dataSelected.applyProcess) {
+      let formMD = new FormModel();
+      let dialogModel = new DialogModel();
+      formMD.funcID = this.funcIDCrr.functionID;
+      formMD.entityName = this.view?.formModel.entityName;
+      formMD.formName = this.view?.formModel.formName;
+      formMD.gridViewName = this.view?.formModel.gridViewName;
+      dialogModel.zIndex = 999;
+      dialogModel.FormModel = formMD;
+      let obj = {
+        statusDefault: this.dataSelected?.statusCode,
+        statusCodecmt: this.dataSelected?.statusCodeCmt,
+        applyProcess: true,
+        title: this.titleAction,
+        recID: this.dataSelected.recID,
+        valueListStatusCode: this.valueListStatusCode,
+        gridViewSetup: this.gridViewSetup,
+        category:this.applyFor
+      };
+      let dialog = this.callfc.openForm(
+        PopupUpdateStatusComponent,
+        '',
+        500,
+        400,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      dialog.closed.subscribe((e) => {
+        if (e && e?.event != null) {
+          this.dataSelected.statusCodeID = e?.event?.statusDefault;
+          this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected, true).subscribe();
+          this.detectorRef.detectChanges();
+          this.notificationsService.notifyCode('SYS007');
+        }
+      });
+    }
+    else {
+      this.dataSelected = data;
+      this.statusDefault = this.dataSelected.applyProcess
+        ? this.dataSelected?.statusCode
+        : ['1', '15'].includes(this.dataSelected?.status)
+        ? ''
+        : this.dataSelected?.status;
+      this.dialogQuestionCopy = this.callfc.openForm(
+        this.popUpQuestionCopy,
+        '',
+        400,
+        200,
+      );
+    }
   }
   valueChangeStatus($event) {
     if ($event) {

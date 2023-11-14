@@ -555,6 +555,22 @@
     </div>
   </ng-container>
 
+  <ng-container *ngIf="customField.dataType == 'PA'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="combobox"
+      [refValue]="customField.refValue"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue || ''"
+      (keyUpEnter)="valueChangeCbxPA($event)"
+      (valueChange)="valueChangeCbxPA($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+    <div class="text-gray-600 ms-3" data-field="">
+      {{ dataRef }}
+    </div>
+  </ng-container>
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
     {{ errorMessage }}
   </div>
