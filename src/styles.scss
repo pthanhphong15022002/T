@@ -4183,3 +4183,9 @@ codx-view-schedule{
 codx-input.border-0 input.e-input, codx-input .border-0 input.e-input, codx-input input.e-input.border-0{
   border-color:transparent!important ;
 }
+
+body.light.default{
+  .aside.aside-v2-lighter {
+    background-color: var(--white);
+}
+}
