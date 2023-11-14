@@ -1835,6 +1835,7 @@ export class InstancesComponent
       processID: this.processID,
       applyFor: '0',
       isMoveProcess: false,
+      isCallInstance: this.process.applyFor == '0',
     };
 
     var dialogRevision = this.callfc.openForm(

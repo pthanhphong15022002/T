@@ -516,15 +516,15 @@ export class PopupAddDealComponent
     //   );
     //   return;
     // }
-    if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
-      this.notificationsService.notifyCode(
-        'DP032',
-        0,
-        '"' + this.gridViewSetup['EndDate']?.headerText + '"',
-        '"' + this.dateMessage + '"'
-      );
-      return;
-    }
+    // if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
+    //   this.notificationsService.notifyCode(
+    //     'DP032',
+    //     0,
+    //     '"' + this.gridViewSetup['EndDate']?.headerText + '"',
+    //     '"' + this.dateMessage + '"'
+    //   );
+    //   return;
+    // }
     let ischeck = true;
     let ischeckFormat = true;
     let title = '';
