@@ -110,7 +110,7 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
     );
 
     if (this.dataDefault.isEdit) {
-      this.api.exec('BS', 'BSBusiness', 'LoadDataAsync', [this.dataDefault.customerID, "1"]).subscribe((res: any) => {
+      this.api.exec('BS', 'BSBusiness', 'LoadDataAsync', [this.dataDefault.vendorID, "2"]).subscribe((res: any) => {
         this.lstAddress = res?.lstAddress || [];
         this.lstContact = res?.lstcontact || [];
         this.lstBank = res?.lstBank || [];

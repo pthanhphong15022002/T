@@ -66,8 +66,8 @@
             <!-- Người gửi tiền -->
             <codx-label *ngIf="(formModel.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor" [formModel]="formModel">
             </codx-label>
-            <span *ngIf="formModel.funcID == 'ACT0401' && itemSelected?.contactName" class="text-gray-600">{{itemSelected?.contactName}}</span>
-            <span *ngIf="formModel.funcID == 'ACT0401' && (itemSelected?.contactName == '' || itemSelected?.contactName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Payor'].headerText}}</span>
+            <span *ngIf="formModel.funcID == 'ACT0401' && itemSelected?.payor" class="text-gray-600">{{itemSelected?.payor}}</span>
+            <span *ngIf="formModel.funcID == 'ACT0401' && (itemSelected?.payor == '' || itemSelected?.payor == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Payor'].headerText}}</span>
             <!-- Người gửi tiền -->
     
             <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
@@ -78,7 +78,10 @@
             <!-- Người nhận tiền (phiếu chi)   -->
           </div>
           <div class="d-flex align-self-center">
-            <codx-vll [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+            <codx-vll *ngIf="itemSelected?.status == '1'" [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.validated ? '1' : '7'" [showText]="true"
+              [showBgColor]="true" class="badge badge-light badge-sm">
+            </codx-vll>
+            <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
               [showBgColor]="true" class="badge badge-light badge-sm">
             </codx-vll>
           </div>
