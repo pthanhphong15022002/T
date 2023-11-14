@@ -1820,6 +1820,7 @@ export class CodxTasksComponent
           case 'TMT02015':
           case 'TMT02025':
             if (
+              !data.write ||
               data.status == '90' ||
               data.status == '80' ||
               data.status == '50' ||
