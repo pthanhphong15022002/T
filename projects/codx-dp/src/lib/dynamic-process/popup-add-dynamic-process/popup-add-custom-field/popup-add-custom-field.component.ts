@@ -158,11 +158,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.enabled = dt?.data?.enabled;
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
-    if (this.field.defaultValue) {
-      this.fieldCus = Object.assign(this.field, {
-        dataValue: this.field.defaultValue,
-      });
-    }
+    this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
       : '550';
@@ -230,11 +226,32 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     }
     if (e.field == 'refValue' && this.field.dataType == 'PA') {
+      this.field.refType = '3';
       this.servicePA = e?.component?.itemsSelected[0]?.Service;
       this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
     }
+    this.creatFieldCustom();
 
     // this.changdef.detectChanges(); thua
+  }
+
+  creatFieldCustom() {
+    if (
+      (this.field.dataFormat &&
+        (this.field.dataType == 'N' ||
+          this.field.dataType == 'P' ||
+          this.field.dataType == 'T')) ||
+      ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
+        this.field.refValue)
+    ) {
+      this.fieldCus = JSON.parse(
+        JSON.stringify(
+          Object.assign(this.field, {
+            dataValue: this.field.defaultValue,
+          })
+        )
+      );
+    }
   }
 
   changeRequired(e) {
@@ -805,11 +822,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
       switch (field.dataType) {
         case 'P':
         case 'L':
-          // case 'TA':
+        case 'PA':
           result = event.e;
           break;
       }
       this.field.defaultValue = result;
+      if (this.fieldCus) {
+        this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
+      }
     }
   }
   //end

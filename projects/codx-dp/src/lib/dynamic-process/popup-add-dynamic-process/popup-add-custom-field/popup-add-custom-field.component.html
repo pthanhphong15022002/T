@@ -333,24 +333,19 @@
         </div>
       </ng-container>
 
-      <div
-        class="form-group"
-        *ngIf="
-          field.dataType == 'N' ||
-          field.dataType == 'P' ||
-          field.dataType == 'L' ||
-          field.dataType == 'T' ||
-          field.dataType == 'PA'
-        "
-      >
+      <div class="form-group" *ngIf="fieldCus">
         <codx-input-custom-field
-          [customField]="this.field.defaultValue ? fieldCus : this.field"
+          [customField]="fieldCus"
           [showTitle]="false"
           [checkValid]="false"
-          [formModel]="dialog.formModel"
           (valueChangeCustom)="valueChangeCustom($event)"
         >
         </codx-input-custom-field>
+        <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">
+          <codx-fields-format-value
+            [data]="fieldCus"
+          ></codx-fields-format-value>
+        </ng-container>
       </div>
 
       <div class="form-group" *ngIf="field.dataType == 'A'">

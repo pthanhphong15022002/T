@@ -1737,17 +1737,21 @@ export class CodxTasksComponent
       case 'TMT02035':
         this.openUpdateProgress(e.data, data);
         break;
+      //Hoàn tất
       case 'TMT02011':
-      case 'TMT02012':
-      case 'TMT02013':
-      case 'TMT02014':
       case 'TMT02021':
-      case 'TMT02022':
-      case 'TMT02023':
-      case 'TMT02024':
       case 'TMT02031':
+      //Đang thực hiện
+      case 'TMT02012':
+      case 'TMT02022':
       case 'TMT02032':
+      //Hoãn lai
+      case 'TMT02013':
+      case 'TMT02023':
       case 'TMT02033':
+      //Hủy
+      case 'TMT02014':
+      case 'TMT02024':
       case 'TMT02034':
         this.changeStatusTask(e.data, data);
         break;
@@ -1781,12 +1785,13 @@ export class CodxTasksComponent
           //tắt duyệt confirm
           case 'TMT02016':
           case 'TMT02017':
-            if (data.confirmStatus != '1') x.disabled = true;
+            if (!data.write || data.confirmStatus != '1') x.disabled = true;
             break;
           //an gia hạn cong viec
           case 'TMT02019':
           case 'TMT02027':
             if (
+              !data.write ||
               (data.verifyControl == '0' &&
                 (data.category == '1' ||
                   (data.owner == data.createdBy && data.category == '2'))) ||
@@ -1814,11 +1819,21 @@ export class CodxTasksComponent
           //an giao viec
           case 'TMT02015':
           case 'TMT02025':
+            if (
+              data.status == '90' ||
+              data.status == '80' ||
+              data.status == '50' ||
+              data.status == '05' ||
+              data.status == '00'
+            )
+              x.disabled = true;
+            break;
           //an cap nhat tien do khi hoan tat
           case 'TMT02018':
           case 'TMT02026':
           case 'TMT02035':
             if (
+              !data.write ||
               data.status == '90' ||
               data.status == '80' ||
               data.status == '05' ||
@@ -1830,6 +1845,7 @@ export class CodxTasksComponent
           case 'SYS02':
           case 'SYS03':
             if (
+              !data.write ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
               this.funcID == 'TMT0206' ||
@@ -1843,10 +1859,59 @@ export class CodxTasksComponent
             break;
           case 'SYS04':
             if (
+              !data.write ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401'
+            )
+              x.disabled = true;
+            break;
+          //ẩn more theo yêu cầu
+          //Hoàn tất
+          case 'TMT02011':
+          case 'TMT02021':
+          case 'TMT02031':
+            if (!data.write || data.status != '20') x.disabled = true;
+            break;
+          //Đang thực hiện
+          case 'TMT02012':
+          case 'TMT02022':
+          case 'TMT02032':
+            if (
+              !data.write ||
+              data.status == '20' ||
+              data.status == '00' ||
+              data.status == '05' ||
+              data.status == '07'
+            )
+              x.disabled = true;
+            break;
+          //Hoãn lai
+          case 'TMT02013':
+          case 'TMT02023':
+          case 'TMT02033':
+            if (
+              !data.write ||
+              data.status == '90' ||
+              data.status == '50' ||
+              data.status == '00' ||
+              data.status == '05'
+              // ||
+              // data.status == '07'
+            )
+              x.disabled = true;
+            break;
+          //Hủy
+          case 'TMT02014':
+          case 'TMT02024':
+          case 'TMT02034':
+            if (
+              !data.write ||
+              data.status == '80' ||
+              data.status == '90' ||
+              data.status == '00' ||
+              data.status == '05'
             )
               x.disabled = true;
             break;

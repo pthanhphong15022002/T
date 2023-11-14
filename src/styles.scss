@@ -3038,6 +3038,7 @@ codx-vll.badge.badge-md span::before{
   font-size: 12px!important;
   //padding-top: 2px!important;
   line-height: 16px!important;
+  margin-top: 4px;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
@@ -3573,7 +3574,7 @@ codx-view-list-tree{
   }
   codx-listview .card-body.p-0{
     height: 100%!important;
-    background-color: white;
+    background-color: var(--bg-body);
   }
 }
 .e-pane .aside-menu{
@@ -4165,5 +4166,26 @@ codx-aside-v2.aside-v2-lighter{
   .menu-link .menu-icon {
     height: 26px!important;
   }
+}
+}
+codx-view-list-tree
+codx-view-schedule{
+  .fit-content{
+
+    .w-250px{
+      width: 150px!important;
+    }
+    .w-300px.mx-2{
+      width: 250px!important;
+    }
+  }
+}
+codx-input.border-0 input.e-input, codx-input .border-0 input.e-input, codx-input input.e-input.border-0{
+  border-color:transparent!important ;
+}
+
+body.light.default{
+  .aside.aside-v2-lighter {
+    background-color: var(--white);
 }
 }

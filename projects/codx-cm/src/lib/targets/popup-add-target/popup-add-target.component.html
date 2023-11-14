@@ -201,7 +201,7 @@
               >
                 <span
                   class="me-1"
-                  [innerHTML]="formatNumberWithoutTrailingZeros(item?.weight)"
+                  [innerHTML]="item?.weight | formatTarget"
                 ></span>
                 <span>%</span>
               </div>
