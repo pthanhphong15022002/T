@@ -895,6 +895,15 @@ export class CodxDpService {
       data
     );
   }
+  moveDealReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveDealReasonAsync',
+      data
+    );
+  }
 
   //#endregion
 }

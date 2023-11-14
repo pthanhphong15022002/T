@@ -24,7 +24,6 @@ import { ProgressBarModule } from '@syncfusion/ej2-angular-progressbar';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { LayoutComponent } from './_layout/layout.component';
 import { PopupContactComponent } from './company-setting/popup-contact/popup-contact.component';
 import { ViewUsersComponent } from './users/view-users/view-users.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
@@ -40,7 +39,6 @@ import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-g
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
-import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
 import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
 import { PleaseUseComponent } from './users/please-use/please-use.component';
@@ -53,11 +51,12 @@ import { PopupOrderDetailComponent } from './company-setting/popup-order-detail/
 import { PopupExtendModuleComponent } from './company-setting/popup-extend-module/popup-extend-module.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: NoSubAsideComponent,
+    component: LayoutComponent,
     children: [
       {
         path: 'users/:funcID',
@@ -113,7 +112,6 @@ export const routes: Routes = [
 ];
 
 const T_Component: Type<any>[] = [
-  LayoutComponent,
   UserComponent,
   CompanySettingComponent,
   PopupContactComponent,
@@ -127,7 +125,6 @@ const T_Component: Type<any>[] = [
   RoleDetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
-  NoSubAsideComponent,
   ApproversComponent,
   AddApproversComponent,
   BindPipe,
