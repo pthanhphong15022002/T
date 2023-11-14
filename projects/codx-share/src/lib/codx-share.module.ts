@@ -187,6 +187,7 @@ import { AddIetablesComponent } from './components/codx-import/add-template/add-
 import { FreezeService, GridModule } from '@syncfusion/ej2-angular-grids';
 import { CodxViewDetailSignFileComponent } from './components/codx-approval-procress/codx-view-detail-signfile/codx-view-detail-signfile.component';
 import { CodxViewApproveComponent } from './components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { LayoutComponent } from './components/layout/layout.component';
 import { FormSettingComponent } from './components/form-setting/form-setting.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -384,6 +385,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CodxFilesAttachmentViewComponent,
     PopupAddLineTableComponent,
     CodxDateComponent,
+    LayoutComponent,
     T_Pipe,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],

@@ -546,7 +546,7 @@
 <ng-template #TmpTabLine>
   <ng-container *ngIf="formCashPayment?.data?.subType == '1' || formCashPayment?.data?.subType == '9'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+      <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
         [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
         [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" (beforeSaveRow)="beforeSaveRowCashPayment($event)"
         [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
@@ -587,7 +587,7 @@
     <div class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices [formName]="fmSettledInvoices.formName" [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true"
         [showEmptyRecord]="false" [entityName]="fmSettledInvoices.entityName" [showEmptyRecord]="false" rowNoField="rowNo" gridLines="Both"
-        [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID" [autoFitColumns]="false"
+        [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID" [autoFitColumns]="true"
         (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
@@ -635,7 +635,7 @@
       <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName" [gridViewName]="fmVATInvoices.gridViewName"
         [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
         (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true" [templateMore]="templateMore"
-        (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0" gridLines="Both" [autoFitColumns]="false"
+        (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0" gridLines="Both" [autoFitColumns]="true"
         [dataValues]="formCashPayment?.data?.recID" service="AC">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">

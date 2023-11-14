@@ -202,20 +202,20 @@
 
 <ng-template #templateViewDetail>
   <view-lead-detail
-  [formModel]="view.formModel"
-  [dataSelected]="dataSelected"
-  [gridViewSetup]="gridViewSetup"
-  [colorReasonSuccess]="colorReasonSuccess"
-  [colorReasonFail]="colorReasonFail"
-  [funcID]="funcID"
-  [valueListStatusCode]="valueListStatusCode"
-  [listCategory]="listCategory"
-  [applyProcess]="checkApplyProcess(dataSelected)"
-  (changeMF)="changeMF($event)"
-  (clickMoreFunc)="clickMoreFunc($event)"
-  [dialog]="dialogViewLead"
->
-</view-lead-detail>
+    [formModel]="view.formModel"
+    [dataSelected]="dataSelected"
+    [gridViewSetup]="gridViewSetup"
+    [colorReasonSuccess]="colorReasonSuccess"
+    [colorReasonFail]="colorReasonFail"
+    [funcID]="funcID"
+    [valueListStatusCode]="valueListStatusCode"
+    [listCategory]="listCategory"
+    [applyProcess]="checkApplyProcess(dataSelected)"
+    (changeMF)="changeMF($event)"
+    (clickMoreFunc)="clickMoreFunc($event)"
+    [dialog]="dialogViewLead"
+  >
+  </view-lead-detail>
 </ng-template>
 <!--View Kanban -->
 <ng-template #cardKanban let-data let-setting="setting">
@@ -364,9 +364,7 @@
             >
             </codx-vll>
           </div>
-          <ng-container
-          *ngIf="data.approveStatus > '1' && data?.approveStatus"
-          >
+          <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
             <codx-vll
               [name]="vllApprove"
               [field]="'ApproveStatus'"
@@ -456,31 +454,20 @@
 </ng-template>
 
 <ng-template #bodyFormCopyName>
-  <div *ngIf="dataSelected.applyProcess ; else defaultProcess">
-      <ejs-combobox
-      [dataSource]="valueListStatusCode "
+  <div class="form-group">
+    <ejs-combobox
+      [dataSource]="valueListStatus"
+      [fields]="fieldCbxStatus"
       (valueChange)="valueChangeStatus($event)"
-      [fields]="fieldCbxStatusCode"
       [placeholder]="gridViewSetup?.Status?.description"
       [allowFiltering]="true"
       [value]="statusDefault"
     ></ejs-combobox>
   </div>
-  <ng-template #defaultProcess>
-    <ejs-combobox
-    [dataSource]="valueListStatus"
-    [fields]="fieldCbxStatus"
-    (valueChange)="valueChangeStatus($event)"
-    [placeholder]="gridViewSetup?.Status?.description"
-    [allowFiltering]="true"
-    [value]="statusDefault"
-  ></ejs-combobox>
-  </ng-template>
-
 </ng-template>
 
 <ng-template #footerFormCopyName>
-  <button type="button" class="btn btn-primary" (click)="saveCopy()">
+  <button type="button" class="btn btn-primary" (click)="saveStatus()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
 </ng-template>

@@ -109,7 +109,7 @@
                       <span
                         class="me-1"
                         [innerHTML]="
-                          formatNumberWithoutTrailingZeros(item?.weight)
+                          item?.weight | formatTarget
                         "
                       ></span>
                       <span>%</span>
@@ -184,7 +184,7 @@
                       (click)="dbClick(item?.quarter, 'target')"
                       class="d-flex align-items-center justify-content-end user-nav-item"
                     >
-                      <span class="" [innerHTML]="targetToFixed(item?.target)">
+                      <span class="" [innerHTML]="item?.target.toLocaleString()">
                       </span>
                     </div>
                     <div
@@ -341,7 +341,7 @@
                     <span
                       class="me-1"
                       [innerHTML]="
-                        formatNumberWithoutTrailingZeros(item?.weight)
+                        item?.weight | formatTarget
                       "
                     ></span>
                     <span>%</span>
@@ -407,7 +407,7 @@
                     (click)="dbClick(item?.lineID, 'target')"
                     class="d-flex align-items-center w-100 justify-content-end user-nav-item"
                   >
-                    <span class="" [innerHTML]="targetToFixed(item?.target)">
+                    <span class="" [innerHTML]="item?.target.toLocaleString()">
                     </span>
                   </div>
                   <div

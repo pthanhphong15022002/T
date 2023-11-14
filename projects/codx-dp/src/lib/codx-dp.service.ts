@@ -530,12 +530,12 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync');
   }
 
-  openOrClosedInstance(recID, check) {
+  openOrClosedInstance(recID, check,applyFor) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'OpenOrClosedInstanceAsync',
-      [recID, check]
+      [recID, check,applyFor]
     );
   }
 
@@ -892,6 +892,15 @@ export class CodxDpService {
       'DP',
       'InstancesStepsBusiness',
       'GetRecIDInstancesStepsReleasedAsync',
+      data
+    );
+  }
+  moveDealReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveDealReasonAsync',
       data
     );
   }

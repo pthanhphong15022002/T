@@ -1576,6 +1576,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.changeProgress.emit(true);
       }
     }
+    this.changeDetectorRef.detectChanges();
     return dataPopupOutput;
   }
 

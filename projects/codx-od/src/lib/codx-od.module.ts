@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { LayoutComponent } from './_layout/layout.component';
 import { IncommingComponent } from './incomming/incomming.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,6 +44,7 @@ import {
 import { ApprovalStepComponent } from './incomming/approval-step/approval-step.component';
 import { ODDashboardComponent } from './oddashboard/oddashboard.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 const routes: Routes = [
   {
     path: '',
@@ -102,7 +102,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    LayoutComponent,
     HomeComponent,
     IncommingComponent,
     CodxOdComponent,

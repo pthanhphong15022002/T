@@ -50,7 +50,7 @@
           <div
             #campaignName
             class="fs-6 fw-bold line-clamp line-clamp-1 text-popover"
-            [ngbPopover]="setTextPopover(data?.campaignName)"
+            [ngbPopover]="data?.campaignName"
             #p="ngbPopover"
             [openDelay]="500"
             (mouseenter)="PopoverDetail($event, p, data, 'campaignName')"
