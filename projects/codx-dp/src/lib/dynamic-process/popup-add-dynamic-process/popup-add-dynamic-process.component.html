@@ -315,7 +315,7 @@
 <!--Phần của Phúc - Thông tin quy trình-->
 <ng-template #General>
   <!--Thông tin chung-->
-  <div class="background">
+  <div class="background" *ngIf="gridViewSetup">
     <div
       class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
@@ -400,7 +400,6 @@
               [placeholder]="gridViewSetup['ProcessName']?.description"
               [disabled]="
                 systemProcess == '1' ||
-                systemProcess == '2' ||
                 process?.category == '0'
                   ? true
                   : false
@@ -468,7 +467,7 @@
             </div>
             <codx-input
               field="businessLineID"
-              [disabled]="action === 'edit'"
+              [disabled]="action === 'edit' || systemProcess == '2'"
               [formModel]="dialog.formModel"
               [model]="{ ProcessID: process?.recID }"
               [crrValue]="process?.businessLineID"
