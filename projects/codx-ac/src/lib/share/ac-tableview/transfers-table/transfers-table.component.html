@@ -2,7 +2,7 @@
     <table style="table-layout: fixed;" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom">
+          <th class="w-30 border-bottom">
             <div class="d-flex align-items-center justify-content-start ps-3">
               <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
               </codx-label>
@@ -26,6 +26,12 @@
               </codx-label>
             </div>
           </th>
+          <th class="w-40 border-bottom">
+            <div class="d-flex align-items-center justify-content-start ps-3">
+              <codx-label class="fw-bold" fiedName="lblPrice" default="Ghi chú">
+              </codx-label>
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -40,78 +46,184 @@
                         class="fw-bold">{{item.itemName}}</span>
                     </ng-container>
                   </div>
-                  <div *ngIf="(item.idiM0 != null && item.idiM0 != '') ||
-                                      (item.idiM1 != null && item.idiM1 != '') || 
-                                      (item.idiM2 != null && item.idiM2 != '') ||
-                                      (item.idiM3 != null && item.idiM3 != '')" class="d-flex justify-content-start">
-                    <ng-container>
-                      <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
-                      </codx-label>
-                      :&nbsp;
-                      <div class="w-100" style="text-align: left;display: inline-block;">
-                        <div *ngIf="(item.idiM0 != null && item.idiM0 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            {{item.idiM0Name}}
-                          </span>
+                  <ng-container *ngIf="type === 'issue'">
+                    <div *ngIf="(item.idiM01Name != null && item.idiM01Name != '') ||
+                                                        (item.idiM11Name != null && item.idiM11Name != '') || 
+                                                        (item.idiM21Name != null && item.idiM21Name != '') ||
+                                                        (item.idiM31Name != null && item.idiM31Name != '')" class="d-flex justify-content-start">
+                      <ng-container>
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
+                        </codx-label>
+                        :&nbsp;
+                        <div class="w-100" style="text-align: left;display: inline-block;">
+                          <div *ngIf="(item.idiM01Name != null && item.idiM01Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              {{item.idiM01Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM11Name != null && item.idiM11Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM11Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM21Name != null && item.idiM21Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM21Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM31Name != null && item.idiM31Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM31Name}}
+                            </span>
+                          </div>
                         </div>
-                        <div *ngIf="(item.idiM1 != null && item.idiM1 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM1Name}}
-                          </span>
+                      </ng-container>
+                    </div>
+                    <div *ngIf="(item.idiM41Name != null && item.idiM41Name != '') ||
+                                                        (item.idiM51Name != null && item.idiM51Name != '') || 
+                                                        (item.idiM61Name != null && item.idiM61Name != '') ||
+                                                        (item.idiM71Name != null && item.idiM71Name != '') ||
+                                                        (item.idiM81Name != null && item.idiM81Name != '') ||
+                                                        (item.idiM91Name != null && item.idiM91Name != '')"
+                      class="d-flex justify-content-start mb-1">
+                      <ng-container>
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Kho">
+                        </codx-label>
+                        :&nbsp;
+                        <div class="w-100" style="text-align: left;display: inline-block;">
+                          <div *ngIf="(item.idiM41Name != null && item.idiM41Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              {{item.idiM41Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM51Name != null && item.idiM51Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM51Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM61Name != null && item.idiM61Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM61Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM71Name != null && item.idiM71Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM71Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM81Name != null && item.idiM81Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;{{item.idiM81Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM91Name != null && item.idiM91Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM91Name}}
+                            </span>
+                          </div>
                         </div>
-                        <div *ngIf="(item.idiM2 != null && item.idiM2 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM2Name}}
-                          </span>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="type === 'receipt'">
+                    <div *ngIf="(item.idiM02Name != null && item.idiM02Name != '') ||
+                                                        (item.idiM12Name != null && item.idiM12Name != '') || 
+                                                        (item.idiM22Name != null && item.idiM22Name != '') ||
+                                                        (item.idiM32Name != null && item.idiM32Name != '')" class="d-flex justify-content-start">
+                      <ng-container>
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
+                        </codx-label>
+                        :&nbsp;
+                        <div class="w-100" style="text-align: left;display: inline-block;">
+                          <div *ngIf="(item.idiM02Name != null && item.idiM02Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              {{item.idiM02Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM12Name != null && item.idiM12Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM12Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM22Name != null && item.idiM22Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM22Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM32Name != null && item.idiM32Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM32Name}}
+                            </span>
+                          </div>
                         </div>
-                      </div>                                     
-                    </ng-container>
-                  </div>
-                  <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
-                                      (item.idiM5 != null && item.idiM5 != '') || 
-                                      (item.idiM6 != null && item.idiM6 != '') ||
-                                      (item.idiM7 != null && item.idiM7 != '') ||
-                                      (item.idiM8 != null && item.idiM8 != '') ||
-                                      (item.idiM9 != null && item.idiM9 != '')" class="d-flex justify-content-start mb-1">
-                    <ng-container>
-                      <codx-label style="white-space: nowrap"
-                        class="fs-7 fw-bold" default="Kho">
-                      </codx-label>                                         
-                      :&nbsp;                    
-                      <div class="w-100" style="text-align: left;display: inline-block;">
-                        <div *ngIf="(item.idiM4 != null && item.idiM4 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            {{item.idiM4Name}}
-                          </span>
+                      </ng-container>
+                    </div>
+                    <div *ngIf="(item.idiM42Name != null && item.idiM42Name != '') ||
+                                                        (item.idiM52Name != null && item.idiM52Name != '') || 
+                                                        (item.idiM62Name != null && item.idiM62Name != '') ||
+                                                        (item.idiM72Name != null && item.idiM72Name != '') ||
+                                                        (item.idiM82Name != null && item.idiM82Name != '') ||
+                                                        (item.idiM92Name != null && item.idiM92Name != '')"
+                      class="d-flex justify-content-start mb-1">
+                      <ng-container>
+                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Kho">
+                        </codx-label>
+                        :&nbsp;
+                        <div class="w-100" style="text-align: left;display: inline-block;">
+                          <div *ngIf="(item.idiM42Name != null && item.idiM42Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              {{item.idiM42Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM52Name != null && item.idiM52Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM52Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM62Name != null && item.idiM62Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM62Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM72Name != null && item.idiM72Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM72Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM82Name != null && item.idiM82Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;{{item.idiM82Name}}
+                            </span>
+                          </div>
+                          <div *ngIf="(item.idiM92Name != null && item.idiM92Name != '')"
+                            style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                            <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                              -&nbsp;&nbsp;{{item.idiM92Name}}
+                            </span>
+                          </div>
                         </div>
-                        <div *ngIf="(item.idiM5 != null && item.idiM5 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM5Name}}
-                          </span>
-                        </div>
-                        <div *ngIf="(item.idiM6 != null && item.idiM6 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM6Name}}
-                          </span>
-                        </div>
-                        <div *ngIf="(item.idiM7 != null && item.idiM7 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM7Name}}
-                          </span>
-                        </div>
-                        <div *ngIf="(item.idiM8 != null && item.idiM8 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;{{item.idiM8Name}}
-                          </span>
-                        </div>
-                        <div *ngIf="(item.idiM9 != null && item.idiM9 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                          <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
-                            -&nbsp;&nbsp;{{item.idiM9Name}}
-                          </span>
-                        </div>
-                      </div>                    
-                    </ng-container>
-                  </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
                   <div *ngIf="item?.lineType != '1'" class="d-flex justify-content-start">
                     <span class="badge ac-badge-light-primary">
                       {{item?.lineType | vll : 'AC089' : 'text' | async}}
@@ -130,16 +242,21 @@
               </div>
             </td>
             <td class="text-center">
-              <!-- <div class="d-flex justify-content-end ps-3">
-                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.purcPrice
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.costPrice
                       | tranformValueNumber : 'B' | async"></span>
-              </div> -->
+              </div>
             </td>
             <td class="text-center">
-              <!-- <div class="d-flex justify-content-end ps-3">
-                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.netAmt
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.costAmt
                       | tranformValueNumber : 'B' | async"></span>
-              </div> -->
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-start ps-3">
+                <span class="text-gray-600 fs-7">{{item?.note}}</span>
+              </div>
             </td>
           </tr>
         </ng-container>
@@ -153,31 +270,23 @@
     </div>
   </div>
   <table style="table-layout: fixed;" class="table mb-0">
-    <!-- <tfoot class="table-footer-ac">
-      <td class="w-40">
-        <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+    <tfoot class="table-footer-ac">
+      <td class="w-30">
+        <!-- <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <codx-label  *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
           </codx-label>
-        </div>
+        </div> -->
       </td>
       <td class="w-15">
-        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-          <span *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalQuantity
-                  | tranformValueNumber : 'B' | async"></span>
-        </div>
       </td>
       <td class="w-15"></td>
       <td class="w-15">
         <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-          <span *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
+          <span *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalCostAmt
                   | tranformValueNumber : 'B' | async"></span>
         </div>
       </td>
-      <td class="w-15">
-        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-          <span *ngIf="listTransfer && listTransfer.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatAtm
-                  | tranformValueNumber : 'B' | async"></span>
-        </div>
+      <td class="w-40">
       </td>
-    </tfoot> -->
+    </tfoot>
   </table>
