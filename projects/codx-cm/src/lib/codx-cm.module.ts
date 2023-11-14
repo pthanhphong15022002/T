@@ -117,6 +117,7 @@ import { CodxShowMoreLessComponent } from './deals/deal-detail/codx-show-more-le
 import { ViewDealDetailComponent } from './deals/view-deal-detail/view-deal-detail.component';
 import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-detail.component';
 import { CustomIconPipe } from './pipes/customIcon.pipe';
+import { FormatTargetPipe } from './pipes/format-target.pipe';
 
 export const routes: Routes = [
   {
@@ -281,6 +282,7 @@ const T_Component: Type<any>[] = [
     ViewDealDetailComponent,
     ViewLeadDetailComponent,
     CustomIconPipe,
+    FormatTargetPipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
