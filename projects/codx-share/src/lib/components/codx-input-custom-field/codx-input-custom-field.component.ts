@@ -55,6 +55,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
     download: true,
     delete: true,
   };
+  dataRef = '';
 
   // @Input() readonly = false;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -154,6 +155,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.customField.dataValue = this.customField.defaultValue;
 
     switch (this.customField.dataType) {
+      case 'PA':
+        this.viewFieldRef();
+        break;
       case 'TA':
         this.getColumnTable(this.customField);
         break;
@@ -771,6 +775,85 @@ export class CodxInputCustomFieldComponent implements OnInit {
       data: this.customField,
     });
   }
-
   //--------------end------------//
+
+  //------------PA---------------//
+  valueChangeCbxPA(e) {
+    if (!e.data) {
+      this.valueChangeCustom.emit({
+        e: e.data,
+        data: this.customField,
+      });
+    }
+    let value = e.data;
+    this.cache.combobox(this.customField.refValue).subscribe((res) => {
+      let gridModel = new DataRequest();
+      let entityName = res?.tableName;
+      gridModel.entityName = entityName;
+      gridModel.entityPermission = entityName;
+      gridModel.pageLoading = false;
+
+      let predicate = res.valueMember + '=@0';
+      if (res.predicate) {
+        predicate += ' and ' + res.predicate;
+      }
+      gridModel.predicate = predicate;
+      gridModel.dataValue = value;
+
+      this.api
+        .execSv<any>(
+          res.service,
+          'ERM.Business.Core',
+          'DataBusiness',
+          'LoadDataAsync',
+          gridModel
+        )
+        .subscribe((dataRes) => {
+          if (dataRes) {
+            let crrData = dataRes[0][0];
+            if (crrData) {
+              //this.refValuePA(crrData);
+
+              this.valueChangeCustom.emit({
+                e: e.data,
+                data: this.customField,
+              });
+            } else {
+              this.valueChangeCustom.emit({
+                e: null,
+                data: this.customField,
+              });
+            }
+          }
+        });
+    });
+  }
+  refValuePA(crrData) {
+    this.dataRef = '';
+    let dataFormat = JSON.parse(this.customField.dataFormat);
+    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+      dataFormat.forEach((x) => {
+        let value = '';
+        for (var key in crrData) {
+          if (key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()) {
+            value = crrData[key];
+          }
+        }
+        this.modelJSON += '"' + x.fieldName + '":"' + value + '",';
+      });
+      this.modelJSON = this.modelJSON.substring(0, this.modelJSON.length - 1);
+      this.modelJSON = '[{' + this.modelJSON + '}]';
+    }
+  }
+
+  viewFieldRef() {
+    let dataFormat = JSON.parse(this.customField.dataFormat);
+    if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+      dataFormat.forEach((x) => {
+        this.dataRef += x.fieldName + ', ';
+      });
+      this.dataRef = this.dataRef.substring(0, this.dataRef.length - 2);
+    }
+  }
+  //-----------------------------//
 }

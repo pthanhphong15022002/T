@@ -343,7 +343,7 @@ export class PopupConvertLeadComponent implements OnInit {
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.deal.dealID,
-          autoNameTabFields: res[3]
+          autoNameTabFields: res[3],
         };
         this.listInstanceSteps = res[0];
         this.listParticipants = obj.permissions;
@@ -383,7 +383,9 @@ export class PopupConvertLeadComponent implements OnInit {
     );
     if (menuInput != -1) {
       this.tabInfo[menuInput].text = JSON.parse(JSON.stringify(text));
-      this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.tabInfo[menuInput]));
+      this.tabInfo[menuInput] = JSON.parse(
+        JSON.stringify(this.tabInfo[menuInput])
+      );
     }
   }
   //end
@@ -796,6 +798,7 @@ export class PopupConvertLeadComponent implements OnInit {
         case 'A':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event.e;
           break;
         case 'C':

@@ -46,7 +46,7 @@ export class PopupAddDealComponent
   implements OnInit, AfterViewInit
 {
   // view child
-   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
+  @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail')
   tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail')
@@ -280,15 +280,28 @@ export class PopupAddDealComponent
   }
 
   //get autoname tab fields
-  setAutoNameTabFields(autoNameTabFields){
+  setAutoNameTabFields(autoNameTabFields) {
     this.autoNameTabFields = autoNameTabFields;
-    if(this.menuInputInfo){
-      this.menuInputInfo.text = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Thông tin mở rộng';
-      this.menuInputInfo.subName = this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
-      this.menuInputInfo.subText =this.autoNameTabFields && this.autoNameTabFields.trim() != '' ? this.autoNameTabFields : 'Input information';
-      const menuInput = this.tabInfo.findIndex((item) => item?.name === this.menuInputInfo?.name);
-      if(menuInput != -1){
-        this.tabInfo[menuInput] = JSON.parse(JSON.stringify(this.menuInputInfo));
+    if (this.menuInputInfo) {
+      this.menuInputInfo.text =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Thông tin mở rộng';
+      this.menuInputInfo.subName =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Input information';
+      this.menuInputInfo.subText =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Input information';
+      const menuInput = this.tabInfo.findIndex(
+        (item) => item?.name === this.menuInputInfo?.name
+      );
+      if (menuInput != -1) {
+        this.tabInfo[menuInput] = JSON.parse(
+          JSON.stringify(this.menuInputInfo)
+        );
       }
     }
   }
@@ -586,6 +599,7 @@ export class PopupAddDealComponent
         case 'A':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event?.e;
           break;
         case 'C':
@@ -961,7 +975,7 @@ export class PopupAddDealComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
-          autoNameTabFields: res[3]
+          autoNameTabFields: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
@@ -985,15 +999,16 @@ export class PopupAddDealComponent
           this.deal.dealID = res[2];
         }
         this.dateMax = this.HandleEndDate(
-            this.listInstanceSteps,
-            this.action,
-            this.action !== this.actionEdit ||
-              (this.action === this.actionEdit &&
-                (this.deal.status == '1' || this.deal.status == '15'))
-              ? null
-              : this.deal.createdOn
-          );
-        this.deal.endDate = this.action === this.actionEdit ? this.deal?.endDate: this.dateMax;
+          this.listInstanceSteps,
+          this.action,
+          this.action !== this.actionEdit ||
+            (this.action === this.actionEdit &&
+              (this.deal.status == '1' || this.deal.status == '15'))
+            ? null
+            : this.deal.createdOn
+        );
+        this.deal.endDate =
+          this.action === this.actionEdit ? this.deal?.endDate : this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1136,7 +1151,7 @@ export class PopupAddDealComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
-      let isEndSaturday = endDay.getDay() === 6 ;
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -1144,7 +1159,7 @@ export class PopupAddDealComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        if(!isEndSaturday) {
+        if (!isEndSaturday) {
           endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
         }
         endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));

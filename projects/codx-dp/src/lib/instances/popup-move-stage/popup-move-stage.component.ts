@@ -384,7 +384,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    if(this.isLockStep) return;
+    if (this.isLockStep) return;
     if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -654,6 +654,7 @@ export class PopupMoveStageComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event.e;
           break;
       }

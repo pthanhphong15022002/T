@@ -721,11 +721,7 @@
         <span *ngIf="item?.dealValue === 0">0</span>
       </ng-container>
       <ng-container *ngIf="probability == '2'">
-        <span
-          [innerHTML]="
-            formatNumberWithoutTrailingZeros(item?.probabilityDV) + '%'
-          "
-        ></span>
+        <span [innerHTML]="(item?.probabilityDV | formatTarget) + '%'"></span>
       </ng-container>
     </div>
   </div>
@@ -764,9 +760,7 @@
             <ng-container *ngIf="probability == '2'">
               <span
                 class="text-gray-800"
-                [innerHTML]="
-                  formatNumberWithoutTrailingZeros(busi?.probabilityDV) + '%'
-                "
+                [innerHTML]="(busi?.probabilityDV | formatTarget) + '%'"
               ></span>
             </ng-container>
           </div>
