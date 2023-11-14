@@ -38,6 +38,8 @@ import { CodxDpService } from '../../../codx-dp.service';
 import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
+import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
+import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -54,6 +56,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   @ViewChild('comboxView') comboxView: ComboBoxComponent; ///cobx xem truoc ViewForm Field
   // @ViewChild('viewComboxForm') viewComboxForm: ComboBoxComponent; ///cobx xem truoc ViewForm add VLL
   @ViewChild('toolDeleted') toolDeleted: TemplateRef<any>;
+  @ViewChild('tempInput') tempInput: CodxInputCustomFieldComponent;
+  @ViewChild('tempView') tempView: CodxFieldsFormatValueComponent;
 
   dialog: DialogRef;
   field: DP_Steps_Fields;
@@ -805,9 +809,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
           option
         );
         dialogColumn.closed.subscribe((res) => {
-          if (res && res.event?.length > 0) {
+          if (res && res.event && res.event[1]) {
             this.field.refType = '3';
-            this.field.dataFormat = JSON.stringify(res.event);
+            this.fieldCus.referType = '3';
+            if (res.event && res.event[0]) {
+              this.field.dataFormat = JSON.stringify(res.event[0]);
+              this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
+            } else {
+              this.field.dataFormat = '';
+              this.fieldCus.dataFormat = '';
+            }
+            if (this.tempInput) this.tempInput.viewFieldRef();
+            if (this.tempView)
+              this.tempView.parseValuePA(this.fieldCus.dataValue);
           }
         });
       } else this.notiService.alertCode('SYS001');

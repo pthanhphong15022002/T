@@ -81,7 +81,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
   }
 
   saveData() {
-    this.dialog.close(this.dataRef);
+    this.dialog.close([this.dataRef, true]);
   }
   convertStepField(data) {
     let field = this.dataRef.find((x) => x.fieldName == data.fieldName);
