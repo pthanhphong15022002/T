@@ -273,6 +273,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.isTaskDefault = false;
       this.stepsTasks.requireCompleted = false;
       this.stepsTasks.approvedBy = null;
+      this.stepsTasks.assigned = '0';
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.loadListApproverStep();
