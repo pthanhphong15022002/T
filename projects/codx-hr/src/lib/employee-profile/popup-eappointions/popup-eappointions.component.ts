@@ -40,7 +40,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   autoNumField: string;
   eAppointionHeaderTexts: any;
   changedInForm = false;
-
+  isMultiCopy: boolean = false;
   disabledInput = false;
   employeeSign;
   loaded: boolean = false;
@@ -65,6 +65,9 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   oldPositionStr: any;
   oldLocationStr: any;
 
+  originEmpID = '';
+  originEmpBeforeSelectMulti: any;
+
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   //@ViewChild('listView') listView: CodxListviewComponent;
@@ -86,6 +89,11 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
+      this.originEmpID = this.employId;
+      this.originEmpBeforeSelectMulti = this.employeeObj;
     }
     this.isUseEmployee = data?.data?.isUseEmployee;
     if (data?.data?.appointionObj)
@@ -581,34 +589,67 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
 
     this.EAppointionObj.employeeID = this.employId;
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEmployeeAppointionsInfo(this.EAppointionObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            // this.successFlag = true;
-            p.emp = this.employeeObj;
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS023');
-        });
-    } else {
-      this.hrService
-        .UpdateEmployeeAppointionsInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(this.EAppointionObj);
+    if(this.actionType == 'copyMulti'){
+      console.log('chay vao add multi');
+      
+      this.hrService.AddMultiEmployeeAppointionsInfo(this.form.data).subscribe((res) => {
+        debugger
 
-            // this.lstEAppointions[this.indexSelected] = p;
-            // if (this.listView) {
-            //   (this.listView.dataService as CRUDService)
-            //     .update(this.lstEAppointions[this.indexSelected])
-            //     .subscribe();
-            // }
-            // this.dialog.close(this.data)
-          } else this.notify.notifyCode('SYS021');
-        });
+        if(res.length > 0){
+          let returnVal;
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal = res[i];
+            }
+          }
+          if(returnVal){
+            returnVal.emp = this.originEmpBeforeSelectMulti;
+            this.dialog && this.dialog.close(returnVal);
+          }
+          else{
+            this.dialog && this.dialog.close();
+          }
+        }
+        else{
+          this.dialog && this.dialog.close();
+        }
+
+        // if(res == true){
+        //   this.notify.notifyCode('SYS006');
+        //   this.dialog && this.dialog.close();
+        // }
+      })
+    }
+    else{
+      if (this.actionType === 'add' || this.actionType === 'copy') {
+        this.hrService
+          .AddEmployeeAppointionsInfo(this.EAppointionObj)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS006');
+              // this.successFlag = true;
+              p.emp = this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            } else this.notify.notifyCode('SYS023');
+          });
+      } else {
+        this.hrService
+          .UpdateEmployeeAppointionsInfo(this.formModel.currentData)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              this.dialog && this.dialog.close(this.EAppointionObj);
+  
+              // this.lstEAppointions[this.indexSelected] = p;
+              // if (this.listView) {
+              //   (this.listView.dataService as CRUDService)
+              //     .update(this.lstEAppointions[this.indexSelected])
+              //     .subscribe();
+              // }
+              // this.dialog.close(this.data)
+            } else this.notify.notifyCode('SYS021');
+          });
+      }
     }
   }
 

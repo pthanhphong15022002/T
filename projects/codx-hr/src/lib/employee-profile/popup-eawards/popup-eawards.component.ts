@@ -24,10 +24,13 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   awardObj;
   employeeName: string;
-
+  isMultiCopy: boolean = false;
   actionType;
   headerText: '';
   idField = 'RecID';
+  originEmpID = '';
+  originEmpBeforeSelectMulti: any;
+
   employId;
   empObj;
   valueYear;
@@ -54,8 +57,27 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
+
+    if (this.awardObj?.employeeID && this.fromListView) {
+      this.employId = this.awardObj?.employeeID;
+    } else {
+      this.employId = data?.data?.employeeId;
+    }
+
+    if (this.awardObj?.emp && this.fromListView) {
+      this.empObj = this.awardObj?.emp;
+    } else {
+      this.empObj = data?.data?.empObj;
+    }
+
     if(this.actionType == 'view'){
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
+      this.originEmpID = this.employId;
+      this.originEmpBeforeSelectMulti = this.empObj;
+
     }
     this.fromListView = data?.data?.fromListView;
     this.formModel = this.dialog.formModel;
@@ -65,16 +87,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     if (this.awardObj) {
       this.valueYear = this.awardObj.inYear;
     }
-    if (this.awardObj?.employeeID && this.fromListView) {
-      this.employId = this.awardObj?.employeeID;
-    } else {
-      this.employId = data?.data?.employeeId;
-    }
-    if (this.awardObj?.emp && this.fromListView) {
-      this.empObj = this.awardObj?.emp;
-    } else {
-      this.empObj = data?.data?.empObj;
-    }
+
   }
 
   allowToViewEmp(): boolean {
@@ -258,27 +271,58 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     // }
     if (this.actionType === 'copy') delete this.awardObj.recID;
 
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEmployeeAwardInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            p[0].emp = this.empObj;
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS023');
-          this.awardObj.isSuccess = true;
-        });
-    } else {
-      this.hrService
-        .UpdateEmployeeAwardInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            p[0].emp = this.empObj;
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
-        });
+    if(this.actionType == 'copyMulti'){
+      this.hrService.AddMultiEAwardInfo(this.form.data).subscribe((res) => {
+        debugger
+
+        if(res.length > 0){
+          let returnVal = [];
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal.push(res[i]);
+            }
+          }
+          if(returnVal){
+            returnVal[0].emp = this.originEmpBeforeSelectMulti;
+            this.dialog && this.dialog.close(returnVal);
+          }
+          else{
+            this.dialog && this.dialog.close();
+          }
+        }
+        else{
+          this.dialog && this.dialog.close();
+        }
+
+        // if(res == true){
+        //   this.notify.notifyCode('SYS006');
+        //   this.dialog && this.dialog.close();
+        // }
+      })
+    }
+    else{
+      if (this.actionType === 'add' || this.actionType === 'copy') {
+        this.hrService
+          .AddEmployeeAwardInfo(this.formModel.currentData)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS006');
+              p[0].emp = this.empObj;
+              this.dialog && this.dialog.close(p);
+            } else this.notify.notifyCode('SYS023');
+            this.awardObj.isSuccess = true;
+          });
+      } else {
+        this.hrService
+          .UpdateEmployeeAwardInfo(this.formModel.currentData)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              p[0].emp = this.empObj;
+              this.dialog && this.dialog.close(p);
+            } else this.notify.notifyCode('SYS021');
+          });
+      }
     }
   }
 

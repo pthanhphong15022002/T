@@ -34,12 +34,6 @@
           </th>
           <th class="w-15 border-bottom">
             <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế suất">
-              </codx-label>
-            </div>
-          </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
               <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế GTGT">
               </codx-label>
             </div>
@@ -206,12 +200,6 @@
       <td class="w-15">
         <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
-                  | tranformValueNumber : 'B' | async"></span>
-        </div>
-      </td>
-      <td class="w-15">
-        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-          <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatPct
                   | tranformValueNumber : 'B' | async"></span>
         </div>
       </td>

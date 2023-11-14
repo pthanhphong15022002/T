@@ -29,7 +29,8 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   actionType;
   notitfy: NotificationsService;
   employeeObj: any;
-  openFrom: string;
+  isMultiCopy: boolean = false;
+  openFrom: string = '';
   idField = 'RecID';
   genderGrvSetup: any;
   employId;
@@ -38,6 +39,9 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   disabledInput = false;
   loaded: boolean = false;
   employeeSign;
+
+  originEmpID = '';
+  originEmpBeforeSelectMulti: any;
 
   defaultDisciplineDate: string = '0001-01-01T00:00:00';
   autoNumField: string;
@@ -61,12 +65,13 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     // }
     // this.data = dialog?.dataService?.dataSelected
 
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EDisciplines';
-      this.formModel.entityName = 'HR_EDisciplines';
-      this.formModel.gridViewName = 'grvEDisciplines';
-    }
+    // if (!this.formModel) {
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EDisciplines';
+    //   this.formModel.entityName = 'HR_EDisciplines';
+    //   this.formModel.gridViewName = 'grvEDisciplines';
+    // }
+    this.formModel = dialog?.formModel;
     this.employId = data?.data?.employeeId;
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
@@ -78,6 +83,11 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
+      this.originEmpID = this.employId;
+      this.originEmpBeforeSelectMulti = this.employeeObj;
     }
     this.lstDiscipline = data?.data?.lstDiscipline;
     this.indexSelected = data?.data?.indexSelected ?? -1;
@@ -222,27 +232,56 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.disciplineObj.companyID = this.employeeObj?.companyID;
     this.disciplineObj.positionID = this.employeeObj?.positionID;
 
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEmployeeDisciplineInfo(this.disciplineObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            p.emp = this.employeeObj;
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS023');
-        });
-    } else {
-      this.hrService
-        .UpdateEmployeeDisciplineInfo(this.disciplineObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            p.emp = this.employeeObj;
-            this.dialog && this.dialog.close(p);
-          } else this.notify.notifyCode('SYS021');
-        });
+    if(this.actionType == 'copyMulti'){
+      this.hrService.AddMultiEDisciplineInfo(this.form.data).subscribe((res) => {
+        if(res.length > 0){
+          let returnVal;
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal = res[i];
+            }
+          }
+          if(returnVal){
+            returnVal.emp = this.originEmpBeforeSelectMulti;
+            this.dialog && this.dialog.close(returnVal);
+          }
+          else{
+            this.dialog && this.dialog.close();
+          }
+        }
+        else{
+          this.dialog && this.dialog.close();
+        }
+        // if(res == true){
+        //   this.notify.notifyCode('SYS006');
+        //   this.dialog && this.dialog.close();
+        // }
+      })
     }
+    else{
+      if (this.actionType === 'add' || this.actionType === 'copy') {
+        this.hrService
+          .AddEmployeeDisciplineInfo(this.disciplineObj)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS006');
+              p.emp = this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            } else this.notify.notifyCode('SYS023');
+          });
+      } else {
+        this.hrService
+          .UpdateEmployeeDisciplineInfo(this.disciplineObj)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              p.emp = this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            } else this.notify.notifyCode('SYS021');
+          });
+      }
+    }
+
   }
 
   click(data) {
