@@ -294,13 +294,14 @@
   [footer]="footer"
   [dialog]="dialog"
   [data]="disciplineObj"
+  [group]="form.formGroup"
   >
   <!-- *ngIf="isAfterRender"
   [group]="form.formGroup" -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
     <div
-      *ngIf="openFrom == 'empDisciplinesProcess'"
+      *ngIf="openFrom == 'empDisciplinesProcess' || isMultiCopy == true"
       class="form-group row mt-5"
     >
       <div class="col-10">
@@ -362,6 +363,7 @@
         <codx-input
           [disabled]="disabledInput"
           [showInput]="false"
+      [multiple]="isMultiCopy"
           field="employeeID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"

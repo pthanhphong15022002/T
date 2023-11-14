@@ -658,6 +658,16 @@ export class CodxHrService {
     );
   }
 
+  AddMultiEAwardInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAwardsBusiness',
+      'AddMultiEmployeeEAwardAsync',
+      data
+    );
+  }
+
   AddEmployeeAwardInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -715,6 +725,16 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'UpdateEmployeeDisciplineInfoAsync',
+      data
+    );
+  }
+
+  AddMultiEDisciplineInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDisciplinesBusiness',
+      'AddMultiEmployeeEDisciplineAsync',
       data
     );
   }
@@ -971,6 +991,16 @@ export class CodxHrService {
       'HR',
       'EAppointionsBusiness',
       'GetEmployeeAppointionsModelAsync'
+    );
+  }
+
+  AddMultiEmployeeAppointionsInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAppointionsBusiness',
+      'AddMultiEmployeeEAppointionAsync',
+      data
     );
   }
 
@@ -1392,6 +1422,16 @@ export class CodxHrService {
       'HR',
       'EBasicSalariesBusiness',
       'GetEmployeeBasicSalariesModelAsync'
+    );
+  }
+
+  AddMultiEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'AddMultiEmployeeBasicSalariesInfoAsync',
+      data
     );
   }
 
@@ -1865,6 +1905,16 @@ export class CodxHrService {
     );
   }
 
+  AddEBenefitMultiEmp(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'AddMultiEmployeeEBenefitAsync',
+      data
+    );
+  }
+
   AddEBenefit(data: any) {
     return this.api.execSv<any>(
       'HR',
@@ -1925,6 +1975,16 @@ export class CodxHrService {
       'EBusinessTravelsBusiness',
       'GetEBTravelDefaultAsync',
       null
+    );
+  }
+
+  addEBusinessTravelsMultiEmp(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'AddMultiEmployeeBusinessTravelAsync',
+      data
     );
   }
 

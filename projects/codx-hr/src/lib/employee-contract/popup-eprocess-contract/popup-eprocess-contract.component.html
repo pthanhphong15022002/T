@@ -20,7 +20,7 @@
 <ng-template #contractInfo>
 <ng-container *ngIf="form.formGroup">
   <div
-    *ngIf="openFrom == 'empContractProcess'"
+    *ngIf="openFrom == 'empContractProcess' || isMultiCopy == true"
     class="form-group d-flex justify-content-between"
   >
     <div class="w-100">

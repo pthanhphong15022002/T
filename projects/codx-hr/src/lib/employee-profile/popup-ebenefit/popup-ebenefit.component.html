@@ -10,7 +10,8 @@
   [data]="benefitObj"
   [group]="form.formGroup"
   >
-  <!-- *ngIf="isAfterRender" -->
+  <!-- *ngIf="isAfterRender"
+  -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
     <div *ngIf="useForQTNS == true || isMultiCopy == true" class="form-group row mt-5">
@@ -70,7 +71,8 @@
         <codx-input
         *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [showInput]="false"
-          field="employeeID"
+      [multiple]="isMultiCopy"
+      field="employeeID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"
@@ -583,7 +585,8 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
-    </div> -->
+    </div>
+  -->
   </ng-container>
   </ng-template>
 </codx-form>
@@ -602,7 +605,6 @@
 <ng-template #popOverDue>
   <span>
     <codx-label
-
       name="lblOverDue"
       [formModel]="form.formModel"
       default="Quá hạn"
