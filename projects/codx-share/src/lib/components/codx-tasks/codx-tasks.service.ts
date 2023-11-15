@@ -8,6 +8,7 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopupAddComponent } from './popup-add/popup-add.component';
+import { tmpReferences } from '../../models/assign-task.model';
 
 @Injectable({
   providedIn: 'root',
@@ -317,4 +318,49 @@ export class CodxTasksService {
     });
   }
   //end
+
+  //clear Reference Task -VTHAO
+  getReference(
+    refType, // refType task
+    refID, // recID cua nv dc ref
+    getRef?: Function, // hàm trả kết quả về
+    service = null, // service goi ham
+    className = null, // class chua ham
+    methol = 'GetTempReferenceByRefIDAsync' //ten ham get
+  ) {
+    let dataReferences = [];
+    switch (refType) {
+      case 'OD_Dispatches':
+        service = 'OD';
+        className = 'DispatchesBusiness';
+        break;
+      case 'ES_SignFiles':
+        service = 'ES';
+        className = 'SignFilesBusiness';
+        break;
+      case 'TM_Tasks':
+        service = 'TM';
+        className = 'TaskBusiness';
+        break;
+      case 'DP_Instances_Steps_Tasks':
+        service = 'DP';
+        className = 'InstancesBusiness';
+        break;
+      case 'OM_OKRs':
+        service = 'OM';
+        className = 'OKRBusiness';
+        break;
+      default:
+        getRef(dataReferences);
+        return;
+    }
+    this.api
+      .execSv<any>(service, service, className, methol, refID)
+      .subscribe((result) => {
+        if (result && result?.length > 0) {
+          dataReferences = result;
+        }
+        getRef(dataReferences)
+      });
+  }
 }

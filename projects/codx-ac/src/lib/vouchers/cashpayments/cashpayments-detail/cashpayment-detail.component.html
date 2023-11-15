@@ -115,12 +115,7 @@
         <div class="d-flex align-items-top mb-1">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
           </codx-label>
-          <ejs-tooltip *ngIf="itemSelected?.memo" id='tooltip' target="#tipmemo">
-            <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{itemSelected?.memo}}</span>
-            <ng-template #content>
-              <span id="tipmemo">{{itemSelected?.memo}}</span>
-            </ng-template>
-          </ejs-tooltip>
+          <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{itemSelected?.memo}}</span>
           <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
         </div>
         <div class="d-flex align-items-top mb-1">

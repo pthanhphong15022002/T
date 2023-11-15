@@ -64,68 +64,65 @@
                                 </div>
                             </div>
                             <div class="align-items-center w-100">
-                                <div *ngIf="(item.accountID != null && item.accountID != '')"
+                                <ng-container *ngIf="(item.accountID != null && item.accountID != '')"
                                     class="d-flex align-items-center justify-content-start">
+                                    <span style="text-align: left !important;" #accountID
+                                        class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
+                                </ng-container>
+                                <div *ngIf="(item.objectName!= null && item.objectName != '')" class="d-flex align-items-center justify-content-start">
                                     <ng-container>
-                                        <span style="text-align: left !important;" #accountID
-                                            class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
-                                    </ng-container>
-                                </div>
-                                <div *ngIf="(item.objectName!= null && item.objectName != '')"
-                                    class="d-flex align-items-center justify-content-start">
-                                    <ng-container>
-                                        <codx-label style="white-space: nowrap"
-                                            class="fs-7 fw-bold" default="Đối tượng">
+                                        <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" default="Đối tượng">
                                         </codx-label>
-                                        :&nbsp;
-                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                                            {{item.objectName}}
-                                        </span>
+                                        &nbsp;
+                                        <div class="w-100" style="text-align: left;display: inline-block;">
+                                            <div style="display: inline;text-overflow: ellipsis;">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                                                    {{item.objectName}}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                 </div>
                                 <div *ngIf="(item.diM3 != null && item.diM3 != '')"
-                                    class="d-flex align-items-center justify-content-start">
+                                    class="d-flex justify-content-start">
                                     <ng-container>
                                         <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon"
                                             fiedName="lblDIM3" default="Mục phí">
                                         </codx-label>
-                                        &nbsp;
-                                        <span class="fs-7 text-gray-700">{{item.diM3}}</span>
-                                        &nbsp;-&nbsp;
-                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                                            {{item.costItemName}}
-                                        </span>
+                                        <div class="w-100" style="text-align: left;display: inline-block;">
+                                            <div style="display: inline;text-overflow: ellipsis;">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM3 + ' - ' + item.costItemName}}</span>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                 </div>
                                 <div *ngIf="(item.diM2 != null && item.diM2 != '')"
-                                    class="d-flex align-items-center justify-content-start">
+                                    class="d-flex justify-content-start">
                                     <ng-container>
                                         <codx-label style="white-space: nowrap" class="fw-bold fs-7 label-colon" fiedName="lblDIM2"
                                             default="TTCP">
                                         </codx-label>
-                                        &nbsp;
-                                        <span class="fs-7 text-gray-700">{{item.diM2}}</span>
-                                        &nbsp;-&nbsp;
-                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                                            {{item.costCenterName}}
-                                        </span>
+                                        <div class="w-100" style="text-align: left;display: inline-block;">
+                                            <div style="display: inline;text-overflow: ellipsis;">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM2 + ' - ' + item.costCenterName}}</span>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                 </div>
                                 <div *ngIf="(item.diM1 != null && item.diM1 != '')"
-                                    class="d-flex align-items-center justify-content-start">
+                                    class="d-flex justify-content-start">
                                     <ng-container>
                                         <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" fiedName="lblDIM1"
                                             default="Phòng ban">
                                         </codx-label>
-                                        &nbsp;
-                                        <span class="fs-7 text-gray-700">{{item.diM1}}</span>
-                                        &nbsp;-&nbsp;
-                                        <span class="fs-7 text-gray-700 line-clamp line-clamp-1">
-                                            {{item.departmentName}}
-                                        </span>
+                                        <div class="w-100" style="text-align: left;display: inline-block;">
+                                            <div style="display: inline;text-overflow: ellipsis;">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM1 + ' - ' + item.profitCenterName}}</span>
+                                            </div>
+                                        </div>
                                     </ng-container>
                                 </div>
-                                <div *ngIf="(item.projectID != null && item.projectID != '')"
+                                <!-- <div *ngIf="(item.projectID != null && item.projectID != '')"
                                     class="d-flex align-items-center justify-content-start">
                                     <ng-container>
                                         <codx-label style="white-space: nowrap" class="fs-7 fw-bold"
@@ -135,16 +132,8 @@
                                         <span style="white-space: nowrap"
                                             class="fs-7 text-gray-700">{{item.projectID}}</span>
                                         &nbsp;-&nbsp;
-                                        <!-- <span #projectID class="fs-7 text-gray-700 line-clamp line-clamp-1" [innerHTML]="
-                        item.projectID
-                          | formatvalue
-                            : fmCashPaymentsLines
-                            : 'projectID'
-                            : projectID
-                          | async
-                      "></span> -->
                                     </ng-container>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </td>

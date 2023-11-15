@@ -144,11 +144,14 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if (event) {
+    if (event) 
+    {
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
       this.codxListView.dataService.search(event);
-    } else {
+    } 
+    else 
+    {
       this.searched = false;
       this.codxListView.dataService.method = 'GetGroupAsync';
       this.codxListView.dataService.search(event);
@@ -158,9 +161,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
 
   //select goup chat
   selectItem(group: any) {
-    group.isRead = true;
-    group.messageMissed = 0;
-    this.signalRSV.sendData('OpenGroupAsync', group);
+    this.signalRSV.sendData('OpenBoxChat', group);
   }
   // select item search
   selectItemSeach(item: any) {
@@ -174,8 +175,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
 
   // open popup add group chat
-  addGroup(group: any) {
-    if (group) {
+  addGroup(group: any) 
+  {
+    if(group) 
+    {
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }

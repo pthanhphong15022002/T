@@ -17,6 +17,7 @@ import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
 import { CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
+import { CodxTasksService } from '../codx-tasks.service';
 
 @Component({
   selector: 'share-view-detail',
@@ -100,6 +101,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private api: ApiHttpService,
+    private taskService: CodxTasksService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
@@ -361,7 +363,17 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   loadDataReferences() {
     this.dataReferences = [];
     if (this.itemSelected.refID)
-      this.getReferencesByCategory3(this.itemSelected);
+      //this.getReferencesByCategory3(this.itemSelected); //code cu
+      this.taskService.getReference(
+        this.itemSelected.refType,
+        this.itemSelected.refID,
+        this.getRef.bind(this)
+      );
+  }
+
+  getRef(dataReferences) {
+    if (dataReferences && dataReferences?.length > 0)
+      this.dataReferences = dataReferences;
   }
 
   getReferencesByCategory3(task) {

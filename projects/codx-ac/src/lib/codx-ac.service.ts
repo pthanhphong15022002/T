@@ -147,6 +147,7 @@ export enum MorfuncPur {
   KhoiPhuc = 'ACT060105',
   In = 'ACT060107',
   KiemTraHopLe = 'ACT060106',
+  PhanBoChiPhi = 'ACT060108'
 }
 
 export enum MorfuncSale {
@@ -944,6 +945,7 @@ export class CodxAcService {
       MorfuncPur.KhoiPhuc,
       MorfuncPur.In,
       MorfuncPur.KiemTraHopLe,
+      MorfuncPur.PhanBoChiPhi,
       'SYS02',
       'SYS03',
       'SYS04',
@@ -995,7 +997,8 @@ export class CodxAcService {
             arrBookmark.forEach((element) => {
               if (
                 element.functionID == MorfuncPur.GhiSo ||
-                element.functionID == MorfuncPur.In
+                element.functionID == MorfuncPur.In ||
+                element.functionID == MorfuncPur.PhanBoChiPhi
               ) {
                 element.disabled = false;
               } else {
@@ -1006,7 +1009,8 @@ export class CodxAcService {
             arrBookmark.forEach((element) => {
               if (
                 element.functionID == MorfuncPur.GuiDuyet ||
-                element.functionID == MorfuncPur.In
+                element.functionID == MorfuncPur.In ||
+                element.functionID == MorfuncPur.PhanBoChiPhi
               ) {
                 element.disabled = false;
               } else {
@@ -1020,7 +1024,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.HuyDuyet ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -1033,7 +1038,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.GhiSo ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -1045,7 +1051,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.KhoiPhuc ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -1057,7 +1064,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.KiemTraHopLe ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
