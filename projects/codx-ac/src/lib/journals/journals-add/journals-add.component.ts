@@ -306,8 +306,8 @@ export class JournalsAddComponent extends UIComponent {
     let dialog = this.callfc.openForm(
       JournalsAddIdimcontrolComponent,
       '',
-      null,
-      null,
+      300,
+      400,
       '',
       obj,
       '',
