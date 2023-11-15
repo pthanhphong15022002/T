@@ -194,7 +194,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
 
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
-      preDIM1 = '@0.Contains(DepartmentID)';
+      preDIM1 = '@0.Contains(ProfitCenterID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);

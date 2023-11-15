@@ -194,6 +194,26 @@ export class JournalsAddComponent extends UIComponent {
           }
           this.isPreventChange = false;
           break;
+        case 'dim1control':
+          this.formJournal.form.setValue('diM1','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dim2control':
+          this.formJournal.form.setValue('diM2','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dim3control':
+          this.formJournal.form.setValue('diM3','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'cracctcontrol':
+          this.formJournal.form.setValue('crAcctID','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dracctcontrol':
+          this.formJournal.form.setValue('drAcctID','',{});
+          this.detectorRef.detectChanges();
+          break;
       }
     }
   }
