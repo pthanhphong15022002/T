@@ -508,7 +508,7 @@
                   <codx-label style="white-space: nowrap !important" fiedName="lblAmout" default="Số tiền"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input [crrValue]="totalDrLine" field="lblAmout" disabled="true" type="number">
+                  <codx-input [crrValue]="formCashPayment.data.totalDR" field="lblAmout" disabled="true" type="number">
                   </codx-input>
                 </div>
               </div>
@@ -517,7 +517,7 @@
                   <codx-label style="white-space: nowrap !important" fiedName="lblAlphabet" default="Bảng chữ"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="lblAlphabet" disabled="true" type="text">
+                  <codx-input field="lblAlphabet" disabled="true" [crrValue]="textTotal" type="text">
                   </codx-input>
                 </div>
               </div>

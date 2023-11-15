@@ -2,7 +2,7 @@
     <table style="table-layout: fixed;" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom">
+          <th class="w-30 border-bottom">
             <div class="d-flex align-items-center justify-content-start ps-3">
               <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
               </codx-label>
@@ -29,6 +29,12 @@
           <th class="w-15 border-bottom">
             <div class="d-flex align-items-center justify-content-end ps-3">
               <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế GTGT">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-40 border-bottom">
+            <div class="d-flex align-items-center justify-content-start ps-3">
+              <codx-label class="fw-bold" fiedName="lblVAT" default="Ghi chú">
               </codx-label>
             </div>
           </th>
@@ -156,6 +162,11 @@
                 <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
               </div>
             </td>
+            <td class="text-center">
+              <div *ngIf="item?.note" class="d-flex justify-content-start ps-3">
+                <span class="fw-bold line-clamp line-clamp-1">{{item?.note}}</span>
+              </div>
+            </td>
           </tr>
         </ng-container>
       </tbody>
@@ -169,8 +180,8 @@
   </div>
   <table style="table-layout: fixed;" class="table mb-0">
     <tfoot class="table-footer-ac">
-      <td class="w-40">
-        <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+      <td class="w-30">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <codx-label  *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
           </codx-label>
         </div>
@@ -193,6 +204,8 @@
           <span *ngIf="listSalesInvoicesLine && listSalesInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatAtm
                   | tranformValueNumber : 'B' | async"></span>
         </div>
+      </td>
+      <td class="w-40">
       </td>
     </tfoot>
   </table>

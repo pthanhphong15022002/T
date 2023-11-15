@@ -84,6 +84,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   bankAcctIDReceive: any = null;
   bankReceiveName: any;
   ownerReceive: any;
+  textTotal:any;
   isload:any = true;
   fmCashpaymentLine: any = fmCashPaymentsLines;
   fmCashpaymentLineOne: any = fmCashPaymentsLinesOneAccount;
@@ -109,7 +110,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   dRAdv: any = 0; //? số tiền liên kết(xứ lí lấy số tiền của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
-  totalDrLine:any = 0; //? tổng số tiền của tất cả dòng line (số tiền tab ủy nhiệm chi)
   isPreventChange:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -643,7 +643,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onTabSelectedMaster(event) {
-    if (event.selectedIndex == 1) { 
+    if (event.selectedIndex == 1 && this.formCashPayment.data.isEdit) { 
       let indexCashBook = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) =>x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
       if (indexCashBook > -1) {
         this.bankAcctIDPay = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexCashBook].BankAcctID; //? lấy tài khoản chi
@@ -658,16 +658,18 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         this.ownerReceive = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName; //? lấy tên chủ tài khoản
       }
 
-      this.totalDrLine = this.eleGridCashPayment.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
       this.api
         .exec('BS', 'BanksBusiness', 'GetBankInfoAsync', [
           this.bankAcctIDPay,
           this.bankAcctIDReceive,
+          this.formCashPayment.data.totalDR,
+          this.formCashPayment.data.currencyID
         ])
         .pipe(takeUntil(this.destroy$))
         .subscribe((res: any) => {
           this.bankNamePay = res?.BankPayname || '';
           this.bankReceiveName = res?.BankReceiveName || '';
+          this.textTotal = res?.TextNum || '';
           this.detectorRef.detectChanges();
         });
       this.detectorRef.detectChanges();
