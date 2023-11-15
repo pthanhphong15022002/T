@@ -129,7 +129,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     let hideFields = [];
 
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
-      preDIM1 = '@0.Contains(DepartmentID)';
+      preDIM1 = '@0.Contains(ProfitCenterID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
@@ -492,6 +492,30 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
     oLine.note = this.formPurchaseInvoices.data.note;
     oLine = this.genFixedDims(oLine);
+    let dicSetting = JSON.parse(this.journal.extras);
+    if (dicSetting) {
+      if (
+        dicSetting?.diM1Control &&
+        dicSetting?.diM1Control != '2' &&
+        dicSetting?.diM1Control != '9'
+      ) {
+        oLine.diM1 = this.journal.diM1;
+      }
+      if (
+        dicSetting?.diM2Control &&
+        dicSetting?.diM2Control != '2' &&
+        dicSetting?.diM2Control != '9'
+      ) {
+        oLine.diM2 = this.journal.diM2;
+      }
+      if (
+        dicSetting?.diM3Control &&
+        dicSetting?.diM3Control != '2' &&
+        dicSetting?.diM3Control != '9'
+      ) {
+        oLine.diM3 = this.journal.diM3;
+      }
+    }
     return oLine;
   }
 

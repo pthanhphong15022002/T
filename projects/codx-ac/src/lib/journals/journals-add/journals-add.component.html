@@ -154,7 +154,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DRAcctID'].referedValue,formJournal?.form?.data?.drAcctID,formJournal?.form?.data?.drAcctControl,'drAcctID')">
@@ -182,7 +182,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['CRAcctID'].referedValue,formJournal?.form?.data?.crAcctID,formJournal?.form?.data?.crAcctControl,'crAcctID')">
@@ -210,7 +210,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM1'].referedValue,formJournal?.form?.data?.diM1,formJournal?.form?.data?.diM1Control,'diM1')">
@@ -238,7 +238,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM2'].referedValue,formJournal?.form?.data?.diM2,formJournal?.form?.data?.diM2Control,'diM2')">
@@ -266,7 +266,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM3'].referedValue,formJournal?.form?.data?.diM3,formJournal?.form?.data?.diM3Control,'diM3')">
