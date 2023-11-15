@@ -161,6 +161,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         formType: 'add',
         headerText: this.headerText,
       };
+      this.view.dataService.dataSelected = res;
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;

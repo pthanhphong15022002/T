@@ -415,6 +415,9 @@ h1,
 .bg-white {
     background-color: var(--bg-card) !important;
 }
+.bg-gray-100 {
+    background-color: var(--gray-100) !important;
+}
 
 .card-footer[_ngcontent-ueb-c389] {
     background-color: var(--bg-card) !important;
@@ -875,4 +878,19 @@ codx-view-list-detail .e-listview .e-list-parent {
 
     }
 }
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary{ 
+    .menu-link:hover .menu-title {
+        color: var(--text-title) !important;
+    }
+    .aside-footer {
+        .menu-title {
+            color: var(--text-title);
+        }
+        .svg-icon svg [fill]:not(.permanent):not(g) {
+            fill: var(--text-title);
+        }
+    }
+ }
+
 //end dark

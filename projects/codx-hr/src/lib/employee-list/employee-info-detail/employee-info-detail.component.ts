@@ -2508,13 +2508,13 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.copyValue(event.text, data, 'eContract', true); //
           break;
         case this.appointionFuncID:
-          this.copyValue(event.text, data, 'eAppointions');
+          this.copyValue(event.text, data, 'eAppointions', true);
           break;
         case this.eBusinessTravelFuncID:
-          this.copyValue(event.text, data, 'eBusinessTravels');
+          this.copyValue(event.text, data, 'eBusinessTravels', true);
           break;
         case this.awardFuncID:
-          this.HandleEmployeeEAwardsInfo(event.text, 'copy', data);
+          this.HandleEmployeeEAwardsInfo(event.text, 'copy', data, true);
           break;
         case this.eDisciplineFuncID:
           this.copyValue(event.text, data, 'eDisciplines', true); //
@@ -4661,8 +4661,9 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res.event) {
-        if (actionType == 'add' || actionType == 'copy') {
+        if (actionType == 'add' || actionType == 'copy' ||  actionType == 'copyMulti') {
           if (res.event){
             if(this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate) == true){
               this.listCrrBenefit.push(res.event);
@@ -4861,8 +4862,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     isMulti = false
   ) {
     let option = new SidebarModel();
-    option.DataService =
-      this.basicSalaryGridview?.dataService ?? this.view?.dataService;
+    // option.DataService =
+    //   this.basicSalaryGridview?.dataService ?? this.view?.dataService;
     option.FormModel = this.eBasicSalaryFormmodel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
@@ -4881,16 +4882,19 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
+        debugger
         if (res.event){
           if(this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate) == true){
             this.crrEBSalary = res.event;
           }
           else{
-            this.hrService
-            .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-            .subscribe((dataEBaSlary) => {
-              this.crrEBSalary = dataEBaSlary;
-            });
+            if(data.employeeID){
+              this.hrService
+              .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+              .subscribe((dataEBaSlary) => {
+                this.crrEBSalary = dataEBaSlary;
+              });
+            }
           }
         }
       }
@@ -5676,8 +5680,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     , isMulti = false
   ) {
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    // option.DataService = this.view.dataService;
+    option.FormModel = this.eDisciplineFormModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEDisciplinesComponent,
@@ -5696,6 +5700,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event)
         (this.eDisciplineGrid?.dataService as CRUDService).clear();
       if (res.event)
+      debugger
         this.updateGridView(this.eDisciplineGrid, actionType, res.event, null);
       this.df.detectChanges();
     });
@@ -5858,6 +5863,7 @@ dataService.clear();
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         this.LoadedEInfo = false;
         this.updateGridView(this.appointionGridView, actionType, res.event);
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
@@ -6210,104 +6216,104 @@ dataService.clear();
   }
 
   // form động khen thưởng
-    HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
-    let tempData = JSON.parse(JSON.stringify(data));
+  //   HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any, isMulti = false) {
+  //   let tempData = JSON.parse(JSON.stringify(data));
 
-    var dataService = new CRUDService(this.inject);
-    let request = new DataRequest(this.awardFunc?.formName,this.awardFunc?.gridViewName,this.awardFunc?.entityName);
-    request.funcID = this.awardFunc?.functionID;
-    dataService.service = 'HR';
-    dataService.request = request;
+  //   var dataService = new CRUDService(this.inject);
+  //   let request = new DataRequest(this.awardFunc?.formName,this.awardFunc?.gridViewName,this.awardFunc?.entityName);
+  //   request.funcID = this.awardFunc?.functionID;
+  //   dataService.service = 'HR';
+  //   dataService.request = request;
 
-    if(actionType == 'add'){
-      this.hrService.getDataDefault(
-        this.awardFormModel.funcID,
-        this.awardFormModel.entityName,
-        'RecID'
-      ).subscribe((res: any) => {
-        tempData = res?.data;
-        tempData.employeeID = this.employeeID;
-        dataService.addDatas.set(tempData.recID, tempData);
-    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  //   if(actionType == 'add'){
+  //     this.hrService.getDataDefault(
+  //       this.awardFormModel.funcID,
+  //       this.awardFormModel.entityName,
+  //       'RecID'
+  //     ).subscribe((res: any) => {
+  //       tempData = res?.data;
+  //       tempData.employeeID = this.employeeID;
+  //       dataService.addDatas.set(tempData.recID, tempData);
+  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
 
-        // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
-      })
-    }
-    else if(actionType == 'copy'){
-      tempData.recID = Util.uid();
-      dataService.addDatas.set(tempData.recID, tempData);
-    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  //       // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //     })
+  //   }
+  //   else if(actionType == 'copy'){
+  //     tempData.recID = Util.uid();
+  //     dataService.addDatas.set(tempData.recID, tempData);
+  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
 
-      // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
-    }
-    else if(actionType == 'edit' || actionType == 'view'){
-      dataService.updateDatas.set(tempData.recID, tempData);
-    this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
+  //   else if(actionType == 'edit' || actionType == 'view'){
+  //     dataService.updateDatas.set(tempData.recID, tempData);
+  //   this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
 
-      // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
-    }
+  //     // this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
+  //   }
   
-    // dataService.updateDatas.set(tempData.recID, tempData);
-    // this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
-  }
+  //   // dataService.updateDatas.set(tempData.recID, tempData);
+  //   // this.openFormEAward(actionHeaderText, actionType, dataService, tempData, data);
+  // }
 
-  openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
-    dataService.dataSelected = tempData;
-    let option = new SidebarModel();
-    option.FormModel = this.awardFormModel;
-    option.Width = '550px';
-    let dialogAdd = this.callfunc.openSide(
-      CodxFormDynamicComponent,
-      {
-        formModel: option.FormModel,
-        data: tempData,
-        function: null,
-        isView: actionType == 'view' ? true : false,
-        dataService: dataService,
-        titleMore: actionHeaderText,
-      },
-      option
-    );
-
-    dialogAdd.closed.subscribe((res) => {
-      if (res.event) {
-    dataService.clear();
-
-        if(actionType == 'edit'){
-          this.updateGridView(this.AwardGrid, actionType, res.event.update.data, null);
-        }
-        else if(actionType == 'add' || actionType =='copy'){
-          this.updateGridView(this.AwardGrid, actionType, res.event.save.data, null);
-        }
-      this.df.detectChanges();
-    }});
-  }
-
-  // form custome khen thưởng
-  // HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any) {
+  // openFormEAward(actionHeaderText, actionType,dataService, tempData, data){
+  //   dataService.dataSelected = tempData;
   //   let option = new SidebarModel();
-  //   option.DataService = this.AwardGrid?.dataService;
   //   option.FormModel = this.awardFormModel;
   //   option.Width = '550px';
   //   let dialogAdd = this.callfunc.openSide(
-  //     PopupEAwardsComponent,
+  //     CodxFormDynamicComponent,
   //     {
-  //       actionType: actionType,
-  //       headerText:
-  //         actionHeaderText + ' ' + this.getFormHeader2(this.awardFuncID, this.lstFuncHRProcess),
-  //       employeeId: this.employeeID,
-  //       funcID: this.awardFuncID,
-  //       dataInput: data,
+  //       formModel: option.FormModel,
+  //       data: tempData,
+  //       function: null,
+  //       isView: actionType == 'view' ? true : false,
+  //       dataService: dataService,
+  //       titleMore: actionHeaderText,
   //     },
   //     option
   //   );
+
   //   dialogAdd.closed.subscribe((res) => {
-  //     if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
-  //     if (res.event[0])
-  //       this.updateGridView(this.AwardGrid, actionType, res.event[0], data);
+  //     if (res.event) {
+  //   dataService.clear();
+
+  //       if(actionType == 'edit'){
+  //         this.updateGridView(this.AwardGrid, actionType, res.event.update.data, null);
+  //       }
+  //       else if(actionType == 'add' || actionType =='copy'){
+  //         this.updateGridView(this.AwardGrid, actionType, res.event.save.data, null);
+  //       }
   //     this.df.detectChanges();
-  //   });
+  //   }});
   // }
+
+  // form custome khen thưởng
+  HandleEmployeeEAwardsInfo(actionHeaderText, actionType: string, data: any, isMulti = false) {
+    let option = new SidebarModel();
+    option.DataService = this.AwardGrid?.dataService;
+    option.FormModel = this.awardFormModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEAwardsComponent,
+      {
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
+        headerText:
+          actionHeaderText + ' ' + this.getFormHeader2(this.awardFuncID, this.lstFuncHRProcess),
+        employeeId: this.employeeID,
+        funcID: this.awardFuncID,
+        dataInput: data,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) (this.AwardGrid?.dataService as CRUDService).clear();
+      if (res?.event && res?.event[0])
+        this.updateGridView(this.AwardGrid, actionType, res.event[0], data);
+      this.df.detectChanges();
+    });
+  }
 
   //form động bệnh nghề nghiệp
     HandleEmployeeEDiseasesInfo(actionHeaderText, actionType: string, data: any) {
@@ -6475,14 +6481,14 @@ dataService.clear();
   // }
 
   //form custome
-  HandleEBusinessTravel(actionHeaderText, actionType: string, data: any) {
+  HandleEBusinessTravel(actionHeaderText, actionType: string, data: any, isMulti = false) {
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.EBusinessTravelFormodel;
     let dialogAdd = this.callfunc.openSide(
       PopupEmpBusinessTravelsComponent,
       {
-        actionType: actionType,
+        actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
         employeeId: this.employeeID,
         headerText:
           actionHeaderText +
@@ -6495,6 +6501,7 @@ dataService.clear();
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
+        debugger
         this.updateGridView(this.businessTravelGrid, actionType, res.event, null);
       }
       this.df.detectChanges();
@@ -7380,7 +7387,12 @@ dataService.clear();
       (this.businessTravelGrid.dataService as CRUDService)
         .copy()
         .subscribe((res: any) => {
-          this.HandleEBusinessTravel(actionHeaderText, 'copy', res);
+          if(isMulti == true){
+            this.HandleEBusinessTravel(actionHeaderText, 'copy', res, true);
+          }
+          else{
+            this.HandleEBusinessTravel(actionHeaderText, 'copy', res);
+          }
         });
     } else if (flag == 'basicSalary') {
       this.hrService
@@ -7462,7 +7474,7 @@ dataService.clear();
         (p) => p.recID == oldData.recID
       );
     }
-    if (actionType == 'add' || actionType == 'copy') {
+    if (actionType == 'add' || actionType == 'copy' || actionType == 'copyMulti') {
       // (gridView?.dataService as CRUDService)?.add(newData, 0).subscribe();
       // gridView.addRow(newData, 0, true);
 

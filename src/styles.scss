@@ -3132,11 +3132,12 @@ codx-layout{
     }
   }
 }
-
+codx-aside-v1{
 .menu-state-icon-primary .menu-item:hover {
   .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     fill: var(--primary)!important;
   }
+}
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
@@ -3786,6 +3787,7 @@ codx-view-tree-targets .menu-sub{
   [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended){
     .menu-item{
       display: block;
+      border: 1px transparent solid;
     }
     .aside-secondary .menu-title{
       text-align: left!important;
@@ -4140,6 +4142,9 @@ app-setting .e-tab .e-tab-header.e-vertical:before {
  //// theme for aside mode 2
 /// 
 codx-aside-v2.aside-v2-lighter{
+  .menu-state-primary .menu-item > .menu-link {
+    padding-left: 5px!important;
+  }
   .menu-state-primary .menu-item.here > .menu-link {
     background-color: var(--primary-lighter);
   }
@@ -4168,6 +4173,33 @@ codx-aside-v2.aside-v2-lighter{
   }
 }
 }
+
+
+body.light.default{
+  .aside.aside-v2-lighter {
+    background-color: var(--white);
+}
+}
+codx-aside-v2{
+  .aside-menu .menu-item .menu-icon .svg-icon{
+    display: flex;
+    justify-content: center;
+  }
+}
+codx-header-v2{
+  .flex-shrink-0 .btn.btn-icon{
+    width: auto!important;
+  }
+  .badge.badge-sm {
+    font-size: 6px;
+    padding-left: 3px!important;
+    padding-right: 3px!important;
+    margin-left: -6px;
+    margin-top: -5px;
+}
+}
+
+
 codx-view-list-tree
 codx-view-schedule{
   .fit-content{
@@ -4184,8 +4216,6 @@ codx-input.border-0 input.e-input, codx-input .border-0 input.e-input, codx-inpu
   border-color:transparent!important ;
 }
 
-body.light.default{
-  .aside.aside-v2-lighter {
-    background-color: var(--white);
-}
+codx-dropdown-calendar .dropdown-toggle>.d-flex {
+  font-size: 12px;
 }
