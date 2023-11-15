@@ -82,10 +82,20 @@ export class CodxAddBookingCarComponent
     objectID: any;
     icon: string;
   };
+  tmpCost :{
+    tranID:string;
+    quantity:number;
+    costItemName:string;
+    unitPrice:number;
+    amount:number;
+    costItemID:string;
+
+  }
   tempDriver: any;
-  title:any;
+  title: any;
   attendeesList = [];
   onSaving = false;
+  loadedCost = false;
   resourceOwner = null;
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('form') form: any;
@@ -111,6 +121,11 @@ export class CodxAddBookingCarComponent
       name: 'tabPeopleInfo',
     },
     {
+      icon: 'icon-u_dollar-sign-alt',
+      text: 'Chi phí công tác',
+      name: 'tabBookingCost',
+    },
+    {
       icon: 'icon-tune',
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
@@ -122,6 +137,9 @@ export class CodxAddBookingCarComponent
   isEP = true;
   customAttendees = [];
   haveEP: any;
+  costInfos=[];
+  grViewCost: any;
+  totalCost=0;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -167,6 +185,7 @@ export class CodxAddBookingCarComponent
   onInit(): void {
     this.getCacheData();
     this.getCardTranInfo();
+    this.getCostInfo();
   }
   ngAfterViewInit(): void {}
 
@@ -181,7 +200,13 @@ export class CodxAddBookingCarComponent
           this.grView = Util.camelizekeyObj(grv);
         }
       });
-
+    this.cache
+    .gridViewSetup("BookingCost", "grvBookingCost")
+    .subscribe((grvCost) => {
+      if (grvCost) {
+        this.grViewCost = Util.camelizekeyObj(grvCost);
+      }
+    });
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = Array.from(res.datas);
       this.vllDevices.forEach((item) => {
@@ -446,8 +471,8 @@ export class CodxAddBookingCarComponent
           if (res) {
             this.useCard = res?.useCard;
             this.carCapacity = res?.capacity;
-            let tempApprover = new Approver ();
-            tempApprover.approver=res?.owner;
+            let tempApprover = new Approver();
+            tempApprover.approver = res?.owner;
             this.resourceOwner = [tempApprover];
           } else {
             this.carCapacity = 0;
@@ -471,10 +496,78 @@ export class CodxAddBookingCarComponent
         }
       });
   }
+  getCostInfo(){
+    this.codxBookingService
+      .getCostInfo(this.data?.recID)
+      .subscribe((res:any) => {
+        if (res) {
+          this.costInfos = res;
+        }
+        this.loadedCost=true;
+        this.detectorRef.detectChanges();
+      });
+  }
+  
   //---------------------------------------------------------------------------------//
   //-----------------------------------Event-----------------------------------------//
   //---------------------------------------------------------------------------------//
+  addCost(){
+    let newCost = {...this.tmpCost}
+    newCost.tranID = this.data?.recID;
+    newCost.quantity = 1;
+    newCost.unitPrice = 0;
+    if(this.costInfos==null){
+      this.costInfos=[];
+    }
+    this.costInfos.push(newCost);
+    this.calculateTotalCost();
+    this.detectorRef.detectChanges();
+  }
+  
+  changeCost(evt: any) {
+    if (evt) {
+    }
+  }
+  deleteCost(index:number) {
+    if (this.costInfos?.length >index ) {
+      this.costInfos?.splice(index,1);
+      this.calculateTotalCost();
+      this.detectorRef.detectChanges();
+    }
+  }
+  editCost(evt: any, index:number) {
+    if (evt && this.costInfos?.length >index) {
+      switch(evt?.field){
+        case "quantity":
+          this.costInfos[index].quantity= evt?.data;
+        break;
 
+        case "unitPrice":
+          this.costInfos[index].unitPrice= evt?.data;
+        break;
+
+        case "costItemName":
+          this.costInfos[index].costItemName= evt?.data;
+        break;
+        
+        case "costItemID":
+          this.costInfos[index].costItemName= evt?.data;
+        break;
+      }
+    }
+    this.calculateTotalCost();
+  }
+  calculateTotalCost(){
+    if(this.costInfos?.length>0){
+      this.totalCost=0;
+      this.costInfos?.forEach(cost=>{
+        cost.amount = cost?.quantity * cost?.unitPrice;
+        if(cost.amount ==null) cost.amount = 0;
+        this.totalCost +=cost.amount;
+      });
+    }
+    this.detectorRef.detectChanges();
+  }
   startDateChange(evt: any) {
     if (!evt.field) {
       return;
@@ -529,7 +622,7 @@ export class CodxAddBookingCarComponent
   }
 
   driverChangeWithCar(carID: string) {
-    if(!this.haveEP) return;
+    if (!this.haveEP) return;
     this.codxBookingService.getGetDriverByCar(carID).subscribe((res: any) => {
       if (res && res?.resourceID != null) {
         this.tempAtender = {
@@ -576,7 +669,10 @@ export class CodxAddBookingCarComponent
       } else {
         this.data[event?.field] = event.data;
       }
-      if(event?.field=='reasonName' && event?.components?.itemsSelected?.length>0){
+      if (
+        event?.field == 'reasonName' &&
+        event?.components?.itemsSelected?.length > 0
+      ) {
         this.data.reasonID = event?.components?.itemsSelected[0]?.ReasonID;
       }
     }
@@ -589,9 +685,9 @@ export class CodxAddBookingCarComponent
       });
       if (selectResource) {
         this.carCapacity = selectResource[0]?.capacity;
-        
-        let tempApprover = new Approver ();
-        tempApprover.approver=selectResource[0]?.owner;
+
+        let tempApprover = new Approver();
+        tempApprover.approver = selectResource[0]?.owner;
         this.resourceOwner = [tempApprover];
         this.useCard = selectResource[0]?.useCard;
         this.tmplstDevice = [];
@@ -799,6 +895,7 @@ export class CodxAddBookingCarComponent
         }
       });
   }
+
   //---------------------------------------------------------------------------------//
   //-----------------------------------Validate Func---------------------------------//
   //---------------------------------------------------------------------------------//
@@ -842,8 +939,8 @@ export class CodxAddBookingCarComponent
     if (this.funcType == _editMF) {
       isAdd = false;
     }
-    option.methodName = 'SaveAsync';
-    option.data = [itemData, isAdd, this.attendeesList, null];
+    option.methodName = 'SaveAsync';    
+    option.data = [itemData, isAdd, this.attendeesList, null,this.costInfos];
     return true;
   }
   onSaveForm(approval: boolean = false) {
@@ -886,6 +983,24 @@ export class CodxAddBookingCarComponent
           this.onSaving = false;
           return;
         }
+      }
+
+      if(this.costInfos?.length>0){
+        let unCostName= this.costInfos.filter(x=>x?.costItemName ==null ||x?.costItemName =="");
+        if(unCostName?.length>0){
+          this.notificationsService.notifyCode(
+            'SYS009',
+            0,
+            '"' + this.grViewCost?.costItemName?.headerText + '"'
+          );            
+          this.onSaving = false;
+          return;
+        }
+        this.costInfos.forEach(cost=>{          
+          if(cost?.costItemID == null ||cost?.costItemID ==""){
+            cost.costItemID = cost?.costItemName;
+          }
+        })
       }
 
       let tmpEquip = [];
@@ -957,7 +1072,10 @@ export class CodxAddBookingCarComponent
     }
   }
   capacityCheck(approval) {
-    if (this.data.attendees > this.carCapacity && this.data.resourceID!=null) {
+    if (
+      this.data.attendees > this.carCapacity &&
+      this.data.resourceID != null
+    ) {
       this.notificationsService.alertCode('EP010').subscribe((x) => {
         if (x.event?.status == 'Y') {
           this.attendeesValidateStep(approval);
@@ -1028,69 +1146,76 @@ export class CodxAddBookingCarComponent
       this.startSaveNotEP(approval);
     } else {
       this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          if (!res.save) {
-            this.returnData = res.update;
-          } else {
-            this.returnData = res.save;
-          }
-          if (approval) {
-            if (this.approvalRule != '0') {
-              this.codxBookingService
-                .getProcessByCategoryID(this.categoryID)
-                .subscribe((category: any) => {
-                  this.codxShareService
-                  .codxReleaseDynamic(
-                    'EP',
-                    this.returnData,
-                    category,
-                    this.formModel?.entityName,
-                    this.formModel.funcID,
-                    this.returnData?.title,
-                    (res: ResponseModel) => {
-                      if (res?.msgCodeError == null && res?.rowCount) {
-                        this.returnData.approveStatus = res.returnStatus ?? EPCONST.A_STATUS.Released;
-                        this.returnData.write = false;
-                        this.returnData.delete = false;
-                        (this.dialogRef.dataService as CRUDService).update(this.returnData,true).subscribe();
-                        this.notificationsService.notifyCode('SYS034');
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      } else {
-                        this.notificationsService.notifyCode(res?.msgCodeError);
-                        // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialogRef && this.dialogRef.close(this.returnData);
-                      }
-                    },
-                    this.returnData?.createdBy,
-                    this.resourceOwner,               
-                  )
-                });
+        .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+        .subscribe((res) => {
+          if (res.save || res.update) {
+            if (!res.save) {
+              this.returnData = res.update;
             } else {
-              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
-                if(approveData!=null){
-                  this.returnData.approveStatus=approveData?.approveStatus;
-                  this.returnData.write = false;
-                  this.returnData.delete = false;
-                  this.notificationsService.notifyCode('SYS034');
-                  this.dialogRef && this.dialogRef.close(this.returnData);
-                }
-                else{
-                  this.onSaving = false;
-                  return;
-                }
-              });
+              this.returnData = res.save;
             }
-
+            if (approval) {
+              if (this.approvalRule != '0') {
+                this.codxBookingService
+                  .getProcessByCategoryID(this.categoryID)
+                  .subscribe((category: any) => {
+                    this.codxShareService.codxReleaseDynamic(
+                      'EP',
+                      this.returnData,
+                      category,
+                      this.formModel?.entityName,
+                      this.formModel.funcID,
+                      this.returnData?.title,
+                      (res: ResponseModel) => {
+                        if (res?.msgCodeError == null && res?.rowCount) {
+                          this.returnData.approveStatus =
+                            res.returnStatus ?? EPCONST.A_STATUS.Released;
+                          this.returnData.write = false;
+                          this.returnData.delete = false;
+                          (this.dialogRef.dataService as CRUDService)
+                            .update(this.returnData, true)
+                            .subscribe();
+                          this.notificationsService.notifyCode('SYS034');
+                          this.dialogRef &&
+                            this.dialogRef.close(this.returnData);
+                        } else {
+                          this.notificationsService.notifyCode(
+                            res?.msgCodeError
+                          );
+                          // Thêm booking thành công nhưng gửi duyệt thất bại
+                          this.dialogRef &&
+                            this.dialogRef.close(this.returnData);
+                        }
+                      },
+                      this.returnData?.createdBy,
+                      this.resourceOwner
+                    );
+                  });
+              } else {
+                this.codxBookingService
+                  .approvedManual(this.returnData?.recID)
+                  .subscribe((approveData: any) => {
+                    if (approveData != null) {
+                      this.returnData.approveStatus =
+                        approveData?.approveStatus;
+                      this.returnData.write = false;
+                      this.returnData.delete = false;
+                      this.notificationsService.notifyCode('SYS034');
+                      this.dialogRef && this.dialogRef.close(this.returnData);
+                    } else {
+                      this.onSaving = false;
+                      return;
+                    }
+                  });
+              }
+            } else {
+              this.dialogRef && this.dialogRef.close(this.returnData);
+            }
           } else {
-            this.dialogRef && this.dialogRef.close(this.returnData);
+            this.onSaving = false;
+            return;
           }
-        } else {
-          this.onSaving = false;
-          return;
-        }
-      });
+        });
     }
   }
 
@@ -1135,18 +1260,19 @@ export class CodxAddBookingCarComponent
                     });
                 });
             } else {
-              this.codxBookingService.approvedManual(this.returnData?.recID).subscribe((approveData:any)=>{
-                if(approveData!=null){
-                  this.returnData.approveStatus=approveData?.approveStatus;
-                  this.returnData.write = false;
-                  this.returnData.delete = false;
-                  this.notificationsService.notifyCode('SYS034');
-                  this.dialogRef && this.dialogRef.close(this.returnData);
-                }
-                else{
-                  return;
-                }
-              });
+              this.codxBookingService
+                .approvedManual(this.returnData?.recID)
+                .subscribe((approveData: any) => {
+                  if (approveData != null) {
+                    this.returnData.approveStatus = approveData?.approveStatus;
+                    this.returnData.write = false;
+                    this.returnData.delete = false;
+                    this.notificationsService.notifyCode('SYS034');
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  } else {
+                    return;
+                  }
+                });
             }
 
             this.dialogRef && this.dialogRef.close(this.returnData);
@@ -1224,7 +1350,7 @@ export class CodxAddBookingCarComponent
           });
           let resourceStillAvailable = false;
           if (this.data.resourceID != null) {
-            for(let i=0;i<this.cbbResource?.length;i++){
+            for (let i = 0; i < this.cbbResource?.length; i++) {
               if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
                 resourceStillAvailable = true;
               }

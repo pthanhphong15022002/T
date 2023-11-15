@@ -28,7 +28,7 @@ import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-import { InputCustomFieldComponent } from './instances/popup-add-instance/input-custom-field/input-custom-field.component';
+
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
@@ -62,6 +62,7 @@ import { ViewInstancesComponent } from './view-instances/view-instances.componen
 import { CdkTableModule } from '@angular/cdk/table';
 import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
+import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 
 export const routes: Routes = [
   {
@@ -132,7 +133,6 @@ const T_Component: Type<any>[] = [
   InstanceDetailComponent,
   PopupAddInstanceComponent,
   StagesDetailComponent,
-  InputCustomFieldComponent,
   PopupMoveStageComponent,
   PopupMoveReasonComponent,
   ViewJobComponent,
@@ -153,6 +153,7 @@ const T_Component: Type<any>[] = [
   PopupSettingTableComponent,
   PopupSettingReferenceComponent,
   ViewInstancesComponent,
+  ReplaceProgressPipe,
 ];
 
 @NgModule({

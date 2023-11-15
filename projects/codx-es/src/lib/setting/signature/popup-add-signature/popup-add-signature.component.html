@@ -343,13 +343,19 @@
       <div class="col-4">
         <codx-label fiedName="Password" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input
-          type="password"
+        <div class="input-pw">
+          <codx-input
+          type="text" 
+          class="input-pw"
+          className="input-pw"         
           field="password"
           [crrValue]="data?.password"
           (valueChange)="passwordChange($event)"
         >
         </codx-input>
+        </div>
+
+        
         <!-- <codx-input
           type="text"
           field="password"

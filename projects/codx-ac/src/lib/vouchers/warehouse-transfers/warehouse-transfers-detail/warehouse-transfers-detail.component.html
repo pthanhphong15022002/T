@@ -106,20 +106,35 @@
         <div class="card-add card-transfer mt-1">
             <ejs-tab>
               <e-tabitems>
-                <!--Start tab Thông tin chi tiết -->
+                <!--Start tab Thông tin kho xuất -->
                 <e-tabitem>
                   <ng-template #headerText>
                     <div class="d-flex align-items-top me-2 mt-2">
-                      <i class="icon-format_list_bulleted icon-16 me-2"></i>
+                      <i class="icon-i-file-text icon-16 me-2"></i>
                       <codx-label class="fw-bold fs-6" fiedName="lblDetail2" [formModel]="formModel"
-                        default="Chi tiết"></codx-label>
+                        default="Thông tin kho xuất"></codx-label>
                     </div>
                   </ng-template>
                   <ng-template #content>
                     <ng-container *ngTemplateOutlet="tabTranfer"></ng-container>
                   </ng-template>
                 </e-tabitem>
-                <!--End tab Thông tin hóa đơn -->
+                <!--End tab Thông tin kho xuất -->
+
+                <!--Start tab Thông tin kho nhập -->
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2 mt-2">
+                      <i class="icon-i-file-text icon-16 me-2"></i>
+                      <codx-label class="fw-bold fs-6" fiedName="lblDetail2" [formModel]="formModel"
+                        default="Thông tin kho nhập"></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <ng-container *ngTemplateOutlet="tabTranfer2"></ng-container>
+                  </ng-template>
+                </e-tabitem>
+                <!--End tab Thông tin kho nhập -->
       
                 <!--Start tab hạch toán -->
                 <!-- <e-tabitem>
@@ -153,7 +168,13 @@
 
   <ng-template #tabTranfer let-data>
     <ng-container *ngIf="itemSelected">
-      <transfers-table [itemSelected]="itemSelected" [baseCurr]="baseCurr"></transfers-table>
+      <transfers-table [type]="'issue'" [itemSelected]="itemSelected" [baseCurr]="baseCurr"></transfers-table>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tabTranfer2 let-data>
+    <ng-container *ngIf="itemSelected">
+      <transfers-table [type]="'receipt'" [itemSelected]="itemSelected" [baseCurr]="baseCurr"></transfers-table>
     </ng-container>
   </ng-template>
 

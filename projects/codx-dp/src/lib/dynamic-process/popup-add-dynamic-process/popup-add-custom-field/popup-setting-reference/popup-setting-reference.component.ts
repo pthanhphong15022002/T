@@ -64,7 +64,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
       let field = this.convertStepField(this.datas[key]);
       this.listField.push(field);
       //test
-      if (key == 'Address') this.dataRef.push(field);
+      // if (key == 'Address') this.dataRef.push(field);
     }
   }
 
@@ -81,7 +81,7 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
   }
 
   saveData() {
-    this.dialog.close(this.dataRef);
+    this.dialog.close([this.dataRef, true]);
   }
   convertStepField(data) {
     let field = this.dataRef.find((x) => x.fieldName == data.fieldName);
@@ -92,7 +92,44 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     field.title = data.headerText;
     field.refType = data.referedType;
     field.refValue = data.referedValue;
-    field.refValue = data.referedValue;
+    field.dataType = this.convertDataTypeAndFormat(
+      data.dataType,
+      data.dataFormat
+    )[0];
+    field.dataFormat = this.convertDataTypeAndFormat(
+      data.dataType,
+      data.dataFormat
+    )[1];
     return field;
+  }
+  convertDataTypeAndFormat(dataType, dataFormat): any[] {
+    let type = 'T';
+    let format = 'S';
+    //hoi laiKhanh
+    switch (dataType.toLocaleLowerCase()) {
+      case 'string':
+      case 'guild':
+        type = 'T';
+        format = dataFormat.includes('ed') ? 'L' : 'S';
+        break;
+      case 'bool':
+        type = 'T';
+        format = '';
+        break;
+      case 'datetime':
+        type = 'D';
+        format = dataFormat == 'g' ? '3' : '2'; //DD/MM/YYYY
+        break;
+      case 'int':
+      case 'short':
+        type = 'N';
+        format = 'I';
+        break;
+      case 'decimal':
+        type = 'N';
+        format = 'D';
+        break;
+    }
+    return [type, format];
   }
 }

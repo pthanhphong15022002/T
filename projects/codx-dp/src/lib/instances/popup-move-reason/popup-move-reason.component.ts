@@ -59,8 +59,9 @@ export class PopupMoveReasonComponent implements OnInit {
   isReason: boolean = true;
   isMoveProcess: boolean = false;
   isLockStep: boolean = false;
-  applyFor: string = '0';
+  isCallInstance: boolean = true;
 
+  applyFor: string = '0';
   dataCM: any;
   recID: string = '';
   nextStep: string = '';
@@ -93,6 +94,7 @@ export class PopupMoveReasonComponent implements OnInit {
     this.headerText = dt?.data?.headerTitle;
     this.processID =  dt?.data?.processID;
     this.isMoveProcess = dt?.data?.isMoveProcess;
+    this.isCallInstance = dt?.data?.isCallInstance;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
     if (this.applyFor == '0') {
@@ -163,10 +165,22 @@ export class PopupMoveReasonComponent implements OnInit {
     //           comment: this.reasonStep.memo,
     //         };
     //         this.dialog.close(obj);
+    let oldStepId = this.instances.stepID;
+    let oldStatus = this.instances.status;
     this.codxDpService.moveReasonByIdInstance(data).subscribe((res) => {
       if (res) {
         this.instances = res[0];
         this.listStep = res[1];
+
+        if(this.applyFor == "0" && !this.isCallInstance) {
+          let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
+          this.codxDpService.moveDealReason(datas).subscribe((res) => {
+            if (res) {
+            }
+          });
+
+        }
+
         if (this.applyFor != '0') {
           let objApplyFor = {
             listStep: this.listStep,

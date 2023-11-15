@@ -1,5 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DataRequest,
+  FormModel,
+} from 'codx-core';
 import moment from 'moment';
 
 @Component({
@@ -29,10 +34,12 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   count: number = 0;
   dataValueTypeC: any = [];
   dataValueTypeV: any = [];
+  dataValueTypePA: any = [];
 
   constructor(
     private cache: CacheService,
-    private changeRef: ChangeDetectorRef
+    private changeRef: ChangeDetectorRef,
+    private api: ApiHttpService
   ) {}
 
   // ngOnChanges() {
@@ -51,6 +58,9 @@ export class CodxFieldsFormatValueComponent implements OnInit {
         if (this.data.dataFormat == 'V')
           this.dataValueTypeV = this.listValue(this.data.dataValue);
         break;
+      case 'PA':
+        this.parseValuePA(this.data.dataValue);
+        break;
     }
   }
 
@@ -60,6 +70,54 @@ export class CodxFieldsFormatValueComponent implements OnInit {
 
   listValue(dataValue) {
     return dataValue?.split(';');
+  }
+
+  parseValuePA(dataValue) {
+    this.dataValueTypePA = [];
+    if (!this.data.dataFormat) return;
+    this.cache.combobox(this.data.refValue).subscribe((res) => {
+      let gridModel = new DataRequest();
+      let entityName = res?.tableName;
+      gridModel.entityName = entityName;
+      gridModel.entityPermission = entityName;
+      gridModel.pageLoading = false;
+
+      let predicate = res.valueMember + '=@0';
+      if (res.predicate) {
+        predicate += ' and ' + res.predicate;
+      }
+      gridModel.predicate = predicate;
+      gridModel.dataValue = dataValue;
+
+      this.api
+        .execSv<any>(
+          res.service,
+          'ERM.Business.Core',
+          'DataBusiness',
+          'LoadDataAsync',
+          gridModel
+        )
+        .subscribe((dataRes) => {
+          if (dataRes) {
+            let crrData = dataRes[0][0];
+            let dataFormat = JSON.parse(this.data.dataFormat);
+            if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+              dataFormat.forEach((x) => {
+                let value = '';
+                for (var key in crrData) {
+                  if (
+                    key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()
+                  ) {
+                    value = crrData[key];
+                  }
+                }
+                let obj = Object.assign(x, { dataValue: value });
+                this.dataValueTypePA.push(obj);
+              });
+            }
+          }
+        });
+    });
   }
 
   //--------------format table---------------//
@@ -99,73 +157,4 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     return arrTable;
   }
   //--------------end------------//
-
-  //===========FORMART DATETIME=====================//
-  // getFormatTime(dv) {
-  //   if (!dv) return '';
-  //   var arrTime = dv.split(':');
-  //   return moment(new Date())
-  //     .set({ hour: arrTime[0], minute: arrTime[1] })
-  //     .toDate();
-  // }
-  // formatNumber(dt) {
-  //   if (!dt.dataValue) return '';
-  //   if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-  //   return (
-  //     Number.parseFloat(dt.dataValue).toFixed(2) +
-  //     (dt.dataFormat == 'P' ? ' %' : '')
-  //   );
-  // }
-  // partNum(num): number {
-  //   return Number.parseInt(num);
-  // }
-
-  // fomatvalue(df) {
-  //   //xu ly tam
-  //   if (!this.dtFormatDate) {
-  //     this.cache.valueList('DP0274').subscribe((res) => {
-  //       if (res) {
-  //         this.dtFormatDate = res.datas;
-  //         return this.getFormatValue(df);
-  //       }
-  //     });
-  //   } else {
-  //     return this.getFormatValue(df);
-  //   }
-  // }
-
-  // getFormatValue(df) {
-  //   var index = this.dtFormatDate?.findIndex((x) => x.value == df);
-  //   if (index == -1) return '';
-  //   return this.dtFormatDate[index]?.text;
-  // }
-
-  // getFormatStringType6(dt) {
-  //   if (!this.dtFormatDate) {
-  //     this.cache.valueList('DP0274').subscribe((res) => {
-  //       if (res) {
-  //         this.dtFormatDate = res.datas;
-  //         return this.formatValueType6(dt);
-  //       }
-  //     });
-  //   } else {
-  //     return this.formatValueType6(dt);
-  //   }
-  // }
-
-  // formatValueType6(dt) {
-  //   var index = this.dtFormatDate?.findIndex((x) => x.value == dt.dataFormat);
-  //   if (index == -1) return '';
-  //   var tetxFormart = this.dtFormatDate[index]?.text;
-  //   var day = moment(dt.dataValue).toDate();
-  //   let date = day.getDate();
-  //   let month = day.getMonth() + 1;
-  //   let year = day.getFullYear();
-  //   tetxFormart = tetxFormart.replace('dd', date);
-  //   tetxFormart = tetxFormart.replace('mm', month);
-  //   tetxFormart = tetxFormart.replace('yyyy', year);
-  //   return tetxFormart;
-  // }
-
-  //=========== END - FORMART DATETIME=====================//
 }

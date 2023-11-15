@@ -8,7 +8,7 @@
         <span 
             [inlineSVG]="'./assets/themes/sys/default/img/header_chatting.svg'"
             class="svg-icon"
-            [ngClass]="codxService.toolbarButtonIconSizeClass">
+            [ngClass]="codxService.asideMode != '2' ? codxService.toolbarButtonIconSizeClass : 'svg-icon-3 svg-icon-primary'">
         </span>
         <ng-container *ngIf="count > 0">
           <span class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">

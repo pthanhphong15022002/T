@@ -125,7 +125,9 @@ export class PopupAddInstanceComponent implements OnInit {
     this.autoNameTabFields = dt?.data?.autoNameTabFields;
     this.oldIdInstance = dt?.data?.oldIdInstance;
     this.instance = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
-    this.lstParticipants = dt?.data?.lstParticipants?.filter(x => x?.userID != null && x?.userID != '');
+    this.lstParticipants = dt?.data?.lstParticipants?.filter(
+      (x) => x?.userID != null && x?.userID != ''
+    );
 
     if (this.action != 'add') {
       this.promiseAll();
@@ -135,8 +137,7 @@ export class PopupAddInstanceComponent implements OnInit {
     if (this.action === 'edit') {
       this.autoName = dt?.data?.autoName;
       this.owner = this.instance?.owner;
-    }
-    else {
+    } else {
       this.instance.title = this.autoName?.trim();
       this.instance.endDate = this.endDate;
       let check = false;
@@ -160,14 +161,17 @@ export class PopupAddInstanceComponent implements OnInit {
         }
       });
 
-      if(this.action === 'add') {
-       this.updateEndDate();
-      }
-
+    if (this.action === 'add') {
+      this.updateEndDate();
+    }
   }
 
   ngOnInit(): void {
-    if(this.menuInputInfo) this.menuInputInfo.text = this.autoNameTabFields != null && this.autoNameTabFields?.trim() != '' ? this.autoNameTabFields : this.menuInputInfo.text
+    if (this.menuInputInfo)
+      this.menuInputInfo.text =
+        this.autoNameTabFields != null && this.autoNameTabFields?.trim() != ''
+          ? this.autoNameTabFields
+          : this.menuInputInfo.text;
     if (this.action === 'add' || this.action === 'copy') {
       this.action === 'add' && this.autoClickedSteps();
     }
@@ -197,11 +201,12 @@ export class PopupAddInstanceComponent implements OnInit {
       this.action,
       this.action !== 'edit' ||
         (this.action === 'edit' &&
-          (this.instance.status == '1' || this.instance.status == '15' ))
+          (this.instance.status == '1' || this.instance.status == '15'))
         ? null
         : this.instance.createdOn
     );
-    this.instance.endDate = this.action === 'edit' ? this.instance?.endDate:  this.endDate;
+    this.instance.endDate =
+      this.action === 'edit' ? this.instance?.endDate : this.endDate;
   }
 
   loadTabsForm() {
@@ -237,7 +242,7 @@ export class PopupAddInstanceComponent implements OnInit {
       .subscribe(async (res) => {
         if (res && res?.length > 0) {
           this.listStep = JSON.parse(JSON.stringify(res));
-         this.updateEndDate();
+          this.updateEndDate();
           this.loadTabsForm();
         }
       });
@@ -292,6 +297,7 @@ export class PopupAddInstanceComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event.e;
           break;
       }
@@ -512,7 +518,7 @@ export class PopupAddInstanceComponent implements OnInit {
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === 'add' ||
-      action ===  'copy'||
+      action === 'copy' ||
       (this.action === 'edit' &&
         (this.instance.status == '1' || this.instance.status == '15'))
         ? new Date()
@@ -520,7 +526,7 @@ export class PopupAddInstanceComponent implements OnInit {
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
-      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+      if (!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
         endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
         endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
         endDate = this.setTimeHoliday(
@@ -530,7 +536,6 @@ export class PopupAddInstanceComponent implements OnInit {
         );
         dateNow = endDate;
       }
-
     }
     return endDate;
   }
@@ -548,7 +553,7 @@ export class PopupAddInstanceComponent implements OnInit {
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
-      let isEndSaturday = endDay.getDay() === 6 ;
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -556,7 +561,7 @@ export class PopupAddInstanceComponent implements OnInit {
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        if(!isEndSaturday) {
+        if (!isEndSaturday) {
           endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
         }
         endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
@@ -564,5 +569,4 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return endDay;
   }
-
 }

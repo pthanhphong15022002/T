@@ -278,6 +278,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event?.e;
           break;
       }

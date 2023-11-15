@@ -239,7 +239,7 @@
   *ngIf="isAfterRender" -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
-    <div *ngIf="fromListView" class="form-group row d-flex flex-row">
+    <div *ngIf="fromListView || isMultiCopy == true" class="form-group row d-flex flex-row">
       <div class="col-10">
         <div class="d-flex">
           <div class="d-flex flex-column position-relative">
@@ -288,6 +288,7 @@
           [disabled]="disabledInput"
           [showInput]="false"
           field="employeeID"
+      [multiple]="isMultiCopy"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"

@@ -28,7 +28,7 @@ export class PopupCustomFieldComponent implements OnInit {
   customerID: any; //Khách hàng cơ hội
 
   constructor(
-    private changeDetectorRef : ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
@@ -64,6 +64,8 @@ export class PopupCustomFieldComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
+        case 'PA':
           result = event.e;
           break;
       }

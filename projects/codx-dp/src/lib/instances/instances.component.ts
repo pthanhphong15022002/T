@@ -817,7 +817,7 @@ export class InstancesComponent
       .subscribe((info) => {
         if (info?.event?.status == 'Y') {
           this.codxDpService
-            .openOrClosedInstance(data.recID, check)
+            .openOrClosedInstance(data.recID, check,this.process.applyFor)
             .subscribe((res) => {
               if (res) {
                 this.dataSelected.closed = check;
@@ -1835,6 +1835,7 @@ export class InstancesComponent
       processID: this.processID,
       applyFor: '0',
       isMoveProcess: false,
+      isCallInstance: this.process.applyFor == '0',
     };
 
     var dialogRevision = this.callfc.openForm(

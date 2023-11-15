@@ -118,7 +118,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '25%',
+          widthLeft: '22%',
           //separatorSize:3
         },
       },
@@ -194,27 +194,22 @@ export class PurchaseinvoicesComponent extends UIComponent {
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
+      case 'ACT060102':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
+      case 'ACT060104':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
+      case 'ACT060106':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
+      case 'ACT060103':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
+      case 'ACT060105':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT041010':
+      case 'ACT060107':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }

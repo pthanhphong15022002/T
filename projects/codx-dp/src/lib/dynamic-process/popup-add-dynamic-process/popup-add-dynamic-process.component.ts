@@ -40,6 +40,8 @@ import {
   DataRequest,
   CodxService,
   AuthService,
+  CodxComboboxComponent,
+  CodxInputComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -81,6 +83,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   @ViewChild('addReasonPopup') addReasonPopup: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate: TemplateRef<any>;
   @ViewChild('autoNumberSetting') autoNumberSetting: any;
+  @ViewChild('inputUser') inputUser: CodxInputComponent;
   process = new DP_Processes();
   permissions = [];
   dialog: any;
@@ -821,7 +824,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       stepListSave.forEach((step) => {
         if (step && step?.taskGroups?.length > 0) {
           let index = step?.taskGroups?.findIndex((x) => !x?.recID);
-          if(index >= 0){
+          if (index >= 0) {
             step?.taskGroups?.splice(index, 1);
           }
           step?.taskGroups?.forEach((element) => {
@@ -850,36 +853,39 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.loadCbxProccess();
       }
     }
-    if (e.field === 'groupID') {
-      if (!this.process.groupID) {
-        this.cache
-          .message('SYS028')
-          .pipe(takeUntil(this.destroyFrom$))
-          .subscribe((res) => {
-            if (res) this.errorMessage = res.customName || res.defaultName;
-            this.checkGroup = false;
-          });
-      } else {
-        this.checkGroup = this.lstGroup.some(
-          (x) => x.groupID == this.process.groupID
-        );
-        if (!this.checkGroup) {
-          this.cache
-            .message('DP015')
-            .pipe(takeUntil(this.destroyFrom$))
-            .subscribe((res) => {
-              if (res) this.errorMessage = res.customName || res.defaultName;
-            });
-        }
-      }
-    }
+
+    //điều kiện check đang sai với chưa hợp lý. cmt lại tính sau
+    // if (e.field === 'groupID') {
+    // ;
+    //   if (!this.process.groupID) {
+    //     this.cache
+    //       .message('SYS028')
+    //       .pipe(takeUntil(this.destroyFrom$))
+    //       .subscribe((res) => {
+    //         if (res) this.errorMessage = res.customName || res.defaultName;
+    //         this.checkGroup = false;
+    //       });
+    //   } else {
+    //     this.checkGroup = this.lstGroup.some(
+    //       (x) => x.groupID == this.process.groupID
+    //     );
+    //     if (!this.checkGroup) {
+    //       this.cache
+    //         .message('DP015')
+    //         .pipe(takeUntil(this.destroyFrom$))
+    //         .subscribe((res) => {
+    //           if (res) this.errorMessage = res.customName || res.defaultName;
+    //         });
+    //     }
+    //   }
+    // }
   }
 
   valueChangeAutoNoCode(e) {
     this.instanceNoSetting = e?.data;
   }
-  valueChangebusinessLineID($event ){
-    if($event && $event?.data) {
+  valueChangebusinessLineID($event) {
+    if ($event && $event?.data) {
       this.process.businessLineID = $event?.data;
     }
   }
@@ -1245,6 +1251,64 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   openPopupParticipants(popupParticipants) {
     this.callfc.openForm(popupParticipants, '', 950, 650);
+  }
+
+  searchAddUsers(e, type) {
+    if (e && e?.component?.itemsSelected?.length > 0) {
+      if (!this.isChange) this.isChange = true;
+      if (!this.isUpdatePermiss) this.isUpdatePermiss = true;
+      const data = e?.component?.itemsSelected[0];
+      if (data) {
+        let perm = new DP_Processes_Permission();
+        perm.objectID = data?.UserID;
+        perm.objectName = data?.UserName;
+        perm.objectType = 'U';
+        perm.roleType = type;
+        perm.read = true;
+        switch (type) {
+          case 'O':
+            perm.full = true;
+            perm.create = true;
+            perm.assign = true;
+            perm.edit = true;
+            perm.delete = true;
+            perm.isActive = true;
+            break;
+          case 'P':
+            perm.full = false;
+            perm.create = true;
+            perm.assign = false;
+            perm.edit = false;
+            perm.isActive = true;
+            perm.delete = false;
+            break;
+          case 'F':
+            perm.full = false;
+            perm.create = false;
+            perm.assign = false;
+            perm.edit = false;
+            perm.isActive = true;
+            // perm.publish = false;
+            perm.delete = false;
+            break;
+        }
+        this.permissions = this.checkUserPermission(this.permissions, perm);
+        this.process.permissions = this.permissions;
+        this.updateStepChange(this.step?.recID);
+      }
+      if (this.inputUser) {
+        e.data = null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).value = null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).valueField =
+          null;
+        (this.inputUser.ComponentCurrent as CodxComboboxComponent).textField =
+          null;
+        this.inputUser.crrValue = null;
+        this.inputUser.value = null;
+        this.inputUser.data = null;
+      }
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   applyShare(e, type) {
@@ -1724,8 +1788,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.process.startInstanceControl = false;
       }
-    }
-    else if (view === 'AllowEstimatedEndView') {
+    } else if (view === 'AllowEstimatedEndView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowEstimatedEnd = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
@@ -2430,12 +2493,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   deleteCustomField(field) {
     this.fieldCrr = field;
-    let task = this.checkFieldInTask(this.fieldCrr?.recID,this.fieldCrr?.stepID)
-    let mes = task ?'Xóa liên kết với công việc nhé':'SYS030';
+    let task = this.checkFieldInTask(
+      this.fieldCrr?.recID,
+      this.fieldCrr?.stepID
+    );
+    let mes = task ? 'Xóa liên kết với công việc nhé' : 'SYS030';
     this.notiService.alertCode(mes).subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
-        if(task){
-          let fieldId = this.convertString(task?.fieldID,this.fieldCrr?.recID);
+        if (task) {
+          let fieldId = this.convertString(task?.fieldID, this.fieldCrr?.recID);
           task.fieldID = fieldId;
         }
         let idxStep = this.stepList.findIndex(
@@ -2540,14 +2606,23 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
   }
   async dropFieldsToStep(event, stepID) {
-    let task = this.checkFieldInTask(event.item.data?.recID, event.item.data?.stepID);
-    if(task){
-      let select = await firstValueFrom(this.notiService.alertCode('Trường tùy chỉnh này có liên kết với công việc nếu di chuyển sẽ hủy liên kết', null, []));
+    let task = this.checkFieldInTask(
+      event.item.data?.recID,
+      event.item.data?.stepID
+    );
+    if (task) {
+      let select = await firstValueFrom(
+        this.notiService.alertCode(
+          'Trường tùy chỉnh này có liên kết với công việc nếu di chuyển sẽ hủy liên kết',
+          null,
+          []
+        )
+      );
       if (select.event && select.event.status == 'Y') {
         let fieldId = this.convertString(task?.fieldID, event.item.data?.recID);
         task.fieldID = fieldId;
-      }else{
-        return
+      } else {
+        return;
       }
     }
     let stepIDContain = event.container.id;
@@ -2584,22 +2659,22 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.updateSorting(stepIDContain, stepIDPrevious);
   }
   checkFieldInTask(fieldID, stepID) {
-    let step = this.stepList?.find(step => step.recID == stepID);
-    if(step){
+    let step = this.stepList?.find((step) => step.recID == stepID);
+    if (step) {
       let tasks = step.tasks;
-      if(tasks?.length  > 0){
-        let task = tasks.find(x => x.fieldID.includes(fieldID));
-        if(task) return task;
+      if (tasks?.length > 0) {
+        let task = tasks.find((x) => x.fieldID.includes(fieldID));
+        if (task) return task;
       }
     }
     return null;
   }
-  convertString(str, strDelete){
-    str = str.replace(strDelete, "");
-    if (str.startsWith(";")) {
+  convertString(str, strDelete) {
+    str = str.replace(strDelete, '');
+    if (str.startsWith(';')) {
       str = str.slice(1);
     }
-    if (str.endsWith(";")) {
+    if (str.endsWith(';')) {
       str = str.slice(0, -1);
     }
     return str;
@@ -2979,7 +3054,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.taskGroupList.splice(index - 1, 0, taskGroup);
       } else {
         this.taskGroupList.push(taskGroup);
-      };
+      }
       this.sumTimeStep();
       // add role vào step
       this.addRole(taskGroup['roles'][0]);
@@ -4554,7 +4629,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     ) {
       return false;
     }
-    if(!this.process?.businessLineID && this.process.applyFor == '1' && this.action !== 'edit' ) {
+    if (
+      !this.process?.businessLineID &&
+      this.process.applyFor == '1' &&
+      this.action !== 'edit'
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,

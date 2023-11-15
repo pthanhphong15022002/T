@@ -147,6 +147,7 @@ export enum MorfuncPur {
   KhoiPhuc = 'ACT060105',
   In = 'ACT060107',
   KiemTraHopLe = 'ACT060106',
+  PhanBoChiPhi = 'ACT060108'
 }
 
 export enum MorfuncSale {
@@ -524,26 +525,11 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncCash.GhiSoPC ||
-              element.functionID == MorfuncCash.GhiSoUPC ||
-              element.functionID == MorfuncCash.InPC ||
-              element.functionID == MorfuncCash.InUPC ||
-              (element.functionID == MorfuncCash.ChuyenTienDienTu &&
-                formModel.funcID == 'ACT0429')
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncCash.GuiDuyetPC ||
-              element.functionID == MorfuncCash.GuiDuyetUPC ||
+              element.functionID == MorfuncCash.KiemTraHopLePC ||
+              element.functionID == MorfuncCash.KiemTraHopLeUPC ||
               element.functionID == MorfuncCash.InPC ||
               element.functionID == MorfuncCash.InUPC
             ) {
@@ -552,6 +538,36 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncCash.GhiSoPC ||
+                element.functionID == MorfuncCash.GhiSoUPC ||
+                element.functionID == MorfuncCash.InPC ||
+                element.functionID == MorfuncCash.InUPC ||
+                (element.functionID == MorfuncCash.ChuyenTienDienTu &&
+                  formModel.funcID == 'ACT0429')
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncCash.GuiDuyetPC ||
+                element.functionID == MorfuncCash.GuiDuyetUPC ||
+                element.functionID == MorfuncCash.InPC ||
+                element.functionID == MorfuncCash.InUPC
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -600,7 +616,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncCash.KiemTraHopLePC ||
@@ -691,10 +706,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncVoucher.GhiSo ||
+              element.functionID == MorfuncVoucher.KiemTraHopLe ||
               element.functionID == MorfuncVoucher.In
             ) {
               element.disabled = false;
@@ -702,17 +717,30 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncVoucher.GuiDuyet ||
-              element.functionID == MorfuncVoucher.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncVoucher.GhiSo ||
+                element.functionID == MorfuncVoucher.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncVoucher.GuiDuyet ||
+                element.functionID == MorfuncVoucher.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -753,7 +781,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncVoucher.KiemTraHopLe ||
@@ -816,10 +843,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncCashReceipt.GhiSo ||
+              element.functionID == MorfuncCashReceipt.KiemTraHopLe ||
               element.functionID == MorfuncCashReceipt.In
             ) {
               element.disabled = false;
@@ -827,17 +854,30 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncCashReceipt.GuiDuyet ||
-              element.functionID == MorfuncCashReceipt.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncCashReceipt.GhiSo ||
+                element.functionID == MorfuncCashReceipt.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncCashReceipt.GuiDuyet ||
+                element.functionID == MorfuncCashReceipt.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -878,7 +918,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncCashReceipt.KiemTraHopLe ||
@@ -906,6 +945,7 @@ export class CodxAcService {
       MorfuncPur.KhoiPhuc,
       MorfuncPur.In,
       MorfuncPur.KiemTraHopLe,
+      MorfuncPur.PhanBoChiPhi,
       'SYS02',
       'SYS03',
       'SYS04',
@@ -941,10 +981,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncPur.GhiSo ||
+              element.functionID == MorfuncPur.KiemTraHopLe ||
               element.functionID == MorfuncPur.In
             ) {
               element.disabled = false;
@@ -952,24 +992,40 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncPur.GuiDuyet ||
-              element.functionID == MorfuncPur.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        }
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncPur.GhiSo ||
+                element.functionID == MorfuncPur.In ||
+                element.functionID == MorfuncPur.PhanBoChiPhi
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncPur.GuiDuyet ||
+                element.functionID == MorfuncPur.In ||
+                element.functionID == MorfuncPur.PhanBoChiPhi
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
+        }   
         break;
       case '3':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.HuyDuyet ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -982,7 +1038,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.GhiSo ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -994,7 +1051,8 @@ export class CodxAcService {
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.KhoiPhuc ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -1003,11 +1061,11 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncPur.KiemTraHopLe ||
-            element.functionID == MorfuncPur.In
+            element.functionID == MorfuncPur.In ||
+            element.functionID == MorfuncPur.PhanBoChiPhi
           ) {
             element.disabled = false;
           } else {
@@ -1066,10 +1124,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncSale.GhiSo ||
+              element.functionID == MorfuncSale.KiemTraHopLe ||
               element.functionID == MorfuncSale.In
             ) {
               element.disabled = false;
@@ -1077,17 +1135,30 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncSale.GuiDuyet ||
-              element.functionID == MorfuncSale.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncSale.GhiSo ||
+                element.functionID == MorfuncSale.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncSale.GuiDuyet ||
+                element.functionID == MorfuncSale.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -1128,7 +1199,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncSale.KiemTraHopLe ||
@@ -1191,10 +1261,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncIssueVoucher.GhiSo ||
+              element.functionID == MorfuncIssueVoucher.KiemTraHopLe ||
               element.functionID == MorfuncIssueVoucher.In
             ) {
               element.disabled = false;
@@ -1202,17 +1272,30 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncIssueVoucher.GuiDuyet ||
-              element.functionID == MorfuncIssueVoucher.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncIssueVoucher.GhiSo ||
+                element.functionID == MorfuncIssueVoucher.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncIssueVoucher.GuiDuyet ||
+                element.functionID == MorfuncIssueVoucher.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -1253,7 +1336,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncIssueVoucher.KiemTraHopLe ||
@@ -1316,21 +1398,10 @@ export class CodxAcService {
 
     switch (data?.status) {
       case '1':
-        if (journal.approvalControl == '0') {
+        if (!data?.validated) {
           arrBookmark.forEach((element) => {
             if (
-              element.functionID == MorfuncGeneralJournals.GhiSo ||
-              element.functionID == MorfuncGeneralJournals.In
-              ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        } else {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncGeneralJournals.GuiDuyet ||
+              element.functionID == MorfuncGeneralJournals.KiemTraHopLe ||
               element.functionID == MorfuncGeneralJournals.In
             ) {
               element.disabled = false;
@@ -1338,6 +1409,30 @@ export class CodxAcService {
               element.disabled = true;
             }
           });
+        }else{
+          if (journal.approvalControl == '0') {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncGeneralJournals.GhiSo ||
+                element.functionID == MorfuncGeneralJournals.In
+                ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          } else {
+            arrBookmark.forEach((element) => {
+              if (
+                element.functionID == MorfuncGeneralJournals.GuiDuyet ||
+                element.functionID == MorfuncGeneralJournals.In
+              ) {
+                element.disabled = false;
+              } else {
+                element.disabled = true;
+              }
+            });
+          }
         }
         break;
       case '3':
@@ -1378,7 +1473,6 @@ export class CodxAcService {
         });
         break;
       case '2':
-      case '7':
         arrBookmark.forEach((element) => {
           if (
             element.functionID == MorfuncGeneralJournals.KiemTraHopLe ||
