@@ -6489,7 +6489,7 @@ dataService.clear();
       PopupEmpBusinessTravelsComponent,
       {
         actionType: actionType == 'copy' && isMulti == true ? 'copyMulti': actionType,
-        employeeId: this.employeeID,
+        employeeId: this.infoPersonal.employeeID,
         headerText:
           actionHeaderText +
           ' ' +
