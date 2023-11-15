@@ -63,10 +63,10 @@
       </div>
     </div> -->
     <div [ngStyle]="showInfo ? '' : {display:'none'}">
-      <div class="form-group">
+      <!-- <div class="form-group">
         <codx-label fiedName="AddNewMode" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="addNewMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-      </div>
+      </div> -->
       <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
         <codx-label fiedName="EntryMode" [formModel]="dialog.formModel"></codx-label>
         <codx-input field="entryMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
