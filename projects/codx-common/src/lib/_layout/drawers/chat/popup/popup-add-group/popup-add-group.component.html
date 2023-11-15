@@ -3,82 +3,90 @@
   [headerText]="headerText"
   [body]="body"
   [footer]="footer"
+  [subHeader]="subHeader"
 >
 </codx-form>
-<ng-template #body>
-  <div class="popup">
-    <div class="popup-header">
-      <div class="me-4">
-        <codx-img
-          #codxImg
-          [objectId]="group.groupID"
-          [objectType]="'WP_Groups'"
-          [width]="40"
-          isDefaulImg="true"
-          isAllowEdit="true"
-          (handleInput)="selectedFile($event)"
-          [funcId]="dialogRef.formModel.funcID">
-        </codx-img>
-      </div>
-      <div class="ms-4 w-100">
-        <codx-input
-          [type]="'text'"
-          [field]="'groupName'"
-          [crrValue]="group.groupName"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
+<ng-template #subHeader>
+  <div class="row w-100">
+    <div class="col-2">
+      <codx-img
+        #codxImg
+        [objectId]="group.groupID"
+        [objectType]="'WP_Groups'"
+        [width]="40"
+        [isDefaulImg]="true"
+        [isAllowEdit]="true"
+        [funcId]="dialogRef.formModel.funcID">
+      </codx-img>
     </div>
-    <div class="popup-body">
-      <div class="panel-left">
-        <div class="panel-left-header">
-          <codx-label
-            class="fw-bold mb-1 ms-2"
-            [formModel]="dialogRef.formModel"
-            name="lblListUser"
-            default="Danh sách người dùng"
-          ></codx-label>
-          <codx-searchbar
-            #codxSearch
-            [iconPos]="'left'"
-            (searchEvent)="searchEvent($event)"
-          ></codx-searchbar>
-        </div>
-        <div class="panel-left-body mt-2">
-          <codx-listview
-            #listview
-            (onSelectionChanged)="selectedChange($event)"
-            [comboboxName]="'users'"
-            [itemTemplate]="itemtemplate"
-            [funcId]="dialogRef.formModel.funcID"
-            [entityName]="'AD_Users'"
-            [service]="'SYS'"
-            [assemblyName]="'ERM.Business.Core'"
-            [className]="'DataBusiness'"
-            [method]="'LoadDataCbxAsync'"
-            [selectFirst]="false"
-          >
-          </codx-listview>
-        </div>
-      </div>
-      <div class="panel-right">
-        <codx-listview
-          #listviewSelected
-          [itemTemplate]="selectedtemplate"
-          [headerTemplate]="headerTemplate"
-          [funcId]="dialogRef.formModel.funcID"
-          [entityName]="'AD_Users'"
-          [comboboxName]="'users'"
-          [service]="'SYS'"
-          [assemblyName]="'ERM.Business.Core'"
-          [className]="'DataBusiness'"
-          [method]="'LoadSelectedDataCbxAsync'"
-          [currentValue]="strUserID"
-          [selectFirst]="false"
-        >
-        </codx-listview>
-      </div>
+    <div class="col-10">
+      <codx-input
+        [type]="'text'"
+        [field]="'groupName'"
+        [crrValue]="group.groupName"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6 mt-4">
+      <codx-label
+        class="fw-bold"
+        [className]="'fs-6'"
+        [formModel]="dialogRef.formModel"
+        name="lblListUser"
+        default="Danh sách người dùng"
+      ></codx-label>
+      <codx-searchbar
+          #codxSearch
+          [iconPos]="'left'"
+          (searchEvent)="searchEvent($event)"
+      ></codx-searchbar>
+    </div>
+    <div class="col-6 mt-4">
+      <codx-label
+          class="fw-bold"
+          [className]="'fs-6'"
+          [formModel]="dialogRef.formModel"
+          name="lblListUser"
+          [default]="'Đã chọn'">
+        </codx-label>
+      <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
+    </div>
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="row h-100">
+    <div class="col-6">
+      <codx-listview
+        #codxListView1
+        (onSelectionChanged)="selectedChange($event)"
+        [comboboxName]="'users'"
+        [itemTemplate]="itemtemplate"
+        [funcId]="dialogRef.formModel.funcID"
+        [entityName]="'AD_Users'"
+        [service]="'SYS'"
+        [assemblyName]="'ERM.Business.Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadDataCbxAsync'"
+        [selectFirst]="false"
+      >
+      </codx-listview>
+    </div>
+    <div class="col-6">
+      <codx-listview
+        #codxListView2
+        [itemTemplate]="selectedtemplate"
+        [funcId]="dialogRef.formModel.funcID"
+        [entityName]="'AD_Users'"
+        [comboboxName]="'users'"
+        [service]="'SYS'"
+        [assemblyName]="'ERM.Business.Core'"
+        [className]="'DataBusiness'"
+        [method]="'LoadSelectedDataCbxAsync'"
+        [currentValue]="strUserID"
+        [selectFirst]="false"
+      >
+      </codx-listview>
     </div>
   </div>
   <ng-template #itemtemplate let-item>
@@ -128,26 +136,14 @@
       </div>
     </div>
   </ng-template>
-  <ng-template #headerTemplate>
-    <div class="d-flex align-items-center ms-2 w-100 ">
-      <codx-label
-          class="fw-bold mb-1 me-1"
-          [formModel]="dialogRef.formModel"
-          name="lblListUser"
-          default="Đã chọn">
-        </codx-label>
-      <span>{{'('+arrUsers.length+')'}}</span>
-    </div>
-  </ng-template>
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button [disabled]="loading"
-      type="submit"
+    <button [disabled]="isLoading"
       class="btn btn-sm btn-primary"
       (click)="insertGroup()"
     >
-      Ok
+      Lưu
     </button>
   </div>
 </ng-template>
