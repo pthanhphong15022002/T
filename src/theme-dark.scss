@@ -892,5 +892,8 @@ codx-view-list-detail .e-listview .e-list-parent {
         }
     }
  }
+ .aside-menu .menu-item .menu-title, .aside-footer .menu-item .menu-title {
+    color: var(--text-title);
+}
 
 //end dark
