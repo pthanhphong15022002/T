@@ -66,6 +66,7 @@ export class JournalsAddComponent extends UIComponent {
   ];
   fiscalYears:any;
   isPreventChange:any = false;
+  showInfo:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -96,15 +97,17 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.cache
+    if (!this.formJournal.form.data.isEdit) {
+      this.cache
       .viewSettingValues('ACParameters')
       .pipe(
         map((arr) => arr.filter((f) => f.category === '1')?.[0]),
         map((data) => JSON.parse(data.dataValue)?.IDIMControl)
       )
       .subscribe((res) => {
-        this.formJournal.form.setValue('idimControl',res,{onlySelf: true,emitEvent: false});
+        this.formJournal.form.setValue('idimControl',res,{});
       });
+    }
   }
   //#endregion Init
 
@@ -295,7 +298,7 @@ export class JournalsAddComponent extends UIComponent {
 
   openIDimControlForm(){
     let obj = {
-      lsselectidimcontrol: this.formJournal.form.data.idimControl == '' ? [] : [...this.formJournal.form.data.idimControl.split(';')],
+      lsselectidimcontrol: (this.formJournal.form.data.idimControl == '' || this.formJournal.form.data.idimControl == null) ? [] : [...this.formJournal.form.data.idimControl.split(';')],
       headerText : 'Thiết lập yếu tố tồn kho',
       showAll : false
     };
@@ -303,8 +306,8 @@ export class JournalsAddComponent extends UIComponent {
     let dialog = this.callfc.openForm(
       JournalsAddIdimcontrolComponent,
       '',
-      350,
-      500,
+      null,
+      null,
       '',
       obj,
       '',
@@ -312,7 +315,7 @@ export class JournalsAddComponent extends UIComponent {
     );
     dialog.closed.subscribe((res) => {
       if (res.event != null) {
-        this.formJournal.form.setValue('idimControl',res.event,{onlySelf: true,emitEvent: false,});
+        this.formJournal.form.setValue('idimControl',res.event,{});
         this.detectorRef.detectChanges();
       }
     });
