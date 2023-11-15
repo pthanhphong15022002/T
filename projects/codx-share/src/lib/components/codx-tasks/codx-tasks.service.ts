@@ -319,7 +319,7 @@ export class CodxTasksService {
   }
   //end
 
-  //clear Reference Task -15/11/2023-VTHAO
+  //clear Reference Task -VTHAO
   getReference(
     refType, // refType task
     refID, // recID cua nv dc ref
