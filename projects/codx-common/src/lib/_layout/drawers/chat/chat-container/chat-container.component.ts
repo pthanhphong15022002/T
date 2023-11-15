@@ -49,32 +49,39 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   windowNg: any = global;
   ngOnInit(): void {}
   ngAfterViewInit() {
-    // active new group
+    // add new box chat
     this.signalRSV.activeNewGroup.subscribe((res: any) => {
       if (res?.group) {
         this.handleBoxChat(res.group);
       }
     });
-    // active group
+    
+    // open box chat
     this.signalRSV.activeGroup.subscribe((res: any) => {
       if (res?.group) {
         this.handleBoxChat(res.group);
       }
     });
-    //receiver message
+    // open box chat
+    this.signalRSV.openBoxChat.subscribe((res: any) => {
+      if(res)
+      {
+        this.handleBoxChat(res.group);
+      }
+    });
+
+    // recive message
     this.signalRSV.chat.subscribe((res: any) => {
       if (res?.mssg) {
         this.handleBoxChat(res.mssg);
       }
     });
 
-    // this.signalRSV.disConnected.subscribe((res) => {
-
-    // });
   }
   ngOnDestroy(): void {}
   // handle box chat
   handleBoxChat(data: any) {
+    if(!data) return;
     let isOpen = this.lstGroupActive.some((x) => x.groupID == data.groupID);
     if (isOpen) return;
     // check collaspe

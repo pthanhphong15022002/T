@@ -67,9 +67,7 @@
                             </div>
                         </div>
                         <div class="note-date format-date d-flex justify-content-end">
-                            <span #createdOn class=" text-primary">{{item.createdOn | formatvalue: listview.formModel :
-                                'createdOn' : createdOn
-                                | async}}</span>
+                            <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | formatvalue: listview.formModel : 'createdOn' : createdOn | async"></span>
                         </div>
 
                     </div>
@@ -141,9 +139,9 @@
                             </div>
                         </div>
                         <div class="note-date format-date d-flex justify-content-end">
-                            <span #createdOn class=" text-primary">{{item.createdOn | formatvalue: listview.formModel :
-                                'createdOn' : createdOn
-                                | async}}</span>
+                            <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | formatvalue: listview.formModel :
+                            'createdOn' : createdOn
+                            | async"></span>
                         </div>
                     </div>
                 </div>

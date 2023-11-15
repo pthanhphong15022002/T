@@ -33,6 +33,7 @@ import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchaseinvoices-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { AllocationAddComponent } from '../allocation-add/allocation-add.component';
 
 @Component({
   selector: 'purchaseinvoices-detail',
@@ -138,6 +139,9 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
         break;
       case 'ACT060107':
         this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+      case 'ACT060108':
+        this.allocationVoucher(data, e.functionID); //? phân bổ chi phí chứng từ
         break;
     }
   }
@@ -408,6 +412,23 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
     this.shareService.printReport(reportID,reportType,params,this.formModel);    
   }
 
+  allocationVoucher(text: any, data: any){
+    let obj = {
+      data : data
+    }
+    let opt = new DialogModel();
+    let dialog = this.callfc.openForm(
+      AllocationAddComponent,
+      '',
+      null,
+      null,
+      '',
+      obj,
+      '',
+      opt
+    );
+  }
+
    /**
    * *Hàm mở form báo cáo
    */
@@ -438,96 +459,6 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
    */
   changeMFDetail(event: any, data: any, type: any = '') {
     this.acService.changeMFPur(event,data,type,this.journal,this.formModel);
-    // let arrBookmark = event.filter(
-    //   // danh sách các morefunction
-    //   (x: { functionID: string }) =>
-    //     x.functionID == 'ACT060103' || // MF ghi sổ
-    //     x.functionID == 'ACT060102' || // MF gửi duyệt
-    //     x.functionID == 'ACT060104' || // MF hủy yêu cầu duyệt
-    //     x.functionID == 'ACT060105' || // Mf khôi phục
-    //     x.functionID == 'ACT060107' || // Mf in
-    //     x.functionID == 'ACT060106'// MF kiểm tra tính hợp lệ
-    // );
-    // if (arrBookmark.length > 0) {
-    //   if (type == 'viewgrid') {
-    //     arrBookmark.forEach((element) => {
-    //       element.isbookmark = false;
-    //     });
-    //   }
-    //   switch (data?.status) {
-    //     case '1':
-    //       if (this.journal.approvalControl == '0') {
-    //         arrBookmark.forEach((element) => {
-    //           if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       } else {
-    //         arrBookmark.forEach((element) => {
-    //           if (element.functionID == 'ACT060102' || element.functionID == 'ACT060107') {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       }
-    //       break;
-    //     case '3':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060104' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '5':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '6':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060105' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '2':
-    //     case '7':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060106' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '9':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     default:
-    //       arrBookmark.forEach((element) => {
-    //         element.disabled = true;
-    //       });
-    //       break;
-    //   }
-    // }
-    // return;
   }
   
   /**
