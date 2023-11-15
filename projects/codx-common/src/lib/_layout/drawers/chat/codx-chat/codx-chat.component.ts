@@ -70,8 +70,10 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // get function - gridViewsetup
     if (this.funcID) {
-      this.cache.functionList(this.funcID).subscribe((func: any) => {
-        if (func) {
+      this.cache.functionList(this.funcID)
+      .subscribe((func: any) => {
+        if (func) 
+        {
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
@@ -96,22 +98,17 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    this.getCountMessage();
+    this.getTotalMessage();
     this.addContainerChat();
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.activeGroup.subscribe((res:any) => {
-      this.getCountMessage();
+    this.signalRSV.openBoxChat.subscribe((res:any) => {
+      this.getTotalMessage();
     });
-    // this.signalRSV.disConnected.subscribe((res) => {
-    //   debugger
-    //   let ele = document.getElementsByTagName("codx-chat-container");
-    //   ele[0].remove();
-    // })
   }
   // get count message
-  getCountMessage(){
+  getTotalMessage(){
     this.api.execSv(
       "WP",
       "ERM.Business.WP",
@@ -152,14 +149,16 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       AddGroupChatComponent,
       '',
       0,
-      window.innerHeight,
+      window.innerHeight - 100,
       this.function.funcID,
       data,
       '',
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event) {
+      debugger
+      if (res.event) 
+      {
         this.listChat.addGroup(res.event);
       }
       this.autoClose = true;
@@ -179,19 +178,20 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if (this.listChat) {
+    if (this.listChat) 
+    {
       this.listChat.search(event);
     }
   }
   //select goup chat
   selectItem(group: any) {
     group.isRead = true;
-    if (group.messageMissed > 0) {
+    if (group.messageMissed > 0) 
+    {
       group.messageMissed = 0;
       this.count -= group.messageMissed;
     }
     this.signalRSV.sendData('OpenGroupAsync', group);
-    this.dt.detectChanges();
   }
   // select item search
   selectItemSeach(item: any) {
@@ -205,7 +205,6 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   // close ngbDropdown
-  close() {
-    this.ngbDropdown.close();
+  clickBtnDropdown(){
   }
 }

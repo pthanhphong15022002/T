@@ -29,7 +29,7 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   user: import('codx-core').UserModel;
   approveProcess: ApproveProcess;
   files: any;
-  isAfterRender = false;
+  isAfterRender = true;
   listURL = [];
   constructor(
     private inject: Injector,
@@ -48,23 +48,23 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   }
 
   onInit(): void {
-    if(this.files?.length>0){
-      let sfFiles= this.files?.filter(x=>x.autoCreate=='3');//Chỉ lấy file export tự động(autoCreate=='3') để ký số
-      if(sfFiles?.length>0 && this.signFile?.files?.length>0){  
-        let nFiles = [];      
-        for(let i = 0; i < sfFiles?.length; i++){
-          let nFile = {...this.signFile.files[0]};            
-          nFile.fileID = sfFiles[i]?.recID;
-          nFile.fileName = sfFiles[i]?.fileName;
-          nFile.comment = sfFiles[i]?.extension;
-          nFiles.push(nFile);
-          this.listURL.push(sfFiles[i]?.url); 
-        }
-        this.signFile.files=nFiles;        
-        this.isAfterRender=true;
-        this.detectorRef.detectChanges();
-      }
-    }    
+    // if(this.files?.length>0){
+    //   let sfFiles= this.files?.filter(x=>x.autoCreate=='3');//Chỉ lấy file export tự động(autoCreate=='3') để ký số
+    //   if(sfFiles?.length>0 && this.signFile?.files?.length>0){  
+    //     let nFiles = [];      
+    //     for(let i = 0; i < sfFiles?.length; i++){
+    //       let nFile = {...this.signFile.files[0]};            
+    //       nFile.fileID = sfFiles[i]?.recID;
+    //       nFile.fileName = sfFiles[i]?.fileName;
+    //       nFile.comment = sfFiles[i]?.extension;
+    //       nFiles.push(nFile);
+    //       this.listURL.push(sfFiles[i]?.url); 
+    //     }
+    //     this.signFile.files=nFiles;        
+    //     this.isAfterRender=true;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }    
   }
 
   closePopup(){  
@@ -81,7 +81,8 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
         this.approveProcess?.funcID,
         null,
         this.approveProcess?.htmlView,
-        null
+        null,        
+        this.approveProcess?.approvers,
       )
       .subscribe((res) => {
         if (res?.msgCodeError == null && res?.rowCount > 0) {

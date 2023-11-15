@@ -1,5 +1,5 @@
 .chat-box{
-    width: 420px;
+    width: 400px;
     height: 580px;
     background-color:var(--bg-body);
     border: 1px var(--gray-150) solid;
@@ -106,7 +106,7 @@
     background-color:var(--gray-150);
     max-width: 250px;
     border-radius: 6px;
-    padding: 4px;
+    padding: 8px 10px;
     text-align: justify;
 }
 
@@ -135,13 +135,7 @@
     justify-content: end;
     align-items: end;
 }
-.message-reciver{
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    align-items: end;
-    position: relative;
-}
+
 .message-files{
     // width: 80%;
     width: 280px;
@@ -243,8 +237,9 @@ codx-chat-box.active{
     padding: 4px 10px;
 }
 .message-send-message{
+    color: #fff;
+    background-color: var(--bs-primary-rgb);
     border-radius: 6px;
-    background-color: var(--primary-lighter);
     padding: 4px;
 }
 .message-system{
