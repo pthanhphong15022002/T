@@ -202,17 +202,19 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.path = this.getPath();
     this.button = [
       {
-        id: 'btnCreatFolder',
-        icon: 'icon-i-plus',
-        text: 'Tạo thư mục',
-        hasSet: true,
-      },
-      {
         id: 'btnUpload',
         text: 'Tải lên',
         hasSet: true,
       }
     ];
+
+    if(this.codxService.asideMode == "2")
+      this.button.unshift({
+        id: 'btnCreatFolder',
+        icon: 'icon-i-plus',
+        text: 'Tạo thư mục',
+        hasSet: true,
+      });
     //Mặc định filter
     this.fileService.options.srtColumns = 'CreatedOn';
     this.fileService.options.srtDirections = 'desc';
