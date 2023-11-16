@@ -37,3 +37,15 @@
   padding: 0;
   overflow-x: hidden;
 }
+
+.user-mini-nav {
+  height: 26px;
+  padding: 3px 8px 2px 12px !important;
+  border-radius: 20px;
+  background-color: #f3f3f3;
+  margin-left: 2px;
+}
+
+.user-mini-nav .user-avatar {
+  margin-left: -10px;
+}
