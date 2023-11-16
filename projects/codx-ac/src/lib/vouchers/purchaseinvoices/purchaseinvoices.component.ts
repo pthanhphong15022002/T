@@ -12,9 +12,11 @@ import {
   DataRequest,
   DialogModel,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   TenantStore,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -39,6 +41,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  @ViewChild('xml', { read: ElementRef }) private xml: ElementRef; //Input import xml
+
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
@@ -54,6 +58,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+
   moreFuncs: Array<ButtonModel> = [
     {
       id: 'btnImportXml',
@@ -172,6 +177,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
         break;
+      case 'btnImportXml':
+        this.xml.nativeElement.click();
+        break;
     }
   }
 
@@ -249,6 +257,49 @@ export class PurchaseinvoicesComponent extends UIComponent {
           );
         }
       });
+  }
+
+  /**
+   * Import hóa đơn từ hóa đơn điện tử
+   */
+  importInvoice(event: any) {
+    const input = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const bytes = (e.target.result as string).split('base64,')[1];
+      this.api
+        .exec('AC', 'PurchaseInvoicesBusiness', 'ImportInvoiceAsync', [
+          bytes,
+          this.journalNo,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            let master = res;
+            this.view.dataService.add(master).subscribe();
+            this.view.dataService.dataSelected = master;
+            this.view.dataService
+              .edit(master)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                res.isEdit = true;
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...master }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán,
+                };
+                let dialog = this.callfc.openSide(
+                  PurchaseinvoicesAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+              });
+          }
+        });
+    };
+    reader.readAsDataURL(input);
   }
 
   /**
@@ -339,7 +390,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [
         data.recID,
-        text
+        text,
       ])
       .subscribe((res: any) => {
         if (res?.update) {
@@ -357,7 +408,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data.recID,text])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [
+        data.recID,
+        text,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -376,7 +430,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [
         data.recID,
-        text
+        text,
       ])
       .subscribe((res: any) => {
         if (res?.update) {
@@ -488,9 +542,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
-    }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 
   /**
@@ -522,8 +581,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
+    if (this.view?.views) {
+      let view = this.view?.views.find((x) => x.type == 1);
       if (view && view.active == true) return;
     }
     if (typeof event.data !== 'undefined') {
