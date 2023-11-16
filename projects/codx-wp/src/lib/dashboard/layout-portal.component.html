@@ -19,6 +19,9 @@
             [hasSecond]="false"
             (asideClick)="asideClick($event)"
             class="wp-portal"
+            [className]="codxService.asideMode == '2'?'FormSettingsBusiness':null"
+            [method]="codxService.asideMode == '2'?'GetFormSettingAsync':null"
+            [dataValue]="codxService.asideMode == '2'?'Comments':null"
           >
           </codx-aside>
           <div class="dashboard-content">

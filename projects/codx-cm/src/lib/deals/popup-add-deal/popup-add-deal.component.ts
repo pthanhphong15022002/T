@@ -47,7 +47,8 @@ export class PopupAddDealComponent
 {
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
-  @ViewChild('tabCustomFieldDetail') tabCustomFieldDetail: TemplateRef<any>;
+  @ViewChild('tabCustomFieldDetail')
+  tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail')
   tabGeneralContactDetail: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
@@ -154,7 +155,7 @@ export class PopupAddDealComponent
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
   currencyIDOld: string;
-
+  autoNameTabFields: string;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -277,6 +278,34 @@ export class PopupAddDealComponent
 
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
+
+  //get autoname tab fields
+  setAutoNameTabFields(autoNameTabFields) {
+    this.autoNameTabFields = autoNameTabFields;
+    if (this.menuInputInfo) {
+      this.menuInputInfo.text =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Thông tin mở rộng';
+      this.menuInputInfo.subName =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Input information';
+      this.menuInputInfo.subText =
+        this.autoNameTabFields && this.autoNameTabFields.trim() != ''
+          ? this.autoNameTabFields
+          : 'Input information';
+      const menuInput = this.tabInfo.findIndex(
+        (item) => item?.name === this.menuInputInfo?.name
+      );
+      if (menuInput != -1) {
+        this.tabInfo[menuInput] = JSON.parse(
+          JSON.stringify(this.menuInputInfo)
+        );
+      }
+    }
+  }
+  //end
 
   valueChange($event) {
     if ($event) {
@@ -500,15 +529,15 @@ export class PopupAddDealComponent
     //   );
     //   return;
     // }
-    if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
-      this.notificationsService.notifyCode(
-        'DP032',
-        0,
-        '"' + this.gridViewSetup['EndDate']?.headerText + '"',
-        '"' + this.dateMessage + '"'
-      );
-      return;
-    }
+    // if (this.checkEndDayInstance(this.deal?.endDate, this.dateMax)) {
+    //   this.notificationsService.notifyCode(
+    //     'DP032',
+    //     0,
+    //     '"' + this.gridViewSetup['EndDate']?.headerText + '"',
+    //     '"' + this.dateMessage + '"'
+    //   );
+    //   return;
+    // }
     let ischeck = true;
     let ischeckFormat = true;
     let title = '';
@@ -570,6 +599,7 @@ export class PopupAddDealComponent
         case 'A':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event?.e;
           break;
         case 'C':
@@ -726,6 +756,7 @@ export class PopupAddDealComponent
                   ? null
                   : this.deal.createdOn
               );
+              this.setAutoNameTabFields(result?.autoNameTabFields);
               this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
               if (this.listParticipants && this.listParticipants?.length > 0) {
                 let index = this.listParticipants.findIndex(
@@ -923,7 +954,9 @@ export class PopupAddDealComponent
                     ? null
                     : this.deal.createdOn
                 );
+                this.setAutoNameTabFields(result?.autoNameTabFields);
                 this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.getListInstanceSteps(this.deal.processID);
@@ -942,12 +975,15 @@ export class PopupAddDealComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
+          autoNameTabFields: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
+        const autoNameTabFields = res[3];
+        this.setAutoNameTabFields(autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
@@ -962,7 +998,7 @@ export class PopupAddDealComponent
           }
           this.deal.dealID = res[2];
         }
-        this.deal.endDate = this.HandleEndDate(
+        this.dateMax = this.HandleEndDate(
           this.listInstanceSteps,
           this.action,
           this.action !== this.actionEdit ||
@@ -971,11 +1007,8 @@ export class PopupAddDealComponent
             ? null
             : this.deal.createdOn
         );
-        this.dateMax = this.HandleEndDate(
-          this.listInstanceSteps,
-          this.action,
-          this.action != this.actionEdit ? null : this.deal.createdOn
-        );
+        this.deal.endDate =
+          this.action === this.actionEdit ? this.deal?.endDate : this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1090,14 +1123,17 @@ export class PopupAddDealComponent
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
-      endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-      endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-      endDate = this.setTimeHoliday(
-        dateNow,
-        endDate,
-        listSteps[i]?.excludeDayoff
-      );
-      dateNow = endDate;
+      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+        endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
+        endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
+        endDate = this.setTimeHoliday(
+          dateNow,
+          endDate,
+          listSteps[i]?.excludeDayoff
+        );
+        dateNow = endDate;
+      }
+
     }
     return endDate;
   }
@@ -1115,6 +1151,7 @@ export class PopupAddDealComponent
         day += currentDate.getDay() === 6 && isSaturday ? 1 : 0;
         day += currentDate.getDay() === 0 && isSunday ? 1 : 0;
       }
+      let isEndSaturday = endDay.getDay() === 6;
       endDay.setDate(endDay.getDate() + day);
 
       if (endDay.getDay() === 6 && isSaturday) {
@@ -1122,7 +1159,10 @@ export class PopupAddDealComponent
       }
 
       if (endDay.getDay() === 0 && isSunday) {
-        endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        if (!isEndSaturday) {
+          endDay.setDate(endDay.getDate() + (isSaturday ? 1 : 0));
+        }
+        endDay.setDate(endDay.getDate() + (isSunday ? 1 : 0));
       }
     }
     return endDay;
@@ -1153,31 +1193,34 @@ export class PopupAddDealComponent
 
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
-    let menuInput = this.tabInfo.find((item) => item === this.menuInputInfo);
-    let tabInput = this.tabContent.find(
+    let menuInput = this.tabInfo.findIndex(
+      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+    );
+    let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if (check && !menuInput && !tabInput) {
+    if (check && menuInput == -1 && tabInput == -1) {
       this.tabInfo.splice(2, 0, this.menuInputInfo);
       this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    } else if (!check && menuInput && tabInput) {
-      this.tabInfo.splice(2, 1);
-      this.tabContent.splice(2, 1);
+    } else if (!check && menuInput != -1 && tabInput != -1) {
+      this.tabInfo.splice(menuInput, 1);
+      this.tabContent.splice(tabInput, 1);
     }
   }
+
   itemTabContact(check: boolean): void {
-    let menuContact = this.tabInfo.find(
+    let menuContact = this.tabInfo.findIndex(
       (item) => item === this.menuGeneralContact
     );
-    let tabContact = this.tabContent.find(
+    let tabContact = this.tabContent.findIndex(
       (item) => item === this.tabGeneralContactDetail
     );
-    if (check && !menuContact && !tabContact) {
+    if (check && menuContact == -1 && tabContact == -1) {
       this.tabInfo.splice(1, 0, this.menuGeneralContact);
       this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact && tabContact) {
-      this.tabInfo.splice(1, 1);
-      this.tabContent.splice(1, 1);
+      this.tabInfo.splice(menuContact, 1);
+      this.tabContent.splice(tabContact, 1);
     }
   }
   ischeckFields(steps: any): boolean {

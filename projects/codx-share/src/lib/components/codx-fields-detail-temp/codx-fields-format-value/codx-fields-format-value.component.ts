@@ -1,7 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  DataRequest,
+  FormModel,
+} from 'codx-core';
 import moment from 'moment';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'codx-fields-format-value',
@@ -27,29 +31,35 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   arrDataValue: any[];
   settingWidth = false;
   settingCount = false;
+  count: number = 0;
+  dataValueTypeC: any = [];
+  dataValueTypeV: any = [];
+  dataValueTypePA: any = [];
 
   constructor(
     private cache: CacheService,
-    private changeRef: ChangeDetectorRef
-  ) {
-    // this.cache.valueList('DP0274').subscribe((res) => {
-    //   if (res) this.dtFormatDate = res.datas;
-    // });
-  }
+    private changeRef: ChangeDetectorRef,
+    private api: ApiHttpService
+  ) {}
 
-  ngOnChanges() {
-    // if (this.data.dataType == 'TA') this.getColumnTable(this.data);
-    this.changeRef.detectChanges();
-  }
+  // ngOnChanges() {
+  //   // if (this.data.dataType == 'TA') this.getColumnTable(this.data);
+  //   //this.changeRef.detectChanges();
+  // }
   ngOnInit(): void {
     switch (this.data.dataType) {
-      case 'D':
-        this.cache.valueList('DP0274').subscribe((res) => {
-          if (res) this.dtFormatDate = res.datas;
-        });
-        break;
       case 'TA':
         this.getColumnTable(this.data);
+        break;
+      case 'C':
+        this.dataValueTypeC = this.parseValue(this.data.dataValue);
+        break;
+      case 'L':
+        if (this.data.dataFormat == 'V')
+          this.dataValueTypeV = this.listValue(this.data.dataValue);
+        break;
+      case 'PA':
+        this.parseValuePA(this.data.dataValue);
         break;
     }
   }
@@ -60,6 +70,54 @@ export class CodxFieldsFormatValueComponent implements OnInit {
 
   listValue(dataValue) {
     return dataValue?.split(';');
+  }
+
+  parseValuePA(dataValue) {
+    this.dataValueTypePA = [];
+    if (!this.data.dataFormat) return;
+    this.cache.combobox(this.data.refValue).subscribe((res) => {
+      let gridModel = new DataRequest();
+      let entityName = res?.tableName;
+      gridModel.entityName = entityName;
+      gridModel.entityPermission = entityName;
+      gridModel.pageLoading = false;
+
+      let predicate = res.valueMember + '=@0';
+      if (res.predicate) {
+        predicate += ' and ' + res.predicate;
+      }
+      gridModel.predicate = predicate;
+      gridModel.dataValue = dataValue;
+
+      this.api
+        .execSv<any>(
+          res.service,
+          'ERM.Business.Core',
+          'DataBusiness',
+          'LoadDataAsync',
+          gridModel
+        )
+        .subscribe((dataRes) => {
+          if (dataRes) {
+            let crrData = dataRes[0][0];
+            let dataFormat = JSON.parse(this.data.dataFormat);
+            if (Array.isArray(dataFormat) && dataFormat?.length > 0) {
+              dataFormat.forEach((x) => {
+                let value = '';
+                for (var key in crrData) {
+                  if (
+                    key.toLocaleLowerCase() == x.fieldName.toLocaleLowerCase()
+                  ) {
+                    value = crrData[key];
+                  }
+                }
+                let obj = Object.assign(x, { dataValue: value });
+                this.dataValueTypePA.push(obj);
+              });
+            }
+          }
+        });
+    });
   }
 
   //--------------format table---------------//
@@ -99,43 +157,4 @@ export class CodxFieldsFormatValueComponent implements OnInit {
     return arrTable;
   }
   //--------------end------------//
-
-  getFormatTime(dv) {
-    if (!dv) return '';
-    var arrTime = dv.split(':');
-    return moment(new Date())
-      .set({ hour: arrTime[0], minute: arrTime[1] })
-      .toDate();
-  }
-  formatNumber(dt) {
-    if (!dt.dataValue) return '';
-    if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-    return (
-      Number.parseFloat(dt.dataValue).toFixed(2) +
-      (dt.dataFormat == 'P' ? '%' : '')
-    );
-  }
-  partNum(num): number {
-    return Number.parseInt(num);
-  }
-
-  fomatvalue(df) {
-    //xu ly tam
-    if (!this.dtFormatDate) {
-      this.cache.valueList('DP0274').subscribe((res) => {
-        if (res) {
-          this.dtFormatDate = res.datas;
-          return this.getFormatValue(df);
-        }
-      });
-    } else {
-      return this.getFormatValue(df);
-    }
-  }
-
-  getFormatValue(df) {
-    var index = this.dtFormatDate?.findIndex((x) => x.value == df);
-    if (index == -1) return '';
-    return this.dtFormatDate[index]?.text;
-  }
 }

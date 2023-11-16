@@ -19,7 +19,7 @@ import {
   Util,
 } from 'codx-core';
 import { SignalRService } from '../../services/signalr.service';
-import { WP_Groups } from '../../models/WP_Groups.model';
+import { GroupItem, WP_Groups } from '../../models/WP_Groups.model';
 
 @Component({
   selector: 'chat-popup-add',
@@ -32,13 +32,13 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   gridViewSetUp: any = null;
   user: any = null;
   headerText: string = '';
-  group: WP_Groups;
+  group: GroupItem;
   gridModel: DataRequest;
   strUserID: string = '';
   arrUsers: string[] = [];
   @ViewChild('codxImg') codxImg: ImageViewerComponent;
-  @ViewChild('listview') listview: CodxListviewComponent;
-  @ViewChild('listviewSelected') listviewSelected: CodxListviewComponent;
+  @ViewChild('codxListView1') codxListView1: CodxListviewComponent;
+  @ViewChild('codxListView2') codxListView2: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
     private notifiSV: NotificationsService,
@@ -51,14 +51,17 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
     this.user = this.auth.get();
-    this.group = new WP_Groups();
+    this.group = new GroupItem();
     this.gridModel = new DataRequest();
   }
 
   ngOnInit(): void {
     this.setData();
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.codxListView1.onResize();
+    this.codxListView2.onResize();
+  }
   // set data
   setData() {
     if (this.dialogData) {
@@ -69,7 +72,7 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   }
 
   searchEvent(textSearch: any) {
-    this.listview.dataService.search(textSearch);
+    this.codxListView1.dataService.search(textSearch);
   }
   // value change
   valueChange(event) {
@@ -91,11 +94,14 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
         let member = {
           userID: itemSelected.UserID,
           userName: itemSelected.UserName,
+          tags:"",
+          createdBy:this.user.userID,
+          createdOn:new Date()
         };
         this.group.members.push(member);
         this.arrUsers.push(itemSelected.UserID);
         this.strUserID += itemSelected.UserID + ';';
-        (this.listviewSelected.dataService as CRUDService)
+        (this.codxListView2.dataService as CRUDService)
           .add(itemSelected)
           .subscribe((x) => {
             this.dt.detectChanges();
@@ -122,9 +128,8 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     if (data) {
       this.group.members = this.group.members.filter((x) => x != data.UserID);
       this.arrUsers = this.arrUsers.filter((x) => x != data.UserID);
-      this.strUserID = this.arrUsers.toString();
-      this.dt.detectChanges();
-      (this.listviewSelected.dataService as CRUDService)
+      this.strUserID = this.arrUsers.join(";");
+      (this.codxListView2.dataService as CRUDService)
         .remove(data)
         .subscribe((x) => {
           var input = document.querySelector(
@@ -134,64 +139,44 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
             input.classList.remove('e-check');
           }
         });
+      this.dt.detectChanges();
     }
   }
 
-  selectedFile(file: any) {
-    this.isUploadFile = true;
-  }
-  loading: boolean = false;
-  isUploadFile: boolean = false;
+  isLoading: boolean = false;
   // insert group
   insertGroup() {
     debugger;
-    if (this.group) {
-      if (!this.group.members || this.group.members.length == 0) {
-        this.notifiSV.notify('Vui lòng chọn thành viên');
-        return;
-      }
-      this.loading = true;
-      this.group.groupID = Util.uid();
-      this.group.groupType = '2';
-      if (this.isUploadFile) {
-        this.codxImg
-          .updateFileDirectReload(this.group.groupID)
-          .subscribe((res: any) => {
-            this.api
-              .execSv(
-                'WP',
-                'ERM.Business.WP',
-                'GroupBusiness',
-                'InsertGroupAsync',
-                [this.group]
-              )
-              .subscribe((res: boolean) => {
-                if (res) {
-                  this.signalRSV.sendData('AddNewGroup', this.group.groupID);
-                  this.notifiSV.notifyCode('CHAT004');
-                  this.dialogRef.close(res);
-                } else this.notifiSV.notifyCode('CHAT005');
-                this.loading = true;
-              });
-          });
-      } else {
-        this.api
-          .execSv(
-            'WP',
-            'ERM.Business.WP',
-            'GroupBusiness',
-            'InsertGroupAsync',
-            [this.group]
-          )
-          .subscribe((res: boolean) => {
-            if (res) {
-              this.signalRSV.sendData('AddNewGroup', this.group.groupID);
-              this.notifiSV.notifyCode('CHAT004');
-              this.dialogRef.close(res);
-            } else this.notifiSV.notifyCode('CHAT005');
-            this.loading = true;
-          });
-      }
+    if (!this.group.members || this.group.members.length == 0)
+    {
+      this.notifiSV.notify('Vui lòng chọn thành viên');
+      return;
     }
+    this.isLoading = true;
+    this.group.createdBy = this.user.userID;
+    this.api
+    .execSv(
+      'WP',
+      'ERM.Business.WP',
+      'GroupBusiness',
+      'InsertGroupAsync',
+      this.group)
+      .subscribe((res: boolean) => {
+      if (res) 
+      {
+        this.codxImg
+        .updateFileDirectReload(this.group.groupID)
+        .subscribe((res: any) => 
+        {
+          this.signalRSV.sendData('OpenBoxChat', this.group.groupID);
+          this.notifiSV.notifyCode('CHAT004');
+          this.dialogRef.close(res);
+        });
+      } 
+      else this.notifiSV.notifyCode('CHAT005');
+      this.group = new GroupItem();
+      this.isLoading = true;
+      this.dt.detectChanges();
+    });
   }
 }

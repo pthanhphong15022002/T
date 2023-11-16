@@ -406,28 +406,12 @@
                     fiedName="StartDate"
                     formName="Tasks"
                     gridViewName="grvTasks"
-                    default="Ngày bắt đầu"
                   >
                   </codx-label>
                 </div>
                 <span
-                  *ngIf="itemSelected?.startDate"
                   class="text-gray-700"
                   #startDate
-                  [innerHTML]="
-                    itemSelected?.startDate
-                      | formatvalue
-                        : formModel
-                        : 'startDate'
-                        : startDate
-                        : 'Tasks'
-                        : 'grvTasks'
-                      | async
-                  "
-                ></span>
-                <span
-                  #startDate
-                  *ngIf="!itemSelected?.startDate"
                   [innerHTML]="
                     itemSelected?.startDate
                       | formatvalue
@@ -452,7 +436,6 @@
                   </codx-label>
                 </div>
                 <span
-                  *ngIf="itemSelected?.endDate"
                   class="text-gray-700"
                   #endDate
                   [innerHTML]="
@@ -467,15 +450,27 @@
                   "
                 >
                 </span>
+              </div>
+              <div class="d-flex me-6" *ngIf="itemSelected?.startedOn">
+                <div class="fw-bold">
+                  <codx-label
+                    class="label-colon"
+                    fiedName="StartOn"
+                    formName="Tasks"
+                    gridViewName="grvTasks"
+                    default="Ngày bắt đầu thực tế"
+                  >
+                  </codx-label>
+                </div>
                 <span
-                  #endDate
-                  *ngIf="!itemSelected?.endDate"
+                  class="text-gray-700"
+                  #startedOn
                   [innerHTML]="
-                    itemSelected?.endDate
+                    itemSelected?.startedOn
                       | formatvalue
                         : formModel
-                        : 'endDate'
-                        : endDate
+                        : 'startedOn'
+                        : startedOn
                         : 'Tasks'
                         : 'grvTasks'
                       | async
@@ -494,7 +489,6 @@
                   </codx-label>
                 </div>
                 <span
-                  *ngIf="itemSelected?.completedOn"
                   class="text-gray-700"
                   #completedOnCrr
                   [innerHTML]="
@@ -508,23 +502,42 @@
                       | async
                   "
                 >
-                  | {{ itemSelected.completed }} <span>h</span>
                 </span>
-                <span
-                  *ngIf="!itemSelected?.completedOn"
-                  #completedOn
-                  [innerHTML]="
-                    itemSelected?.completedOn
-                      | formatvalue
-                        : formModel
-                        : 'completedOn'
-                        : completedOn
-                        : 'Tasks'
-                        : 'grvTasks'
-                      | async
-                  "
-                >
-                </span>
+                <ng-container *ngIf="itemSelected?.completedOn">
+                  <codx-label
+                    class="me-2 ms-2"
+                    name="attributeSeparation"
+                    formName="Tasks"
+                    gridViewName="grvTasks"
+                    [default]="'|'"
+                  ></codx-label>
+                  <span
+                    class="text-gray-700"
+                    #completed
+                    [innerHTML]="
+                      itemSelected?.completed
+                        | formatvalue
+                          : formModel
+                          : 'completed'
+                          : completed
+                          : 'Tasks'
+                          : 'grvTasks'
+                        | async
+                    "
+                  >
+                  </span>
+                  <codx-label
+                    class="ms-1"
+                    name="attributeSeparation"
+                    formName="Tasks"
+                    gridViewName="grvTasks"
+                    [default]="'h'"
+                  ></codx-label>
+                </ng-container>
+
+                <!-- <span>
+                  {{ " | " + itemSelected.completed + " h" }}
+                </span> -->
               </div>
             </div>
           </div>

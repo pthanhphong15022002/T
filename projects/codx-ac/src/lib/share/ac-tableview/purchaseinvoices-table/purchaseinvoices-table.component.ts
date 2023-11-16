@@ -12,6 +12,7 @@ export class PurchaseinvoicesTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
+  @Input() journal: any;
 
   totalNetAmt:any = 0; //? tổng thành tiền tab thông tin hóa đơn
   totalQuantity:any = 0; //? tổng số lượng tab thông tin hóa đơn

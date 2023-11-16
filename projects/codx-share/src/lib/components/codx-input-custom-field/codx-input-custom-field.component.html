@@ -1,71 +1,83 @@
 <div class="form-group w-100">
   <!-- <div class="d-flex justify-content-between">
     <div class="'justify-content-start"> -->
-    <div class="d-flex align-items-center mb-2">
-      <div class="me-5">
+  <div class="d-flex align-items-center mb-2">
+    <div class="me-5">
+      <codx-label
+        *ngIf="showTitle"
+        [name]="customField.fieldName"
+        formName="DPInstancesStepsFields"
+        gridViewName="grvDPInstancesStepsFields"
+        [default]="customField.title"
+      >
+      </codx-label>
+      <codx-label
+        *ngIf="!showTitle"
+        fiedName="DefaultValue"
+        formName="DPStepsFields"
+        gridViewName="grvDPStepsFields"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex align-items-center text-gray-600">
+      <span *ngIf="viewFieldName && customField.fieldName">
+        {{ "(" + customField.fieldName + ")" }}
+      </span>
+      <span *ngIf="customField.isRequired">
         <codx-label
-          [name]="customField.fieldName"
+          class="text-danger"
+          name="attentionIsRequired"
           formName="DPInstancesStepsFields"
           gridViewName="grvDPInstancesStepsFields"
-          [default]="customField.title"
+          default="*"
         >
         </codx-label>
-      </div>
-      <div class="d-flex align-items-center text-gray-600">
-        <span *ngIf="viewFieldName && customField.fieldName">
-          {{ "(" + customField.fieldName + ")" }}
-        </span>
-        <span *ngIf="customField.isRequired">
-          <codx-label
-            class="text-danger"
-            name="attentionIsRequired"
-            formName="DPInstancesStepsFields"
-            gridViewName="grvDPInstancesStepsFields"
-            default="*"
-          >
-          </codx-label>
-        </span>
-        <span
-          *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
-          class="codx-label"
+      </span>
+      <span
+        *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
+        class="codx-label"
+      >
+        (%)
+      </span>
+      <!-- </div> -->
+      <!-- <div class="d-flex justify-content-end"> -->
+      <button
+        type="button"
+        *ngIf="customField.dataType == 'A'"
+        class="me-5 btn btn-icon btn-light-primary"
+        (click)="!disable ? addFile() : ''"
+      >
+        <span class="icon-attach_file icon-18"></span>
+      </button>
+      <span
+        *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
+        class="ms-2"
+      >
+        <button
+          type="button"
+          class="btn btn-icon btn-light-primary"
+          (click)="
+            customField.dataType == 'P' ? openUserPopup() : openContact()
+          "
+          [disabled]="disable"
         >
-          (%)
-        </span>
-        <!-- </div> -->
-        <!-- <div class="d-flex justify-content-end"> -->
-        <span
-          *ngIf="customField.dataType == 'A'"
-          class="me-5 text-hover-primary icon-attach_file icon-20 text-dark cursor-pointer"
-          (click)="!disable ? addFile() : ''"
-        ></span>
-        <span
-          *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
-          class="ms-2"
+          <span class="icon-group_add icon-16"></span>
+        </button>
+      </span>
+      <span *ngIf="customField.dataType == 'TA'" class="ms-2">
+        <button
+          type="button"
+          class="btn btn-icon btn-light-primary me-2"
+          (click)="clickAddLine()"
+          [disabled]="disable"
         >
-          <button
-            type="button"
-            class="btn btn-icon btn-light-primary"
-            (click)="customField.dataType == 'P' ? openUserPopup() : openContact()"
-            [disabled]="disable"
-          >
-            <span class="icon-group_add icon-16"></span>
-          </button>
-        </span>
-        <span *ngIf="customField.dataType == 'TA'" class="ms-2">
-          <button
-            type="button"
-            class="btn btn-icon btn-light-primary me-2"
-            (click)="clickAddLine()"
-            [disabled]="disable"
-          >
-            <i class="icon-add_box icon-16"></i></button
-        ></span>
-        <!-- </div> -->
-        <!-- </div> -->
-      </div>
+          <i class="icon-add_box icon-16"></i></button
+      ></span>
+      <!-- </div> -->
+      <!-- </div> -->
     </div>
-  
-  
+  </div>
+
   <ng-container *ngIf="customField.dataType == 'T'">
     <codx-input
       *ngIf="customField.dataFormat != 'L'"
@@ -205,8 +217,11 @@
         <div class="me-5" style="position: relative">
           <codx-img class="" [objectId]="id" objectType="AD_Users"> </codx-img>
           <div style="position: absolute; right: -5px; top: -5px">
-            <button type="button"
-              class="btn btn-icon btn-xs btn-danger" (click)="deleteUser(id)">
+            <button
+              type="button"
+              class="btn btn-icon btn-xs btn-danger"
+              (click)="deleteUser(id)"
+            >
               <i class="icon-close icon-12"></i>
             </button>
           </div>
@@ -540,6 +555,22 @@
     </div>
   </ng-container>
 
+  <ng-container *ngIf="customField.dataType == 'PA'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="combobox"
+      [refValue]="customField.refValue"
+      [placeholder]="customField.note || ''"
+      [crrValue]="customField.dataValue || ''"
+      (keyUpEnter)="valueChangeCbxPA($event)"
+      (valueChange)="valueChangeCbxPA($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+    <div class="text-gray-600 ms-3" data-field="">
+      {{ dataRef }}
+    </div>
+  </ng-container>
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
     {{ errorMessage }}
   </div>

@@ -1,0 +1,576 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [formModel]="formModel"
+>
+  <ng-template #body let-dialog>
+    <div class="container h-100 p-0" *ngIf="isLoaded">
+      <div class="row h-100">
+        <div class="col-4 h-100 p-0">
+          <div class="container h-100 p-0">
+            <div class="row overflow-scroll overflow-x-hidden border-end h-100">
+              <ejs-treeview
+                #treeELe
+                id="formSetting"
+                [cssClass]="''"
+                [fields]="field"
+                sortOder="Ascending"
+                [allowDragAndDrop]="true"
+                (nodeSelected)="onSelected($event)"
+                (created)="onCreate(treeELe)"
+                (nodeDropped)="nodeDropped($event)"
+                (nodeDragStop)="nodeDragStop($event)"
+                (nodeDragging)="nodeDragging($event)"
+                (nodeClicked)="nodeclicked($event)"
+                [expandOn]="'Click'"
+              >
+                <ng-template #nodeTemplate="" let-data="">
+                  <div>
+                    <div class="d-flex align-items-center hover-ne">
+                      <div
+                        class="mx-2 w-100"
+                        [ngClass]="
+                          data.functionType == 'G'
+                            ? 'border-top fw-bold d-flex align-items-center'
+                            : ''
+                        "
+                      >
+                        <div
+                          style="width: 90%"
+                          class="d-flex align-items-center justify-content-start"
+                        >
+                          <span class="text-dark fs-6 text-hover-primary">{{
+                            data.customName
+                          }}</span>
+                        </div>
+                        <div
+                          style="width: 10%"
+                          class="d-flex align-items-center justify-content-end"
+                          *ngIf="data.functionType == 'G'"
+                          [title]="'Thêm chức năng'"
+                        >
+                          <button
+                            class="btn btn-sm btn-linght ms-5 float-end"
+                            (click)="
+                              $event.preventDefault(); onAddFunc(data.recID)
+                            "
+                          >
+                            <i
+                              class="icon-add_circle_outline text-primary"
+                              style="font-size: 21px !important"
+                            ></i>
+                          </button>
+                        </div>
+                      </div>
+                      <!-- <div  class="ms-3">
+                              <span class="treeCount e-badge e-badge-primary"  *ngIf="data.functionType">{{ data.functionType }}</span>
+                          </div> -->
+                    </div>
+                  </div>
+
+                </ng-template>
+              </ejs-treeview>
+            </div>
+            <!-- <div class="row" style="height: 50px">
+                <div class="d-flex align-items-center">
+
+                    <div class="mx-2 w-100  fs-5 d-flex align-items-center" (click)="onAddGroup()">
+                      <i class="icon-add_circle_outline me-3 text-primary"></i> <span class="text-muted fs-5">Thêm nhóm</span>
+                    </div>
+
+                </div>
+              </div> -->
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="container h-100">
+            <div class="row">
+              <div class="col d-flex justify-content-start" *ngIf="isEditGroup">
+                <div class="container p-0 h-100" *ngIf="selectedData">
+                  <span class="fs-5 fw-bold text-dark"
+                  ><codx-label
+                    name="lblEditGroup"
+                    default="Chỉnh sửa Nhóm"
+                    [formName]="'sys'"
+                  ></codx-label></span
+                >&nbsp;
+
+                <!-- <div class="row px-5 pt-3">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      default="Đường dẫn"
+                      name="lblUrl"
+                      formName="sys"
+                    >
+                    </codx-label>
+                    <div class="container p-0">
+                      <div class="row">
+                        <div class="col-11">
+                          <codx-input
+                          field="url"
+                          [crrValue]="selectedData?.url"
+                          type="text"
+                          (valueChange)="valueChange($event)"
+                        >
+                        </codx-input>
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                          <codx-input type="combobox" refType="P5" refValue="SYS063" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbChange($event)"></codx-input>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div> -->
+                <div class="row px-5 pt-2">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      default="Tên Nhóm chức năng"
+                      name="lblGroupName"
+                      formName="sys"
+                    >
+                    </codx-label>
+                    <codx-input
+                      field="name"
+                      [crrValue]="selectedData?.name"
+                      type="text"
+                      (valueChange)="valueChange($event)"
+                    >
+                    </codx-input>
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-start" *ngIf="isEditFunc">
+                <div class="container p-0 h-100" *ngIf="selectedData">
+                  <span class="fs-5 fw-bold text-dark"
+                    ><codx-label
+                      name="lblEditFunc"
+                      default="Chỉnh sửa Chức năng"
+                      [formName]="'sys'"
+                    ></codx-label></span
+                  >&nbsp;
+                  <span class="fs-4 fw-bold text-dark">
+                    : {{ selectedItem?.text }}</span
+                  >
+                  <div class="row px-5 pt-3">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        default="Đường dẫn"
+                        name="lblUrl"
+                        formName="sys"
+                      >
+                      </codx-label>
+                      <div class="container p-0">
+                        <div class="row">
+
+                          <div class="col-11">
+                            <codx-input
+                            field="url"
+                            [crrValue]="selectedData?.url"
+                            type="text"
+                            (valueChange)="valueChange($event)"
+                            [disabled]="!isEnableEdit"
+                          >
+                          </codx-input>
+                          </div>
+                          <div class="col-1 d-flex justify-content-end">
+                            <codx-input type="combobox" refType="P5" refValue="SYS063" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbChange($event)"></codx-input>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        default="Tên chức năng"
+                        name="lblFuctionName"
+                        formName="sys"
+                      >
+                      </codx-label>
+                      <codx-input
+                        field="name"
+                        [crrValue]="selectedData?.name"
+                        type="text"
+                        (valueChange)="valueChange($event)"
+                      >
+                      </codx-input>
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col-4 form-group ps-0">
+                      <codx-label
+                        name="lblIcon"
+                        formName="sys"
+                        default="Icon"
+                      ></codx-label>
+                    </div>
+                    <div class="col-8 d-flex align-items-center h-50px">
+                      <codx-input
+                        type="vllicon"
+                        refValue="L1470"
+                        [field]="'icon'"
+                        [crrValue]="selectedData?.icon"
+                        class="bg-transparent"
+                        (valueChange)="valueChange($event)"
+                      ></codx-input>
+                      <div
+                        class="ps-3 d-flex justify-content-center align-items-center"
+                      >
+                        <codx-colorpicker
+                          [field]="'color'"
+                          mode="Picker"
+                          [value]="selectedData?.color"
+                          (valueChange)="valueChange($event)"
+                        ></codx-colorpicker>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col-4 form-group ps-0">
+                      <codx-label
+                        name="lblImage"
+                        formName="sys"
+                        default="Hình ảnh"
+                      ></codx-label>
+                    </div>
+                    <div class="col-8 form-group d-flex align-items-center">
+                      <codx-img
+                        class="symbol symbol-60px me-5"
+                        objectType="SYS_FormSettings"
+                        [objectId]="selectedData.recID"
+                        [funcId]="selectedData.refID"
+                        [updateDirect]="true"
+                        [isAllowEdit]="true"
+                        [width]="80"
+                        (dataChanged)="imgChanged($event)"
+                      >
+                      </codx-img>
+                    </div>
+                  </div>
+
+                  <div class="row px-5 pt-2" *ngIf="user.administrator || user.systemAdmin">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        name="lblObject"
+                        formName="sys"
+                        default="Đối tượng được phân quyền"
+                      ></codx-label>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-11">
+                            <div class="container p-0 h-100 d-flex w-100 overflow-scroll" style="max-height:300px; flex-wrap: wrap" *ngIf="lstShared[selectedData.recID]">
+                              <ng-container *ngFor="let item of lstShared[selectedData.recID]; index as i">
+                                <div class="d-flex user-mini-nav align-items-center mb-2" style="width:fit-content !important">
+                                  <div class="mx-2 user-avatar">
+                                    <span
+                                    [inlineSVG]="'./assets/themes/sys/default/img/'+item.icon"
+                                    class="svg-icon"
+                                  ></span>
+                                  </div>
+                                  <!-- <div class="me-2 user-avatar" *ngIf="item.shareToType == '9'">
+                                    <codx-img
+                                      [width]="25"
+                                      [objectId]="item.id"
+
+                                    >
+                                    </codx-img>
+                                  </div> -->
+                                  <div class="w-100 me-2">{{ item.text ? item.text : item.objectName }}</div>
+                                  <!-- <a
+                                    class="text-hover-danger d-flex align-items-center"
+                                    (click)="removeItem(i)"
+                                  >
+                                    <span class="icon-close icon-16"></span>
+                                  </a> -->
+                                </div>
+                              </ng-container>
+                              <!-- <div class="border border-1 rounded-pill mx-2 p-3" style="width:fit-content" *ngFor="let item of lstShared[selectedData.recID]">{{item.text}}</div> -->
+                            </div>
+                          </div>
+                          <div class="col-1 d-flex justify-content-end">
+                            <codx-input
+                              type="Share"
+                              refValue="SYS064"
+                              field="resources"
+                              [disabled]="false"
+                              [dataShared]="[]"
+                              [multiple]="true"
+                              [showInput]="false"
+                              (valueChange)="valueShareChange($event)"
+                            >
+                            </codx-input>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-start" *ngIf="isAddFunc">
+                <div class="container p-0 h-100" *ngIf="addData">
+                  <span class="fs-5 fw-bold text-dark"
+                    ><codx-label
+                      name="lblEditFunc"
+                      default="Thêm mới Chức năng"
+                      [formName]="'sys'"
+                    ></codx-label></span
+                  >&nbsp;
+
+                  <div class="row px-5 pt-3">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        default="Đường dẫn"
+                        name="lblUrl"
+                        formName="sys"
+                      >
+                      </codx-label>
+                      <div class="container p-0">
+                        <div class="row">
+
+                          <div class="col-11">
+                            <codx-input
+                            field="url"
+                            [crrValue]="addData?.url"
+                            type="text"
+                            (valueChange)="valueAddChange($event)"
+                            [disabled]="!isEnableEdit"
+                          >
+                          </codx-input>
+                          </div>
+                          <div class="col-1 d-flex justify-content-end">
+                            <codx-input type="combobox" refType="P5" refValue="SYS063" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbAddChange($event)"></codx-input>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        default="Tên chức năng"
+                        name="lblFuctionName"
+                        formName="sys"
+                      >
+                      </codx-label>
+                      <codx-input
+                        field="name"
+                        [crrValue]="addData?.name"
+                        type="text"
+                        (valueChange)="valueAddChange($event)"
+                      >
+                      </codx-input>
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col-4 form-group ps-0">
+                      <codx-label
+                        name="lblIcon"
+                        formName="sys"
+                        default="Icon"
+                      ></codx-label>
+                    </div>
+                    <div class="col-8 d-flex align-items-center h-50px">
+                      <codx-input
+                        type="vllicon"
+                        refValue="L1470"
+                        [field]="'icon'"
+                        [crrValue]="addData?.icon"
+                        class="bg-transparent"
+                        (valueChange)="valueAddChange($event)"
+                      ></codx-input>
+                      <div
+                        class="ps-3 d-flex justify-content-center align-items-center"
+                      >
+                        <codx-colorpicker
+                          [field]="'color'"
+                          mode="Picker"
+                          [value]="addData?.color"
+                          (valueChange)="valueAddChange($event)"
+                        ></codx-colorpicker>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row px-5 pt-2">
+                    <div class="col-4 form-group ps-0">
+                      <codx-label
+                        name="lblImage"
+                        formName="sys"
+                        default="Hình ảnh"
+                      ></codx-label>
+                    </div>
+                    <div class="col-8 form-group d-flex align-items-center">
+                      <codx-img
+                        class="symbol symbol-60px me-5"
+                        objectType="SYS_FormSettings"
+                        [objectId]="addData.recID"
+                        [funcId]="addData.refID"
+                        [updateDirect]="true"
+                        [isAllowEdit]="true"
+                        [width]="80"
+                        (dataChanged)="imgAddChanged($event)"
+                      >
+                      </codx-img>
+                    </div>
+                  </div>
+
+                  <div class="row px-5 pt-2" *ngIf="user.administrator || user.systemAdmin">
+                    <div class="col form-group ps-0">
+                      <codx-label
+                        name="lblObject"
+                        formName="sys"
+                        default="Đối tượng được phân quyền"
+                      ></codx-label>
+                      <div class="container">
+                        <div class="row">
+                          <div class="col-11">
+                            <div class="container p-0 h-100 d-flex w-100 overflow-scroll" style="max-height:300px; flex-wrap: wrap" *ngIf="lstShared[addData.recID]">
+                              <ng-container *ngFor="let item of lstShared[addData.recID]; index as i">
+                                <div class="d-flex user-mini-nav align-items-center mb-2" style="width:fit-content !important">
+                                  <div class="mx-2 user-avatar">
+                                    <span
+                                    [inlineSVG]="'./assets/themes/sys/default/img/'+item.icon"
+                                    class="svg-icon"
+                                  ></span>
+                                  </div>
+                                  <!-- <div class="me-2 user-avatar" *ngIf="item.shareToType == '9'">
+                                    <codx-img
+                                      [width]="25"
+                                      [objectId]="item.id"
+
+                                    >
+                                    </codx-img>
+                                  </div> -->
+                                  <div class="w-100 me-2">{{ item.text ? item.text : item.objectName }}</div>
+                                  <!-- <a
+                                    class="text-hover-danger d-flex align-items-center"
+                                    (click)="removeItem(i)"
+                                  >
+                                    <span class="icon-close icon-16"></span>
+                                  </a> -->
+                                </div>
+                              </ng-container>
+                              <!-- <div class="border border-1 rounded-pill mx-2 p-3" style="width:fit-content" *ngFor="let item of lstShared[selectedData.recID]">{{item.text}}</div> -->
+                            </div>
+                          </div>
+                          <div class="col-1 d-flex justify-content-end">
+                            <codx-input
+                              type="Share"
+                              refValue="SYS064"
+                              field="resources"
+                              [disabled]="false"
+                              [dataShared]="[]"
+                              [multiple]="true"
+                              [showInput]="false"
+                              (valueChange)="valueShareChange($event)"
+                            >
+                            </codx-input>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-start" *ngIf="isAddGroup">
+                <div class="container p-0 h-100">
+                  <span class="fs-5 fw-bold text-dark"
+                  ><codx-label
+                    name="lblAddGroup"
+                    default="Thêm mới Nhóm"
+                    [formName]="'sys'"
+                  ></codx-label></span
+                >&nbsp;
+
+                <!-- <div class="row px-5 pt-3">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      default="Đường dẫn"
+                      name="lblUrl"
+                      formName="sys"
+                    >
+                    </codx-label>
+                    <div class="container p-0">
+                      <div class="row">
+                        <div class="col-11">
+                          <codx-input
+                          field="url"
+                          [crrValue]="addData?.url"
+                          type="text"
+                          (valueChange)="valueAddChange($event)"
+                        >
+                        </codx-input>
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                          <codx-input type="combobox" refType="P5" refValue="SYS063" [showInput]="false"  [multiple]="false" (valueChange)="valueCbbAddChange($event)"></codx-input>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div> -->
+                <div class="row px-5 pt-2">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      default="Tên Nhóm chức năng"
+                      name="lblGroupName"
+                      formName="sys"
+                    >
+                    </codx-label>
+                    <codx-input
+                      field="name"
+                      [crrValue]="addData?.name"
+                      type="text"
+                      (valueChange)="valueAddChange($event)"
+                    >
+                    </codx-input>
+                  </div>
+                </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="row"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>
+<ng-template #footer>
+  <div class="d-flex">
+    <div class="form-group w-50 d-flex justify-content-start">
+      <button
+        type="button"
+        class="btn btn-sm text-hover-primary d-flex align-items-center"
+        (click)="onAddGroup()"
+      >
+        <i class="icon-add_circle_outline me-3 text-primary"></i>
+        <span class="text-muted fs-5">Thêm nhóm</span>
+      </button>
+    </div>
+    <div class="form-group w-50 d-flex justify-content-end" *ngIf="!user.administrator && !user.systemAdmin">
+      <button type="button" class="btn btn-danger me-3" (click)="onRestore()">
+        <codx-label name="lblRestore" default="khôi phục cài đặt"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+        <codx-label name="lblSave" default="Thêm mới"></codx-label>
+      </button>
+    </div>
+    <div class="form-group w-50 d-flex justify-content-end" *ngIf="user.administrator || user.systemAdmin">
+
+      <button type="button" class="btn btn-primary" (click)="onSaveAdmin()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

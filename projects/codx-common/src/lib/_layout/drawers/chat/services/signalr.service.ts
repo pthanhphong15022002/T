@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from 'codx-core';
+import { error } from 'console';
 import { environment } from 'src/environments/environment';
 import { Post } from 'src/shared/models/post';
 
@@ -25,15 +26,18 @@ export class SignalRService {
   activeGroup = new EventEmitter<any>();
   chat = new EventEmitter<any>();
   undoMssg = new EventEmitter<any>();
-
   voteChat = new EventEmitter<any>();
-  constructor(private authStore: AuthStore) {
+
+  openBoxChat = new EventEmitter<any>();
+
+
+  constructor(private authStore: AuthStore) 
+  {
     this.createConnection();
-    this.registerOnServerEvents();
   }
 
-  public createConnection() {
-    this.logOut = false;
+  
+  public async createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/hubwp/chat', {
         skipNegotiation: true,
@@ -43,22 +47,18 @@ export class SignalRService {
         },
       })
       .build();
+      this.hubConnectionstart();
 
-    this.hubConnection.start().then().catch();
-  }
-  // reciver from server
-  public registerOnServerEvents() {
     this.hubConnection.on('ReceiveMessage', (res) => {
       if (res) {
-        switch (res?.data?.action) {
+        switch (res.event) 
+        {
           case 'onConnected':
             break;
           case 'onDisconnected':
             this.disConnected.emit(res.data);
             break;
-          case 'activeNewGroup':
-            this.activeNewGroup.emit(res.data);
-            break;
+          
           case 'activeGroup':
             this.activeGroup.emit(res.data);
             break;
@@ -75,19 +75,40 @@ export class SignalRService {
             this.chat.emit(res.data);
             this.activeGroup.emit(res.data);
             break;
+          case 'openBoxChat':
+            this.openBoxChat.emit(res.data);
+            break;
+          case 'addBoxChat':
+            this.hubConnection.send('OpenBoxChat', res.group);
+            break;
         }
       }
+    });
+    
+    this.hubConnection.onclose(() => {
+      this.hubConnectionstart();
+    });
+  }
+
+
+  hubConnectionstart() {
+    this.hubConnection.start().catch(function () {
+        setTimeout(function () {
+          this.hubConnectionstart();
+        }, 5000);
     });
   }
   // send to server
   sendData(methodName: string, ...args: any[]) {
-    this.hubConnection.invoke(methodName, ...args);
+    return this.hubConnection.send(methodName, ...args)
   }
 
+  // disconnect
   disconnect(user: any) {
-    let ele = document.getElementsByTagName('codx-chat-container');
-    if (ele) {
-      ele[0]?.remove();
+    let codxChatContainer = document.getElementsByTagName('codx-chat-container');
+    if (Array.isArray(codxChatContainer)) 
+    {
+      Array.from(codxChatContainer).forEach(element => { element.remove() });
     }
     this.logOut = true;
     this.hubConnection.invoke('LogOutAsync', user.userID, user.tenant);

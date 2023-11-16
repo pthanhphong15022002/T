@@ -37,11 +37,11 @@ import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
-import { CodxAddTaskComponent } from '../codx-add-stask/codx-add-task.component';
-import { CodxTypeTaskComponent } from '../codx-type-task/codx-type-task.component';
+import { CodxAddTaskComponent } from '../codx-popup-task/codx-add-task.component';
+import { CodxTypeTaskComponent } from '../codx-step-common/codx-type-task/codx-type-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
-import { CodxAddGroupTaskComponent } from '../codx-add-group-task/codx-add-group-task.component';
+import { CodxAddGroupTaskComponent } from '../codx-popup-group/codx-add-group-task.component';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
@@ -599,6 +599,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
           case 'SYS02': //xóa
@@ -677,6 +679,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
           case 'DP20': // tiến độ
@@ -1102,8 +1106,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (type) => type.value == taskEdit?.taskType
       );
       let dataOutput = await this.openPopupTask('edit', 'step',taskEdit);
-      if (dataOutput?.event.task) {
-        let taskOutput = dataOutput?.event?.task;
+      if (dataOutput?.task) {
+        let taskOutput = dataOutput?.task;
         let group = this.listGroupTask.find((group) =>
           this.comparison(group.refID, taskOutput?.taskGroupID)
         );
@@ -1139,6 +1143,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if (indexTask >= 0) {
           this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
         }
+        this.changeDetectorRef.markForCheck();
         this.notiService.notifyCode('SYS007');
       }
     }
@@ -1205,6 +1210,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 groupData['progress'] = data[0];
               }
               this.currentStep['progress'] = data[1];
+              this.changeDetectorRef.markForCheck();
             }
           });
       }
@@ -1570,6 +1576,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.changeProgress.emit(true);
       }
     }
+    this.changeDetectorRef.detectChanges();
     return dataPopupOutput;
   }
 
@@ -2544,7 +2551,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       'DP',
       data,
       category,
-      'DP_Instances_Steps_Tasks',
+      'DP_Activities',
       'CM0201',
       data?.title,
       this.releaseCallback.bind(this)
@@ -2552,7 +2559,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
-    // else {
+    else {
     //   this.codxCmService
     //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
     //     .subscribe((q) => {
@@ -2563,7 +2570,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //       }
     //       this.notificationsService.notifyCode('ES007');
     //     });
-    // }
+    }
   }
   cancelApprover(task) {
     this.notiService.alertCode('ES016').subscribe((x) => {
@@ -2584,7 +2591,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       .codxCancel(
                         'CM',
                         task?.recID,
-                        'DP_Instances_Steps_Tasks',
+                        'DP_Activities',
                         null,
                         null
                       )

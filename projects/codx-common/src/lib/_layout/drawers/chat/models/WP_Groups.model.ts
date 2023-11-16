@@ -27,3 +27,29 @@ export class WP_Groups{
         this.modifiedOn = null;
     }
 }
+
+export class GroupItem{
+    public groupID:string;
+    public groupName:string;
+    public groupID2:string;
+    public groupType:string;
+    public lastMssgID:string;
+    public members:any[];
+    public createdBy:string;
+    public createdOn:Date;
+    public modifiedBy:string;
+    public modifiedOn:Date;
+
+    constructor()
+    {
+        this.groupID = Util.uid();
+        this.groupName = "";
+        this.groupType = "2";
+        this.members = [];
+        this.lastMssgID = "";
+        this.createdBy = "";
+        this.createdOn = new Date();
+        this.modifiedBy = "";
+        this.modifiedOn = null;
+    }
+}

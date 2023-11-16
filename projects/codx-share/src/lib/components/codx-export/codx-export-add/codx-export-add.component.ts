@@ -221,10 +221,12 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
       this.exportAddForm.value.owner = 'a';
       this.exportAddForm.value.buid = 'a';
       //Thêm mới
-      if (this.action == 'add') {
+      if (this.action == 'add') 
+      {
         this.exportAddForm.value.refID = this.refID; // Thảo thêm để thêm biến lưu cho temEx
         this.exportAddForm.value.refType = this.refType; // Thảo thêm để thêm biến lưu cho temEx
-        if (this.fileCount > 0) {
+        if (this.fileCount > 0) 
+        {
           this.api
             .execSv(
               'SYS',
@@ -273,7 +275,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
           )
           .subscribe((item) => {
             if (item[0] == true) {
-              this.notifySvr.notifyCode('RS002');
+           
               this.attachment2.objectId = item[1][0].recID;
               this.attachment2.fileUploadList.forEach((elm) => {
                 elm.objectType = 'AD_ExcelTemplates';
@@ -294,6 +296,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                     saveFile.subscribe((saved) => {
                       if (saved) {
                         //Trả về thông tin khi upload thành công + kèm biến phân biệt có upload lại file
+                        this.notifySvr.notifyCode('RS002');
                         this.dialog.close([
                           item[1][0],
                           this.type,
@@ -306,7 +309,16 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
                   }
                 });
               }
-            } else this.notifySvr.notify('SYS021');
+              else
+              {
+                this.notifySvr.notifyCode('RS002');
+                this.dialog.close();
+              }
+            } 
+            else 
+            {
+              this.notifySvr.notify('SYS021');
+            }
           });
       }
     } else {

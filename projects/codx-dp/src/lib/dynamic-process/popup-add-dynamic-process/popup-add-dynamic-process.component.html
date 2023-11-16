@@ -315,7 +315,7 @@
 <!--Phần của Phúc - Thông tin quy trình-->
 <ng-template #General>
   <!--Thông tin chung-->
-  <div class="background">
+  <div class="background" *ngIf="gridViewSetup">
     <div
       class="header-job d-flex align-items-center justify-content-between py-2 px-5"
     >
@@ -399,11 +399,7 @@
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
               [disabled]="
-                systemProcess == '1' ||
-                systemProcess == '2' ||
-                process?.category == '0'
-                  ? true
-                  : false
+                systemProcess == '1' || process?.category == '0' ? true : false
               "
               type="text"
               [crrValue]="process.processName"
@@ -432,7 +428,7 @@
                   : 'DP002'
               "
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit' || systemProcess == '1'"
+              [disabled]="action == 'edit' || systemProcess == '1' || systemProcess == '2'"
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>
@@ -457,7 +453,10 @@
             >
             </codx-input>
           </div>
-          <!-- <div class="form-group margin-form" *ngIf="process.applyFor == '1'">
+          <div
+            class="form-group margin-form"
+            *ngIf="process.applyFor == '1' || process.applyFor == '4'"
+          >
             <div>
               <codx-label
                 fiedName="BusinessLineID"
@@ -468,12 +467,16 @@
             </div>
             <codx-input
               field="businessLineID"
-              [formModel]="dialog.formModel"
-              [crrValue]="process.businessLineID"
-              (valueChange)="valueChange($event)"
+              [disabled]="action === 'edit' || systemProcess == '2'"
+              type="combobox"
+              [placeholder]="gridViewSetup?.BusinessLineID?.description"
+              [refValue]="gridViewSetup?.BusinessLineID?.referedValue"
+              [model]="{ ProcessID: process?.recID }"
+              [crrValue]="process?.businessLineID"
+              (valueChange)="valueChangebusinessLineID($event)"
             >
             </codx-input>
-          </div> -->
+          </div>
         </div>
         <div class="col-6">
           <div class="form-group ms-5">
@@ -527,56 +530,6 @@
       </div>
     </div>
     <div id="role-main" class="main" [ngClass]="'show-main'">
-      <div class="d-flex flex-column mb-4">
-        <div class="d-flex align-items-center mb-2">
-          <codx-label
-            class="fw-bold fs-4 text-dark me-3"
-            name="lblCreatedBy"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
-            default="Người tạo"
-          >
-          </codx-label>
-          <button
-            type="button"
-            class="btn btn-icon btn-sm btn-light-primary me-2"
-            (click)="clickRoles('C')"
-          >
-            <i class="icon-settings icon-16"></i>
-          </button>
-       </div>
-        <!-- <div class="text-gray-500">
-          <codx-label
-            name="lblLocationControl"
-            default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
-            viên trong quy trình"
-          >
-          </codx-label>
-        </div>  -->
-      </div>
-      <div
-        class="d-flex flex-wrap"
-        *ngIf="process.permissions != null && process.permissions?.length > 0"
-      >
-        <ng-container *ngFor="let perm of process.permissions; index as i">
-          <div
-            *ngIf="perm.roleType == 'C'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
-          >
-            <div class="me-2">
-              <codx-img
-                [width]="20"
-                [objectId]="perm.objectID"
-                [objectName]="perm.objectName"
-                objectType="AD_Users"
-              >
-              </codx-img>
-            </div>
-            <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-          </div>
-        </ng-container>
-      </div>
-      <hr />
       <div class="d-flex flex-column mb-4">
         <div class="d-flex align-items-center mb-2">
           <codx-label
@@ -638,6 +591,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'O')"
+        >
+        </codx-input>
       </div>
       <hr />
 
@@ -705,6 +667,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'P')"
+        >
+        </codx-input>
       </div>
 
       <hr />
@@ -771,6 +742,15 @@
             </ng-container>
           </div>
         </ng-container>
+        <codx-input
+          #inputUser
+          class="min-w-250px"
+          field="searchUser"
+          type="combobox"
+          refValue="Users"
+          (valueChange)="searchAddUsers($event, 'F')"
+        >
+        </codx-input>
       </div>
       <hr />
       <div class="d-flex flex-column mb-4">
@@ -967,7 +947,10 @@
             </codx-label>
           </div>
           <div class="col-6 row">
-            <div #autoNumberSetting class="position-relative col-lg-12 col-xl-8">
+            <div
+              #autoNumberSetting
+              class="position-relative col-lg-12 col-xl-8"
+            >
               <!-- <codx-input
                 type="text"
                 [crrValue]="instanceNoSetting"
@@ -1037,6 +1020,31 @@
           </div>
         </div>
       </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="AutoNameTabFields"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <codx-input
+                field="autoNameTabFields"
+                type="text"
+                [crrValue]="process?.autoNameTabFields"
+                [placeholder]="gridViewSetup?.AutoNameTabFields?.description"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -1242,6 +1250,51 @@
           </div>
         </div>
       </div>
+      <!-- <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="AllowEstimatedEnd"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="allowEstimatedEnd-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.allowEstimatedEnd ?? false"
+                    [crrValue]="process?.allowEstimatedEnd"
+                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="allowEstimatedEnd-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.allowEstimatedEnd ?? false"
+                    [crrValue]="process?.allowEstimatedEnd"
+                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -1255,7 +1308,9 @@
           <div class="col-6 row">
             <div class="col-lg-12 col-xl-8">
               <codx-input
-                [formModel]="dialog?.formModel"
+                type="valuelist"
+                [refValue]="gridViewSetup?.TabControl?.referedValue"
+                [placeholder]="gridViewSetup?.TabControl?.description"
                 [crrValue]="process.tabControl"
                 (valueChange)="valueChange($event)"
                 field="tabControl"

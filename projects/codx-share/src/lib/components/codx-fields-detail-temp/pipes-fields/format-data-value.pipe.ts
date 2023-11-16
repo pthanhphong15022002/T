@@ -1,15 +1,38 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ApiHttpService, CacheService, DataRequest } from 'codx-core';
-import { mergeMap, of } from 'rxjs';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  DatePipe,
+} from 'codx-core';
+import moment from 'moment';
+import { DateFormatPipe } from 'ngx-moment';
+import { map, mergeMap, of } from 'rxjs';
 
 @Pipe({
   name: 'formatDataValue',
 })
 export class FormatDataValuePipe implements PipeTransform {
-  constructor(private cache: CacheService, private api: ApiHttpService) {}
-  transform(value, dataFormat, refValue): any {
-    if (dataFormat == 'C') return this.formatCombox(value, refValue);
-    return value;
+  constructor(
+    private cache: CacheService,
+    private api: ApiHttpService,
+    private authstore: AuthStore
+  ) {}
+  transform(value, dataType, dataFormat, refValue = null): any {
+    switch (dataType) {
+      case 'L':
+        if (dataFormat == 'C') return this.formatCombox(value, refValue);
+        break;
+      case 'N':
+        return this.formatNumber(value, dataFormat);
+        break;
+      case 'D':
+        return this.formatDateTime(value, dataFormat);
+        break;
+    }
+
+    return of(value || '');
   }
 
   formatCombox(value, refValue): any {
@@ -49,5 +72,90 @@ export class FormatDataValuePipe implements PipeTransform {
         } else return of(value || '');
       })
     );
+  }
+
+  formatNumber(dataValue, dataFormat): any {
+    if (!dataValue) return of(dataValue || '');
+    if (dataFormat == 'I') {
+      dataValue = Number.parseFloat(dataValue).toFixed(0);
+      return of(dataValue || '');
+    }
+
+    dataValue =
+      Number.parseFloat(dataValue).toFixed(2) + (dataFormat == 'P' ? ' %' : '');
+    return of(dataValue || '');
+  }
+
+  //----------Format  Data time --------------------//
+  //mergeMap - dung ma data
+  formatDateTime(dataValue, dataFormat) {
+    return this.cache.valueList('DP0274').pipe(
+      mergeMap((res) => {
+        if (res) {
+          let dtFormatDate = res.datas;
+          switch (dataFormat) {
+            case '1':
+            case '2':
+            case '3':
+            case '7':
+            case '8':
+              dataValue = this.getFormatValue(
+                dtFormatDate,
+                dataValue,
+                dataFormat
+              );
+              break;
+            case '6':
+              dataValue = this.formatValueType6(
+                dtFormatDate,
+                dataValue,
+                dataFormat
+              );
+              break;
+            case '4':
+            case '5':
+              dataValue = this.getFormatTime(
+                dtFormatDate,
+                dataValue,
+                dataFormat
+              );
+              break;
+          }
+          return of(dataValue || '');
+        } else return of(dataValue || '');
+      })
+    );
+  }
+
+  getFormatValue(dtFormatDate, dataValue, dataFormat) {
+    var index = dtFormatDate.findIndex((x) => x.value == dataFormat);
+    if (index == -1) return '';
+    let tetxFormart = dtFormatDate[index]?.text.toUpperCase();
+    dataValue = moment(new Date(dataValue)).format(tetxFormart).toUpperCase();
+    return dataValue;
+  }
+
+  getFormatTime(dtFormatDate, dataValue, dataFormat) {
+    if (!dataValue) return '';
+    var arrTime = dataValue.split(':');
+    let dtValue = moment(new Date())
+      .set({ hour: arrTime[0], minute: arrTime[1] })
+      .toDate();
+    return this.getFormatValue(dtFormatDate, dtValue, dataFormat);
+  }
+
+  formatValueType6(dtFormatDate, dataValue, dataFormat) {
+    var index = dtFormatDate?.findIndex((x) => x.value == dataFormat);
+    if (index == -1) return dataValue;
+    var tetxFormart = dtFormatDate[index]?.text;
+    var day = moment(dataValue).toDate();
+    let date = day.getDate();
+    let month = day.getMonth() + 1;
+    let year = day.getFullYear();
+    tetxFormart = tetxFormart.replace('dd', date);
+    tetxFormart = tetxFormart.replace('mm', month);
+    tetxFormart = tetxFormart.replace('yyyy', year);
+
+    return tetxFormart;
   }
 }

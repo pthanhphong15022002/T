@@ -384,7 +384,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   onSave() {
-    if(this.isLockStep) return;
+    if (this.isLockStep) return;
     if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -516,12 +516,13 @@ export class PopupMoveStageComponent implements OnInit {
         // save deal form dp
         if (this.applyFor == '1' && !this.isCallInstance) {
           let dataUpdate = [
-            this.instanceCM.recID,
-            this.instanceCM.stepID,
+            this.instance.recID,
+            this.instance.stepID,
             this.oldStepID,
             this.oldStatus,
             this.instancesStepOld?.note,
             this.expectedClosed,
+            res[2]
           ];
           this.codxDpService.moveStageDeal(dataUpdate).subscribe((res) => {
             if (res) {
@@ -653,6 +654,7 @@ export class PopupMoveStageComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
+        case 'PA':
           result = event.e;
           break;
       }

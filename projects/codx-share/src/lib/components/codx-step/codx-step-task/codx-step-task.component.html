@@ -272,6 +272,7 @@
                         [isShowTitle]="false"
                       >
                       </codx-fields-detail-temp>
+                      <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
@@ -389,7 +390,7 @@
 
 <ng-template #buttonTemplate let-data="value">
   <div
-    class="d-flex justify-content-center mt-3"
+    class="d-flex justify-content-center mt-3 btn-addtask"
     *ngIf="isShowBtnAddTask && !isViewStep && !isMoveStage && isRoleAll"
   >
     <button

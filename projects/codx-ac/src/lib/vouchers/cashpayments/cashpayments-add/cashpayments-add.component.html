@@ -18,9 +18,11 @@
         </div>
         <div class="input-circle input-sm" *ngIf="formCashPayment?.formGroup">
           <span class="me-2">
-            <codx-vll [name]="'AC040'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="formCashPayment.data?.status" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-sm">
+            <codx-vll *ngIf="formCashPayment.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="formCashPayment.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+            </codx-vll>
+            <codx-vll *ngIf="formCashPayment.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'" [value]="formCashPayment.data?.status"
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
             </codx-vll>
           </span>
         </div>
@@ -34,14 +36,14 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 30px" *ngIf="!formCashPayment.data?._isEdit || formCashPayment.data?.status == '7'"
+      <div style="margin-left: 30px" *ngIf="!formCashPayment.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
           field="subType" [refValue]="formCashPayment?.gridviewSetup['SubType'].referedValue"  [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
-      <span style="margin-left: 30px" *ngIf="formCashPayment.data?._isEdit && formCashPayment.data?.status != '7'">
+      <span style="margin-left: 30px" *ngIf="formCashPayment.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
           [value]="formCashPayment.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-lg mt-1">
@@ -159,7 +161,7 @@
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formCashPayment.data">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
       <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-        *ngIf="formCashPayment.data?.status == '7'" style="border: 1px solid" type="button"
+        *ngIf="!formCashPayment.data?.validated" style="border: 1px solid" type="button"
         class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
         (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
@@ -508,7 +510,7 @@
                   <codx-label style="white-space: nowrap !important" fiedName="lblAmout" default="Số tiền"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input [crrValue]="totalDrLine" field="lblAmout" disabled="true" type="number">
+                  <codx-input [crrValue]="formCashPayment.data.totalDR" field="lblAmout" disabled="true" type="number">
                   </codx-input>
                 </div>
               </div>
@@ -517,7 +519,7 @@
                   <codx-label style="white-space: nowrap !important" fiedName="lblAlphabet" default="Bảng chữ"
                     [formModel]="formCashPayment.formModel">
                   </codx-label>
-                  <codx-input field="lblAlphabet" disabled="true" type="text">
+                  <codx-input field="lblAlphabet" disabled="true" [crrValue]="textTotal" type="text">
                   </codx-input>
                 </div>
               </div>

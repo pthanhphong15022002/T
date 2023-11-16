@@ -1,78 +1,95 @@
-
 <container-element [ngSwitch]="viewSetting">
-  <some-element *ngSwitchCase="viewCarouselForPage" [ngTemplateOutlet]="carouselForPage"></some-element>
-  <some-element *ngSwitchCase="viewCarouselDefault" [ngTemplateOutlet]="carouselDefault"></some-element>
+  <some-element
+    *ngSwitchCase="viewCarouselForPage"
+    [ngTemplateOutlet]="carouselForPage"
+  ></some-element>
+  <some-element
+    *ngSwitchCase="viewCarouselDefault"
+    [ngTemplateOutlet]="carouselDefault"
+  ></some-element>
   <some-element *ngSwitchDefault></some-element>
 </container-element>
 
 <ng-template #carouselForPage>
   <div
-  class="group-steps"
-  *ngIf="listTreeView != null && listTreeView.length > 0"
+    class="group-steps"
+    *ngIf="listTreeView != null && listTreeView.length > 0"
   >
-  <ngb-carousel
-  [activeId]="selectedIndex"
-  >
-  <ng-container *ngFor="let items of listTreeView;let i = index" >
-    <ng-template ngbSlide id="{{i}}" >
-      <div class="d-flex arrow-steps flex-container">
-        <ng-container ngbSlide *ngFor="let item of items.items" >
-          <div
-            id="{{item.stepID}}"
-            style="flex-grow: 1; cursor: pointer"
-            [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr === item?.stepID ? 'custom-horizontal-rule':'')"
-            (click)="eventClick(item?.stepID)"
-            [style]="getbackgroundColor(item)"
-          >
-            <div class="d-flex align-items-top ps-6">
-              <span
-                [ngClass]="item?.icon"
-                [ngStyle]="item?.stepStatus != '2' ? { color: item?.iconColor } : '{color: #000000 }'"
-                class="fs-6 me-2"
-              ></span>
-              <span class="line-clamp line-clamp-2 step-name" [ngStyle]="item?.stepStatus != '2' ? {color: item?.textColor } : '{color: #000000 }'">
-                {{ item[fieldName] }}</span
+    <ngb-carousel [activeId]="selectedIndex">
+      <ng-container *ngFor="let items of listTreeView; let i = index">
+        <ng-template ngbSlide id="{{ i }}">
+          <div class="d-flex arrow-steps flex-container">
+            <ng-container ngbSlide *ngFor="let item of items.items">
+              <div
+                id="{{ item.stepID }}"
+                style="flex-grow: 1; cursor: pointer"
+                [ngClass]="
+                  getColorStepName(item?.stepStatus) +
+                  ' ' +
+                  (idElementCrr === item?.stepID
+                    ? 'custom-horizontal-rule'
+                    : '')
+                "
+                (click)="eventClick(item?.stepID)"
+                [style]="getbackgroundColor(item)"
               >
-            </div>
+                <div 
+                  class="d-flex align-items-top ps-6"
+                  [ngStyle]="!['0','1','2'].includes(item?.stepStatus) ? { color: item?.iconColor } : {color: '#00000' }"
+                >
+                  <span
+                    [ngClass]="item?.icon"
+                    class="fs-6 me-2"
+                  ></span>
+                  <span
+                    class="line-clamp line-clamp-2 step-name"
+                  >
+                    {{ item[fieldName] }}</span
+                  >
+                </div>
+              </div>
+            </ng-container>
           </div>
-        </ng-container>
-      </div>
-    </ng-template>
-  </ng-container>
-
-  </ngb-carousel>
-
+        </ng-template>
+      </ng-container>
+    </ngb-carousel>
   </div>
 </ng-template>
 
 <ng-template #carouselDefault>
   <div
-  class="group-steps"
-  *ngIf="listDefaultView != null && listDefaultView.length > 0"
->
-  <div class="d-flex arrow-steps flex-container">
-    <ng-container *ngFor="let item of listDefaultView; index as i">
-      <div
-      id="step-click"
-      style="flex-grow: 1; cursor: pointer"
-      [ngClass]="getColorStepName(item?.stepStatus) + ' ' +(idElementCrr === item?.stepID ? 'custom-horizontal-rule':'')"
-      (click)="eventClick(item.stepID)"
-      [style]="getbackgroundColor(item)"
-    >
-      <div class="d-flex align-items-top ps-6">
-        <span
-          [ngClass]="item?.icon"
-          [ngStyle]="item?.stepStatus != '2' ? { color: item?.iconColor } : '{color: #000000 }'"
-          class="fs-6 me-2"
-        ></span>
-        <span class="line-clamp line-clamp-2 step-name" [ngStyle]="item?.stepStatus != '2' ? {color: item?.textColor } : '{color: #000000 }'">
-          {{ item[fieldName] }}</span
+    class="group-steps"
+    *ngIf="listDefaultView != null && listDefaultView.length > 0"
+  >
+    <div class="d-flex arrow-steps flex-container">
+      <ng-container *ngFor="let item of listDefaultView; index as i">
+        <div
+          id="step-click"
+          style="flex-grow: 1; cursor: pointer"
+          [ngClass]="
+            getColorStepName(item?.stepStatus) +
+            ' ' +
+            (idElementCrr === item?.stepID ? 'custom-horizontal-rule' : '')
+          "
+          (click)="eventClick(item.stepID)"
+          [style]="getbackgroundColor(item)"
         >
-      </div>
+          <div class="d-flex align-items-top ps-6" 
+          [ngStyle]="!['0','1','2'].includes(item?.stepStatus) ? { color: item?.iconColor } : {color: '#00000' }"
+          >
+            <span
+              [ngClass]="item?.icon"
+              
+              class="fs-6 me-2"
+            ></span>
+            <span
+              class="line-clamp line-clamp-2 step-name"
+            >
+              {{ item[fieldName] }}</span
+            >
+          </div>
+        </div>
+      </ng-container>
     </div>
-    </ng-container>
   </div>
-</div>
 </ng-template>
-
-

@@ -171,6 +171,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      console.log(this.itemSelected);
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
     } else {
@@ -665,9 +666,12 @@ export class CashpaymentDetailComponent extends UIComponent {
             [data.recID, tk, 'test']
           )
           .subscribe((res) => {
-            if (res) {
-              this.dataService.update(res).subscribe();
+            if (res && !res?.error) {
+              this.itemSelected.status = '8';
+              this.dataService.update(this.itemSelected).subscribe();
               this.notification.notifyCode('AC0029', 0, text);
+            }else{
+              this.notification.notify(res.data.data.result.message,'2');
             }
           });
       }
@@ -680,6 +684,25 @@ export class CashpaymentDetailComponent extends UIComponent {
   checkLogin(func: any) {
     return jsBh.login('test', (o) => {
       return func(o);
+      // if (o && !o?.isLogin) {
+      //   let data = {
+      //     response: o,
+      //     headerText : 'Chọn ngân hàng điện tử'.toUpperCase()
+      //   };
+      //   let opt = new DialogModel();
+      //   let dialog = this.callfc.openForm(
+      //     ListbankComponent,
+      //     '',
+      //     null,
+      //     null,
+      //     '',
+      //     data,
+      //     '',
+      //     opt
+      //   );
+      // }else{
+      //   return func(o);
+      // }
     });
   }
 

@@ -40,20 +40,22 @@
   </div>
   <div class="d-flex justify-content-between flex-grow-1 mb-2">
     <div style="height: 27px !important;" class="d-flex align-items-center">
-      <span *ngIf="itemSelected?.warehouseName" class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" >{{itemSelected?.warehouseName}}</span>
-      <span *ngIf="(itemSelected?.warehouseName == '' || itemSelected?.warehouseName == null) && gridViewSetup" class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1" >{{gridViewSetup['WarehouseID'].headerText}}</span>
+      <span *ngIf="itemSelected?.warehouseName"
+        class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{itemSelected?.warehouseName}}</span>
+      <span *ngIf="(itemSelected?.warehouseName == '' || itemSelected?.warehouseName == null) && gridViewSetup"
+        class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{gridViewSetup['WarehouseID'].headerText}}</span>
     </div>
     <div class="d-flex align-self-center">
-        <span class="badge badge-pill badge-primary me-3">
-            <!-- <span class="fw-bold" [innerHTML]="(itemSelected?.totalDR
-            | tranformValueNumber : formModel
-            | async)+ ' ' +itemSelected?.currencyID"></span> -->
-            <span class="fw-bold" [innerHTML]="(itemSelected?.totalAmt | tranformValueNumber : 'B' | async)"></span>
-            <!-- <span *ngIf="itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
-                itemSelected?.currencyID}}</span> -->
-        </span>
+      <span class="badge badge-pill badge-primary me-3">
+        <!-- <span class="fw-bold" [innerHTML]="(itemSelected?.totalDR
+              | tranformValueNumber : formModel
+              | async)+ ' ' +itemSelected?.currencyID"></span> -->
+        <span class="fw-bold" [innerHTML]="(itemSelected?.totalAmt | tranformValueNumber : 'B' | async)"></span>
+        <!-- <span *ngIf="itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
+                  itemSelected?.currencyID}}</span> -->
+      </span>
     </div>
-</div>
+  </div>
   </ng-container>
 </ng-template>
 <!-- End: template listdetail Header-->
@@ -83,8 +85,12 @@
         </div>
       </div>
       <div class="d-flex align-self-center">
-        <codx-vll [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
-          [showBgColor]="true" class="badge badge-light badge-sm">
+        <codx-vll *ngIf="itemSelected?.status == '1'" [formModel]="formModel" [field]="'Status'"
+          [value]="itemSelected?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-sm">
+        </codx-vll>
+        <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status"
+          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </div>
     </div>

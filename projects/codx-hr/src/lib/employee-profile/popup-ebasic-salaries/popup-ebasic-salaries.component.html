@@ -7,13 +7,14 @@
   [footer]="footer"
   [dialog]="dialog"
   [data]="EBasicSalaryObj"
+  [group]="form.formGroup"
   >
   <!-- [group]="form.formGroup"
   *ngIf="isAfterRender" -->
 </codx-form>
 <ng-template #body>
   <ng-container *ngIf="form.formGroup">
-  <div *ngIf="fromListView" class="form-group row mt-5">
+  <div *ngIf="fromListView == true || isMultiCopy == true" class="form-group row mt-5">
     <div class="col-10">
       <div class="d-flex">
         <div class="d-flex flex-column position-relative">
@@ -58,6 +59,7 @@
     <div class="col-2 d-flex justify-content-end">
       <codx-input
       *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
+      [multiple]="isMultiCopy"
         [disabled]="disabledInput"
         [showInput]="false"
         field="employeeID"

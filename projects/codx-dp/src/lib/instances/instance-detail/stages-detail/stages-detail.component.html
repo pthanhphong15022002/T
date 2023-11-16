@@ -118,7 +118,7 @@
             [ngStyle]="
               +step?.progress < 10 ? { position: 'relative', left: '15px' } : {}
             "
-            >{{ step?.progress || 0 }}%</span
+            >{{ step?.progress | replaceProgress:1}}</span
           >
         </div>
       </div>
@@ -395,7 +395,7 @@
         </button>
       </div>
     </div>
-    <div id="step-task" class="main p-5" [ngClass]="'show-main'">
+    <div id="step-task" class="main pe-5 dp-stages-main" [ngClass]="'show-main'">
       <codx-step-task
         [instanceStep]="step"
         [ownerInstance]="instance?.owner"

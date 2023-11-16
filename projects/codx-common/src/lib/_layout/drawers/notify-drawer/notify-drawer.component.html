@@ -1,12 +1,16 @@
-<div
-  [ngbTooltip]="function?.customName"
-  class="btn btn-icon btn-clean position-relative cursor-pointer" [ngClass]="codxService.toolbarButtonHeightClass"
-  (click)="openFormNotify()">
-  <span [inlineSVG]="
-      './assets/themes/sys/default/img/header_notifications.svg'
-    " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
-  <span *ngIf="totalNoti > 0"
-    class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100">
-    <span class="text-white fs-8">{{totalNoti < 9 ? totalNoti : '9+' }}</span>
-    </span>
+<div class="d-flex align-items-center cursor-pointer" (click)="openFormNotify()">
+  <div
+    [ngbTooltip]="codxService.asideMode != '2' ? function?.customName : ''"
+    class="btn btn-icon btn-clean position-relative" [ngClass]="codxService.toolbarButtonHeightClass"
+    >
+    <span [inlineSVG]="
+        './assets/themes/sys/default/img/header_notifications.svg'
+      " class="svg-icon" [ngClass]="codxService.asideMode != '2' ? codxService.toolbarButtonIconSizeClass : 'svg-icon-3 svg-icon-primary'"></span>
+    <span *ngIf="totalNoti > 0"
+      class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger px-2 top-0 start-100"
+    >
+      <span class="text-white fs-8">{{totalNoti < 9 ? totalNoti : '9+' }}</span>
+      </span>
+  </div>
+  <span *ngIf="codxService.asideMode == '2'" class="text-primary">{{function?.customName}}</span>
 </div>

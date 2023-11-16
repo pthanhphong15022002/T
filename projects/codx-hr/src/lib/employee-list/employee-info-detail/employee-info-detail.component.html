@@ -584,7 +584,10 @@
         </div>
       </div>
     </div>
-    <div
+
+    <!-- nut bam dropdown them moi -->
+
+    <!-- <div
       ngbDropdown
       class="emp-check-add rounded-circle"
       *ngIf="lstBtnAdd && lstBtnAdd.length > 0 && infoPersonal && infoPersonal.status != '90'"
@@ -615,7 +618,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- <div class="more-function">
     <div class="d-flex flex-column">
@@ -1590,17 +1593,29 @@
             
             <div #passport class="mb-1" *ngIf="ePassportFormModel && curriculumVitaePermission.legalInfoFuncID.passportFuncID.view == true">
               <hr />
-              <div class="d-flex align-items-center mt-6 mb-4">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
-                  <codx-label
-                    name="lblEmployeePassport"
-                    [formModel]="ePassportFormModel"
-                    default="Hộ chiếu"
+              <div class="d-flex align-items-center mt-6 mb-4 justify-content-between">
+                <div class="d-flex align-items-center">
+                  <span class="icon-i-filter-right icon-20 me-2"></span>
+                  <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
+                    <codx-label
+                      name="lblEmployeePassport"
+                      [formModel]="ePassportFormModel"
+                      default="Hộ chiếu"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center ms-5"
+                *ngIf="curriculumVitaePermission.legalInfoFuncID.passportFuncID.write == true && (fromWS == false || curriculumVitaePermission.legalInfoFuncID.passportFuncID.isPortal == false)">
+                  <button
+                    class="btn btn-icon btn-sm btn-white"
+                    (click)="handleEmployeePassportInfo(addHeaderText, 'add', null)"
                   >
-                  </codx-label>
+                    <span class="icon-add icon-18"></span>
+                  </button>
                 </div>
               </div>
+
 
               <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
                 <div class="col">
@@ -1699,17 +1714,30 @@
 
             <hr />
             <div #Visa class="mb-1" *ngIf="eVisaFormModel && curriculumVitaePermission.legalInfoFuncID.visaFuncID.view == true">
-              <div class="d-flex align-items-center mt-6 mb-4">
-                <span class="icon-i-filter-right icon-20 me-2"></span>
-                <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="eVisaFormModel"
-                    default="Thị thực"
+              <div class="d-flex align-items-center mt-6 mb-4 justify-content-between">
+                <div class="d-flex align-items-center">
+                  <span class="icon-i-filter-right icon-20 me-2"></span>
+                  <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="eVisaFormModel"
+                      default="Thị thực"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center ms-5"
+                *ngIf="curriculumVitaePermission.legalInfoFuncID.visaFuncID.write == true && (fromWS == false || curriculumVitaePermission.legalInfoFuncID.visaFuncID.isPortal == false)">
+                  <button
+                    class="btn btn-icon btn-sm btn-white"
+                    (click)="handleEmployeeVisaInfo(addHeaderText, 'add', null)"
                   >
-                  </codx-label>
+                    <span class="icon-add icon-18"></span>
+                  </button>
                 </div>
               </div>
+            </div>
+
 
               <div class="row mb-2 py-2 hover-active bg-hover cursor-pointer">
                 <div class="row mb-5 ">
@@ -1873,7 +1901,6 @@
                 </div> -->
             </div>
           </div>
-        </div>
 
       <!-- Lao động nước ngoài -->
 
@@ -1977,15 +2004,26 @@
      
           <hr />
           <div #workPermit class="mb-1" *ngIf="curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.view == true">
-            <div class="d-flex align-items-center mt-6 mb-4">
-              <span class="icon-i-filter-right icon-20 me-2"></span>
-              <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="eInfoFormModel"
-                  default="Giấy phép lao động"
+            <div class="d-flex align-items-center mt-6 mb-4 justify-content-between">
+              <div class="d-flex align-items-center">
+                <span class="icon-i-filter-right icon-20 me-2"></span>
+                <div class="fw-bold text-uppercase fs-5-sm text-gray-600">
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="eInfoFormModel"
+                    default="Giấy phép lao động"
+                  >
+                  </codx-label>
+                </div>
+              </div>
+              <div class="d-flex align-items-center ms-5"
+              *ngIf="curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.write == true && (fromWS == false || curriculumVitaePermission.foreignWorkerFuncID.workPermitFuncID.isPortal == false)">
+                <button
+                  class="btn btn-icon btn-sm btn-white"
+                  (click)="handleEmployeeWorkingPermitInfo(addHeaderText, 'add', null)"
                 >
-                </codx-label>
+                  <span class="icon-add icon-18"></span>
+                </button>
               </div>
             </div>
 
@@ -2230,14 +2268,15 @@
                 <span>({{ lstFamily.length }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5" 
+            *ngIf="curriculumVitaePermission.eFamiliesFuncID.write == true && (fromWS == false || curriculumVitaePermission.eFamiliesFuncID.isPortal == false)">
               <button type="button" class="btn btn-icon btn-white">
                 <span
                   class="icon-add icon-18"
                   (click)="handleEFamilyInfo(addHeaderText, 'add', null)"
                 ></span>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div #family class="mt-5">
@@ -2403,14 +2442,15 @@
                 <span>({{ eExperienceRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="curriculumVitaePermission.eExperienceFuncID.write == true && (fromWS == false || curriculumVitaePermission.eExperienceFuncID.isPortal == false)">
               <button
                 class="btn btn-icon btn-sm btn-white"
                 (click)="handlEmployeeExperiences(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div *ngIf="lstExperiences?.length > 0; else emptyDataTemplate">
@@ -3376,6 +3416,15 @@
                 </codx-label>
               </div>
             </div>
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="jobInfoPer.eNeedToSubmitProfileFuncID.write == true && (fromWS == false || jobInfoPer.eNeedToSubmitProfileFuncID.isPortal == false)">
+              <button
+                class="btn btn-icon btn-sm btn-white"
+                (click)="HandleEDocumentInfo(addHeaderText, 'add', null)"
+              >
+                <span class="icon-add icon-18"></span>
+              </button>
+            </div>
           </div>
 
           <div #eDocument class="mb-1 mt-6" *ngIf="eInfoFormModel">
@@ -3525,22 +3574,25 @@
             </div>
           </div>
           <div class="d-flex align-items-center ms-5 me-3">
-            <!-- <button
-              type="button"
-              class="btn btn-icon btn-sm btn-white"
-              (click)="
-                HandleEmployeeBasicSalariesInfo(addHeaderText, 'add', null)
-              "
-            >
-              <span class="icon-add icon-18"></span>
-            </button>
-            <span class="text-gray-400 mx-2">|</span> -->
+            <div
+            *ngIf="salaryBenefitInfoPer.eBasicSalaryFuncID.write == true && (fromWS == false || salaryBenefitInfoPer.eBasicSalaryFuncID.isPortal == false)">
+              <button
+                type="button"
+                class="btn btn-icon btn-sm btn-white"
+                (click)="
+                  HandleEmployeeBasicSalariesInfo(addHeaderText, 'add', null)
+                "
+              >
+                <span class="icon-add icon-18"></span>
+              </button>
+              <span class="text-gray-400 mx-2">|</span>
+            </div>
             <button type="button"
               class="btn btn-sm btn-white text-primary"
               (click)="valueChangeViewAllEBasicSalary()"
             >
               <codx-label
-                name="lblSeeAllEBenefit"
+                name="lblSeeAllBSalaries"
                 [formModel]="eInfoFormModel"
                 default="Xem tất cả"
               >
@@ -3831,7 +3883,9 @@
             </div>
           </div>
           <div class="d-flex align-items-center ms-5 me-3">
-            <!-- <button
+            <div
+            *ngIf="salaryBenefitInfoPer.benefitFuncID.write == true && (fromWS == false || salaryBenefitInfoPer.benefitFuncID.isPortal == false)">
+            <button
               type="button"
               class="btn btn-icon btn-sm btn-white"
               (click)="handlEmployeeBenefit(addHeaderText, 'add', null)"
@@ -3839,7 +3893,8 @@
               <i class="icon-add icon-18"></i>
             </button>
             <span class="text-gray-400 mx-2">|</span>
-          -->
+            </div>
+         
             <button type="button"
               class="btn btn-sm btn-white text-primary"
               (click)="valueChangeViewAllEBenefit($event)"
@@ -4078,27 +4133,29 @@
               </div>
             </div>
             <div class="d-flex align-items-center ms-5 me-3">
-              <!-- <button
-                type="button"
-                class="btn btn-icon btn-sm btn-white"
-                (click)="addEContractInfo(addHeaderText, 'add', null)"
-              >
-                <span class="icon-add icon-18"></span>
-              </button>
-              <span class="text-gray-400 mx-2">|</span>
-            -->
-
               <button type="button"
-                class="btn btn-sm btn-white text-primary"
-                (click)="popupViewAllContract()"
+              class="btn btn-sm btn-white text-primary"
+              (click)="popupViewAllContract()"
+            >
+            <codx-label
+                name="lblSeeAllEContract"
+                [formModel]="eInfoFormModel"
+                default="Xem tất cả"
               >
-              <codx-label
-                  name="lblSeeAllEContract"
-                  [formModel]="eInfoFormModel"
-                  default="Xem tất cả"
+            </codx-label>
+            </button>
+              <div
+              *ngIf="workingProcessInfoPer.eContractFuncID.write == true && (fromWS == false || workingProcessInfoPer.eContractFuncID.isPortal == false)">
+              <span class="text-gray-400 mx-2">|</span>
+              <button
+                  type="button"
+                  class="btn btn-icon btn-sm btn-white"
+                  (click)="HandleEContractInfo(addHeaderText, 'add', null)"
                 >
-              </codx-label>
-              </button>
+                  <span class="icon-add icon-18"></span>
+                </button>
+              </div>
+           
             </div>
           </div>
 
@@ -4262,17 +4319,18 @@
               <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-gray-800">({{ appointionRowCount }})</span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="workingProcessInfoPer.appointionFuncID.write == true && (fromWS == false || workingProcessInfoPer.appointionFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="
-                  HandleEmployeeAppointionInfo(addHeaderText, 'add', null)
+                HandleEmployeeAppointionInfo(addHeaderText, 'add', null)
                 "
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mt-3">
             <div *ngIf="appointionFormModel && appointionColumnGrid">
@@ -4352,13 +4410,16 @@
                 ></codx-dropdown-calendar>
                 <!-- [firstChange]="false" -->
               </span>
-              <!-- <span class="text-gray-500 mx-2">|</span>
+              <div
+            *ngIf="workingProcessInfoPer.dayoffFuncID.write == true && (fromWS == false || workingProcessInfoPer.dayoffFuncID.isPortal == false)">
+              <span class="text-gray-500 mx-2">|</span>
               <button
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEmployeeDayOffInfo(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
-              </button> -->
+              </button>
+              </div>
             </div>
           </div>
 
@@ -4456,14 +4517,16 @@
                 [cssClass]="'rounded-pill'"
                 (change)="valueChangeYearFilterBusinessTravel($event)"
               ></codx-dropdown-calendar>
-
-              <!-- <span class="text-gray-500 mx-2">|</span>
-              <button
-                class="btn btn-icon btn-sm btn-white"
-                (click)="HandleEBusinessTravel(addHeaderText, 'add', null)"
-              >
-                <span class="icon-add icon-18"></span>
-              </button> -->
+              <div
+              *ngIf="workingProcessInfoPer.eBusinessTravelFuncID.write == true && (fromWS == false || workingProcessInfoPer.eBusinessTravelFuncID.isPortal == false)">
+                <span class="text-gray-500 mx-2">|</span>
+                <button
+                  class="btn btn-icon btn-sm btn-white"
+                  (click)="HandleEBusinessTravel(addHeaderText, 'add', null)"
+                >
+                  <span class="icon-add icon-18"></span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="mb-1 mt-5"
@@ -4527,8 +4590,8 @@
                 <span>({{ awardRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
-              <codx-dropdown-calendar
+            <div class="d-flex align-items-center ms-5">
+              <!-- <codx-dropdown-calendar
                 *ngIf="awardHeaderText"
                 [cssPopup]="'w-550px h-350px'"
                 [emptyText]="awardHeaderText['InYear']"
@@ -4538,15 +4601,16 @@
                 [cssClass]="'rounded-pill'"
                 (change)="valueChangeYearFilterAward($event)"
               ></codx-dropdown-calendar>
-              <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-500 mx-2">|</span> -->
               <button
+              *ngIf="workingProcessInfoPer.awardFuncID.write == true && (fromWS == false || workingProcessInfoPer.awardFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEmployeeEAwardsInfo(addHeaderText, 'add', null)"
               >
                 <i class="icon-add icon-18"></i>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div
@@ -4594,7 +4658,8 @@
                 <span>({{ eDisciplineRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="workingProcessInfoPer.eDisciplineFuncID.write == true && (fromWS == false || workingProcessInfoPer.eDisciplineFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -4604,7 +4669,7 @@
               >
                 <i class="icon-add icon-18"></i>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div class="mb-1 mt-5"
@@ -4699,9 +4764,11 @@
                 {{ getFormHeader2(eDegreeFuncID, lstFuncKnowledge) }}
               </div>
               <!-- <span class="text-gray-500 mx-2">|</span>
-              <span class="text-dark">({{ eDegreeRowCount }})</span> -->
+              <span class="text-dark">({{ eDegreeRowCount }})</span>
+            -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+                *ngIf="knowledgeInfoPer.eDegreeFuncID.write == true && (fromWS == false || knowledgeInfoPer.eDegreeFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -4709,7 +4776,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-5">
             <!-- <div>
@@ -4828,7 +4895,9 @@
               <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eCertificateRowCount }})</span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="knowledgeInfoPer.eCertificateFuncID.write == true && (fromWS == false || knowledgeInfoPer.eCertificateFuncID.isPortal == false)"
+            >
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white position-relative"
@@ -4838,7 +4907,7 @@
               >
                 <i class="icon-add icon-18"></i>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <div class="mb-1 mt-5">
@@ -4919,7 +4988,9 @@
                 [pageSize]="numPageSizeGridView"
                 [entityName]="'HR_ECertificates'"
                 [emptyTemplate]="emptyDataTemplate"
-              ></codx-gridview> -->
+              ></codx-gridview> 
+              
+            -->
 
               <codx-gridview-v2
               #eCertificateGridView
@@ -4955,8 +5026,8 @@
               <!-- <span class="text-gray-500 mx-2">|</span>
               <span class="text-dark">({{ eSkillRowCount }})</span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5">
+              <!-- <codx-dropdown-select
               *ngIf="eSkillgrvSetup"
               [cssClass]="'rounded-pill border-1'"
               cssPopup="h-350px w-300px"
@@ -4968,15 +5039,16 @@
               (valueChange)="valueChangeFilterSkillID($event)"
             ></codx-dropdown-select>
 
-              <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-500 mx-2">|</span> -->
               <button
+              *ngIf="knowledgeInfoPer.eSkillFuncID.write == true && (fromWS == false || knowledgeInfoPer.eSkillFuncID.isPortal == false)"
               type="button"
               class="btn btn-icon btn-sm btn-white"
               (click)="HandleEmployeeESkillsInfo(addHeaderText, 'add', null)"
             >
               <i class="icon-add icon-18"></i>
             </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-7"
           *ngIf="eSkillFormmodel && eSkillColumnGrid; else emptyDataTemplate"
@@ -5168,9 +5240,10 @@
                   (change)="valueChangeYearFilterETrainCourse($event)"
                 ></codx-dropdown-calendar
               ></span>
-              <!-- <span class="text-gray-500 mx-2">|</span>
+              <span class="text-gray-500 mx-2">|</span>
               <span class="ms-3">
                 <button
+                *ngIf="knowledgeInfoPer.eTrainCourseFuncID.write == true && (fromWS == false || knowledgeInfoPer.eTrainCourseFuncID.isPortal == false)"
                   type="button"
                   class="btn btn-icon btn-sm btn-white"
                   (click)="
@@ -5179,7 +5252,7 @@
                 >
                   <i class="icon-add icon-18"></i>
                 </button>
-              </span> -->
+              </span>
             </div>
           </div>
 
@@ -5299,8 +5372,8 @@
                 <span>({{ eAccidentsRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5">
+              <!-- <codx-dropdown-select
                 *ngIf="eAccidentsGrvSetup"
                 [emptyText]="eAccidentsGrvSetup.AccidentID.headerText"
                 [cssClass]="'rounded-pill border-1'"
@@ -5314,15 +5387,16 @@
                 <i class="icon-filter_alt"></i>
               </codx-dropdown-select>
 
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eAccidentsFuncID.write == true && (fromWS == false || healthInfoPer.eAccidentsFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEmployeeAccidentInfo(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1"
           *ngIf="eAccidentsFormModel && eAccidentsColumnsGrid; else emptyDataTemplate"
@@ -5380,8 +5454,8 @@
                 <span>({{ eDiseasesRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5" *ngIf="eDiseasesHeaderText">
-              <span>
+            <div class="d-flex align-items-center ms-5" *ngIf="eDiseasesHeaderText">
+              <!-- <span>
                 <codx-dropdown-select
                   *ngIf="eDiseasesGrvSetup"
                   [emptyText]="eDiseasesHeaderText['DiseaseID']"
@@ -5396,8 +5470,9 @@
                   <i class="icon-filter_alt"></i>
                 </codx-dropdown-select>
               </span>
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eDiseasesFuncID.write == true && (fromWS == false || healthInfoPer.eDiseasesFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="
@@ -5406,7 +5481,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
 
           <!--Griddiseases-->
@@ -5497,7 +5572,8 @@
                 <span>({{ eHealthRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5">
+            <div class="d-flex align-items-center ms-5"
+            *ngIf="healthInfoPer.eHealthFuncID.write == true && (fromWS == false || healthInfoPer.eHealthFuncID.isPortal == false)">
               <button
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
@@ -5505,7 +5581,7 @@
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mb-1 mt-6"
           *ngIf="eHealthFormModel && eHealthColumnGrid; else emptyDataTemplate"
@@ -5569,8 +5645,8 @@
                 <span>({{ eVaccineRowCount }})</span>
               </span> -->
             </div>
-            <!-- <div class="d-flex align-items-center ms-5" *ngIf="eVaccineHeaderText">
-              <codx-dropdown-select
+            <div class="d-flex align-items-center ms-5" *ngIf="eVaccineHeaderText">
+              <!-- <codx-dropdown-select
                 *ngIf="eVaccineGrvSetup"
                 [cssClass]="'rounded-pill border-1'"
                 cssPopup="h-350px w-300px"
@@ -5592,15 +5668,16 @@
                   (change)="valueChangeYearFilterEVaccine($event)"
                 ></codx-dropdown-calendar>
               </span>
-              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-400 mx-2">|</span> -->
               <button
+              *ngIf="healthInfoPer.eVaccinesFuncID.write == true && (fromWS == false || healthInfoPer.eVaccinesFuncID.isPortal == false)"
                 type="button"
                 class="btn btn-icon btn-sm btn-white"
                 (click)="HandleEVaccinesInfo(addHeaderText, 'add', null)"
               >
                 <span class="icon-add icon-18"></span>
               </button>
-            </div> -->
+            </div>
           </div>
           <div class="mt-7"
           *ngIf="eVaccineFormModel && eVaccineColumnGrid; else emptyDataTemplate"
@@ -5713,7 +5790,8 @@
                 </codx-label>
               </div>
               <div class="d-flex align-items-center ms-7">
-                <span class="text-dark fw-bold">
+                <span 
+                [ngClass]="infoPersonal?.submitDate? 'text-dark fw-bold' : 'text-gray-400 text-italic' ">
                   {{ infoPersonal?.submitDate | fmDT }}
                 </span>
               </div>
@@ -5724,7 +5802,9 @@
                 </codx-label>
               </div>
               <div class="d-flex align-items-center" >
-                <span class="text-dark fw-bold">
+                <span
+                [ngClass]="infoPersonal?.stoppedOn? 'text-dark fw-bold' : 'text-gray-400 text-italic' "
+                >
                   {{ infoPersonal?.stoppedOn | fmDT }}</span
                 >
               </div>
@@ -5798,7 +5878,9 @@
                 </codx-label>
               </div>
               <div class="d-flex align-items-center" >
-                <span class="text-dark fw-bold">
+                <span
+                [ngClass]="infoPersonal?.contractClosedDate? 'text-dark fw-bold' : 'text-gray-400 text-italic' "
+                >
                   {{ infoPersonal?.contractClosedDate | fmDT }}</span
                 >
               </div>
@@ -5831,7 +5913,7 @@
             <codx-input
               [formModel]="formModel"
               [type]="'checkbox'"
-              [checked]="infoPersonal?.isHandOverWork"
+              [checked]="infoPersonal?.isHandOverWork == true ? true : false"
               [disabled]="true"
               field="isHandOverWork"
             ></codx-input>
@@ -5841,7 +5923,7 @@
             <codx-input
             [formModel]="formModel"
             [type]="'checkbox'"
-            [checked]="infoPersonal?.isHandOverProperty"
+            [checked]="infoPersonal?.isHandOverProperty  == true ? true : false"
             [disabled]="true"
             field="isHandOverProperty"
           ></codx-input>
@@ -5852,7 +5934,7 @@
             <codx-input
             [formModel]="formModel"
             [type]="'checkbox'"
-            [checked]="infoPersonal?.isPaidDebt"
+            [checked]="infoPersonal?.isPaidDebt  == true ? true : false"
             [disabled]="true"
             field="isPaidDebt"
             ></codx-input>
@@ -5874,7 +5956,7 @@
             <codx-input
               [formModel]="formModel"
               [type]="'checkbox'"
-              [checked]="infoPersonal?.isLockAccount"
+              [checked]="infoPersonal?.isLockAccount  == true ? true : false"
               [disabled]="true"
               field="isLockAccount"
             ></codx-input>
@@ -5889,7 +5971,7 @@
             <codx-input
               [formModel]="formModel"
               [type]="'checkbox'"
-              [checked]="infoPersonal?.isNotify"
+              [checked]="infoPersonal?.isNotify  == true ? true : false"
               [disabled]="true"
               field="isNotify"
             ></codx-input>
@@ -5904,7 +5986,7 @@
             <codx-input
               [formModel]="formModel"
               [type]="'checkbox'"
-              [checked]="infoPersonal?.isReductedSI"
+              [checked]="infoPersonal?.isReductedSI  == true ? true : false"
               [disabled]="true"
               field="isReductedSI"
             ></codx-input>
@@ -5919,7 +6001,7 @@
             <codx-input
               [formModel]="formModel"
               [type]="'checkbox'"
-              [checked]="infoPersonal?.isClosedSI"
+              [checked]="infoPersonal?.isClosedSI  == true ? true : false"
               [disabled]="true"
               field="isClosedSI"
             ></codx-input>

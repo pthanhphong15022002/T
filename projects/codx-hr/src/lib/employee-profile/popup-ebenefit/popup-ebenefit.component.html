@@ -10,10 +10,11 @@
   [data]="benefitObj"
   [group]="form.formGroup"
   >
-  <!-- *ngIf="isAfterRender" -->
+  <!-- *ngIf="isAfterRender"
+  -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
-    <div *ngIf="useForQTNS" class="form-group row mt-5">
+    <div *ngIf="useForQTNS == true || isMultiCopy == true" class="form-group row mt-5">
       <div class="col-11">
         <div class="d-flex">
           <div class="d-flex flex-column position-relative">
@@ -61,7 +62,8 @@
                       | async
                   "
                 ></span>
-              </div> -->
+              </div>
+            --> 
           </div>
         </div>
       </div>
@@ -69,7 +71,8 @@
         <codx-input
         *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [showInput]="false"
-          field="employeeID"
+      [multiple]="isMultiCopy"
+      field="employeeID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           (valueChange)="handleSelectEmp($event)"
@@ -310,7 +313,7 @@
       ></codx-label>
       <codx-input
       *ngIf="form.gridviewSetup.SignerID.allowPopup == true"
-        field="SignerID"
+        field="signerID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [showInput]="false"
@@ -582,7 +585,8 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
       ></codx-input>
-    </div> -->
+    </div>
+  -->
   </ng-container>
   </ng-template>
 </codx-form>
@@ -601,7 +605,6 @@
 <ng-template #popOverDue>
   <span>
     <codx-label
-
       name="lblOverDue"
       [formModel]="form.formModel"
       default="Quá hạn"
