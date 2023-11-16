@@ -905,7 +905,9 @@ codx-layout-add{
   .nav-pills.w-175px{
     width: 185px!important;
   }
-
+  .codx-tab .tab-content {
+    overflow-x: hidden;
+  }
 }
 .e-appointment {
   text-align: left !important;
@@ -3038,6 +3040,7 @@ codx-vll.badge.badge-md span::before{
   font-size: 12px!important;
   //padding-top: 2px!important;
   line-height: 16px!important;
+  margin-top: 4px;
 }
 .aside-minimize-icon-title .aside.aside-extended .aside-primary .aside-menu .menu-link .menu-title{
   flex-grow: inherit;
@@ -3079,7 +3082,7 @@ codx-vll.badge.badge-md span::before{
    }
 
  }
-.aside-minimize-icon-title .aside .menu-link {
+.aside-minimize-icon-title:not(.header-fixed-2) .aside .menu-link {
   padding-left: 7px!important;
   padding-right: 7px!important;
   margin-bottom: 1px;
@@ -3131,11 +3134,12 @@ codx-layout{
     }
   }
 }
-
+codx-aside-v1{
 .menu-state-icon-primary .menu-item:hover {
   .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     fill: var(--primary)!important;
   }
+}
 }
 .toolbar{
   .e-control.e-inplaceeditor .e-editable-value-wrapper {
@@ -3573,7 +3577,7 @@ codx-view-list-tree{
   }
   codx-listview .card-body.p-0{
     height: 100%!important;
-    background-color: white;
+    background-color: var(--bg-body);
   }
 }
 .e-pane .aside-menu{
@@ -3785,6 +3789,7 @@ codx-view-tree-targets .menu-sub{
   [data-kt-aside-minimize=on].aside-minimize-icon-title:not(.aside-hoverable):not(.aside-extended){
     .menu-item{
       display: block;
+      border: 1px transparent solid;
     }
     .aside-secondary .menu-title{
       text-align: left!important;
@@ -4139,6 +4144,9 @@ app-setting .e-tab .e-tab-header.e-vertical:before {
  //// theme for aside mode 2
 /// 
 codx-aside-v2.aside-v2-lighter{
+  .menu-state-primary .menu-item > .menu-link {
+    padding-left: 5px!important;
+  }
   .menu-state-primary .menu-item.here > .menu-link {
     background-color: var(--primary-lighter);
   }
@@ -4166,4 +4174,59 @@ codx-aside-v2.aside-v2-lighter{
     height: 26px!important;
   }
 }
+}
+
+
+body.light.default{
+  .aside.aside-v2-lighter {
+    background-color: var(--white);
+}
+}
+codx-aside-v2{
+  .aside-menu .menu-item .menu-icon .svg-icon{
+    display: flex;
+    justify-content: center;
+  }
+}
+codx-header-v2{
+  .flex-shrink-0 .btn.btn-icon{
+    width: auto!important;
+  }
+  .badge.badge-sm {
+    font-size: 6px;
+    padding-left: 3px!important;
+    padding-right: 3px!important;
+    margin-left: -6px;
+    margin-top: -5px;
+}
+}
+
+
+codx-view-list-tree
+codx-view-schedule{
+  .fit-content{
+
+    .w-250px{
+      width: 150px!important;
+    }
+    .w-300px.mx-2{
+      width: 250px!important;
+    }
+  }
+}
+codx-input.border-0 input.e-input, codx-input .border-0 input.e-input, codx-input input.e-input.border-0{
+  border-color:transparent!important ;
+}
+
+codx-dropdown-calendar .dropdown-toggle>.d-flex {
+  font-size: 12px;
+}
+#toolbar codx-dropdown-select .text-truncate.text-hover-primary{
+  color: var(--text-body)!important;
+}
+
+ .edit-info{
+  .nav-pills.w-175px{
+    margin-right: 25px;
+  }
 }

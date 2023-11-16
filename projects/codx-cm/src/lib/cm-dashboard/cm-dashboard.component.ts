@@ -2471,7 +2471,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               countOlds
             ).toLocaleString();
             tmpPerform['isAsc'] =
-              count - countOlds == 0 ? '0' : count - countOlds > 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+              count - countOlds >= 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
             performances.push(tmpPerform);
           }
         }

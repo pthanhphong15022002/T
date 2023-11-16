@@ -1400,6 +1400,15 @@ export class CodxShareService {
       [sf]
     );
   }
+  getSFByID(lstParams) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'GetByIDAsync',
+      lstParams
+    );
+  }
   getSettingValueWithOption(
     option,
     formName,
@@ -1483,6 +1492,9 @@ export class CodxShareService {
     approveProcess.category = category;
     approveProcess.data = data;
     approveProcess.exportData = exportData;
+    if(approveProcess.approvers== null){
+      approveProcess.approvers = [];
+    }
     this.callBackComponent = curComponent;
 
     //Gọi gửi duyệt thẳng (Dùng cho nội bộ ES_SignFile)
@@ -1933,14 +1945,20 @@ export class CodxShareService {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
-            let signFile = this.apCreateSignFile(approveProcess, lstFile);
+            
             if (lstFile?.length > 0) {
-              this.apOpenViewSignFile(
-                approveProcess,
-                releaseCallback,
-                approveProcess.template[0],
-                lstFile
-              );
+              let signFile = this.apCreateSignFile(approveProcess, lstFile);
+              this.createNewESSF(signFile).subscribe((res) => {
+                if (res) {                 
+                  this.apOpenViewSignFile(
+                    approveProcess,
+                    releaseCallback,
+                    res,
+                    lstFile
+                  );                  
+                }
+              });
+              
             } else {
               this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
             }
@@ -1954,7 +1972,18 @@ export class CodxShareService {
             let signFile = this.apCreateSignFile(approveProcess, lstFile);
             this.createNewESSF(signFile).subscribe((res) => {
               if (res) {
-                this.apBaseRelease(approveProcess, releaseCallback);
+                this.getSFByID([
+                  res?.recID,
+                  this.user?.userID,
+                  false,
+                  true,
+                  null,
+                  approveProcess.approvers,
+                  false,
+                ])
+                .subscribe((res: any) => {
+                  this.apBaseRelease(approveProcess, releaseCallback);
+                });
               }
             });
           }

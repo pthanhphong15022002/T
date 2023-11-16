@@ -285,7 +285,9 @@
 
         <div
           class="form-group"
-          *ngIf="field.dataType == 'L' || field.dataType == 'PA'"
+          *ngIf="
+            (field.dataType == 'L' || field.dataType == 'PA') && field.refValue
+          "
         >
           <codx-label
             class="label-colon"
@@ -312,7 +314,7 @@
                 #comboxView
                 [dataSource]="datasVllCrr"
                 [fields]="fieldsCrrVll"
-                [value]="crrValueFirst"
+                [value]=""
                 [allowFiltering]="false"
                 [placeholder]="this.crrVll?.note"
               ></ejs-combobox>
@@ -322,7 +324,7 @@
                 [dataSource]="datasVllCrr"
                 [mode]="'Default'"
                 [fields]="fieldsCrrVll"
-                [value]="crrValueFirst"
+                [value]=""
                 [showDropDownIcon]="true"
                 [placeholder]="this.crrVll?.note"
               ></ejs-multiselect>
@@ -331,27 +333,21 @@
         </div>
       </ng-container>
 
-      <div
-        class="form-group"
-        *ngIf="
-          field.dataType == 'N' ||
-          field.dataType == 'P' ||
-          field.dataType == 'L' ||
-          field.dataType == 'T' ||
-          field.dataType == 'PA'
-        "
-      >
-        <codx-label
-          fiedName="DefaultValue"
-          [formModel]="form.formModel"
-        ></codx-label>
+      <div class="form-group" *ngIf="fieldCus">
         <codx-input-custom-field
-          [customField]="field"
+          #tempInput
+          [customField]="fieldCus"
+          [showTitle]="false"
           [checkValid]="false"
-          [formModel]="dialog.formModel"
           (valueChangeCustom)="valueChangeCustom($event)"
         >
         </codx-input-custom-field>
+        <ng-container *ngIf="field.defaultValue && field.dataType == 'PA'">
+          <codx-fields-format-value
+            #tempView
+            [data]="fieldCus"
+          ></codx-fields-format-value>
+        </ng-container>
       </div>
 
       <div class="form-group" *ngIf="field.dataType == 'A'">

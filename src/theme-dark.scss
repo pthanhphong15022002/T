@@ -129,6 +129,9 @@ app-list-post .e-listview .e-list-item {
     border-color: var(--bg-card) !important;
     background-color: var(--bg-card);
 }
+div#newfeed ejs-listview .e-list-item:hover {
+    background-color: transparent!important;
+}
 
 .wp-home .e-listview .e-list-item.e-hover,
 .wp-home .e-listview .e-list-item.e-active {
@@ -201,12 +204,15 @@ textarea.codx-textarea {
 .feed-box .btn span[class*=icon-] {
     color: var(--text-body);
 }
-
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active, .e-tab .e-tab-header.e-vertical .e-toolbar-item:hover, .e-tab .e-tab.e-focused>.e-tab-header .e-toolbar-item:focus {
+    background-color:var(--gray-150);
+}
 .btn.btn-white {
     background-color: var(--bg-card);
-
+    border-color: var(--border-light);
     &:hover {
         background-color: var(--gray-100) !important;
+        color: var(--text-title);
     }
 }
 
@@ -412,6 +418,9 @@ h1,
 .bg-white {
     background-color: var(--bg-card) !important;
 }
+.bg-gray-100 {
+    background-color: var(--gray-100) !important;
+}
 
 .card-footer[_ngcontent-ueb-c389] {
     background-color: var(--bg-card) !important;
@@ -545,6 +554,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
     border-color: var(--primary) !important;
+    background-color: var(--primary-light);
 }
 
 .card-footer {
@@ -717,14 +727,14 @@ label,
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-month-view .e-work-cells {
     background-color: rgba(255, 255, 255, 0.04) !important;
-    border-color: var(--border-list);
+    border-color: var(--border-light);
     color: inherit;
 }
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-year-view .e-work-cells {
     background-color: rgba(255, 255, 255, 0.04) !important;
-    border-color: var(--border-list);
+    border-color: var(--border-light);
     color: inherit;
 }
 .e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells.e-child-node {
@@ -734,6 +744,7 @@ label,
 
 .btn {
     color: var(--primary);
+    border-color:var(--border-light) ;
 }
 
 .btn.btn-primary {
@@ -840,5 +851,66 @@ codx-view-list-detail .e-listview .e-list-parent {
 }
 
 
+.aside-primary .menu-state-icon-primary .menu-item .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--text-title)!important;
+}
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary span.menu-link:hover .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(--text-title)!important;
+}
+.aside-minimize-icon-title .aside.aside-extended .aside-primary .menu-link:hover {
+    background-color: rgba(255, 255, 255, 0.085) !important;
+}
+
+.e-listview .e-list-item.e-active {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells {
+    border-color: var(--gray-200) !important;
+    border-color: var(--border-light)!important;
+}
+
+#gridViewV2.e-grid.e-default tr td:first-child, #gridViewV2.e-grid.e-default tr :not(.e-rtl) th.e-headercell:first-child:not(.e-firstcell):not(.e-headercell.e-frozen-left-border), #gridViewV2.e-grid.e-default tr th.e-detailheadercell:first-child, #gridViewV2.e-grid.e-default tr th.e-filterbarcell:first-child:not(.e-filterbarcell.e-frozen-left-border) {
+    border-color: var(--border-light)!important;
+}
+#gridViewV2 {
+    .e-grid .e-gridheader {
+        border-color: var(--border-light);
+    }
+    .e-grid .e-rowcell:not(.e-editedbatchcell):not(.e-updatedtd){
+        color: var(--text-body) !important;
+
+    }
+}
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary{ 
+    .menu-link:hover .menu-title {
+        color: var(--text-title) !important;
+    }
+    .aside-footer {
+        .menu-title {
+            color: var(--text-title);
+        }
+        .svg-icon svg [fill]:not(.permanent):not(g) {
+            fill: var(--text-title);
+        }
+    }
+ }
+ .aside-menu .menu-item .menu-title, .aside-footer .menu-item .menu-title {
+    color: var(--text-title);
+}
+
+.codx-theme .codx-tab .tab-content {
+    border-color: var(--border-light);
+}
+ejs-tab#calendarTab .e-calendar {
+    border-color:  var(--border-light)!important;
+}
+.btn.btn-light {
+    //color: #6f7475;
+    //border-color: #f5f9fa;
+    background-color: var(--bg-card);
+}
 
 //end dark

@@ -133,6 +133,7 @@ export class PopupAddCardsComponent implements OnInit {
   isHaveFile = false;
   showLabelAttachment = false;
   type = 'add';
+  reduceCoCoins = 0;
 
   constructor(
     private api: ApiHttpService,
@@ -180,6 +181,7 @@ export class PopupAddCardsComponent implements OnInit {
           } else {
             this.title = func.description;
           }
+          this.CheckAvalidMaxPointPeriod();
           this.cache
             .gridViewSetup(this.formName, this.gridViewName)
             .subscribe((grdSetUp: any) => {
@@ -381,12 +383,14 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   valueChange(e: any) {
+    console.log(e);
     // if (!e?.field || !e?.data) {
     //   return;
     // }
 
     let data = e.data;
     let field = e.field;
+    console.log(field)
     switch (field) {
       case 'rating':
         this.rating = data;
@@ -514,7 +518,28 @@ export class PopupAddCardsComponent implements OnInit {
         if (data) {
           if (this.parameter.MaxPointPerOnceControl === '1') {
             if (data > this.parameter.MaxPointPerOnce) {
-              this.notifySV.notify('Vượt quá số xu cho phép tặng');
+              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần');
+              data = this.givePoint;
+            }
+          }
+          if(data && this.parameter.MaxPointControl === '1'){
+            let unitName = "";
+            switch (this.parameter.MaxPointPeriod) {
+              case "1":
+                unitName = "tuần";
+                break;
+              case "2":
+                unitName = "tháng";
+                break;
+              case "3":
+                unitName = "quý";
+                break;
+              case "4":
+                unitName = "năm";
+                break;
+            }
+            if((this.reduceCoCoins + data) > this.parameter.MaxPoints){
+              this.notifySV.notify('Vượt quá số xu cho phép tặng: ' + this.parameter.MaxPoints + ' xu/' + unitName);
               data = this.givePoint;
             }
           }
@@ -529,6 +554,22 @@ export class PopupAddCardsComponent implements OnInit {
         break;
     }
     this.dt.detectChanges();
+  }
+
+  CheckAvalidMaxPointPeriod(){
+    this.api
+      .execSv<any>(
+        'FD',
+        'ERM.Business.FD',
+        'CardsBusiness',
+        'CheckAvalidMaxPointPeriod',
+        ["FDParameters", this.cardType, this.user.userID]
+      )
+      .subscribe((res) => {
+        if(res){
+          this.reduceCoCoins = res;
+        }
+      });
   }
 
   checkValidateWallet(receiverID: string) {

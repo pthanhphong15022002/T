@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <!-- <ng-container>
+        <ng-container>
           <div style="margin-left: 25px" *ngIf="!formWareHouse.data?._isEdit || formWareHouse.data?.status == '7'"
             class="input-circle h-20px input-border-0 w-400px mb-1">
             <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
@@ -41,13 +41,13 @@
               [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
               (valueChange)="changeSubType($event)"></codx-dropdown-select>
           </div>
-          <span style="margin-left: 30px" *ngIf="formWareHouse.data?._isEdit && formWareHouse.data?.status != '7'">
+          <!-- <span style="margin-left: 30px" *ngIf="formWareHouse.data?._isEdit && formWareHouse.data?.status != '7'">
             <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
               [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
               class="badge badge-light-primary badge-lg mt-1">
             </codx-vll>
-          </span>
-        </ng-container> -->
+          </span> -->
+        </ng-container>
     </div>
 </ng-template>
 
@@ -71,7 +71,7 @@
         </ejs-tab>
     </div>
     <!-- Start: Tab Detail -->
-    <div style="height: calc(100vh - 375px) !important">
+    <div style="height: calc(100vh - 400px) !important">
         <ejs-tab #elementTabDetail>
             <e-tabitems>
                 <e-tabitem>
@@ -293,7 +293,7 @@
 
 <!-- Start: Grid Tranfer -->
 <ng-template #TmpTabLine>
-    <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
+    <div class="tablinetranfer-content scroll-ac header-table-ac position-relative">
         <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
             [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
@@ -317,7 +317,7 @@
 </ng-template>
 
 <ng-template #TmpTabLine2>
-    <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
+    <div class="tablinetranfer-content scroll-ac header-table-ac position-relative">
         <codx-gridview-v2 #eleGridReceipt [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"

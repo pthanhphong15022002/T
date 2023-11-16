@@ -95,7 +95,6 @@
               >
               </codx-share>
             </ng-template>
-
           </div>
         </div>
         <ng-container>
@@ -202,7 +201,7 @@
               >
                 <span
                   class="me-1"
-                  [innerHTML]="formatNumberWithoutTrailingZeros(item?.weight)"
+                  [innerHTML]="item?.weight | formatTarget"
                 ></span>
                 <span>%</span>
               </div>
@@ -260,7 +259,7 @@
                 (click)="dbClick(item?.userID, 'target')"
                 class="d-flex align-items-center justify-content-end user-nav-item"
               >
-                <span class="" [innerHTML]="targetToFixed(item?.target)">
+                <span class="" [innerHTML]="item?.target.toLocaleString()">
                 </span>
               </div>
               <div
