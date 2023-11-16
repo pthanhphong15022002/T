@@ -60,10 +60,10 @@
             <span id="tipmemo">{{ data?.memo }}</span>
           </ng-template>
         </ejs-tooltip> -->
-        <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
+        <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-2 me-3">{{ data?.memo }}</span>
         <span *ngIf="
             (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
-          " class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText
+          " class="place-holder text-gray-600 line-clamp line-clamp-2 me-3">{{ view?.gridViewSetup["Memo"].headerText
           }}</span>
       </div>
     </div>

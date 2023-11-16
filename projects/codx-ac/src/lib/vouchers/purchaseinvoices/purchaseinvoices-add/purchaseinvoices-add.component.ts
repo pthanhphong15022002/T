@@ -191,7 +191,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       hideFields.push('PurcAmt2');
       hideFields.push('DiscAmt2');
       hideFields.push('NetAmt2');
-      hideFields.push('MiscAmt2');
+      //hideFields.push('MiscAmt2');
     }
 
     eleGrid.showHideColumns(hideFields);

@@ -331,7 +331,7 @@
 <!-- Start: GridLine -->
 <ng-template #TmpTabLine>
   <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
-    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="true" gridLines="Both" [autoFitColumns]="false"
+    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
       [formName]="journal.entryMode == '1'? fmGeneralJournalsLines.formName : fmGeneralJournalsLinesOne.formName"
       [childModel]="childModelCashPayment"
       [gridViewName]="journal.entryMode == '1' ? fmGeneralJournalsLines.gridViewName : fmGeneralJournalsLinesOne.gridViewName"
@@ -365,7 +365,7 @@
         [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true" [templateMore]="templateMore2"
         [showEmptyRecord]="false" [entityName]="fmSettledInvoices.entityName" [showEmptyRecord]="false"
         rowNoField="rowNo" gridLines="Both" service="AC" predicates="TransID=@0" [dataValues]="formGeneral.data.recID"
-        [autoFitColumns]="true" (gridInit)="beforeInitGridSettledInvoices($event)"
+        [autoFitColumns]="false" (gridInit)="beforeInitGridSettledInvoices($event)"
         (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
@@ -395,7 +395,7 @@
         (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
         (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true"
         [templateMore]="templateMore" (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0"
-        gridLines="Both" [autoFitColumns]="true" [dataValues]="formGeneral?.data?.recID" service="AC">
+        gridLines="Both" [autoFitColumns]="false" [dataValues]="formGeneral?.data?.recID" service="AC">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">

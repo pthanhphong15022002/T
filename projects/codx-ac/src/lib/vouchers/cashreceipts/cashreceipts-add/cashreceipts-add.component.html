@@ -402,7 +402,7 @@
   <ng-container *ngIf="formCashReceipt.data?.subType == '11'">
     <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both"
-        [autoFitColumns]="true" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
+        [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
         entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
         (beforeSaveRow)="beforeSaveRow($event)" [templateMore]="TmpMFCashReceipts" service="AC"
@@ -444,7 +444,7 @@
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
         gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0"
-        [dataValues]="formCashReceipt.data.recID" [autoFitColumns]="true"
+        [dataValues]="formCashReceipt.data.recID" [autoFitColumns]="false"
         (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
