@@ -35,6 +35,7 @@ export class PopupEBasicSalariesComponent
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
+  isMultiCopy: boolean = false;
   employeeId: string | null;
   // isAfterRender = false;
   headerText: ' ';
@@ -51,7 +52,8 @@ export class PopupEBasicSalariesComponent
   moment = moment;
   employeeSign;
   loadedAutoNum = false;
-
+  originEmpID = '';
+  originEmpBeforeSelectMulti: any;
   dateNow = moment().format('YYYY-MM-DD');
   // genderGrvSetup: any;
   //end
@@ -69,9 +71,7 @@ export class PopupEBasicSalariesComponent
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
-    if (this.actionType == 'view') {
-      this.disabledInput = true;
-    }
+
     this.formModel = dialog?.formModel;
     this.fromListView = data?.data?.fromListView;
     if (data?.data?.salaryObj) {
@@ -88,6 +88,15 @@ export class PopupEBasicSalariesComponent
       this.employeeObj = this.EBasicSalaryObj?.emp;
     } else {
       this.employeeObj = data?.data?.empObj || null;
+    }
+
+    if (this.actionType == 'view') {
+      this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
+      this.originEmpID = this.employeeId;
+      this.originEmpBeforeSelectMulti = this.employeeObj;
     }
   }
 
@@ -245,7 +254,8 @@ export class PopupEBasicSalariesComponent
       if (
         this.actionType === 'edit' ||
         this.actionType === 'copy' ||
-        this.actionType === 'view'
+        this.actionType === 'view' ||
+        this.actionType === 'copyMulti'
       ) {
         this.hrService
           .getDataDefault(
@@ -316,27 +326,56 @@ export class PopupEBasicSalariesComponent
       });
     }
 
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            p.emp = this.employeeObj;
-            this.dialog && this.dialog.close(p);
+    if(this.actionType == 'copyMulti'){
+      console.log('chay vao add multi');
+      
+      this.hrService.AddMultiEmployeeBasicSalariesInfo(this.form.data).subscribe((res) => {
+        if(res.length > 0){
+          let returnVal;
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal = res[i];
+            }
           }
-        });
-    } else {
-      debugger
-      this.hrService
-        .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            p.emp = this.employeeObj;
-            this.dialog && this.dialog.close(p);
+          if(returnVal){
+            returnVal.emp = this.originEmpBeforeSelectMulti;
+            this.dialog && this.dialog.close(returnVal);
           }
-        });
+          else{
+            this.dialog && this.dialog.close();
+          }
+        }
+        else{
+          this.dialog && this.dialog.close();
+        }
+        // if(res == true){
+        //   this.notify.notifyCode('SYS006');
+        //   this.dialog && this.dialog.close();
+        // }
+      })
+    }
+    else{
+      if (this.actionType === 'add' || this.actionType === 'copy') {
+        this.hrService
+          .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS006');
+              p.emp = this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            }
+          });
+      } else {
+        this.hrService
+          .UpdateEmployeeBasicSalariesInfo(this.formModel.currentData)
+          .subscribe((p) => {
+            if (p != null) {
+              this.notify.notifyCode('SYS007');
+              p.emp = this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            }
+          });
+      }
     }
   }
 

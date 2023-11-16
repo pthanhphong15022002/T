@@ -40,6 +40,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   headerText: '';
   employeeSign;
   data: any;
+  originEmpID = '';
+  originEmpBeforeSelectMulti: any;
   moment = moment;
   dateNow = moment().format('YYYY-MM-DD');
 
@@ -75,6 +77,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
     else if(this.actionType == 'copyMulti'){
       this.isMultiCopy = true;
+      this.originEmpID = this.employId;
+      this.originEmpBeforeSelectMulti = this.employeeObj;
     }
     //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
@@ -195,6 +199,8 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
   }
 
   async onSaveForm() {
+    console.log('tt cbi gui xuong', this.form.data);
+    
     this.benefitObj.employeeID = this.employId;
     if (this.form.formGroup.invalid) {
       this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
@@ -227,39 +233,68 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       );
       return;
     }
+    
 
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
-        if (this.useForQTNS) {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            p.emp = this.employeeObj.emp ?? this.employeeObj;
-            this.dialog && this.dialog.close(p);
+    if(this.actionType == 'copyMulti'){
+      console.log('chay vao add multi');
+      
+      this.hrService.AddEBenefitMultiEmp(this.form.data).subscribe((res) => {
+        if(res.length > 0){
+          let returnVal;
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal = res[i];
+            }
           }
-        } else {
-          debugger
-          if (p != null) {
-            if (p.length > 1) {
-              this.benefitObj.recID = p[1].recID;
-            } else this.benefitObj.recID = p.recID;
-            this.notify.notifyCode('SYS006');
-            this.successFlag = true;
-            this.dialog && this.dialog.close(this.benefitObj);
+          if(returnVal){
+            returnVal.emp = this.originEmpBeforeSelectMulti;
+            this.dialog && this.dialog.close(returnVal);
+          }
+          else{
+            this.dialog && this.dialog.close();
           }
         }
-      });
-    } else {
-      this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
-        if (p != null) {
-          this.notify.notifyCode('SYS007');
+        else{
+          this.dialog && this.dialog.close();
+        }
+      })
+    }
+    else{
+      if (this.actionType === 'add' || this.actionType === 'copy') {
+      console.log('chay vao add');
+
+        this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
           if (this.useForQTNS) {
-            p.emp = this.employeeObj.emp ?? this.employeeObj;
-            this.dialog && this.dialog.close(p);
+            if (p != null) {
+              this.notify.notifyCode('SYS006');
+              p.emp = this.employeeObj.emp ?? this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            }
           } else {
-            this.dialog && this.dialog.close(this.benefitObj);
+            debugger
+            if (p != null) {
+              if (p.length > 1) {
+                this.benefitObj.recID = p[1].recID;
+              } else this.benefitObj.recID = p.recID;
+              this.notify.notifyCode('SYS006');
+              this.successFlag = true;
+              this.dialog && this.dialog.close(this.benefitObj);
+            }
           }
-        }
-      });
+        });
+      } else {
+        this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+          if (p != null) {
+            this.notify.notifyCode('SYS007');
+            if (this.useForQTNS) {
+              p.emp = this.employeeObj.emp ?? this.employeeObj;
+              this.dialog && this.dialog.close(p);
+            } else {
+              this.dialog && this.dialog.close(this.benefitObj);
+            }
+          }
+        });
+      }
     }
   }
 
@@ -332,7 +367,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
 
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
-        case 'SignerID': {
+        case 'signerID': {
           let employee = event.data;
 
           if (employee) {

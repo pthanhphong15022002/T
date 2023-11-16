@@ -88,9 +88,11 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
             mssg.messageType === '3' || mssg.messageType === '5'
               ? ''
               : mssg.message;
-          mssg.isRead = mssg.status.some(
-            (x: any) => x.userID === this.user.userID
-          );
+          if(mssg.status)
+          {
+            mssg.isRead = mssg.status.some((x: any) => x.userID === this.user.userID);
+          }
+          
           group.message = JSON.parse(JSON.stringify(mssg));
           lstData.splice(idx, 1);
           (this.codxListView.dataService as CRUDService).add(group).subscribe();
@@ -144,11 +146,14 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if (event) {
+    if (event) 
+    {
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
       this.codxListView.dataService.search(event);
-    } else {
+    } 
+    else 
+    {
       this.searched = false;
       this.codxListView.dataService.method = 'GetGroupAsync';
       this.codxListView.dataService.search(event);
@@ -158,9 +163,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
 
   //select goup chat
   selectItem(group: any) {
-    group.isRead = true;
-    group.messageMissed = 0;
-    this.signalRSV.sendData('OpenGroupAsync', group);
+    this.signalRSV.sendData('OpenBoxChat', group);
   }
   // select item search
   selectItemSeach(item: any) {
@@ -174,8 +177,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
 
   // open popup add group chat
-  addGroup(group: any) {
-    if (group) {
+  addGroup(group: any) 
+  {
+    if(group) 
+    {
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }

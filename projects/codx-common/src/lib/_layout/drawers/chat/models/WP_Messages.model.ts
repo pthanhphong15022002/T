@@ -54,3 +54,22 @@ export class tmpMessage extends WP_Messages{
         this.jSMessage = null;
     }
 }
+
+export class MessageItem{
+    public recID:string;
+    public message:string;
+    public messageType : string;
+    public isRead:string;
+    public createdBy:string;
+    public createdOn:Date;
+    public groupID:string;
+    public userID:string;
+    public refID:string;
+    public refContent:any;
+
+    constructor(groupID:string) 
+    {
+        this.recID = Util.uid();
+        this.groupID = groupID;
+    }
+}

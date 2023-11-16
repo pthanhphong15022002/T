@@ -36,10 +36,11 @@ export class PopupEmpBusinessTravelsComponent
   formModel: FormModel;
   dialog: DialogRef;
   headerText: string = '';
-  employId;
   data;
+  isMultiCopy: boolean = false;
   isNotOverseaFlag: boolean;
   disabledInput = false;
+  originEmpID = '';
 
   idField = 'RecID';
 
@@ -79,6 +80,11 @@ export class PopupEmpBusinessTravelsComponent
     }
     if (this.actionType == 'view') {
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
+      this.originEmpID = this.employeeId;
+
     }
     this.funcID = data?.data?.funcID;
     this.data = JSON.parse(JSON.stringify(data?.data?.businessTravelObj));
@@ -312,6 +318,7 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   onSaveForm() {
+    this.formGroup.patchValue(this.form.data);
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
       this.form.validation(false)
@@ -333,26 +340,55 @@ export class PopupEmpBusinessTravelsComponent
       this.notitfy.notifyCode('HR011');
       return;
     }
+    if(this.actionType == 'copyMulti'){
+      this.hrService.addEBusinessTravelsMultiEmp(this.form.data).subscribe((res) => {
+        debugger
+        if(res.length > 0){
+          let returnVal;
+          for(let i = 0; i<res.length; i++){
+            if(res[i].employeeID == this.originEmpID){
+              returnVal = res[i];
+              this.successFlag = true;
+            }
+          }
+          if(returnVal){
+            this.dialog && this.dialog.close(returnVal);
+          }
+          else{
+            this.dialog && this.dialog.close();
+          }
+        }
+        else{
+          this.dialog && this.dialog.close();
+        }
 
-    if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.data.contractTypeID = '1';
-
-      this.hrService.addEBusinessTravels(this.data).subscribe((res) => {
-        if (res) {
-          this.data = res;
+        if(res == true){
           this.notitfy.notifyCode('SYS006');
-          this.successFlag = true;
-          this.dialog && this.dialog.close(this.data);
+          this.dialog && this.dialog.close();
         }
-      });
-    } else if (this.actionType == 'edit') {
-      this.hrService.editEBusinessTravels(this.data).subscribe((res) => {
-        if (res) {
-          this.notitfy.notifyCode('SYS007');
-          this.dialog && this.dialog.close(this.data);
-        }
-      });
+      })
     }
-    this.cr.detectChanges();
-  }
+    else{
+      if (this.actionType == 'add' || this.actionType == 'copy') {
+        this.data.contractTypeID = '1';
+  
+        this.hrService.addEBusinessTravels(this.data).subscribe((res) => {
+          if (res) {
+            this.data = res;
+            this.notitfy.notifyCode('SYS006');
+            this.successFlag = true;
+            this.dialog && this.dialog.close(this.data);
+          }
+        });
+      } else if (this.actionType == 'edit') {
+        this.hrService.editEBusinessTravels(this.data).subscribe((res) => {
+          if (res) {
+            this.notitfy.notifyCode('SYS007');
+            this.dialog && this.dialog.close(this.data);
+          }
+        });
+      }
+      this.cr.detectChanges();
+    }
+    }
 }

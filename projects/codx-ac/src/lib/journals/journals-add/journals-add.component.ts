@@ -66,6 +66,7 @@ export class JournalsAddComponent extends UIComponent {
   ];
   fiscalYears:any;
   isPreventChange:any = false;
+  showInfo:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -96,15 +97,17 @@ export class JournalsAddComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.cache
+    if (!this.formJournal.form.data.isEdit) {
+      this.cache
       .viewSettingValues('ACParameters')
       .pipe(
         map((arr) => arr.filter((f) => f.category === '1')?.[0]),
         map((data) => JSON.parse(data.dataValue)?.IDIMControl)
       )
       .subscribe((res) => {
-        this.formJournal.form.setValue('idimControl',res,{onlySelf: true,emitEvent: false});
+        this.formJournal.form.setValue('idimControl',res,{});
       });
+    }
   }
   //#endregion Init
 
@@ -167,14 +170,14 @@ export class JournalsAddComponent extends UIComponent {
             )
             .subscribe((res) => {
               if (res) {
-                this.formJournal.form.setValue('journalDesc',res,{onlySelf: true,emitEvent: false,});
+                this.formJournal.form.setValue('journalDesc',res,{});
               }
             });
           break;
         case 'periodid':
-          value = event.value;
+          value = event.data;
           let fiscalYear = parseInt(value.substring(0, 4));
-          this.formJournal.form.setValue('fiscalYear',fiscalYear,{onlySelf: true,emitEvent: false});
+          this.formJournal.form.setValue('fiscalYear',fiscalYear,{});
           break;
         case 'vatcontrol':
           this.isPreventChange = true;
@@ -193,6 +196,26 @@ export class JournalsAddComponent extends UIComponent {
             this.formJournal.form.setValue('autoPost',0,{});
           }
           this.isPreventChange = false;
+          break;
+        case 'dim1control':
+          this.formJournal.form.setValue('diM1','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dim2control':
+          this.formJournal.form.setValue('diM2','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dim3control':
+          this.formJournal.form.setValue('diM3','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'cracctcontrol':
+          this.formJournal.form.setValue('crAcctID','',{});
+          this.detectorRef.detectChanges();
+          break;
+        case 'dracctcontrol':
+          this.formJournal.form.setValue('drAcctID','',{});
+          this.detectorRef.detectChanges();
           break;
       }
     }
@@ -275,7 +298,7 @@ export class JournalsAddComponent extends UIComponent {
 
   openIDimControlForm(){
     let obj = {
-      lsselectidimcontrol: this.formJournal.form.data.idimControl == '' ? [] : [...this.formJournal.form.data.idimControl.split(';')],
+      lsselectidimcontrol: (this.formJournal.form.data.idimControl == '' || this.formJournal.form.data.idimControl == null) ? [] : [...this.formJournal.form.data.idimControl.split(';')],
       headerText : 'Thiết lập yếu tố tồn kho',
       showAll : false
     };
@@ -283,8 +306,8 @@ export class JournalsAddComponent extends UIComponent {
     let dialog = this.callfc.openForm(
       JournalsAddIdimcontrolComponent,
       '',
-      350,
-      500,
+      300,
+      400,
       '',
       obj,
       '',
@@ -292,7 +315,7 @@ export class JournalsAddComponent extends UIComponent {
     );
     dialog.closed.subscribe((res) => {
       if (res.event != null) {
-        this.formJournal.form.setValue('idimControl',res.event,{onlySelf: true,emitEvent: false,});
+        this.formJournal.form.setValue('idimControl',res.event,{});
         this.detectorRef.detectChanges();
       }
     });

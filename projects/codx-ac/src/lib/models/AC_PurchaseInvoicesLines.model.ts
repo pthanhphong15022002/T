@@ -7,7 +7,7 @@ export class AC_PurchaseInvoicesLines {
 
   rowNo: number = 0;
 
-  lineType: string;
+  lineType: string = '1';
 
   lineStatus: string = '60';
 

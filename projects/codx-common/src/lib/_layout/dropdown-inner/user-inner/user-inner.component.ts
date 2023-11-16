@@ -22,6 +22,7 @@ import {
   CallFuncService,
   AlertConfirmInputConfig,
   FilesService,
+  DialogModel,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -29,6 +30,7 @@ import { CodxCommonService } from '../../../codx-common.service';
 import { CodxClearCacheComponent } from '../../codx-clear-cache/codx-clear-cache.component';
 import { CodxCreateIndexComponent } from '../../codx-create-index/codx-create-index.component';
 import { SignalRService } from '../../drawers/chat/services/signalr.service';
+import { FormSettingComponent } from 'projects/codx-share/src/lib/components/form-setting/form-setting.component';
 
 @Component({
   selector: 'codx-user-inner',
@@ -101,7 +103,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
-    
+
     this.codxCMService.isSetChangeThemes.subscribe(item=>{
       this.setTheme(item);
     })
@@ -359,6 +361,21 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   myProfile() {
     debugger;
     this.codxService.navigate('MWP009', '', { funcID: 'MWP009' });
+  }
+
+  formSetting(){
+    let dModel = new DialogModel();
+        dModel.FormModel = this.formModel;
+        let dialogStationery = this.callSV.openForm(
+          FormSettingComponent,
+          'Danh sách chức năng',
+          1024,
+          768,
+          null,
+          [],
+          '',
+          dModel
+        );
   }
 }
 

@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { DatePipe } from '@angular/common';
 import {
@@ -94,17 +95,18 @@ export class PdfComponent
   @Input() transRecID = null;
   @Input() oSignFile = null;
   @Input() oURL = [];
-  @Input() curFileName :string = "";//Tên file đang view (tên file khi tải xuống)
+  @Input() curFileName: string = ''; //Tên file đang view (tên file khi tải xuống)
   @Input() oApprovalTrans;
   @Input() isPublic: boolean = false; // ký ngoài hệ thống
   @Input() isSettingMode: boolean = false; // Thiết lập mẫu ko lấy danh sách người duyệt theo role dynamic
   @Input() approver: string = ''; // ký ngoài hệ thống
   @Output() confirmChange = new EventEmitter<boolean>();
 
+  @Input() needSuggest: boolean = true;//Gợi ý vùng ký => roll xuống trang dưới cùng
   @Input() hideActions = false;
   @Input() isSignMode = false;
-  @Input() dynamicApprovers = [];  
-  @Input() hideThumbnail: boolean = false;//thumbnail
+  @Input() dynamicApprovers = [];
+  @Input() hideThumbnail: boolean = false; //thumbnail
   @Output() changeSignerInfo = new EventEmitter();
   @Output() eventHighlightText = new EventEmitter();
 
@@ -151,6 +153,7 @@ export class PdfComponent
   defaultAddedColor = 'transparent';
   selectedColor = 'rgb(114, 255, 234)';
   //vll
+  ovllActions;
   vllActions;
 
   //page
@@ -244,7 +247,6 @@ export class PdfComponent
   //
 
   //auto sign
-  needSuggest: boolean = true;
   autoSignState: boolean = false;
   signPerRow;
   direction;
@@ -272,12 +274,16 @@ export class PdfComponent
   ];
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
-
   vllSupplier: any;
   oSignfile: any;
   getPASignature() {
     this.esService
-      .getApproverSignature(this.signerInfo.email, this.signerInfo?.signType,null,this.signerInfo?.approver)
+      .getApproverSignature(
+        this.signerInfo.email,
+        this.signerInfo?.signType,
+        null,
+        this.signerInfo?.approver
+      )
       .subscribe((signature) => {
         if (signature) {
           this.paSignature = signature[0];
@@ -299,11 +305,11 @@ export class PdfComponent
       ])
       .subscribe((res: any) => {
         console.table('sf', res);
-        //Gán template để hiển thị form ký số 
+        //Gán template để hiển thị form ký số
         if (this.oURL?.length > 0) {
           res.urls = this.oURL;
         }
-        let sf = this.oSignFile ?? res?.signFile ;
+        let sf = this.oSignFile ?? res?.signFile;
         //---------------------
         if (sf) {
           sf.files.forEach((file: any, index) => {
@@ -349,6 +355,7 @@ export class PdfComponent
           } else {
             this.signerInfo = res.approvers[0];
           }
+          //this.reloadAction();
           if (this.isPublic) {
             this.getPASignature();
           }
@@ -402,11 +409,12 @@ export class PdfComponent
         this.detectorRef.detectChanges();
       });
 
-      this.loadSFByID();
-
       this.cache.valueList('ES015').subscribe((res) => {
+        this.ovllActions = res.datas;
         this.vllActions = res.datas;
       });
+
+      this.loadSFByID();
 
       this.cache.valueList('ES024').subscribe((res) => {
         res?.datas?.forEach((font) => {
@@ -2406,10 +2414,24 @@ export class PdfComponent
     this.signerInfo = e.itemData;
     this.curSignerID = this.signerInfo.authorID;
     this.stepNo = this.signerInfo.stepNo;
-    this.curSignerRecID = this.signerInfo.recID;
+    this.curSignerRecID = this.signerInfo.recID;    
+    //this.reloadAction();
     this.detectorRef.detectChanges();
   }
 
+  reloadAction() {
+    if (this.ovllActions?.length > 0 && this.signerInfo != null) {
+      switch (this.signerInfo?.stepType) {
+        case 'S':
+          this.vllActions = [...this.ovllActions];
+          break;
+        default:
+          this.vllActions = [...this.ovllActions?.filter((x) => x.value != 'S3' &&  x.value != 'S2' && x.value != 'S1')];
+          break;
+      }      
+      this.detectorRef.detectChanges();
+    }
+  }
   changeSuggestState(e: any) {
     if (this.isEditable) {
       this.needSuggest = e.data;

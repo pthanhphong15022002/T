@@ -14,7 +14,7 @@
   <ng-template #body>
 <ng-container *ngIf="form.formGroup">
 
-    <div *ngIf="isUseEmployee" class="form-group row mt-5">
+    <div *ngIf="isUseEmployee || isMultiCopy == true" class="form-group row mt-5">
       <div class="col-10">
         <div class="d-flex">
           <div class="d-flex flex-column position-relative">
@@ -56,7 +56,8 @@
                     | async
                 "
               ></span>
-            </div> -->
+            </div>
+          -->
           </div>
         </div>
       </div>
@@ -64,6 +65,7 @@
         <codx-input
         *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [disabled]="disabledInput"
+      [multiple]="isMultiCopy"
           [showInput]="false"
           field="employeeID"
           [formModel]="form.formModel"
@@ -120,7 +122,6 @@
       <div class="col-6">
         <codx-label
 *ngIf="form.gridviewSetup.OldOrgUnitID.allowPopup == true"
-
           fiedName="OldOrgUnitID"
           [formModel]="form.formModel"
         ></codx-label>

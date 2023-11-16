@@ -1,0 +1,72 @@
+<codx-form #form [formModel]="dialog.formModel" [dialog]="dialog" [openMore]="false" [body]="body" [footer]="footer"
+  [customToolbar]="subToolbar">
+</codx-form>
+<ng-template #subToolbar>
+    <div class="w-100">
+      <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+        <div class="d-flex align-items-center me-2">
+          <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
+            <i class="icon-i-check2-square icon-16"></i>
+          </div>
+          <!-- <div style="background-color: var(--primary-dark);"class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+            <i style="color: white;" class="icon-i-check2-square icon-16"></i>
+          </div> -->
+          <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+            Phân bổ chi phí mua hàng
+          </div>
+        </div>
+        <div class="d-flex align-items-center me-3">
+          <div class="ms-2">
+            <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+              <i class="icon-close icon-18"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body>
+    <div class="tabs tabs-login">
+      <ejs-tab class="h-100 w-100" overflowMode="Popup" heightAdjustMode="Auto">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="nav-item w-100">
+                <div class="d-flex flex-column w-100 text-center">
+                  <div [class]="'icon-20 icon-i-key mb-2'"></div>
+                  <span class="text-gray-700 fw-bold">
+                    <codx-label default="Đăng nhập"></codx-label>
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <!-- <ng-container *ngTemplateOutlet="loginPW"></ng-container> -->
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="nav-item w-100">
+                <div class="d-flex flex-column w-100 text-center">
+                  <div [class]="'icon-20 mb-2 icon-email'"></div>
+                  <span class="text-gray-700 fw-bold">
+                    <codx-label default="OTP"></codx-label>
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+
+  </ng-template>
+
+
