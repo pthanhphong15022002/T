@@ -50,7 +50,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class CardsComponent extends UIComponent {
   user = null;
   grvSetup: any;
-  buttonAdd: ButtonModel;
+  buttonAdd: ButtonModel[];
   views: Array<ViewModel> = [];
   itemSelected: any = null;
   cardType = '';
@@ -111,9 +111,9 @@ export class CardsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.buttonAdd = {
+    this.buttonAdd = [{
       id: 'btnAdd',
-    };
+    }];
 
     // const request: ResourceModel = {
     //   service: 'FD',

@@ -131,7 +131,7 @@ export class ContractsComponent extends UIComponent {
   columnGrids: any;
   arrFieldIsVisible = [];
   itemSelected: any;
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   tabControl = [];
   //param
   approveRule = '0';

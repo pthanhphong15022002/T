@@ -107,7 +107,7 @@ export class LeadsComponent
 
   columnGrids = [];
   // showButtonAdd = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dataSelected: any;
   //region Method
   //endregion
@@ -185,9 +185,9 @@ export class LeadsComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
   }
 
   async ngAfterViewInit() {

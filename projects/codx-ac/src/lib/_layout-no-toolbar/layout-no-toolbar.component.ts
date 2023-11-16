@@ -5,13 +5,14 @@ import { CodxAcService } from '../codx-ac.service';
 import { RoundService } from '../round.service';
 import { Router } from '@angular/router';
 @Component({
-  selector: 'lib-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss','../codx-ac.component.scss'],
+  selector: 'lib-layout-no-toolbar',
+  templateUrl: './layout-no-toolbar.component.html',
+  styleUrls: ['./layout-no-toolbar.component.css','../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LayoutComponent extends LayoutBaseComponent  {
+
+export class LayoutNoToolbarComponent extends LayoutBaseComponent  {
   dialog!: DialogRef;
   funcID:any;
   constructor(
@@ -25,8 +26,7 @@ export class LayoutComponent extends LayoutBaseComponent  {
   ) {
     super(inject);
     this.module = 'AC';
-    this.layoutModel.toolbarDisplay = true;
-    this.layoutModel.toolbarFixed = false;
+    this.layoutModel.toolbarDisplay = false;
     this.round.initCache();
   }
 
@@ -44,5 +44,7 @@ export class LayoutComponent extends LayoutBaseComponent  {
     // })
   }
 
-  
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }  
 }

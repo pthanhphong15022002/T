@@ -47,6 +47,8 @@ import {
   AnimationSettingsModel,
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
+import { E } from '@angular/cdk/keycodes';
+import { CreateFolderComponent } from '../createFolder/createFolder.component';
 
 @Component({
   selector: 'home',
@@ -66,12 +68,14 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('view') codxview!: any;
   @ViewChild('Dialog') public Dialog: DialogComponent;
+
+  submenu: string;
   selectedFirst = false;
   animationSettings: AnimationSettingsModel = { effect: 'None' };
   viewActive: any;
   currView?: TemplateRef<any>;
   path: string;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   typeView: ViewType;
   viewIcon: string;
   views: Array<ViewModel> = [];
@@ -196,11 +200,19 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     this.user = this.auth.get();
     this.path = this.getPath();
-    this.button = {
-      id: 'btnUpload',
-      text: 'Tải lên',
-      hasSet: true,
-    };
+    this.button = [
+      {
+        id: 'btnCreatFolder',
+        icon: 'icon-i-plus',
+        text: 'Tạo thư mục',
+        hasSet: true,
+      },
+      {
+        id: 'btnUpload',
+        text: 'Tải lên',
+        hasSet: true,
+      }
+    ];
     //Mặc định filter
     this.fileService.options.srtColumns = 'CreatedOn';
     this.fileService.options.srtDirections = 'desc';
@@ -398,10 +410,10 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.folderID = '';
         this.view.dataService.dataSelected = null;
         if (this.funcID != 'DMT03') {
-          this.button.disabled = true;
+          this.button[1].disabled = true;
           this.dmSV.disableInput.next(true);
         } else {
-          this.button.disabled = false;
+          this.button[1].disabled = false;
           this.dmSV.disableInput.next(false);
         }
         this.scrollTop();
@@ -484,10 +496,14 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     });
 
     this.dmSV.isDisableUpload.subscribe((res) => {
-      this.button.disabled = res;
+      this.button[1].disabled = res;
       this.changeDetectorRef.detectChanges();
     });
 
+    this.dmSV.isDisableInput.subscribe((res) => {
+      this.button[0].disabled = res;
+      this.changeDetectorRef.detectChanges();
+    });
     //Xóa File
     this.dmSV.isDeleteFileView.subscribe((item) => {
       if (item) {
@@ -534,6 +550,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         }
       }
     });
+
+    this.dmSV.isMenuIdActive.subscribe((res) => {
+      this.submenu = res;
+      this.changeDetectorRef.detectChanges();
+    });
+    
   }
 
   disableMark() {
@@ -739,8 +761,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     var dis = true;
     if (this.funcID == 'DMT03') {
       dis = false;
-      this.button.disabled = false;
-    } else this.button.disabled = true;
+      this.button[1].disabled = false;
+    } else this.button[1].disabled = true;
     this.dmSV.disableInput.next(dis);
   }
 
@@ -1034,23 +1056,40 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     }
   }
 
-  addFile($event) {
-    if (this.button.disabled) return;
-    var data = new DialogAttachmentType();
-    data.type = 'popup';
-    // data.objectType = 'WP_Notes';
-    // data.objectId = '628c326c590addf224627f42';
-    data.functionID = this.codxview?.formModel?.funcID;
-    data.isDM = true;
+  addFile(e:any) {
+    if(e.id == "btnUpload")
+    {
+      if (this.button[1].disabled) return;
+      var data = new DialogAttachmentType();
+      data.type = 'popup';
+      // data.objectType = 'WP_Notes';
+      // data.objectId = '628c326c590addf224627f42';
+      data.functionID = this.codxview?.formModel?.funcID;
+      data.isDM = true;
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '550px';
+      option.FormModel.entityName = 'DM_FileInfo';
+      this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
+      this.dialog.closed.subscribe((e) => {
+        console.log(e);
+      });
+    }
+    else if(e.id == "btnCreatFolder") this.addFolder();
+   
+  }
+
+  addFolder() {
     let option = new SidebarModel();
-    option.DataService = this.view?.currentView?.dataService;
-    option.FormModel = this.view?.currentView?.formModel;
+    option.DataService = this.dmSV.dataService;
+    option.FormModel = this.dmSV.formModel;
     option.Width = '550px';
-    option.FormModel.entityName = 'DM_FileInfo';
-    this.dialog = this.callfc.openSide(AttachmentComponent, data, option);
-    this.dialog.closed.subscribe((e) => {
-      console.log(e);
-    });
+    let data = {} as any;
+    data.title = 'Tạo thư mục';
+    data.id = null;
+    data.type = 'add';
+    this.callfc.openSide(CreateFolderComponent, data, option);
   }
 
   getfileCount($event) {
@@ -1641,5 +1680,43 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       if (text) return text;
       return '';
     }
+  }
+
+  onClick(id, title, subtitle, subid) {
+    var breadcumb = [];
+    breadcumb.push(title);
+    breadcumb.push(subtitle);
+    this.dmSV.idMenuActive = id;
+    this.dmSV.page = 0;
+    this.dmSV.breadcumb.next(breadcumb);
+    this.dmSV.menuIdActive.next(id);
+    this.dmSV.menuActive.next(title);
+    this.dmSV.currentNode = '';
+    this.dmSV.folderId.next(id);
+    this.dmSV.dmFavoriteID = '2';
+    this.dmSV.folderID = '';
+    this.folderService.options.favoriteID = subid;
+    this.fileService.options.favoriteID = subid;
+    this.dmSV.refeshData.next(true);
+  }
+
+  onJump() {
+    //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
+    if (
+      this.dmSV.idMenuActive == 'DMT06' ||
+      this.dmSV.idMenuActive == 'DMT05' ||
+      this.dmSV.idMenuActive == 'DMT07' ||
+      this.dmSV.idMenuActive == 'DMT00' 
+    )
+      return;
+    var data = {} as any;
+    data.recID = '';
+    this.dmSV.folderID = '';
+    this.dmSV.isSearchView = false;
+    this.dmSV.refreshTree.next(true);
+    this.dmSV.breadcumb.next([this.dmSV.menuActive.getValue()]);
+    if (this.dmSV.breadcumbLink)
+      this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0, 1);
+    this.changeDetectorRef.detectChanges();
   }
 }
