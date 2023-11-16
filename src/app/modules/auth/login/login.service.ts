@@ -14,6 +14,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
+import { AngularDeviceInformationService } from 'angular-device-information';
+import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,10 +27,24 @@ export class LoginService {
     private signalRService: SignalRService,
     private navRouter: Router,
     private shareService: CodxShareService,
-    private api: ApiHttpService
-  ) {}
+    private api: ApiHttpService,
+    private deviceInfo: AngularDeviceInformationService
+  ) {
+    let dInfo = this.deviceInfo.getDeviceInfo();
+    this.loginDevice = {
+      name: dInfo.browser,
+      os: dInfo.os + ' ' + dInfo.osVersion,
+      ip: '',
+      id: null,
+      imei: null,
+      trust: false,
+      tenantID: '',
+      times: '1',
+    };
+  }
   returnUrl: string;
   iParams: string;
+  loginDevice: Device;
 
   onInit() {}
   login(objData) {
@@ -79,7 +95,19 @@ export class LoginService {
           window.location.href = this.returnUrl;
         //return this.navRouter.navigate([`${this.returnUrl}`]);
         else if (environment.saas == 1) {
-          if (!user.tenant) return this.navRouter.navigate(['/tenants']);
+          if (!user.tenant) {
+            return this.getTenants(user.email).subscribe((res: any) => {
+              if (res && res.length) {
+                if (res.length > 1)
+                  return this.navRouter.navigate(['/tenants']);
+                else this.navigate(res[0].tenantID);
+              } else {
+                return (window.location.href = this.returnUrl
+                  ? this.returnUrl
+                  : user.tenant);
+              }
+            });
+          }
         }
         window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
       }
@@ -91,6 +119,45 @@ export class LoginService {
       // this.notificationsService.notify(data.error.errorMessage);
     }
     return false;
+  }
+
+  navigate(tn) {
+    this.api
+      .exec('AD', 'UsersBusiness', 'CreateUserLoginAsync', [
+        tn,
+        JSON.stringify(this.loginDevice),
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.loginDevice.tenantID = tn;
+          let trust2FA = res?.extends?.Trust2FA;
+          let objData = {
+            data: { data: res },
+            login2FA: res?.extends?.TwoFA,
+            hubConnectionID: '',
+            loginDevice: this.loginDevice,
+          };
+          if (!trust2FA) {
+            let lg2FADialog = this.callfc.openForm(
+              Login2FAComponent,
+              '',
+              400,
+              600,
+              '',
+              objData
+            );
+            lg2FADialog.closed.subscribe((lg2FAEvt) => {
+              if (lg2FAEvt.event.data.error) return;
+              this.authService.setLogin(lg2FAEvt.event.data.data);
+              this.loginAfter(lg2FAEvt.event.data);
+            });
+          } else {
+            this.authService.setLogin(res);
+            this.loginAfter({ data: res });
+          }
+        }
+        return res;
+      });
   }
 
   getUserLoginSetting(email: string) {
