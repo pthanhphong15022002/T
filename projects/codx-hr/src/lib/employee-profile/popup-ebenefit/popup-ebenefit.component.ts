@@ -367,7 +367,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
 
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
-        case 'SignerID': {
+        case 'signerID': {
           let employee = event.data;
 
           if (employee) {

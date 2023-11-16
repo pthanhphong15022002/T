@@ -156,6 +156,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
               this.EAppointionObj.locationID = this.employeeObj?.locationID;
               this.EAppointionObj.positionID = this.employeeObj?.positionID;
             }
+            if (this.employId != null)
+            this.getEmployeeInfoById(this.employId, 'employeeID');
             // this.formModel.currentData = this.EAppointionObj;
             // this.form.formGroup.patchValue(this.EAppointionObj);
             // this.isAfterRender = true;
@@ -177,6 +179,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
           if (res) {
             this.autoNumField = res.key ? res.key : null;
           }
+          if (this.employId != null)
+          this.getEmployeeInfoById(this.employId, 'employeeID');
         });
       if (this.EAppointionObj.signerID) {
         this.getEmployeeInfoById(this.EAppointionObj.signerID, 'SignerID');
@@ -189,6 +193,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   }
 
   getEmployeeInfoById(empId: string, fieldName: string) {
+    debugger
     let empRequest = new DataRequest();
     empRequest.entityName = 'HR_Employees';
     empRequest.dataValues = empId;
@@ -198,7 +203,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       if (emp[1] > 0) {
         if (fieldName === 'employeeID') {
           this.employeeObj = emp[0][0];
-
+          if(this.EAppointionObj){
+          }
           this.EAppointionObj.orgUnitID = this.employeeObj.orgUnitID;
           this.EAppointionObj.jobLevel = this.employeeObj.jobLevel;
           this.EAppointionObj.locationID = this.employeeObj.locationID;
@@ -283,8 +289,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       });
 
     //Update Employee Information when CRUD then render
-    if (this.employId != null)
-      this.getEmployeeInfoById(this.employId, 'employeeID');
+    // if (this.employId != null)
+    //   this.getEmployeeInfoById(this.employId, 'employeeID');
   }
 
   handleSelectEmp(evt) {

@@ -204,12 +204,15 @@ textarea.codx-textarea {
 .feed-box .btn span[class*=icon-] {
     color: var(--text-body);
 }
-
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active, .e-tab .e-tab-header.e-vertical .e-toolbar-item:hover, .e-tab .e-tab.e-focused>.e-tab-header .e-toolbar-item:focus {
+    background-color:var(--gray-150);
+}
 .btn.btn-white {
     background-color: var(--bg-card);
-
+    border-color: var(--border-light);
     &:hover {
         background-color: var(--gray-100) !important;
+        color: var(--text-title);
     }
 }
 
@@ -551,6 +554,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
     border-color: var(--primary) !important;
+    background-color: var(--primary-light);
 }
 
 .card-footer {
@@ -740,6 +744,7 @@ label,
 
 .btn {
     color: var(--primary);
+    border-color:var(--border-light) ;
 }
 
 .btn.btn-primary {
@@ -892,5 +897,20 @@ codx-view-list-detail .e-listview .e-list-parent {
         }
     }
  }
+ .aside-menu .menu-item .menu-title, .aside-footer .menu-item .menu-title {
+    color: var(--text-title);
+}
+
+.codx-theme .codx-tab .tab-content {
+    border-color: var(--border-light);
+}
+ejs-tab#calendarTab .e-calendar {
+    border-color:  var(--border-light)!important;
+}
+.btn.btn-light {
+    //color: #6f7475;
+    //border-color: #f5f9fa;
+    background-color: var(--bg-card);
+}
 
 //end dark

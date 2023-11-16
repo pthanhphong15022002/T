@@ -263,6 +263,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
         this.hrService
           .AddEmployeeDisciplineInfo(this.disciplineObj)
           .subscribe((p) => {
+            debugger
             if (p != null) {
               this.notify.notifyCode('SYS006');
               p.emp = this.employeeObj;
