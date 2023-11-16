@@ -536,6 +536,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
             );
             popupApprover.closed.subscribe((res) => {
               if (res.event) {
+                this.newAppr = res?.event;
                 //this.lstApprover.push(res.event);
               }
             });
