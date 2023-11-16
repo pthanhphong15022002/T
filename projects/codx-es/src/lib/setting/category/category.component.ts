@@ -271,7 +271,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         if (!res?.event) this.viewBase.dataService.clear();
         else {
           res.event.modifiedOn = new Date();
-          this.viewBase.dataService.update(res.event).subscribe();
+          this.viewBase.dataService.update(res.event,true).subscribe();
         }
       });
     });
@@ -337,8 +337,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             if (res?.event == null) {
               this.viewBase.dataService.dataSelected = evt.data;
               this.viewBase.dataService.clear();
-            } else {
-              this.viewBase.dataService.update(res.event).subscribe();
+            } else {              
+              res.event.modifiedOn = new Date();
+              this.viewBase.dataService.update(res.event,true).subscribe();
+              //this.viewBase?.currentView?.refesh();
             }
           });
         });

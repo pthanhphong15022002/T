@@ -251,19 +251,19 @@
       </div>
       <div class="w-25">
         <div class="my-2">
-          <span class="fw-bold text-black-50"><codx-label name="lblCurrentQty" [formName]="formModel.formName"
+          <span class="fw-bold text-gray-500"><codx-label name="lblCurrentQty" [formName]="formModel.formName"
               [gridViewName]="formModel.gridViewName" default="Tồn kho"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.currentQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50"><codx-label name="lblReservedQty" [formName]="formModel.formName"
+          <span class="fw-bold text-gray-500"><codx-label name="lblReservedQty" [formName]="formModel.formName"
               [gridViewName]="formModel.gridViewName" default="Đã được đăng ký"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.reservedQty }}</span>
         </div>
         <div class="my-2">
-          <span class="fw-bold text-black-50"><codx-label name="lblAvailableQty" [formName]="formModel.formName"
+          <span class="fw-bold text-gray-500"><codx-label name="lblAvailableQty" [formName]="formModel.formName"
               [gridViewName]="formModel.gridViewName" default="Được phép đăng ký"></codx-label>:
           </span>
           <span class="fw-bold">{{ data?.availableQty }}</span>
@@ -280,7 +280,7 @@
           </codx-img>
           <div class="ms-2 d-flex flex-column">
             <span [innerHTML]="data?.owner| formatvalue : formModel : 'owner' | async"></span>
-            <span class="text-black-50">{{ data?.position }}</span>
+            <span class="text-gray-500">{{ data?.position }}</span>
           </div>
         </div>
         <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)"

@@ -6,11 +6,10 @@ import {
   AuthStore,
   CallFuncService,
 } from 'codx-core';
-import { map } from 'rxjs';
 import { Login2FAComponent } from '../login/login2-fa/login2-fa.component';
-import { LoginService } from '../login/login.service';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { AngularDeviceInformationService } from 'angular-device-information';
+import { LoginService } from '../login/login.service';
 
 @Component({
   selector: 'app-tenants',

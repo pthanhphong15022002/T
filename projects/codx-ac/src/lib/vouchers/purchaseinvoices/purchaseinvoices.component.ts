@@ -12,9 +12,11 @@ import {
   DataRequest,
   DialogModel,
   NotificationsService,
+  RequestOption,
   SidebarModel,
   TenantStore,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -25,6 +27,7 @@ import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
+import { AllocationAddComponent } from './allocation-add/allocation-add.component';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -39,6 +42,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  @ViewChild('xml', { read: ElementRef }) private xml: ElementRef; //Input import xml
+
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
@@ -54,6 +59,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   };
+
   moreFuncs: Array<ButtonModel> = [
     {
       id: 'btnImportXml',
@@ -172,6 +178,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
         break;
+      case 'btnImportXml':
+        this.xml.nativeElement.click();
+        break;
     }
   }
 
@@ -194,28 +203,26 @@ export class PurchaseinvoicesComponent extends UIComponent {
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
+      case 'ACT060102':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
+      case 'ACT060104':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
+      case 'ACT060106':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
+      case 'ACT060103':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
+      case 'ACT060105':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT041010':
+      case 'ACT060107':
         this.printVoucher(data, e.functionID); //? in chứng từ
+        break;
+      case 'ACT060108':
+        this.allocationVoucher(data, e.functionID); //? phân bổ chi phí chứng từ
         break;
     }
   }
@@ -249,6 +256,49 @@ export class PurchaseinvoicesComponent extends UIComponent {
           );
         }
       });
+  }
+
+  /**
+   * Import hóa đơn từ hóa đơn điện tử
+   */
+  importInvoice(event: any) {
+    const input = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const bytes = (e.target.result as string).split('base64,')[1];
+      this.api
+        .exec('AC', 'PurchaseInvoicesBusiness', 'ImportInvoiceAsync', [
+          bytes,
+          this.journalNo,
+        ])
+        .subscribe((res: any) => {
+          if (res) {
+            let master = res;
+            this.view.dataService.add(master).subscribe();
+            this.view.dataService.dataSelected = master;
+            this.view.dataService
+              .edit(master)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((res: any) => {
+                res.isEdit = true;
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...master }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán,
+                };
+                let dialog = this.callfc.openSide(
+                  PurchaseinvoicesAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+              });
+          }
+        });
+    };
+    reader.readAsDataURL(input);
   }
 
   /**
@@ -339,7 +389,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [
         data.recID,
-        text
+        text,
       ])
       .subscribe((res: any) => {
         if (res?.update) {
@@ -357,7 +407,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [data.recID,text])
+      .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [
+        data.recID,
+        text,
+      ])
       .subscribe((res: any) => {
         if (res?.update) {
           this.itemSelected = res?.data;
@@ -376,7 +429,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [
         data.recID,
-        text
+        text,
       ])
       .subscribe((res: any) => {
         if (res?.update) {
@@ -488,27 +541,26 @@ export class PurchaseinvoicesComponent extends UIComponent {
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
-    }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 
-  /**
-   * *Hàm mở form báo cáo
-   */
-  openFormReportVoucher(data: any, reportList: any) {
-    var obj = {
-      data: data,
-      reportList: reportList,
-      url: 'ac/report/detail/',
-      formModel: this.view.formModel,
-    };
+  allocationVoucher(text: any, data: any){
+    let obj = {
+      data : data
+    }
     let opt = new DialogModel();
-    var dialog = this.callfc.openForm(
-      CodxListReportsComponent,
+    let dialog = this.callfc.openForm(
+      AllocationAddComponent,
       '',
-      400,
-      600,
+      null,
+      null,
       '',
       obj,
       '',
@@ -522,8 +574,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
+    if (this.view?.views) {
+      let view = this.view?.views.find((x) => x.type == 1);
       if (view && view.active == true) return;
     }
     if (typeof event.data !== 'undefined') {
@@ -550,96 +602,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
       this.journal,
       this.view.formModel
     );
-    // let arrBookmark = event.filter(
-    //   // danh sách các morefunction
-    //   (x: { functionID: string }) =>
-    //     x.functionID == 'ACT060103' || // MF ghi sổ
-    //     x.functionID == 'ACT060102' || // MF gửi duyệt
-    //     x.functionID == 'ACT060104' || // MF hủy yêu cầu duyệt
-    //     x.functionID == 'ACT060105' || // Mf khôi phục
-    //     x.functionID == 'ACT060107' || // Mf in
-    //     x.functionID == 'ACT060106'// MF kiểm tra tính hợp lệ
-    // );
-    // if (arrBookmark.length > 0) {
-    //   if (type == 'viewgrid') {
-    //     arrBookmark.forEach((element) => {
-    //       element.isbookmark = false;
-    //     });
-    //   }
-    //   switch (data?.status) {
-    //     case '1':
-    //       if (this.journal.approvalControl == '0') {
-    //         arrBookmark.forEach((element) => {
-    //           if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       } else {
-    //         arrBookmark.forEach((element) => {
-    //           if (element.functionID == 'ACT060102' || element.functionID == 'ACT060107') {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       }
-    //       break;
-    //     case '3':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060104' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '5':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '6':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060105' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '2':
-    //     case '7':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060106' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '9':
-    //       arrBookmark.forEach((element) => {
-    //         if (element.functionID == 'ACT060103' || element.functionID == 'ACT060107') {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     default:
-    //       arrBookmark.forEach((element) => {
-    //         element.disabled = true;
-    //       });
-    //       break;
-    //   }
-    // }
-    // return;
   }
 
   /**

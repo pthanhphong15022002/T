@@ -472,7 +472,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         }
         else{
           this.lstApprover = this.lstApprover.filter(x=>x?.roleType != this.newAppr.roleType);
-        }
+        } 
         this.lstApprover.push(this.newAppr);
       }
       this.cr.detectChanges();
@@ -584,12 +584,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                           this.newAppr.roleType = element?.objectType;
                           this.newAppr.name = element?.text;
                           this.newAppr.position = element?.dataSelected?.PositionName;
-                          this.newAppr.userID = lstUserInfo[0]?.userID;
-                          this.newAppr.userName = lstUserInfo[0]?.userName;
-                          this.newAppr.orgUnitName = lstUserInfo[0]?.orgUnitName;
-                          this.newAppr.email = lstUserInfo[0]?.email;
-                          this.newAppr.phone = lstUserInfo[0]?.phone;
-                          //this.lstApprover.push(appr);
+                          this.newAppr.userIDs = lstUserInfo?.map(x=>x?.userID)?.join(';');
+                          this.dialogApprovalStep?.patchValue({ approveMode:"3" }); 
+                          this.data.approveMode="3";
+                          this.currentApproveMode="3";
+                          this.cr.detectChanges();           
                         } else {
                           return;
                         }

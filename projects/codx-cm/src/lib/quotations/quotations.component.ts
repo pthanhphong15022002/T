@@ -96,6 +96,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   currencyIDDefault = 'VND';
   exchangeRateDefault = 1;
   applyApprover = '0';
+  runMode: any;
 
   constructor(
     private inject: Injector,
@@ -108,6 +109,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.funcID = this.routerActive.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+        this.runMode = f?.runMode;
+      }
+    });
   }
 
   onInit(): void {
@@ -303,7 +309,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     this.changeDataMF(e, data, 11);
   }
   changeDataMF(e, data, type = 1) {
-    if (e != null && data != null) {
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    } else if (e != null && data != null) {
       e.forEach((res) => {
         if (type == 11) {
           res.isbookmark = false;

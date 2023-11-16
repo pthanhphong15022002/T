@@ -411,8 +411,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   //#region Login
   private login(type: string) {
-    //nho xoa
-    debugger
     const loginSubscr = this.authService
       .login(
         this.f.email.value,
@@ -445,7 +443,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               console.log('close popup ', lg2FAEvt);
               if (lg2FAEvt.event.data.error) return;
               this.authService.setLogin(data.data);
-
               this.loginService.loginAfter(lg2FAEvt.event.data);
             });
           } else {

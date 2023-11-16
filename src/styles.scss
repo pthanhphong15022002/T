@@ -905,7 +905,9 @@ codx-layout-add{
   .nav-pills.w-175px{
     width: 185px!important;
   }
-
+  .codx-tab .tab-content {
+    overflow-x: hidden;
+  }
 }
 .e-appointment {
   text-align: left !important;
@@ -4226,4 +4228,13 @@ codx-input.border-0 input.e-input, codx-input .border-0 input.e-input, codx-inpu
 
 codx-dropdown-calendar .dropdown-toggle>.d-flex {
   font-size: 12px;
+}
+#toolbar codx-dropdown-select .text-truncate.text-hover-primary{
+  color: var(--text-body)!important;
+}
+
+ .edit-info{
+  .nav-pills.w-175px{
+    margin-right: 25px;
+  }
 }

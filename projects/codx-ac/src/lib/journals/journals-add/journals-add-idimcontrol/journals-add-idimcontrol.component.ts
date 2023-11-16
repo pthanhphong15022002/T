@@ -36,7 +36,6 @@ export class JournalsAddIdimcontrolComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '15%', '38%');
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(

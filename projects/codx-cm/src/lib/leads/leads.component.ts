@@ -149,7 +149,6 @@ export class LeadsComponent
   applyProcess: boolean = true;
   gridDetailView = '2';
 
-
   readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
@@ -158,6 +157,7 @@ export class LeadsComponent
   queryParams: any;
   leverSetting = 0;
   viewActiveType = '';
+  runMode: any;
 
   constructor(
     private inject: Injector,
@@ -303,6 +303,7 @@ export class LeadsComponent
     this.cache.functionList(funcID).subscribe((f) => {
       if (f) {
         this.funcIDCrr = f;
+        this.runMode = f?.runMode;
         this.getGridViewSetup(
           this.funcIDCrr.formName,
           this.funcIDCrr.gridViewName
@@ -367,6 +368,12 @@ export class LeadsComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFuncID != this.funcID) {
       this.crrFuncID = this.funcID;
+      // this.cache.functionList(this.funcID).subscribe((f) => {
+      //   if (f) {
+      //     this.funcIDCrr = f;
+      //     this.runMode = f?.runMode;
+      //   }
+      // });
     }
     this.viewCrr = e?.view?.type;
     if (this.viewCrr == 6) {
@@ -387,9 +394,11 @@ export class LeadsComponent
     this.clickMF(e.e, e.data);
   }
 
-  changeDataMF($event, data, type = null) {
-    if ($event != null && data != null) {
-      for (let eventItem of $event) {
+  changeDataMF(event, data, type = null) {
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
+    } else if (event != null && data != null) {
+      for (let eventItem of event) {
         if (type == 11) eventItem.isbookmark = false;
         eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
         const functionID = eventItem.functionID;
@@ -824,7 +833,7 @@ export class LeadsComponent
         e.event.modifiedOn = new Date();
         this.dataSelected = e.event;
         //   this.detailViewLead.promiseAllLoad();
-        this.view.dataService.update(this.dataSelected,true).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -864,7 +873,7 @@ export class LeadsComponent
             data.modifiedOn = moment(new Date()).add(99, 'hours').toDate();
             this.detailViewLead.promiseAllLoad();
             this.dataSelected = JSON.parse(JSON.stringify(e.event));
-            this.view.dataService.update(this.dataSelected,true).subscribe();
+            this.view.dataService.update(this.dataSelected, true).subscribe();
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -939,7 +948,7 @@ export class LeadsComponent
           this.dataSelected.salespersonID = e.event.salespersonID;
           this.dataSelected.consultantID = e.event.consultantID;
           this.dataSelected.status = '11';
-          this.view.dataService.update(this.dataSelected,true).subscribe();
+          this.view.dataService.update(this.dataSelected, true).subscribe();
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.dataSelected.applyProcess &&
             this.detailViewLead.reloadListStep(e.event.listStep);
@@ -1150,7 +1159,7 @@ export class LeadsComponent
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event,true).subscribe();
+          this.view.dataService.update(e?.event, true).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -1175,7 +1184,9 @@ export class LeadsComponent
                     );
                     this.detailViewLead.reloadListStep(resDP[1]);
                     this.notificationsService.notifyCode('SYS007');
-                    this.view.dataService.update(this.dataSelected,true).subscribe();
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
                   }
                   this.detectorRef.detectChanges();
                 });
@@ -1221,7 +1232,7 @@ export class LeadsComponent
       if (res) {
         this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected,true).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         listStep.length > 0 &&
           listStep &&
           this.detailViewLead.reloadListStep(listStep);
@@ -1238,7 +1249,7 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID,data.status,this.processId,isCheck];
+          let datas = [data.recID, data.status, this.processId, isCheck];
           this.getApiUpdateProcess(datas);
         }
       });
@@ -1280,8 +1291,8 @@ export class LeadsComponent
         this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.notificationsService.notifyCode('SYS007');
-        this.view.dataService.update(this.dataSelected,true).subscribe();
-        if(this.dataSelected.applyProcess)  {
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        if (this.dataSelected.applyProcess) {
           this.detailViewLead.promiseAllLoad();
         }
       }
@@ -1299,14 +1310,16 @@ export class LeadsComponent
             if (res) {
               this.dataSelected.closed = check;
               this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-              this.view.dataService.update(this.dataSelected,true).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.notificationsService.notifyCode(
                 check ? 'DP016' : 'DP017',
                 0,
                 "'" + data.leadName + "'"
               );
               if (data.showInstanceControl === '1') {
-                this.view.dataService.update(this.dataSelected,true).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
               }
               // if (
               //   data.showInstanceControl === '0' ||
@@ -1392,7 +1405,7 @@ export class LeadsComponent
               this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
                 if (res) {
                   data = res;
-                  this.view.dataService.update(data,true).subscribe();
+                  this.view.dataService.update(data, true).subscribe();
                   this.detailViewLead.dataSelected = data;
 
                   if (e.event.isReason != null) {
@@ -1457,7 +1470,7 @@ export class LeadsComponent
         this.codxCmService.moveLeadReason(datas).subscribe((res) => {
           if (res) {
             data = res;
-            this.view.dataService.update(data,true).subscribe();
+            this.view.dataService.update(data, true).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -1473,7 +1486,7 @@ export class LeadsComponent
   }
 
   popupOwnerRoles(data) {
-    this.dataSelected =  JSON.parse(JSON.stringify(data)) ;
+    this.dataSelected = JSON.parse(JSON.stringify(data));
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.funcIDCrr.functionID;
@@ -1510,7 +1523,7 @@ export class LeadsComponent
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
         this.detailViewLead.promiseAllLoad();
-        this.view.dataService.update(e?.event,true).subscribe();
+        this.view.dataService.update(e?.event, true).subscribe();
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
       }
@@ -1532,7 +1545,8 @@ export class LeadsComponent
 
   viewDetail(data) {
     this.dataSelected = data;
-    let temView = this.gridDetailView == "2" ?this.tempViewLeadDetail:this.popDetail;
+    let temView =
+      this.gridDetailView == '2' ? this.tempViewLeadDetail : this.popDetail;
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
@@ -1572,7 +1586,7 @@ export class LeadsComponent
           }
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
-          this.view.dataService.update(this.dataSelected,true).subscribe();
+          this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();
           this.notificationsService.notifyCode('SYS007');
         }
@@ -1582,7 +1596,7 @@ export class LeadsComponent
 
   changeStatus(data) {
     this.dataSelected = data;
-    if(this.dataSelected.applyProcess) {
+    if (this.dataSelected.applyProcess) {
       let formMD = new FormModel();
       let dialogModel = new DialogModel();
       formMD.funcID = this.funcIDCrr.functionID;
@@ -1599,7 +1613,7 @@ export class LeadsComponent
         recID: this.dataSelected.recID,
         valueListStatusCode: this.valueListStatusCode,
         gridViewSetup: this.gridViewSetup,
-        category:this.applyFor
+        category: this.applyFor,
       };
       let dialog = this.callfc.openForm(
         PopupUpdateStatusComponent,
@@ -1622,8 +1636,7 @@ export class LeadsComponent
           this.notificationsService.notifyCode('SYS007');
         }
       });
-    }
-    else {
+    } else {
       this.dataSelected = data;
       this.statusDefault = this.dataSelected.applyProcess
         ? this.dataSelected?.statusCode
@@ -1634,7 +1647,7 @@ export class LeadsComponent
         this.popUpQuestionCopy,
         '',
         400,
-        200,
+        200
       );
     }
   }
@@ -1652,7 +1665,7 @@ export class LeadsComponent
       ) {
         this.dataSelected.approveStatus = appoverStatus;
       }
-      this.view.dataService.update(this.dataSelected,true).subscribe();
+      this.view.dataService.update(this.dataSelected, true).subscribe();
     }
   }
 
@@ -1789,7 +1802,7 @@ export class LeadsComponent
         .subscribe((c) => {
           if (c) {
             this.dataSelected = c;
-            this.view.dataService.update(this.dataSelected,true).subscribe();
+            this.view.dataService.update(this.dataSelected, true).subscribe();
             if (this.kanban) this.kanban.updateCard(this.dataSelected);
           }
           this.notificationsService.notifyCode('ES007');
@@ -1837,7 +1850,9 @@ export class LeadsComponent
               .subscribe((res3) => {
                 if (res3) {
                   this.dataSelected.approveStatus = '0';
-                  this.view.dataService.update(this.dataSelected,true).subscribe();
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
                   this.notificationsService.notifyCode('SYS007');
                 } else this.notificationsService.notifyCode('SYS021');
               });

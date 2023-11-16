@@ -46,38 +46,53 @@
       <codx-input field="journalDesc" [formModel]="dialog.formModel"
         [Group]="formJournal?.form?.formGroup"></codx-input>
     </div>
-    <div class="line-around-flex pb-3">
-      <codx-label style="font-size: 15px !important;" default="Thông tin mặc định" class="fw-bold text-primary"></codx-label>
+    <div class="line-around-flex pb-3" (click)="showInfo = !showInfo">
+      <codx-label style="font-size: 15px !important;" default="Thông tin mặc định"
+        class="fw-bold text-primary me-2"></codx-label>
+      <span *ngIf="showInfo" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+      <span *ngIf="!showInfo" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
     </div>
-    <div class="form-group">
-      <codx-label fiedName="AddNewMode" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="addNewMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="EntryMode" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="entryMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="CashBookID" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="cashBookID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="reasonID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
-      <codx-input type="combobox" field="reasonID" refType="3" refValue="InventoryReasonsAC"
-        [crrValue]="formJournal?.form?.data?.reasonID" (valueChange)="valueChange($event)"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="SubType" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="subType" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
-    </div>
-    <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
-      <codx-label fiedName="InvoiceForm" [formModel]="dialog.formModel"></codx-label>
-      <codx-input field="invoiceForm" [formModel]="dialog.formModel"
-        [Group]="formJournal?.form?.formGroup"></codx-input>
+    <!-- <div class="extend-function pt-0">
+      <hr />
+      <div class="d-flex justify-content-center" (click)="showInfo = !showInfo">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <codx-label class="text-primary text-hover-primary_darker fw-bold me-1" default="Thông tin mặc định"></codx-label>
+          <span *ngIf="showInfo" class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"></span>
+          <span *ngIf="!showInfo" class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"></span>
+        </div>
+      </div>
+    </div> -->
+    <div [ngStyle]="showInfo ? '' : {display:'none'}">
+      <!-- <div class="form-group">
+        <codx-label fiedName="AddNewMode" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="addNewMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div> -->
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="EntryMode" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="entryMode" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="CashBookID" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="cashBookID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [ngStyle]="vllAC122.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="reasonID" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [ngStyle]="vllAC107.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="ReasonID" [formModel]="dialog.formModel"></codx-label>
+        <codx-input type="combobox" field="reasonID" refType="3" refValue="InventoryReasonsAC"
+          [crrValue]="formJournal?.form?.data?.reasonID" (valueChange)="valueChange($event)"></codx-input>
+      </div>
+      <div [ngStyle]="vllAC104.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="SubType" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="subType" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
+      <div [ngStyle]="vllAC105.includes(formJournal?.form?.data?.journalType) ? '' :{display:'none'}" class="form-group">
+        <codx-label fiedName="InvoiceForm" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="invoiceForm" [formModel]="dialog.formModel"
+          [Group]="formJournal?.form?.formGroup"></codx-input>
+      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -154,7 +169,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DRAcctID'].referedValue,formJournal?.form?.data?.drAcctID,formJournal?.form?.data?.drAcctControl,'drAcctID')">
@@ -182,7 +197,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['CRAcctID'].referedValue,formJournal?.form?.data?.crAcctID,formJournal?.form?.data?.crAcctControl,'crAcctID')">
@@ -210,7 +225,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM1'].referedValue,formJournal?.form?.data?.diM1,formJournal?.form?.data?.diM1Control,'diM1')">
@@ -238,7 +253,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM2'].referedValue,formJournal?.form?.data?.diM2,formJournal?.form?.data?.diM2Control,'diM2')">
@@ -266,7 +281,7 @@
       <div class="col-4">
         <div class="d-flex align-items-center">
           <div class="w-100 me-2">
-            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+            <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
           <button [disabled]="formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM3'].referedValue,formJournal?.form?.data?.diM3,formJournal?.form?.data?.diM3Control,'diM3')">

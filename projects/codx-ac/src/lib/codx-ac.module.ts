@@ -111,6 +111,7 @@ import { WarehouseTransfersComponent } from './vouchers/warehouse-transfers/ware
 import { WarehouseTransfersAddComponent } from './vouchers/warehouse-transfers/warehouse-transfers-add/warehouse-transfers-add.component';
 import { WarehouseTransfersDetailComponent } from './vouchers/warehouse-transfers/warehouse-transfers-detail/warehouse-transfers-detail.component';
 import { TransfersTableComponent } from './share/ac-tableview/transfers-table/transfers-table.component';
+import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
 import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 export const routes: Routes = [
   {
@@ -419,6 +420,7 @@ export const routes: Routes = [
     WarehouseTransfersAddComponent,
     WarehouseTransfersDetailComponent,
     TransfersTableComponent,
+    AllocationAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
