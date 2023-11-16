@@ -1143,7 +1143,6 @@ export class CodxEsService {
       [sfRecID, tmpRecID]
     );
   }
-
   updateApproveTemplate(sf: any): Observable<any> {
     return this.api.execSv(
       'ES',
@@ -1151,6 +1150,15 @@ export class CodxEsService {
       'SignFilesBusiness',
       'UpdateTemplateSignFileAsync',
       [sf]
+    );
+  }
+  updateTemplateSF(recID: string, tpRecID:string): Observable<any> {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'SignFilesBusiness',
+      'UpdateTemplateSFAsync',
+      [recID,tpRecID]
     );
   }
   getTemplateOfCategory(categoryID: string) {

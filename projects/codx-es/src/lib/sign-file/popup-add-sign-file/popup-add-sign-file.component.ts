@@ -138,6 +138,7 @@ export class PopupAddSignFileComponent implements OnInit {
   templateRefID: any;
   processRecID: any;
   tempSampleProcessName: any;
+  reloadedStep= true;
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -165,6 +166,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.data =
       data?.data?.option?.DataService?.dataSelected ?? data?.data?.data ?? {};
     this.isAddNew = data?.data?.isAddNew ?? true;
+    
     this.option = data?.data?.option;
     this.categoryID = data?.data?.oSignFile?.categoryID;
     this.oSignFile = data?.data?.oSignFile;
@@ -1093,6 +1095,9 @@ export class PopupAddSignFileComponent implements OnInit {
               processID: this.processID,
               approveControl: '2',
             });
+
+            this.reloadedStep=false;
+            this.cr.detectChanges();
             this.data.processID = this.processID;
             this.data.approveControl = '2';
             this.sampleProcessName = this.tempSampleProcessName;  
@@ -1102,6 +1107,7 @@ export class PopupAddSignFileComponent implements OnInit {
                 f.areas = null;
               })
             }       
+            this.reloadedStep=true;
             this.cr.detectChanges();
             
             //Apply sign areas from template
@@ -1109,7 +1115,7 @@ export class PopupAddSignFileComponent implements OnInit {
               .getByRecID(this.processRecID)
               .subscribe((res: any) => {
                 if (res?.files?.length > 0) {
-                  let areas = res.signFile?.files[0]?.areas;
+                  let areas = res.files[0]?.areas;
                   // set new area
                   if (areas?.length > 0) {
                     areas.forEach((area) => {
@@ -1141,20 +1147,25 @@ export class PopupAddSignFileComponent implements OnInit {
           processID: this.processID,
           approveControl: '2',
         });
+        this.reloadedStep=false;
+        this.cr.detectChanges();
         this.data.processID = this.processID;
         this.data.approveControl = '2';
         this.sampleProcessName = this.tempSampleProcessName; 
+        
+        this.reloadedStep=true;
+        this.cr.detectChanges();
         //Xóa vùng ký mẫu cũ
         if(this.data.files?.length>0){
           this.data.files.forEach(f=>{
             f.areas = null;
           })
-        }          
+        }    this.showStepSetting      
         this.cr.detectChanges();        
         //Apply sign areas from template
         this.esService.getByRecID(this.processRecID).subscribe((res: any) => {
           if (res?.files?.length > 0) {
-            let areas = res.signFile?.files[0]?.areas;
+            let areas = res.files[0]?.areas;
 
             // set new area
             if (areas?.length > 0) {
@@ -1215,15 +1226,14 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   updateApproveTemplate() {
-    // if (this.data?.approveControl != '1') {
-    //   this.notify.notify('Qui trình chưa thay đổi');
-    //   return;
-    // }
-    this.esService.updateApproveTemplate(this.data).subscribe((res) => {
-      if (res != null) {
-        this.notify.notifyCode('SYS007');
-      }
-    });
+    if (this.data?.approveControl == '2' && this.processRecID) {
+      this.esService.updateTemplateSF(this.data?.recID,this.processRecID).subscribe((res) => {
+        if (res != null) {
+          this.notify.notifyCode('SYS007');
+        }
+      });
+    }
+    
   }
   //#endregion
 
