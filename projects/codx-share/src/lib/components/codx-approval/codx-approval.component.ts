@@ -62,7 +62,7 @@ export class CodxApprovalComponent
   transID: any;
   recID: any;
   views: Array<ViewModel> | any = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   gridViewSetup: any;
   dvlApproval: any;
   dataItem: any;

@@ -24,7 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ImportEInvoicesComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới

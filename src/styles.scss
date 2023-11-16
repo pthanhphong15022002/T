@@ -4145,7 +4145,7 @@ app-setting .e-tab .e-tab-header.e-vertical:before {
 /// 
 codx-aside-v2.aside-v2-lighter{
   .menu-state-primary .menu-item > .menu-link {
-    padding-left: 5px!important;
+    //padding-left: 5px!important; tbchung sửa á sai kiếm nó nha
   }
   .menu-state-primary .menu-item.here > .menu-link {
     background-color: var(--primary-lighter);
@@ -4157,6 +4157,14 @@ codx-aside-v2.aside-v2-lighter{
   .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary) !important;
+  }
+  .menu-item.active 
+  {
+    .menu-title
+    {
+      color: var(--primary) !important;
+    }
+    background-color: var(--primary-lighter);
   }
  
 }

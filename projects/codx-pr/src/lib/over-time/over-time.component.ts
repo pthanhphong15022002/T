@@ -50,7 +50,7 @@ export class OverTimeComponent extends UIComponent {
 
   cmtStatus: string = '';
   views: Array<ViewModel> = [];
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   popupTitle;
   funcIDName = '';
   user;
@@ -244,9 +244,9 @@ export class OverTimeComponent extends UIComponent {
       }
     });
 
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
     this.cache.message('AC0033').subscribe((res) => {
       if (res) {
         this.lblAdd = res?.customName;
