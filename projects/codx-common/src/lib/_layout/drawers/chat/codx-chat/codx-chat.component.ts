@@ -156,7 +156,6 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      debugger
       if (res.event) 
       {
         this.listChat.addGroup(res.event);
