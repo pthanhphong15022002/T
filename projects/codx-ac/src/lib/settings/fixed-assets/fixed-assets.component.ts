@@ -25,7 +25,7 @@ export class FixedAssetsComponent extends UIComponent {
   @ViewChild('header3', { static: true }) header3: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  btnAdd: ButtonModel = { id: 'btnAdd' };
+  btnAdd: ButtonModel[] = [{ id: 'btnAdd' }];
   functionName: string;
 
   constructor(injector: Injector) {

@@ -16,7 +16,7 @@ import { CodxAdService } from '../codx-ad.service';
 })
 export class DecentralizedGroupComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  button: ButtonModel = { id: 'btnAdd' };
+  button: ButtonModel[] = [{ id: 'btnAdd' }];
   @ViewChild('item') itemTemplate: TemplateRef<any>;
 
   //predicate for groupType 3: nhom phan quyen

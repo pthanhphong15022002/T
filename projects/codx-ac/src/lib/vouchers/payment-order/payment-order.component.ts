@@ -25,11 +25,11 @@ export class PaymentOrderComponent extends UIComponent {
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
   dataCategory: any; //? data của category
   dataDefault: any; //? data default của phiếu
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-  };
+  }];
   optionSidebar: DialogModel = new DialogModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(

@@ -44,9 +44,9 @@ export class EmployeeBenefitComponent extends UIComponent {
   views: Array<ViewModel> = [];
   method = 'GetEBenefitListAsync';
   grvSetup: any;
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   formGroup: FormGroup;
 
   //Object data

@@ -31,10 +31,10 @@ export class AccountsComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = []; //? model view
-  button: ButtonModel = { //? nút thêm tài khoản
+  button: ButtonModel[] = [{ //? nút thêm tài khoản
     id: 'btnAdd',
     icon: 'icon-add_circle_outline',
-  };
+  }];
   funcName = ''; //? tên truyền vào headertext
   headerText: any;
   optionSidebar: SidebarModel = new SidebarModel();

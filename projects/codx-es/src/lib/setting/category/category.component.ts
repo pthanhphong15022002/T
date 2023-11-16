@@ -53,7 +53,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  button: ButtonModel;
+  button: ButtonModel[];
   funcID: string;
   service = 'ES';
   assemblyName = 'ES';
@@ -97,9 +97,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
     if (this.funcID != 'ODS24') {
-      this.button = {
+      this.button = [{
         id: 'btnAdd',
-      };
+      }];
     }
 
     this.moreFunc = [

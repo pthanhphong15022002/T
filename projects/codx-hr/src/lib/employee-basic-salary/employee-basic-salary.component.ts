@@ -68,9 +68,9 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
 
   grvSetup: any;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   formGroup: FormGroup;
   currentEmpObj: any;
   editStatusObj: any;

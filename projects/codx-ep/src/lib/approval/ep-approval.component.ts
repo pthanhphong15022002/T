@@ -69,7 +69,7 @@ export class EPApprovalComponent extends UIComponent {
   scheduleEvent?: ResourceModel;
   dialog: DialogRef;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   moreFunc: Array<ButtonModel> = [];
   columnGrids = [];
   scheduleEvtModel: any;

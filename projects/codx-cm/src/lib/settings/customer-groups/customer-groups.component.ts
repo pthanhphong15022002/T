@@ -38,7 +38,7 @@ export class CustomerGroupsComponent extends UIComponent {
   predicate: string;
   dataValue: string;
   idField = 'custGroupID';
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   arrFieldIsVisible = [];
   dataSelected: any;
@@ -67,9 +67,9 @@ export class CustomerGroupsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit(): void {
