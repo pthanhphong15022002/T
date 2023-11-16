@@ -136,6 +136,7 @@ export class ContractsComponent extends UIComponent {
   //param
   approveRule = '0';
   paramDefault: any;
+  runMode: any;
 
   constructor(
     private inject: Injector,
@@ -148,6 +149,11 @@ export class ContractsComponent extends UIComponent {
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f) {
+        this.runMode = f?.runMode;
+      }
+    });
   }
 
   async onInit(): Promise<void> {
@@ -241,7 +247,9 @@ export class ContractsComponent extends UIComponent {
   }
 
   changeDataMF(event, data, isDetail = false) {
-    if (event != null) {
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
+    } else if (event != null) {
       event.forEach((res) => {
         res.isblur = data.approveStatus == '3';
         switch (res.functionID) {
@@ -1092,10 +1100,10 @@ export class ContractsComponent extends UIComponent {
   popupOwnerRoles(data) {
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
-    formMD.funcID = "CM0205";
-    formMD.entityName = "CM_Deals";
-    formMD.formName = "CMDeals";
-    formMD.gridViewName = "grvCMDeals";
+    formMD.funcID = 'CM0205';
+    formMD.entityName = 'CM_Deals';
+    formMD.formName = 'CMDeals';
+    formMD.gridViewName = 'grvCMDeals';
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formMD;
     var obj = {
@@ -1132,5 +1140,4 @@ export class ContractsComponent extends UIComponent {
       }
     });
   }
-
 }

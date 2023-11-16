@@ -321,7 +321,7 @@ export class PopupEmpBusinessTravelsComponent
     this.formGroup.patchValue(this.form.data);
     if (this.formGroup.invalid) {
       this.hrService.notifyInvalid(this.formGroup, this.formModel);
-      this.form.validation(true)
+      this.form.validation(false)
       return;
     }
 
