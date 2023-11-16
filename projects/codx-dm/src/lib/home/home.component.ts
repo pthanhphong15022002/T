@@ -411,11 +411,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.folderId.next('');
         this.dmSV.folderID = '';
         this.view.dataService.dataSelected = null;
+        var index = this.button.findIndex(x=>x.id == "btnUpload");
         if (this.funcID != 'DMT03') {
-          this.button[1].disabled = true;
+          this.button[index].disabled = true;
           this.dmSV.disableInput.next(true);
         } else {
-          this.button[1].disabled = false;
+          this.button[index].disabled = false;
           this.dmSV.disableInput.next(false);
         }
         this.scrollTop();
@@ -498,12 +499,14 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     });
 
     this.dmSV.isDisableUpload.subscribe((res) => {
-      this.button[1].disabled = res;
+      var index = this.button.findIndex(x=>x.id == "btnUpload");
+      this.button[index].disabled = res;
       this.changeDetectorRef.detectChanges();
     });
 
     this.dmSV.isDisableInput.subscribe((res) => {
-      this.button[0].disabled = res;
+      var index = this.button.findIndex(x=>x.id == "btnCreatFolder");
+      this.button[index].disabled = res;
       this.changeDetectorRef.detectChanges();
     });
     //Xóa File
@@ -760,11 +763,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
   //Disable nút tạo mới folder tùy theo funcID
   setDisableAddNewFolder() {
+    var index = this.button.findIndex(x=>x.id == "btnUpload");
     var dis = true;
     if (this.funcID == 'DMT03') {
       dis = false;
-      this.button[1].disabled = false;
-    } else this.button[1].disabled = true;
+      this.button[index].disabled = false;
+    } else this.button[index].disabled = true;
     this.dmSV.disableInput.next(dis);
   }
 
@@ -1061,7 +1065,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   addFile(e:any) {
     if(e.id == "btnUpload")
     {
-      if (this.button[1].disabled) return;
+      var index = this.button.findIndex(x=>x.id == "btnUpload");
+      if (this.button[index].disabled) return;
       var data = new DialogAttachmentType();
       data.type = 'popup';
       // data.objectType = 'WP_Notes';
