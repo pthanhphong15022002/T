@@ -1,6 +1,6 @@
 <div #dropdown [ngbTooltip]="codxService.asideMode != '2' ? function?.defaultName : ''"  ngbDropdown class="d-inline-block w-100 cursor-pointer" [autoClose]="autoClose"   container="body">
   <button ngbDropdownToggle (click)="clickBtnDropdown()" type="button" class="btn btn-sm btn-icon" id="chat-box" >
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex align-items-center">
       <div
         class="btn btn-icon btn-clean position-relative"
         [ngClass]="codxService.toolbarButtonHeightClass"
