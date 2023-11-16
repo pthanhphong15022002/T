@@ -137,7 +137,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
           .subscribe((res) => {
             if (res) {
-              this.dialogOtpPin?.close();
+              this.dialogOtpPin?.close(); 
               this.beforeApprove(this.mode, this.title, this.subTitle);
             }
           });
