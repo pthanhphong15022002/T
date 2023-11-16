@@ -411,11 +411,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   //#region Login
   private login(type: string) {
-<<<<<<< HEAD
-    //nho xoa
-    debugger;
-=======
->>>>>>> 2a7808530e70c1393d7890a2abd3857c98b45a94
     const loginSubscr = this.authService
       .login(
         this.f.email.value,
