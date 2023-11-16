@@ -170,14 +170,14 @@ export class JournalsAddComponent extends UIComponent {
             )
             .subscribe((res) => {
               if (res) {
-                this.formJournal.form.setValue('journalDesc',res,{onlySelf: true,emitEvent: false,});
+                this.formJournal.form.setValue('journalDesc',res,{});
               }
             });
           break;
         case 'periodid':
-          value = event.value;
+          value = event.data;
           let fiscalYear = parseInt(value.substring(0, 4));
-          this.formJournal.form.setValue('fiscalYear',fiscalYear,{onlySelf: true,emitEvent: false});
+          this.formJournal.form.setValue('fiscalYear',fiscalYear,{});
           break;
         case 'vatcontrol':
           this.isPreventChange = true;

@@ -333,7 +333,6 @@
   <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
     <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
       [formName]="journal.entryMode == '1'? fmGeneralJournalsLines.formName : fmGeneralJournalsLinesOne.formName"
-      [childModel]="childModelCashPayment"
       [gridViewName]="journal.entryMode == '1' ? fmGeneralJournalsLines.gridViewName : fmGeneralJournalsLinesOne.gridViewName"
       (beforeSaveRow)="beforeSaveRowGeneral($event)" [entityName]="fmGeneralJournalsLines.entityName"
       predicates="TransID=@0" [dataValues]="formGeneral?.data?.recID" [templateMore]="templateMore" service="AC"
