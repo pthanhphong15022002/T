@@ -172,6 +172,7 @@ export class DealsComponent
   statusCodecmt: string = '';
   queryParams: any;
   gridDetailView = '2';
+  runMode: any;
 
   constructor(
     private inject: Injector,
@@ -182,7 +183,7 @@ export class DealsComponent
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
     private authStore: AuthStore,
-    private stepService: StepService,
+    private stepService: StepService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -195,6 +196,7 @@ export class DealsComponent
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
+      this.runMode = f?.runMode;
       this.functionModule = f.module;
       this.nameModule = f.customName;
     });
@@ -210,7 +212,6 @@ export class DealsComponent
         this.processIDKanban = res;
       }
     });
-
 
     this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
@@ -328,6 +329,12 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
+      // this.cache.functionList(this.funcID).subscribe((f) => {
+      //   if (f) {
+      //     this.funcIDCrr = f;
+      //     this.runMode = f?.runMode;
+      //   }
+      // });
     } else if (
       this.funcID == 'CM0201' &&
       this.viewCrr == 6 &&
@@ -358,15 +365,17 @@ export class DealsComponent
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
   }
-  changeDataMF($event, data, type = null) {
-    if ($event != null && data != null) {
-      for (let eventItem of $event) {
+  changeDataMF(event, data, type = null) {
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
+    } else if (event != null && data != null) {
+      for (let eventItem of event) {
         if (type == 11) {
           eventItem.isbookmark = false;
         }
-       const functionID = eventItem.functionID;
-       const mappingFunction = this.getRoleMoreFunction(functionID);
-       mappingFunction && mappingFunction(eventItem, data);
+        const functionID = eventItem.functionID;
+        const mappingFunction = this.getRoleMoreFunction(functionID);
+        mappingFunction && mappingFunction(eventItem, data);
       }
     }
   }
@@ -415,7 +424,7 @@ export class DealsComponent
     };
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
-       data?.alloweStatus == '1'
+        data?.alloweStatus == '1'
           ? !['1', '2', '15'].includes(data.status) ||
             data.closed ||
             ['1', '0'].includes(data.status)
@@ -424,9 +433,7 @@ export class DealsComponent
     let isConfirmOrRefuse = (eventItem, data) => {
       //Xác nhận từ chối
       eventItem.disabled =
-        data?.alloweStatus == '1'
-          ? !['0'].includes(data.status)
-          : true;
+        data?.alloweStatus == '1' ? !['0'].includes(data.status) : true;
     };
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
@@ -457,8 +464,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled =
-        data?.alloweStatus == '1' ? false : true;
+      eventItem.disabled = data?.alloweStatus == '1' ? false : true;
     };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -548,7 +554,7 @@ export class DealsComponent
   }
 
   checkMoreReason(data) {
-    return data?.status != "1" && data?.status != "2" && data?.status != "15";
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {
     this.dataSelected = data;
@@ -1327,10 +1333,10 @@ export class DealsComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-      this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-        if (process) {
-          if(process.approveRule) {
-            this.codxCmService
+    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+      if (process) {
+        if (process.approveRule) {
+          this.codxCmService
             .getESCategoryByCategoryID(process.processNo)
             .subscribe((res) => {
               if (!res) {
@@ -1343,14 +1349,15 @@ export class DealsComponent
                 this.release(dt, res);
               }
             });
-          }
-          else {
-            this.notificationsService.notifyCode('Quy trình chưa bật chức năng ký duyệt');
-          }
         } else {
-          this.notificationsService.notifyCode('DP040');
+          this.notificationsService.notifyCode(
+            'Quy trình chưa bật chức năng ký duyệt'
+          );
         }
-      });
+      } else {
+        this.notificationsService.notifyCode('DP040');
+      }
+    });
   }
 
   release(data: any, category: any) {
@@ -1940,7 +1947,7 @@ export class DealsComponent
       recID: this.dataSelected.recID,
       valueListStatusCode: this.valueListStatusCode,
       gridViewSetup: this.gridViewSetup,
-      category: '1'
+      category: '1',
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
@@ -1977,25 +1984,24 @@ export class DealsComponent
     return '';
   }
 
-  async addTask(data){
+  async addTask(data) {
     let taskType = await this.stepService.chooseTypeTask();
-    if(taskType){
+    if (taskType) {
       let dataDeal = {
-        typeCM:'5',
+        typeCM: '5',
         parentTaskID: data.recID,
-      }
+      };
       let dataAddTask = {
         type: 'notStep',
         action: 'add',
         taskType: taskType,
-        titleName:  this.titleAction,
-        ownerInstance: data?.owner,// owner of Parent
+        titleName: this.titleAction,
+        ownerInstance: data?.owner, // owner of Parent
         dataParentTask: dataDeal,
         instanceID: data.refID,
         isStart: data.status == '2',
-      }
+      };
       let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
     }
-
   }
 }

@@ -8,11 +8,11 @@ export class AC_SalesInvoicesLines {
 
   rowNo: number = 0;
 
-  lineType: string;
+  lineType: string = '1';
 
   lineStatus: string = '60';
 
-  lotID: string = Util.uid();;
+  lotID: string = Util.uid();
 
   itemID: string;
 

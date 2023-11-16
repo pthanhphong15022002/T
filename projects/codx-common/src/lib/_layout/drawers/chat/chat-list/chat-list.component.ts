@@ -88,9 +88,11 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
             mssg.messageType === '3' || mssg.messageType === '5'
               ? ''
               : mssg.message;
-          mssg.isRead = mssg.status.some(
-            (x: any) => x.userID === this.user.userID
-          );
+          if(mssg.status)
+          {
+            mssg.isRead = mssg.status.some((x: any) => x.userID === this.user.userID);
+          }
+          
           group.message = JSON.parse(JSON.stringify(mssg));
           lstData.splice(idx, 1);
           (this.codxListView.dataService as CRUDService).add(group).subscribe();

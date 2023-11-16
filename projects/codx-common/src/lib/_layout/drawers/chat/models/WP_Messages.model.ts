@@ -65,6 +65,8 @@ export class MessageItem{
     public groupID:string;
     public userID:string;
     public refID:string;
+    public refContent:any;
+
     constructor(groupID:string) 
     {
         this.recID = Util.uid();
