@@ -27,7 +27,42 @@
   </ng-template>
 
   <ng-template #body>
-
+    <div class="tabs tabs-login">
+      <ejs-tab class="h-100 w-100" overflowMode="Popup" heightAdjustMode="Auto">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="nav-item w-100">
+                <div class="d-flex flex-column w-100 text-center">
+                  <div [class]="'icon-20 icon-i-key mb-2'"></div>
+                  <span class="text-gray-700 fw-bold">
+                    <codx-label default="Đăng nhập"></codx-label>
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <!-- <ng-container *ngTemplateOutlet="loginPW"></ng-container> -->
+            </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="nav-item w-100">
+                <div class="d-flex flex-column w-100 text-center">
+                  <div [class]="'icon-20 mb-2 icon-email'"></div>
+                  <span class="text-gray-700 fw-bold">
+                    <codx-label default="OTP"></codx-label>
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
   </ng-template>
 
   <ng-template #footer>

@@ -19,9 +19,11 @@
         </div>
         <div class="input-circle input-sm" *ngIf="formGeneral?.formGroup">
           <span class="me-2">
-            <codx-vll [name]="'AC040'" [formModel]="formGeneral.formModel" [field]="'Status'"
-              [value]="formGeneral.data?.status" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-sm">
+            <codx-vll *ngIf="formGeneral.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="formGeneral.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+            </codx-vll>
+            <codx-vll *ngIf="formGeneral.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'" [value]="formGeneral.data?.status"
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
             </codx-vll>
           </span>
         </div>
@@ -142,7 +144,7 @@
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formGeneral.data">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
       <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-        *ngIf="formGeneral.data?.status == '7'" style="border: 1px solid" type="button"
+        *ngIf="!formGeneral.data?.validated" style="border: 1px solid" type="button"
         class="btn btn-md btn-light-danger me-2 rounded-15"
         (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
@@ -329,7 +331,7 @@
 <!-- Start: GridLine -->
 <ng-template #TmpTabLine>
   <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
-    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="true" gridLines="Both" [autoFitColumns]="false"
       [formName]="journal.entryMode == '1'? fmGeneralJournalsLines.formName : fmGeneralJournalsLinesOne.formName"
       [childModel]="childModelCashPayment"
       [gridViewName]="journal.entryMode == '1' ? fmGeneralJournalsLines.gridViewName : fmGeneralJournalsLinesOne.gridViewName"
@@ -363,7 +365,7 @@
         [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true" [templateMore]="templateMore2"
         [showEmptyRecord]="false" [entityName]="fmSettledInvoices.entityName" [showEmptyRecord]="false"
         rowNoField="rowNo" gridLines="Both" service="AC" predicates="TransID=@0" [dataValues]="formGeneral.data.recID"
-        [autoFitColumns]="false" (gridInit)="beforeInitGridSettledInvoices($event)"
+        [autoFitColumns]="true" (gridInit)="beforeInitGridSettledInvoices($event)"
         (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
@@ -393,7 +395,7 @@
         (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
         (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true"
         [templateMore]="templateMore" (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0"
-        gridLines="Both" [autoFitColumns]="false" [dataValues]="formGeneral?.data?.recID" service="AC">
+        gridLines="Both" [autoFitColumns]="true" [dataValues]="formGeneral?.data?.recID" service="AC">
       </codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">

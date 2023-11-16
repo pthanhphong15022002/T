@@ -13,9 +13,11 @@ import {
   CRUDService,
   CodxFormComponent,
   CodxGridviewV2Component,
+  DatePipe,
   DialogData,
   DialogRef,
   FormModel,
+  FormatvaluePipe,
   NotificationsService,
   UIComponent,
   Util,
@@ -37,6 +39,7 @@ import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
+  providers: [DatePipe],
   templateUrl: './purchaseinvoices-add.component.html',
   styleUrls: ['./purchaseinvoices-add.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +50,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
   @ViewChild('formPurchaseInvoices') public formPurchaseInvoices: CodxFormComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
+  @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
 
   headerText: string; //? tên tiêu đề
   dialog: DialogRef; //? dialog truyền vào
@@ -71,6 +75,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     private acService: CodxAcService,
     private notification: NotificationsService,
     private journalService: JournalService,
+    private tranform : DatePipe,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -248,6 +253,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         case 'objectid':
           let indexObject = event?.component?.dataService?.data.find((x) =>x.ObjectID == value);
           if (indexObject != null) {
+            let memo = this.getMemoMaster();
+            this.formPurchaseInvoices.setValue('memo',memo,{});
             this.objectIDChange(field);
           }
           break;
@@ -262,6 +269,11 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           break;
         case 'voucherdate':
           this.voucherDateChange(field);
+          break;
+        case 'invoiceno':
+        case 'invoicedate':
+          let memo = this.getMemoMaster(event?.component?.format);
+          this.formPurchaseInvoices.setValue('memo',memo,{});
           break;
       }
     }
@@ -927,6 +939,25 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
       this.eleGridVatInvoices.deleteRow(data);
     }
+  }
+
+  /**
+   * *Hàm get ghi chú từ lí do chi + đối tượng + tên người nhận
+   * @returns
+   */
+  getMemoMaster(format:any = '') {
+    let newMemo = ''; //? tên ghi chú mới
+    let objectName = ''; //? tên đối tượng
+    let invoiceno = '';
+    let invoicedate = '';
+    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+    if (indexObject > -1) {
+      objectName = 'Mua hàng của ' + this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;
+      if(this.formPurchaseInvoices?.data?.invoiceNo) invoiceno = 'theo hóa đơn ' + this.formPurchaseInvoices?.data?.invoiceNo;
+      if(this.formPurchaseInvoices?.data?.invoiceDate) invoicedate = 'ngày ' + this.tranform.transform(this.formPurchaseInvoices?.data?.invoiceDate,format);
+      newMemo = objectName + ' ' + invoiceno + ' ' + invoicedate;
+    }
+    return newMemo;
   }
 
   @HostListener('click', ['$event']) //? focus out grid
