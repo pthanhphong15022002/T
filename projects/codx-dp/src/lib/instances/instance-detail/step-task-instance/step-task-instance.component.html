@@ -1,4 +1,4 @@
-<div *ngIf="applyProcess">
+<div>
   <header class="d-flex align-items-center justify-content-between search p-2">
     <div class="left d-flex align-items-center">
       <div>
@@ -67,22 +67,6 @@
     ></ng-container>
   </main>
 </div>
-
-<div *ngIf="!applyProcess">
-  <task
-    [objectID]="dataCM?.recID"
-    [isPause]="isPause"
-    [entityName]="entityName"
-    [isAdmin]="isAdmin"
-    (saveAssign)="handelSaveAssignTask($event)"
-    [leadName]="leadName"
-    [contractName]="contractName"
-    [dealName]="dealName"
-    [customerName]="customerName"
-    [ownerInstance]="owner"
-  ></task>
-</div>
-
 <ng-template #taskTem>
   <div *ngIf="isDataLoading || !type">
     <div *ngFor="let step of [1, 2, 3]">
@@ -125,11 +109,12 @@
       <hr class="m-0 p-0" />
     </div>
   </div>
-  <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
+  <div >
     <div
       *ngFor="let instanceStep of listInstanceStepShow; let i = index"
       class="list-step mt-3"
     >
+
       <codx-step-task
         *ngIf="!instanceStep?.isSuccessStep && !instanceStep?.isFailStep"
         [instanceStep]="instanceStep"
@@ -138,9 +123,9 @@
         [isShowMore]="true"
         [isDeepCopy]="false"
         [isShowStep]="true"
-        [isStart]="dataCM?.status == '2'"
-        [isClose]="dataCM?.closed"
-        [isRoleAll]="dataCM?.full"
+        [isStart]="instance?.status == '2'"
+        [isClose]="instance?.permissionCloseInstances"
+        [isRoleAll]="instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.full || instance?.edit "
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
         [isTaskFirst]="i == 0 ? true : false"
@@ -148,19 +133,14 @@
         (saveAssign)="handelSaveAssignTask($event)"
         (changeProgress)="autoStart($event)"
         (isSuccessStep)="susscessStepEnd($event, instanceStep)"
-        [sessionID]="dataCM?.recID"
+        [sessionID]="instance?.recID"
         [formModelAssign]="formModel"
-        [isChangeOwner]="isChangeOwner"
-        [leadName]="leadName"
-        [contractName]="contractName"
-        [dealName]="dealName"
-        [customerName]="customerName"
         [ownerInstance]="owner"
       ></codx-step-task>
       <div
         *ngIf="
           (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&
-          !['0', '1', '2','15'].includes(dataCM?.status)
+          !['0', '1', '2','15'].includes(instance?.status)
         "
       >
         <div>
@@ -195,7 +175,7 @@
                 <button class="button-custom" (click)="openPopupReason()">
                   <span
                     [ngClass]="
-                    dataCM?.closed
+                    instance?.closed
                         ? ''
                         : 'icon-edit icon-20 text-primary-600 py-2'
                     "
@@ -265,10 +245,10 @@
       [listInstanceStep]="listInstanceStep"
       [isShowTypeTime]="false"
       [typeTime]="typeTime"
-      [instance]="dataCM"
+      [instance]="instance"
       [listSteps]="listInstanceStepShow"
-      [isRoleAll]="dataCM?.alloweStatus || dataCM?.full "
-      [type]="'CM'"
+      [isRoleAll]="instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.full || instance?.edit"
+      [type]="'DP'"
     ></codx-step-chart>
   </div>
 </ng-template>
@@ -360,7 +340,7 @@
   </div>
   <div
     class="pb-2 px-7"
-    style="max-height: 400px; overflow: auto"
+    style="max-height: 700px; overflow: auto"
     *ngIf="stepViews?.length > 0"
   >
     <ng-container *ngFor="let item of stepViews; let i = index">
