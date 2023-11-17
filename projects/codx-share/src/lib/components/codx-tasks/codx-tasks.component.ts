@@ -108,13 +108,15 @@ export class CodxTasksComponent
   @Output() resourceNew = new EventEmitter<any>();
   //
 
-  button?: ButtonModel[] = [{
-    id: 'btnAdd',
-    // items: [{
-    //   id: 'avc',
-    //   text: 'xxyz'
-    // }]
-  }];
+  button?: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+      // items: [{
+      //   id: 'avc',
+      //   text: 'xxyz'
+      // }]
+    },
+  ];
 
   model?: DataRequest;
   request: ResourceModel;
@@ -1847,6 +1849,7 @@ export class CodxTasksComponent
           case 'SYS03':
             if (
               !data.write ||
+              data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
               this.funcID == 'TMT0206' ||
