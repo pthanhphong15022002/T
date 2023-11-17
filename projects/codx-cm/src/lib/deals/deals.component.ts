@@ -559,6 +559,7 @@ export class DealsComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
+    this.stepIdClick = '';
     const functionMapping = {
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),
