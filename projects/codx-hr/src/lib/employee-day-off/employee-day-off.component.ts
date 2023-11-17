@@ -81,9 +81,9 @@ export class EmployeeDayOffComponent extends UIComponent {
 
   grvSetup: any;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   eDayOffsHeaderText;
   formGroup: FormGroup;
   eDayOffObj: any;

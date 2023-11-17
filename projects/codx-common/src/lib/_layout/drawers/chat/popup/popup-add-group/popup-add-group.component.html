@@ -28,7 +28,12 @@
       >
       </codx-input>
     </div>
-    <div class="col-6 mt-4">
+    
+  </div>
+</ng-template>
+<ng-template #body>
+  <div class="row">
+    <div class="col-6">
       <codx-label
         class="fw-bold"
         [className]="'fs-6'"
@@ -42,7 +47,7 @@
           (searchEvent)="searchEvent($event)"
       ></codx-searchbar>
     </div>
-    <div class="col-6 mt-4">
+    <div class="col-6">
       <codx-label
           class="fw-bold"
           [className]="'fs-6'"
@@ -53,9 +58,7 @@
       <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
     </div>
   </div>
-</ng-template>
-<ng-template #body>
-  <div class="row h-100">
+  <div class="row mt-2">
     <div class="col-6">
       <codx-listview
         #codxListView1

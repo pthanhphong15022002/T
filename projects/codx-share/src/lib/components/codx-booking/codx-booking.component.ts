@@ -88,7 +88,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   scheduleEvent?: ResourceModel;
   dialog: DialogRef;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   moreFunc: Array<ButtonModel> = [];
   columnGrids = [];
   scheduleEvtModel: any;
@@ -151,9 +151,9 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     this.getBaseVariable();
     this.roleCheck();
     this.getCache();
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   onLoading(evt: any) {
@@ -538,7 +538,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   onActionClick(event?) {
     if (event.type == 'add' && event.data?.resourceId != null) {
-      this.popupTitle = this.buttons?.text + ' ' + this.funcIDName;
+      this.popupTitle = this.buttons[0].text + ' ' + this.funcIDName;
       this.addNew(event.data);
     }
     if (event.type == 'doubleClick' || event.type == 'edit') {

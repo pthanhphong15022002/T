@@ -11,10 +11,9 @@ export class ReportsComponent extends UIComponent {
   @ViewChild('view') viewBase:ViewsComponent;
   views: Array<ViewModel> = [];
   viewType = ViewType;
-  button:ButtonModel = {
-    id:'btnAdd',
-
-  }
+  button: ButtonModel[] = [{
+    id: 'btnAdd',
+  }];
   module:any='';
   constructor(injector: Injector,
     private layout: LayoutService,

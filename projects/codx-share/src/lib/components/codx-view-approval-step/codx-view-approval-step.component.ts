@@ -101,11 +101,14 @@ export class CodxViewApprovalStepComponent
                           );
                         }
                         if (curAp?.length > 0) {
-                          ap.userID = curAp[0]?.userID;
-                          ap.userName = curAp[0]?.userName;
-                          ap.employeeID = curAp[0]?.employeeID;
-                          ap.position = ap?.position ?? curAp[0]?.positionName;
-                          ap.orgUnitName = curAp[0]?.orgUnitName;
+                          ap.userIDs = curAp[0]?.userIDs;
+                          if(ap?.userIDs?.length ==0){
+                            ap.userID = curAp[0]?.userID;
+                            ap.userName = curAp[0]?.userName;
+                            ap.employeeID = curAp[0]?.employeeID;
+                            ap.position = ap?.position ?? curAp[0]?.positionName;
+                            ap.orgUnitName = curAp[0]?.orgUnitName;
+                          }
                         }
                       }
                     }

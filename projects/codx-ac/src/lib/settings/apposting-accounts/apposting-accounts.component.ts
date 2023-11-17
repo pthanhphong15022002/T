@@ -37,9 +37,9 @@ export class APPostingAccountsComponent
   selectedValue: string;
   defaultPostType1: string;
   defaultPostType2: string;
-  btnAdd = {
+  btnAdd = [{
     id: 'btnAdd',
-  };
+  }];
   functionName: string;
 
   constructor(inject: Injector) {

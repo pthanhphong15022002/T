@@ -53,6 +53,9 @@ codx-wrapper {
 
 .e-listview .e-list-item {
     color: var(--text-body);
+    &:hover{
+        color: var(--text-body)!important;
+    }
 }
 
 .e-listview .e-list-item .fw-bold {
@@ -130,7 +133,7 @@ app-list-post .e-listview .e-list-item {
     background-color: var(--bg-card);
 }
 div#newfeed ejs-listview .e-list-item:hover {
-    background-color: transparent!important;
+    background-color:var(--bg-card) !important;
 }
 
 .wp-home .e-listview .e-list-item.e-hover,
@@ -912,5 +915,7 @@ ejs-tab#calendarTab .e-calendar {
     //border-color: #f5f9fa;
     background-color: var(--bg-card);
 }
-
+.data-text-color {
+    color: var(--gray-400);
+}
 //end dark

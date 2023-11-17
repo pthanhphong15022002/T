@@ -25,7 +25,7 @@ import {
 export class ApproversComponent extends UIComponent implements AfterViewInit {
   //#region Constructor
   views: Array<ViewModel> = [];
-  button: ButtonModel = { id: 'btnAdd' };
+  button: ButtonModel[] = [{ id: 'btnAdd' }];
   func: any;
 
   //Start Tooltip

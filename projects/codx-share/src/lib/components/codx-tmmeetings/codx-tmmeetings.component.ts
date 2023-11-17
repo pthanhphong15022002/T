@@ -69,7 +69,7 @@ export class CodxTmmeetingsComponent
   @ViewChild('headerTemp') headerTemp!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   model?: DataRequest;
   resourceKanban?: ResourceModel;
@@ -134,9 +134,9 @@ export class CodxTmmeetingsComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 

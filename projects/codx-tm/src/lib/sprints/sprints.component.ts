@@ -50,7 +50,7 @@ export class SprintsComponent extends UIComponent {
   urlView = '';
   moreFunc: any[];
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   model?: DataRequest;
   predicate = 'Owner=@0';
@@ -93,9 +93,9 @@ export class SprintsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
 
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))

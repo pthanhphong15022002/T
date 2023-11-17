@@ -27,9 +27,9 @@ export class CashtransfersComponent
   @ViewChild('content') content?: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  btnAdd = {
+  btnAdd = [{
     id: 'btnAdd',
-  };
+  }];
   master: ICashTransfer;
   functionName: string;
   journalNo: string;

@@ -46,7 +46,7 @@ export class DashboardComponent extends UIComponent {
   sender = [];
   dataRadio = null;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel;
+  buttonAdd: ButtonModel[];
   user = null;
 
   /* #region filter */

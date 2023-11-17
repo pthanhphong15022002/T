@@ -262,23 +262,25 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
-              var method =
-                this.type == 'excel' ? 'AD_ExcelTemplates' : 'AD_WordTemplates';
-              this.api
-                .execActionData<any>(method, [data], 'DeleteAsync')
-                .subscribe((item) => {
-                  if (item[0] == true) {
-                    this.notifySvr.notifyCode('RS002');
-                    if (this.type == 'excel')
-                      this.dataEx = this.dataEx.filter(
-                        (x) => x.recID != item[1][0].recID
-                      );
-                    else if (this.type == 'word')
-                      this.dataWord = this.dataWord.filter(
-                        (x) => x.recID != item[1][0].recID
-                      );
-                  } else this.notifySvr.notifyCode('SYS022');
-                });
+              var className = this.type == 'excel' ? 'ExcelTemplatesBusiness' : 'WordTemplatesBusiness';
+              this.api.execSv(this.service,"AD",className,"DeleteIDAsync",data.recID).subscribe(item=>{
+                if(item)
+                {
+                  this.notifySvr.notifyCode('RS002');
+                  if (this.type == 'excel')
+                    this.dataEx = this.dataEx.filter(
+                      (x) => x.recID != data.recID
+                    );
+                  else if (this.type == 'word')
+                    this.dataWord = this.dataWord.filter(
+                      (x) => x.recID != data.recID
+                    );
+                }
+                else
+                {
+                  this.notifySvr.notifyCode('SYS022');
+                }
+              });
             }
           });
         break;

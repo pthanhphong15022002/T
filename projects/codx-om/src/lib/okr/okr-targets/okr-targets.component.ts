@@ -171,7 +171,7 @@ export class OkrTargetsComponent implements OnInit {
   skrType = OMCONST.VLL.OKRType.SKResult;
   OM_UseSKR = false;
   tree: any;
-  button: ButtonModel;
+  button: ButtonModel[];
   isAfterRender: boolean;
   skrTitle: any;
   skrFuncID: any;
@@ -205,7 +205,7 @@ export class OkrTargetsComponent implements OnInit {
   //-----------------------------------Get Cache Data--------------------------------//
   //---------------------------------------------------------------------------------//
   createBase() {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
       separator: true,
       hasSet: true,
@@ -220,7 +220,7 @@ export class OkrTargetsComponent implements OnInit {
           id: 'btnAddKR',
         },
       ],
-    };
+    }];
     if(this.dataOKR?.length>0){
       for (let gr of this.dataOKR){
         this.totalOB += gr.listOKR.length;
@@ -264,7 +264,7 @@ export class OkrTargetsComponent implements OnInit {
             (settingVal?.UseSubKR == '1' || settingVal?.UseSubKR == true)
           ) {
             this.OM_UseSKR = true;
-            this.button.items.push({
+            this.button[0].items.push({
               text: 'Thêm kết quả phụ',
               id: 'btnAddSKR',
             });

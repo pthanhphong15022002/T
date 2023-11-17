@@ -77,10 +77,11 @@ initData(){
             }
           })
         }
+        this.isLoaded = true;
       })
     }
 
-    this.isLoaded = true;
+
   })
 }
   constructor(
@@ -101,7 +102,6 @@ initData(){
       this.vllShared = res.datas;
     })
     this.user = this.authStore.get();
-    console.log(this.user);
 
   }
 
@@ -319,6 +319,7 @@ initData(){
       else this.isEnableEdit = true;
       this.selectedData.url = item.Url
       this.selectedData.refID=item.FunctionID;
+      this.selectedData.name=item.CustomName;
     }
     this.editedFunc[this.selectedData.recID] = this.selectedData;
     this.changeDetect.detectChanges();
@@ -330,6 +331,7 @@ initData(){
       else this.isEnableEdit = true;
       this.addData.url = item.Url;
       this.addData.refID=item.FunctionID;
+      this.addData.name=item.CustomName
     }
     this.changeDetect.detectChanges();
   }
@@ -449,16 +451,40 @@ initData(){
   }
 
   onAddForm(){
-    this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
-      console.log(res);
+    let idField = 'recID';
+    if(this.datasource[0].oldID) idField='oldID'
+    if(this.tree && (this.tree as any).liList.length){
+      let newDatasource:any=[];
+      for(let i =0;i< (this.tree as any).liList.length;i++){
+        let id = (this.tree as any).liList[i].getAttribute('data-uid');
+        if(id){
+          let item = this.datasource.find((x:any)=> x[idField] == id);
+          if(item){
+            item.sorting = '00'+i;
+            newDatasource.push(item);
+          }
+        }
+      }
+      //debugger
+      this.datasource = newDatasource;
+    }
+    this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
 
       if(!res.error){
-        setTimeout(()=>{
-          this.notificationsService.notifyCode('SYS007');
-          this.initData();
-        }
-      )}
+        this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
+          console.log(res);
+
+          if(!res.error){
+            setTimeout(()=>{
+              this.notificationsService.notifyCode('SYS007');
+              this.initData();
+            }
+          )}
+        })
+       }
+
     })
+
   }
   onRestore(){
     this.notificationsService.alertCode("SYS046").subscribe((res:any)=>{
@@ -472,5 +498,38 @@ initData(){
         })
       }
     });
+  }
+
+  onDeleteFunc(recID:any){
+    if(recID){
+      let idField = 'recID';
+      if(this.datasource[0].oldID) idField='oldID';
+      let item = this.datasource.find((x:any)=>x[idField]==recID);
+      if(item){
+        if(item.oldID){
+          let idx = this.datasource.indexOf(item);
+          if(idx>-1){
+            this.datasource.splice(idx,1);
+            this.api.execAction('SYS_FormSettings',this.datasource,'SaveAsync',true).subscribe((res:any)=>{
+              console.log(res);
+
+              if(!res.error){
+                setTimeout(()=>{
+                  this.initData();
+                }
+              )}
+            })
+          }
+          return;
+        }
+        else{
+          this.api.execAction('SYS_FormSettings',[item],'DeleteAsync',true).subscribe((res:any)=>{
+            if(!res.error){
+              this.initData();
+            }
+          })
+        }
+      }
+    }
   }
 }

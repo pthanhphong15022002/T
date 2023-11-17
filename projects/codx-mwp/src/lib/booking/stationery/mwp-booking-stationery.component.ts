@@ -32,7 +32,7 @@ export class MWPBookingStationeryComponent
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   viewType = ViewType;
   views: Array<ViewModel> = [];
-  button: ButtonModel;
+  button: ButtonModel[];
   dataSelected: any;
   columnsGrid: any;
   dialog!: DialogRef;
@@ -71,10 +71,10 @@ export class MWPBookingStationeryComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
       disabled: true,
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

@@ -43,9 +43,9 @@ export class ArPostingAccountsComponent extends UIComponent {
   funcName: any;
   menuActive: any = 1;
   linkActive = '';
-  button = {
+  button = [{
     id: 'btnAdd',
-  };
+  }];
   editSettings: EditSettingsModel = {
     allowEditing: false,
     allowAdding: false,

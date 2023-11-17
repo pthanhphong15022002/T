@@ -58,9 +58,7 @@ export class SignalRService {
           case 'onDisconnected':
             this.disConnected.emit(res.data);
             break;
-          case 'activeNewGroup':
-            this.activeNewGroup.emit(res.data);
-            break;
+          
           case 'activeGroup':
             this.activeGroup.emit(res.data);
             break;
@@ -79,6 +77,9 @@ export class SignalRService {
             break;
           case 'openBoxChat':
             this.openBoxChat.emit(res.data);
+            break;
+          case 'addBoxChat':
+            this.hubConnection.send('OpenBoxChat', res.group);
             break;
         }
       }

@@ -28,7 +28,7 @@
                     </div>
                     <div class="tabs tabs-login" *ngIf="enableMultiLogin; else loginPW">
                       <ejs-tab class="h-100 w-100" overflowMode="Popup" heightAdjustMode="Auto"
-                        (selected)="selectedTab($event)">
+                        (selecting)="select($event)" (selected)="selectedTab($event)">
                         <e-tabitems>
                           <e-tabitem>
                             <ng-template #headerText>

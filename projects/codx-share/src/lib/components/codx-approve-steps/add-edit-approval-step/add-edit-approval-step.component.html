@@ -42,7 +42,7 @@
           <div class="form-group">
             <codx-label fiedName="ApproveMode" [formModel]="formModel">
             </codx-label>
-            <codx-input field="approveMode" ControlName="approveMode" [formModel]="formModel" [Group]="dialogApprovalStep">
+            <codx-input field="approveMode" (valueChange)="valueChange($event)" ControlName="approveMode" [formModel]="formModel" [Group]="dialogApprovalStep">
             </codx-input>
           </div>
         </div>
@@ -95,16 +95,22 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex align-items-center pt-3">
-                  <codx-temp-full cardCss="card-template mb-4 w-100"
-                  [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
+                <div class="d-flex flex-column align-items-start pt-3 mb-2">
+                  <codx-temp-full cardCss="card-template  w-100"
+                  [imageId]="item?.userIDs ? null : item?.roleType =='U' ? item?.approver : item?.userID" 
                   [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver ? (item?.approver | vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
                   [subTitle]="item?.orgUnitName" [desc]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
                   [formModel]="formModel" [dataItem]="item" typeMF="hover"
-                  [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
+                  [imageSrc]="(item?.roleType !='U' && !item?.userID) || item?.userIDs ? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
                   [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
                   [hideMF]="true">
-                </codx-temp-full>
+                </codx-temp-full>                
+                <div class="pt-2 ps-45px" *ngIf="item?.userIDs">
+                  <codx-imgs [objectId]=" item?.userIDs"
+                  objectType="AD_Users"
+                  [numberImages]="3"
+                  [width]="30"></codx-imgs>
+                </div>
                 </div>
               </div>
               
@@ -172,8 +178,8 @@
             [showInput]="false">
           </codx-input>
         </div>
-        <div class=" pt-4 px-4 border rounded-2 mb-2" *ngIf="newAppr?.roleType">
-          <codx-temp-full cardCss="card-template mb-4 w-100"
+        <div class="pb-2 pt-4 px-4 border rounded-2 mb-2" *ngIf="newAppr?.roleType">
+          <codx-temp-full cardCss="card-template w-100"
             [imageId]="newAppr?.roleType =='U' ? newAppr?.approver : newAppr?.userID"
             [title]="newAppr?.name ? newAppr?.name : newAppr?.userName ? newAppr?.userName : newAppr?.approver ? (newAppr?.approver| vll : 'ES014' : 'text' | async) : (newAppr?.roleType | vll : 'ES014' : 'text' | async)"
             [subTitle]="newAppr?.orgUnitName"
@@ -183,7 +189,12 @@
             [imageSrc]="newAppr?.roleType !='U' && !newAppr?.userID? './assets/themes/sys/default/img/' + (newAppr?.icon ? newAppr?.icon : 'share_default.svg') : null"
             [imgCss]="newAppr?.roleType !='U' && !newAppr?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
-
+          <div class=" pt-2 ps-45px"  *ngIf="newAppr?.userIDs">
+            <codx-imgs [objectId]=" newAppr?.userIDs"
+            objectType="AD_Users"
+            [numberImages]="3"
+            [width]="30"></codx-imgs>
+          </div>
         </div>
         <div class="row">
           <div class="col-6">
@@ -268,9 +279,9 @@
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)">
       <div *ngFor="let item of lstApprover; let index = index" cdkDrag>
-        <div class="w-100">
+        <div class="w-100 mb-4">
 
-          <codx-temp-full cardCss="card-template mb-4 w-100"
+          <codx-temp-full cardCss="card-template  w-100"
             [imageId]="item?.roleType =='U' ? item?.approver : item?.userID"
             [title]="item?.userName ? item?.userName : item?.name ? item?.name : item?.approver ? (item?.approver| vll : 'ES014' : 'text' | async) : (item?.roleType | vll : 'ES014' : 'text' | async)"
             [subTitle]="item?.position" [imageObjType]="'AD_Users'" [imageWidth]="35" [titleLine]="3"
@@ -278,6 +289,12 @@
             [imageSrc]="item?.roleType !='U' && !item?.userID? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
             [imgCss]="item?.roleType !='U' && !item?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
           </codx-temp-full>
+          <div class=" pt-2 ps-45px" *ngIf="item?.userIDs">
+            <codx-imgs [objectId]=" item?.userIDs"
+            objectType="AD_Users"
+            [numberImages]="3"
+            [width]="30"></codx-imgs>
+          </div>
         </div>
       </div>
     </div>

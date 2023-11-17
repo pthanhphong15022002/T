@@ -87,7 +87,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   columnGrids: any;
   arrFieldIsVisible = [];
   itemSelected: any;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   titleAction = '';
   dataSource = [];
   isNewVersion = false;
@@ -117,9 +117,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.loadSetting();
   }
 

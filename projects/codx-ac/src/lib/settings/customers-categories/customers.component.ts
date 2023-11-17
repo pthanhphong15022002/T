@@ -36,10 +36,10 @@ export class CustomersComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   views: Array<ViewModel> = []; //? model view
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd',
     icon: 'icon-i-person-plus',
-  };
+  }];
   funcName = ''; //? tên truyền vào headertext
   headerText: any;
   optionSidebar: SidebarModel = new SidebarModel();
