@@ -1,5 +1,5 @@
 .wp-home {
-  max-width: 980px;
+  //max-width: 980px;
   margin: 0 auto;
 
   [data-kt-aside-minimize="on"] .aside:not(.aside-hoverable) .aside-menu .menu-title,
@@ -108,13 +108,14 @@
 }
 
 .dashboard-main {
-  width: 1286px;
-  margin: 0 auto;
+ // width: 1286px;
+  width: 100%;
+  margin: 0 15px;
 }
 
-.dashboard-content {
-  width: 996px;
-}
+// .dashboard-content {
+//   width: 996px;
+// }
 
 .home-left {
   width: 617px !important;
