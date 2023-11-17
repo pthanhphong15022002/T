@@ -498,7 +498,7 @@
                               [dataShared]="[]"
                               [multiple]="true"
                               [showInput]="false"
-                              (valueChange)="valueShareChange($event)"
+                              (valueChange)="valueShareAddChange($event)"
                             >
                             </codx-input>
                           </div>
@@ -597,8 +597,10 @@
       </button>
     </div>
     <div class="form-group w-50 d-flex justify-content-end" *ngIf="user.administrator || user.systemAdmin">
-
-      <button type="button" class="btn btn-primary" (click)="onSaveAdmin()">
+      <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+        <codx-label name="lblSave" default="Thêm mới"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup"(click)="onSaveAdmin()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
     </div>
