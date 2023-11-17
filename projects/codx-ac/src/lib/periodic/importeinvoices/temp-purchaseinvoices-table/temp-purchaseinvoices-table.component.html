@@ -1,92 +1,85 @@
 <div class="table-responsive table-ac">
-  <table style="table-layout: fixed;" class="table mb-0">
-    <thead class="border-gray-200 table-thead-ac">
-      <tr class="border-bottom">
-        <th class="w-40 border-bottom">
-          <div class="d-flex align-items-center justify-content-start ps-3">
-            <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
-            </codx-label>
-          </div>
-        </th>
-        <th class="w-15 border-bottom">
-          <div class="d-flex align-items-center justify-content-end ps-3">
-            <codx-label class="fw-bold" fiedName="umid" default="ĐVT">
-            </codx-label>
-          </div>
-        </th>
-        <th class="w-15 border-bottom">
-          <div class="d-flex align-items-center justify-content-end ps-3">
-            <codx-label class="fw-bold" fiedName="lblQuantity" default="Số lượng">
-            </codx-label>
-          </div>
-        </th>
-        <th class="w-15 border-bottom">
-          <div class="d-flex align-items-center justify-content-end ps-3">
-            <codx-label class="fw-bold" fiedName="lblUnitPrice" default="Đơn giá">
-            </codx-label>
-          </div>
-        </th>
-        <th class="w-15 border-bottom">
-          <div class="d-flex align-items-center justify-content-end ps-3">
-            <codx-label class="fw-bold" fiedName="lblPrice" default="Thành tiền">
-            </codx-label>
-          </div>
-        </th>
-        <th class="w-15 border-bottom">
-          <div class="d-flex align-items-center justify-content-end ps-3">
-            <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế GTGT">
-            </codx-label>
-          </div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let item of listPurchaseInvoicesLine;trackBy: trackByFn">
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important;">
-          <td class="text-center">
-            <div class="d-flex justify-content-start ps-3">
-              <div class="align-items-center w-100">
-                <div *ngIf="(item.itemName != null && item.itemName != '')"
-                  class="d-flex align-items-center justify-content-start">
-                  <ng-container>
-                    <span style="text-align: left !important;"
-                      class="fw-bold line-clamp line-clamp-1">{{item.itemName}}</span>
-                  </ng-container>
-                </div>
-                <div *ngIf="(item.idiM0 != null && item.idiM0 != '') ||
+    <table style="table-layout: fixed;" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom">
+            <div class="d-flex align-items-center justify-content-start ps-3">
+              <codx-label class="fw-bold" fiedName="lblItem" default="Mặt hàng">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="umid" default="ĐVT">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblQuantity" default="Số lượng">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblUnitPrice" default="Đơn giá">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblPrice" default="Thành tiền">
+              </codx-label>
+            </div>
+          </th>
+          <th class="w-15 border-bottom">
+            <div class="d-flex align-items-center justify-content-end ps-3">
+              <codx-label class="fw-bold" fiedName="lblVAT" default="Thuế GTGT">
+              </codx-label>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of listPurchaseInvoicesLine;trackBy: trackByFn">
+          <tr style="border-bottom: 1px solid var(--bs-border-color) !important;">
+            <td class="text-center">
+              <div class="d-flex justify-content-start ps-3">
+                <div class="align-items-center w-100">
+                  <div *ngIf="(item.itemName != null && item.itemName != '')" class="d-flex align-items-center justify-content-start">
+                    <ng-container>
+                      <span style="text-align: left !important;"
+                        class="fw-bold line-clamp line-clamp-1">{{item.itemName}}</span>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="(item.idiM0 != null && item.idiM0 != '') ||
                                       (item.idiM1 != null && item.idiM1 != '') || 
                                       (item.idiM2 != null && item.idiM2 != '') ||
                                       (item.idiM3 != null && item.idiM3 != '')" class="d-flex justify-content-start">
-                  <ng-container>
-                    <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
-                    </codx-label>
-                    :&nbsp;
-                    <div class="w-100" style="text-align: left;display: inline-block;">
-                      <div *ngIf="(item.idiM0 != null && item.idiM0 != '')"
-                        style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                        <span style="white-space: pre-wrap;word-wrap: break-word;"
-                          class="fs-7 text-gray-700 line-clamp line-clamp-2">
-                          {{item.idiM0Name}}
-                        </span>
-                      </div>
-                      <div *ngIf="(item.idiM1 != null && item.idiM1 != '')"
-                        style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                        <span style="white-space: pre-wrap;word-wrap: break-word;"
-                          class="fs-7 text-gray-700 line-clamp line-clamp-2">
-                          -&nbsp;&nbsp;{{item.idiM1Name}}
-                        </span>
-                      </div>
-                      <div *ngIf="(item.idiM2 != null && item.idiM2 != '')"
-                        style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
-                        <span style="white-space: pre-wrap;word-wrap: break-word;"
-                          class="fs-7 text-gray-700 line-clamp line-clamp-2">
-                          -&nbsp;&nbsp;{{item.idiM2Name}}
-                        </span>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
-                <!-- <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
+                    <ng-container>
+                      <codx-label style="white-space: nowrap" class="fs-7 fw-bold" default="Quy cách">
+                      </codx-label>
+                      :&nbsp;
+                      <div class="w-100" style="text-align: left;display: inline-block;">
+                        <div *ngIf="(item.idiM0 != null && item.idiM0 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                            {{item.idiM0Name}}
+                          </span>
+                        </div>
+                        <div *ngIf="(item.idiM1 != null && item.idiM1 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                            -&nbsp;&nbsp;{{item.idiM1Name}}
+                          </span>
+                        </div>
+                        <div *ngIf="(item.idiM2 != null && item.idiM2 != '')"  style="display: inline;text-overflow: ellipsis;white-space: nowrap;word-break: break-all;">
+                          <span style="white-space: pre-wrap;word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                            -&nbsp;&nbsp;{{item.idiM2Name}}
+                          </span>
+                        </div>
+                      </div>                                     
+                    </ng-container>
+                  </div>
+                  <!-- <div *ngIf="(item.idiM4 != null && item.idiM4 != '') ||
                                       (item.idiM5 != null && item.idiM5 != '') || 
                                       (item.idiM6 != null && item.idiM6 != '') ||
                                       (item.idiM7 != null && item.idiM7 != '') ||
@@ -131,93 +124,90 @@
                       </div>                    
                     </ng-container>
                   </div> -->
-                <div *ngIf="item?.lineType && item?.lineType != '1'" class="d-flex justify-content-start">
-                  <span class="badge ac-badge-light-primary">
-                    {{item?.lineType | vll : 'AC089' : 'text' | async}}
-                  </span>
+                  <div *ngIf="item?.lineType && item?.lineType != '1'" class="d-flex justify-content-start">
+                    <span class="badge ac-badge-light-primary">
+                      {{item?.lineType | vll : 'AC089' : 'text' | async}}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </td>
-          <td class="text-center">
-            <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
-            </div>
-          </td>
-          <td class="text-center">
-            <div class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.quantity
+            </td>
+            <td class="text-center">
+              <div *ngIf="item?.umid" class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.quantity
                       | tranformValueNumber : 'B' | async"></span>
-            </div>
-          </td>
-          <td class="text-center">
-            <div class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.purcPrice
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.purcPrice
                       | tranformValueNumber : 'B' | async"></span>
-            </div>
-          </td>
-          <td class="text-center">
-            <div class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.netAmt
+              </div>
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.netAmt
                       | tranformValueNumber : 'B' | async"></span>
-            </div>
-          </td>
-          <td class="text-center">
-            <div *ngIf="item?.vatPct" class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
-            </div>
-          </td>
-          <td class="text-center">
-            <div class="d-flex justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.vatAmt
+              </div>
+            </td>
+            <td class="text-center">
+                <div *ngIf="item?.vatPct" class="d-flex justify-content-end ps-3">
+                  <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
+                </div>
+              </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-end ps-3">
+                <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.vatAmt
                       | tranformValueNumber : 'B' | async"></span>
-            </div>
-          </td>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
-  <div *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length == 0" class="ac-empty">
-    <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
-      <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-        <div class="fs-6 text-dark mt-2 text-center">
-          {{ "SYS011" | mssg | async }}
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length == 0" class="ac-empty">
+      <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+          <div class="fs-6 text-dark mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<table style="table-layout: fixed;" class="table mb-0">
-  <tfoot class="table-footer-ac">
-    <td class="w-40">
-      <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
-        <codx-label *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0"
-          class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
-        </codx-label>
-      </div>
-    </td>
-    <td class="w-15"></td>
-    <td class="w-15">
-      <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-        <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0"
-          class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalQuantity
+  <table style="table-layout: fixed;" class="table mb-0">
+    <tfoot class="table-footer-ac">
+      <td class="w-40">
+        <div class="d-flex align-items-center justify-content-start ps-3 h-30px">
+          <codx-label  *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal" default="Tổng cộng">
+          </codx-label>
+        </div>
+      </td>
+      <td class="w-15"></td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalQuantity
                   | tranformValueNumber : 'B' | async"></span>
-      </div>
-    </td>
-    <td class="w-15"></td>
-    <td class="w-15">
-      <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
-        <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0"
-          class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
+        </div>
+      </td>
+      <td class="w-15"></td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+          <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalNetAmt
                   | tranformValueNumber : 'B' | async"></span>
-      </div>
-    </td>
-    <td class="w-15">
-      <!-- <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+        </div>
+      </td>
+      <td class="w-15">
+        <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
           <span *ngIf="listPurchaseInvoicesLine && listPurchaseInvoicesLine.length > 0" class="fw-bold line-clamp line-clamp-1"[innerHTML]="totalVatAtm
                   | tranformValueNumber : 'B' | async"></span>
-        </div> -->
-    </td>
-  </tfoot>
-</table>
+        </div>
+      </td>
+    </tfoot>
+  </table>
