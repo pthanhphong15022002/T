@@ -28,7 +28,7 @@ export class DimensionGroupsComponent extends UIComponent {
   //#region Contructor
   views: Array<ViewModel> = [];
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   headerText: any;
   dialog: DialogRef;
   funcName: any;

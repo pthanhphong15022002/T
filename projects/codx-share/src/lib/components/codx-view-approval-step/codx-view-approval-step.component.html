@@ -18,7 +18,7 @@
       </div>
       <div class="codx-approval-content ms-12 ps-1">
         <ng-container *ngFor="let approver of item?.approvers">
-          <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="d-flex justify-content-between align-items-start">
 
             <codx-temp-full
             [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
@@ -26,8 +26,10 @@
             [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"            
             [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
             [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            
             >
             </codx-temp-full>
+            
             
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
               <div class="d-flex align-items-center ms-6 flex-column">
@@ -37,7 +39,13 @@
                 <div class="text-dark fs-7"></div>
               </div>
             </div>
-          </div>
+          </div>                
+          <div class="ps-45px mb-2 pt-1" *ngIf="approver?.userIDs">
+            <codx-imgs [objectId]=" approver?.userIDs"
+            objectType="AD_Users"
+            [numberImages]="3"
+            [width]="30"></codx-imgs>
+          </div>    
           <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
             <div class="d-flex w-250px">
               <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
@@ -95,20 +103,7 @@
         <div class="step-number border-success">{{ item?.stepNo }}</div>
         <div class="step-title text-gray-700 fw-bold fs-6 me-2">
           {{ item?.stepName  ?? (item?.stepType | vll : "ES002" : "text" | async )}}
-          <!-- {{ item?.stepType | vll : "ES002" : "text" | async }} -->
-          <!-- {{ item?.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
         </div>
-        <!-- <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
-          <div class="step-title text-gray-700 fw-bold fs-6 me-2"> | </div>
-          <div *ngIf="eSign" class="step-title text-gray-700 fw-bold fs-6 me-2" [innerHTML]="
-              item?.signatureType | vll : 'ES001' : 'text' | async
-            "></div>
-        </ng-container>
-
-        <div class="text-gray-400 fs-6 me-2"> - </div>
-        <div class="text-gray-400 fs-6 me-2">
-          {{ item?.stepName ?? item?.stepNote }}
-        </div> -->
       </div>
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item?.approvers">
@@ -127,6 +122,7 @@
                 positionDefault
               ">
             </codx-temp-full>
+            
             <div class="d-flex justify-content-between">
               <div class="text-dark fs-7 me-4 mt-1" *ngIf="approver?.status == '3'">
                 {{ approver?.activedOn | amTimeAgo }}
@@ -155,6 +151,7 @@
               </div>
             </div>
           </div>
+          
           <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
             <div class="d-flex w-250px">
               <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
@@ -226,20 +223,7 @@
             <div class="step-number border-success">{{ item?.stepNo }}</div>
             <div class="step-title text-gray-700 fw-bold fs-6 me-2">
               {{ item?.stepName  ?? (item?.stepType | vll : "ES002" : "text" | async )}}
-              <!-- {{ item?.stepType | vll : "ES002" : "text" | async }} -->
-              <!-- {{ item?.stepType | formatvalue : eDiseasesFormModel : "Conclusion" | async }} -->
-            </div>
-            <!-- <ng-container *ngIf="item?.signatureType && fmApprovalTrans">
-              <div class="step-title text-gray-700 fw-bold fs-6 me-2"> | </div>
-              <div *ngIf="eSign" class="step-title text-gray-700 fw-bold fs-6 me-2" [innerHTML]="
-                item?.signatureType| vll : 'ES001' : 'text' | async
-              "></div>
-            </ng-container>
-
-            <div class="text-gray-400 fs-6 me-2"> - </div>
-            <div class="text-gray-400 fs-6 me-2">
-              {{ item?.stepName ?? item?.stepNote }}
-            </div> -->
+            </div>            
           </div>
           <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item?.approvers">
@@ -257,16 +241,13 @@
                   positionDefault
                 ">
                 </codx-temp-full>
+                
                 <div class="d-flex justify-content-between">
                   <div class="text-dark fs-7 me-4 mt-1" *ngIf="approver?.status == '3'">
                     {{ approver?.activedOn | amTimeAgo }}
                   </div>
                   <div class="d-flex flex-wrap">
                     <div class="d-flex mt-1" *ngIf="approver?.status == '5'">
-                      <!-- <codx-label
-                      fiedName="ApprovedOn"
-                      [formModel]="fmApprovalTrans"
-                    ></codx-label> -->
                       <div class="d-flex text-dark fs-7 me-4">
                         {{ approver?.approvedOn | fmDT }}
                       </div>

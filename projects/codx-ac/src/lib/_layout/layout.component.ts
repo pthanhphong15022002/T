@@ -38,6 +38,7 @@ export class LayoutComponent extends LayoutBaseComponent {
     super(inject);
     this.module = 'AC';
     this.layoutModel.toolbarDisplay = true;
+    this.layoutModel.toolbarFixed = false;
     this.round.initCache();
   }
 
@@ -55,7 +56,5 @@ export class LayoutComponent extends LayoutBaseComponent {
     // })
   }
 
-  ngDoCheck() {
-    //this.detectorRef.detectChanges();
-  }
+  
 }

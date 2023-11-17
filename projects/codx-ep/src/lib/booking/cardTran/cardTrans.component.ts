@@ -32,7 +32,7 @@ export class CardTransComponent
   views: any;
   popupDialog: any;
   dialog: DialogRef;
-  button: ButtonModel;
+  button: ButtonModel[];
   fGroupResourceTran: FormGroup;
   id: any;
   popupTitle: any;
@@ -58,9 +58,9 @@ export class CardTransComponent
     });
   }
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    }
+    }]
     
   }
   

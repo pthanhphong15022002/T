@@ -42,7 +42,7 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   user: any;
   userName = '';
   isOpen = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog: DialogRef;
   headerText = '';
   moreFuncs = [
@@ -91,9 +91,9 @@ export class BehaviorRuleComponent extends UIComponent implements OnInit {
   }
   columnsGrid = [];
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.changedr.detectChanges();
   }
 

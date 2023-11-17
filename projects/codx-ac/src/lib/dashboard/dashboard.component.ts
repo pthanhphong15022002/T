@@ -15,9 +15,9 @@ import {
 export class DashboardComponent extends UIComponent {
   @ViewChild('template') template?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
 
   user: any;
   chartData = [

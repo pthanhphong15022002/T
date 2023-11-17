@@ -930,6 +930,7 @@ export class PdfComponent
       createdBy: authorID,
       modifiedBy: authorID,
       recID: recID,
+      objectID: this.signerInfo.userID,
     };
     if (this.needAddKonva) {
       if (this.imgConfig.includes(tmpArea.labelType)) {
@@ -2038,6 +2039,7 @@ export class PdfComponent
       createdBy: tmpName.Signer,
       modifiedBy: tmpName.Signer,
       recID: this.curSelectedArea.attrs.id,
+      objectID:this.signerInfo?.userID
     };
 
     this.esService
@@ -2580,6 +2582,7 @@ export class PdfComponent
             createdBy: person.authorID,
             modifiedBy: person.authorID,
             recID: recID,
+            objectID:this.signerInfo?.userID
           };
 
           layer?.add(textArea);
@@ -2699,6 +2702,7 @@ export class PdfComponent
               createdBy: person.authorID,
               modifiedBy: person.authorID,
               recID: recID,
+              objectID:this.signerInfo?.userID
             };
 
             layer?.add(imgArea);

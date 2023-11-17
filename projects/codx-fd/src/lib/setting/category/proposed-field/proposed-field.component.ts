@@ -54,7 +54,7 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   industryIdUpdate = '';
   checkAddEdit = true;
   isAddMode = true;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog: DialogRef;
   headerText = '';
 
@@ -87,9 +87,9 @@ export class ProposedFieldComponent extends UIComponent implements OnInit {
   columnsGrid = [];
   @ViewChild(ImageViewerComponent) imageViewer: ImageViewerComponent;
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.changedr.detectChanges();
   }
 

@@ -28,7 +28,7 @@ export class UnitsofmearsureComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;

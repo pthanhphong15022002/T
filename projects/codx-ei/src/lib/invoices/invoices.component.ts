@@ -18,7 +18,7 @@ export class InvoicesComponent extends UIComponent {
   views: Array<ViewModel> = [];
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   funcName = '';
   moreFuncName = '';
 

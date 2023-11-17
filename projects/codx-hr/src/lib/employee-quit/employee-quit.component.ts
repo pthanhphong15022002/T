@@ -40,9 +40,9 @@ export class EmployeeQuitComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   grvSetup;
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   cmtStatus: string = '';
   formGroup: FormGroup;
   itemDetail;

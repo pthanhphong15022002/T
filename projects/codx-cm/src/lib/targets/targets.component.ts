@@ -114,7 +114,7 @@ export class TargetsComponent
   dataObj: any;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   scheduleHeader?: ResourceModel;
   schedules?: ResourceModel;
   //#region tree request
@@ -203,9 +203,9 @@ export class TargetsComponent
     // this.viewDashboard = true;
     if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
 
     this.year = new Date().getFullYear();
 

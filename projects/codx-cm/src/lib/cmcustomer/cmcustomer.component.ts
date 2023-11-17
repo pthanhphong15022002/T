@@ -76,7 +76,7 @@ export class CmCustomerComponent
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   // showButtonAdd = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dataSelected: any;
   //region Method
   service = 'CM';
@@ -172,9 +172,9 @@ export class CmCustomerComponent
   }
 
   async onInit() {
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
     this.showButtonAdd = true;
     this.checkAdmin();
     var param = await firstValueFrom(

@@ -36,7 +36,7 @@ export class UserGroupsComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
 
   user: any;
@@ -57,9 +57,9 @@ export class UserGroupsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

@@ -41,9 +41,9 @@ export class EmployeeAppointionsComponent extends UIComponent {
   //#endregion
 
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   currentEmpObj: any = null;
   grvSetup: any;
 

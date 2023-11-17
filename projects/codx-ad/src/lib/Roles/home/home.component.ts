@@ -42,7 +42,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   isLoad = true;
   index = 0;
   views = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog: DialogRef;
   urlDetailRoles: any;
   headerText = '';
@@ -67,9 +67,9 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngOnDestroy(): void {}

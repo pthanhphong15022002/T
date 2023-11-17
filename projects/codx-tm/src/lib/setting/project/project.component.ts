@@ -31,7 +31,7 @@ export class ProjectComponent extends UIComponent {
   }
   itemSelected: any;
   columnsGrid = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   //#region  init
   onInit(): void {
@@ -54,9 +54,9 @@ export class ProjectComponent extends UIComponent {
       // BaoLV 1.TM - Danh mục dự án - Chức năng cập nhật thông tin dự án
       , { field: '', headerText: '#', width: 30 }
     ];
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.moreFuncs = [
       {

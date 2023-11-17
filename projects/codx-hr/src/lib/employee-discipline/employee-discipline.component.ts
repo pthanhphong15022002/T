@@ -41,9 +41,9 @@ export class EmployeeDisciplineComponent extends UIComponent {
   eDisciplineHeaderText;
   method = 'LoadDataEDisciplineWithEmployeeInfoAsync';
   itemDetail;
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   formGroup: FormGroup;
   cmtStatus: string = '';
   currentEmpObj: any = null;

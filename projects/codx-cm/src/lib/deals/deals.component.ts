@@ -119,7 +119,7 @@ export class DealsComponent
 
   columnGrids = [];
   // showButtonAdd = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dataSelected: any;
   //region Method
   //endregion
@@ -218,9 +218,9 @@ export class DealsComponent
 
   async onInit(): Promise<void> {
     this.afterLoad();
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
   }
 
   ngAfterViewInit(): void {}

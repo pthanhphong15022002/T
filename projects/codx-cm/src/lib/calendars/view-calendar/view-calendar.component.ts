@@ -91,9 +91,9 @@ export class ViewCalendarComponent
   viewCrr: any;
 
   titleAction: string;
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
 
   taskType;
   popupTypeCM: DialogRef;

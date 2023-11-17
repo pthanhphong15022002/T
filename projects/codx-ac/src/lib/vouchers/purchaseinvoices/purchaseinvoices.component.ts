@@ -54,11 +54,11 @@ export class PurchaseinvoicesComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-  };
+  }];
 
   moreFuncs: Array<ButtonModel> = [
     {
