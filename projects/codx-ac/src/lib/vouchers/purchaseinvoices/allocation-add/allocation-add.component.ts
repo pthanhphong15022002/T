@@ -12,6 +12,7 @@ import { CodxAcService } from '../../../codx-ac.service';
 export class AllocationAddComponent extends UIComponent { 
   //#region Constructor
   dialog!: DialogRef;
+  isStep:any = false;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -51,4 +52,20 @@ export class AllocationAddComponent extends UIComponent {
     this.onDestroy();
   }
   //#endregion Event
+
+  //#region Function
+  onNextStep(){
+    this.isStep = true;
+    this.detectorRef.detectChanges();
+  }
+
+  onBack(){
+    this.isStep = false;
+    this.detectorRef.detectChanges();
+  }
+
+  onAccept(){
+
+  }
+  //#endregion Function
 }
