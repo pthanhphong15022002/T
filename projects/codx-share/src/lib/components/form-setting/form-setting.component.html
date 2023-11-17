@@ -17,7 +17,6 @@
                 id="formSetting"
                 [cssClass]="''"
                 [fields]="field"
-                sortOder="Ascending"
                 [allowDragAndDrop]="true"
                 (nodeSelected)="onSelected($event)"
                 (created)="onCreate(treeELe)"
@@ -43,6 +42,8 @@
                           style="width: 90%"
                           class="d-flex align-items-center justify-content-start"
                         >
+                          <span class="me-2" [ngClass]="data.largeIcon" [ngStyle]="{'color': data.color ? data.color : '#000'}" *ngIf="data.largeIcon"></span>
+                          <img class="w-20px h-20px me-2" [src]="data.smallIcon" *ngIf="data.smallIcon && !data.largeIcon">
                           <span class="text-dark fs-6 text-hover-primary">{{
                             data.customName
                           }}</span>
@@ -53,7 +54,7 @@
                           *ngIf="data.functionType == 'G'"
                           [title]="'Thêm chức năng'"
                         >
-                          <button
+                          <!-- <button
                             class="btn btn-sm btn-linght ms-5 float-end"
                             (click)="
                               $event.preventDefault(); onAddFunc(data.recID)
@@ -63,7 +64,18 @@
                               class="icon-add_circle_outline text-primary"
                               style="font-size: 21px !important"
                             ></i>
-                          </button>
+                          </button> -->
+                          <button
+                          class="btn btn-sm btn-linght  me-3 float-end"
+                          (click)="
+                            $event.preventDefault(); onDeleteFunc(data.recID)
+                          "
+                        >
+                          <i
+                            class="icon-delete text-danger"
+                            style="font-size: 21px !important"
+                          ></i>
+                        </button>
                         </div>
                         <div
                         style="width: 10%"
@@ -91,7 +103,7 @@
                     <div *ngIf="data.isButton">
                       <div class="d-flex align-items-center">
 
-                          <div class="mx-2 w-100 text-primary fs-5 d-flex align-items-center" (click)="onAddNewFunc(data.parentID)">
+                          <div class="mx-2 w-100 text-primary fs-6 d-flex align-items-center" (click)="onAddNewFunc(data.parentID,data)">
                              <i class="icon-add_circle_outline me-3"></i> <span>{{data.customName}}</span>
                           </div>
                            <!-- <div  class="ms-3">
@@ -498,7 +510,7 @@
                               [dataShared]="[]"
                               [multiple]="true"
                               [showInput]="false"
-                              (valueChange)="valueShareChange($event)"
+                              (valueChange)="valueShareAddChange($event)"
                             >
                             </codx-input>
                           </div>
@@ -586,8 +598,11 @@
       </button>
     </div>
     <div class="form-group w-50 d-flex justify-content-end" *ngIf="!user.administrator && !user.systemAdmin">
-      <button type="button" class="btn btn-danger me-3" (click)="onRestore()">
-        <codx-label name="lblRestore" default="khôi phục cài đặt"></codx-label>
+      <button type="button" class="btn btn-danger me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup">
+        <codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
+      </button>
+      <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
+        <codx-label name="lblCancel" default="Hủy"></codx-label>
       </button>
       <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup" (click)="onSaveForm()">
         <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
@@ -597,8 +612,13 @@
       </button>
     </div>
     <div class="form-group w-50 d-flex justify-content-end" *ngIf="user.administrator || user.systemAdmin">
-
-      <button type="button" class="btn btn-primary" (click)="onSaveAdmin()">
+      <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
+        <codx-label name="lblCancel" default="Hủy"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+        <codx-label name="lblSave" default="Thêm mới"></codx-label>
+      </button>
+      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup"(click)="onSaveAdmin()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
     </div>
