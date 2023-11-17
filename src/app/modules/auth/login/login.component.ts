@@ -443,7 +443,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               console.log('close popup ', lg2FAEvt);
               if (lg2FAEvt.event.data.error) return;
               this.authService.setLogin(data.data);
-
               this.loginService.loginAfter(lg2FAEvt.event.data);
             });
           } else {

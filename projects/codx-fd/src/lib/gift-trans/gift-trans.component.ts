@@ -14,7 +14,7 @@ import { Observable, of } from 'rxjs';
 })
 export class GiftTransComponent extends UIComponent {
     views: Array<ViewModel>;
-    buttonAdd: ButtonModel;
+    buttonAdd: ButtonModel[];
     service: string = "FD";
     assemblyName: string = "ERM.Business.FD";
     className: string = "GiftTransBusiness"
@@ -48,9 +48,9 @@ export class GiftTransComponent extends UIComponent {
     }
 
     ngAfterViewInit(): void {
-        this.buttonAdd = {
+        this.buttonAdd = [{
             id: 'btnAdd',
-        };
+        }];
         this.views = [{
             type: ViewType.listdetail,
             active: true,

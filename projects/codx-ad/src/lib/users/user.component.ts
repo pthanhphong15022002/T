@@ -48,7 +48,7 @@ export class UserComponent extends UIComponent {
   @ViewChild('please_use') please_use: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   user: any;
   constructor(
     private inject: Injector,
@@ -68,9 +68,9 @@ export class UserComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

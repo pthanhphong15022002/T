@@ -28,7 +28,7 @@ import { PopupAddCardsComponent } from '../cards/popup-add-cards/popup-add-cards
 })
 export class ApprovalsComponent extends UIComponent {
   user = null;
-  buttonAdd: ButtonModel;
+  buttonAdd: ButtonModel[];
   views: Array<ViewModel> = [];
   itemSelected: any = null;
   cardType = '';
@@ -81,9 +81,9 @@ export class ApprovalsComponent extends UIComponent {
   }
 
   ngAfterViewInit() {
-    this.buttonAdd = {
+    this.buttonAdd = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.views = [
       {

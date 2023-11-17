@@ -33,7 +33,7 @@ export class AprpermissionComponent
   implements OnInit, AfterViewInit
 {
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   columnsGrid = [];

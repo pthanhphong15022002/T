@@ -15,7 +15,7 @@ export class CalculatingCostOfProductComponent extends UIComponent{
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   dialog!: DialogRef;
   entityName: any;
   mfFormName: any = 'CalculatingCostOfProduct';

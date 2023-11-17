@@ -31,10 +31,10 @@
                   <div>
                     <div class="d-flex align-items-center hover-ne">
                       <div
-                        class="mx-2 w-100"
+                        class="mx-2 w-100 d-flex align-items-center"
                         [ngClass]="
                           data.functionType == 'G'
-                            ? 'border-top fw-bold d-flex align-items-center'
+                            ? 'border-top fw-bold  align-items-center'
                             : ''
                         "
                       >
@@ -64,6 +64,24 @@
                             ></i>
                           </button>
                         </div>
+                        <div
+                        style="width: 10%"
+                        class="d-flex align-items-center justify-content-end"
+                        *ngIf="data.functionType == 'F'"
+                        [title]="'Xóa chức năng'"
+                      >
+                        <button
+                          class="btn btn-sm btn-linght ms-3 me-3 float-end"
+                          (click)="
+                            $event.preventDefault(); onDeleteFunc(data.recID)
+                          "
+                        >
+                          <i
+                            class="icon-delete text-danger"
+                            style="font-size: 21px !important"
+                          ></i>
+                        </button>
+                      </div>
                       </div>
                       <!-- <div  class="ms-3">
                               <span class="treeCount e-badge e-badge-primary"  *ngIf="data.functionType">{{ data.functionType }}</span>

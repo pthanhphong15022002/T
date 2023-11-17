@@ -112,6 +112,7 @@ import { WarehouseTransfersAddComponent } from './vouchers/warehouse-transfers/w
 import { WarehouseTransfersDetailComponent } from './vouchers/warehouse-transfers/warehouse-transfers-detail/warehouse-transfers-detail.component';
 import { TransfersTableComponent } from './share/ac-tableview/transfers-table/transfers-table.component';
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
+import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 export const routes: Routes = [
   {
     path: '',
@@ -186,12 +187,6 @@ export const routes: Routes = [
       //   data: { noReuse: true },
       // },
       {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
-
-      {
         path: 'receipttransaction/:funcID',
         component: ReceiptTransactionsComponent,
         data: { noReuse: true },
@@ -264,6 +259,19 @@ export const routes: Routes = [
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
     ],
   },
+
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+    ],
+  },
   // {
   //   path: '',
   //   component: LayloutJournalComponent,
@@ -325,6 +333,7 @@ export const routes: Routes = [
   declarations: [
     CodxAcComponent,
     LayoutComponent,
+    LayoutNoToolbarComponent,
     CashPaymentsComponent,
     CashPaymentAddComponent,
     CashtransfersComponent,

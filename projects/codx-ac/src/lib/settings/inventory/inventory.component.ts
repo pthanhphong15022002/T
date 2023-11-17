@@ -29,7 +29,7 @@ export class InventoryComponent extends UIComponent {
   //#region Contructor
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   headerText: any;
   dialog: DialogRef;
   funcName: any;

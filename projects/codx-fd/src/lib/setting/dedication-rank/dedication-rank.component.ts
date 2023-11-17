@@ -48,7 +48,7 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
   userPermission: any;
   showHeader: boolean = true;
   user: any;
-  button: ButtonModel;
+  button: ButtonModel[];
   headerText: any;
   dialog: DialogRef;
 
@@ -99,9 +99,9 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit() {}

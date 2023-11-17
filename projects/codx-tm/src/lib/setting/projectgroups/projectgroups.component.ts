@@ -37,7 +37,7 @@ export class ProjectgroupsComponent implements OnInit {
 
   columnsGrid = [];
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   itemSelected: any;
   dialog!: DialogRef;
@@ -60,9 +60,9 @@ export class ProjectgroupsComponent implements OnInit {
       // BaoLV 1.TM - Danh mục nhónm dự án
       { field: '', headerText: '#', width: 30 },
     ];
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.moreFuncs = [
       {

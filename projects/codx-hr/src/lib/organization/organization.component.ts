@@ -39,7 +39,7 @@ export class OrgorganizationComponent extends UIComponent {
   requestTitle: any = null;
   viewActive: string = '';
   count: any;
-  buttonAdd: ButtonModel;
+  buttonAdd: ButtonModel[];
   formModelEmployee;
   activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
@@ -77,9 +77,9 @@ export class OrgorganizationComponent extends UIComponent {
         this.buttonAdd = null;
         this.activeMFC = false;
       } else {
-        this.buttonAdd = {
+        this.buttonAdd = [{
           id: 'btnAdd',
-        };
+        }];
         this.activeMFC = true;
       }
       this.detectorRef.detectChanges();

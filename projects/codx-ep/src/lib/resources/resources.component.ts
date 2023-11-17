@@ -71,9 +71,9 @@ export class ResourcesComponent extends UIComponent {
   viewType = ViewType;
   columnGrids: any;
   dialog!: DialogRef;
-  buttons = {
+  buttons: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   //---------------------------------------------------------//
   vllDevices = [];
   resourceEquipments = [];

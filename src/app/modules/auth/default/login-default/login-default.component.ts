@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 import { Modal } from 'bootstrap';
 import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
+import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'codx-login',
@@ -346,6 +347,11 @@ export class LoginDefaultComponent extends UIComponent {
     //       .login('mannhi1601@gmail.com', qrInfo.session as string, 'qr')
     //       .subscribe((res) => {});
     //   });
+  }
+  select(e: SelectEventArgs) {
+    if (e.isSwiped) {
+      e.cancel = true;
+    }
   }
 
   selectedTab(evt) {

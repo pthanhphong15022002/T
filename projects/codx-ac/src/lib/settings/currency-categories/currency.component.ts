@@ -37,10 +37,10 @@ export class CurrencyComponent extends UIComponent {
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   funcName: any;
   views: Array<ViewModel> = [];
-  button?: ButtonModel = {
+  button?: ButtonModel[] = [{
     id: 'btnAdd',
     icon: 'icon-add_circle_outline'
-  };;
+  }];
   headerText:any;
   optionSidebar: SidebarModel = new SidebarModel();
   dataDefault:any;

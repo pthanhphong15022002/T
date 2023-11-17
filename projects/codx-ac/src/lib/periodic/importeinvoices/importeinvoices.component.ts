@@ -24,7 +24,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class ImportEInvoicesComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
@@ -36,14 +36,6 @@ export class ImportEInvoicesComponent extends UIComponent {
   headerText: any;
   runmode: any;
   selectedFirst = true;
-
-  moreFuncs: Array<ButtonModel> = [
-    {
-      id: 'btnImportXml',
-      icon: '',
-      text: 'Đọc file xml',
-    },
-  ];
   constructor(inject: Injector) {
     super(inject);
     this.cache
@@ -80,22 +72,21 @@ export class ImportEInvoicesComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateGrid,
-
         },
 
-        request:{service:'AC'},
-        subModel:{
-          entityName:'AC_PurchaseInvoicesLines',
-          formName:'PurchaseInvoicesLines',
-          gridviewName:'grvPurchaseInvoicesLines',
-          parentField:'TransID',
-          parentNameField:'InvoiceNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'AC' },
+        subModel: {
+          entityName: 'AC_PurchaseInvoicesLines',
+          formName: 'PurchaseInvoicesLines',
+          gridviewName: 'grvPurchaseInvoicesLines',
+          parentField: 'TransID',
+          parentNameField: 'InvoiceNo',
+          hideMoreFunc: true,
+          request: {
             service: 'AC',
           },
-          idField:'recID'
-        }
+          idField: 'recID',
+        },
       },
     ];
     this.cache
@@ -114,9 +105,6 @@ export class ImportEInvoicesComponent extends UIComponent {
   toolBarClick(e) {
     switch (e.id) {
       case 'btnAdd':
-        //this.add(e);
-        break;
-      case 'btnImportXml':
         this.xml.nativeElement.click();
         break;
     }

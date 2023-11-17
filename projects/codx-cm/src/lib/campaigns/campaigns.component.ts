@@ -58,7 +58,7 @@ export class CampaignsComponent
   moreFuncs: Array<ButtonModel> = [];
   showButtonAdd = false;
   // showButtonAdd = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   views: Array<ViewModel> = [];
   isButton = true;
   titleAction: any;
@@ -88,9 +88,9 @@ export class CampaignsComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
     this.showButtonAdd = true;
 
     this.cmSv.countLeadsBehavior.subscribe((res) => {

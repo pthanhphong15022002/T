@@ -48,7 +48,7 @@ export class DynamicFormComponent extends UIComponent {
   columnsGrid = [];
   data = [];
   dialog: DialogRef;
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   formGroup: FormGroup;
   idField: string = 'recID';
   dataSelected: any;
@@ -80,9 +80,9 @@ export class DynamicFormComponent extends UIComponent {
       //   if (state.urlOld) this.layout.setUrl(state.urlOld);
       // }
     });
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

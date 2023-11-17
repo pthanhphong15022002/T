@@ -39,7 +39,7 @@ export class RangesKanbanComponent extends UIComponent {
 
   dialog!: DialogRef;
   columnsGrid = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   views: Array<ViewModel> = [];
   itemSelected: any;
@@ -58,9 +58,9 @@ export class RangesKanbanComponent extends UIComponent {
       }
     });
 
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
   onLoading(e) {
     let formModel = this.view.formModel;

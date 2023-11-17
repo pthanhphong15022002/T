@@ -108,13 +108,13 @@ export class CodxTasksComponent
   @Output() resourceNew = new EventEmitter<any>();
   //
 
-  button?: ButtonModel = {
+  button?: ButtonModel[] = [{
     id: 'btnAdd',
     // items: [{
     //   id: 'avc',
     //   text: 'xxyz'
     // }]
-  };
+  }];
 
   model?: DataRequest;
   request: ResourceModel;

@@ -53,7 +53,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   views: Array<ViewModel> = [];
   moreFunc: Array<ButtonModel> = [];
 
-  button: ButtonModel;
+  button: ButtonModel[];
   funcID: string;
   service = 'ES';
   assemblyName = 'ES';
@@ -97,9 +97,9 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
     if (this.funcID != 'ODS24') {
-      this.button = {
+      this.button = [{
         id: 'btnAdd',
-      };
+      }];
     }
 
     this.moreFunc = [
@@ -271,7 +271,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         if (!res?.event) this.viewBase.dataService.clear();
         else {
           res.event.modifiedOn = new Date();
-          this.viewBase.dataService.update(res.event).subscribe();
+          this.viewBase.dataService.update(res.event,true).subscribe();
         }
       });
     });
@@ -337,8 +337,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
             if (res?.event == null) {
               this.viewBase.dataService.dataSelected = evt.data;
               this.viewBase.dataService.clear();
-            } else {
-              this.viewBase.dataService.update(res.event).subscribe();
+            } else {              
+              res.event.modifiedOn = new Date();
+              this.viewBase.dataService.update(res.event,true).subscribe();
+              //this.viewBase?.currentView?.refesh();
             }
           });
         });
