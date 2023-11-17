@@ -6,7 +6,7 @@
       <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
         <div class="d-flex align-items-center me-2">
           <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
-            <i class="icon-i-check2-square icon-16"></i>
+            <i class="icon-clear_all icon-16"></i>
           </div>
           <!-- <div style="background-color: var(--primary-dark);"class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
             <i style="color: white;" class="icon-i-check2-square icon-16"></i>
@@ -27,42 +27,40 @@
   </ng-template>
 
   <ng-template #body>
-    <div class="tabs tabs-login">
-      <ejs-tab class="h-100 w-100" overflowMode="Popup" heightAdjustMode="Auto">
-        <e-tabitems>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="nav-item w-100">
-                <div class="d-flex flex-column w-100 text-center">
-                  <div [class]="'icon-20 icon-i-key mb-2'"></div>
-                  <span class="text-gray-700 fw-bold">
-                    <codx-label default="Đăng nhập"></codx-label>
-                  </span>
+    <div class="card-body p-0 codx-card-custom">
+      <div class="codx-stepper stepper stepper-pills">
+        <div class="d-flex align-items-center">
+          <div class="stepper-nav flex-center flex-wrap">
+            <div class="stepper-item approve">
+              <div class="stepper-wrapper d-flex align-items-center flex-column">
+                <div class="stepper-icon h-30px">
+                  <i class="icon-18 text-primary icon-radio_button_checked"></i>
+                </div>
+                <div class="stepper-label text-primary fw-bold">
+                  <codx-label name="lblGeneral"  default="Chọn hóa đơn nhận chi phí"></codx-label>
                 </div>
               </div>
-            </ng-template>
-            <ng-template #content>
-              <!-- <ng-container *ngTemplateOutlet="loginPW"></ng-container> -->
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="nav-item w-100">
-                <div class="d-flex flex-column w-100 text-center">
-                  <div [class]="'icon-20 mb-2 icon-email'"></div>
-                  <span class="text-gray-700 fw-bold">
-                    <codx-label default="OTP"></codx-label>
-                  </span>
-                </div>
+            </div>
+            <div class="stepper-item approve-disabled">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
+                <i class="icon-18 icon-radio_button_checked"></i>
               </div>
-            </ng-template>
-            <ng-template #content>
-              
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
+              <div
+                class="stepper-label">
+                <codx-label
+                  name="lblStage"
+                  [formModel]="dialog.formModel"
+                  default="Thiết lập giai đoạn"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
     </div>
+    
   </ng-template>
 
   <ng-template #footer>

@@ -918,4 +918,8 @@ ejs-tab#calendarTab .e-calendar {
 .data-text-color {
     color: var(--gray-400);
 }
+
+.codx-theme .list-item a:hover .icon-edit-one, .codx-theme .setting-btnright a:hover span {
+    color: var(--primary-dark);
+}
 //end dark

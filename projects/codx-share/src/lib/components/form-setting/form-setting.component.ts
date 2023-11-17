@@ -17,7 +17,7 @@ export class FormSettingComponent extends UIComponent {
   isAfterRender = false;
   returnData: any;
   data: any=[];
-  headerText = '';
+  headerText = 'Danh sách chức năng';
   fGroup: any;
   grView: any;
   disableEdit=false;
@@ -36,6 +36,7 @@ initData(){
   this.isLoaded = false;
   this.selectedData=undefined;
   this.addData= undefined;
+  let arrButtons:any=[];
   this.api.execSv('SYS','SYS','FormSettingsBusiness','GetFormSettingAsync','Comments').subscribe((res:any)=>{
     this.data = res;
     let lstRecID:any=[];
@@ -46,6 +47,12 @@ initData(){
         x.smallIcon = environment.urlUpload+'/'+x.smallIcon;
       }
       if(x.functionType == 'G'){
+        let objButton:any={};
+        objButton.recID = Util.uid();
+        objButton.parentID = x.recID;
+        objButton.customName = "Thêm chức năng";
+        objButton.isButton = true;
+        arrButtons.push(objButton);
         x.hasChild = true;
        }
       return x;
@@ -117,7 +124,13 @@ initData(){
     setTimeout(()=>{
       let item = this.data.find((x:any)=>x[this.field.id]==e.nodeData.id);
       if(item){
-
+        if(item.isAddNew){
+          this.isEditGroup = false;
+          this.isAddFunc = true;
+          this.isAddGroup = false;
+          this.isEditFunc=false;
+          return;
+        }
         if(!this.user.administrator && !this.user.systemAdmin){
           this.selectedData = this.datasource.find(x=>x.oldID==item.recID);
           if(this.selectedData){
@@ -231,6 +244,7 @@ initData(){
     }
 
   }
+
   nodeDragStop(e:any){
     let dragItem = e.draggedNodeData;
     let targetNode = e.droppedNodeData;
@@ -324,6 +338,7 @@ initData(){
     this.editedFunc[this.selectedData.recID] = this.selectedData;
     this.changeDetect.detectChanges();
   }
+
   valueCbbAddChange(e:any){
     if(e.data.dataSelected[0]){
       let item = e.data.dataSelected[0].dataSelected;
@@ -353,7 +368,7 @@ initData(){
       this.addData.userID = this.user.userID;
       this.addData.recID = Util.uid();
       this.addData.oldID = Util.uid();
-      this.addData.sorting = '00'+this.datasource.length
+      this.addData.sorting = this.datasource.length
       let parent = this.datasource.find((x:any)=>x[idField]==parentID);
       if(parent){
         this.addData.parentID = parent.recID;
@@ -361,6 +376,32 @@ initData(){
     },200)
   }
 
+  onAddNewFunc(parentID){
+    if(this.tree){
+      this.addData = {
+        userID: this.user.userID,
+        recID: Util.uid(),
+        parentID: parentID,
+        category: 'F',
+        formName:'Comments',
+        settingType:'1',
+        sorting: this.datasource.length,
+        name:'Chức năng mới'
+      }
+      let item: { [key: string]: Object } = { recID: this.addData.recID, customName: "Chức năng mới",parentID:parentID, functionType:'F',isAddNew:true };
+      this.tree?.addNodes([item], parentID, null as any);
+      this.data.push(item);
+      //this.tree.refresh()
+      this.tree.selectedNodes= [this.addData.recID];
+      this.tree?.beginEdit(this.addData.recID);
+      this.isEditFunc = false;
+      this.isAddGroup = false;
+      this.isEditGroup = false;
+      this.isAddFunc = true;
+
+
+    }
+  }
   isEditGroup:boolean=false;
   isEditFunc:boolean=false;
   isAddGroup:boolean=false;
@@ -377,7 +418,7 @@ initData(){
     this.addData.formName='Comments';
     this.addData.settingType='1';
     this.addData.userID = this.user.userID;
-    this.addData.sorting = '00'+this.datasource.length
+    this.addData.sorting = this.datasource.length
   }
   imgChanged(e:any){
     if(this.selectedData && e.length){
@@ -404,7 +445,7 @@ initData(){
         if(id){
           let item = this.datasource.find((x:any)=> x[idField] == id);
           if(item){
-            item.sorting = '00'+i;
+            item.sorting = i+1;
             newDatasource.push(item);
           }
         }
@@ -460,7 +501,7 @@ initData(){
         if(id){
           let item = this.datasource.find((x:any)=> x[idField] == id);
           if(item){
-            item.sorting = '00'+i;
+            item.sorting = i+1;
             newDatasource.push(item);
           }
         }
@@ -471,6 +512,7 @@ initData(){
     this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
 
       if(!res.error){
+        if(this.user.administrator || this.user.systemAdmin) delete this.addData.userID;
         this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
           console.log(res);
 
@@ -531,5 +573,9 @@ initData(){
         }
       }
     }
+  }
+
+  nodeEdited(e:any){
+    this.addData.name = e.newText;
   }
 }
