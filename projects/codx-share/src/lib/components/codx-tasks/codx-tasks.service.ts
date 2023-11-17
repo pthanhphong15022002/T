@@ -368,4 +368,24 @@ export class CodxTasksService {
         getRef(dataReferences);
       });
   }
+
+  //get Task Tree-- OD --chưa xử lý chỗ khác gom về
+  getTreeAssign(refID, refType, getTree?: Function, sessionID = null) {
+    let methol = 'GetListTaskTreeByRefIDAsync';
+    if (sessionID == null) {
+      switch (refType) {
+        case 'OD_Dispatches':
+          methol = 'GetListTaskTreeByRefIDAsync';
+          break;
+        default:
+          getTree([]);
+          return;
+      }
+    }
+    this.api
+      .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', methol, '', refID)
+      .subscribe((res) => {
+        getTree(res);
+      });
+  }
 }
