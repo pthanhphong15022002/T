@@ -997,7 +997,6 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP02':
-              case 'DP22':
               case 'DP14':
               case 'DP15':
               case 'DP23':
