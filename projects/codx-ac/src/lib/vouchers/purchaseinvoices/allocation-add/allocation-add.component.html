@@ -2,69 +2,128 @@
   [customToolbar]="subToolbar">
 </codx-form>
 <ng-template #subToolbar>
-    <div class="w-100">
-      <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
-        <div class="d-flex align-items-center me-2">
-          <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
-            <i class="icon-clear_all icon-16"></i>
-          </div>
-          <!-- <div style="background-color: var(--primary-dark);"class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
+  <div class="w-100">
+    <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+      <div class="d-flex align-items-center me-2">
+        <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
+          <i class="icon-clear_all icon-16"></i>
+        </div>
+        <!-- <div style="background-color: var(--primary-dark);"class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
             <i style="color: white;" class="icon-i-check2-square icon-16"></i>
           </div> -->
-          <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
-            Phân bổ chi phí mua hàng
-          </div>
+        <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+          Phân bổ chi phí mua hàng
         </div>
-        <div class="d-flex align-items-center me-3">
-          <div class="ms-2">
-            <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
-              <i class="icon-close icon-18"></i>
-            </div>
+      </div>
+      <div class="d-flex align-items-center me-3">
+        <div class="ms-2">
+          <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+            <i class="icon-close icon-18"></i>
           </div>
         </div>
       </div>
     </div>
-  </ng-template>
+  </div>
+</ng-template>
 
-  <ng-template #body>
-    <div class="card-body p-0 codx-card-custom">
-      <div class="codx-stepper stepper stepper-pills">
-        <div class="d-flex align-items-center">
-          <div class="stepper-nav flex-center flex-wrap">
-            <div class="stepper-item approve">
-              <div class="stepper-wrapper d-flex align-items-center flex-column">
-                <div class="stepper-icon h-30px">
-                  <i class="icon-18 text-primary icon-radio_button_checked"></i>
-                </div>
-                <div class="stepper-label text-primary fw-bold">
-                  <codx-label name="lblGeneral"  default="Chọn hóa đơn nhận chi phí"></codx-label>
-                </div>
-              </div>
-            </div>
-            <div class="stepper-item approve-disabled">
+<ng-template #body>
+  <div class="card-body p-0 codx-card-custom">
+    <div class="codx-stepper stepper stepper-pills">
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="stepper-nav flex-center flex-wrap">
+          <div class="stepper-item approve">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
-                <i class="icon-18 icon-radio_button_checked"></i>
+                <i class="icon-18 text-primary icon-radio_button_checked"></i>
               </div>
-              <div
-                class="stepper-label">
-                <codx-label
-                  name="lblStage"
-                  [formModel]="dialog.formModel"
-                  default="Thiết lập giai đoạn"
-                ></codx-label>
+              <div class="stepper-label text-primary fw-bold">
+                <codx-label name="lblGeneral" default="Chọn hóa đơn nhận chi phí"></codx-label>
               </div>
             </div>
           </div>
+          <div class="stepper-item approve-disabled">
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
+                <i [ngClass]="isStep ? 'text-primary' : ''" class="icon-18 icon-radio_button_checked"></i>
+              </div>
+              <div [ngClass]="isStep ? 'text-primary' : 'text-gray-600'" class="stepper-label fw-bold">
+                <codx-label name="lblStage" [formModel]="dialog.formModel" default="Phân bổ chi phí"></codx-label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    
-  </ng-template>
+  </div>
+  <div class="mt-5">
+    <div class="card-add">
+      <ejs-tab #cashRef>
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2">
+                <i class="icon-filter_list icon-18 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblGeneral" [formModel]="form.formModel"
+                  default="Điều kiện lọc"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+      <div tabindex="-1" style="height: calc(90vh - 348px) !important;">
+        <ejs-tab #tabObj>
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div #cashRef class="d-flex align-items-top me-2 mt-2">
+                  <i class="icon-i-list-check icon-18 me-2"></i>
+                  <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="form.formModel"
+                    default="Dữ liệu"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <ng-container *ngTemplateOutlet="tabDetail"></ng-container>
+              </ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
+      <div style="height: 36px !important;" class="row ac-empty-record">
+      </div>
+    </div>
+  </div>
 
-  <ng-template #footer>
+  <ng-template #tabBasic></ng-template>
+  <ng-template #tabDetail></ng-template>
+  
 
-  </ng-template>
+</ng-template>
 
-
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <button *ngIf="!isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+        (click)="onNextStep()">
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-normal" fiedName="lblSave" default="Tiếp tục"></codx-label>
+        </div>
+    </button>
+    <button *ngIf="isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+        class="btn btn-md btn-light-primary rounded-15 me-2" style="border: 1px solid var(--primary-dark) !important"
+        (click)="onBack()">
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-normal" fiedName="lblSave" default="Quay lại"></codx-label>
+        </div>
+    </button>
+    <button *ngIf="isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+        (click)="onAccept()">
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-normal" fiedName="lblSave" default="Nhận"></codx-label>
+        </div>
+    </button>
+  </div>
+</ng-template>
