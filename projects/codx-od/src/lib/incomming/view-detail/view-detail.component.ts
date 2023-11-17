@@ -154,25 +154,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         icon: 'icon-i-chat-right',
       },
     ];
-    if (
-      this.defaultValue == '2' ||
-      (this.defaultValue == '3' && this.dataItem?.dispatchType == '3') ||
-      this.xd
-    )
-      this.tabControl.push({
-        name: 'Approve',
-        textDefault: 'Xét duyệt',
-        isActive: false,
-      });
-
-    if (this.defaultValue != '2' && this.defaultValue != '3') {
-      this.tabControl.push({
-        name: 'AssignTo',
-        textDefault: 'Giao việc',
-        isActive: false,
-        icon: 'icon-i-clipboard-check',
-      });
-    }
+    
+    
     this.setHeight();
   }
 
@@ -217,14 +200,39 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.data = null;
     if (id) {
       this.odService
-        .getDetailDispatch(id, this.formModel.entityName , this.referType , false , this.funcID)
+        .getDetailDispatch(id, this.formModel?.entityName , this.referType , false , this.funcID)
         .subscribe((item) => {
           if (item) {
             this.data = formatDtDis(item);
+            this.updateTabControl();
           }
         });
     }
   }
+
+  updateTabControl()
+  {
+    if (
+      this.defaultValue == '2' ||
+      (this.defaultValue == '3' && this.data?.dispatchType == '3') ||
+      this.xd
+    )
+      this.tabControl.push({
+        name: 'Approve',
+        textDefault: 'Xét duyệt',
+        isActive: false,
+      });
+
+    if (this.defaultValue != '2' && this.defaultValue != '3') {
+      this.tabControl.push({
+        name: 'AssignTo',
+        textDefault: 'Giao việc',
+        isActive: false,
+        icon: 'icon-i-clipboard-check',
+      });
+    }
+  }
+
   setHeight() {
     let main = 0,
       header = 0;
