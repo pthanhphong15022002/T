@@ -945,7 +945,7 @@ export class CodxAcService {
       MorfuncPur.KhoiPhuc,
       MorfuncPur.In,
       MorfuncPur.KiemTraHopLe,
-      MorfuncPur.PhanBoChiPhi,
+      //MorfuncPur.PhanBoChiPhi,
       'SYS02',
       'SYS03',
       'SYS04',
