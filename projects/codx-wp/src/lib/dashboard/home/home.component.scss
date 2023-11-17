@@ -1,6 +1,7 @@
 .wp-home {
   //max-width: 980px;
   margin: 0 auto;
+  padding-right: 30px;
 
   [data-kt-aside-minimize="on"] .aside:not(.aside-hoverable) .aside-menu .menu-title,
   [data-kt-aside-minimize="on"] .aside:not(:hover) .aside-menu .menu-title {
@@ -120,6 +121,7 @@
 .home-left {
   width: 617px !important;
   min-width: 617px !important;
+  margin: 0 auto;
 }
 
 .overflow-hidden {
