@@ -539,15 +539,14 @@ export class PopupAddCardsComponent implements OnInit {
                 break;
             }
             if((this.reduceCoCoins + data) > this.parameter.MaxPoints){
-              this.notifySV.notify('Vượt quá số xu cho phép tặng: ' + this.parameter.MaxPoints + ' xu/' + unitName);
+              this.notifySV.notify('Vượt quá số xu cho phép tặng: ' + this.parameter.MaxPoints + ' xu/' + unitName, '2');
               data = this.givePoint;
+              this.form.patchValue({ coins: this.givePoint });
             }
           }
           this.givePoint = data;
-          this.dt.detectChanges();
         } else {
           this.givePoint = 0;
-          this.dt.detectChanges();
         }
         break;
       default:

@@ -846,11 +846,11 @@
               >
                 <codx-temp-full
                 class="p-1"
-                [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
+                [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30"
                 [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-                [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"            
+                [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
                 [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-                [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+                [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
                 >
                 </codx-temp-full>
 
