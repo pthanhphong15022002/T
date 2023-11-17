@@ -9,6 +9,7 @@ import {
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-layout-portal',
@@ -27,8 +28,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
   ) {
     super(inject);
     this.module = 'WP';
-    this.layoutModel.asideMode = "2";
-    this.layoutModel.asideFixed = false;
+    if(environment.asideMode != "2") this.layoutModel.asideFixed = false;
     this.layoutModel.asideTheme = 'transparent';
     this.layoutModel.asideMinimize = 'icon';
     this.layoutModel.toolbarDisplay = false;

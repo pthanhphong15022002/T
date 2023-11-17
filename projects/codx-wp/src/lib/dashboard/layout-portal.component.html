@@ -19,14 +19,12 @@
             [hasSecond]="false"
             (asideClick)="asideClick($event)"
             class="wp-portal"
-            [service]="'SYS'"
-            [assemblyName]="'SYS'"
-            [className]="'FormSettingsBusiness'"
-            [method]="'GetFormSettingAsync'"
-            [dataValue]="'Comments'"
+            [className]="codxService.asideMode == '2'?'FormSettingsBusiness':null"
+            [method]="codxService.asideMode == '2'?'GetFormSettingAsync':null"
+            [dataValue]="codxService.asideMode == '2'?'Comments':null"
           >
           </codx-aside>
-          <div class="dashboard-content">
+          <div class="dashboard-content w-100">
             <codx-wrapper
               class="d-flex flex-column flex-column-fluid wrapper-portal"
             >

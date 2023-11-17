@@ -49,6 +49,7 @@ export class PopupEProcessContractComponent
   lstSubContract: any;
   headerText: string;
   openFrom: string;
+  isMultiCopy: boolean = false;
   employeeObj: any;
 
   loaded: boolean = false;
@@ -120,6 +121,9 @@ export class PopupEProcessContractComponent
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
+    }
+    else if(this.actionType == 'copyMulti'){
+      this.isMultiCopy = true;
     }
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
     if (data?.data?.empObj) {

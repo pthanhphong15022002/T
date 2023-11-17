@@ -1,4 +1,4 @@
-<div *ngIf="codxService.asideMode == '1'" ngbDropdown class="d-block" [ngClass]="buttonMarginClass">
+<div *ngIf="codxService.asideMode != '2'" ngbDropdown class="d-block" [ngClass]="buttonMarginClass">
   <button
     type="button"
     class="btn btn-icon btn-clean"
@@ -21,7 +21,7 @@
           {{ group.groupName || group.groupID }}
         </div>
       </div>
-      <div class="px-5 ms-3">
+      <div class="mt-2 mx-3">
         <div class="row g-0">
           <div
             class="col-6"

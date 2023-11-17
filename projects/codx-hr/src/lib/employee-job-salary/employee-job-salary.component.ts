@@ -44,10 +44,9 @@ export class EmployeeJobSalaryComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   method = 'GetEJobSalariesListAsync';
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-    text: 'Thêm',
-  };
+  }];
   eJobSalaryHeader;
   eBasicSalariesFormModel: FormModel;
   currentEmpObj: any = null;

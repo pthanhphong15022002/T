@@ -53,6 +53,9 @@ codx-wrapper {
 
 .e-listview .e-list-item {
     color: var(--text-body);
+    &:hover{
+        color: var(--text-body)!important;
+    }
 }
 
 .e-listview .e-list-item .fw-bold {
@@ -130,7 +133,7 @@ app-list-post .e-listview .e-list-item {
     background-color: var(--bg-card);
 }
 div#newfeed ejs-listview .e-list-item:hover {
-    background-color: transparent!important;
+    background-color:var(--bg-card) !important;
 }
 
 .wp-home .e-listview .e-list-item.e-hover,
@@ -204,12 +207,15 @@ textarea.codx-textarea {
 .feed-box .btn span[class*=icon-] {
     color: var(--text-body);
 }
-
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active, .e-tab .e-tab-header.e-vertical .e-toolbar-item:hover, .e-tab .e-tab.e-focused>.e-tab-header .e-toolbar-item:focus {
+    background-color:var(--gray-150);
+}
 .btn.btn-white {
     background-color: var(--bg-card);
-
+    border-color: var(--border-light);
     &:hover {
         background-color: var(--gray-100) !important;
+        color: var(--text-title);
     }
 }
 
@@ -415,6 +421,9 @@ h1,
 .bg-white {
     background-color: var(--bg-card) !important;
 }
+.bg-gray-100 {
+    background-color: var(--gray-100) !important;
+}
 
 .card-footer[_ngcontent-ueb-c389] {
     background-color: var(--bg-card) !important;
@@ -548,6 +557,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
     border-color: var(--primary) !important;
+    background-color: var(--primary-light);
 }
 
 .card-footer {
@@ -737,6 +747,7 @@ label,
 
 .btn {
     color: var(--primary);
+    border-color:var(--border-light) ;
 }
 
 .btn.btn-primary {
@@ -874,5 +885,41 @@ codx-view-list-detail .e-listview .e-list-parent {
         color: var(--text-body) !important;
 
     }
+}
+
+.aside-minimize-icon-title .aside.aside-extended .aside-primary{ 
+    .menu-link:hover .menu-title {
+        color: var(--text-title) !important;
+    }
+    .aside-footer {
+        .menu-title {
+            color: var(--text-title);
+        }
+        .svg-icon svg [fill]:not(.permanent):not(g) {
+            fill: var(--text-title);
+        }
+    }
+ }
+ .aside-menu .menu-item .menu-title, .aside-footer .menu-item .menu-title {
+    color: var(--text-title);
+}
+
+.codx-theme .codx-tab .tab-content {
+    border-color: var(--border-light);
+}
+ejs-tab#calendarTab .e-calendar {
+    border-color:  var(--border-light)!important;
+}
+.btn.btn-light {
+    //color: #6f7475;
+    //border-color: #f5f9fa;
+    background-color: var(--bg-card);
+}
+.data-text-color {
+    color: var(--gray-400);
+}
+
+.codx-theme .list-item a:hover .icon-edit-one, .codx-theme .setting-btnright a:hover span {
+    color: var(--primary-dark);
 }
 //end dark

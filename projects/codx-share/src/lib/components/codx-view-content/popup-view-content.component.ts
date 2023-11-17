@@ -28,7 +28,7 @@ export class PopupViewContentComponent{
   function:any;
   dataSelected:any;
   formModel:any;
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,

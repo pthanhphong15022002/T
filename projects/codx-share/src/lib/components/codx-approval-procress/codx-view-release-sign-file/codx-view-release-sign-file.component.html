@@ -19,7 +19,7 @@
       <!-- [curSignerType]="oApprovalTrans?.approverType" -->
   
       <div class="stepper-body pt-2 w-100" *ngIf="isAfterRender">
-         <lib-pdf [recID]="signFile?.recID" [isApprover]="false" [oApprovalTrans]="signFile" [isEditable]="false" [oSignFile]="signFile" [oURL]="listURL">
+         <lib-pdf [recID]="signFile?.recID" [isApprover]="false" [dynamicApprovers]="approveProcess?.approvers" [oApprovalTrans]="signFile" [isEditable]="false" [oSignFile]="signFile" [oURL]="listURL">
     </lib-pdf> 
         <!-- <lib-pdf
           #pdfView

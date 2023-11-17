@@ -311,9 +311,10 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     if (event?.field && event?.component && event?.data != '') {
       switch (event.field) {
         case 'certificateType': {
-          (cbxComponent.ComponentCurrent.dataService as CRUDService).data = [];
-          cbxComponent.ComponentCurrent.predicates = 'CertificateType=@0';
-          cbxComponent.ComponentCurrent.dataValues = event.data;
+          // (cbxComponent.ComponentCurrent.dataService as CRUDService).data = [];
+          // cbxComponent.ComponentCurrent.predicates = 'CertificateType=@0';
+          // cbxComponent.ComponentCurrent.dataValues = event.data;
+          
           //(cbxComponent.ComponentCurrent.dataService as CRUDService).setPredicate('CertificateType=@0', [event.data]).subscribe();
           // console.log(cbxComponent);
           break;

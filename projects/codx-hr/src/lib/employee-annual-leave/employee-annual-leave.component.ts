@@ -26,7 +26,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   autoSearch = true;
   searchText: string ='';
   views: Array<ViewModel> = []
-  button: ButtonModel = null;
+  button: ButtonModel[] = null;
   showButton: boolean = true;
   grvSetup: any;
   grvEDaysOff: any;
@@ -70,7 +70,7 @@ export class EmployeeAnnualLeaveComponent extends UIComponent {
   onInit(): void {
   }
   ngAfterViewInit(): void {
-    this.button = { id: 'btnAdd', text: 'Thêm' };
+    this.button = [{ id: 'btnAdd', text: 'Thêm' }];
     this.initRequest();
     this.initViewSetting();
     this.getEDaysOffGrvSetUp();

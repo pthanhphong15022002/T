@@ -74,9 +74,9 @@ export class EmployeeAwardsComponent extends UIComponent {
   grvSetup: any;
   // genderGrvSetup: any;
   views: Array<ViewModel> = [];
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   eAwardsHeaderText;
   formGroup: FormGroup;
   currentEmpObj: any;

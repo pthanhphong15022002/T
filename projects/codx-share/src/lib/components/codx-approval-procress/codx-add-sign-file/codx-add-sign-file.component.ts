@@ -1060,11 +1060,11 @@ export class CodxAddSignFileComponent implements OnInit {
     //   this.notify.notify('Qui trình chưa thay đổi');
     //   return;
     // }
-    this.esService.updateApproveTemplate(this.data).subscribe((res) => {
-      if (res != null) {
-        this.notify.notifyCode('SYS007');
-      }
-    });
+    // this.esService.updateApproveTemplate(this.data).subscribe((res) => {
+    //   if (res != null) {
+    //     this.notify.notifyCode('SYS007');
+    //   }
+    // });
   }
   //#endregion
 

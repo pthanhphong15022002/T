@@ -234,8 +234,10 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.tags = this.taskParent.tags;
       this.task.refID = this.refID ? this.refID : this.taskParent.recID;
       this.task.refNo = this.taskParent.taskID;
-      this.task.taskType = this.taskParent.taskType
-        ? this.taskParent.taskType
+      this.task.refType = this.refType
+        ? this.refType
+        : this.taskParent.refType
+        ? this.taskParent.refType
         : 'TM_Tasks';
       this.copyListTodo(this.taskParent.taskID);
       if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
@@ -868,7 +870,18 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   //referen new
   loadDataReferences() {
     this.dataReferences = [];
-    if (this.task.refID) this.getReferencesByCategory3(this.task);
+    if (this.task.refID)
+      //this.getReferencesByCategory3(this.task); //code cu
+      this.tmSv.getReference(
+        this.task.refType,
+        this.task.refID,
+        this.getRef.bind(this)
+      );
+  }
+
+  getRef(dataReferences) {
+    if (dataReferences && dataReferences?.length > 0)
+      this.dataReferences = dataReferences;
   }
 
   getReferencesByCategory3(task) {

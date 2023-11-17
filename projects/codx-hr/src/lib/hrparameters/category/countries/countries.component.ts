@@ -8,7 +8,7 @@ import { ButtonModel, ViewModel, ViewType } from 'codx-core';
 })
 export class CountriesComponent implements OnInit {
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   columnsGrid = [];
 
   @Input() functionObject;

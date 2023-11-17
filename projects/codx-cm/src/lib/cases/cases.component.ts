@@ -93,7 +93,7 @@ export class CasesComponent
 
   columnGrids = [];
   // showButtonAdd = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dataSelected: any;
   //region Method
   //endregion
@@ -162,9 +162,9 @@ export class CasesComponent
 
   onInit(): void {
     //test no chosse
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
     this.afterLoad();
   }
 

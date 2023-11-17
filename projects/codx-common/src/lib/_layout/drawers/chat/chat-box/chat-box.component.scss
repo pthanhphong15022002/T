@@ -1,5 +1,5 @@
 .chat-box{
-    width: 420px;
+    width: 400px;
     height: 580px;
     background-color:var(--bg-body);
     border: 1px var(--gray-150) solid;
@@ -62,9 +62,6 @@
 }
 .chat-box-footer{
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 0 10px;
     position: absolute;
     bottom: 0;
@@ -96,9 +93,8 @@
 .message{
     width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin: 10px 0px;
-    line-break: anywhere;
 }
 
 .reciver-message{
@@ -106,7 +102,7 @@
     background-color:var(--gray-150);
     max-width: 250px;
     border-radius: 6px;
-    padding: 4px;
+    padding: 8px 10px;
     text-align: justify;
 }
 
@@ -117,11 +113,6 @@
     align-items: center;
     justify-content: end;
     position: relative;
-}
-.message-send_content{
-    text-align: justify;
-    max-width: 250px;
-    padding: 4px;
 }
 .message-reft{
     background-color: var(--primary-lighter);
@@ -135,13 +126,7 @@
     justify-content: end;
     align-items: end;
 }
-.message-reciver{
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    align-items: end;
-    position: relative;
-}
+
 .message-files{
     // width: 80%;
     width: 280px;
@@ -242,9 +227,19 @@ codx-chat-box.active{
     max-width: 250px;
     padding: 4px 10px;
 }
-.message-send-message{
+
+
+
+.message-send{
+    color: #fff;
+    background-color: var(--bs-primary-rgb);
     border-radius: 6px;
-    background-color: var(--primary-lighter);
+    padding: 4px;
+}
+.message-send-message{
+    color: #fff;
+    background-color: var(--bs-primary-rgb);
+    border-radius: 6px;
     padding: 4px;
 }
 .message-system{
@@ -344,4 +339,30 @@ codx-chat-box.active{
 .popup-view-body_infor > p {
     margin: 8px;
     padding: 0px;
+}
+
+
+
+.bg-mssg-send{
+    background-color: var(--bs-primary-rgb);
+}
+
+.max-w-250px{
+    max-width: 250px;
+    width: fit-content;
+}
+
+.text-justify{
+    text-align: justify;
+}
+
+.bg-mssg-recive{
+    background-color:var(--gray-150);
+}
+
+.bg-mssg-reply{
+    background-color: var(--gray-150);
+}
+.w-fit-content{
+    width: fit-content;
 }

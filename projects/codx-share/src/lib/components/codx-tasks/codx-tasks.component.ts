@@ -108,13 +108,15 @@ export class CodxTasksComponent
   @Output() resourceNew = new EventEmitter<any>();
   //
 
-  button?: ButtonModel = {
-    id: 'btnAdd',
-    // items: [{
-    //   id: 'avc',
-    //   text: 'xxyz'
-    // }]
-  };
+  button?: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+      // items: [{
+      //   id: 'avc',
+      //   text: 'xxyz'
+      // }]
+    },
+  ];
 
   model?: DataRequest;
   request: ResourceModel;
@@ -1820,6 +1822,7 @@ export class CodxTasksComponent
           case 'TMT02015':
           case 'TMT02025':
             if (
+              !data.write ||
               data.status == '90' ||
               data.status == '80' ||
               data.status == '50' ||
@@ -1846,6 +1849,7 @@ export class CodxTasksComponent
           case 'SYS03':
             if (
               !data.write ||
+              data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
               this.funcID == 'TMT0206' ||
@@ -1872,7 +1876,13 @@ export class CodxTasksComponent
           case 'TMT02011':
           case 'TMT02021':
           case 'TMT02031':
-            if (!data.write || data.status != '20') x.disabled = true;
+            if (
+              !data.write ||
+              (data.status != '20' &&
+                data.status != '10' &&
+                data.status != '09')
+            )
+              x.disabled = true;
             break;
           //Đang thực hiện
           case 'TMT02012':

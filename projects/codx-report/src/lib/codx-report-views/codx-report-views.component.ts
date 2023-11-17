@@ -40,9 +40,9 @@ export class CodxReportViewsComponent
   views: ViewModel[];
   viewType = ViewType;
   funcItem: any;
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   module: any = '';
   predicates: string = "ReportType = 'R' && Module=@0";
   dataValues: String = '';

@@ -13,7 +13,7 @@ export class ItemBatchsComponent extends UIComponent{
   //Constructor
 
   views: Array<ViewModel> = [];
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;

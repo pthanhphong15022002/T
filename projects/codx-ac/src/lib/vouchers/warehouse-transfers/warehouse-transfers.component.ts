@@ -30,11 +30,11 @@ export class WarehouseTransfersComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-  };
+  }];
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -142,7 +142,6 @@ export class WarehouseTransfersComponent extends UIComponent {
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
     this.optionSidebar.isFull = true;
-    console.log(this.view.dataService.data)
   }
 
   ngOnDestroy() {

@@ -45,7 +45,7 @@ export class ImportpartsComponent extends UIComponent {
   predicatesTemp = '';
   dataValuesTemp = '';
   dataSelected: any;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   lstImportParts = [];
   loaded: boolean;
   titleView = '';
@@ -58,9 +58,9 @@ export class ImportpartsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.cache.moreFunction('IELogs', 'grvIELogs').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'WR0105_1');

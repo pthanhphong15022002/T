@@ -51,10 +51,11 @@
             </div>
           </div>
 
-          <div  [ngClass]="
+          <div [ngClass]="
               [isAddNew ? 'stepper-item' : 'stepper-item approve-disabled',showStepSetting && !editApprovers ? 'visible' :'d-none']
             " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
-            <div *ngIf="showStepSetting && !editApprovers" class="stepper-wrapper d-flex align-items-center flex-column">
+            <div *ngIf="showStepSetting && !editApprovers"
+              class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
                 <i class="stepper-default icon-24 icon-radio_button_checked"></i>
                 <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
@@ -130,7 +131,7 @@
                   </div>
                 </a>
               </li>
-              <li>
+              <li *ngIf="data?.approveControl=='2'">
                 <a ngbDropdownItem (click)="updateApproveTemplate()" class="cursor-pointer">
                   <div class="d-flex flex-column">
                     <codx-label name="lblUpdateApproval" [formModel]="formModelCustom"
@@ -320,11 +321,13 @@
 
             <div *ngIf="!editApprovers && showStepSetting" class="tab-pane fade" id="pane_2"
               [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1" [transId]="
-                data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl" [dynamicApprovers]="dynamicApprovers"
-                [isTemplate]="data?.isTemplate" [recID]="data.recID" [type]="'1'" [eSign]="eSign" 
-                [signatureType]="signatureType" [refType]="data?.refType !=null ? data?.refType :refType" [isSettingMode]="data?.isTemplate ? true :false"
-                [mssgDelete]="mssgDelete" (addEditItem)="dataStepChange($event)">
+              <codx-approval-steps #viewApprovalStep *ngIf="currentTab == 1 && reloadedStep" [transId]="
+                data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
+                [dynamicApprovers]="dynamicApprovers" [isTemplate]="data?.isTemplate" [recID]="data.recID" [type]="'1'"
+                [eSign]="eSign" [signatureType]="signatureType"
+                [refType]="data?.refType !=null ? data?.refType :refType"
+                [isSettingMode]="data?.isTemplate ? true :false" [mssgDelete]="mssgDelete"
+                (addEditItem)="dataStepChange($event)">
               </codx-approval-steps>
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''"></div>
@@ -364,7 +367,8 @@
             <codx-label name="lblContinue" [formModel]="formModelCustom" default="Tiếp tục"></codx-label>
           </button>
 
-          <div class="d-flex" *ngIf="eSign == false && currentTab == 1 && !editApprovers && showStepSetting && modeView != '2'">
+          <div class="d-flex"
+            *ngIf="eSign == false && currentTab == 1 && !editApprovers && showStepSetting && modeView != '2'">
             <ng-container>
               <!-- <div *ngIf="currentTab == 2 && !isTemplate && data?.approveControl=='3'">
 
@@ -396,7 +400,7 @@
                       </div>
                     </a>
                   </li>
-                  <li>
+                  <li *ngIf="data?.approveControl=='2'">
                     <a ngbDropdownItem (click)="updateApproveTemplate()" class="cursor-pointer">
                       <div class="d-flex flex-column">
                         <codx-label name="lblUpdateApproval" [formModel]="formModelCustom"
@@ -428,10 +432,11 @@
         modeView != '1'
           ? true
           : false
-      " (isAreaControl)="setValueAreaControl($event)" [dynamicApprovers]="dynamicApprovers" [isSettingMode]="data?.isTemplate ? true :false">
-    </lib-pdf>
+      " (isAreaControl)="setValueAreaControl($event)" [dynamicApprovers]="dynamicApprovers"
+          [isSettingMode]="data?.isTemplate ? true :false">
+        </lib-pdf>
       </div>
-      
+
     </div>
   </div>
 </div>
@@ -461,8 +466,8 @@
         <label class="me-2">
           <codx-label fiedName="" [formModel]="formModelCustom" default="Quy trình mẫu"></codx-label>
         </label>
-        <codx-input type="combobox" field="processID" refValue="ProcessTemplate" [crrValue]="processRecID" [model]="data" 
-          (valueChange)="processIDChange($event)">
+        <codx-input type="combobox" field="processID" refValue="ProcessTemplate" [crrValue]="processRecID"
+          [model]="data" (valueChange)="processIDChange($event)">
         </codx-input>
       </div>
     </div>

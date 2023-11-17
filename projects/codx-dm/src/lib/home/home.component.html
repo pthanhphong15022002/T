@@ -3,7 +3,9 @@
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [autoFilter]="false" 
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="selectedFirst" [button]="button" (buttonClick)="addFile($event)"
   (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)" (viewChanged)="changeView($event)"
-  (searchChanged)="searchChange($event)" (filterChange)="filterChange($event)" 
+  (searchChanged)="searchChange($event)" (filterChange)="filterChange($event)"
+  [hideMoreFuncs]="true" 
+  [titleToolBarTmp]="breadCumbs"
   >
 </codx-views>
 <ng-template #templateMain let-data>
@@ -318,3 +320,247 @@
 <ng-container *ngIf="visible">
   <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
 </ng-container>
+
+<ng-template #breadCumbs>
+  <div *ngIf="codxService.asideMode == '2'" class="d-flex align-items-end flex-wrap mt-1">
+    <div ngbDropdown class="nav-item dropdown me-1">
+    
+      <div
+        ngbDropdownMenu
+        class="dropdown-menu"
+        aria-labelledby="dropdownMenuButton"
+      >
+        <container-element [ngSwitch]="submenu">
+          <!-- the same view can be shown in more than one case
+                    *ngSwitchCase="'multi-choice' || 'singe-choice'"
+                -->
+          <some-element *ngSwitchCase="'DMT05'">
+            <a
+              ngbDropdownItem
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT05',
+                  'Tài liệu chia sẻ',
+                  'Tài liệu được chia sẻ',
+                  '1'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblSharedDocuments"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu được chia sẻ"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+            <a
+              ngbDropdownItem
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT05',
+                  'Tài liệu chia sẻ',
+                  'Tài liệu chia sẻ',
+                  '2'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblSharedDocuments2"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu chia sẻ"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+          </some-element>
+          <some-other-element *ngSwitchCase="'DMT06'">
+            <a
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT06',
+                  'Tài liệu yêu cầu chia sẻ',
+                  'Tài liệu được yêu cầu',
+                  '1'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblRequiredDocuments"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu được yêu cầu"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+            <a
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT06',
+                  'Tài liệu yêu cầu chia sẻ',
+                  'Tài liệu yêu cầu',
+                  '2'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblRequiredDocuments2"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu yêu cầu"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+            <a
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT06',
+                  'Tài liệu yêu cầu chia sẻ',
+                  'Lịch sử chia sẻ',
+                  '3'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblShareHistory"
+                    [formName]="'fmLayOutDM'"
+                    default="Lịch sử chia sẻ"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+          </some-other-element>
+          <some-other-element *ngSwitchCase="'DMT07'">
+            <a
+              class="dropdown-item"
+              (click)="
+                onClick(
+                  'DMT07',
+                  'Tài liệu chờ duyệt',
+                  'Tài liệu được yêu cầu',
+                  '1'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblShareHistory2"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu được yêu cầu"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+            <a
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT07',
+                  'Tài liệu chờ duyệt',
+                  'Tài liệu chờ duyệt',
+                  '2'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblDocumentsPendingApproval"
+                    [formName]="'fmLayOutDM'"
+                    default="Tài liệu chờ duyệt"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+            <a
+              class="dropdown-item cursor-pointer"
+              (click)="
+                onClick(
+                  'DMT07',
+                  'Tài liệu chờ duyệt',
+                  'Lịch sử xét duyệt',
+                  '3'
+                )
+              "
+            >
+              <div class="d-flex align-items-center">
+                <span>
+                  <codx-label
+                    fiedName="lblReviewHistory"
+                    [formName]="'fmLayOutDM'"
+                    default="Lịch sử xét duyệt"
+                  >
+                  </codx-label>
+                </span>
+              </div>
+            </a>
+          </some-other-element>
+          <!--default case when there are no matches -->
+          <some-element *ngSwitchDefault>
+            <a class="dropdown-item">
+              <div class="d-flex align-items-center">
+                <codx-label
+                  fiedName="lblMyRequest"
+                  [formName]="'fmLayOutDM'"
+                  default="Yêu cầu của tôi"
+                >
+                </codx-label>
+              </div>
+            </a>
+            <a class="dropdown-item">
+              <div class="d-flex align-items-center">
+                <codx-label
+                  fiedName="lblRequestWaitForMeToGrant"
+                  [formName]="'fmLayOutDM'"
+                  default="Yêu cầu chờ tôi cấp"
+                >
+                </codx-label>
+              </div>
+            </a>
+          </some-element>
+        </container-element>
+      </div>
+    </div>
+    <div class="d-flex align-items-center">
+      <a>
+        <div
+          class="fs-5 text-dark fw-bold my-0 me-2 cursor-pointer"
+          (click)="onJump()"
+        >
+          {{ this.dmSV.menuActive.getValue() }}
+        </div>
+      </a>
+      <codx-breadcumb
+        notTree="true"
+        link="true"
+        end="2"
+        start="1"
+        max="4"
+      ></codx-breadcumb>
+    </div>
+  
+  </div>
+</ng-template>

@@ -145,9 +145,9 @@ export class SignFileComponent extends UIComponent {
 
     this.taskViewStt = '1';
     this.preStepNo = 0;
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

@@ -42,7 +42,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 })
 export class EmployeesComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   columnsGrid = [];
   dialog!: DialogRef;
   currentEmployee: boolean = true;
@@ -89,9 +89,9 @@ export class EmployeesComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.columnsGrid = [
       {
         field: 'employeeID',

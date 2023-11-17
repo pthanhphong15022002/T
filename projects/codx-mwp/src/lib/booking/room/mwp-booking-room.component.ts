@@ -65,7 +65,7 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
   isCollapsed = true;
   dialog!: DialogRef;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   moreFunc: Array<ButtonModel> = [];
   fields: any;
   resourceField: any;
@@ -144,9 +144,9 @@ export class MWPBookingRoomComponent extends UIComponent implements AfterViewIni
       Title: 'Resources',
     };
 
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.codxEpService.getListResource('1').subscribe((res:any)=>{
       if(res){

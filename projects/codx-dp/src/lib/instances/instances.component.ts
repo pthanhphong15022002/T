@@ -93,7 +93,7 @@ export class InstancesComponent
   dialogOwnerStep: DialogRef;
   views: Array<ViewModel> = [];
   showButtonAdd = true;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dataSelected: any;
   dataReload: any;
   //Setting load list
@@ -378,9 +378,9 @@ export class InstancesComponent
   //   this.setColorKanban();
   // }
   onInit() {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     if (this.funcID == 'DPT04') {
       this.dataObj = {
         processID: this.processID,

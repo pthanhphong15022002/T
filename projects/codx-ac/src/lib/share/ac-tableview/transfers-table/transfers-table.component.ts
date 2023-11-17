@@ -12,10 +12,9 @@ export class TransfersTableComponent extends UIComponent {
   //#region Constructor
   @Input() itemSelected: any;
   @Input() baseCurr: any;
+  @Input() type: any;
 
-  totalNetAmt:any = 0; //? tổng thành tiền tab thông tin hóa đơn
-  totalQuantity:any = 0; //? tổng số lượng tab thông tin hóa đơn
-  totalVatAtm: any = 0; //? tổng tiền thuế tab thông tin hóa đơn
+  totalCostAmt:any = 0; //? tổng thành tiền
   listTransfer:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -49,13 +48,14 @@ export class TransfersTableComponent extends UIComponent {
    */
   getDataDetail(dataItem) {
     this.api
-      .exec('AC', 'TransfersLinesBusiness', 'LoadDataAsync', [
+      .exec('IV', 'TransfersLinesBusiness', 'LoadDataAsync', [
         dataItem.recID,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
           this.listTransfer = res;
+          console.log(this.listTransfer);
           this.setTotalRecord();
           this.detectorRef.detectChanges();
         }
@@ -66,15 +66,11 @@ export class TransfersTableComponent extends UIComponent {
    * Hàm tính tổng các số tiền của các tab detail(hạch toán,thông tin hóa đơn,hóa đơn GTGT)
    */
   setTotalRecord() {
-    this.totalQuantity = 0;
-    this.totalNetAmt = 0;
-    this.totalVatAtm = 0;
+    this.totalCostAmt = 0;
 
-    // if (this.listPurchaseInvoicesLine && this.listPurchaseInvoicesLine.length > 0) {
-    //   this.totalQuantity = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.quantity,0);
-    //   this.totalNetAmt = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.netAmt,0);
-    //   this.totalVatAtm = this.listPurchaseInvoicesLine.reduce((sum, data:any) => sum + data?.vatAmt,0);
-    // }
+    if (this.listTransfer && this.listTransfer.length > 0) {
+      this.totalCostAmt = this.listTransfer.reduce((sum, data:any) => sum + data?.costAmt,0);
+    }
   }
 
   /**

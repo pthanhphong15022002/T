@@ -51,7 +51,7 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   entityName = 'BS_Competences';
   parentName = '';
   headerText = '';
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog: DialogRef;
   functionList: any;
   formModel: any;
@@ -90,9 +90,9 @@ export class BehaviorComponent extends UIComponent implements OnInit {
   }
   columnsGrid = [];
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.changedr.detectChanges();
   }
 

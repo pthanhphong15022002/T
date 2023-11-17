@@ -57,9 +57,9 @@ export class ItempostingaccountsComponent extends UIComponent {
   funcName: any;
   subheaderText: any;
   headerText: any;
-  button = {
+  button = [{
     id: 'btnAdd',
-  };
+  }];
   dataDefault:any;
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api

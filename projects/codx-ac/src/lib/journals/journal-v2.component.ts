@@ -56,10 +56,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
   mainFilterValue: string;
   subFilterValue: string;
   ViewType = ViewType;
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     icon:'icon-i-journal-plus',
     id: 'btnAdd',
-  };
+  }];
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(

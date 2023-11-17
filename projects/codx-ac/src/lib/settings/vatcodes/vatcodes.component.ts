@@ -14,9 +14,9 @@ export class VATCodesComponent extends UIComponent{
 
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd'
-  };
+  }];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;

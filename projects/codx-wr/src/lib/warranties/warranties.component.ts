@@ -71,7 +71,7 @@ export class WarrantiesComponent
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
-  button?: ButtonModel = { id: 'btnAdd' };
+  button?: ButtonModel[] = [{ id: 'btnAdd' }];
   readonly btnAdd: string = 'btnAdd';
   funcIDCrr: any;
   titleAction = '';
@@ -121,9 +121,9 @@ export class WarrantiesComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
     this.wrSv.listOrderUpdateSubject.subscribe((res) => {
       if (res) {
         this.lstOrderUpdate = res?.e ?? [];

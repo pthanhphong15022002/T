@@ -27,7 +27,7 @@ import { PopAddWarehousesComponent } from './pop-add-warehouses/pop-add-warehous
 export class WarehousesComponent extends UIComponent {
   //#region Contructor
   views: Array<ViewModel> = [];
-  buttons: ButtonModel = { id: 'btnAdd' };
+  buttons: ButtonModel[] = [{ id: 'btnAdd' }];
   headerText: any;
   columnsGrid = [];
   dialog: DialogRef;

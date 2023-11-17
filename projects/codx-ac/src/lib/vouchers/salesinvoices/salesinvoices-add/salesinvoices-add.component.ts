@@ -41,6 +41,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
   @ViewChild('eleGridSalesInvoice') eleGridSalesInvoice: CodxGridviewV2Component; //? element codx-grv2 lưới SalesInvoice
   @ViewChild('formSalesInvoice') public formSalesInvoice: CodxFormComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
+  @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
 
   headerText: string; //? tên tiêu đề
   dialog: DialogRef; //? dialog truyền vào
@@ -124,7 +125,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     let hideFields = [];
 
     if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
-      preDIM1 = '@0.Contains(DepartmentID)';
+      preDIM1 = '@0.Contains(ProfitCenterID)';
       dtvDIM1 = `[${this.journal?.diM1}]`;
     }
     eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
@@ -252,6 +253,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
         case 'objectid':
           let indexObject = event?.component?.dataService?.data.find((x) =>x.ObjectID == value);
           if (indexObject != null) {
+            let memo = this.getMemoMaster();
+            this.formSalesInvoice.setValue('memo',memo,{});
             this.objectIDChange(field);
           }
           break;
@@ -448,6 +451,30 @@ export class SalesinvoicesAddComponent extends UIComponent{
     oLine.idiM4 = this.formSalesInvoice.data.warehouseID;
     oLine.note = this.formSalesInvoice.data.note;
     oLine = this.genFixedDims(oLine);
+    let dicSetting = JSON.parse(this.journal.extras);
+    if (dicSetting) {
+      if (
+        dicSetting?.diM1Control &&
+        dicSetting?.diM1Control != '2' &&
+        dicSetting?.diM1Control != '9'
+      ) {
+        oLine.diM1 = this.journal.diM1;
+      }
+      if (
+        dicSetting?.diM2Control &&
+        dicSetting?.diM2Control != '2' &&
+        dicSetting?.diM2Control != '9'
+      ) {
+        oLine.diM2 = this.journal.diM2;
+      }
+      if (
+        dicSetting?.diM3Control &&
+        dicSetting?.diM3Control != '2' &&
+        dicSetting?.diM3Control != '9'
+      ) {
+        oLine.diM3 = this.journal.diM3;
+      }
+    }
     return oLine;
   }
   
@@ -736,6 +763,22 @@ export class SalesinvoicesAddComponent extends UIComponent{
     if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
       this.eleGridSalesInvoice.deleteRow(data);
     }
+  }
+
+  /**
+   * *Hàm get ghi chú từ lí do chi + đối tượng + tên người nhận
+   * @returns
+   */
+  getMemoMaster(format:any = '') {
+    let newMemo = ''; //? tên ghi chú mới
+    let objectName = ''; //? tên đối tượng
+    
+    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+    if (indexObject > -1) {
+      objectName = 'Bán hàng cho ' + this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;
+      newMemo = objectName;
+    }
+    return newMemo;
   }
   
   @HostListener('click', ['$event']) //? focus out grid

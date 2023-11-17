@@ -54,7 +54,7 @@ export class DynamicProcessComponent
   // View
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
 
   // view child
   @ViewChild('templateViewCard', { static: true })
@@ -162,9 +162,9 @@ export class DynamicProcessComponent
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
       this.crrFunID = this.funcID;

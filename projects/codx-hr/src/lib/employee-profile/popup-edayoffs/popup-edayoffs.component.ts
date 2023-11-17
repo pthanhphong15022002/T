@@ -315,6 +315,13 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           ? ''
           : this.dayoffObj.totalDays,
     });
+
+    this.form.formGroup.patchValue({
+      totalDaysOff:
+        this.dayoffObj.endDate < this.dayoffObj.beginDate
+          ? ''
+          : this.dayoffObj.totalDays,
+    });
   }
 
   //Change date and render days
@@ -328,7 +335,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       this.dayoffObj.endDate = evt.data;
     }
 
-    if (this.dayoffObj.endDate && this.dayoffObj.beginDate) {
+    if (this.dayoffObj.endDate && this.dayoffObj.beginDate && this.dayoffObj.periodType) {
       this.HandleTotalDaysVal(this.dayoffObj.periodType);
     }
   }
