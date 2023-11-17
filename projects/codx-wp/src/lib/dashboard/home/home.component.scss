@@ -111,7 +111,6 @@
 .dashboard-main {
  // width: 1286px;
   width: 100%;
-  margin: 0 15px;
 }
 
 // .dashboard-content {
@@ -119,8 +118,9 @@
 // }
 
 .home-left {
-  width: 617px !important;
+  width: 680px !important;
   min-width: 617px !important;
+  max-width: 100%;
   margin: 0 auto;
 }
 
